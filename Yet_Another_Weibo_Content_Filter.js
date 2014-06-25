@@ -26,25 +26,24 @@ var funcStr = function (f) {
 
 // 文本常量
 // 所有翻译以简体中文为准，别的都是我瞎编的
+// http://zh.wikipedia.org/wiki/Template:CGroup/IT
+// http://www.microsoft.com/Language/zh-cn/Search.aspx
 var text = {
-  'filter': { 'zh-cn': '过滤器', 'zh-hk': '過濾器', 'zh-tw': '過濾器', 'en': 'Filter' },
-  'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '過濾器設置', 'zh-tw': '過濾器設定', 'en': 'Filter Settings' },
-  'weiboFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博過濾', 'zh-tw': '微博過濾', 'en': 'Weibo' },
-  'layoutFilterGroupTitle': { 'zh-cn': '页面布局', 'zh-hk': '頁面布局', 'zh-tw': '頁面佈局', 'en': 'Layout' },
+  'filter': { 'zh-cn': '过滤器', 'zh-hk': '篩選器', 'zh-tw': '篩選器', 'en': 'Filter' },
+  'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設置', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
+  'weiboFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博篩選', 'zh-tw': '微博篩選', 'en': 'Weibo' },
+  'layoutFilterGroupTitle': { 'zh-cn': '页面布局', 'zh-hk': '頁面配置', 'zh-tw': '頁面配置', 'en': 'Layout' },
 };
 
 // 页面常量
 var html = {
-  'icon': funcStr(function () { /*!HTML
-    <div class="gn_setting" node-type="filter"><i>
-      <a class="gn_tab gn_filter" href="#">
-        <span class="ico">{{filter}}</span>
-      </a>
-    </i></div>
-  */}).trim(),
-  'configHeaderTop': '<div class="profile_tab S_line5" node-type="forward_tab"><ul class="pftb_ul S_line1">',
+  'icon': '<div class="gn_setting" node-type="filter"><i><a class="gn_tab gn_filter" href="#"><span class="ico">{{filter}}</span></a></i></div>',
+  'configHeaderTop': '<div class="profile_tab S_line5 yawcf-config-header" node-type="yawcf-config-header"><ul class="pftb_ul S_line1">',
   'configHeaderItem': '<li class="pftb_itm S_line1"><a class="pftb_lk S_line5 S_txt1 S_bg5 {{I-class}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{I-name}}</a>',
   'configHeaderBottom': '</ul></div>',
+  'configLayerTop': '<div node-type="yawcf-config-body" class="yawcf-config-body">',
+  'configLayerItem': '<div class="{{I-name}} yawcf-config-layer" node-type="{{I-name}}" style="display: none;">',
+  'configLayerBottom': '</div>',
 };
 
 // 根据用户界面上的语言做不同调整
@@ -95,6 +94,7 @@ var config = (function () {
   };
 }());
 
+// 显示右上角过滤器图标
 var showIcon = function () {
   var p = document.querySelector('.WB_global_nav .gn_person');
   var d = document.createElement('div');
@@ -103,6 +103,7 @@ var showIcon = function () {
   return document.querySelector('.gn_filter');
 };
 
+// 显示一个对话框
 var Dialog = function (id, fillFun) {
   var dialog;
   var STK = unsafeWindow.STK;
@@ -114,22 +115,58 @@ var Dialog = function (id, fillFun) {
   return dialog;
 };
 
+// 延迟调用函数
+var call = function (f) {
+  setTimeout.apply(this, [f].concat([0]).concat(Array.apply(Array, arguments).slice(1)));
+};
+
 // 过滤器管理器
 var filters = (function () {
-  var list = [];
+  var list = [], preinit = true;
   var add = function (details) {
     list.push(details);
+    if (!preinit) details.init();
+    return details;
+  };
+  var init = function () {
+    list.forEach(function (x) { call(x.init); });
+    preinit = false;
   };
   var dialog = null;
   var showDialog = function (count) {
     if (!(dialog = Dialog('yawcf-config', function (inner) {
-      inner.innerHTML = html.configHeaderTop + list.map(function (filter, index) {
-        return fillStr(html.configHeaderItem, {
-          'I-name': text[filter.name + 'Title'],
-          'I-class': (index === 0 ? ' current' : '') +
-            (index === list.length - 1 ? ' pftb_itm_lst' : '')
-        });
-      }) + html.configHeaderBottom;
+      inner.innerHTML = [html.configHeaderTop,
+        list.map(function (filter, index) {
+          return fillStr(html.configHeaderItem, {
+            'I-name': text[filter.name + 'Title'],
+            'I-class': (index === 0 ? ' current' : '') +
+              (index === list.length - 1 ? ' pftb_itm_lst' : '')
+          });
+        }).join(''),
+        html.configHeaderBottom,
+        html.configLayerTop,
+        list.map(function (filter, index) {
+          return fillStr(html.configLayerItem, {
+            'I-name': text[filter.name + 'Layer'],
+          });
+        }).join(''),
+        html.configLayerBottom,
+      ].join('');
+      var alist = Array.apply(Array, inner.querySelectorAll('.yawcf-config-header a'));
+      var llist = Array.apply(Array, inner.querySelectorAll('.yawcf-config-body .yawcf-config-layer'))
+      var choseLList = function (i) {
+        llist.forEach(function (l) { l.style.display = 'none'; });
+        alist.forEach(function (a) { a.classList.remove('current'); });
+        llist[i].style.display = 'block';
+        alist[i].classList.add('current');
+      };
+      list.map(function (filter, i) {
+        var l = llist[i], a = alist[i];
+        a.addEventListener('click', function () { choseLList(i); });
+        a.addEventListener('keydown', function () { choseLList(i); });
+        filter.html(l);
+      });
+      choseLList(0);
     }))) {
       showDialog(count++);
       if (!count || count < 100)
@@ -139,32 +176,50 @@ var filters = (function () {
   };
   return {
     'add': add,
+    'init': init,
     'showDialog': showDialog,
   }
 }());
 
-var filterGroup = function (groupName) {
+var applyAll = function () {
+  var feeds = Array.apply(Array,
+    document.querySelectorAll('.WB_feed_type:not([yawcf-display])'));
+  feeds.forEach(function (feed) {
+    feed.setAttribute('yawcf-display', 'display');
+  });
+};
+
+var weiboFilter = function () {
+  applyAll();
+  var body = document.body;
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) { applyAll(); });
+  });
+  observer.observe(body, { childList: true });
+};
+
+// 微博过滤
+var weiboFilterGroup = filters.add({
+  'name': 'weiboFilterGroup',
+  'html': function (tab) {
+    tab.innerHTML = 'hello, world!';
+  },
+  'init': function () {
+    weiboFilter();
+  },
+});
+
+var basicFilterGroup = function (groupName) {
   var list = [], init = false;
   var group = {
     'name': groupName,
-    'init': function () {
-      init = true;
-      list.forEach(function (x) { x(); });
-    },
-    'add': function (filter) {
-      list.push(filter);
-      if (init) setTitle(filter, 0);
-    },
-    'html': function () {
-
-    },
+    'html': function () { }
   };
   filters.add(group);
   return group;
 };
 
-var weiboFilterGroup = filterGroup('weiboFilterGroup');
-var layoutFilterGroup = filterGroup('layoutFilterGroup');
+var layoutFilterGroup = basicFilterGroup('layoutFilterGroup');
 
 var validPage = function () {
   if (!unsafeWindow.$CONFIG.uid) return false;
@@ -182,6 +237,8 @@ var dcl = function () {
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
   // 显示设置按钮
   showIcon().addEventListener('click', function (e) { filters.showDialog(); e.preventDefault(); });
+  // 初始化所有过滤器
+  filters.init();
 };
 if (document.body) dcl();
 else document.addEventListener('DOMContentLoaded', dcl);
@@ -191,7 +248,9 @@ GM_addStyle(fillStr(funcStr(function () { /*!CSS
   .WB_global_nav .gn_search { width: 210px !important; }
   .WB_global_nav .gn_search .gn_input { width: 168px !important; }
   #yawcf-config [node-type="inner"] { padding: 20px; }
-  #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 0; width: 640px; }
+  #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 640px; }
+  [yawcf-display="hidden"] { display: none !important; }
+  .WB_feed_type:not([yawcf-display]) { display: none !important; }
 */ }), {
   'filter-img': images.filter,
 }));
