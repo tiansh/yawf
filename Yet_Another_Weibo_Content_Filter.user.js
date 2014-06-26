@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Yet Another Weibo Content Filter
 // @namespace   http://userscripts.org/users/ts
-// @description 新浪微博根据关键词、用户、来源、链接屏蔽微博，改造版面。 Filter Sina Weibo by keywords, user, source, links. Reform page layout.
+// @description 新浪微博根据关键词、帐号、来源、链接屏蔽微博，改造版面。 Filter Sina Weibo by keywords, account, sources, links. Reform page layout.
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
 // @version     0
@@ -30,9 +30,17 @@ var funcStr = function (f) {
 // http://www.microsoft.com/Language/zh-cn/Search.aspx
 var text = {
   'filter': { 'zh-cn': '过滤器', 'zh-hk': '篩選器', 'zh-tw': '篩選器', 'en': 'Filter' },
-  'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設置', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
-  'weiboFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博篩選', 'zh-tw': '微博篩選', 'en': 'Weibo' },
+  'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設定', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
+  'weiboFilterAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
+  'weiboFilterDelete': { 'zh-cn': '删除', 'zh-hk': '刪除', 'zh-tw': '刪除', 'en': 'Delete' },
+  'weiboFilterClear': { 'zh-cn': '删除', 'zh-hk': '刪除', 'zh-tw': '刪除', 'en': 'Delete' },
+  'keywordFilterGroupTitle': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
+  'keywordFilterBlacklist': { 'zh-cn': '隐藏包含以下关键词的微博', 'zh-hk': '隱藏包含以下關鍵字的微博', 'zh-tw': '隱藏包含以下關鍵字的微博', 'en': 'Hide Weibo with keywords' },
+  'accountFilterGroupTitle': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
+  'sourceFilterGroupTitle': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutFilterGroupTitle': { 'zh-cn': '页面布局', 'zh-hk': '頁面配置', 'zh-tw': '頁面配置', 'en': 'Layout' },
+  // 'weiboFilterRegex': { 'zh-cn': '正则表达式', 'zh-hk': '正規表達式', 'zh-tw': '正規表示式', 'en': 'Regex' },
+  'hyperlinkFilterGroup': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
 };
 
 // 页面常量
@@ -44,6 +52,7 @@ var html = {
   'configLayerTop': '<div node-type="yawcf-config-body" class="yawcf-config-body">',
   'configLayerItem': '<div class="{{I-name}} yawcf-config-layer" node-type="{{I-name}}" style="display: none;">',
   'configLayerBottom': '</div>',
+  'configSubtitle': '<div class="groupSubTitle">{{I-title}}</div>',
 };
 
 // 根据用户界面上的语言做不同调整
@@ -79,20 +88,24 @@ var fillStr = function (base) {
 };
 
 // 设置项
-var config = (function () {
+var config = function (uid) {
   var config = {};
-  var read = function () {
+  (function () {
     try { return config = JSON.prase(GM_getValue('config', '{}')); }
     catch (e) { return config = {}; }
+  }());
+  var write = function (key, value) {
+    config.key = value;
+    GM_setValue('user' + uid + '.config', config);
   };
-  var write = function () {
-    GM_setValue('config', config);
+  var read = function (key) {
+    return config[key] || null;
   };
   return {
     'write': write,
-    'raw': read(),
+    'read': read,
   };
-}());
+};
 
 // 显示右上角过滤器图标
 var showIcon = function () {
@@ -164,7 +177,7 @@ var filters = (function () {
         var l = llist[i], a = alist[i];
         a.addEventListener('click', function () { choseLList(i); });
         a.addEventListener('keydown', function () { choseLList(i); });
-        filter.html(l);
+        filter.show(l);
       });
       choseLList(0);
     }))) {
@@ -181,48 +194,88 @@ var filters = (function () {
   }
 }());
 
-var applyAll = function () {
+// 检查是否有新的节点
+var newNode = (function () {
+  var callbacks = [];
+  var callAll = function () {
+    callbacks.forEach(function (c) { try { c(); } catch (e) {} });
+  };
+  var observe = function () {
+    callAll();
+    (new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) { callAll(); });
+    })).observe(document.body, { childList: true });
+  };
+  if (document.body) observe();
+  else document.addEventListener('DOMContentLoaded', observe);
+  return function (callback) {
+    callbacks.push(callback);
+    return callback;
+  };
+}());
+
+var applyAll = newNode(function () {
   var feeds = Array.apply(Array,
     document.querySelectorAll('.WB_feed_type:not([yawcf-display])'));
   feeds.forEach(function (feed) {
     feed.setAttribute('yawcf-display', 'display');
   });
-};
-
-var weiboFilter = function () {
-  applyAll();
-  var body = document.body;
-  var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) { applyAll(); });
-  });
-  observer.observe(body, { childList: true });
-};
-
-// 微博过滤
-var weiboFilterGroup = filters.add({
-  'name': 'weiboFilterGroup',
-  'html': function (tab) {
-    tab.innerHTML = 'hello, world!';
-  },
-  'init': function () {
-    weiboFilter();
-  },
 });
 
-var basicFilterGroup = function (groupName) {
-  var list = [], init = false;
+var weiboFilter = function () {
+};
+
+
+var filterGroup = function (groupName) {
+  var items = [];
+  var htmls = [];
+  var show = function (inner) {
+    htmls.forEach(function (ml) { inner.appendChild(ml); });
+  };
+  var genHtml = {
+    'subtitle': function (item) {
+      var d = document.createElement('div');
+      d.innerHTML = fillStr(html.configSubtitle, {
+        'I-title': fillStr(item.title)
+      });
+      return d.firstChild;
+    },
+    'strings': function () {
+    },
+    'boolean': function () {
+    },
+  };
+  var add = function (item) { items.push(item); };
+  var init = function () {
+    items.forEach(function (item) {
+      if (item.init) item.init();
+      if (item.show) htmls.push(item.show());
+      htmls.push(genHtml[item.type](item));
+    });
+  };
   var group = {
     'name': groupName,
-    'html': function () { }
+    'show': show,
+    'init': init,
+    'add': add
   };
   filters.add(group);
   return group;
 };
 
-var layoutFilterGroup = basicFilterGroup('layoutFilterGroup');
+// 关键字过滤
+var keywordFilterGroup = filterGroup('keywordFilterGroup');
+keywordFilterGroup.add({
+  'type': 'subtitle',
+  'title': '{{keywordFilterBlacklist}}',
+})
 
+var layoutFilterGroup = filterGroup('layoutFilterGroup');
+
+// 检查是否要在本页上运行
 var validPage = function () {
   if (!unsafeWindow.$CONFIG.uid) return false;
+  if (!unsafeWindow.$CONFIG.lang) return false;
   if (!unsafeWindow.$CONFIG.any.indexOf('wvr=5') === -1) return false;
   return true;
 };
@@ -232,6 +285,8 @@ var dcl = function () {
   if (!validPage()) return;
   // 初始化用户语言
   i18n.setLang(unsafeWindow.$CONFIG.lang);
+  // 加载用户配置
+  config(unsafeWindow.$CONFIG.uid);
   // 初始化文本和网页数据（基于用户选择的语言）
   Object.keys(text).map(function (key) { i18n(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
@@ -240,7 +295,7 @@ var dcl = function () {
   // 初始化所有过滤器
   filters.init();
 };
-if (document.body) dcl();
+if (document.body) call(dcl);
 else document.addEventListener('DOMContentLoaded', dcl);
 
 GM_addStyle(fillStr(funcStr(function () { /*!CSS
@@ -251,6 +306,7 @@ GM_addStyle(fillStr(funcStr(function () { /*!CSS
   #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 640px; }
   [yawcf-display="hidden"] { display: none !important; }
   .WB_feed_type:not([yawcf-display]) { display: none !important; }
+  .groupSubTitle { font-weight: bold; background: #f2f2f2; padding: 6px 10px; }
 */ }), {
   'filter-img': images.filter,
 }));
