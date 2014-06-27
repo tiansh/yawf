@@ -1,3 +1,7 @@
 = yawcf =
 
-[施工中] Yet Another Weibo Content Filter
+'''[施工中] Yet Another Weibo Content Filter'''
+
+== 当前功能 ==
+
+* 根据关键字过滤微博
