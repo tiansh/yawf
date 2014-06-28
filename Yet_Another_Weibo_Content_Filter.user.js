@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词过滤微博。 Filter Sina Weibo by keywords.
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.0.1
+// @version     0.0.2
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -226,13 +226,13 @@ var filters = (function () {
 var newNode = (function () {
   var callbacks = [], actived = false;
   var callAll = function () {
-    callbacks.forEach(function (c) { try { c(); } catch (e) {} });
+    callbacks.forEach(function (c) { try { c(); } catch (e) { } }); 
   };
   var observe = function () {
     callAll();
     (new MutationObserver(function (mutations) {
       mutations.forEach(function (mutation) { callAll(); });
-    })).observe(document.body, { childList: true });
+    })).observe(document.body, { 'childList': true, 'subtree': true });
   };
   var add = function (callback) {
     callbacks.push(callback);
@@ -252,10 +252,52 @@ var newNode = (function () {
 // 逐条进行过滤
 var weiboFilter = newNode.add(function () {
   var feeds = Array.apply(Array,
-    document.querySelectorAll('.WB_feed_type:not([yawcf-display])'));
+    document.querySelectorAll('.WB_feed>.WB_feed_type:not([yawcf-display])'));
   feeds.forEach(function (feed) {
-    var action = rules.parse(feed) || 'show';
-    feed.setAttribute('yawcf-display', action === 'show' ? 'display' : 'hidden');
+    // 同源合并的微博
+    var sonFeeds = Array.apply(Array, feed.querySelectorAll('.WB_feed_type:not([yawcf-display])'));
+    var parentAction = null;
+    while (parentAction === null) {
+      var action = rules.parse(feed) || 'show';
+      // 如果父微博被屏蔽，那么就把下面一条没被屏蔽的拉上来换个位置
+      if (action === 'hidden' && sonFeeds.length) {
+        (function (p, s) {
+          var x = document.createElement('div');
+          ['.WB_face', '.WB_info', '.WB_text', '.WB_func'].map(function (q) {
+            (function (a, b) {
+              b.parentNode.replaceChild(x, b);
+              a.parentNode.replaceChild(b, a);
+              x.parentNode.replaceChild(a, x);
+            }(p.querySelector(q), s.querySelector(q)));
+          });
+          var mid = p.getAttribute('mid');
+          p.setAttribute('mid', s.getAttribute('mid'));
+          s.setAttribute('mid', mid);
+          s.setAttribute('yawcf-display', 'hidden');
+          // 各种细节的修补（原网站做的太乱了……）
+          var pf = p.querySelector('.WB_face'), sf = s.querySelector('.WB_face');
+          var pfa = pf.querySelector('a'), pfi = pf.querySelector('img');
+          var sfa = sf.querySelector('a'), sfi = sf.querySelector('img');
+          if (pfa.href.indexOf('?') === -1) pfa.href += '?from=feed&loc=avatar';
+          if (sfa.href.indexOf('?') !== -1) sfa.href = sfa.href.slice(0, sfa.href.indexOf('?'));
+          if (!pfa.title) pfa.title = pfi.title;
+          if (sfa.title) sfa.removeAttribute('title');
+          sfi.width = sfi.height = '30'; pfi.width = pfi.height = '50';
+        }(feed, sonFeeds.shift()));
+      } else parentAction = action;
+    }
+    feed.setAttribute('yawcf-display', parentAction);
+    // 最后处理所有下面的子微博
+    sonFeeds.forEach(function (feed) {
+      var action = rules.parse(feed) || 'show';
+      feed.setAttribute('yawcf-display', action);
+    });
+    // 如果有一个微博的子微博都隐藏了，那么就隐藏这个微博的子微博框
+    if (feed.querySelector('.WB_feed_together')) (function () {
+      var actLen = feed.querySelectorAll('.WB_feed_together .WB_sonFeed .WB_feed_type[yawcf-display="show"]').length;
+      if (actLen === 0) feed.querySelector('.WB_feed_together').setAttribute('yawcf-display', 'hidden');
+      else feed.querySelector('[node-type="followNum"]').textContent = actLen;
+    }());
   });
 });
 
@@ -277,19 +319,22 @@ var filterGroup = function (groupName) {
       return cewih('div', fillStr(html.configSubtitle, item)).firstChild;
     },
     'text': function (item) {
-      return cewih('div',  fillStr(tml.configText, item)).firstChild;
+      return cewih('div', fillStr(tml.configText, item)).firstChild;
     },
     'strings': function (item) {
       var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
       var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
       var shown = {};
+      var loadConfig = function () {
+        return item.conf = config.get(item.key, item.confdefault || [], Array);
+      };
       var showKeyword = function (kw) {
         if (shown[kw]) return null;
         var li = cewih('ul', fillStr(html.configStringsItem, { 'keyword': kw })).firstChild;
         var del = li.querySelector('a');
         del.addEventListener('click', function () {
           li.parentNode.removeChild(li);
-          config.put(item.key, item.conf = config.get(item.key, [], Array).filter(function (x) { return x !== kw; }));
+          config.put(item.key, item.conf = loadConfig().filter(function (x) { return x !== kw; }));
         });
         ul.appendChild(shown[kw] = li);
         return li;
@@ -297,16 +342,14 @@ var filterGroup = function (groupName) {
       var moveToEnd = function (x) {
         var p = x.parentNode; p.appendChild(p.removeChild(x));
       };
-      (item.conf = config.get(item.key, [], Array)).forEach(showKeyword);
+      loadConfig().forEach(showKeyword);
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         var value = input.value; input.value = '';
         if (!value) return;
         if (item.add) value = item.add(value);
         if (showKeyword(value)) {
-          item.conf = config.get(item.key, [], Array);
-          item.conf.push(value);
-          config.put(item.key, conf);
+          loadConfig(); item.conf.push(value); config.put(item.key, item.conf);
         }
       });
       return dom;
@@ -350,12 +393,9 @@ var keywordMatch = function (keywords, feed) {
   var reason = feed.querySelector('[node-type="feed_list_reason"] em');
   var texts = Array.apply(Array, content.childNodes);
   if (reason) texts = texts.concat(Array.apply(Array, reason.childNodes));
-  texts = texts.filter(function (node) { return node.nodeType === Node.TEXT_NODE; })
-  return texts.some(function (node) {
-    return keywords.some(function (keyword) {
-      return node.textContent.indexOf(keyword) !== -1;
-    });
-  });
+  texts = texts.filter(function (node) { return node.nodeType === Node.TEXT_NODE; });
+  texts = texts.map(function (node) { return node.textContent; }).join(' ');
+  return keywords.some(function (keyword) { return texts.indexOf(keyword) !== -1; });
 };
 
 keywordFilterGroup.add({
@@ -367,13 +407,14 @@ keywordFilterGroup.add({
   },
 });
 
+// '.WB_deltxt'; // http://t.cn/RvhKSGI // 无权限
+
 // var layoutFilterGroup = filterGroup('layoutFilterGroup');
 
 // 检查是否要在本页上运行
 var validPage = function () {
   if (!unsafeWindow.$CONFIG.uid) return false;
   if (!unsafeWindow.$CONFIG.lang) return false;
-  if (!unsafeWindow.$CONFIG.any.indexOf('wvr=5') === -1) return false;
   return true;
 };
 
@@ -397,20 +438,23 @@ var dcl = function () {
 if (document.body) call(dcl);
 else document.addEventListener('DOMContentLoaded', dcl);
 
-GM_addStyle(fillStr(funcStr(function () { /*!CSS
+GM_addStyle(fillStr((funcStr(function () { /*!CSS
+  // 在顶部添加按钮
   .WB_global_nav .gn_setting .gn_tab.gn_filter .ico { background-image: url("{{filter-img}}"); !important; background-position: 0 0 !important; }
   .WB_global_nav .gn_search { width: 210px !important; }
   .WB_global_nav .gn_search .gn_input { width: 168px !important; }
+  // 设置框相关样式
   #yawcf-config [node-type="inner"] { padding: 20px; }
   #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 640px; }
-  [yawcf-display="hidden"] { display: none !important; }
-  .WB_feed_type:not([yawcf-display]) { display: none !important; }
   .yawcf-groupSubtitle { font-weight: bold; padding: 6px 10px; }
   .yawcf-configStrings { margin: 5px 20px; }
   .yawcf-configStringsInput { margin: 5px; }
   .yawcf-configStringsItem a { margin-left: 3px; vertical-align: -2px; }
   .yawcf-configStringsItems { padding: 5px 10px; }
   .yawcf-configStringsItem { margin: 0 2px; }
-*/ }), {
+  // 隐藏微博
+  [yawcf-display="hidden"] { display: none !important; }
+  .WB_feed>.WB_feed_type:not([yawcf-display]), .WB_feed>.WB_feed_type .WB_feed_type:not([yawcf-display]) { visibility: hidden !important; }
+*/ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
