@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词过滤微博。 Filter Sina Weibo by keywords.
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.0.2
+// @version     0.0.3
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -25,7 +25,7 @@ var funcStr = function (f) {
 };
 
 // 文本常量
-// 所有翻译以简体中文为准，别的都是我瞎编的
+// 所有文本以简体中文为准，别的都是我瞎编的
 // http://zh.wikipedia.org/wiki/Template:CGroup/IT
 // http://www.microsoft.com/Language/zh-cn/Search.aspx
 var text = {
@@ -50,7 +50,6 @@ var text = {
   'sourceFilterBlacklist': { 'zh-cn': '隐藏以下来源的微博', 'zh-hk': '隱藏以下來源的微博', 'zh-tw': '隱藏以下來源的微博', 'en': 'Hide Weibo from these source' },
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能隐藏默认来源', 'zh-hk': '不能隱藏預設來源', 'zh-tw': '不能隱藏預設來源', 'en': 'You cannot hide default source' },
-  // 'weiboFilterRegex': { 'zh-cn': '正则表达式', 'zh-hk': '正規表達式', 'zh-tw': '正規表示式', 'en': 'Regex' },
   'hyperlinkFilterGroup': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
   'otherFilterGroupTitle': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   'adfeedFilterDesc': { 'zh-cn': '隐藏广告微博', 'zh-hk': '隱藏廣告微博', 'zh-tw': '隱藏廣告微博', 'en': 'Hide ad Weibo' },
@@ -58,6 +57,7 @@ var text = {
   'followSuggestFilterDesc': { 'zh-cn': '隐藏关注推荐微博', 'zh-hk': '隱藏關注建議微博', 'zh-tw': '隱藏關注建議微博', 'en': 'Hide Following Recommended Weibo' },
   'layoutFilterGroupTitle': { 'zh-cn': '页面布局', 'zh-hk': '頁面配置', 'zh-tw': '頁面配置', 'en': 'Layout' },
   'adBlockDesc': { 'zh-cn': '隐藏广告', 'zh-hk': '隱藏廣告', 'zh-tw': '隱藏廣告', 'en': 'Hide ad' },
+  'topRecomBlockDesc': { 'zh-cn': '中栏顶部推荐' /* TODO */},
 };
 
 // 页面常量
@@ -88,7 +88,14 @@ var rules = (function () {
   var parse = function (feed) {
     var result = null;
     try {
-      list.some(function (item) { return result = result || item.rule(feed); });
+      list.some(function (item) {
+        var current = item.rule(feed);
+        if (current) {
+          result = current;
+          console.log('%o(%o) -> %s', item.rule, feed, current);
+        }
+        return result;
+      });
     } catch (e) { debug(e); }
     return result;
   };
@@ -119,6 +126,7 @@ var i18n = (function () {
   return langs;
 }());
 
+// 将字符串用&#dd的形式转义
 var escapeXml = function (s) {
   return s.replace(/./g, function (c) { return '&#' + c.charCodeAt(0); });
 };
@@ -144,11 +152,13 @@ var fillStr = function (base) {
 var config = function (uid) {
   var config = {}, storageKey = 'user' + uid + 'config';
   var onputs = [];
+  // 写入到内存
   var put = function (key, value) {
     onputs.map(function (f) { f(key, value, config[key]); });
     config[key] = value;
     return value;
   };
+  // 从内存读取
   var get = function (key, value, type) {
     if (!(key in config)) return value;
     var val = config[key];
@@ -156,16 +166,20 @@ var config = function (uid) {
     if (type && (val === null || val.constructor !== type)) return value;
     return val;
   };
+  // 读取到内存
   var read = function () {
     try { config = JSON.parse(GM_getValue(storageKey, '{}')); }
     catch (e) { config = {}; }
   };
+  // 从内存写出
   var write = function () {
     GM_setValue(storageKey, JSON.stringify(config));
   };
+  // 当内存配置被修改时调用
   var onput = function (f) {
     onputs.push(f);
   };
+  // 初始化
   read();
   return {
     'put': put,
@@ -203,6 +217,30 @@ var call = function (f) {
   setTimeout.apply(this, [f].concat([0]).concat(Array.apply(Array, arguments).slice(1)));
 };
 
+// 套上try-catch
+var withTry = function (f) {
+  return function () {
+    try { f.apply(this, arguments); }
+    catch (e) {
+      console.warn('Exception while run %o: %o', f, e);
+    }
+  };
+};
+
+// 管理样式
+var css = (function () {
+  var styleText = '';
+  var fun = function (css) {
+    return function (conf) {
+      debug('conf: %o, css: %s', conf, css);
+      if (conf) styleText += css + '\n';
+    }
+  };
+  fun.init = function () { GM_addStyle(styleText); }
+  fun.add = function (css) { styleText += css + '\n'; }
+  return fun;
+}());
+
 // 过滤器管理器
 var filters = (function () {
   var list = [], preinit = true;
@@ -216,7 +254,49 @@ var filters = (function () {
     preinit = false;
   };
   var dialog = null;
-  var showDialog = function (count) {
+  var dialogButton = function (dialog, inner) {
+    var applyButton = inner.querySelector('[action-type="apply"]');
+    var saveButton = inner.querySelector('[action-type="save"]');
+    var cancelButton = inner.querySelector('[action-type="cancel"]');
+    config.onput(function () {
+      applyButton.className = 'W_btn_b';
+      saveButton.className = 'W_btn_a';
+    });
+    applyButton.addEventListener('click', function () {
+      if (applyButton.classList.contains('W_btn_b_disable')) return;
+      config.write();
+      applyButton.className = 'W_btn_b W_btn_b_disable';
+      saveButton.className = 'W_btn_a W_btn_a_disable';
+    });
+    saveButton.addEventListener('click', function () {
+      if (applyButton.classList.contains('W_btn_a_disable')) return;
+      config.write();
+      dialog.hide();
+    });
+    cancelButton.addEventListener('click', function () {
+      config.read();
+      dialog.hide();
+    });
+  };
+  var lastTab = 0;
+  var dialogTabs = function (list, inner, page) {
+    var alist = Array.apply(Array, inner.querySelectorAll('.yawcf-config-header a'));
+    var llist = Array.apply(Array, inner.querySelectorAll('.yawcf-config-body .yawcf-config-layer'))
+    var choseLList = function (i) {
+      llist.forEach(function (l) { l.style.display = 'none'; });
+      alist.forEach(function (a) { a.classList.remove('current'); a.classList.remove('S_bg5'); a.classList.add('S_bg1'); });
+      llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
+      alist[i].classList.add('current'); alist[i].classList.remove('S_bg1'); alist[i].classList.add('S_bg5');
+      lastTab = i;
+    };
+    list.map(function (filter, i) {
+      var l = llist[i], a = alist[i];
+      a.addEventListener('click', function () { choseLList(i); });
+      a.addEventListener('keydown', function () { choseLList(i); });
+    });
+    choseLList(page);
+  };
+  var showDialog = function (page, count) {
     var showDialogInner = function (inner) {
       inner.innerHTML = [html.configHeaderTop,
         list.map(function (filter, index) {
@@ -236,60 +316,19 @@ var filters = (function () {
         html.configLayerBottom,
         html.configFooter,
       ].join('');
-      var applyButton = inner.querySelector('[action-type="apply"]');
-      var saveButton = inner.querySelector('[action-type="save"]');
-      var cancelButton = inner.querySelector('[action-type="cancel"]');
-      var init = false;
-      config.onput(function () {
-        applyButton.className = 'W_btn_b';
-        saveButton.className = 'W_btn_a';
-      });
-      applyButton.addEventListener('click', function () {
-        if (applyButton.classList.contains('W_btn_b_disable')) return;
-        config.write();
-        applyButton.className = 'W_btn_b W_btn_b_disable';
-        saveButton.className = 'W_btn_a W_btn_a_disable';
-      });
-      var done = function () { location.reload(true); };
-      saveButton.addEventListener('click', function () {
-        if (applyButton.classList.contains('W_btn_a_disable')) return;
-        config.write();
-        done();
-      });
-      cancelButton.addEventListener('click', done);
-      call(function () { dialog.getClose().addEventListener('click', done); });
-      var alist = Array.apply(Array, inner.querySelectorAll('.yawcf-config-header a'));
-      var llist = Array.apply(Array, inner.querySelectorAll('.yawcf-config-body .yawcf-config-layer'))
-      var choseLList = function (i) {
-        llist.forEach(function (l) { l.style.display = 'none'; });
-        alist.forEach(function (a) {
-          a.classList.remove('current');
-          a.classList.remove('S_bg5');
-          a.classList.add('S_bg1');
-        });
-        llist[i].style.display = 'block';
-        alist[i].classList.add('current');
-        alist[i].classList.remove('S_bg1');
-        alist[i].classList.add('S_bg5');
-      };
-      list.map(function (filter, i) {
-        var l = llist[i], a = alist[i];
-        a.addEventListener('click', function () { choseLList(i); });
-        a.addEventListener('keydown', function () { choseLList(i); });
-        filter.show(l);
-      });
       call(function () {
-        choseLList(0);
+        dialogButton(dialog, inner);
         dialog.show().setPosition({
           't': unsafeWindow.STK.core.util.scrollPos().top + 50,
           'l': (unsafeWindow.STK.core.util.winSize().width - dialog.getSize().w) >> 1,
         });
       });
+      if (list.indexOf(page) === -1) dialogTabs(list, inner, lastTab);
+      else dialogTabs(list, inner, list.indexOf(page));
     };
     if (!(dialog = Dialog('yawcf-config', showDialogInner))) {
-      showDialog(count++);
       if (!count || count < 100)
-        setTimeout(showDialog, 100, (count || 0) + 1);
+        setTimeout(showDialog, 100, page, (count || 0) + 1);
       else debug('STK not loaded');
     }
   };
@@ -317,7 +356,6 @@ var newNode = (function () {
     return callback;
   };
   var active = function () {
-    debug('active');
     if (actived) return;
     actived = true;
     observe();
@@ -390,113 +428,150 @@ var newBarRedraw = newNode.add(function () {
 });
 */
 
-// 过滤器组
-var filterGroup = function (groupName) {
-  var items = [];
-  var htmls = [];
-  var show = function (inner) {
-    htmls.forEach(function (ml) { inner.appendChild(ml); });
+var typedConfig = (function () {
+  // 字符串
+  var strings = function (item) {
+    if (!item.getconf) item.getconf = function () {
+      return item.conf = config.get(item.key, item['default'] || [], Array);
+    };
+    if (!item.setconf) item.setconf = function (conf) {
+      return config.put(item.key, item.conf = conf);
+    };
   };
+  // 布尔值
+  var boolean = function (item) {
+    if (!item.getconf) item.getconf = function () {
+      return item.conf = config.get(item.key, item['default'] || false, Boolean);
+    };
+    if (!item.setconf) item.setconf = function (conf) {
+      return config.put(item.key, item.conf = conf);
+    };
+  }
+  return {
+    'strings': strings,
+    'boolean': boolean,
+  }
+}());
+
+// 根据不同类型生成带有事件的文档节点
+var typedHtml = (function () {
   var cewih = function (tag, inner) {
     var d = document.createElement(tag);
     d.innerHTML = inner;
     return d;
   };
-  var genHtml = {
-    'noui': function () { return null; },
-    'subtitle': function (item) {
-      return cewih('div', fillStr(html.configSubtitle, item)).firstChild;
-    },
-    'text': function (item) {
-      return cewih('div', fillStr(tml.configText, item)).firstChild;
-    },
-    'html': function (item) {
-      return cewih('div', fillStr(item.html)).firstChild;
-    },
-    'strings': function (item) {
-      var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
-      var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
-      var shown = {};
-      var loadConfig = function () {
-        return item.conf = config.get(item.key, item['default'] || [], Array);
-      };
-      var setConfig = function (conf) {
-        return config.put(item.key, item.conf = conf);
-      };
-      var showStrings = function (str) {
-        if (shown[str]) return null;
-        var li = cewih('ul', fillStr(html.configStringsItem, { 'item': str })).firstChild;
-        var del = li.querySelector('a');
-        del.addEventListener('click', function () {
-          delete shown[str];
-          if (item.del) item.del(str);
-          li.parentNode.removeChild(li);
-          setConfig(loadConfig().filter(function (x) { return x !== str; }));
-        });
-        ul.appendChild(shown[str] = li);
-        return li;
-      };
-      var moveToEnd = function (x) {
-        var p = x.parentNode; p.appendChild(p.removeChild(x));
-      };
-      loadConfig().forEach(showStrings);
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var value = input.value; input.value = '';
-        if (!value) return;
-        if (item.add) value = item.add(value);
-        if (value === null) return;
-        if (showStrings(value)) {
-          loadConfig(); item.conf.push(value); setConfig(item.conf);
-        }
-      });
-      return dom;
-    },
-    'boolean': function (item) {
-      var dom = cewih('div', fillStr(html.configBoolean, item)).firstChild;
-      var input = dom.querySelector('input');
-      var loadConfig = function () {
-        return item.conf = config.get(item.key, item['default'] || false, Boolean);
-      };
-      var setConfig = function (conf) {
-        return config.put(item.key, item.conf = conf);
-      };
-      input.checked = loadConfig();
-      input.addEventListener('change', function () {
-        setConfig(input.checked);
-      });
-      debug(item.key);
-      return dom;
-    },
-    'users': function (item) {
-      var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
-      return dom;
-    },
+  // 没有界面的项目
+  var noui = function () { return null; };
+  // 副标题
+  var subtitle = function (item) {
+    return cewih('div', fillStr(html.configSubtitle, item)).firstChild;
   };
-  var add = function (item) { items.push(item); };
-  var init = function () {
-    items.forEach(function (item) {
-      try {
-        if (item.init) item.init();
-        debug('item.type: %s', item.type);
-        var dom = null;
-        if (item.type && genHtml[item.type]) dom = genHtml[item.type](item);
-        if (item.show) dom = item.show(dom);
-        if (dom) htmls.push(dom);
-        if (item.rule)
-          rules.add(item.priority || 0, function (feed) { return item.rule(item.conf, feed); });
-        if (item.type === 'boolean' && item.css) GM_addStyle(fillStr(funcStr(item.css)));
-      } catch (e) { debug(e); }
+  // 文本
+  var text = function (item) {
+    return cewih('div', fillStr(tml.configText, item)).firstChild;
+  };
+  // 直接被嵌入的HTML
+  var _html = function (item) {
+    if (item.constructor === String) return cewih('div', fillStr(item.html)).firstChild;
+    else if (item instanceof Node) return item.hmtl;
+    else return null;
+  };
+  // 字符串数组的设置项
+  var strings = function (item) {
+    var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
+    var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
+    var shown = {};
+    // 显示一个新的字符串
+    var showStrings = function (str) {
+      if (shown[str]) return null;
+      var li = cewih('ul', fillStr(html.configStringsItem, { 'item': str })).firstChild;
+      var del = li.querySelector('a');
+      del.addEventListener('click', function () {
+        delete shown[str];
+        if (item.del) item.del(str);
+        li.parentNode.removeChild(li);
+        item.setconf(item.getconf().filter(function (x) { return x !== str; }));
+      });
+      ul.appendChild(shown[str] = li);
+      return li;
+    };
+    // 将某个已经有的字符串显示到末尾
+    var moveToEnd = function (x) {
+      var p = x.parentNode; p.appendChild(p.removeChild(x));
+    };
+    item.getconf().forEach(showStrings);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var value = input.value; input.value = '';
+      if (!value) return;
+      if (item.add) value = item.add(value);
+      if (value === null) return;
+      if (showStrings(value)) {
+        item.getconf();
+        item.conf.push(value);
+        item.setconf(item.conf);
+      }
     });
+    return dom;
   };
+  // 真假值的设置项
+  var boolean = function (item) {
+    var dom = cewih('div', fillStr(html.configBoolean, item)).firstChild;
+    var input = dom.querySelector('input');
+    input.checked = item.getconf();
+    input.addEventListener('change', function () {
+      item.setconf(input.checked);
+    });
+    return dom;
+  };
+  // 用户列表的设置项
+  var users = function (item) {
+    var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
+    return dom;
+  };
+  return {
+    'noui': noui,
+    'subtitle': subtitle,
+    'text': text,
+    'html': _html,
+    'strings': strings,
+    'boolean': boolean,
+    'users': users,
+  };
+}());
+
+// 过滤器组
+var filterGroup = function (groupName) {
+  var items = [];
+  // 向过滤器组里面添加一个项目
+  var add = function (item) { items.push(item); };
+  // 网页被初始化时初始化所有过滤器
+  var init = function () {
+    items.forEach(withTry(function (item) {
+      if (item.type && typedConfig[item.type]) typedConfig[item.type](item);
+      if (item.getconf) item.getconf();
+      if (item.init) item.init(item.conf);
+      if (item.rule) rules.add(item.priority || 0, item.rule.bind(item));
+    }));
+  };
+  // 需要显示选项时生成界面
+  var show = function (inner) {
+    items.forEach(withTry(function (item) {
+      var dom = null;
+      if (item.show) dom = item.show(dom);
+      else if (item.type && typedHtml[item.type])
+        dom = typedHtml[item.type](item);
+      if (dom) inner.appendChild(dom);
+    }));
+  };
+  // 注册到过滤器分组
   var group = {
     'name': groupName,
     'show': show,
     'init': init,
     'add': add
   };
-  filters.add(group);
-  return group;
+  return filters.add(group);
 };
 
 // 关键字过滤
@@ -510,7 +585,8 @@ keywordFilterGroup.add({
 var keywordMatch = function (keywords, feed) {
   var content = feed.querySelector('[node-type="feed_list_content"]');
   var reason = feed.querySelector('[node-type="feed_list_reason"] em');
-  var texts = Array.apply(Array, content.childNodes);
+  var texts = [];
+  if (content) texts = texts.concat(Array.apply(Array, content.childNodes));
   if (reason) texts = texts.concat(Array.apply(Array, reason.childNodes));
   texts = texts.filter(function (node) { return node.nodeType === Node.TEXT_NODE; });
   texts = texts.map(function (node) { return node.textContent; }).join(' ');
@@ -523,13 +599,14 @@ keywordFilterGroup.add({
   'key': 'weibo.blacklist',
   'text': '{{keywordFilterDesc}}',
   'add': function (s) { return s.trim(); },
-  'rule': function (setting, feed) {
-    return keywordMatch(setting, feed) ? 'hidden' : null;
+  'rule': function keywordFilterBlacklistRule(feed) {
+    return keywordMatch(this.conf, feed) ? 'hidden' : null;
   },
 });
 
-// 屏蔽话题
+// 话题过滤
 var topicFilterGroup = filterGroup('topicFilterGroup');
+
 topicFilterGroup.add({
   'type': 'subtitle',
   'text': '{{topicFilterBlacklist}}',
@@ -541,6 +618,7 @@ var topicMatch = function (topics, feed) {
   return topics.some(function (topic) { return text.indexOf(topic) !== -1; });
 }
 
+// 屏蔽话题
 topicFilterGroup.add({
   'type': 'strings',
   'key': 'weibo.topics',
@@ -548,18 +626,20 @@ topicFilterGroup.add({
   'add': function (s) {
     return s.trim().replace(/#/g, '');
   },
-  'rule': function (setting, feed) {
-    return topicMatch(setting, feed) ? 'hidden' : null;
+  'rule': function topicFilterBlacklistRule(feed) {
+    return topicMatch(this.conf, feed) ? 'hidden' : null;
   },
 });
 
-// 屏蔽来源
+// 来源过滤
 var sourceFilterGroup = filterGroup('sourceFilterGroup');
+
 sourceFilterGroup.add({
   'type': 'subtitle',
   'text': '{{sourceFilterBlacklist}}',
 });
 
+// 屏蔽来源
 var sourceMatch = function (sources, feed) {
   var st = feed.querySelector('[node-type="feed_list_funcLink"] [action-type="app_source"]');
   if (!st || !st.textContent) return false;
@@ -582,8 +662,8 @@ sourceFilterGroup.add({
     }
     return s;
   },
-  'rule': function (setting, feed) {
-    return sourceMatch(setting, feed) ? 'hidden' : null;
+  'rule': function sourceFilterBlacklistRule(feed) {
+    return sourceMatch(this.conf, feed) ? 'hidden' : null;
   },
 });
 
@@ -595,8 +675,8 @@ otherFilterGroup.add({
   'key': 'weibo.ad_feed',
   'default': true,
   'text': '{{adfeedFilterDesc}}',
-  'rule': function (setting, feed) {
-    if (!setting) return null;
+  'rule': function adFeedFilterRule(feed) {
+    if (!this.conf) return null;
     return feed.getAttribute('feedtype') === 'ad' ? 'hidden' : null;
   },
 });
@@ -607,9 +687,7 @@ otherFilterGroup.add({
   'key': 'weibo.adblock',
   'default': true,
   'text': '{{recommandFeedDesc}}',
-  'css': function () { /*!CSS
-    [node-type="feed_list_recommend"] { display: none !important; }
-  */ },
+  'init': css('[node-type="feed_list_recommend"] { display: none !important; }'),
 });
 
 // 关注推荐微博
@@ -618,8 +696,8 @@ otherFilterGroup.add({
   'key': 'weibo.follow_suggest',
   'default': true,
   'text': '{{followSuggestFilterDesc}}',
-  'rule': function (setting, feed) {
-    if (!setting) return null;
+  'rule': function followSuggestFilterRule(feed) {
+    if (!this.conf) return null;
     return feed.querySelector('a[href$="/find/i"]') ? 'hidden' : null;
   },
 });
@@ -632,10 +710,19 @@ layoutFilterGroup.add({
   'key': 'weibo.adblock',
   'default': true,
   'text': '{{adBlockDesc}}',
-  'css': function () { /*!CSS
+  'init': css(funcStr(function (conf) { /*!CSS
     #wrapAD { visibility: hidden !important; }
     [id^="sinaadToolkitBox"] { display: none !important; }
-  */ },
+  */ })),
+});
+
+// 中栏顶部推荐
+layoutFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.toprecom',
+  'default': false,
+  'text': '{{topRecomBlockDesc}}',
+  'init': css('#pl_content_toprecom { display: none !important; }'),
 });
 
 // '.WB_deltxt'; // http://t.cn/RvhKSGI // 无权限
@@ -651,7 +738,6 @@ var validPage = function () {
 
 // 完成加载时
 var dcl = function () {
-  debug('load');
   if (!validPage()) return;
   // 初始化用户语言
   i18n.setLang(unsafeWindow.$CONFIG.lang);
@@ -664,6 +750,8 @@ var dcl = function () {
   showIcon().addEventListener('click', function (e) { filters.showDialog(); e.preventDefault(); });
   // 初始化所有过滤器
   filters.init();
+  // 注册样式
+  css.init();
   // 开始过滤
   newNode.active();
 };
@@ -678,6 +766,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .WB_global_nav .gn_search .gn_input { width: 168px !important; }
   // 设置框相关样式
   #yawcf-config [node-type="inner"] { padding: 20px; }
+  .yawcf-config-body { width: 600px; }
   #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 640px; }
   .yawcf-groupSubtitle { font-weight: bold; padding: 6px 10px; }
   .yawcf-configStrings, .yawcf-configBoolean { margin: 2px 20px; }
