@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name        Yet Another Weibo Content Filter
 // @namespace   http://userscripts.org/users/ts
-// @description 新浪微博根据关键词过滤微博。 Filter Sina Weibo by keywords.
+// @description 新浪微博根据关键词、作者、话题、来源过滤微博；改造版面。 filter Sina Weibo by keywords, original, topic, and source; reforme layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.0.3
+// @version     0.0.4
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -35,13 +35,19 @@ var text = {
   'configSaveButton': { 'zh-cn': '保存', 'zh-hk': '儲存', 'zh-tw': '儲存', 'en': 'Save' },
   'configCancelButton': { 'zh-cn': '取消', 'zh-hk': '取消', 'zh-tw': '取消', 'en': 'Cancel' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
+  'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'weiboFilterDelete': { 'zh-cn': '删除', 'zh-hk': '刪除', 'zh-tw': '刪除', 'en': 'Delete' },
   'weiboFilterClear': { 'zh-cn': '删除', 'zh-hk': '刪除', 'zh-tw': '刪除', 'en': 'Delete' },
   'keywordFilterGroupTitle': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterBlacklist': { 'zh-cn': '隐藏包含以下关键词的微博', 'zh-hk': '隱藏包含以下關鍵字的微博', 'zh-tw': '隱藏包含以下關鍵字的微博', 'en': 'Hide Weibo with these keywords' },
   'accountFilterGroupTitle': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
-  'accountFilterDesc': { 'zh-cn': '隐藏来自以下帐号的微博', 'zh-hk': '隱藏來自以下帳號的微博', 'zh-tw': '隱藏來自以下帳號的微博', 'en': 'Hide Weibo from these accounts' },
+  'accountNotExistErrorTitle': { 'zh-cn': '帐号不存在', 'zh-hk': '帳號不存在', 'zh-tw': '帳號不存在', 'en': 'Account does not exist' },
+  'accountNotExistError': { 'zh-cn': '不存在名为{{name}}的账号', 'zh-hk': '不存在名為{{name}}的賬號', 'zh-tw': '不存在名為{{name}}的賬號', 'en': 'Account named {{name}} does not exist' },
+  'accountFilterBlacklist': { 'zh-cn': '隐藏来自以下帐号的微博', 'zh-hk': '隱藏來自以下帳號的微博', 'zh-tw': '隱藏來自以下帳號的微博', 'en': 'Hide Weibo from these accounts' },
+  'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
+  'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
+  'originalFilterBlacklist': { 'zh-cn': '隐藏转发自以下账号的微博', 'zh-hk': '隱藏轉發自以下帳號的微博', 'zh-tw': '隱藏轉發自以下帳號的微博', 'en': 'Hide Weibo forwarded from these accounts' },
   'topicFilterGroupTitle': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDesc': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterBlacklist': { 'zh-cn': '隐藏包含以下话题的微博', 'zh-hk': '隱藏包含以下話題的微博', 'zh-tw': '隱藏包含以下話題的微博', 'en': 'Hide Weibo with these topics' },
@@ -57,7 +63,8 @@ var text = {
   'followSuggestFilterDesc': { 'zh-cn': '隐藏关注推荐微博', 'zh-hk': '隱藏關注建議微博', 'zh-tw': '隱藏關注建議微博', 'en': 'Hide Following Recommended Weibo' },
   'layoutFilterGroupTitle': { 'zh-cn': '页面布局', 'zh-hk': '頁面配置', 'zh-tw': '頁面配置', 'en': 'Layout' },
   'adBlockDesc': { 'zh-cn': '隐藏广告', 'zh-hk': '隱藏廣告', 'zh-tw': '隱藏廣告', 'en': 'Hide ad' },
-  'topRecomBlockDesc': { 'zh-cn': '中栏顶部推荐' /* TODO */},
+  'topRecomBlockDesc': { 'zh-cn': '隐藏中栏顶部推荐', 'zh-hk': '隱藏中欄頂端建議', 'zh-tw': '隱藏中欄頂端建議', 'en': 'Hide recommand at top of middle column' },
+  'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '指令碼', 'zh-tw': '指令碼', 'en': 'Script' },
 };
 
 // 页面常量
@@ -69,13 +76,18 @@ var html = {
   'configLayerTop': '<div node-type="yawcf-config-body" class="yawcf-config-body">',
   'configLayerItem': '<div class="{{name}} yawcf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
-  'configFooter': '<div class="btn clearfix" node-type="yawcf-config-footer"><a node-type="apply" class="W_btn_b W_btn_b_disable" action-type="apply" href="javascript:;" style=""><span class="btn_30px W_f14">{{configApplyButton}}</span></a><a node-type="save" class="W_btn_a W_btn_a_disable" action-type="save" href="javascript:;" style=""><span class="btn_30px W_f14">{{configSaveButton}}</span></a><a node-type="canncel" class="W_btn_b" action-type="cancel" href="javascript:;" style=""><span class="btn_30px W_f14">{{configCancelButton}}</span></a></div>',
+  'configFooter': '<div class="btn clearfix" node-type="yawcf-config-footer"><a node-type="apply" class="W_btn_b W_btn_b_disable" action-type="apply" href="javascript:;" style=""><span class="btn_30px W_f14">{{configApplyButton}}</span></a><a node-type="save" class="W_btn_a" action-type="save" href="javascript:;" style=""><span class="btn_30px W_f14">{{configSaveButton}}</span></a><a node-type="canncel" class="W_btn_b" action-type="cancel" href="javascript:;" style=""><span class="btn_30px W_f14">{{configCancelButton}}</span></a></div>',
   'configSubtitle': '<div class="yawcf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawcf-groupText">{{{text}}}</div>',
   'configStrings': '<div class="yawcf-configStrings"><form action="#"><label><span class="yawcf-configDesc yawcf-configStringsDesc">{{{text}}}</span><input id="yawcf-{{key}}" class="W_input yawcf-configStringsInput" type="text" name="yawcf-{{key}}"></label><button id="yawcf-add-{{key}}" class="W_btn_a yawcf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawcf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_arrow tag yawcf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
   'configBoolean': '<div class="yawcf-configBoolean"><label><input id="yawcf-{{key}}" class="W_checkbox yawcf-configStringsInput" type="checkbox" name="yawcf-{{key}}"><span class="yawcf-configDesc yawcf-configStringsDesc">{{{text}}}</span></label></div>',
-  'configUsers': '<div class="yawcf-configUsers"><form action="#"><label><span class="yawcf-configDesc yawcf-configStringsDesc">{{{text}}}</span><div class="W_input W_input_default fake_input" node-type="keycontainer"><input class="flow_input S_txt2 " type="text" action-type="text_copy" node-type="input" extra="except={{uid}}"></label><button id="yawcf-add-{{key}}" class="W_btn_a yawcf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawcf-configStringsItems"></ul></div>',
+  'configUsers': '<div class="yawcf-configUsers"><form action="#"><label><span class="yawcf-configDesc yawcf-configUsersDesc">{{{text}}}</span><input id="yawcf-{{key}}" class="W_input yawcf-configUsersInput" type="text" name="yawcf-{{key}}"></label><button id="yawcf-add-{{key}}" class="W_btn_a yawcf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawcf-configUsersItems"></ul></div>',
+  'configUsersItem': '<li class="yawcf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
+};
+
+var url = {
+  'newcard': 'http://weibo.com/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
 };
 
 // 微博过滤规则
@@ -141,7 +153,7 @@ var fillStr = function (base) {
       return ret !== null;
     });
     if (ret) {
-      if (i[0] === '{') return fillStr(ret);
+      if (i[0] === '{') return fillStr.bind(this, ret).apply(null, datas);
       if (i[0] === '[') return escapeXml(ret);
     }
     return ret || o;
@@ -187,6 +199,7 @@ var config = function (uid) {
     'read': read,
     'write': write,
     'onput': onput,
+    'uid': uid,
   };
 };
 
@@ -195,10 +208,15 @@ var debug = console.log.bind(console);
 // 显示右上角过滤器图标
 var showIcon = function () {
   var p = document.querySelector('.WB_global_nav .gn_person');
+  if (!p) return setTimeout(showIcon, 100);
   var d = document.createElement('div');
   d.innerHTML = html.icon;
   p.appendChild(d.firstChild);
-  return document.querySelector('.gn_filter');
+  var f = document.querySelector('.gn_filter');
+  f.addEventListener('click', function (e) {
+    filters.showDialog();
+    e.preventDefault();
+  });
 };
 
 // 显示一个对话框
@@ -214,15 +232,16 @@ var Dialog = function (id, fillFun) {
 
 // 延迟调用函数
 var call = function (f) {
-  setTimeout.apply(this, [f].concat([0]).concat(Array.apply(Array, arguments).slice(1)));
+  setTimeout.bind(this, f, 0).apply(null, Array.apply(Array, arguments).slice(1));
 };
 
 // 套上try-catch
-var withTry = function (f) {
+var withTry = function (f, fc) {
   return function () {
     try { f.apply(this, arguments); }
     catch (e) {
-      console.warn('Exception while run %o: %o', f, e);
+      console.warn('Exception while run %o: %o (%o)', f, e, e.stack);
+      if (fc) fc(e);
     }
   };
 };
@@ -231,14 +250,51 @@ var withTry = function (f) {
 var css = (function () {
   var styleText = '';
   var fun = function (css) {
-    return function (conf) {
-      debug('conf: %o, css: %s', conf, css);
-      if (conf) styleText += css + '\n';
-    }
+    return function (conf) { if (conf) styleText += css + '\n'; }
   };
   fun.init = function () { GM_addStyle(styleText); }
   fun.add = function (css) { styleText += css + '\n'; }
   return fun;
+}());
+
+// 产生一个假的回调函数
+var fakeCallback = (function () {
+  var last = 0;
+  return function () {
+    return 'STK_' + (last = Math.max(last + 1, Number(new Date())));
+  };
+}());
+
+// 维护账号信息，用于显示
+var account = (function () {
+  var idCache = {}, nameCache = {};
+  var request = function (queryStr, onsucc, onerror) {
+    GM_xmlhttpRequest({
+      'method': 'GET',
+      'url': fillStr(url.newcard, { 'query': queryStr, 'callback': fakeCallback() }),
+      'onload': withTry(function (resp) {
+        var respJson = JSON.parse(resp.responseText.replace(/^try{[^{]*\(/, '').replace(/\)}catch\(e\){};$/, ''));
+        var namecard = document.createElement('div'); namecard.innerHTML = respJson.data;
+        var avatar = namecard.querySelector('.name dt img').getAttribute('src');
+        var name = namecard.querySelector('.name dd a[uid]').getAttribute('title');
+        var uid = namecard.querySelector('.name dd a[uid]').getAttribute('uid');
+        var data = { 'avatar': avatar, 'id': uid, 'name': name };
+        nameCache[name] = idCache[uid] = data;
+        onsucc(data);
+      }, onerror),
+      'onerror': function () { onerror(); },
+    });
+    return queryStr
+  };
+  var byId = function (id, onsucc, onerror) {
+    if (idCache[id]) onsucc(idCache[id]);
+    else request('id=' + id, onsucc, onerror);
+  };
+  var byName = function (name, onsucc, onerror) {
+    if (nameCache[name]) onsucc(nameCache[name]);
+    else request('name=' + name, onsucc, onerror);
+  };
+  return { 'id': byId, 'name': byName };
 }());
 
 // 过滤器管理器
@@ -260,16 +316,13 @@ var filters = (function () {
     var cancelButton = inner.querySelector('[action-type="cancel"]');
     config.onput(function () {
       applyButton.className = 'W_btn_b';
-      saveButton.className = 'W_btn_a';
     });
     applyButton.addEventListener('click', function () {
       if (applyButton.classList.contains('W_btn_b_disable')) return;
       config.write();
       applyButton.className = 'W_btn_b W_btn_b_disable';
-      saveButton.className = 'W_btn_a W_btn_a_disable';
     });
     saveButton.addEventListener('click', function () {
-      if (applyButton.classList.contains('W_btn_a_disable')) return;
       config.write();
       dialog.hide();
     });
@@ -450,6 +503,7 @@ var typedConfig = (function () {
   return {
     'strings': strings,
     'boolean': boolean,
+    'users': strings,
   }
 }());
 
@@ -460,60 +514,24 @@ var typedHtml = (function () {
     d.innerHTML = inner;
     return d;
   };
-  // 没有界面的项目
-  var noui = function () { return null; };
+
   // 副标题
   var subtitle = function (item) {
     return cewih('div', fillStr(html.configSubtitle, item)).firstChild;
   };
+
   // 文本
   var text = function (item) {
     return cewih('div', fillStr(tml.configText, item)).firstChild;
   };
+
   // 直接被嵌入的HTML
   var _html = function (item) {
     if (item.constructor === String) return cewih('div', fillStr(item.html)).firstChild;
     else if (item instanceof Node) return item.hmtl;
     else return null;
   };
-  // 字符串数组的设置项
-  var strings = function (item) {
-    var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
-    var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
-    var shown = {};
-    // 显示一个新的字符串
-    var showStrings = function (str) {
-      if (shown[str]) return null;
-      var li = cewih('ul', fillStr(html.configStringsItem, { 'item': str })).firstChild;
-      var del = li.querySelector('a');
-      del.addEventListener('click', function () {
-        delete shown[str];
-        if (item.del) item.del(str);
-        li.parentNode.removeChild(li);
-        item.setconf(item.getconf().filter(function (x) { return x !== str; }));
-      });
-      ul.appendChild(shown[str] = li);
-      return li;
-    };
-    // 将某个已经有的字符串显示到末尾
-    var moveToEnd = function (x) {
-      var p = x.parentNode; p.appendChild(p.removeChild(x));
-    };
-    item.getconf().forEach(showStrings);
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var value = input.value; input.value = '';
-      if (!value) return;
-      if (item.add) value = item.add(value);
-      if (value === null) return;
-      if (showStrings(value)) {
-        item.getconf();
-        item.conf.push(value);
-        item.setconf(item.conf);
-      }
-    });
-    return dom;
-  };
+
   // 真假值的设置项
   var boolean = function (item) {
     var dom = cewih('div', fillStr(html.configBoolean, item)).firstChild;
@@ -524,13 +542,90 @@ var typedHtml = (function () {
     });
     return dom;
   };
-  // 用户列表的设置项
-  var users = function (item) {
-    var dom = cewih('div', fillStr(html.configStrings, item)).firstChild;
+
+  // 字符串数组设置项模板
+  var items = function (base, genli, item) {
+    var dom = cewih('div', fillStr(base, item)).firstChild;
+    var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
+    var shown = {};
+    // 将某个已经有的字符串显示到末尾
+    var moveToEnd = function (x) {
+      var p = x.parentNode; p.appendChild(p.removeChild(x));
+    };
+    // 显示一个新的字符串
+    var showStrings = function (userinput, str, onsucc, ondone) {
+      genli(item, userinput, str, function (str, li) {
+        if (ondone) ondone();
+        console.log('str: %o', str);
+        if (!str || !li) return;
+        if (shown[str]) return moveToEnd(shown[str]);
+        var del = li.querySelector('a.icon_close');
+        del.addEventListener('click', function () {
+          delete shown[str];
+          if (item.del) item.del(str);
+          li.parentNode.removeChild(li);
+          item.setconf(item.getconf().filter(function (x) { return x !== str; }));
+        });
+        ul.appendChild(shown[str] = li);
+        if (onsucc) onsucc(str);
+      });
+    };
+    item.getconf().forEach(function (str) { showStrings(false, str); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var str = input.value;
+      input.disabled = true;
+      if (!str) return;
+      showStrings(true, str, function (str) {
+        item.getconf();
+        item.conf.push(str);
+        item.setconf(item.conf);
+      }, function () {
+        input.value = '';
+        input.disabled = false;
+      });
+    });
     return dom;
   };
+
+  // 字符串设置项
+  var strings = items.bind(null, html.configStrings, function (item, userinput, str, callback) {
+    if (userinput && item.add && !(str = item.add(str))) callback();
+    else callback(str, cewih('ul', fillStr(html.configStringsItem, { 'item': item.display ? item.display(str) : str })).firstChild);
+  });
+
+  // 用户列表的设置项
+  var users = items.bind(null, html.configUsers, function (item, userinput, str, callback) {
+    var showUserNotExistError = function () {
+      var msg = fillStr('{{{accountNotExistError}}}', { 'name': escapeXml(str) });
+      unsafeWindow.STK.ui.alert(msg, {
+        'title': fillStr('{{accountNotExistErrorTitle}}'),
+        'icon': 'error',
+        'msg': msg,
+      });
+      callback();
+    };
+    if (userinput) {
+      if (!(str = str.trim().replace(/^@/, ''))) return;
+      account.name(str, function (info) {
+        if (!info) showUserNotExistError();
+        else if (item.add && !item.add(info)) callback();
+        else callback(info.id, cewih('ul', fillStr(html.configUsersItem, info)).firstChild);
+      }, showUserNotExistError);
+    } else {
+      var emptyInfo = { 'id': str, 'name': ' ', 'avatar': ' ' };
+      var li = cewih('ul', fillStr(html.configUsersItem, emptyInfo)).firstChild;
+      callback(str, li);
+      account.id(str, function (info) {
+        var u = li.querySelector('[uid]');
+        u.setAttribute('uid', info.id); u.setAttribute('title', info.name); u.textContent = info.name;
+        var p = li.querySelector('.pic img');
+        p.src = info.avatar;
+      });
+    }
+  });
+
   return {
-    'noui': noui,
     'subtitle': subtitle,
     'text': text,
     'html': _html,
@@ -604,6 +699,32 @@ keywordFilterGroup.add({
   },
 });
 
+// 原创用户过滤
+var originalFilterGroup = filterGroup('originalFilterGroup');
+
+var originalMatch = function (originals, feed) {
+  var originalAuthor = feed.querySelector('.WB_media_expand .WB_info .WB_name');
+  if (!originalAuthor) return false;
+  var id = originalAuthor.getAttribute('usercard').split('=')[1];
+  console.log('id: %d, originals: %o', id, originals);
+  return originals.some(function (x) { return x === id; });
+};
+
+originalFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{originalFilterBlacklist}}',
+});
+
+originalFilterGroup.add({
+  'type': 'users',
+  'key': 'weibo.oriblacklist',
+  'text': '{{originalFilterDesc}}',
+  'rule': function originalFilterBlacklistRule(feed) {
+    return originalMatch(this.conf, feed) ? 'hidden' : null;
+  },
+});
+
+
 // 话题过滤
 var topicFilterGroup = filterGroup('topicFilterGroup');
 
@@ -623,9 +744,8 @@ topicFilterGroup.add({
   'type': 'strings',
   'key': 'weibo.topics',
   'text': '{{topicFilterDesc}}',
-  'add': function (s) {
-    return s.trim().replace(/#/g, '');
-  },
+  'add': function (s) { return s.trim().replace(/#/g, ''); },
+  'display': function (s) { return '#' + s + '#'; },
   'rule': function topicFilterBlacklistRule(feed) {
     return topicMatch(this.conf, feed) ? 'hidden' : null;
   },
@@ -713,6 +833,7 @@ layoutFilterGroup.add({
   'init': css(funcStr(function (conf) { /*!CSS
     #wrapAD { visibility: hidden !important; }
     [id^="sinaadToolkitBox"] { display: none !important; }
+    .news_logo { visibility: hidden !important; }
   */ })),
 });
 
@@ -725,12 +846,12 @@ layoutFilterGroup.add({
   'init': css('#pl_content_toprecom { display: none !important; }'),
 });
 
-// '.WB_deltxt'; // http://t.cn/RvhKSGI // 无权限
-
-// var layoutFilterGroup = filterGroup('layoutFilterGroup');
+// 脚本设置
+var scriptFilterGroup = filterGroup('scriptFilterGroup');
 
 // 检查是否要在本页上运行
 var validPage = function () {
+  if (self !== top) return false;
   if (!unsafeWindow.$CONFIG.uid) return false;
   if (!unsafeWindow.$CONFIG.lang) return false;
   return true;
@@ -747,7 +868,7 @@ var dcl = function () {
   Object.keys(text).map(function (key) { i18n(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
   // 显示设置按钮
-  showIcon().addEventListener('click', function (e) { filters.showDialog(); e.preventDefault(); });
+  showIcon();
   // 初始化所有过滤器
   filters.init();
   // 注册样式
@@ -769,11 +890,20 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawcf-config-body { width: 600px; }
   #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 640px; }
   .yawcf-groupSubtitle { font-weight: bold; padding: 6px 10px; }
-  .yawcf-configStrings, .yawcf-configBoolean { margin: 2px 20px; }
-  .yawcf-configStringsInput { margin: 5px; }
-  .yawcf-configStringsItem a { margin-left: 3px; vertical-align: -2px; }
-  .yawcf-configStringsItems { padding: 5px 10px; }
-  .yawcf-configStringsItem { margin: 0 2px; }
+  .yawcf-configStrings, .yawcf-configBoolean, .yawcf-configUsers { margin: 2px 20px; }
+  .yawcf-configStringsInput, .yawcf-configUsersInput { margin: 5px; }
+  .yawcf-configStringsItems, .yawcf-configUsersItems { padding: 5px 10px; }
+  .yawcf-configStringsItem, .yawcf-configUsersItem { display: inline-block; margin: 0 2px; }
+  .yawcf-configStringsItem a.icon_close,
+  .yawcf-configUsersItem a.icon_close { margin-left: 3px; vertical-align: -2px; }
+  .yawcf-configUsersItem .shield_object_card { display: inline-block; }
+  .yawcf-configUsersItem .shield_object_card .card_bg { border: 1px solid #e6e6e6; border-radius: 2px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.02); padding: 1px 5px 1px 1px; }
+  .yawcf-configUsersItem .shield_object_card .card_pic { float: left; width: 50px; }
+  .yawcf-configUsersItem .shield_object_card .card_pic .pic_box { display: block; }
+  .yawcf-configUsersItem .shield_object_card .card_content { margin-left: 60px; }
+  .yawcf-configUsersItem .shield_object_card .object_info { height: 22px; margin-top: 2px; }
+  .yawcf-configUsersItem .shield_object_card .object_name { line-height: 22px; overflow: hidden; }
+  .yawcf-configUsersItem .shield_object_card .other_info { line-height: 24px; }
   #yawcf-config .btn { border-top: 1px solid #ccc; margin: 15px 0 0; padding: 10px 0 0; }
   #yawcf-config .btn .W_btn_b_disable:hover { border-color: #d9d9d9; }
   #yawcf-config .btn .W_btn_b_disable:hover span { border-color: #ffffff; }
