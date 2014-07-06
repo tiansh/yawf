@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Yet Another Weibo Content Filter
 // @namespace   http://userscripts.org/users/ts
-// @description 新浪微博根据关键词、作者、话题、来源过滤微博；改造版面。 filter Sina Weibo by keywords, original, topic, and source; reforme layout
+// @description 新浪微博根据关键词、作者、话题、来源过滤微博；改造版面。 filter Sina Weibo by keywords, original, topic, and source; reform layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
 // @version     0.0.4
@@ -41,6 +41,10 @@ var text = {
   'keywordFilterGroupTitle': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterBlacklist': { 'zh-cn': '隐藏包含以下关键词的微博', 'zh-hk': '隱藏包含以下關鍵字的微博', 'zh-tw': '隱藏包含以下關鍵字的微博', 'en': 'Hide Weibo with these keywords' },
+  'regexpFilterGroupTitle': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
+  'regexpFilterBlacklist': { 'zh-cn': '隐藏匹配以下正则表达式的微博', 'zh-hk': '隱藏匹配以下正則表達式的微博', 'zh-tw': '隱藏匹配以下正規表示式的微博', 'en': 'Hide Weibo matches these regular expressions' },
+  'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
+  'regexpFilterRemark': { 'zh-cn': '书写时不需要对“/”字符转义', 'zh-hk': '書寫時不需要對“/”字符轉義', 'zh-tw': '書寫時不需要對“/”字符轉義', 'en': 'Do not escape "\" in your regexp.' },
   'accountFilterGroupTitle': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountNotExistErrorTitle': { 'zh-cn': '帐号不存在', 'zh-hk': '帳號不存在', 'zh-tw': '帳號不存在', 'en': 'Account does not exist' },
   'accountNotExistError': { 'zh-cn': '不存在名为{{name}}的账号', 'zh-hk': '不存在名為{{name}}的賬號', 'zh-tw': '不存在名為{{name}}的賬號', 'en': 'Account named {{name}} does not exist' },
@@ -48,6 +52,9 @@ var text = {
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterBlacklist': { 'zh-cn': '隐藏转发自以下账号的微博', 'zh-hk': '隱藏轉發自以下帳號的微博', 'zh-tw': '隱藏轉發自以下帳號的微博', 'en': 'Hide Weibo forwarded from these accounts' },
+  'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
+  'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
+  'mentionFilterBlacklist': { 'zh-cn': '隐藏提到以下账号的微博', 'zh-hk': '隱藏提到以下帳號的微博', 'zh-tw': '隱藏提到以下帳號的微博', 'en': 'Hide Weibo mentioned these accounts' },
   'topicFilterGroupTitle': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDesc': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterBlacklist': { 'zh-cn': '隐藏包含以下话题的微博', 'zh-hk': '隱藏包含以下話題的微博', 'zh-tw': '隱藏包含以下話題的微博', 'en': 'Hide Weibo with these topics' },
@@ -64,6 +71,7 @@ var text = {
   'layoutFilterGroupTitle': { 'zh-cn': '页面布局', 'zh-hk': '頁面配置', 'zh-tw': '頁面配置', 'en': 'Layout' },
   'adBlockDesc': { 'zh-cn': '隐藏广告', 'zh-hk': '隱藏廣告', 'zh-tw': '隱藏廣告', 'en': 'Hide ad' },
   'topRecomBlockDesc': { 'zh-cn': '隐藏中栏顶部推荐', 'zh-hk': '隱藏中欄頂端建議', 'zh-tw': '隱藏中欄頂端建議', 'en': 'Hide recommand at top of middle column' },
+  'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '指令碼', 'zh-tw': '指令碼', 'en': 'Script' },
 };
 
@@ -133,6 +141,7 @@ var i18n = (function () {
     pending.map(chose);
     pending = [];
     i18n = chose;
+    i18n.lang = l;
   };
   langs.setLang = setLang;
   return langs;
@@ -356,7 +365,7 @@ var filters = (function () {
           return fillStr(html.configHeaderItem, {
             'name': text[filter.name + 'Title'],
             'aclass': index === 0 ? 'S_bg5 current' : 'S_bg1',
-            'liclass': index === list.length - 1 ? 'pftb_itm_lst' : '',
+            'liclass': index === list.length - 1 ? 'pftb_itm_lst' : ' ',
           });
         }).join(''),
         html.configHeaderBottom,
@@ -522,7 +531,7 @@ var typedHtml = (function () {
 
   // 文本
   var text = function (item) {
-    return cewih('div', fillStr(tml.configText, item)).firstChild;
+    return cewih('div', fillStr(html.configText, item)).firstChild;
   };
 
   // 直接被嵌入的HTML
@@ -669,8 +678,18 @@ var filterGroup = function (groupName) {
   return filters.add(group);
 };
 
+var weiboContentSelector = function (feed, f) {
+  var content = feed.querySelector('[node-type="feed_list_content"]');
+  var reason = feed.querySelector('[node-type="feed_list_reason"] em');
+  var items = [];
+  if (content) items = items.concat(Array.apply(Array, f(content)));
+  if (reason) items = items.concat(Array.apply(Array, f(reason)));
+  return items;
+};
+
 // 关键字过滤
 var keywordFilterGroup = filterGroup('keywordFilterGroup');
+
 keywordFilterGroup.add({
   'type': 'subtitle',
   'text': '{{keywordFilterBlacklist}}',
@@ -678,14 +697,12 @@ keywordFilterGroup.add({
 
 // 检查某个微博里面是否有关键字列表中的关键字
 var keywordMatch = function (keywords, feed) {
-  var content = feed.querySelector('[node-type="feed_list_content"]');
-  var reason = feed.querySelector('[node-type="feed_list_reason"] em');
-  var texts = [];
-  if (content) texts = texts.concat(Array.apply(Array, content.childNodes));
-  if (reason) texts = texts.concat(Array.apply(Array, reason.childNodes));
-  texts = texts.filter(function (node) { return node.nodeType === Node.TEXT_NODE; });
-  texts = texts.map(function (node) { return node.textContent; }).join(' ');
-  return keywords.some(function (keyword) { return texts.indexOf(keyword) !== -1; });
+  var texts = weiboContentSelector(feed, function (m) {
+    return Array.apply(Array, m.childNodes)
+      .filter(function (node) { return node.nodeType === Node.TEXT_NODE; })
+      .map(function (node) { return node.textContent; });
+  }).join(' ').toUpperCase();
+  return keywords.some(function (keyword) { return texts.indexOf(keyword.toUpperCase()) !== -1; });
 };
 
 // 关键字屏蔽
@@ -699,8 +716,54 @@ keywordFilterGroup.add({
   },
 });
 
+// 按照正则式过滤
+var regexpFilterGroup = filterGroup('regexpFilterGroup');
+
+regexpFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{regexpFilterBlacklist}}',
+});
+
+// 检查某个微博里面是否会匹配某个正则式
+var regexpMatch = function (regexen, feed) {
+  var texts = weiboContentSelector(feed, function (m) {
+    return Array.apply(Array, m.childNodes)
+      .filter(function (node) { return node.nodeType === Node.TEXT_NODE; })
+      .map(function (node) { return node.textContent; });
+  }).join(' ');
+  return regexen.some(function (regexp) {
+    return !!(RegExp(regexp).exec(texts));
+  });
+};
+
+// 正则式匹配
+regexpFilterGroup.add({
+  'type': 'strings',
+  'key': 'weibo.regexpblacklist',
+  'text': '{{regexpFilterDesc}}',
+  'add': function (s) {
+    s = s.trim();
+    if (s[0] === '/' && s[s.length - 1] === '/') s = s.slice(1, -1);
+    return s;
+  },
+  'display': function (s) { return '/' + s + '/'; },
+  'rule': function regexpFilterBlacklistRule(feed) {
+    return regexpMatch(this.conf, feed) ? 'hidden' : null;
+  },
+});
+
+regexpFilterGroup.add({
+  'type': 'text',
+  'text': '{{regexpFilterRemark}}',
+});
+
 // 原创用户过滤
 var originalFilterGroup = filterGroup('originalFilterGroup');
+
+originalFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{originalFilterBlacklist}}',
+});
 
 var originalMatch = function (originals, feed) {
   var originalAuthor = feed.querySelector('.WB_media_expand .WB_info .WB_name');
@@ -710,10 +773,6 @@ var originalMatch = function (originals, feed) {
   return originals.some(function (x) { return x === id; });
 };
 
-originalFilterGroup.add({
-  'type': 'subtitle',
-  'text': '{{originalFilterBlacklist}}',
-});
 
 originalFilterGroup.add({
   'type': 'users',
@@ -721,6 +780,35 @@ originalFilterGroup.add({
   'text': '{{originalFilterDesc}}',
   'rule': function originalFilterBlacklistRule(feed) {
     return originalMatch(this.conf, feed) ? 'hidden' : null;
+  },
+});
+
+// 提到某人的微博
+var mentionFilterGroup = filterGroup('mentionFilterGroup');
+
+mentionFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{mentionFilterBlacklist}}',
+});
+
+var mentionMatch = function (mentions, feed) {
+  var links = weiboContentSelector(feed, function (m) {
+    return Array.apply(Array, m.querySelectorAll('a[usercard^="name="][href$="loc=at"]'));
+  });
+  return links.some(function (link) {
+    var name = link.getAttribute('usercard').slice('name='.length);
+    return mentions.some(function (x) { return x === name; });
+  });
+};
+
+mentionFilterGroup.add({
+  'type': 'strings',
+  'key': 'weibo.mentionblacklist',
+  'text': '{{mentionFilterDesc}}',
+  'add': function (s) { return s.trim().replace(/^@/, ''); },
+  'display': function (s) { return '@' + s; },
+  'rule': function mentionFilterBlacklistRule(feed) {
+    return mentionMatch(this.conf, feed) ? 'hidden' : null;
   },
 });
 
@@ -734,8 +822,10 @@ topicFilterGroup.add({
 });
 
 var topicMatch = function (topics, feed) {
-  var list = Array.apply(Array, feed.querySelectorAll('.a_topic'));
-  var text = list.map(function (x) { return x.textContent; }).join('');
+  var list = weiboContentSelector(feed, function (m) {
+    return Array.apply(Array, m.querySelectorAll('.a_topic'));
+  });
+  var text = list.map(function (x) { return x.textContent; }).join('##');
   return topics.some(function (topic) { return text.indexOf(topic) !== -1; });
 }
 
@@ -846,8 +936,22 @@ layoutFilterGroup.add({
   'init': css('#pl_content_toprecom { display: none !important; }'),
 });
 
+// 改造设置
+var toolFilterGroup = filterGroup('toolFilterGroup');
+toolFilterGroup.add({ 'type': 'text', 'text': '// TODO' });
+
 // 脚本设置
 var scriptFilterGroup = filterGroup('scriptFilterGroup');
+scriptFilterGroup.add({ 'type': 'text', 'text': '// TODO' });
+
+scriptFilterGroup.add({
+  'init': function () {
+    css.add(fillStr(funcStr(function () { /*!CSS
+      .profile_tab .pftb_lk { padding-left: {{width}}; padding-right: {{width}}; }
+      .profile_tab .current.pftb_lk { padding-left: calc({{width}} - 3px); padding-right: calc({{width}} - 3px); }
+    */ }), { 'width': i18n.lang === 'en' ? '8px' : '12px' }));
+  },
+});
 
 // 检查是否要在本页上运行
 var validPage = function () {
