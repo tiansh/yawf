@@ -2,6 +2,8 @@
 
 '''[施工中] Yet Another Weibo Content Filter'''
 
+只打算支持 Greasymonkey ，其他的如果能用就是恰巧能用而已。
+
 当前脚本处于开发过程中，可能有各种问题。不建议用户安装。
 
 == 当前功能 ==
