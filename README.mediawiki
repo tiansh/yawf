@@ -1,6 +1,8 @@
-= yawcf =
+= yawf =
 
-'''[施工中] Yet Another Weibo Content Filter'''
+'''[施工中] Yet Another Weibo Filter'''
+
+本程序部分代码基于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦（新浪微博）]。
 
 只打算支持 Greasymonkey ，其他的如果能用就是恰巧能用而已。
 
@@ -15,11 +17,13 @@
 * 根据话题过滤微博
 * 过滤推广微博等混入微博列表的东西
 * 其他一些广告过滤
+* 清理微博版面
 
 == TODO ==
 
-* 白名单和折叠功能
 * 替换掉有新微博的提示
-* 其他乱七八糟的东西
 * 设置导入导出
+* 白名单和折叠功能
+* 根据链接过滤
+* 其他界面改造项目
 
