@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name        Yet Another Weibo Content Filter
-// @namespace   http://userscripts.org/users/ts
+// @name        Yet Another Weibo Filter
+// @namespace   https://github.com/tiansh
 // @description 新浪微博根据关键词、作者、话题、来源过滤微博；改造版面。 filter Sina Weibo by keywords, original, topic, and source; reform layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.0.5
+// @version     0.0.6
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -127,10 +127,14 @@ var text = {
   'layoutHideOtherWbIm': { 'zh-cn': '微博桌面推荐（右下）' },
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '指令碼', 'zh-tw': '指令碼', 'en': 'Script' },
-  'configImportAndExport': { 'zh-cn': '导入与导出', 'zh-hk': '匯入與匯出', 'zh-tw': '匯入與匯出', 'en': 'Import and Export' },
+  'configImportAndExport': { 'zh-cn': '设置', 'zh-hk': '設定', 'zh-tw': '設定', 'en': 'Setting' },
   'configImportButton': { 'zh-cn': '导入', 'zh-hk': '匯入', 'zh-tw': '匯入', 'en': 'Import' },
+  'configImportWarningTitle': { 'zh-cn': '设置导入', 'zh-hk': '設定匯入', 'zh-tw': '設定匯入', 'en': 'Setting Import' },
+  'configImportWarning': { 'zh-cn': '导入的设置会覆盖您当前已有的设置，确实要导入设置吗？' },
   'configExportButton': { 'zh-cn': '导出', 'zh-hk': '匯出', 'zh-tw': '匯出', 'en': 'Export' },
   'configResetButton': { 'zh-cn': '重置', 'zh-hk': '重設', 'zh-tw': '重設', 'en': 'Reset' },
+  'configResetWarningTitle': { 'zh-cn': '设置重置', 'zh-hk': '設定重設', 'zh-tw': '設定重設', 'en': 'Setting Reset' },
+  'configResetWarning': { 'zh-cn': '这将会清空您当前的所有配置，确实要重置设置吗？' },
   'configFileWarning': { 'zh-cn': '导出的设置文件中可能包含您的个人资料', },
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAboutText': { 'zh-cn': '', },
@@ -145,7 +149,7 @@ var html = {
   'configLayerTop': '<div node-type="yawcf-config-body" class="yawcf-config-body">',
   'configLayerItem': '<div class="{{name}} yawcf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
-  'configFooter': '<div class="btn clearfix" node-type="yawcf-config-footer"><span class="W_fl S_txt2">{{configRefreshNotice}}</span><a node-type="apply" class="W_btn_b W_btn_b_disable" action-type="apply" href="javascript:;" style=""><span class="btn_30px W_f14">{{configApplyButton}}</span></a><a node-type="save" class="W_btn_a" action-type="save" href="javascript:;" style=""><span class="btn_30px W_f14">{{configSaveButton}}</span></a><a node-type="canncel" class="W_btn_b" action-type="cancel" href="javascript:;" style=""><span class="btn_30px W_f14">{{configCancelButton}}</span></a></div>',
+  'configFooter': '<div class="btn clearfix" node-type="yawcf-config-footer"><span class="W_fl S_txt2">{{configRefreshNotice}}</span><a node-type="apply" class="W_btn_b W_btn_b_disable" action-type="apply" href="javascript:;"><span class="btn_30px W_f14">{{configApplyButton}}</span></a><a node-type="save" class="W_btn_a" action-type="save" href="javascript:;"><span class="btn_30px W_f14">{{configSaveButton}}</span></a><a node-type="canncel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{configCancelButton}}</span></a></div>',
   'configSubtitle': '<div class="yawcf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawcf-groupText">{{{text}}}</div>',
   'configStrings': '<div class="yawcf-configStrings"><form action="#"><label><span class="yawcf-configDesc yawcf-configStringsDesc">{{{text}}}</span><input id="yawcf-{{key}}" class="W_input yawcf-configStringsInput" type="text" name="yawcf-{{key}}"></label><button id="yawcf-add-{{key}}" class="W_btn_a yawcf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawcf-configStringsItems"></ul></div>',
@@ -153,6 +157,7 @@ var html = {
   'configBoolean': '<div class="yawcf-configBoolean"><label><input id="yawcf-{{key}}" class="W_checkbox yawcf-configStringsInput" type="checkbox" name="yawcf-{{key}}"><span class="yawcf-configDesc yawcf-configBooleanDesc">{{{text}}}</span></label></div>',
   'configUsers': '<div class="yawcf-configUsers"><form action="#"><label><span class="yawcf-configDesc yawcf-configUsersDesc">{{{text}}}</span><input id="yawcf-{{key}}" class="W_input yawcf-configUsersInput" type="text" name="yawcf-{{key}}"></label><button id="yawcf-add-{{key}}" class="W_btn_a yawcf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawcf-configUsersItems"></ul></div>',
   'configUsersItem': '<li class="yawcf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
+  'configImportExport': '<div class="yawcf-configImportExport"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="btn_30px W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="btn_30px W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="btn_30px W_f14">{{configResetButton}}</span></a></div>',
 };
 
 var url = {
@@ -266,8 +271,10 @@ var config = function (uid) {
   // 从字串导入
   var import_ = function (s) {
     try {
+      clear();
       s = JSON.parse(s);
       Object.keys(s).forEach(function (key) { put(key, s[key]); });
+      return true;
     } catch (e) { }
     return false;
   };
@@ -314,6 +321,22 @@ var Dialog = function (id, fillFun) {
   dialog.setTitle(text.configDialogTitle);
   fillFun(dialog.getOuter().querySelector('[node-type="inner"]'));
   return dialog;
+};
+
+// 显示一个提示框
+var Alert = function (title, msg, icon) {
+  return unsafeWindow.STK.ui.alert(msg, {
+    'title': title,
+    'icon': icon || 'message',
+  });
+};
+
+var Confirm = function (title, msg, onOk, onCancel) {
+  return unsafeWindow.STK.ui.confirm(msg, {
+    'title': title,
+    'OK': onOk,
+    'cancel': onCancel,
+  });
 };
 
 // 延迟调用函数
@@ -602,14 +625,15 @@ var typedConfig = (function () {
   }
 }());
 
+// 快速创建一段文档元素
+var cewih = function (tag, inner) {
+  var d = document.createElement(tag);
+  d.innerHTML = inner;
+  return d;
+};
+
 // 根据不同类型生成带有事件的文档节点
 var typedHtml = (function () {
-  var cewih = function (tag, inner) {
-    var d = document.createElement(tag);
-    d.innerHTML = inner;
-    return d;
-  };
-
   // 副标题
   var subtitle = function (item) {
     return cewih('div', fillStr(html.configSubtitle, item)).firstChild;
@@ -692,11 +716,7 @@ var typedHtml = (function () {
   var users = items.bind(null, html.configUsers, function (item, userinput, str, callback) {
     var showUserNotExistError = function () {
       var msg = fillStr('{{{accountNotExistError}}}', { 'name': escapeXml(str) });
-      unsafeWindow.STK.ui.alert(msg, {
-        'title': fillStr('{{accountNotExistErrorTitle}}'),
-        'icon': 'error',
-        'msg': msg,
-      });
+      Alert(fillStr('{{accountNotExistErrorTitle}}'), msg, 'error');
       callback();
     };
     if (userinput) {
@@ -947,11 +967,7 @@ sourceFilterGroup.add({
   'add': function (s) {
     s = s.trim();
     if (s === '微博 weibo.com') {
-      unsafeWindow.STK.ui.alert(fillStr('{{sourceFilterWarning}}'), {
-        'title': fillStr('{{sourceFilterWarningTitle}}'),
-        'icon': 'error',
-        'msg': fillStr('{{sourceFilterWarning}}'),
-      });
+      Alert(fillStr('{{sourceFilterWarningTitle}}'), fillStr('{{sourceFilterWarning}}'), 'error');
       s = null;
     }
     return s;
@@ -1048,8 +1064,8 @@ var layouts = (function () {
   item('Whole', '.B_profile .W_main_c, .B_profile .WB_feed .repeat .input textarea { width: 100% } .B_profile .WB_feed .WB_screen { margin-left: 928px } .B_profile .W_main_2r { display: none !important; }');
   item('Template', '#pl_content_setSkin { display: none !important; }');
   item('Info', '.W_person_info { display: none !important; }');
-  item('Trial', '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
   item('Atten', '#pl_rightmod_myinfo .user_atten { display: none !important; }');
+  item('Trial', '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
   item('Interest', '[yawcf-id="rightmod_recom_interest"] { display: none !important; }');
   item('HotTopic', '[yawcf-id="rightmod_zt_hottopic"] { display: none !important; }');
   item('Member', '#trustPagelet_recom_memberv5 { display: none !important; }');
@@ -1101,6 +1117,7 @@ var layouts = (function () {
 
   newNode.add(tagRightbarMods);
   tagRightbarMods();
+  css.add('.W_miniblog { visibility: visible !important; }');
 
 }());
 
@@ -1119,7 +1136,37 @@ scriptFilterGroup.add({
 
 scriptFilterGroup.add({
   'show': function (button) {
-    return null;
+    var dom = cewih('div', html.configImportExport).firstChild;
+    var bi = dom.querySelector('[node-type="import"]');
+    var bii = dom.querySelector('input[type="file"]');
+    var be = dom.querySelector('[node-type="export"]');
+    var br = dom.querySelector('[node-type="reset"]');
+    var updateExportButton = function () {
+      be.href = 'data:application/octet-stream;base64,' +
+        btoa(unescape(encodeURIComponent(config.export())));
+      be.setAttribute('download', 'yawf-config.yawf');
+    };
+    bii.addEventListener('change', function () {
+      var file = bii.files[0];
+      Confirm(fillStr('{{configImportWarningTitle}}'),
+        fillStr('{{configImportWarning}}'), function () {
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          if (config.import(reader.result)) updateExportButton();
+        });
+        reader.readAsText(file);
+        bii.value = '';
+      });
+    });
+    updateExportButton();
+    br.addEventListener('click', function () {
+      Confirm(fillStr('{{configResetWarningTitle}}'),
+        fillStr('{{configResetWarning}}'), function () {
+        config.clear();
+        updateExportButton();
+      });
+    });
+    return dom;
   },
 });
 
@@ -1179,7 +1226,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawcf-config-body { margin: -20px -20px 0; max-height: 300px; overflow-y: auto; padding: 20px; width: 600px; }
   #yawcf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 640px; }
   .yawcf-groupSubtitle { font-weight: bold; padding: 6px 10px; }
-  .yawcf-configStrings, .yawcf-configBoolean, .yawcf-configUsers { margin: 2px 20px; }
+  .yawcf-configStrings, .yawcf-configBoolean, .yawcf-configUsers, .yawcf-configImportExport { margin: 2px 20px; }
   .yawcf-configStringsInput, .yawcf-configUsersInput { margin: 5px; }
   .yawcf-configStringsItems, .yawcf-configUsersItems { padding: 5px 10px; }
   .yawcf-configStringsItem, .yawcf-configUsersItem { display: inline-block; margin: 0 2px; }
@@ -1193,6 +1240,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawcf-configUsersItem .shield_object_card .object_info { height: 22px; margin-top: 2px; }
   .yawcf-configUsersItem .shield_object_card .object_name { line-height: 22px; overflow: hidden; }
   .yawcf-configUsersItem .shield_object_card .other_info { line-height: 24px; }
+  .yawcf-configImportExport [node-type] { margin-right: 20px; }
   #yawcf-config .btn { border-top: 1px solid #ccc; margin: 15px 0 0; padding: 10px 0 0; }
   #yawcf-config .btn .W_btn_b_disable:hover { border-color: #d9d9d9; }
   #yawcf-config .btn .W_btn_b_disable:hover span { border-color: #ffffff; }
@@ -1205,6 +1253,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .WB_feed_together[yawcf-fold="display"] [action-type="feed_list_seeAll"],
   .WB_feed_together[yawcf-fold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
   // [node-type="feed_list_newBar"]:not([yawcf-newbar]) { display: none !important; }
+  .W_miniblog { visibility: hidden; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
