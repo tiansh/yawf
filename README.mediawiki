@@ -1,27 +1,18 @@
-= yawf =
+脚本尚处于开发之中，功能尚不稳定，不能保证更新后可以保留原有设置。<br />
+腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。 <br />
+This script have not been done. It may not stable. And you may lose your setting after update.
 
-'''Yet Another Weibo Filter'''
-'''看真正想看的微博'''
+= 看真正想看的微博 (YAWF) =
 
-本程序部分代码基于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦（新浪微博）]。
-
-只打算支持 Greasymonkey ，其他的如果能用就是恰巧能用而已。
-
-当前脚本处于开发过程中，可能有各种问题。不建议用户安装。
+请使用 Greasymonkey 安装本脚本。
 
 == 当前功能 ==
 
-* 根据关键字过滤微博
-* 根据正则式过滤微博
-* 根据作者过滤微博
-* 根据原作者过滤微博
-* 根据提到的帐号过滤微博
-* 根据来源过滤微博
-* 根据话题过滤微博
-* 根据链接过滤微博
+* 根据关键字、正则式、作者、来源等过滤微博
 * 过滤推广微博等混入微博列表的东西
 * 其他一些广告过滤
 * 清理微博版面
+* 添加查看大图链接
 
 == 待做 ==
 
@@ -31,4 +22,6 @@
 
 == 关于 ==
 
-The MIT License (MIT)
+脚本以 MIT 协议授权。本脚本部分代码基于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦（新浪微博）]。<br />
+
+

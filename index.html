@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Yet Another Weibo Filter 看真正想看的微博</title>
+  <style>
+    .lang { display: none; }
+    .zh-cn { display: block; }
+    .langs ~ div.lang { display: none; }
+    .langs.zh-cn ~ div.lang.zh-cn { display: block; }
+    .langs.zh-hk ~ div.lang.zh-hk { display: block; }
+    .langs.zh-tw ~ div.lang.zh-tw { display: block; }
+    .langs.en ~ .lang.en { display: block; }
+    .install { font-size: 48px; display: block; width: 12em; height: 2em; line-height: 2em; background: black; color: white; text-decoration: none; text-align: center; }
+    .warning { color: #700; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <script>
+    var lang = 'zh-cn';
+    if (navigator.language === 'zh-HK') lang = 'zh-hk';
+    if (navigator.language === 'zh-TW') lang = 'zh-tw';
+    if (navigator.language.match(/en(-.+)?/)) lang = 'en';
+    document.write('<div class="langs ' + lang + '"></div>');
+  </script>
+  <div class="lang zh-cn" lang="zh-cn">
+    <h1>看真正想看的微博 (YAWF)</h1>
+    <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安装脚本</a>
+    <p>新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。</p>
+    <p class="warning">脚本尚处于开发之中，功能尚不稳定，不能保证更新后可以保留原有设置。</p>
+  </div>
+  <div class="lang zh-hk" lang="zh-hk">
+    <h1>看真正想看的微博 (YAWF)</h1>
+    <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a>
+    <p>新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。</p>
+    <p class="warning">腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。</p>
+  </div>
+  <div class="lang zh-tw" lang="zh-tw">
+    <h1>看真正想看的微博 (YAWF)</h1>
+    <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a>
+    <p>新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。</p>
+    <p class="warning">腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。</p>
+  </div>
+  <div class="lang en" lang="en">
+    <h1>Yet Another Weibo Filter</h1>
+    <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">Install Script</a>
+    <p>filter Sina Weibo by keywords, original, topic, source, etc.; modify layout</p>
+    <p class="warning">script have not been done. It may not stable. And you may lose your setting after update.</p>
+  </div>
+</body>
+</html>

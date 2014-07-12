@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源过滤微博；改造版面。 filter Sina Weibo by keywords, original, topic, and source; reform layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.0.8
+// @version     0.1.10 alpha
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -123,7 +123,6 @@ var text = {
   // 中栏
   'layoutHideMiddle': { 'zh-cn': '中栏' },
   'layoutHideMiddleRecommendedTopic': { 'zh-cn': '热门微博（发布框上方）' },
-  'layoutHideMiddlePublish': { 'zh-cn': '发布框' },
   'layoutHideMiddleMemberTip': { 'zh-cn': '开通会员提示（底部）' },
   // 右栏
   'layoutHideRight': { 'zh-cn': '右栏' },
@@ -152,8 +151,11 @@ var text = {
   // 个人主页
   'layoutHidePerson': { 'zh-cn': '个人主页' },
   'layoutHidePersonCover': { 'zh-cn': '封面图' },
+  'layoutHidePersonTemplate': { 'zh-cn': '模板设置' },
+  'layoutHidePersonBadgeIcon': { 'zh-cn': '勋章' },
   'layoutHidePersonStats': { 'zh-cn': '关注/粉丝/微博数' },
   'layoutHidePersonMyData': { 'zh-cn': '我的微博人气' },
+  'layoutHidePersonSuggestUser': { 'zh-cn': '可能感兴趣的人' },
   'layoutHidePersonRelation': { 'zh-cn': '关注/粉丝' },
   'layoutHidePersonAlbum': { 'zh-cn': '图片' },
   'layoutHidePersonHotTopic': { 'zh-cn': '话题' },
@@ -167,9 +169,15 @@ var text = {
   'layoutHideOtherTip': { 'zh-cn': '功能提示框' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
+  'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题' },
   'userstyleTitle': { 'zh-cn': '自定义CSS' },
   'userstyleEditDesc': { 'zh-cn': '编辑自定义CSS' },
   'userstyleEditDetails': { 'zh-cn': 'Yet Another Weibo Filter 样式自定义' },
+  'showAllGroupDesc': { 'zh-cn': '展开左栏分组' },
+  'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息', },
+  'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行' },
+  'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接' },
+  'viewOriginalText': { 'zh-cn': '查看原图' },
   // 脚本
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   // 导入导出
@@ -186,9 +194,12 @@ var text = {
   'configResetWarningTitle': { 'zh-cn': '设置重置', 'zh-hk': '設定重設', 'zh-tw': '設定重設', 'en': 'Setting Reset' },
   'configResetWarning': { 'zh-cn': '这将会清空您当前的所有配置，确实要重置设置吗？' },
   'configFileWarning': { 'zh-cn': '导出的设置文件中可能包含您的个人资料', },
+  // 调试
+  'scriptDebugTitle': { 'zh-cn': '调试' },
+  'scriptDebug': { 'zh-cn': '在控制台打印调试信息' },
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
-  'scriptAboutText': { 'zh-cn': '', },
+  'scriptAbout': { 'zh-cn': 'YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权，项目主页：<a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a>。<br />本脚本中部分代码参考了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本。', },
 };
 
 // 页面常量
@@ -208,16 +219,18 @@ var html = {
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawf-groupText">{{{text}}}</div>',
   'configBoolean': '<div class="yawf-configBoolean yawf-configItem"><label><input id="yawf-{{key}}" class="W_checkbox yawf-configBooleanInput" type="checkbox" name="yawf-{{key}}"><span class="yawf-configDesc yawf-configBooleanDesc">{{{text}}}</span></label></div>',
-  'configString': '<div class="yawf-configString yawf-configItem"><label><textarea id="yawf-{{key}}" class="W_input yawf-configStringInput" name="yawf-{{key}}"></label></div>',
+  'configString': '<div class="yawf-configString yawf-configItem"><label><span>{{{text}}}</span><textarea id="yawf-{{key}}" class="W_input yawf-configStringInput" name="yawf-{{key}}"></label></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_arrow tag yawf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
-  'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="btn_30px W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="btn_30px W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="btn_30px W_f14">{{configResetButton}}</span></a></div>',
+  'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
+  'viewOriginalLink': '<a target="_blank" class="show_big" suda-data="key=tblog_newimage_feed&value=view_original" action-type="maximum" href="javascript:;"><em class="W_ico12 ico_showbig"></em>{{viewOriginalText}}</a><i class="W_vline">|</i>',
 };
 
 var url = {
   'newcard': 'http://weibo.com/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
+  'view_ori': 'http://photo.weibo.com/{{uid}}/wbphotos/large/mid/{{mid}}/pid/{{pid}}',
 };
 
 // 微博过滤规则
@@ -350,7 +363,8 @@ var config = function (uid) {
   };
 };
 
-var debug = console.log.bind(console);
+var debug = !!GM_getValue('debug', false) ?
+  console.log.bind(console) : function () { };
 
 // 显示右上角过滤器图标
 var showIcon = function () {
@@ -605,7 +619,7 @@ var filters = (function () {
       ].join('');
       call(function () {
         dialogButton(dialog, inner);
-        dialog.show(50);
+        dialog.show(0);
       });
       if (list.indexOf(page) === -1) dialogTabs(list, inner, lastTab);
       else dialogTabs(list, inner, list.indexOf(page));
@@ -749,13 +763,6 @@ var typedHtml = (function () {
     return cewih('div', fillStr(html.configText, item)).firstChild;
   };
 
-  // 直接被嵌入的HTML
-  var _html = function (item) {
-    if (item.constructor === String) return cewih('div', fillStr(item.html)).firstChild;
-    else if (item instanceof Node) return item.hmtl;
-    else return null;
-  };
-
   // 真假值的设置项
   var boolean = function (item) {
     var dom = cewih('div', fillStr(html.configBoolean, item)).firstChild;
@@ -859,7 +866,6 @@ var typedHtml = (function () {
   return {
     'subtitle': subtitle,
     'text': text,
-    'html': _html,
     'string': string,
     'strings': strings,
     'boolean': boolean,
@@ -871,11 +877,14 @@ var typedHtml = (function () {
 var filterGroup = function (groupName) {
   var items = [];
   // 向过滤器组里面添加一个项目
-  var add = function (item) { items.push(item); };
+  var add = function (item) {
+    items.push(item);
+    try { if (item.type && typedConfig[item.type]) typedConfig[item.type](item); } catch (e) { }
+    return item;
+  };
   // 网页被初始化时初始化所有过滤器
   var init = function () {
     items.forEach(withTry(function (item) {
-      if (item.type && typedConfig[item.type]) typedConfig[item.type](item);
       if (item.getconf) item.getconf();
       if (item.init) item.init();
       if (item.rule) rules.add(item.priority || 0, item.rule.bind(item));
@@ -1175,7 +1184,6 @@ var layouts = (function () {
   item('App', '#pl_leftnav_app { display: none !important; }')
 
   subtitle('Middle');
-  item('Publish', '#pl_content_publisherTop { display: none !important; }');
   item('MemberTip', '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
   item('RecommendedTopic', '#pl_content_publisherTop div[node-type="recommendTopic"] { display: none !important; }');
 
@@ -1202,9 +1210,12 @@ var layouts = (function () {
   item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
 
   subtitle('Person');
-  item('Cover', '.profile_top .pf_head { top: 10px } .profile_top .pf_info { margin-top: 20px } .profile_top .S_bg5 { background-color: transparent !important } .profile_pic_top { display: none !important; }');
-  item('Stats', '.profile_top .user_atten { display: none !important; }');
+  item('Cover', '.profile_pic_top { max-height: 120px; }');
+  item('Template', '.templete_enter { display: none !important; }');
+  item('BadgeIcon', '.pf_badge_icon { display: none !important; }');
+  item('Stats', '.profile_top .user_atten { display: none !important; } .pf_head { margin-top: 51px; } ');
   item('MyData', '.W_main_c [id^="Pl_Official_MyMicroworld__"] { display: none !important; }');
+  item('SuggestUser', '.W_main_2r [id^="Pl_Core_RightUserList__"] { display: none !important; }');
   item('Relation', '.W_main_2r [id^="Pl_Core_RightUserGrid__"] { display: none !important; }');
   item('Album', '.W_main_2r [id^="Pl_Core_RightPicMulti__"] { display: none !important; }');
   item('HotTopic', '.W_main_2r [id^="Pl_Core_RightTextSingle__"] { display: none !important; }');
@@ -1245,13 +1256,73 @@ var layouts = (function () {
 // 改造设置
 var toolFilterGroup = filterGroup('toolFilterGroup');
 
+// 清除发布框中的默认话题 (wcf)
 toolFilterGroup.add({
-  'type': 'subtitle',
-  'text': '{{userstyleTitle}}',
+  'type': 'boolean',
+  'key': 'weibo.tool.clear_def_topic',
+  'text': '{{clearDefTopicDesc}}',
+  'init': function () {
+    if (!this.conf) return;
+    var clearDefTopic = function () {
+      var inputBox = document.querySelector('#pl_content_publisherTop .send_weibo .input textarea');
+      if (inputBox && inputBox.hasAttribute('hottopic')) {
+        inputBox.removeAttribute('hottopic'); inputBox.removeAttribute('hottopicid');
+        inputBox.value = 'DUMMY'; inputBox.focus();
+        inputBox.value = ''; inputBox.blur();
+      }
+    };
+    newNode.add(clearDefTopic);
+  },
 });
 
+// 展开左栏分组
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.showAllGroup',
+  'text': '{{showAllGroupDesc}}',
+  'init': css('#pl_leftnav_group div[node-type="moreList"] { display: block !important } #pl_leftnav_group > div[node-type="groupList"] > .level_2_Box > .levmore { display: none }'),
+});
+
+// 展开左栏消息
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.showAllMsgNav',
+  'text': '{{showAllMsgNavDesc}}',
+  'init': css('#pl_leftnav_common > .level_1_Box > .lev2_new { display: block !important }'),
+});
+
+// 微博作者与正文同行
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.unwrapText',
+  'text': '{{unwrapTextDesc}}',
+  'init': css('.WB_info, .WB_text { display: inline } .WB_info+.WB_text::before { content: ": " } .WB_func { margin-top: 5px } .B_index .WB_feed .W_ico16 { vertical-align: -3px !important }'),
+});
+
+// 查看大图旁添加查看原图链接
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.viewOriginal',
+  'text': '{{viewOriginalDesc}}',
+  'init': function () {
+    if (!this.conf) return;
+    var addOriLink = function () {
+      var a = document.querySelector('a.show_big[action-data]:not([yawf-viewori])');
+      if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
+      var arg = a.getAttribute('action-data').match(/pid=(\w+)&mid=(\d+)&uid=(\d+)/);
+      if (!arg) return;
+      var vol = cewih('div', fillStr(html.viewOriginalLink));
+      vol.firstChild.href = fillStr(url.view_ori, {'uid': arg[3], 'mid': arg[2], 'pid': arg[1]});
+      while (vol.firstChild) a.parentNode.insertBefore(vol.firstChild, a);
+    };
+    newNode.add(addOriLink);
+  },
+});
+
+// 自定义样式
 toolFilterGroup.add({
   'type': 'string',
+  'text': '{{userstyleTitle}}',
   'key': 'weibo.tool.userstyle',
   'init': function () {
     var conf = this.conf; GM_addStyle(conf), set = this.setconf.bind(this);
@@ -1264,6 +1335,7 @@ toolFilterGroup.add({
     }, "S");
   },
 });
+
 
 // 脚本设置
 var scriptFilterGroup = filterGroup('scriptFilterGroup');
@@ -1339,11 +1411,35 @@ scriptFilterGroup.add({
   },
 });
 
+// 调试
+scriptFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{scriptDebugTitle}}',
+});
+
+scriptFilterGroup.add({
+  'show': function (button) {
+    var dom = cewih('div', fillStr(html.configBoolean, { 'key': 'debug', 'text': '{{scriptDebug}}' })).firstChild;
+    var input = dom.querySelector('input');
+    input.checked = !!GM_getValue('debug', false);
+    input.addEventListener('change', function () {
+      GM_setValue('debug', !GM_getValue('debug', false));
+    });
+    return dom;
+  }
+});
+
 // 关于
 scriptFilterGroup.add({
   'type': 'subtitle',
   'text': '{{scriptAboutTitle}}',
 });
+
+scriptFilterGroup.add({
+  'type': 'text',
+  'text': '{{scriptAbout}}',
+});
+
 
 // 检查是否要在本页上运行
 var validPage = function () {
@@ -1386,15 +1482,14 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   #yawf-config [node-type="inner"] { padding: 20px; }
   .yawf-config-body { margin: -20px -20px 0; max-height: 300px; overflow-y: auto; padding: 20px; width: 760px; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
-  .yawf-groupSubtitle, .yawf-groupText { padding: 6px 10px; }
-  .yawf-groupSubtitle { font-weight: bold; }
-  .yawf-configItem { margin: 2px 20px; }
-  .yawf-configString textarea { width: 100%; min-height: 100px; resize: vertical; }
+  .yawf-groupSubtitle { margin: 5px 10px; padding: 10px 0 0 0; font-weight: bold; }
+  .yawf-configItem, .yawf-groupText { margin: 5px 20px; padding: 5px 0; }
+  .yawf-configString span { line-height: 16px; padding: 2px 10px; margin-bottom: -20px; display: block; width: calc(100% - 20px); position: relative; }
+  .yawf-configString textarea.W_input { width: calc(100% - 20px); padding-top: 20px; min-height: 80px; resize: vertical; }
   .yawf-configStringsInput, .yawf-configUsersInput { margin: 5px; }
   .yawf-configStringsItems, .yawf-configUsersItems { padding: 5px 10px; }
   .yawf-configStringsItem, .yawf-configUsersItem { display: inline-block; margin: 2px; }
-  .yawf-configStringsItem a.icon_close,
-  .yawf-configUsersItem a.icon_close { margin-left: 3px; vertical-align: -2px; }
+  .yawf-configStringsItem a.icon_close, .yawf-configUsersItem a.icon_close { margin-left: 3px; vertical-align: -2px; }
   .yawf-configUsersItem .shield_object_card { display: inline-block; }
   .yawf-configUsersItem .shield_object_card .card_bg { border: 1px solid #e6e6e6; border-radius: 2px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.02); padding: 1px 5px 1px 1px; }
   .yawf-configUsersItem .shield_object_card .card_pic { float: left; width: 50px; }
@@ -1404,6 +1499,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawf-configUsersItem .shield_object_card .object_name { line-height: 22px; overflow: hidden; }
   .yawf-configUsersItem .shield_object_card .other_info { line-height: 24px; }
   .yawf-configImportExport [node-type] { margin-right: 20px; }
+  .yawf-configAdd { appearance: none; }
   #yawf-config .btn { border-top: 1px solid #ccc; margin: 15px 0 0; padding: 10px 0 0; }
   #yawf-config .btn .W_btn_b_disable:hover { border-color: #d9d9d9; }
   #yawf-config .btn .W_btn_b_disable:hover span { border-color: #ffffff; }
