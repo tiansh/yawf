@@ -2,9 +2,9 @@
 腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。 <br />
 This script have not been done. It may not stable. And you may lose your setting after update.
 
-= 看真正想看的微博 (YAWF) =
+= 看真正想看的微博 Yet Another Weibo Filter =
 
-请使用 Greasymonkey 安装本脚本。
+请使用 Greasemonkey 安装本脚本。
 
 == 当前功能 ==
 
