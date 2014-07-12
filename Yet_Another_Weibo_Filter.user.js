@@ -9,6 +9,7 @@
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       GM_addStyle
+// @grant       GM_registerMenuCommand
 // @grant       unsafeWindow
 // @run-at      document-start
 // ==/UserScript==
@@ -93,9 +94,10 @@ var text = {
   'hyperlinkFilterDetails': { 'zh-cn': '包含指向以下网站的超链接的微博', 'zh-hk': '包含指向以下站點的超連結的微博', 'zh-tw': '包含指向以下站點的超連結的微博', 'en': 'Weibo with hyperlink to these website' },
   // 更多
   'otherFilterGroupTitle': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
-  'adfeedFilterDesc': { 'zh-cn': '隐藏广告微博', 'zh-hk': '隱藏廣告微博', 'zh-tw': '隱藏廣告微博', 'en': 'Hide ad Weibo' },
+  'adfeedFilterDesc': { 'zh-cn': '隐藏推广微博', 'zh-hk': '隱藏推廣微博', 'zh-tw': '隱藏推廣微博', 'en': 'Hide ad Weibo' },
   'recommandFeedDesc': { 'zh-cn': '隐藏推荐微博', 'zh-hk': '隱藏建議微博', 'zh-tw': '隱藏建議微博', 'en': 'Hide recommand Weibo' },
   'followSuggestFilterDesc': { 'zh-cn': '隐藏关注推荐微博', 'zh-hk': '隱藏關注建議微博', 'zh-tw': '隱藏關注建議微博', 'en': 'Hide Following Recommended Weibo' },
+  'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-cn': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Hide forward of deleted Weibo' },
   // 模块
   'layoutFilterGroupTitle': { 'zh-cn': '模块', 'zh-hk': '模組', 'zh-tw': '模組', 'en': 'Module' },
   // 标识图标
@@ -165,6 +167,9 @@ var text = {
   'layoutHideOtherTip': { 'zh-cn': '功能提示框' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
+  'userstyleTitle': { 'zh-cn': '自定义CSS' },
+  'userstyleEditDesc': { 'zh-cn': '编辑自定义CSS' },
+  'userstyleEditDetails': { 'zh-cn': 'Yet Another Weibo Filter 样式自定义' },
   // 脚本
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   // 导入导出
@@ -202,12 +207,13 @@ var html = {
   'configFooter': '<div class="btn clearfix" node-type="yawf-config-footer"><span class="W_fl S_txt2">{{configRefreshNotice}}</span><a node-type="apply" class="W_btn_b W_btn_b_disable" action-type="apply" href="javascript:;"><span class="btn_30px W_f14">{{configApplyButton}}</span></a><a node-type="save" class="W_btn_a" action-type="save" href="javascript:;"><span class="btn_30px W_f14">{{configSaveButton}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{configCancelButton}}</span></a></div>',
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawf-groupText">{{{text}}}</div>',
-  'configStrings': '<div class="yawf-configStrings"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
+  'configBoolean': '<div class="yawf-configBoolean yawf-configItem"><label><input id="yawf-{{key}}" class="W_checkbox yawf-configBooleanInput" type="checkbox" name="yawf-{{key}}"><span class="yawf-configDesc yawf-configBooleanDesc">{{{text}}}</span></label></div>',
+  'configString': '<div class="yawf-configString yawf-configItem"><label><textarea id="yawf-{{key}}" class="W_input yawf-configStringInput" name="yawf-{{key}}"></label></div>',
+  'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_arrow tag yawf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
-  'configBoolean': '<div class="yawf-configBoolean"><label><input id="yawf-{{key}}" class="W_checkbox yawf-configStringsInput" type="checkbox" name="yawf-{{key}}"><span class="yawf-configDesc yawf-configBooleanDesc">{{{text}}}</span></label></div>',
-  'configUsers': '<div class="yawf-configUsers"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
+  'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
-  'configImportExport': '<div class="yawf-configImportExport"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="btn_30px W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="btn_30px W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="btn_30px W_f14">{{configResetButton}}</span></a></div>',
+  'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="btn_30px W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="btn_30px W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="btn_30px W_f14">{{configResetButton}}</span></a></div>',
 };
 
 var url = {
@@ -368,8 +374,8 @@ var Form = function (dom, display, details) {
   var mouse = null, pos;
   var setPos = function (pos) {
     var left = pos[0], top = pos[1];
-    left = Math.min(Math.max(0, left), document.body.clientWidth - dom.clientWidth);
-    top = Math.min(Math.max(pageYOffset, top), pageYOffset + window.innerHeight - dom.clientHeight);
+    left = Math.min(Math.max(0, left), document.body.clientWidth - dom.clientWidth - 2);
+    top = Math.min(Math.max(pageYOffset, top), pageYOffset + window.innerHeight - dom.clientHeight - 2);
     dom.style.left = left + 'px';
     dom.style.top = top + 'px';
     return [left, top];
@@ -407,8 +413,8 @@ var Form = function (dom, display, details) {
   }
   var cover = cewih('div', html.cover).firstChild;
   var keys = function (e) {
-    if (e.which === 13) if (ok) ok.click();
-    if (e.which === 0) if (close) close.click();
+    if (e.keyCode === 13) if (ok) ok.click();
+    if (e.keyCode === 27) if (close) close.click();
   };
   var hide = function () {
     document.body.removeChild(dom);
@@ -543,7 +549,7 @@ var filters = (function () {
     var saveButton = inner.querySelector('[action-type="save"]');
     var cancelButton = inner.querySelector('[action-type="cancel"]');
     config.onput(function () {
-      applyButton.className = 'W_btn_b';
+      if (applyButton) applyButton.className = 'W_btn_b';
     });
     applyButton.addEventListener('click', function () {
       if (applyButton.classList.contains('W_btn_b_disable')) return;
@@ -713,27 +719,21 @@ var newBarRedraw = newNode.add(function () {
 
 var typedConfig = (function () {
   // 字符串
-  var strings = function (item) {
-    if (!item.getconf) item.getconf = function () {
-      return item.conf = config.get(item.key, item['default'] || [], Array);
-    };
-    if (!item.setconf) item.setconf = function (conf) {
-      return config.put(item.key, item.conf = conf);
+  var baseConfig = function (type) {
+    return function (item) {
+      if (!item.getconf) item.getconf = function () {
+        return item.conf = config.get(item.key, item['default'] || type(), type);
+      };
+      if (!item.setconf) item.setconf = function (conf) {
+        return config.put(item.key, item.conf = conf);
+      };
     };
   };
-  // 布尔值
-  var boolean = function (item) {
-    if (!item.getconf) item.getconf = function () {
-      return item.conf = config.get(item.key, item['default'] || false, Boolean);
-    };
-    if (!item.setconf) item.setconf = function (conf) {
-      return config.put(item.key, item.conf = conf);
-    };
-  }
   return {
-    'strings': strings,
-    'boolean': boolean,
-    'users': strings,
+    'string': baseConfig(String),
+    'strings': baseConfig(Array),
+    'boolean': baseConfig(Boolean),
+    'users': baseConfig(Array),
   }
 }());
 
@@ -764,6 +764,16 @@ var typedHtml = (function () {
     input.addEventListener('change', function () {
       item.setconf(input.checked);
     });
+    return dom;
+  };
+
+  // 字符串的设置项
+  var string = function (item) {
+    var dom = cewih('div', fillStr(html.configString, item)).firstChild;
+    var textarea = dom.querySelector('textarea');
+    textarea.value = item.getconf();
+    textarea.addEventListener('change', function () { item.setconf(textarea.value); });
+    textarea.addEventListener('keypress', function () { item.setconf(textarea.value); });
     return dom;
   };
 
@@ -850,6 +860,7 @@ var typedHtml = (function () {
     'subtitle': subtitle,
     'text': text,
     'html': _html,
+    'string': string,
     'strings': strings,
     'boolean': boolean,
     'users': users,
@@ -1089,8 +1100,7 @@ var otherFilterGroup = filterGroup('otherFilterGroup');
 // 推广微博
 otherFilterGroup.add({
   'type': 'boolean',
-  'key': 'weibo.ad_feed',
-  'default': true,
+  'key': 'weibo.other.ad_feed',
   'text': '{{adfeedFilterDesc}}',
   'rule': function adFeedFilterRule(feed) {
     if (!this.conf) return null;
@@ -1098,24 +1108,26 @@ otherFilterGroup.add({
   },
 });
 
-// 推荐微博
-otherFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.adblock',
-  'default': true,
-  'text': '{{recommandFeedDesc}}',
-  'init': css('[node-type="feed_list_recommend"] { display: none !important; }'),
-});
-
 // 关注推荐微博
 otherFilterGroup.add({
   'type': 'boolean',
-  'key': 'weibo.follow_suggest',
-  'default': true,
+  'key': 'weibo.other.follow_suggest',
   'text': '{{followSuggestFilterDesc}}',
   'rule': function followSuggestFilterRule(feed) {
     if (!this.conf) return null;
     return feed.querySelector('a[href$="/find/i"]') ? 'hidden' : null;
+  },
+});
+
+// 已删除或没有权限查看的微博的转发
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.deleted_forward',
+  'text': '{{deletedForwardFilterDesc}}',
+  'rule': function deletedForwardFilterRule(feed) {
+    if (feed.getAttribute('isforward') === '1' &&
+      feed.querySelector('.WB_media_expand .WB_info .WB_name')) return 'hidden';
+    return null;
   },
 });
 
@@ -1232,7 +1244,26 @@ var layouts = (function () {
 
 // 改造设置
 var toolFilterGroup = filterGroup('toolFilterGroup');
-toolFilterGroup.add({ 'type': 'text', 'text': '// TODO' });
+
+toolFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{userstyleTitle}}',
+});
+
+toolFilterGroup.add({
+  'type': 'string',
+  'key': 'weibo.tool.userstyle',
+  'init': function () {
+    var conf = this.conf; GM_addStyle(conf), set = this.setconf.bind(this);
+    var setconf = function (css) {
+      conf = css;
+      setTimeout(function () { set(css); config.write(); location.reload(); }, 0);
+    };
+    GM_registerMenuCommand(fillStr('{{userstyleEditDesc}}'), function () {
+      setconf(prompt(fillStr('{{userstyleEditDetails}}'), conf));
+    }, "S");
+  },
+});
 
 // 脚本设置
 var scriptFilterGroup = filterGroup('scriptFilterGroup');
@@ -1357,7 +1388,8 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
   .yawf-groupSubtitle, .yawf-groupText { padding: 6px 10px; }
   .yawf-groupSubtitle { font-weight: bold; }
-  .yawf-configStrings, .yawf-configBoolean, .yawf-configUsers, .yawf-configImportExport { margin: 2px 20px; }
+  .yawf-configItem { margin: 2px 20px; }
+  .yawf-configString textarea { width: 100%; min-height: 100px; resize: vertical; }
   .yawf-configStringsInput, .yawf-configUsersInput { margin: 5px; }
   .yawf-configStringsItems, .yawf-configUsersItems { padding: 5px 10px; }
   .yawf-configStringsItem, .yawf-configUsersItem { display: inline-block; margin: 2px; }
