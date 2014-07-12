@@ -4,12 +4,12 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.10 alpha
+// @version     0.1.11 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
 // @copyright   2013+, 田生
-// @license     The MIT Licenses (MIT); http://opensource.org/licenses/MIT
+// @license     The MIT License (MIT); http://opensource.org/licenses/MIT
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
@@ -52,12 +52,14 @@ var text = {
   'configCancelButton': { 'zh-cn': '取消', 'zh-hk': '取消', 'zh-tw': '取消', 'en': 'Cancel' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
+  'foldedWeiboText': { 'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博被折叠，请点击查看"', 'zh-hk': '"來自@" attr(yawf-author) " 的一條微博被折疊，請點擊查看"', 'zh-tw': '"來自@" attr(yawf-author) " 的一條微博被折疊，請點擊查看"', 'en': '"A Weibo from @" attr(yawf-author) " was folded, click to view."' },
   // 设置框
   'filter': { 'zh-cn': '过滤器', 'zh-hk': '篩選器', 'zh-tw': '篩選器', 'en': 'Filter' },
   'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設定', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
   'configRefreshNotice': { 'zh-cn': '部分设置修改需要保存后重新载入页面才能生效', 'zh-hk': '部分設定變更需要儲存後重新載入網頁才能生效', 'zh-tw': '部分設定變更需要儲存後重新載入網頁才能生效', 'en': 'Some settings need refresh webpage after save to apply' },
   'whitelistFilterDesc': { 'zh-cn': '总是显示{{{typed}}}', 'zh-hk': '總是顯示{{{typed}}}', 'zh-tw': '總是顯示{{{typed}}}', 'en': 'Always show {{{typed}}}' },
   'blacklistFilterDesc': { 'zh-cn': '隐藏{{{typed}}}', 'zh-hk': '隱藏{{{typed}}}', 'zh-tw': '隱藏{{{typed}}}', 'en': 'Hide {{{typed}}}' },
+  'foldlistFilterDesc': { 'zh-cn': '折叠{{{typed}}}', 'zh-hk': '折疊{{{typed}}}', 'zh-tw': '折疊{{{typed}}}', 'en': 'Fold {{{typed}}}' },
   // 关键词
   'keywordFilterGroupTitle': { 'zh-cn': '内容', 'zh-hk': '內容', 'zh-tw': '內容', 'en': 'Content' },
   'keywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
@@ -102,7 +104,8 @@ var text = {
   'adfeedFilterDesc': { 'zh-cn': '隐藏推广微博', 'zh-hk': '隱藏推廣微博', 'zh-tw': '隱藏推廣微博', 'en': 'Hide ad Weibo' },
   'recommandFeedDesc': { 'zh-cn': '隐藏推荐微博', 'zh-hk': '隱藏建議微博', 'zh-tw': '隱藏建議微博', 'en': 'Hide recommand Weibo' },
   'followSuggestFilterDesc': { 'zh-cn': '隐藏关注推荐微博', 'zh-hk': '隱藏關注建議微博', 'zh-tw': '隱藏關注建議微博', 'en': 'Hide Following Recommended Weibo' },
-  'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-cn': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Hide forward of deleted Weibo' },
+  'deletedForwardFilterDesc': { 'zh-cn': '隐藏已删除微博的转发', 'zh-cn': '隱藏已刪除微博的轉發', 'zh-tw': '隱藏已刪除微博的轉發', 'en': 'Hide forward of deleted Weibo' },
+  'voteWeiboFilterDesc': { 'zh-cn': '隐藏投票微博' },
   // 模块
   'layoutFilterGroupTitle': { 'zh-cn': '模块', 'zh-hk': '模組', 'zh-tw': '模組', 'en': 'Module' },
   // 标识图标
@@ -204,7 +207,7 @@ var text = {
   'scriptDebug': { 'zh-cn': '在控制台打印调试信息' },
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
-  'scriptAbout': { 'zh-cn': 'YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权，项目主页：<a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a>。<br />本脚本中部分代码参考了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本。', },
+  'scriptAbout': { 'zh-cn': 'YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权，项目主页：<a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a>。<br />本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。', },
 };
 
 // 页面常量
@@ -249,7 +252,7 @@ var rules = (function () {
     var result = null;
     list.some(function (item) {
       try { result = item.rule(feed) || result; }
-      catch (e) { debug(e); }
+      catch (e) { debug('error while parsing rule %o: %o', item.rule, e); }
       if (result) debug('%o(%o) -> %s', item.rule, feed, result);
       return result;
     });
@@ -674,6 +677,22 @@ var newNode = (function () {
   };
 }());
 
+var fixFoldWeibo = (function () {
+  var fix = withTry(function (feed) {
+    var showFeed = function () {
+      feed.setAttribute('yawf-display', 'show');
+      feed.removeEventListener('click', showFeed);
+    };
+    var author = feed.querySelector('.WB_name[usercard]').getAttribute('title');
+    feed.setAttribute('yawf-author', author);
+    feed.addEventListener('click', showFeed);
+  });
+  fix.init = function () {
+    css.add(fillStr('.WB_feed>.WB_feed_type[yawf-display="fold"]::before { content: {{foldedWeiboText}}; }'));
+  };
+  return fix;
+}());
+
 // 逐条进行过滤
 var weiboFilter = newNode.add(function () {
   var feeds = Array.apply(Array,
@@ -684,8 +703,8 @@ var weiboFilter = newNode.add(function () {
     var parentAction = null;
     while (parentAction === null) {
       var action = rules.parse(feed) || 'show';
-      // 如果父微博被屏蔽，那么就把下面一条没被屏蔽的拉上来换个位置
-      if (action === 'hidden' && sonFeeds.length) {
+      // 如果父微博被屏蔽或折叠，那么就把下面一条没被屏蔽的拉上来换个位置
+      if ((action === 'hidden' || action === 'fold') && sonFeeds.length) {
         (function (p, s) {
           var x = cewih('div', '');
           ['.WB_face', '.WB_info', '.WB_text', '.WB_func'].map(function (q) {
@@ -712,6 +731,7 @@ var weiboFilter = newNode.add(function () {
       } else parentAction = action;
     }
     feed.setAttribute('yawf-display', parentAction);
+    if (parentAction === 'fold') fixFoldWeibo(feed);
     // 最后处理所有下面的子微博
     sonFeeds.forEach(function (feed) {
       var action = rules.parse(feed) || 'show';
@@ -719,7 +739,7 @@ var weiboFilter = newNode.add(function () {
     });
     // 如果有一个微博的子微博都隐藏了，那么就隐藏这个微博的子微博框
     if (feed.querySelector('.WB_feed_together')) (function () {
-      var sonCount = feed.querySelectorAll('.WB_feed_together .WB_sonFeed .WB_feed_type[yawf-display="show"]').length;
+      var sonCount = feed.querySelectorAll('.WB_feed_together .WB_sonFeed .WB_feed_type:not([yawf-display="hidden"])').length;
       if (sonCount === 0) feed.querySelector('.WB_feed_together').setAttribute('yawf-display', 'hidden');
       else feed.querySelector('[node-type="followNum"]').textContent = sonCount;
       if (sonCount <= 3 && feed.querySelector('[node-type="feed_list_wrapForward"]')) {
@@ -917,8 +937,9 @@ var filterGroup = function (groupName) {
 
 var allInOneFilters = function (details) {
   var filters = [
-    { 'type': 'blacklist', 'priority': 0, 'action': 'hidden' },
     { 'type': 'whitelist', 'priority': 1e5, 'action': 'show' },
+    { 'type': 'blacklist', 'priority': 0, 'action': 'hidden' },
+    { 'type': 'foldlist', 'priority': -1e5, 'action': 'fold' },
   ];
   var typedFilterGroup = filterGroup(details.name + 'FilterGroup');
   filters.forEach(function (filter) {
@@ -1139,8 +1160,22 @@ otherFilterGroup.add({
   'key': 'weibo.other.deleted_forward',
   'text': '{{deletedForwardFilterDesc}}',
   'rule': function deletedForwardFilterRule(feed) {
+    if (!this.conf) return null;
     if (feed.getAttribute('isforward') === '1' &&
-      feed.querySelector('.WB_media_expand .WB_info .WB_name')) return 'hidden';
+      !feed.querySelector('.WB_media_expand .WB_info .WB_name')) return 'hidden';
+    return null;
+  },
+});
+
+// 投票微博
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.vote_weibo',
+  'text': '{{voteWeiboFilterDesc}}',
+  'rule': function voteWeiboFilterRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('.WB_from a[href^="http://vote.weibo.com/"]'))
+      return 'hidden';
     return null;
   },
 });
@@ -1468,6 +1503,8 @@ var dcl = function () {
   showIcon();
   // 初始化所有过滤器
   filters.init();
+  // 初始化折叠微博
+  fixFoldWeibo.init();
   // 注册样式
   css.init();
   // 开始过滤
@@ -1512,6 +1549,12 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   // 隐藏微博
   [yawf-display="hidden"] { display: none !important; }
   .WB_feed>.WB_feed_type:not([yawf-display]), .WB_feed>.WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
+  // 折叠微博
+  .WB_feed>.WB_feed_type[yawf-display="fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; border-bottom: #e6e6e6 1px solid; cursor: pointer; } 
+  .WB_feed>.WB_feed_type[yawf-display="fold"] { height: 45px; overflow: hidden; }
+  .WB_feed>.WB_feed_type[yawf-display="fold"] .WB_screen { margin-top: -40px !important; }
+  .WB_feed>.WB_feed_type[yawf-display="fold"] .WB_feed_datail { display: none !important; }
+  // 其他
   .WB_feed_together[yawf-fold="display"] .wft_users { display: none; }
   .WB_feed_together[yawf-fold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
   .WB_feed_together[yawf-fold="display"] [action-type="feed_list_seeAll"],

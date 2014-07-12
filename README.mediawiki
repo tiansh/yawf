@@ -17,7 +17,6 @@ This script have not been done. It may not stable. And you may lose your setting
 == 待做 ==
 
 * 替换掉有新微博的提示
-* 折叠功能
 * 其他界面改造项目
 
 == 关于 ==
