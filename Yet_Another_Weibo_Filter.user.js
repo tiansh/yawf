@@ -189,9 +189,9 @@ var text = {
 // 页面常量
 var html = {
   'cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: #000; opacity: 0.3; z-index: 10001;"></div>',
-  'dialog': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title"><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"></div></div></td></tr></tbody></table></div></div>',
-  'alert': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textSmall" class="S_txt2"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
-  'confirm': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textComplex" class="S_txt2" style="display: none;"></p><p node-type="textSmall" class="S_txt2" style="display: none;"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" href="javascript:void(0)"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
+  'dialog': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title"><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"></div></div></td></tr></tbody></table></div></div>',
+  'alert': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textSmall" class="S_txt2"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
+  'confirm': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textComplex" class="S_txt2" style="display: none;"></p><p node-type="textSmall" class="S_txt2" style="display: none;"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" href="javascript:void(0)"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
   'icon': '<div class="gn_setting" node-type="filter"><i><a class="gn_tab gn_filter" href="#"><span class="ico">{{filter}}</span></a></i></div>',
   'configHeaderTop': '<div class="profile_tab S_line5 yawf-config-header" node-type="yawf-config-header"><ul class="pftb_ul S_line1">',
   'configHeaderItem': '<li class="pftb_itm S_line1 {{liclass}}"><a class="pftb_lk S_line5 S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a>',
@@ -359,21 +359,76 @@ var showIcon = function () {
   });
 };
 
-var Form = function (dom, display) {
+// 对话框
+var Form = function (dom, display, details) {
+  var ok = dom.querySelector('[node-type="OK"]');
+  var cancel = dom.querySelector('[node-type="cancel"]');
+  var close = dom.querySelector('[node-type="close"]');
+  var title = dom.querySelector('.title');
+  var mouse = null, pos;
+  var setPos = function (pos) {
+    var left = pos[0], top = pos[1];
+    left = Math.min(Math.max(0, left), document.body.clientWidth - dom.clientWidth);
+    top = Math.min(Math.max(pageYOffset, top), pageYOffset + window.innerHeight - dom.clientHeight);
+    dom.style.left = left + 'px';
+    dom.style.top = top + 'px';
+    return [left, top];
+  };
+  var dragMove = function (e) {
+    debug(e.which);
+    var mouse_new = [e.clientX, e.clientY];
+    pos[0] += mouse_new[0] - mouse[0];
+    pos[1] += mouse_new[1] - mouse[1];
+    setPos(pos);
+    mouse = mouse_new;
+  };
+  var dragMoveDone = function () {
+    document.removeEventListener('mousemove', dragMove);
+    document.removeEventListener('mouseup', dragMoveDone);
+    dom.classList.remove('yawf-drag');
+    if (dom.releaseCapture) { dom.releaseCapture(); }
+    pos = setPos(pos);
+    mouse = null;
+  };
+  if (title) {
+    title.style.cursor = 'move';
+    title.addEventListener('mousedown', function (e) {
+      mouse = [e.clientX, e.clientY];
+      document.addEventListener('mousemove', dragMove);
+      document.addEventListener('mouseup', dragMoveDone);
+      dom.classList.add('yawf-drag');
+      if (dom.setCapture) { dom.setCapture(); }
+    });
+  }
+  if (details.onOk) if (ok) ok.addEventListener('click', details.onOk);
+  if (details.onCancel) {
+    if (cancel) cancel.addEventListener('click', details.onCancel);
+    if (close) close.addEventListener('click', details.onCancel);
+  }
   var cover = cewih('div', html.cover).firstChild;
+  var keys = function (e) {
+    if (e.which === 13) if (ok) ok.click();
+    if (e.which === 0) if (close) close.click();
+  };
   var hide = function () {
     document.body.removeChild(dom);
     document.body.removeChild(cover);
+    document.removeEventListener('keypress', keys);
   };
   var show = function (top, left) {
     document.body.appendChild(cover);
     document.body.appendChild(dom);
     if (top == null) top = (window.innerHeight - dom.clientHeight) / 2;
     if (left == null) left = (window.innerWidth - dom.clientWidth) / 2;
-    dom.style.top = (top + pageYOffset) + 'px';
-    dom.style.left = left + 'px';
+    pos = [left, top + pageYOffset];
+    setPos(pos);
+    document.addEventListener('keypress', keys);
+    document.activeElement.blur();
   };
   if (display) show();
+  if (ok) ok.addEventListener('click', hide);
+  if (cancel) cancel.addEventListener('click', hide);
+  if (close) close.addEventListener('click', hide);
   return {
     'hide': hide,
     'show': show,
@@ -383,36 +438,21 @@ var Form = function (dom, display) {
 // 显示一个对话框
 var Dialog = function (id, title, fillFun) {
   var dom = cewih('div', fillStr(html.dialog, { 'id': id, 'title': title })).firstChild;
-  var close = dom.querySelector('[node-type="close"]');
+  var form = Form(dom, false, {});
   fillFun(dom.querySelector('[node-type="inner"]'));
-  var form = Form(dom, false);
-  close.addEventListener('click', form.hide);
   return form;
 };
 
 // 显示一个提示框
 var Alert = function (id, details) {
   var dom = cewih('div', fillStr(html.alert, { 'id': id, 'title': details.title, 'text': details.text, 'icon': details.icon || 'warn' })).firstChild;
-  var ok = dom.querySelector('[node-type="OK"]');
-  var close = dom.querySelector('[node-type="close"]');
-  var form = Form(dom, true);
-  ok.addEventListener('click', form.hide);
-  close.addEventListener('click', form.hide);
+  var form = Form(dom, true, details);
   return form;
 };
 
 var Confirm = function (id, details) {
   var dom = cewih('div', fillStr(html.confirm, { 'id': id, 'title': details.title, 'text': details.text, 'icon': details.icon || 'question' })).firstChild;
-  var ok = dom.querySelector('[node-type="OK"]');
-  var cancel = dom.querySelector('[node-type="cancel"]');
-  var close = dom.querySelector('[node-type="close"]');
-  if (details.onOk) ok.addEventListener('click', details.onOk);
-  if (details.onCancel) cancel.addEventListener('click', details.onCancel);
-  if (details.onCancel) close.addEventListener('click', details.onCancel);
-  var form = Form(dom, true);
-  ok.addEventListener('click', form.hide);
-  cancel.addEventListener('click', form.hide);
-  close.addEventListener('click', form.hide);
+  var form = Form(dom, true, details);
   return form;
 };
 
@@ -1217,22 +1257,28 @@ scriptFilterGroup.add({
       be.setAttribute('download', 'yawf-config.yawf');
     };
     // 导入按钮
-    var doImport = function () {
+    var doImport = function (file) {
       var reader = new FileReader();
-      reader.addEventListener('load', function () {
+      var success = function () {
+        Alert('yawf-config-import-success', {
+          'title': fillStr('{{configImportSuccessTitle}}'),
+          'text': fillStr('{{configImportSuccess}}'),
+          'icon': 'succ'
+        });
+      };
+      var error = function () {
+        Alert('yawf-config-import-fail', {
+          'title': fillStr('{{configImportFailTitle}}'),
+          'text': fillStr('{{configImportFail}}'),
+          'icon': 'error'
+        });
+      };
+      if (file.size > (1<<24)) error();
+      else reader.addEventListener('load', function () {
         if (config.import(reader.result)) {
           updateExportButton();
-          Alert('yawf-config-import-success', {
-            'title': fillStr('{{configImportSuccessTitle}}'),
-            'text': fillStr('{{configImportSuccess}}'),
-            'icon': 'succ'
-          });
-        } else
-          Alert('yawf-config-import-fail', {
-            'title': fillStr('{{configImportFailTitle}}'),
-            'text': fillStr('{{configImportFail}}'),
-            'icon': 'error'
-          });
+          success();
+        } else error();
       });
       reader.readAsText(file);
       bii.value = '';
@@ -1242,7 +1288,7 @@ scriptFilterGroup.add({
       Confirm('yawf-config-import-warning', {
         'title': fillStr('{{configImportWarningTitle}}'),
         'text': fillStr('{{configImportWarning}}'),
-        'onOk': doImport
+        'onOk': function () { doImport(file); },
       });
     });
     updateExportButton();
@@ -1305,6 +1351,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .WB_global_nav .gn_search { width: 210px !important; left: 440px !important; position: absolute !important; }
   .WB_global_nav .gn_search .gn_input { width: 168px !important; }
   // 设置框相关样式
+  .yawf-Layer.yawf-drag { opacity: 0.67; -moz-user-select: none; user-select: none; }
   #yawf-config [node-type="inner"] { padding: 20px; }
   .yawf-config-body { margin: -20px -20px 0; max-height: 300px; overflow-y: auto; padding: 20px; width: 760px; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
