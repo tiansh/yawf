@@ -2,8 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
   <title>Yet Another Weibo Filter 看真正想看的微博</title>
+  <meta name="keywords" content="Weibo, Sina Weibo, 微博, 新浪微博, 过滤, 篩選, Filter" />
+  <meta name="description" content="新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout" />
+  <link rel="canonical" href="https://tiansh.github.io/yawf/">
   <style>
+    body { width: 800px; margin: 0 auto; font-size: 120%; font-family: sans-serif; }
     .lang { display: none; }
     .zh-cn { display: block; }
     .langs ~ div.lang { display: none; }
@@ -11,7 +16,7 @@
     .langs.zh-hk ~ div.lang.zh-hk { display: block; }
     .langs.zh-tw ~ div.lang.zh-tw { display: block; }
     .langs.en ~ .lang.en { display: block; }
-    .install { font-size: 48px; display: block; width: 12em; height: 2em; line-height: 2em; background: black; color: white; text-decoration: none; text-align: center; }
+    .install { font-size: 300%; display: block; width: 12em; height: 2em; line-height: 2em; background: #FFA00A; color: white; text-decoration: none; text-align: center; }
     .warning { color: #700; font-weight: bold; }
   </style>
 </head>
@@ -28,24 +33,80 @@
     <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安装脚本</a>
     <p>新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。</p>
     <p class="warning">脚本尚处于开发之中，功能尚不稳定，不能保证更新后可以保留原有设置。</p>
+    <p>请使用 Greasemonkey 安装本脚本。</p>
+    <img width="296" height="153" alt="点击右上角漏斗图标显示脚本设置" src="useage.png" />
+    <h2>当前功能</h2>
+    <ul>
+      <li>根据关键字、正则式、作者、来源等过滤微博</li>
+      <li>过滤推广微博等混入微博列表的东西</li>
+      <li>其他一些广告过滤</li>
+      <li>清理微博版面</li>
+      <li>添加查看大图链接</li>
+    </ul>
+    <h2>关于</h2>
+    <p>YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权。<br />
+    您可以访问脚本的主页 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 获取详细信息。<br />
+    本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。</p>
   </div>
   <div class="lang zh-hk" lang="zh-hk">
     <h1>看真正想看的微博 (YAWF)</h1>
     <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a>
     <p>新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。</p>
     <p class="warning">腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。</p>
+    <p>請使用 Greasemonkey 安裝本腳本。 </p>
+    <img width="296" height="153" alt="點擊右上角漏斗圖示顯示腳本設定" src="useage.png" />
+    <h2>當前功能</h2>
+    <ul>
+      <li>根據關鍵字、正則式、作者、來源等過濾微博</li>
+      <li>過濾推廣微博等混入微博列表的東西</li>
+      <li>其他一些廣告過濾</li>
+      <li>清理微博版面</li>
+      <li>添加查看大圖鏈接</li>
+    </ul>
+    <h2>關於</h2>
+    <p>YAWF (Yet Another Weibo Filter) 使用MIT 協議授權。<br />
+    您可以訪問腳本的主頁<a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 獲取詳細信息。 <br />
+    本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分代碼。 </p>
   </div>
   <div class="lang zh-tw" lang="zh-tw">
     <h1>看真正想看的微博 (YAWF)</h1>
     <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a>
     <p>新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。</p>
     <p class="warning">腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。</p>
+    <p>請使用 Greasemonkey 安裝本腳本。 </p>
+    <img width="296" height="153" alt="點擊右上角漏斗圖示顯示腳本設定" src="useage.png" />
+    <h2>當前功能</h2>
+    <ul>
+      <li>根據關鍵字、正規式、作者、來源等過濾微博</li>
+      <li>過濾推廣微博等混入微博列表的東西</li>
+      <li>其他一些廣告過濾</li>
+      <li>清理微博版面</li>
+      <li>添加查看大圖鏈接</li>
+    </ul>
+    <h2>關於</h2>
+    <p>YAWF (Yet Another Weibo Filter) 使用MIT 協議授權。<br />
+    您可以訪問腳本的主頁<a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 獲取詳細信息。 <br />
+    本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分代碼。 </p>
   </div>
   <div class="lang en" lang="en">
     <h1>Yet Another Weibo Filter</h1>
     <a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">Install Script</a>
     <p>filter Sina Weibo by keywords, original, topic, source, etc.; modify layout</p>
     <p class="warning">script have not been done. It may not stable. And you may lose your setting after update.</p>
+    <p>Please use Greasemonkey to install this script </p>
+    <img width="296" height="153" alt="Click funnel icon on right top to show script setting" src="useage.png" />
+    <h2>Current Function</h2>
+    <ul>
+      <li>Filter weibo by keyword, regexp, author, source, etc.</li>
+      <li>Filter out suggestion Weibo and other contents in Weibo list</li>
+      <li>Ad Block</li>
+      <li>Clean webpage layout</li>
+      <li>Add "View Original" link</li>
+    </ul>
+    <h2>About</h2>
+    <p>YAWF (Yet Another Weibo Filter) is under the MIT License. <br />
+    You may visit project host page <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> for more information.<br />
+    Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦 (Weibo Content Filter)</a> script.</p>
   </div>
 </body>
 </html>
