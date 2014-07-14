@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.13 alpha
+// @version     0.1.14 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -214,7 +214,7 @@ var text = {
     'zh-cn': 'YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权。您可以访问脚本的主页 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 获取详细信息。<br />本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。',
     'zh-hk': 'YAWF (Yet Another Weibo Filter) 使用 MIT 協議授權。您可以訪問腳本的主頁 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 獲取詳細訊息。<br />本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>腳本的部分代碼。',
     'zh-tw': 'YAWF (Yet Another Weibo Filter) 使用 MIT 協議授權。您可以訪問腳本的主頁 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 獲取詳細訊息。<br />本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>腳本的部分代碼。',
-    'en': 'YAWF (Yet Another Weibo Filter) is under the MIT License. <br />You may visit project host page <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> for more information. <br />Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦 (Weibo Content Filter)</a> script.YAWF (Yet Another Weibo Filter) is under the MIT License. Project host page: <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a>。<br />Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦 (Weibo Content Filter)</a> script.',
+    'en': 'YAWF (Yet Another Weibo Filter) is under the MIT License. <br />You may visit project host page <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> for more information. <br />Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦 (Weibo Content Filter)</a> script.',
   },
 };
 
@@ -730,12 +730,12 @@ var fixFoldWeibo = (function () {
     feed.addEventListener('click', showFeed);
   });
   fix.init = function () {
-    css.add(fillStr('.WB_feed>.WB_feed_type[yawf-display="fold"]::before { content: {{foldedWeiboText}}; }'));
+    css.add(fillStr('.WB_feed_type[yawf-display="fold"]::before { content: {{foldedWeiboText}}; }'));
   };
   return fix;
 }());
 
-var swapParentWeibo = function (parent, son) {
+var swapParentSonWeibo = function (parent, son) {
   var x = cewih('div', '');
   ['.WB_face', '.WB_info', '.WB_text', '.WB_func'].map(function (q) {
     (function (a, b) {
@@ -775,21 +775,34 @@ var weiboFilter = function () {
     document.querySelectorAll('.WB_feed>.WB_feed_type:not([yawf-display])'));
   feeds.forEach(function (feed) {
     // 同源合并的微博
-    var sonFeeds = Array.apply(Array, feed.querySelectorAll('.WB_feed_type:not([yawf-display])'));
+    var sonFeeds = Array.apply(Array, feed.querySelectorAll('.WB_feed_type:not([yawf-display])')), son;
     var action = null;
+    var needSwap = function (action) {
+      if (!sonFeeds.length) return false;
+      if (['hidden', 'fold'].indexOf(action) === -1) return false;
+      return true;
+    };
+    var setAction = function (feed, action) {
+      feed.setAttribute('yawf-display', action);
+      if (action === 'fold') fixFoldWeibo(feed);
+    }
     while (true) {
       action = rules.parse(feed) || 'unset';
       // 如果父微博被屏蔽或折叠，那么就把下面一条没被屏蔽的拉上来换个位置
-      if ((action === 'hidden' || action === 'fold') && sonFeeds.length) {
-        swapParentWeibo(feed, sonFeeds.shift()).setAttribute('yawf-display', action);
-      } else break;
+      if (!needSwap(action)) break;
+      setAction(swapParentSonWeibo(feed, sonFeeds.pop()), action);
     }
-    feed.setAttribute('yawf-display', action);
-    if (action === 'fold') fixFoldWeibo(feed);
+    setAction(feed, action);
     // 最后处理所有下面的子微博
-    sonFeeds.forEach(function (feed) {
-      feed.setAttribute('yawf-display', rules.parse(feed) || 'unset');
-    });
+    while (sonFeeds.length) (function (feed) {
+      var action = rules.parse(feed) || 'unset';
+      setAction(feed, action);
+      // 一样地，如果子微博被屏蔽或折叠，也要把它换到最后
+      if (needSwap(action)) {
+        var rel = feed.parentNode;
+        rel.appendChild(rel.removeChild(feed));
+      }
+    }(sonFeeds.shift()));
     fixSonWeiboDisplay(feed);
   });
   return feeds;
@@ -1241,9 +1254,12 @@ otherFilterGroup.add({
   'init': function () {
     if (!this.conf) return;
     addWeiboFilterListener(function (feed) {
-      if (feed.getAttribute('yawf-display') !== 'hidden') return;
-      if (!feed.getAttribute('mid')) return;
-      blockWeibo(feed.getAttribute('mid'));
+      [feed].concat(Array.apply(Array, feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
+        if (feed.getAttribute('yawf-display') !== 'hidden') return;
+        if (!feed.getAttribute('mid')) return;
+        blockWeibo(feed.getAttribute('mid'));
+        feed.setAttribute('yawf-block', 'block');
+      });
     });
   }
 });
@@ -1641,10 +1657,10 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   [yawf-display="hidden"] { display: none !important; }
   .WB_feed>.WB_feed_type:not([yawf-display]), .WB_feed>.WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
-  .WB_feed>.WB_feed_type[yawf-display="fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; border-bottom: #e6e6e6 1px solid; } 
-  .WB_feed>.WB_feed_type[yawf-display="fold"] { height: 45px; overflow: hidden; cursor: pointer; }
-  .WB_feed>.WB_feed_type[yawf-display="fold"] .WB_screen { margin-top: -40px !important; }
-  .WB_feed>.WB_feed_type[yawf-display="fold"] .WB_feed_datail { display: none !important; }
+  .WB_feed_type[yawf-display="fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; border-bottom: #e6e6e6 1px solid; } 
+  .WB_feed_type[yawf-display="fold"] { height: 45px; overflow: hidden; cursor: pointer; }
+  .WB_feed_type[yawf-display="fold"] .WB_screen { margin-top: -40px !important; }
+  .WB_feed_type[yawf-display="fold"] .WB_feed_datail { display: none !important; }
   // 其他
   .WB_feed_together[yawf-fold="display"] .wft_users { display: none; }
   .WB_feed_together[yawf-fold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
