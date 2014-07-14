@@ -1,0 +1,10 @@
+﻿@charset "utf-8";
+
+body { width: 800px; margin: 0 auto; font-size: 120%; font-family: sans-serif; background: #f3f3f3; }
+#lang { float: right; color: gray; font-size: 83%; }
+h2 { border-bottom: 2px solid #ccc; margin-top: 1em; }
+.install { font-size: 300%; display: block; width: 12em; height: 2em; line-height: 2em; background: #FFA00A; color: white; text-decoration: none; text-align: center; margin-left: 100px; text-transform: uppercase; }
+.install:hover { background: #ffb137; }
+#checkFx { display: none; }
+.in { margin-left: 40px; }
+.warning { color: #700; font-weight: bold; }
