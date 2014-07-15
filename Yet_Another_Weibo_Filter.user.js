@@ -730,7 +730,7 @@ var fixFoldWeibo = (function () {
     feed.addEventListener('click', showFeed);
   });
   fix.init = function () {
-    css.add(fillStr('.WB_feed_type[yawf-display="fold"]::before { content: {{foldedWeiboText}}; }'));
+    css.add(fillStr('[node-type="feed_list"] .WB_feed_type[yawf-display="fold"]::before { content: {{foldedWeiboText}}; }'));
   };
   return fix;
 }());
@@ -772,10 +772,10 @@ var fixSonWeiboDisplay = function (feed) {
 
 var weiboFilter = function () {
   var feeds = Array.apply(Array,
-    document.querySelectorAll('.WB_feed>.WB_feed_type:not([yawf-display])'));
+    document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
   feeds.forEach(function (feed) {
     // 同源合并的微博
-    var sonFeeds = Array.apply(Array, feed.querySelectorAll('.WB_feed_type:not([yawf-display])')), son;
+    var sonFeeds = Array.apply(Array, feed.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])')), son;
     var action = null;
     var needSwap = function (action) {
       if (!sonFeeds.length) return false;
@@ -1655,12 +1655,12 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .layoutFilterGroupLayer .yawf-configBoolean { display: inline-block; margin-right: 0; }
   // 隐藏微博
   [yawf-display="hidden"] { display: none !important; }
-  .WB_feed>.WB_feed_type:not([yawf-display]), .WB_feed>.WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
+  [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
-  .WB_feed_type[yawf-display="fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; border-bottom: #e6e6e6 1px solid; } 
-  .WB_feed_type[yawf-display="fold"] { height: 45px; overflow: hidden; cursor: pointer; }
-  .WB_feed_type[yawf-display="fold"] .WB_screen { margin-top: -40px !important; }
-  .WB_feed_type[yawf-display="fold"] .WB_feed_datail { display: none !important; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display="fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; border-bottom: #e6e6e6 1px solid; } 
+  [node-type="feed_list"] .WB_feed_type[yawf-display="fold"] { height: 45px; overflow: hidden; cursor: pointer; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display="fold"] .WB_screen { margin-top: -40px !important; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display="fold"] .WB_feed_datail { display: none !important; }
   // 其他
   .WB_feed_together[yawf-fold="display"] .wft_users { display: none; }
   .WB_feed_together[yawf-fold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
