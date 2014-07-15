@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.16 alpha
+// @version     0.1.17 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -985,7 +985,7 @@ var filterGroup = function (groupName) {
   // 网页被初始化时初始化所有过滤器
   var init = function () {
     items.forEach(withTry(function (item) {
-      if (item.key && item.getconf()) { config.reg(item.key); item.getconf(); }
+      if (item.key && item.getconf) { config.reg(item.key); item.getconf(); }
       if (item.init) item.init();
       if (item.rule) rules.add(item.priority || 0, item.rule.bind(item));
     }));
