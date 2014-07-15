@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.15 alpha
+// @version     0.1.16 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -15,16 +15,14 @@
 // @grant       GM_getValue
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
-// @grant       GM_getResourceURL
 // @grant       GM_info
 // @grant       unsafeWindow
 // @run-at      document-start
-// @resource    filter_png http://tiansh.github.io/yawf/filter.png?version=20140713
 // ==/UserScript==
 
 // 图片
 var images = {
-  'filter': GM_getResourceURL('filter_png') || 'http://tiansh.github.io/yawf/filter.png?version=20140713'
+  'filter': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAFEUExURUxpcZ6eno6OjpmZmf////v7+/j4+Pr6+vr6+uzs7MvLy8rKyuzs7Ly8vLy8vO7u7r29vb29ve7u7unp6by8vOrq6ufn5+/v776+vry8vO3t7ejo6Ojo6Ovr6+/v7729ve7u7ry8vO/v7+vr6+jo6L6+vu7u7ry8vO/v7+rq6ujo6L6+vu3t7e/v77e3t+vr6+jo6Jubm5qampqamp+fn7m5uezs7MXFxe7u7p2dnZubm5+fn5ycnOzs7L6+vsDAwMLCwsHBwevr6/Ly8vr6+sPDw+3t7e/v78TExMHBwcnJycXFxff39+np6e7u7vPz8/f39/j4+O/v7/T09Ovr6/////Dw8PT09P///9zc3Pn5+fv7+////+3t7f///9ra2v///8DAwOPj49PT0////8LCwtHR0b+/v+Pj48bGxsHBwcfHx0ifhqUAAABsdFJOUwA/Skoauru8u8K7u40sLY8yMYeULoqRijIxjIiNkI42jTWQko86nDaeoJ08sLRKuLQ1Nj8yUL2twEc9Nzq6op6lqbbGn6K/wKymsqmExsO6foDKuMV+wchsm3qmF8l6l2ZWC7oWtrpSCLq2ugo9naEAAAClSURBVBjTY2DAANGsbOzsHEDAzs7G6gIUCI9Ny8rm4ubmykxNDnIGCniFxKczMjEzMzEmRvqaAwUsvYMTMkB6kyL8HYxBDCuPsLgUBgaWUD9HI4ixNp6cUTEsgZx2hjCLrF3dA3zc7E0QVptaONma6SG5RVvXQF9HHUlAVUNLU00RSUBeSUVZQRJJQEJORlaKD0lAQFxaVEgESUCQX0yYh5cBKwAASvgW88X18swAAAAASUVORK5CYII=',
 };
 
 // 多行字符串
@@ -356,7 +354,7 @@ var config = function (uid) {
   var import_ = function (s) {
     try {
       clear();
-      s = JSON.parse(s).settings;
+      s = JSON.parse(s).conf;
       Object.keys(s).forEach(function (key) {
         put(key, s[key]);
       });
@@ -367,10 +365,11 @@ var config = function (uid) {
   // 导出成为字串
   var export_ = function () {
     return JSON.stringify({
-      'ua': navigator.userAgent || '',
-      'yawf': GM_info.script || {},
-      'gm': GM_info.version || '',
-      'settings': config,
+      'ua': navigator.userAgent,
+      'yawf': GM_info.script.name,
+      'ver': GM_info.script.version,
+      'gm': GM_info.version,
+      'conf': config,
     }, null, 2);
   };
   // 清空设置
