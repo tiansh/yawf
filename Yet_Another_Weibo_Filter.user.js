@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.14 alpha
+// @version     0.1.15 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -16,6 +16,7 @@
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
 // @grant       GM_getResourceURL
+// @grant       GM_info
 // @grant       unsafeWindow
 // @run-at      document-start
 // @resource    filter_png http://tiansh.github.io/yawf/filter.png?version=20140713
@@ -23,7 +24,7 @@
 
 // 图片
 var images = {
-  'filter': GM_getResourceURL('filter_png'),
+  'filter': GM_getResourceURL('filter_png') || 'http://tiansh.github.io/yawf/filter.png?version=20140713'
 };
 
 // 多行字符串
@@ -319,13 +320,13 @@ var fillStr = function (base) {
 
 // 设置项
 var config = function (uid) {
-  var config = {}, storageKey = 'user' + uid + 'config';
-  var onputs = [];
+  var config = {}, keys = [], onputs = [], storageKey = 'user' + uid + 'config';
   var tonputs = function (key, value, oldValue) {
     onputs.map(function (f) { f(key, value, oldValue); });
   };
   // 写入到内存
   var put = function (key, value) {
+    if (keys.indexOf(key) === -1) return;
     tonputs(key, value, config[key]);
     config[key] = value;
     return value;
@@ -355,19 +356,30 @@ var config = function (uid) {
   var import_ = function (s) {
     try {
       clear();
-      s = JSON.parse(s);
-      Object.keys(s).forEach(function (key) { put(key, s[key]); });
+      s = JSON.parse(s).settings;
+      Object.keys(s).forEach(function (key) {
+        put(key, s[key]);
+      });
       return true;
     } catch (e) { }
     return false;
   };
   // 导出成为字串
-  var export_ = function () { return JSON.stringify(config); };
+  var export_ = function () {
+    return JSON.stringify({
+      'ua': navigator.userAgent || '',
+      'yawf': GM_info.script || {},
+      'gm': GM_info.version || '',
+      'settings': config,
+    }, null, 2);
+  };
   // 清空设置
   var clear = function () {
     config = {};
     tonputs();
   };
+  // 注册键
+  var reg = function (key) { keys.push(key); };
   // 初始化
   read();
   return {
@@ -376,6 +388,7 @@ var config = function (uid) {
     'read': read, 'write': write,
     'import': import_, 'export': export_,
     'clear': clear,
+    'reg': reg,
   };
 };
 
@@ -586,14 +599,8 @@ var filters = (function () {
       config.write();
       applyButton.className = 'W_btn_b W_btn_b_disable';
     });
-    saveButton.addEventListener('click', function () {
-      config.write();
-      dialog.hide();
-    });
-    cancelButton.addEventListener('click', function () {
-      config.read();
-      dialog.hide();
-    });
+    saveButton.addEventListener('click', function () { config.write(); dialog.hide(); });
+    cancelButton.addEventListener('click', function () { config.read(); dialog.hide(); });
   };
   var lastTab = 0;
   var dialogTabs = function (list, inner, page) {
@@ -970,13 +977,16 @@ var filterGroup = function (groupName) {
   // 向过滤器组里面添加一个项目
   var add = function (item) {
     items.push(item);
-    try { if (item.type && typedConfig[item.type]) typedConfig[item.type](item); } catch (e) { }
+    try {
+      if (item.type && typedConfig[item.type])
+        typedConfig[item.type](item);
+    } catch (e) { }
     return item;
   };
   // 网页被初始化时初始化所有过滤器
   var init = function () {
     items.forEach(withTry(function (item) {
-      if (item.getconf) item.getconf();
+      if (item.key && item.getconf()) { config.reg(item.key); item.getconf(); }
       if (item.init) item.init();
       if (item.rule) rules.add(item.priority || 0, item.rule.bind(item));
     }));
