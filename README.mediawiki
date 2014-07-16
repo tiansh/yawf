@@ -13,6 +13,8 @@ This script have not been done. It may not stable. And you may lose your setting
 * 其他一些广告过滤
 * 清理微博版面
 * 添加查看大图链接
+* 高亮显示白名单微博
+* 隐藏/折叠单人过多微博或单微博过多转发
 
 == 关于 ==
 
