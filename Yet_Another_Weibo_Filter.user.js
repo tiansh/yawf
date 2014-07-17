@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.20 alpha
+// @version     0.1.21 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -189,9 +189,11 @@ var text = {
   'userstyleTitle': { 'zh-cn': '自定义CSS', 'zh-hk': '自訂CSS', 'zh-tw': '自訂CSS', 'en': 'Customize CSS' },
   'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
   'userstyleEditDetails': { 'zh-cn': 'YAWF CSS: ', 'zh-hk': 'YAWF CSS: ', 'zh-tw': 'YAWF CSS: ', 'en': 'YAWF CSS: ' },
+  'noFloatNav': { 'zh-cn': '禁用导航栏顶端固定', 'zh-hk': '禁用導覽列頂端固定', 'zh-tw': '禁用導覽列頂端固定', 'en': 'Make navigation scroll with page' },
   'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
   'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息', 'zh-hk': '展開左欄消息', 'zh-tw': '展開左欄消息', 'en': 'Unfold news in left column' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
+  'personalRedirectWeibo': { 'zh-cn': '访问账号主页显示微博页面', 'zh-hk': '訪問帳號主頁顯示微博頁面', 'zh-tw': '訪問帳號主頁顯示微博頁面', 'en': 'Show Weibo page instead of personal mainpage by default' },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加“查看原圖”連結', 'zh-tw': '添加“查看原圖”連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
@@ -348,7 +350,6 @@ var config = function (uid) {
   var get = function (key, value, type) {
     if (!(key in config)) return value;
     var val = config[key];
-    debug('get %s = %o', key, val);
     if (typeof val === 'undefined') return value;
     if (type && (val === null || val.constructor !== type)) return value;
     return val;
@@ -380,11 +381,12 @@ var config = function (uid) {
   };
   // 导出成为字串
   var export_ = function () {
+    var info = GM_info || {}, script = info.script || {};
     return JSON.stringify({
       'ua': navigator.userAgent,
-      'yawf': GM_info.script.name,
-      'ver': GM_info.script.version,
-      'gm': GM_info.version,
+      'yawf': script.name,
+      'ver': script.version,
+      'gm': (info.scriptHandler || '') + info.version,
       'conf': config,
     }, null, 2);
   };
@@ -736,7 +738,7 @@ var newNode = (function () {
   };
   var remove = function (callback) {
     var found = false;
-    callback = callback.filter(function (x) {
+    callbacks = callbacks.filter(function (x) {
       if (x === callback) return found = true; return false;
     });
   };
@@ -1475,9 +1477,17 @@ var layouts = (function () {
   item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
 
   subtitle('Person');
-  item('Cover', '.profile_pic_top { max-height: 120px; }');
+  item('Cover', funcStr(function () { /* !CSS
+    .S_profile_pic { display: none; }
+    .profile_top .pf_head { top: 10px; margin-top: 0 !important; }
+    .profile_top .pf_head_pic { height: 120px; width: 120px; float: left; }
+    .profile_top .pf_head_pic img { height: 120px; }
+    .profile_top .pf_head .user_atten { width: 60px; float: right; height: 120px; }
+    .profile_top .pf_head .user_atten li, .profile_top .pf_head .user_atten .follower { width: 54px; padding: 0 3px 3px; height: 37px; border-right: none; }
+    .profile_top .pf_head .user_atten li strong { margin: 3px 0 0; }
+  */ }));
   item('BadgeIcon', '.pf_badge_icon { display: none !important; }');
-  item('Stats', '.profile_top .user_atten { display: none !important; } .pf_head { margin-top: 51px; } ');
+  item('Stats', '.profile_top .user_atten { display: none !important; } .profile_top .pf_head { margin-top: 51px; } ');
   item('MyData', '.W_main_c [id^="Pl_Official_MyMicroworld__"] { display: none !important; }');
   item('Group', '.W_main_2r [id^="Pl_Core_RightGroupsBtn__"] { display: none !important; }');
   item('SuggestUser', '.W_main_2r [id^="Pl_Core_RightUserList__"] { display: none !important; }');
@@ -1543,6 +1553,14 @@ toolFilterGroup.add({
 // 展开左栏分组
 toolFilterGroup.add({
   'type': 'boolean',
+  'key': 'weibo.tool.noFloatNav',
+  'text': '{{noFloatNav}}',
+  'init': css('.WB_global_nav { position: absolute !important; }'),
+});
+
+// 展开左栏分组
+toolFilterGroup.add({
+  'type': 'boolean',
   'key': 'weibo.tool.showAllGroup',
   'text': '{{showAllGroupDesc}}',
   'init': css('#pl_leftnav_group div[node-type="moreList"] { display: block !important } #pl_leftnav_group > div[node-type="groupList"] > .level_2_Box > .levmore { display: none }'),
@@ -1562,6 +1580,29 @@ toolFilterGroup.add({
   'key': 'weibo.tool.unwrapText',
   'text': '{{unwrapTextDesc}}',
   'init': css('.WB_info, .WB_text { display: inline } .WB_info+.WB_text::before { content: ": " } .WB_func { margin-top: 5px } .B_index .WB_feed .W_ico16 { vertical-align: -3px !important }'),
+});
+
+// 个人主页自动打开微博列表
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.redirectWeibo',
+  'text': '{{personalRedirectWeibo}}',
+  'init': function () {
+    if (!this.conf) return;
+    var locat = unsafeWindow.$CONFIG.location;
+    if (locat.slice(-5) !== '_home') return;
+    if (!document.body.classList.contains('B_profile')) return;
+    var from = (location.search.match(/from=([^&]*)/) || {})[1];
+    if (locat.indexOf(from) === 0) return;
+    var redirect = function () {
+      var link = document.querySelector('.PRF_tab_noicon li.pftb_itm a[href*="/weibo?"]'); if (!link) return;
+      if (!link) return false;
+      newNode.remove(redirect);
+      link.click(); return true;
+    };
+    newNode.add(redirect);
+    redirect();
+  },
 });
 
 // 查看大图旁添加查看原图链接
@@ -1636,6 +1677,7 @@ var genColorWithTransparencyInput = function (binder1, binder2) {
   return [color, transparency];
 };
 
+// 将颜色和透明度转换为一个表示颜色的字符串
 var colorStr = function (color, transparency) {
   return 'rgba(' + color.slice(1)
     .split(/(..)/).filter(function (x) { return x; })
@@ -1643,6 +1685,7 @@ var colorStr = function (color, transparency) {
     ',' + (100 - transparency) / 100 + ')';
 };
 
+// 一个带有颜色/透明度的选框项
 var coloredConfigItem = function (details) {
   var conf = {
     'type': 'boolean',
