@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.19 alpha
+// @version     0.1.20 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -109,8 +109,6 @@ var text = {
   'fakeWeiboFilterDesc': { 'zh-cn': '隐藏混入微博列表的其它内容', 'zh-hk': '隱藏混入微博列表的其它內容', 'zh-tw': '隱藏混入微博列表的其它內容', 'en': 'Hide other contents in Weibo list' },
   'deletedForwardFilterDesc': { 'zh-cn': '隐藏已删除微博的转发', 'zh-hk': '隱藏已刪除微博的轉發', 'zh-tw': '隱藏已刪除微博的轉發', 'en': 'Hide forward of deleted Weibo' },
   'voteWeiboFilterDesc': { 'zh-cn': '隐藏投票微博', 'zh-hk': '隱藏投票微博', 'zh-tw': '隱藏投票微博', 'en': 'Hide vote weibo' },
-  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
-  'whitelistHighlightDesc': { 'zh-cn': '以该背景色显示白名单的微博：', 'zh-hk': '以該背景色顯示白名單的微博：', 'zh-tw': '以該背景色顯示白名單的微博：', 'en': 'Show Weibo in whitelist with background color: ' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：', 'zh-hk': '相同作者的微博：', 'zh-tw': '相同作者的微博：', 'en': 'Weibo from same account: ' },
   'sameForwardFilterDesc': { 'zh-cn': '相同微博的转发：', 'zh-hk': '相同微博的轉發：', 'zh-tw': '相同微博的轉發：', 'en': 'Forward from same Weibo: ' },
   'sameNumberOptionDesc': { 'zh-cn': '超过{{number}}条时', 'zh-hk': '超過{{number}}條時', 'zh-tw': '超過{{number}}條時', 'en': 'display no more than {{number}} ' },
@@ -196,6 +194,11 @@ var text = {
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加“查看原圖”連結', 'zh-tw': '添加“查看原圖”連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
+  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
+  'whitelistHighlightDesc': { 'zh-cn': '以该背景色显示白名单的微博：', 'zh-hk': '以該背景色顯示白名單的微博：', 'zh-tw': '以該背景色顯示白名單的微博：', 'en': 'Show Weibo in whitelist with background color: ' },
+  'transparencyInput': {'zh-cn': '透明度{{number}}%', 'zh-hk': '透明度{{number}}%', 'zh-tw': '透明度{{number}}%', 'en': ' transparency {{number}} %'},
+  'mainBackgroundColorOverride': { 'zh-cn': '首页背景颜色', 'zh-hk': '首頁背景色彩', 'zh-tw': '首頁背景色彩', 'en': 'Background color for home page' },
+  'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景颜色', 'zh-hk': '個人主頁背景色彩', 'zh-tw': '個人主頁背景色彩', 'en': 'Background color for personal home page' },
   // 脚本
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   // 导入导出
@@ -250,6 +253,7 @@ var html = {
   'viewOriginalLink': '<a target="_blank" class="show_big" suda-data="key=tblog_newimage_feed&value=view_original" action-type="maximum" href="javascript:;"><em class="W_ico12 ico_showbig"></em>{{viewOriginalText}}</a><i class="W_vline">|</i>',
   'colorInput': '<input type="color" class="W_f14" style="width: 60px;" />',
   'numberInput': '<input type="number" class="W_f14" style="width: 60px;" />',
+  'transparencyInput': '<input type="number" min="0" max="100" maxlength="3" class="W_f14" style="width: 45px; text-align: right;" /><div class="yawf-transparency-range" style="background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog;"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div>',
   'select': '<select>{{options}}</select>',
   'option': '<option value="{{value}}">{{{text}}}</option>',
 };
@@ -344,6 +348,7 @@ var config = function (uid) {
   var get = function (key, value, type) {
     if (!(key in config)) return value;
     var val = config[key];
+    debug('get %s = %o', key, val);
     if (typeof val === 'undefined') return value;
     if (type && (val === null || val.constructor !== type)) return value;
     return val;
@@ -667,6 +672,18 @@ var filters = (function () {
   };
 }());
 
+var bindInputValue = function (input, obj, attr, standlize) {
+  var onchange = function () {
+    var val = input.value, valid;
+    if (standlize) valid = standlize(val); else valid = val;
+    if (String(valid) !== val) input.value = valid;
+    obj['putconf' + attr](valid);
+  };
+  input.value = obj['getconf' + attr]();
+  input.addEventListener('change', onchange);
+  return onchange;
+};
+
 var blockWeibo = (function () {
   var buffer = [], busy = false;
   var delay = function () { return 3000 + Math.round(20 * Math.random()) * 100; };
@@ -791,7 +808,6 @@ var fixSonWeiboDisplay = function (feed) {
   var sonList = Array.apply(Array, feed.querySelectorAll('.WB_feed_together .WB_sonFeed .WB_feed_type[yawf-display]'));
   // 交换两个子微博
   var swapSon = function (p, q) {
-    console.log('swap: %d %d', p, q);
     var x = sonList[p], y = sonList[q];
     var fakeNode = document.createElement('div');
     x.parentNode.insertBefore(fakeNode, x);
@@ -1323,48 +1339,6 @@ otherFilterGroup.add({
   },
 });
 
-// 屏蔽隐藏微博
-otherFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.other.block_hidden',
-  'text': '{{blockHiddenWeiboDesc}}',
-  'init': function () {
-    if (!this.conf) return;
-    addWeiboFilterListener(function (feed) {
-      [feed].concat(Array.apply(Array, feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
-        if (feed.getAttribute('yawf-display') !== 'hidden') return;
-        if (!feed.getAttribute('mid')) return;
-        blockWeibo(feed.getAttribute('mid'));
-        feed.setAttribute('yawf-block', 'block');
-      });
-    });
-  }
-});
-
-// 高亮显示白名单微博
-otherFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.other.whitelist_highlight',
-  'keys': { 'color': 'string' },
-  'defaultcolor': '#fef3da',
-  'text': '{{whitelistHighlightDesc}}',
-  'shown': function (dom) {
-    var color = cewih('div', html.colorInput).firstChild;
-    color.value = this.getconfcolor();
-    color.addEventListener('change', function () {
-      this.putconfcolor(color.value);
-    }.bind(this));
-    dom.appendChild(color);
-  },
-  'init': function () {
-    if (!this.conf) return;
-    css.add(fillStr(funcStr(function () { /*
-      [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -20px 0 0 {{color}}, 20px 0 0 {{color}}; }
-      [node-type="feed_list"] .WB_feed_together .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -10px 0 0 {{color}}, 10px 0 0 {{color}}; }
-    */ }), { 'color': this.confcolor }));
-  },
-});
-
 // 添加数量和折叠/隐藏的
 var lotShown = function (dom) {
   var nl = cewih('label', fillStr(text.sameNumberOptionDesc, { 'number': html.numberInput }));
@@ -1374,11 +1348,12 @@ var lotShown = function (dom) {
       fillStr(html.option, { 'value': 'hidden', 'text': '{{blacklistActionDesc}}' }),
   }));
   var n = nl.querySelector('input'), s = sl.querySelector('select');
-  n.setAttribute('min', '0');
-  n.value = this.getconfnumber();
-  n.addEventListener('change', function () { this.putconfnumber(Number(n.value)); }.bind(this));
-  s.value = this.getconfaction();
-  s.addEventListener('change', function () { this.putconfaction(s.value); }.bind(this));
+  n.setAttribute('min', '1');
+  bindInputValue(n, this, 'number', function (val) {
+    if (isNaN(val)) val = 1; else val = parseInt(val);
+    return Math.max(val, 1);
+  });
+  bindInputValue(s, this, 'action');
   dom.appendChild(nl); dom.appendChild(sl);
 };
 
@@ -1394,7 +1369,6 @@ otherFilterGroup.add({
   'shown': lotShown,
   'rule': function sameAccountRule(feed) {
     if (!this.conf) return null;
-    debug('RULE!: %o, %o', feed, this.getconf());
     var author = feed.querySelector('.WB_name[usercard]');
     if (!author) return null;
     var id = author.getAttribute('usercard').split('=')[1];
@@ -1480,7 +1454,7 @@ var layouts = (function () {
 
   subtitle('Right');
   item('Whole', '.B_profile .W_main_c, .B_profile .WB_feed .repeat .input textarea { width: 100% } .B_profile .WB_feed .WB_screen { margin-left: 928px } .B_profile .W_main_2r { display: none !important; }');
-  item('Template', '#pl_content_setSkin { display: none !important; }');
+  item('Template', '.templete_enter { display: none !important; }');
   item('Info', '.W_person_info { display: none !important; }');
   item('Atten', '#pl_rightmod_myinfo .user_atten { display: none !important; }');
   item('Trial', '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
@@ -1502,7 +1476,6 @@ var layouts = (function () {
 
   subtitle('Person');
   item('Cover', '.profile_pic_top { max-height: 120px; }');
-  item('Template', '.templete_enter { display: none !important; }');
   item('BadgeIcon', '.pf_badge_icon { display: none !important; }');
   item('Stats', '.profile_top .user_atten { display: none !important; } .pf_head { margin-top: 51px; } ');
   item('MyData', '.W_main_c [id^="Pl_Official_MyMicroworld__"] { display: none !important; }');
@@ -1619,6 +1592,122 @@ toolFilterGroup.add({
     newNode.add(addOriLink);
   },
 });
+
+// 屏蔽隐藏微博
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.block_hidden',
+  'text': '{{blockHiddenWeiboDesc}}',
+  'init': function () {
+    if (!this.conf) return;
+    addWeiboFilterListener(function (feed) {
+      [feed].concat(Array.apply(Array, feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
+        if (feed.getAttribute('yawf-display') !== 'hidden') return;
+        if (!feed.getAttribute('mid')) return;
+        blockWeibo(feed.getAttribute('mid'));
+        feed.setAttribute('yawf-block', 'block');
+      });
+    });
+  }
+});
+
+// 显示一个透明度设置框
+var genTransparencyInput = function (binder) {
+  var l = cewih('label', fillStr(text.transparencyInput, { 'number': html.transparencyInput }));
+  var n = l.querySelector('input[type="number"]'), r = l.querySelector('input[type="range"]');
+  var onchange = binder(n, function (val) {
+    if (isNaN(parseInt(val))) return 0;
+    return Math.min(Math.max(parseInt(val), 0), 100);
+  });
+  r.value = n.value;
+  var updateN = function () { if (r.value !== n.value) n.value = r.value; onchange(); };
+  var updateR = function () { if (r.value !== n.value) r.value = n.value; onchange(); };
+  r.addEventListener('change', updateN); r.addEventListener('mousemove', updateN);
+  n.addEventListener('change', updateR); n.addEventListener('keypress', updateR);
+  return l;
+};
+
+// 显示一个颜色&透明度设置框
+var genColorWithTransparencyInput = function (binder1, binder2) {
+  var color = cewih('label', html.colorInput);
+  var c = color.querySelector('input[type="color"]');
+  binder1(c);
+  var transparency = genTransparencyInput(binder2);
+  return [color, transparency];
+};
+
+var colorStr = function (color, transparency) {
+  return 'rgba(' + color.slice(1)
+    .split(/(..)/).filter(function (x) { return x; })
+    .map(function (x) { return parseInt(x, 16); }).join(',') +
+    ',' + (100 - transparency) / 100 + ')';
+};
+
+var coloredConfigItem = function (details) {
+  var conf = {
+    'type': 'boolean',
+    'key': details.key,
+    'keys': { 'color': 'string', 'transparency': 'number', 'blur': 'boolean' },
+    'defaultcolor': details.defaultcolor,
+    'defaulttransparency': details.defaulttransparency,
+    'text': details.text,
+    'shown': function (dom) {
+      var elements = genColorWithTransparencyInput(function (c, s) {
+        bindInputValue(c, this, 'color', s);
+      }.bind(this), function (t, s) {
+        return bindInputValue(t, this, 'transparency', s);
+      }.bind(this));
+      elements.forEach(dom.appendChild.bind(dom));
+    },
+    'init': function () {
+      if (!this.conf) return;
+      details.init(colorStr(this.confcolor, this.conftransparency));
+    },
+  };
+  return conf;
+};
+
+// 高亮显示白名单微博
+toolFilterGroup.add(coloredConfigItem({
+  'key': 'weibo.tool.whitelist_highlight',
+  'defaultcolor': '#fef3da',
+  'text': '{{whitelistHighlightDesc}}',
+  'init': function (color) {
+    css.add(fillStr(funcStr(function () { /*
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -20px 0 0 {{color}}, 20px 0 0 {{color}}; }
+      [node-type="feed_list"] .WB_feed_together .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -10px 0 0 {{color}}, 10px 0 0 {{color}}; }
+    */ }), { 'color': color }));
+  },
+}));
+
+// 首页背景
+toolFilterGroup.add(coloredConfigItem({
+  'key': 'weibo.tool.my_background_color',
+  'defaultcolor': '#ffffff',
+  'defaulttransparency': 30,
+  'text': '{{mainBackgroundColorOverride}}',
+  'init': function (color) {
+    css.add(fillStr(funcStr(function () { /*
+      body:not(.S_profile) .W_main { background-image: none !important; background-color: {{color}} !important }
+      body:not(.S_profile) .S_bg4, body:not(.S_profile) .W_main_a, body:not(.S_profile) .W_main_bg { background: transparent !important; }
+    */ }), { 'color': color }));
+  },
+}));
+
+// 个人主页背景
+toolFilterGroup.add(coloredConfigItem({
+  'key': 'weibo.tool.other_background_color',
+  'defaultcolor': '#ffffff',
+  'defaulttransparency': 30,
+  'text': '{{profileBackgroundColorOverride}}',
+  'init': function (color) {
+    css.add(fillStr(funcStr(function () { /*
+			.S_profile .W_profile_bg, .S_profile .S_bg5 { background-color: {{color}} !important; }
+      .S_profile .S_bg4:not(.W_profile_bg) { background: none transparent !important }
+    */ }), { 'color': color }));
+  },
+}));
+
 
 // 自定义样式
 toolFilterGroup.add({
@@ -1773,6 +1862,7 @@ var dcl = function () {
   // 加载用户配置
   config = config(unsafeWindow.$CONFIG.uid);
   typedConfig();
+  config.onput(function () { debug('%o', arguments); });
   // 初始化文本和网页数据（基于用户选择的语言）
   Object.keys(text).map(function (key) { i18n(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
@@ -1848,6 +1938,8 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_seeAll"],
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
   .W_miniblog { visibility: hidden; }
+  input[type="number"]:not(:focus) ~ .yawf-transparency-range:not(:hover) > input[type="range"]:not(:focus) { display: none; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
+
