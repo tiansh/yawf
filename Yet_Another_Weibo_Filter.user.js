@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.21 alpha
+// @version     0.1.22 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -38,7 +38,6 @@ var cewih = function (tag, inner) {
   return d;
 };
 
-
 // 文本常量
 // 请以简体中文为原文，参考这些资料翻译
 // http://zh.wikipedia.org/wiki/Template:CGroup/IT
@@ -48,9 +47,6 @@ var text = {
   'okButtonTitle': { 'zh-cn': '确定', 'zh-hk': '確定', 'zh-tw': '確定', 'en': 'Confirm' },
   'cancelButtonTitle': { 'zh-cn': '取消', 'zh-hk': '取消', 'zh-tw': '取消', 'en': 'Cancel' },
   'closeButtonTitle': { 'zh-cn': '关闭', 'zh-hk': '關閉', 'zh-tw': '關閉', 'en': 'Close' },
-  'configApplyButton': { 'zh-cn': '应用', 'zh-hk': '套用', 'zh-tw': '套用', 'en': 'Apply' },
-  'configSaveButton': { 'zh-cn': '保存', 'zh-hk': '儲存', 'zh-tw': '儲存', 'en': 'Save' },
-  'configCancelButton': { 'zh-cn': '取消', 'zh-hk': '取消', 'zh-tw': '取消', 'en': 'Cancel' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'foldedWeiboText': { 'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博被折叠，请点击查看"', 'zh-hk': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"', 'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"', 'en': '"A Weibo from @" attr(yawf-author) " was folded, click to view."' },
@@ -112,7 +108,7 @@ var text = {
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：', 'zh-hk': '相同作者的微博：', 'zh-tw': '相同作者的微博：', 'en': 'Weibo from same account: ' },
   'sameForwardFilterDesc': { 'zh-cn': '相同微博的转发：', 'zh-hk': '相同微博的轉發：', 'zh-tw': '相同微博的轉發：', 'en': 'Forward from same Weibo: ' },
   'sameNumberOptionDesc': { 'zh-cn': '超过{{number}}条时', 'zh-hk': '超過{{number}}條時', 'zh-tw': '超過{{number}}條時', 'en': 'display no more than {{number}} ' },
-  'sameActionOptionDesc': {'zh-cn': '{{{select}}}', 'zh-hk': '{{{select}}}', 'zh-tw': '{{{select}}}', 'en': 'or {{{select}}} it'},
+  'sameActionOptionDesc': { 'zh-cn': '{{{select}}}', 'zh-hk': '{{{select}}}', 'zh-tw': '{{{select}}}', 'en': 'or {{{select}}} it' },
   // 模块
   'layoutFilterGroupTitle': { 'zh-cn': '模块', 'zh-hk': '模組', 'zh-tw': '模組', 'en': 'Module' },
   'layoutFilterGroupDesc': { 'zh-cn': '隐藏以下模块', 'zh-hk': '隱藏以下模組', 'zh-tw': '隱藏以下模組', 'en': 'Hide following modules' },
@@ -198,7 +194,7 @@ var text = {
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
   'whitelistHighlightDesc': { 'zh-cn': '以该背景色显示白名单的微博：', 'zh-hk': '以該背景色顯示白名單的微博：', 'zh-tw': '以該背景色顯示白名單的微博：', 'en': 'Show Weibo in whitelist with background color: ' },
-  'transparencyInput': {'zh-cn': '透明度{{number}}%', 'zh-hk': '透明度{{number}}%', 'zh-tw': '透明度{{number}}%', 'en': ' transparency {{number}} %'},
+  'transparencyInput': { 'zh-cn': '透明度{{number}}%', 'zh-hk': '透明度{{number}}%', 'zh-tw': '透明度{{number}}%', 'en': ' transparency {{number}} %' },
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景颜色', 'zh-hk': '首頁背景色彩', 'zh-tw': '首頁背景色彩', 'en': 'Background color for home page' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景颜色', 'zh-hk': '個人主頁背景色彩', 'zh-tw': '個人主頁背景色彩', 'en': 'Background color for personal home page' },
   // 脚本
@@ -222,10 +218,10 @@ var text = {
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
-    'zh-cn': 'YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权。您可以访问脚本的主页 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 获取详细信息。<br />本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。',
-    'zh-hk': 'YAWF (Yet Another Weibo Filter) 使用 MIT 協議授權。您可以訪問腳本的主頁 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 獲取詳細訊息。<br />本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>腳本的部分代碼。',
-    'zh-tw': 'YAWF (Yet Another Weibo Filter) 使用 MIT 協議授權。您可以訪問腳本的主頁 <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> 獲取詳細訊息。<br />本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>腳本的部分代碼。',
-    'en': 'YAWF (Yet Another Weibo Filter) is under the MIT License. <br />You may visit project host page <a href="https://github.com/tiansh/yawf">https://github.com/tiansh/yawf</a> for more information. <br />Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦 (Weibo Content Filter)</a> script.',
+    'zh-cn': '<p>YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权。<br />您可以访问<a href="https://github.com/tiansh/yawf">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a href="https://github.com/tiansh/yawf/issues">反馈页面</a>提供报告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。</p>',
+    'zh-hk': '<p>YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权。<br />您可以访问<a href="https://github.com/tiansh/yawf">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a href="https://github.com/tiansh/yawf/issues">反馈页面</a>提供报告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。</p>',
+    'zh-tw': '<p>YAWF (Yet Another Weibo Filter) 使用 MIT 协议授权。<br />您可以访问<a href="https://github.com/tiansh/yawf">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a href="https://github.com/tiansh/yawf/issues">反馈页面</a>提供报告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。</p>',
+    'en': '<p>YAWF (Yet Another Weibo Filter) is under the MIT License.<br />You may visit <a href="https://github.com/tiansh/yawf">project host page</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a href="https://github.com/tiansh/yawf/issues">feedback page</a>, or <a href="http://weibo.com/tsh90/weibo">send message to author</a>. </p><p>Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
   },
 };
 
@@ -242,7 +238,7 @@ var html = {
   'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
-  'configFooter': '<div class="btn clearfix" node-type="yawf-config-footer"><span class="W_fl S_txt2">{{configRefreshNotice}}</span><a node-type="apply" class="W_btn_b W_btn_b_disable" action-type="apply" href="javascript:;"><span class="btn_30px W_f14">{{configApplyButton}}</span></a><a node-type="save" class="W_btn_a" action-type="save" href="javascript:;"><span class="btn_30px W_f14">{{configSaveButton}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{configCancelButton}}</span></a></div>',
+  'configFooter': '',
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawf-groupText">{{{text}}}</div>',
   'configBoolean': '<div class="yawf-configBoolean yawf-configItem"><label><input id="yawf-{{key}}" class="W_checkbox yawf-configBooleanInput" type="checkbox" name="yawf-{{key}}"><span class="yawf-configDesc yawf-configBooleanDesc">{{{text}}}</span></label></div>',
@@ -253,7 +249,7 @@ var html = {
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   'viewOriginalLink': '<a target="_blank" class="show_big" suda-data="key=tblog_newimage_feed&value=view_original" action-type="maximum" href="javascript:;"><em class="W_ico12 ico_showbig"></em>{{viewOriginalText}}</a><i class="W_vline">|</i>',
-  'colorInput': '<input type="color" class="W_f14" style="width: 60px;" />',
+  'colorInput': '<input type="color" class="W_f14" style="width: 40px;" />',
   'numberInput': '<input type="number" class="W_f14" style="width: 60px;" />',
   'transparencyInput': '<input type="number" min="0" max="100" maxlength="3" class="W_f14" style="width: 45px; text-align: right;" /><div class="yawf-transparency-range" style="background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog;"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div>',
   'select': '<select>{{options}}</select>',
@@ -263,6 +259,7 @@ var html = {
 var url = {
   'newcard': 'http://weibo.com/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
   'view_ori': 'http://photo.weibo.com/{{uid}}/wbphotos/large/mid/{{mid}}/pid/{{pid}}',
+  'block_wb': 'http://weibo.com/aj/user/block?_wv=5&__rnd={{rnd}}',
 };
 
 // 微博过滤规则
@@ -344,6 +341,7 @@ var config = function (uid) {
     if (keys.indexOf(key) === -1) return;
     tonputs(key, value, config[key]);
     config[key] = value;
+    write();
     return value;
   };
   // 从内存读取
@@ -603,21 +601,6 @@ var filters = (function () {
     preinit = false;
   };
   var dialog = null;
-  var dialogButton = function (dialog, inner) {
-    var applyButton = inner.querySelector('[action-type="apply"]');
-    var saveButton = inner.querySelector('[action-type="save"]');
-    var cancelButton = inner.querySelector('[action-type="cancel"]');
-    config.onput(function () {
-      if (applyButton) applyButton.className = 'W_btn_b';
-    });
-    applyButton.addEventListener('click', function () {
-      if (applyButton.classList.contains('W_btn_b_disable')) return;
-      config.write();
-      applyButton.className = 'W_btn_b W_btn_b_disable';
-    });
-    saveButton.addEventListener('click', function () { config.write(); dialog.hide(); });
-    cancelButton.addEventListener('click', function () { config.read(); dialog.hide(); });
-  };
   var lastTab = 0;
   var dialogTabs = function (list, inner, page) {
     var alist = Array.apply(Array, inner.querySelectorAll('.yawf-config-header a'));
@@ -657,7 +640,6 @@ var filters = (function () {
         html.configFooter,
       ].join('');
       call(function () {
-        dialogButton(dialog, inner);
         dialog.show(0);
       });
       if (list.indexOf(page) === -1) dialogTabs(list, inner, lastTab);
@@ -686,6 +668,7 @@ var bindInputValue = function (input, obj, attr, standlize) {
   return onchange;
 };
 
+// 告诉服务器屏蔽被隐藏的微博
 var blockWeibo = (function () {
   var buffer = [], busy = false;
   var delay = function () { return 3000 + Math.round(20 * Math.random()) * 100; };
@@ -694,7 +677,7 @@ var blockWeibo = (function () {
     debug('blocking weibo %s', mid);
     GM_xmlhttpRequest({
       'method': 'POST',
-      'url': 'http://weibo.com/aj/user/block?_wv=5&__rnd=' + dateStr(),
+      'url': fillStr(url.block_wb, { 'rnd': dateStr() }),
       'headers': {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Cache-Control': 'no-cache',
@@ -851,7 +834,7 @@ var weiboFilter = function () {
     document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
   feeds.forEach(function (feed) {
     // 同源合并的微博
-    var sonFeeds = Array.apply(Array, feed.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])')), son;
+    var sonFeeds = Array.apply(Array, feed.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
     var action = null, parentAction = null;
     var needSwap = function (action) {
       if (!sonFeeds.length) return false;
@@ -860,7 +843,7 @@ var weiboFilter = function () {
     };
     var setAction = function (feed, action) {
       feed.setAttribute('yawf-display', 'display-' + action);
-    }
+    };
     while (true) {
       action = rules.parse(feed) || 'unset';
       // 如果父微博被屏蔽或折叠，那么就把下面一条没被屏蔽的拉上来换个位置
@@ -869,7 +852,7 @@ var weiboFilter = function () {
     }
     parentAction = action;
     // 最后处理所有下面的子微博
-    while (sonFeeds.length) (function (son) {
+    var fixSonWeibo = function (son) {
       var action = rules.parse(son) || 'unset';
       setAction(son, action);
       // 如果一列里面有白名单的，那么把白名单的特别换到外面去
@@ -877,7 +860,8 @@ var weiboFilter = function () {
         setAction(swapParentSonWeibo(feed, son), parentAction);
         parentAction = action;
       }
-    }(sonFeeds.shift()));
+    };
+    while (sonFeeds.length) fixSonWeibo(sonFeeds.shift());
     setAction(feed, parentAction);
     fixSonWeiboDisplay(feed);
   });
@@ -1069,7 +1053,6 @@ var filterGroup = function (groupName) {
   // 网页被初始化时初始化所有过滤器
   var init = function () {
     items.forEach(withTry(function (item) {
-      if (item.keys) { Object.keys(item.keys).forEach(function (key) { }) }
       if (item.init) item.init();
       if (item.rule) rules.add(item.priority || 0, item.rule.bind(item));
     }));
@@ -1479,10 +1462,11 @@ var layouts = (function () {
   subtitle('Person');
   item('Cover', funcStr(function () { /* !CSS
     .S_profile_pic { display: none; }
-    .profile_top .pf_head { top: 10px; margin-top: 0 !important; }
-    .profile_top .pf_head_pic { height: 120px; width: 120px; float: left; }
+    .profile_top { margin-top: 20px; }
+    .profile_top .pf_head { top: 5px; margin-top: 0 !important; }
+    .profile_top .pf_head_pic { height: 120px; width: 120px; float: right; }
     .profile_top .pf_head_pic img { height: 120px; }
-    .profile_top .pf_head .user_atten { width: 60px; float: right; height: 120px; }
+    .profile_top .pf_head .user_atten { width: 60px; float: left; height: 120px; }
     .profile_top .pf_head .user_atten li, .profile_top .pf_head .user_atten .follower { width: 54px; padding: 0 3px 3px; height: 37px; border-right: none; }
     .profile_top .pf_head .user_atten li strong { margin: 3px 0 0; }
   */ }));
@@ -1598,7 +1582,7 @@ toolFilterGroup.add({
       var link = document.querySelector('.PRF_tab_noicon li.pftb_itm a[href*="/weibo?"]'); if (!link) return;
       if (!link) return false;
       newNode.remove(redirect);
-      link.click(); return true;
+      location.replace(link.href);
     };
     newNode.add(redirect);
     redirect();
@@ -1643,7 +1627,8 @@ toolFilterGroup.add({
     if (!this.conf) return;
     addWeiboFilterListener(function (feed) {
       [feed].concat(Array.apply(Array, feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
-        if (feed.getAttribute('yawf-display') !== 'hidden') return;
+        var display = feed.getAttribute('yawf-display');
+        if (display.slice(-7) !== '-hidden') return;
         if (!feed.getAttribute('mid')) return;
         blockWeibo(feed.getAttribute('mid'));
         feed.setAttribute('yawf-block', 'block');
@@ -1905,7 +1890,6 @@ var dcl = function () {
   // 加载用户配置
   config = config(unsafeWindow.$CONFIG.uid);
   typedConfig();
-  config.onput(function () { debug('%o', arguments); });
   // 初始化文本和网页数据（基于用户选择的语言）
   Object.keys(text).map(function (key) { i18n(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
@@ -1932,7 +1916,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   // 设置框相关样式
   .yawf-Layer.yawf-drag { opacity: 0.67; -moz-user-select: none; user-select: none; }
   #yawf-config [node-type="inner"] { padding: 20px; }
-  .yawf-config-body { margin: -20px -20px 0; max-height: 300px; overflow-y: auto; padding: 20px; width: 760px; }
+  .yawf-config-body { margin: -20px; max-height: 360px; overflow-y: auto; padding: 20px; width: 760px; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
   .yawf-groupSubtitle { margin: 5px 10px; padding: 10px 0 0 0; font-weight: bold; }
   .yawf-configItem, .yawf-groupText { margin: 5px 20px; padding: 5px 0; }

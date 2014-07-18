@@ -1,12 +1,14 @@
-脚本尚处于开发之中，功能尚不稳定，不能保证更新后可以保留原有设置。<br />
-腳本尚處於開發之中，功能尚不穩定，不能保證更新後可以保留原有設定。 <br />
-This script have not been done. It may not stable. And you may lose your setting after update.
+[https://tiansh.github.io/yawf/ 脚本主页 Script Homepage https://tiansh.github.io/yawf/]
+[https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js 安装脚本 Install Script]
+
+脚本尚处于开发之中，功能尚不稳定<br />
+This script have not been done. It may not stable.<br />
 
 = 看真正想看的微博 Yet Another Weibo Filter =
 
 请使用 Greasemonkey 安装本脚本。
 
-== 当前功能 ==
+== 主要功能 ==
 
 * 根据关键字、正则式、作者、来源等过滤微博
 * 过滤推广微博等混入微博列表的东西
