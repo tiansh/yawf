@@ -17,7 +17,6 @@
 // @grant       GM_registerMenuCommand
 // @grant       GM_info
 // @grant       unsafeWindow
-// @run-at      document-start
 // ==/UserScript==
 
 // 图片
@@ -373,6 +372,7 @@ var config = function (uid) {
       Object.keys(s).forEach(function (key) {
         put(key, s[key]);
       });
+      write();
       return true;
     } catch (e) { }
     return false;
@@ -392,6 +392,7 @@ var config = function (uid) {
   var clear = function () {
     config = {};
     tonputs();
+    write();
   };
   // 注册键
   var reg = function (key) { keys.push(key); };
