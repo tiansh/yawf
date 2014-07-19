@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.24 alpha
+// @version     0.1.25 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -100,15 +100,28 @@ var text = {
   'hyperlinkFilterDetails': { 'zh-cn': '包含指向以下网站的超链接的微博', 'zh-hk': '包含指向以下站點的超連結的微博', 'zh-tw': '包含指向以下站點的超連結的微博', 'en': 'Weibo with hyperlink to these website' },
   // 更多
   'otherFilterGroupTitle': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
-  'adfeedFilterDesc': { 'zh-cn': '隐藏推广微博', 'zh-hk': '隱藏推廣微博', 'zh-tw': '隱藏推廣微博', 'en': 'Hide ad Weibo' },
-  'recommandFeedDesc': { 'zh-cn': '隐藏推荐微博', 'zh-hk': '隱藏建議微博', 'zh-tw': '隱藏建議微博', 'en': 'Hide recommand Weibo' },
-  'fakeWeiboFilterDesc': { 'zh-cn': '隐藏混入微博列表的其它内容', 'zh-hk': '隱藏混入微博列表的其它內容', 'zh-tw': '隱藏混入微博列表的其它內容', 'en': 'Hide other contents in Weibo list' },
-  'deletedForwardFilterDesc': { 'zh-cn': '隐藏已删除微博的转发', 'zh-hk': '隱藏已刪除微博的轉發', 'zh-tw': '隱藏已刪除微博的轉發', 'en': 'Hide forward of deleted Weibo' },
-  'voteWeiboFilterDesc': { 'zh-cn': '隐藏投票微博', 'zh-hk': '隱藏投票微博', 'zh-tw': '隱藏投票微博', 'en': 'Hide vote weibo' },
+  // 显示
+  'otherWhitelistTitle': { 'zh-cn': '显示以下内容（不计入白名单）', 'zh-hk': '顯示以下內容（不計入白名單）', 'zh-tw': '顯示以下內容（不計入白名單）', 'en': 'Show following content (not regard as whitelist)' },
+  'showMyWeiboDesc': { 'zh-cn': '自己的微博', 'zh-hk': '自己的微博', 'zh-tw': '自己的微博', 'en': 'Weibo by myself' },
+  'showMyOriginalDesc': { 'zh-cn': '自己微博的转发', 'zh-hk': '自己微博的轉發', 'zh-tw': '自己微博的轉發', 'en': 'Forward of my Weibo' },
+  'showMentionMeDesc': { 'zh-cn': '提到自己的微博', 'zh-hk': '提到自己的微博', 'zh-tw': '提到自己的微博', 'en': 'Weibo mentioned me' },
+  // 隐藏
+  'otherBlacklistTitle': { 'zh-cn': '隐藏以下内容', 'zh-hk': '以下內容', 'zh-tw': '隱藏以下內容', 'en': 'Hide following content' },
+  'adfeedFilterDesc': { 'zh-cn': '推广微博', 'zh-hk': '推廣微博', 'zh-tw': '推廣微博', 'en': 'Ad Weibo' },
+  'recommandFeedDesc': { 'zh-cn': '推荐微博', 'zh-hk': '建議微博', 'zh-tw': '建議微博', 'en': 'Recommand Weibo' },
+  'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容', 'zh-hk': '混入微博列表的其它內容', 'zh-tw': '混入微博列表的其它內容', 'en': 'Other contents in Weibo list' },
+  'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-hk': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Forward of deleted Weibo' },
+  'voteWeiboFilterDesc': { 'zh-cn': '投票微博', 'zh-hk': '投票微博', 'zh-tw': '投票微博', 'en': 'Vote weibo' },
+  // 刷屏与版聊
+  'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chating' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：', 'zh-hk': '相同作者的微博：', 'zh-tw': '相同作者的微博：', 'en': 'Weibo from same account: ' },
   'sameForwardFilterDesc': { 'zh-cn': '相同微博的转发：', 'zh-hk': '相同微博的轉發：', 'zh-tw': '相同微博的轉發：', 'en': 'Forward from same Weibo: ' },
   'sameNumberOptionDesc': { 'zh-cn': '超过{{number}}条时', 'zh-hk': '超過{{number}}條時', 'zh-tw': '超過{{number}}條時', 'en': 'display no more than {{number}} ' },
   'sameActionOptionDesc': { 'zh-cn': '{{{select}}}', 'zh-hk': '{{{select}}}', 'zh-tw': '{{{select}}}', 'en': 'or {{{select}}} it' },
+  // 分组浏览
+  'otherGroupTitle': { 'zh-cn': '分组浏览', 'zh-hk': '分組流覽', 'zh-tw': '分組流覽', 'en': 'Browse by Group' },
+  'accountByGroup': { 'zh-cn': '分组浏览时禁用按账号隐藏', 'zh-hk': '分組流覽時禁用按帳號隱藏', 'zh-tw': '分組流覽時禁用按帳號隱藏', 'en': 'Disable hide by account filter when browsing by group' },
+  'sameAccountByGroup': { 'zh-cn': '浏览分组时禁用相同作者数量限制', 'zh-hk': '流覽分組時禁用相同作者數量限制', 'zh-tw': '流覽分組時禁用相同作者數量限制', 'en': 'Disable hide too many Weibo from same account filter when browsing by group' },
   // 模块
   'layoutFilterGroupTitle': { 'zh-cn': '模块', 'zh-hk': '模組', 'zh-tw': '模組', 'en': 'Module' },
   'layoutFilterGroupDesc': { 'zh-cn': '隐藏以下模块', 'zh-hk': '隱藏以下模組', 'zh-tw': '隱藏以下模組', 'en': 'Hide following modules' },
@@ -585,7 +598,7 @@ var account = (function () {
   };
   var byName = function (name, onsucc, onerror) {
     if (nameCache[name]) onsucc(nameCache[name]);
-    else request('name=' + name, onsucc, onerror);
+    else request('name=' + encodeURIComponent(name), onsucc, onerror);
   };
   return { 'id': byId, 'name': byName };
 }());
@@ -1008,7 +1021,7 @@ var typedHtml = (function () {
       callback();
     };
     if (userinput) {
-      if (!(str = str.trim().replace(/^@/, ''))) return;
+      if (!(str = str.trim().replace(/^@/, ''))) return callback();
       account.name(str, function (info) {
         if (!info) showUserNotExistError();
         else if (item.add && !item.add(info)) callback();
@@ -1080,6 +1093,10 @@ var filterGroup = function (groupName) {
   return filters.add(group);
 };
 
+var onGroupPage = function () {
+  return location.pathname.slice(-9) === '/mygroups';
+};
+
 var allInOneFilters = function (details) {
   var filters = [
     { 'type': 'whitelist', 'priority': 1e5, 'action': 'show' },
@@ -1102,6 +1119,11 @@ var allInOneFilters = function (details) {
     if (details.add) rule.add = details.add.bind(rule);
     if (details.display) rule.display = details.display.bind(rule);
     rule.rule = details.rule.bind(rule, filter.action);
+    if (details[filter.type]) {
+      Object.keys(details[filter.type]).forEach(function (override) {
+        rule[override] = details[filter.type][override](rule[override]);
+      });
+    }
     typedFilterGroup.add(rule);
   });
   return typedFilterGroup;
@@ -1167,33 +1189,60 @@ var regexpFilterGroup = allInOneFilters({
   },
 });
 
+// 从一条微博中找到他的作者
+var getFeedAuthorId = function (feed) {
+  var author = feed.querySelector('.WB_name[usercard]');
+  if (!author) return null;
+  return author.getAttribute('usercard').split('=')[1];
+};
+
 // 作者用户过滤
 var accountFilterGroup = allInOneFilters({
   'name': 'account',
   'type': 'users',
   'rule': function accountMatch(action, feed) {
-    var accounts = this.conf;
-    var author = feed.querySelector('.WB_name[usercard]');
-    if (!author) return false;
-    var id = author.getAttribute('usercard').split('=')[1];
+    var accounts = this.conf, id = getFeedAuthorId(feed);
+    if (!id) return null;
     var match = accounts.some(function (x) { return x === id; });
     if (match) return action; else return null;
   },
+  'blacklist': {
+    'rule': function accountMatchBlacklistOverride(_super) {
+      return function accountMatchBlacklist(feed) {
+        if (!accountByGroup.conf || !onGroupPage()) return _super(feed);
+        return null;
+      };
+    },
+  },
 });
+
+// 从一条微博中找到他的作者
+var getFeedOriginalId = function (feed) {
+  var originalAuthor = feed.querySelector('.WB_media_expand .WB_info .WB_name');
+  if (!originalAuthor) return null;
+  return originalAuthor.getAttribute('usercard').split('=')[1];
+};
 
 // 原创用户过滤
 var originalFilterGroup = allInOneFilters({
   'name': 'original',
   'type': 'users',
   'rule': function originalMatch(action, feed) {
-    var originals = this.conf;
-    var originalAuthor = feed.querySelector('.WB_media_expand .WB_info .WB_name');
-    if (!originalAuthor) return false;
-    var id = originalAuthor.getAttribute('usercard').split('=')[1];
+    var originals = this.conf, id = getFeedOriginalId(feed);
+    if (!id) return null;
     var match = originals.some(function (x) { return x === id; });
     if (match) return action; else return null;
   },
 });
+
+// 找到在一条微博里面被提到的人的昵称
+var getFeedMentionList = function (feed) {
+  return weiboContentSelector(feed, function (m) {
+    return Array.apply(Array, m.querySelectorAll('a[usercard^="name="][href$="loc=at"]'));
+  }).map(function (link) {
+    return link.getAttribute('usercard').slice('name='.length);
+  });
+};
 
 // 提到某人的微博
 var mentionFilterGroup = allInOneFilters({
@@ -1202,33 +1251,41 @@ var mentionFilterGroup = allInOneFilters({
   'add': function (s) { return s.trim().replace(/^@/, ''); },
   'display': function (s) { return '@' + s; },
   'rule': function mentionMatch(action, feed) {
-    var mentions = this.conf;
-    var links = weiboContentSelector(feed, function (m) {
-      return Array.apply(Array, m.querySelectorAll('a[usercard^="name="][href$="loc=at"]'));
-    });
-    var match = links.some(function (link) {
-      var name = link.getAttribute('usercard').slice('name='.length);
+    var mentions = this.conf, users = getFeedMentionList(feed);
+    var match = users.some(function (name) {
       return mentions.indexOf(name) !== -1;
     });
     if (match) return action; else return null;
   },
 });
 
+var getFeedTopicList = function (feed) {
+  return weiboContentSelector(feed, function (m) {
+    return Array.apply(Array, m.querySelectorAll('.a_topic'));
+  }).map(function (topic) { return topic.textContent; });
+};
+
 // 话题过滤
 var topicFilterGroup = allInOneFilters({
   'name': 'topic',
   'add': function (s) { return s.trim().replace(/#/g, ''); },
   'display': function (s) { return '#' + s + '#'; },
-  'rule': function (action, feed) {
+  'rule': function topicMatch(action, feed) {
     var topics = this.conf;
-    var list = weiboContentSelector(feed, function (m) {
-      return Array.apply(Array, m.querySelectorAll('.a_topic'));
-    });
-    var text = list.map(function (x) { return x.textContent; }).join('##');
+    var text = getFeedTopicList(feed).join('##');
     var match = topics.some(function (topic) { return text.indexOf(topic) !== -1; });
     if (match) return action; else return null;
   },
 });
+
+// 获取一条微博的所有来源（包括转发）
+var getFeedSourceList = function (feed) {
+  return ['[node-type="feed_list_funcLink"] [action-type="app_source"]',
+  '.WB_media_expand [action-type="app_source"]'].map(function (qs) {
+    var st = feed.querySelector(qs); if (!st) return null;
+    return st.getAttribute('title') || st.textContent || '未通过审核应用';
+  }).filter(function (x) { return x; });
+};
 
 // 来源过滤
 var sourceFilterGroup = allInOneFilters({
@@ -1246,26 +1303,25 @@ var sourceFilterGroup = allInOneFilters({
     return s;
   },
   'rule': function sourceMatch(action, feed) {
-    var sources = this.conf;
-    var match = ['[node-type="feed_list_funcLink"] [action-type="app_source"]',
-    '.WB_media_expand [action-type="app_source"]'].some(function (qs) {
-      var st = feed.querySelector(qs); if (!st) return null;
-      var source = st.getAttribute('title') || st.textContent || '未通过审核应用';
-      return sources.indexOf(source) !== -1;
-    });
+    var sources = this.conf, _sources = getFeedSourceList(feed);
+    var match = _sources.some(function (s) { return sources.indexOf(s) !== -1; })
     if (match) return action; else return null;
   },
 });
+
+var getFeedHyperlinkList = function (feed) {
+  return Array.apply(Array, feed.querySelectorAll('a[title]')).map(function (a) {
+    return a.getAttribute('title');
+  });
+};
 
 // 超链接过滤
 var hyperlinkFilterGroup = allInOneFilters({
   'name': 'hyperlink',
   'add': function (s) { return s.trim(); },
   'rule': function hyperlinkMatch(action, feed) {
-    var links = this.conf;
-    var al = Array.apply(Array, feed.querySelectorAll('a[title]'));
-    var match = al.some(function (a) {
-      var l = a.getAttribute('title');
+    var links = this.conf, _links = getFeedHyperlinkList(feed);
+    var match = _links.some(function (l) {
       return links.some(function (link) {
         return l.toUpperCase().indexOf(link.toUpperCase()) !== -1;
       });
@@ -1274,8 +1330,53 @@ var hyperlinkFilterGroup = allInOneFilters({
   },
 });
 
-
 var otherFilterGroup = filterGroup('otherFilterGroup');
+
+otherFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{otherWhitelistTitle}}'
+});
+
+// 总是显示自己的微博
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.my_weibo',
+  'text': '{{showMyWeiboDesc}}',
+  'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
+  'rule': function showMyWeiboRule(feed) {
+    if (!this.conf) return;
+    if (getFeedAuthorId(feed) === config.uid) return 'showme'; else return null;
+  },
+});
+
+// 总是显示自己原创的微博
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.my_original',
+  'text': '{{showMyOriginalDesc}}',
+  'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
+  'rule': function showMyOriginalRule(feed) {
+    if (!this.conf) return;
+    if (getFeedOriginalId(feed) === config.uid) return 'showme'; else return null;
+  },
+});
+
+// 总是显示自己原创的微博
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.mention_me',
+  'text': '{{showMentionMeDesc}}',
+  'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
+  'rule': function showMentionMeRule(feed) {
+    if (!this.conf) return;
+    if (getFeedMentionList(feed).indexOf(config.uid) !== -1) return 'showme'; else return null;
+  },
+});
+
+otherFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{otherBlacklistTitle}}'
+});
 
 // 推广微博
 otherFilterGroup.add({
@@ -1326,6 +1427,11 @@ otherFilterGroup.add({
   },
 });
 
+otherFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{otherSpammingTitle}}',
+});
+
 // 添加数量和折叠/隐藏的
 var lotShown = function (dom) {
   var nl = cewih('label', fillStr(text.sameNumberOptionDesc, { 'number': html.numberInput }));
@@ -1356,6 +1462,7 @@ otherFilterGroup.add({
   'shown': lotShown,
   'rule': function sameAccountRule(feed) {
     if (!this.conf) return null;
+    if (sameAccountByGroup.conf && onGroupPage()) return null;
     var author = feed.querySelector('.WB_name[usercard]');
     if (!author) return null;
     var id = author.getAttribute('usercard').split('=')[1];
@@ -1385,6 +1492,27 @@ otherFilterGroup.add({
     if (number >= this.confnumber) return 'forward-' + this.confaction; else return null;
   },
 });
+
+// 分组浏览
+otherFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{otherGroupTitle}}',
+});
+
+// 分组浏览不做按帐号隐藏
+var accountByGroup = otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.group_account',
+  'text': '{{accountByGroup}}',
+});
+
+// 分组浏览不做刷屏检查
+var sameAccountByGroup = otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.group_same_account',
+  'text': '{{sameAccountByGroup}}',
+});
+
 
 var layoutFilterGroup = filterGroup('layoutFilterGroup');
 
