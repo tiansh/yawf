@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.1.26 alpha
+// @version     0.1.27 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -208,7 +208,7 @@ var text = {
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
-  'useFastCreator': { 'zh-cn': '使用拖拽快速创建过滤器', },
+  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
   'userstyleTitle': { 'zh-cn': '自定义CSS', 'zh-hk': '自訂CSS', 'zh-tw': '自訂CSS', 'en': 'Customize CSS' },
   'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
@@ -252,8 +252,8 @@ var text = {
     'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a href="https://tiansh.github.io/yawf/">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a href="https://github.com/tiansh/yawf/issues">feedback page</a>, or <a href="http://weibo.com/tsh90/weibo">send message to author</a>. </p><p>Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
   },
   // 拖拽
-  'dropAreaTitle': { 'zh-cn': '拖拽至此<br />快速创建过滤器', 'zh-hk': '拖拽至此<br />快速創建篩選器', 'zh-tw': '拖拽至此<br />快速創建篩篩器', 'en': 'Drop Here to Create Filter' },
-  'dropAreaText': { 'zh-cn': '将文字或链接拖拽至此，快速创建过滤器。', 'zh-hk': '將文字或連結拖拽至此，快速創建篩選器。', 'zh-tw': '將文字或連結拖拽至此，快速創建篩選器。', 'en': 'Drop text or link here to create filter.' },
+  'dropAreaTitle': { 'zh-cn': '拖放至此<br />快速创建过滤器', 'zh-hk': '拖放至此<br />快速創建篩選器', 'zh-tw': '拖放至此<br />快速創建篩篩器', 'en': 'Drop Here to Create Filter' },
+  'dropAreaText': { 'zh-cn': '将文字或链接拖放至此，快速创建过滤器。', 'zh-hk': '將文字或連結拖放至此，快速創建篩選器。', 'zh-tw': '將文字或連結拖放至此，快速創建篩選器。', 'en': 'Drop text or link here to create filter.' },
   'fastCreateChoseTitle': { 'zh-cn': '创建过滤器', 'zh-hk': '創建篩篩器', 'zh-tw': '創建篩篩器', 'en': 'Create Filter' },
   'fastFilterChoseText': { 'zh-cn': '请选择要创建的过滤器：', 'zh-hk': '請選擇要創建的篩選器：', 'zh-tw': '請選擇要創建的篩選器：', 'en': 'Chose the filter(s) you want:' },
 };
@@ -775,6 +775,7 @@ var dropdown = (function () {
     });
   };
   var init = function () {
+    // 拖放到的框
     dropArea = cewih('div', html.dropArea).firstChild;
     var active = false, target = null;
     content = dropArea.querySelector('#yawf-drop-area-content');
@@ -783,13 +784,26 @@ var dropdown = (function () {
       if (target && target.hover) target.hover(); target = null;
       dropArea.style.display = 'none';
     };
+    // 只接受从微博拽过来的东西
+    var checkTarget = function () {
+      var checker = target;
+      for (var checker = target; checker && checker !== document; checker = checker.parentNode) {
+        if (!checker.classList || !checker.classList.contains || !checker.tagName) continue;
+        if (checker.classList.contains('WB_feed')) return true;
+        if (checker.classList.contains('W_miniblog')) return false;
+        if (checker.tagName.toLowerCase() === 'body') return true;
+      }
+      return false;
+    };
+    // 开始拽
     document.addEventListener('dragstart', function (e) {
       var cover = document.querySelector('body>div[node-type="outer"]');
       if (cover && cover.clientHeight) return;
+      target = e.explicitOriginalTarget; if (target && !checkTarget()) return;
       active = true;
       dropArea.style.display = 'block';
-      target = e.explicitOriginalTarget;
     }, false);
+    // 拽完了
     document.addEventListener('dragend', function (e) {
       console.log('dragend! %o', e);
       if (!active) return; active = false;
@@ -799,6 +813,7 @@ var dropdown = (function () {
       content.innerHTML = '';
       hideDropArea();
     }, false);
+    // 拽出去了
     document.addEventListener('mouseout', function (e) {
       if (!active) return; active = false;
       hideDropArea();
