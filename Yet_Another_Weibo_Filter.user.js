@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.29 alpha
+// @version     0.2.30 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -55,6 +55,7 @@ var text = {
     'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"',
     'en': '"A Weibo from @" attr(yawf-author) " was folded, click to view."'
   },
+  'disabledKey': {'zh-cn': '(已禁用)', 'zh-hk': '(已停用)', 'zh-tw': '(已停用)', 'en': '(Disabled)' },
   // 设置框
   'filter': { 'zh-cn': '过滤器', 'zh-hk': '篩選器', 'zh-tw': '篩選器', 'en': 'Filter' },
   'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設定', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
@@ -68,15 +69,15 @@ var text = {
   'keywordFilterGroupTitle': { 'zh-cn': '内容', 'zh-hk': '內容', 'zh-tw': '內容', 'en': 'Content' },
   'keywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterDetails': { 'zh-cn': '包含以下关键词的微博', 'zh-hk': '包含以下關鍵字的微博', 'zh-tw': '包含以下關鍵字的微博', 'en': 'Weibo with these keywords' },
-  'keywordFilterFast': { 'zh-cn': '包含关键词“{{text}}”的微博', 'zh-hk': '包含關鍵字“{{text}}”的微博', 'zh-tw': '包含關鍵字“{{text}}”的微博', 'en': 'Weibo contains keyword "{{text}}"' },
+  'keywordFilterFast': { 'zh-cn': '包含关键词“{{text}}”的微博', 'zh-hk': '包含關鍵字「{{text}}」的微博', 'zh-tw': '包含關鍵字「{{text}}」的微博', 'en': 'Weibo contains keyword "{{text}}"' },
   // 正则表达式
   'regexpFilterGroupTitle': { 'zh-cn': '正则', 'zh-hk': '正則', 'zh-tw': '正規', 'en': 'Regexp' },
   'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'regexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的微博', 'zh-hk': '匹配以下正則表達式的微博', 'zh-tw': '匹配以下正規表示式的微博', 'en': 'Weibo matches these regular expressions' },
   'regexpFilterRemark': {
     'zh-cn': '正则表达式的过滤方式提供了基于微博内容的高级过滤方式，如果只是需要简单地关键词过滤请使用内容标签页的关键词以获得更好的效率。正则表达式书写时不需要对“/”字符转义。',
-    'zh-hk': '正則表達式的過濾方式提供了基於微博內容的高級過濾方式，如果只是需要簡單地關鍵字過濾請使用內容標籤頁的關鍵字以獲得更好的效率。正則表達式書寫時不需要對“/”字符轉義。',
-    'zh-tw': '正規表示式的過濾方式提供了基於微博內容的高級過濾方式，如果只是需要簡單地關鍵字過濾請使用內容標籤頁的關鍵字以獲得更好的效率。正規表示式書寫時不需要對“/”字符轉義。',
+    'zh-hk': '正則表達式的過濾方式提供了基於微博內容的高級過濾方式，如果只是需要簡單地關鍵字過濾請使用內容標籤頁的關鍵字以獲得更好的效率。正則表達式書寫時不需要對「/」字符轉義。',
+    'zh-tw': '正規表示式的過濾方式提供了基於微博內容的高級過濾方式，如果只是需要簡單地關鍵字過濾請使用內容標籤頁的關鍵字以獲得更好的效率。正規表示式書寫時不需要對「/」字符轉義。',
     'en': 'Regular expression provide advanced filter settings based on content. You may set keywords in Content tab for better performance. You do not need to escape "/" in your regexp.'
   },
   'regexpBadFormedTitle': { 'zh-cn': '非法的正则表达式', 'zh-hk': '不合法的正則表達式', 'zh-tw': '不合法的正規表示式', 'en': 'Illegal Regexp' },
@@ -90,7 +91,7 @@ var text = {
   'accountFilterGroupTitle': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDetails': { 'zh-cn': '来自以下帐号的微博', 'zh-hk': '來自以下帳號的微博', 'zh-tw': '來自以下帳號的微博', 'en': 'Weibo from these accounts' },
-  'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的微博', 'zh-hk': '作者是“@{{name}}”的微博', 'zh-tw': '作者是“@{{name}}”的微博', 'en': 'Weibo from "@{{name}}"', },
+  'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的微博', 'zh-hk': '作者是「@{{name}}」的微博', 'zh-tw': '作者是「@{{name}}」的微博', 'en': 'Weibo from "@{{name}}"', },
   'accountFilterRemark': {
     'zh-cn': '推荐您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隐私设置 - 屏蔽账号</a>屏蔽您关注了但不想在首页看到的账号。',
     'zh-hk': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
@@ -103,29 +104,29 @@ var text = {
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterDetails': { 'zh-cn': '转发自以下账号的微博', 'zh-hk': '隱藏轉發自以下帳號的微博', 'zh-tw': '隱藏轉發自以下帳號的微博', 'en': 'Hide Weibo forwarded from these accounts' },
-  'originalFilterFast': { 'zh-cn': '转发自“@{{name}}”的微博', 'zh-hk': '轉發自“@{{name}}”的微博', 'zh-tw': '轉發自“@{{name}}”的微博', 'en': 'Weibo forwarded from "@{{name}}"' },
+  'originalFilterFast': { 'zh-cn': '转发自“@{{name}}”的微博', 'zh-hk': '轉發自「@{{name}}」的微博', 'zh-tw': '轉發自「@{{name}}」的微博', 'en': 'Weibo forwarded from "@{{name}}"' },
   // 提到
   'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'mentionFilterDetails': { 'zh-cn': '提到以下账号的微博', 'zh-hk': '提到以下帳號的微博', 'zh-tw': '提到以下帳號的微博', 'en': 'Weibo mentioned these accounts' },
-  'mentionFilterFast': { 'zh-cn': '提到了“@{{name}}”的微博', 'zh-hk': '提到了“@{{name}}”的微博', 'zh-tw': '提到了“@{{name}}”的微博', 'en': 'Weibo mentioned "@{{name}}"' },
+  'mentionFilterFast': { 'zh-cn': '提到了“@{{name}}”的微博', 'zh-hk': '提到了「@{{name}}」的微博', 'zh-tw': '提到了「@{{name}}」的微博', 'en': 'Weibo mentioned "@{{name}}"' },
   // 话题
   'topicFilterGroupTitle': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDesc': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDetails': { 'zh-cn': '包含以下话题的微博', 'zh-hk': '包含以下話題的微博', 'zh-tw': '包含以下話題的微博', 'en': 'Weibo with these topics' },
-  'topicFilterFast': { 'zh-cn': '包含“#{{topic}}#”话题的微博', 'zh-hk': '包含“#{{topic}}#”話題的微博', 'zh-tw': '包含“#{{topic}}#”話題的微博', 'en': 'Weibo contains topic "#{{topic}}#"' },
+  'topicFilterFast': { 'zh-cn': '包含“#{{topic}}#”话题的微博', 'zh-hk': '包含「@{{name}}」話題的微博', 'zh-tw': '包含「@{{name}}」話題的微博', 'en': 'Weibo contains topic "#{{topic}}#"' },
   // 来源
   'sourceFilterGroupTitle': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'sourceFilterDesc': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Via' },
   'sourceFilterDetails': { 'zh-cn': '以下来源的微博', 'zh-hk': '以下來源的微博', 'zh-tw': '以下來源的微博', 'en': 'Weibo from these sources' },
-  'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自“{{source}}”的微博', 'zh-tw': '來自“{{source}}”的微博', 'en': 'Weibo via "{{source}}"' },
+  'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「@{{name}}」的微博', 'zh-tw': '來自「@{{name}}」的微博', 'en': 'Weibo via "{{source}}"' },
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能添加默认来源', 'zh-hk': '不能新增預設來源', 'zh-tw': '不能新增預設來源', 'en': 'You cannot add default source' },
   // 超链接
   'hyperlinkFilterGroupTitle': { 'zh-cn': '链接', 'zh-hk': '連結', 'zh-tw': '連結', 'en': 'Link' },
   'hyperlinkFilterDesc': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
   'hyperlinkFilterDetails': { 'zh-cn': '包含指向以下网站的超链接的微博', 'zh-hk': '包含指向以下站點的超連結的微博', 'zh-tw': '包含指向以下站點的超連結的微博', 'en': 'Weibo with hyperlink to these website' },
-  'hyperlinkFilterFast': { 'zh-cn': '包含指向包含“{{host}}”地址链接的微博', 'zh-hk': '包含指向包含“{{host}}”位址連結的微博', 'zh-tw': '包含指向包含“{{host}}”位址連結的微博', 'en': 'Weibo contains hyperlink to "{{host}}"' },
+  'hyperlinkFilterFast': { 'zh-cn': '包含指向包含“{{host}}”地址链接的微博', 'zh-hk': '包含指向包含「{{host}}」位址連結的微博', 'zh-tw': '包含指向包含「{{host}}」位址連結的微博', 'en': 'Weibo contains hyperlink to "{{host}}"' },
   // 更多
   'otherFilterGroupTitle': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 显示
@@ -229,17 +230,19 @@ var text = {
   'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息', 'zh-hk': '展開左欄消息', 'zh-tw': '展開左欄消息', 'en': 'Unfold news in left column' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
   'personalRedirectWeibo': { 'zh-cn': '访问账号主页显示微博页面', 'zh-hk': '訪問帳號主頁顯示微博頁面', 'zh-tw': '訪問帳號主頁顯示微博頁面', 'en': 'Show Weibo page instead of personal mainpage by default' },
-  'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加“查看原圖”連結', 'zh-tw': '添加“查看原圖”連結', 'en': 'add "Original Picture" link' },
+  'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
   'whitelistHighlightDesc': { 'zh-cn': '以该背景色显示白名单的微博：|{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '以該背景色顯示白名單的微博：|{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '以該背景色顯示白名單的微博：|{{<color>}}|透明度{{<transparency>}}%', 'en': 'Show Weibo in whitelist with background color: |{{<color>}}| transparency {{<transparency>}}%' },
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景颜色|{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page|{{<color>}}|透明度{{<transparency>}}%' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景颜色|{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page|{{<color>}}|透明度{{<transparency>}}%' },
+  'weiboOnly': { 'zh-cn': '仅微博列表视图|宽度{{<width>}}px|快捷键{{<key>}}|{{<switch>}}显示快捷链接', 'zh-hk': '僅微博列表視圖|寬度{{<width>}}px|快速鍵{{<key>}}|{{<switch>}}顯示快速連結', 'zh-tw': '僅微博列表視圖|寬度{{<width>}}px|快速鍵{{<key>}}|{{<switch>}}顯示快速連結', 'en': 'Weibo list only view | width {{<width>}}px | shortcut {{<key>}} | {{<switch>}} show switch' },
+  'weiboOnlySwitch': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'userstyleTitle': {
     'zh-cn': '<span>自定义CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜索样式</a></span>{{}}',
     'zh-hk': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a></span>{{}}',
     'zh-tw': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a></span>{{}}',
-    'en': '<span>Customize CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">Search userstyles on userStyles.org</a></span>{{}}'
+    'en': '<span>Customize CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">Search styles on userstyles.org</a></span>{{}}'
   },
   // 脚本
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
@@ -317,10 +320,12 @@ var html = {
   'configStringInput': '<div class="yawf-configInput yawf-configStringInput"><textarea id="yawf-{{key}}" class="W_input yawf-configStringInput" name="yawf-{{key}}"></textarea></div>',
   'configColor': '<div class="yawf-configColor yawf-configItem"><label>{{text}}</label></div>',
   'configColorInput': '<div class="yawf-configInput yawf-configColorInput"><input type="color" class="W_f14" style="width: 40px;" /></div>',
-  'configTransparency': '<div class="yawf-configTransparency yawf-configItem"><label>{{text}}</label></div>',
-  'configTransparencyInput': '<div class="yawf-configInput yawf-configTransparencyInput"><input type="number" min="0" max="100" maxlength="3" class="W_f14" style="width: 45px; text-align: right;" /><div class="yawf-transparency-range" style="background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog;"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
   'configNumber': '<div class="yawf-configNumber yawf-configItem"><label>{{text}}</label></div>',
   'configNumberInput': '<div class="yawf-configInput yawf-configNumberInput"><input type="number" class="W_f14" style="width: 60px;" /></div>',
+  'configRange': '<div class="yawf-configRange yawf-configItem"><label>{{text}}</label></div>',
+  'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" class="W_f14" style="width: 45px; text-align: right;" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
+  'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
+  'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" /></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_arrow tag yawf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
@@ -335,6 +340,8 @@ var html = {
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-chose">',
   'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span>{{inner}}</span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
   'fastFilterFooter': '</ul></div><div class="btn clearfix"><a node-type="ok" class="W_btn_a" action-type="ok" href="javascript:;"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div>',
+  // 只看微博列表
+  'weiboOnlyButton': '<div class="clearfix yawf-weibo-only-button"><a href="javascript:void(0);"><i></i>{{text}}</a></div>',
 };
 
 var url = {
@@ -343,28 +350,55 @@ var url = {
   'block_wb': '/aj/user/block?_wv=5&__rnd={{rnd}}',
 };
 
-// 微博过滤规则
-var rules = (function () {
-  var list = [];
-  var add = function (priority, rule) {
-    list.push({ 'priority': priority, 'rule': rule });
-    list.sort(function (x, y) { return y.priority - x.priority; });
+// 将按键编号或将显示编号对应名称
+var keys = (function () {
+  var ctrl = 1 << 8, shift = 1 << 9, alt = 1 << 10, meta = 1 << 11, key = ctrl - 1;
+  var namelist = '#0;#1;#2;Cancel;#4;#5;Help;#7;BackSpace;TAB;#10;#11;Clear;Enter;EnterSpecial;#15;;;;Pause;CapsLock;Kana;Eisu;Junja;Final;Hanja;#26;Esc;Convert;Nonconvert;Accept;Modechange;Space;PageUp;PageDown;End;Home;Left;Up;Right;Down;Select;Print;Execute;PrintScreen;Insert;Delete;#47;0;1;2;3;4;5;6;7;8;9;Colon;Semicolon;LessThan;Equals;GreaterThan;QuestionMark;At;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;Win;#92;ContextMenu;#94;Sleep;NumPad0;NumPad1;NumPad2;NumPad3;NumPad4;NumPad5;NumPad6;NumPad7;NumPad8;NumPad9;Multiply;Add;Separator;Subtract;Decimal;Divide;F1;F2;F3;F4;F5;F6;F7;F8;F9;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;#136;#137;#138;#139;#140;#141;#142;#143;NumLock;ScrollLocK;WIN_OEM_FJ_JISHO;WIN_OEM_FJ_MASSHOU;WIN_OEM_FJ_TOUROKU;WIN_OEM_FJ_LOYA;WIN_OEM_FJ_ROYA;#151;#152;#153;#154;#155;#156;#157;#158;#159;Circumflex;Exclamation;DoubleQuote;Hash;Dollar;Percent;Ampersand;Underscore;OpenParen;CloseParen;Asterisk;Plus;Pipe;HyphenMinus;OpenCurlyBracket;CloseCurlyBracket;Tilde;#177;#178;#179;#180;VolumeMute;VolumeDown;VolumeUp;#184;#185;#186;#187;Comma;#189;Period;Slash;BackQuote;#193;#194;#195;#196;#197;#198;#199;#200;#201;#202;#203;#204;#205;#206;#207;#208;#209;#210;#211;#212;#213;#214;#215;#216;#217;#218;OpenBracket;BackSlash;CloseBracket;Quote;#223;;AltGr;#226;WIN_ICO_HELP;WIN_ICO_00;#229;WIN_ICO_CLEAR;#231;#232;WIN_OEM_RESET;WIN_OEM_JUMP;WIN_OEM_PA1;WIN_OEM_PA2;WIN_OEM_PA3;WIN_OEM_WSCTRL;WIN_OEM_CUSEL;WIN_OEM_ATTN;WIN_OEM_FINISH;WIN_OEM_COPY;WIN_OEM_AUTO;WIN_OEM_ENLW;WIN_OEM_BACKTAB;Attn;Crsel;Exsel;Ereof;Play;Zoom;#252;PA1;WIN_OEM_CLEAR;#255'.split(';');
+  // 对一个按键事件做编号
+  var get= function (e) {
+    var code = e.keyCode & key;
+    if (e.ctrlKey) code |= ctrl;
+    if (e.shiftKey) code |= shift;
+    if (e.altKey) code |= alt;
+    if (e.metaKey) code |= meta;
+    return code;
   };
-  var parse = function (feed) {
-    var result = null;
-    list.some(function (item) {
-      try { result = item.rule(feed) || result; }
-      catch (e) { debug('error while parsing rule %o: %o', item.rule, e); }
-      if (result) debug('%o(%o) -> %s', item.rule, feed, result);
-      return result;
-    });
-    return result;
+  // 给一个编号，转换为键名
+  var name = function (n) {
+    if (n === 0) return text.disabledKey;
+    var ret = '';
+    if (n & ctrl) ret += 'Ctrl-';
+    if (n & shift) ret += 'Shift-';
+    if (n & alt) ret += 'Alt-';
+    if (n & meta) ret += 'Meta-';
+    ret += namelist[n & key];
+    if (ret.slice(-1) === '-') ret = ret.slice(0, -1);
+    return ret;
   };
+  // 注册全局监听按键
+  var triggers = {};
+  var reg = function (key, callback) {
+    triggers[key] = triggers[key] || [];
+    triggers[key].push(withTry(callback));
+  };
+  // 监听按键
+  var baseEvent = function (e) {
+    var code = get(e);
+    if (!triggers[code]) return [];
+    e.stopPropagation(); e.preventDefault();
+    return triggers[code];
+  };
+  document.addEventListener('keydown', function (e) {
+    baseEvent(e).forEach(function (f) { f(); })
+  });
+  document.addEventListener('keyup', baseEvent);
   return {
-    'add': add,
-    'parse': parse,
+    'get': get,
+    'name': name,
+    'reg': reg,
   };
 }());
+
 
 // 根据用户界面上的语言做不同调整
 var i18n = (function () {
@@ -490,6 +524,30 @@ var config = function (uid) {
     'reg': reg,
   };
 };
+
+
+// 微博过滤规则
+var rules = (function () {
+  var list = [];
+  var add = function (priority, rule) {
+    list.push({ 'priority': priority, 'rule': rule });
+    list.sort(function (x, y) { return y.priority - x.priority; });
+  };
+  var parse = function (feed) {
+    var result = null;
+    list.some(function (item) {
+      try { result = item.rule(feed) || result; }
+      catch (e) { debug('error while parsing rule %o: %o', item.rule, e); }
+      if (result) debug('%o(%o) -> %s', item.rule, feed, result);
+      return result;
+    });
+    return result;
+  };
+  return {
+    'add': add,
+    'parse': parse,
+  };
+}());
 
 var debug = !!GM_getValue('debug', false) ?
   console.log.bind(console) : function () { };
@@ -858,7 +916,6 @@ var dropdown = (function () {
     }, false);
     // 拽完了
     document.addEventListener('dragend', function (e) {
-      console.log('dragend! %o', e);
       if (!active) return; active = false;
       e.preventDefault(); e.stopPropagation();
       if (content.firstChild === content.lastChild) got(content.firstChild);
@@ -935,7 +992,9 @@ var newNode = (function () {
   var remove = function (callback) {
     var found = false;
     callbacks = callbacks.filter(function (x) {
-      if (x === callback) return found = true; return false;
+      var same = x === callback;
+      if (same) found = true;
+      return !same;
     });
     return found;
   };
@@ -1136,9 +1195,10 @@ var typedConfig = (function () {
     'boolean': baseConfig(Boolean),
     'users': itemsConfig,
     'number': baseConfig(Number),
-    'transparency': baseConfig(Number),
+    'range': baseConfig(Number),
     'select': baseConfig(String),
     'color': baseConfig(String),
+    'key': baseConfig(Number),
   };
 }());
 
@@ -1149,10 +1209,8 @@ var bindInputValue = (function () {
     var onchange = function () {
       var val = input[key], valid;
       valid = fine(val);
-      console.log('changed: %o', valid);
       if (String(valid) !== val) input[key] = valid;
       obj.putconf(valid);
-      console.log('conf now: %o', obj.getconf());
     };
     input[key] = fine(obj.getconf());
     input.addEventListener('change', onchange);
@@ -1214,7 +1272,6 @@ var typedHtml = (function () {
       return option.value;
     });
     bindInputValue.select(select, item, function (val) {
-      console.log('keys: %o, val: %o', keys, val);
       return keys.indexOf(val) === -1 ? defaultValue : val;
     });
   });
@@ -1223,8 +1280,8 @@ var typedHtml = (function () {
   var string = base('String', function (dom, item) {
     var textarea = dom.querySelector('textarea');
     bindInputValue.text(textarea, item);
-    textarea.addEventListener('keypress', function () {
-      item.putconf(textarea.value);
+    textarea.addEventListener('keyup', function () {
+      call(function () { item.putconf(textarea.value); });
     });
   });
 
@@ -1330,19 +1387,43 @@ var typedHtml = (function () {
     });
   };
 
-  // 透明度的输入框
-  var transparency = base('Transparency', function (dom, item) {
+  // 一个有数字和垂直范围条的输入框
+  var range = base('Range', function (dom, item) {
     var n = dom.querySelector('input[type="number"]');
     var r = dom.querySelector('input[type="range"]');
+    n.max = item.max; r.max = item.max;
+    n.min = item.min; r.min = item.min;
     var onchange = bindInputValue.text(n, item, function (val) {
-      if (isNaN(parseInt(val))) return 0;
-      return Math.min(Math.max(parseInt(val), 0), 100);
+      if (isNaN(parseInt(val))) return item['default'] || item.min;
+      return Math.min(Math.max(parseInt(val), item.min), item.max);
     });
     r.value = n.value;
     var updateN = function () { if (r.value !== n.value) n.value = r.value; onchange(); };
     var updateR = function () { if (r.value !== n.value) r.value = n.value; onchange(); };
     r.addEventListener('change', updateN); r.addEventListener('mousemove', updateN);
     n.addEventListener('change', updateR); n.addEventListener('keypress', updateR);
+  });
+
+  // 一个输入按键的输入框
+  var key = base('Key', function (dom, item) {
+    var i = dom.querySelector('input'), s = dom.querySelector('button');
+    var copyName = function () { s.textContent = keys.name(Number(i.value)); };
+    var eventClear = function (e) { e.stopPropagation(); e.preventDefault(); };
+    var valid = function (key) { if (key === 27) return 0; return key; }
+    var onchange = bindInputValue.text(i, item, function (val) {
+      call(copyName); return Number(val);
+    });
+    dom.addEventListener('keydown', function (e) {
+      var val = valid(keys.get(e));
+      i.value = val;
+      copyName();
+      onchange();
+      eventClear(e);
+    }, false);
+    dom.addEventListener('keyup', eventClear, false);
+    dom.addEventListener('keypress', eventClear, false);
+    i.addEventListener('change', copyName);
+    call(copyName); 
   });
 
   return {
@@ -1356,7 +1437,8 @@ var typedHtml = (function () {
     'strings': strings,
     'boolean': boolean,
     'users': users,
-    'transparency': transparency,
+    'range': range,
+    'key': key,
   };
 }());
 
@@ -2281,8 +2363,10 @@ var coloredConfigItem = function (details) {
         'default': details.defaultColor || '#000000',
       },
       'transparency': {
-        'type': 'transparency',
+        'type': 'range',
         'default': details.defaultTransparency || 0,
+        'min': 0,
+        'max': 100,
       },
     },
     'text': details.text,
@@ -2334,6 +2418,51 @@ toolFilterGroup.add(coloredConfigItem({
   },
 }));
 
+toolFilterGroup.add({
+  'type': 'boolean',
+  'text': '{{weiboOnly}}',
+  'key': 'weibo.tool.weibo_only',
+  'ref': {
+    // 宽度
+    'width': {
+      'type': 'range',
+      'min': 480,
+      'max': 980,
+      'default': 600,
+    },
+    // 快捷键
+    'key': {
+      'type': 'key',
+      'default': 119 // F8
+    },
+    // 是否显示快捷链接
+    'switch': {
+      'type': 'boolean',
+      'default': false,
+    },
+  },
+  'ainit': function () {
+    var key = this.ref.key, attr = 'yawf-weibo-only';
+    css.add(fillStr('body.B_index[yawf-weibo-only] .W_main, body.B_profile[yawf-weibo-only] .W_main { width: {{width}}; }', { 'width': this.ref.width.conf + 'px' }));
+    var switchMode = function () {
+      if (document.body.getAttribute(attr)) document.body.removeAttribute(attr);
+      else document.body.setAttribute(attr, attr);
+    };
+    // 检查快捷键按键
+    keys.reg(key.conf, switchMode);
+    // 显示切换按钮
+    if (!this.ref['switch'].conf) return;
+    var showSwitch = function () {
+      var wbFeed = document.querySelector('.WB_feed:not([yawf-weibo-only-added])');
+      if (!wbFeed) return; wbFeed.setAttribute('yawf-weibo-only-added', 'added');
+      var weiboOnly = cewih('div', fillStr(html.weiboOnlyButton, { 'text': text.weiboOnlySwitch })).firstChild;
+      weiboOnly.addEventListener('click', switchMode);
+      wbFeed.parentNode.insertBefore(weiboOnly, wbFeed);
+      newNode.remove(showSwitch);
+    };
+    newNode.add(showSwitch);
+  }
+});
 
 // 自定义样式
 toolFilterGroup.add({
@@ -2576,7 +2705,8 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_seeAll"],
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
   .W_miniblog { visibility: hidden; }
-  input[type="number"]:not(:focus) ~ .yawf-transparency-range:not(:hover) > input[type="range"]:not(:focus) { display: none; }
+  .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
+  input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus) { display: none; }
   // 拖拽
   #yawf-drop-area { background: rgba(251, 251, 216, 0.8); display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
   .yawf-drop-area-desc { height: 170px; width: 170px; margin: 16px 16px -206px 16px; padding: 10px; -moz-user-select: none; user-select: none; border: 4px dashed #ddd; border-radius: 20px; }
@@ -2585,6 +2715,47 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   #yawf-drop-area-content { height: 230px; width: 230px; position: relative; z-index: 10002; opacity: 0; }
   #yawf-fast-filter-chose { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
+  // 只看微博
+  body.B_index[yawf-weibo-only] .WB_global_nav,
+  body.B_profile[yawf-weibo-only] .WB_global_nav { position: absolute; }
+  body.B_profile[yawf-weibo-only] .W_main_l,
+  body.B_index[yawf-weibo-only] .W_main_l,
+  body.B_index[yawf-weibo-only] .W_main_r,
+  body.B_profile[yawf-weibo-only] .W_main_r,
+  body.B_index[yawf-weibo-only] #Box_center>div:not(#pl_content_homeFeed),
+  body.B_profile[yawf-weibo-only] #Box_center>div:not(#pl_content_homeFeed),
+  body.B_index[yawf-weibo-only] .group_read,
+  body.B_profile[yawf-weibo-only] .B_index .group_read,
+  body.B_index[yawf-weibo-only] .global_footer,
+  body.B_profile[yawf-weibo-only] .global_footer,
+  body.B_profile[yawf-weibo-only] #Pl_Official_Header__1,
+  body.B_profile[yawf-weibo-only] #Pl_Core_Nav__2,
+  body.B_profile[yawf-weibo-only] .group_read,
+  body.B_profile[yawf-weibo-only] .W_main_2r,
+  body.B_profile[yawf-weibo-only] .group_read,
+  body.B_profile[yawf-weibo-only] .global_footer { display: none }
+  body.B_index[yawf-weibo-only] .W_main,
+  body.B_profile[yawf-weibo-only] .W_main { background-size: 200% 100%; background-position: -300px 0px; max-width: 980px; min-width: 480px; }
+  body.B_index[yawf-weibo-only] #Box_center,
+  body.B_profile[yawf-weibo-only] #Box_center,
+  body.B_index[yawf-weibo-only] .W_main_a,
+  body.B_profile[yawf-weibo-only] .W_main_a { width: 100%; }
+  body.B_index[yawf-weibo-only] .WB_feed .repeat .input textarea,
+  body.B_profile[yawf-weibo-only] .WB_feed .repeat .input textarea { width: 100% }
+  body.B_index[yawf-weibo-only] .WB_feed .WB_screen { margin-left: calc(100% - 15px); position: relative; }
+  body.B_index[yawf-weibo-only] .B_index .WB_feed .type_text { margin-left: calc(100% - 150px); }
+  body.B_index[yawf-weibo-only] #base_scrollToTop,
+  body.B_profile[yawf-weibo-only] #base_scrollToTop { float: left; left: auto; margin: auto; position: relative; top: 1000px; }
+  body.B_index[yawf-weibo-only] #base_scrollToTop span,
+  body.B_profile[yawf-weibo-only] #base_scrollToTop span { position: fixed; bottom: 200px; width: 22px; height: 67px; background: #f2f2f2; background: -moz-element(#base_scrollToTop); background-origin: padding-box; border: 0 none; padding: 10px 1px 10px; }
+  body.B_profile[yawf-weibo-only] .W_main::after,
+  body.B_index[yawf-weibo-only] .W_main::after { content: " "; display: block; height: 1px; width: 100%; float: left; visibility: hidden; }
+  body.B_profile[yawf-weibo-only] .W_miniblog,
+  body.B_index[yawf-weibo-only] .W_miniblog { overflow: hidden; }
+  body.B_profile[yawf-weibo-only] .W_miniblog { padding-top: 60px; }
+  body.B_profile[yawf-weibo-only] .W_main_c { padding-top: 0; width: 100%; }
+  .yawf-weibo-only-button { bottom: calc(80px - 0.5em); float: right; position: relative; right: 25px; }
+  body[yawf-weibo-only] .yawf-weibo-only-button { bottom: calc(20px - 0.5em); }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
