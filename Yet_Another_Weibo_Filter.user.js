@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.30 alpha
+// @version     0.2.31 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -233,11 +233,16 @@ var text = {
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
-  'whitelistHighlightDesc': { 'zh-cn': '以该背景色显示白名单的微博：|{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '以該背景色顯示白名單的微博：|{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '以該背景色顯示白名單的微博：|{{<color>}}|透明度{{<transparency>}}%', 'en': 'Show Weibo in whitelist with background color: |{{<color>}}| transparency {{<transparency>}}%' },
-  'mainBackgroundColorOverride': { 'zh-cn': '首页背景颜色|{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page|{{<color>}}|透明度{{<transparency>}}%' },
-  'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景颜色|{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景色彩|{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page|{{<color>}}|透明度{{<transparency>}}%' },
-  'weiboOnly': { 'zh-cn': '仅微博列表视图|宽度{{<width>}}px|快捷键{{<key>}}|{{<switch>}}显示快捷链接', 'zh-hk': '僅微博列表視圖|寬度{{<width>}}px|快速鍵{{<key>}}|{{<switch>}}顯示快速連結', 'zh-tw': '僅微博列表視圖|寬度{{<width>}}px|快速鍵{{<key>}}|{{<switch>}}顯示快速連結', 'en': 'Weibo list only view | width {{<width>}}px | shortcut {{<key>}} | {{<switch>}} show switch' },
-  'weiboOnlySwitch': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
+  'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
+  'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
+  'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
+  'weiboOnly': {
+    'zh-cn': '阅读视图|宽度{{<width>}}px|快捷键{{<key>}}||背景颜色{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博列表顶部显示快捷开关按钮',
+    'zh-hk': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||背景色彩{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-tw': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||背景色彩{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'en': 'Reading View | width {{<width>}}px | shortcut {{<key>}} || backgroundcolor {{<color>}} | transparency {{<transparency>}} || {{<switch>}} show switch button at top of Weibo list'
+  },
+  'weiboOnlyButton': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'userstyleTitle': {
     'zh-cn': '<span>自定义CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜索样式</a></span>{{}}',
     'zh-hk': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a></span>{{}}',
@@ -290,6 +295,7 @@ var text = {
 // 页面常量
 var html = {
   '|': '</label><label>', // 先关闭前面的label，再从后面开一个，所以这里没写反
+  '||': '</label><br /><label>',
   'select': '<select>{{options}}</select>',
   'option': '<option value="{{value}}">{{{text}}}</option>',
   // 对话框
@@ -341,7 +347,7 @@ var html = {
   'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span>{{inner}}</span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
   'fastFilterFooter': '</ul></div><div class="btn clearfix"><a node-type="ok" class="W_btn_a" action-type="ok" href="javascript:;"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div>',
   // 只看微博列表
-  'weiboOnlyButton': '<div class="clearfix yawf-weibo-only-button"><a href="javascript:void(0);"><i></i>{{text}}</a></div>',
+  'weiboOnlyButton': '<div class="right_item"><div><a class="W_btn_round2" href="javascript:void(0);"><span>{{text}}</span></a></div></div></div>',
 };
 
 var url = {
@@ -353,7 +359,7 @@ var url = {
 // 将按键编号或将显示编号对应名称
 var keys = (function () {
   var ctrl = 1 << 8, shift = 1 << 9, alt = 1 << 10, meta = 1 << 11, key = ctrl - 1;
-  var namelist = '#0;#1;#2;Cancel;#4;#5;Help;#7;BackSpace;TAB;#10;#11;Clear;Enter;EnterSpecial;#15;;;;Pause;CapsLock;Kana;Eisu;Junja;Final;Hanja;#26;Esc;Convert;Nonconvert;Accept;Modechange;Space;PageUp;PageDown;End;Home;Left;Up;Right;Down;Select;Print;Execute;PrintScreen;Insert;Delete;#47;0;1;2;3;4;5;6;7;8;9;Colon;Semicolon;LessThan;Equals;GreaterThan;QuestionMark;At;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;Win;#92;ContextMenu;#94;Sleep;NumPad0;NumPad1;NumPad2;NumPad3;NumPad4;NumPad5;NumPad6;NumPad7;NumPad8;NumPad9;Multiply;Add;Separator;Subtract;Decimal;Divide;F1;F2;F3;F4;F5;F6;F7;F8;F9;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;#136;#137;#138;#139;#140;#141;#142;#143;NumLock;ScrollLocK;WIN_OEM_FJ_JISHO;WIN_OEM_FJ_MASSHOU;WIN_OEM_FJ_TOUROKU;WIN_OEM_FJ_LOYA;WIN_OEM_FJ_ROYA;#151;#152;#153;#154;#155;#156;#157;#158;#159;Circumflex;Exclamation;DoubleQuote;Hash;Dollar;Percent;Ampersand;Underscore;OpenParen;CloseParen;Asterisk;Plus;Pipe;HyphenMinus;OpenCurlyBracket;CloseCurlyBracket;Tilde;#177;#178;#179;#180;VolumeMute;VolumeDown;VolumeUp;#184;#185;#186;#187;Comma;#189;Period;Slash;BackQuote;#193;#194;#195;#196;#197;#198;#199;#200;#201;#202;#203;#204;#205;#206;#207;#208;#209;#210;#211;#212;#213;#214;#215;#216;#217;#218;OpenBracket;BackSlash;CloseBracket;Quote;#223;;AltGr;#226;WIN_ICO_HELP;WIN_ICO_00;#229;WIN_ICO_CLEAR;#231;#232;WIN_OEM_RESET;WIN_OEM_JUMP;WIN_OEM_PA1;WIN_OEM_PA2;WIN_OEM_PA3;WIN_OEM_WSCTRL;WIN_OEM_CUSEL;WIN_OEM_ATTN;WIN_OEM_FINISH;WIN_OEM_COPY;WIN_OEM_AUTO;WIN_OEM_ENLW;WIN_OEM_BACKTAB;Attn;Crsel;Exsel;Ereof;Play;Zoom;#252;PA1;WIN_OEM_CLEAR;#255'.split(';');
+  var namelist = '#0;#1;#2;Cancel;#4;#5;Help;#7;BackSpace;TAB;#10;#11;Clear;Enter;EnterSpecial;#15;;;;Pause;CapsLock;Kana;Eisu;Junja;Final;Hanja;#26;Esc;Convert;Nonconvert;Accept;ModeChange;Space;PageUp;PageDown;End;Home;Left;Up;Right;Down;Select;Print;Execute;PrintScreen;Insert;Delete;#47;0;1;2;3;4;5;6;7;8;9;Colon;Semicolon;LessThan;Equals;GreaterThan;QuestionMark;At;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;Win;#92;ContextMenu;#94;Sleep;NumPad0;NumPad1;NumPad2;NumPad3;NumPad4;NumPad5;NumPad6;NumPad7;NumPad8;NumPad9;Multiply;Add;Separator;Subtract;Decimal;Divide;F1;F2;F3;F4;F5;F6;F7;F8;F9;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;#136;#137;#138;#139;#140;#141;#142;#143;NumLock;ScrollLocK;WIN_OEM_FJ_JISHO;WIN_OEM_FJ_MASSHOU;WIN_OEM_FJ_TOUROKU;WIN_OEM_FJ_LOYA;WIN_OEM_FJ_ROYA;#151;#152;#153;#154;#155;#156;#157;#158;#159;Circumflex;Exclamation;DoubleQuote;Hash;Dollar;Percent;Ampersand;Underscore;OpenParen;CloseParen;Asterisk;Plus;Pipe;HyphenMinus;OpenCurlyBracket;CloseCurlyBracket;Tilde;#177;#178;#179;#180;VolumeMute;VolumeDown;VolumeUp;#184;#185;#186;#187;Comma;#189;Period;Slash;BackQuote;#193;#194;#195;#196;#197;#198;#199;#200;#201;#202;#203;#204;#205;#206;#207;#208;#209;#210;#211;#212;#213;#214;#215;#216;#217;#218;OpenBracket;BackSlash;CloseBracket;Quote;#223;;AltGr;#226;WIN_ICO_HELP;WIN_ICO_00;#229;WIN_ICO_CLEAR;#231;#232;WIN_OEM_RESET;WIN_OEM_JUMP;WIN_OEM_PA1;WIN_OEM_PA2;WIN_OEM_PA3;WIN_OEM_WSCTRL;WIN_OEM_CUSEL;WIN_OEM_ATTN;WIN_OEM_FINISH;WIN_OEM_COPY;WIN_OEM_AUTO;WIN_OEM_ENLW;WIN_OEM_BACKTAB;Attn;Crsel;Exsel;Ereof;Play;Zoom;#252;PA1;WIN_OEM_CLEAR;#255'.split(';');
   // 对一个按键事件做编号
   var get= function (e) {
     var code = e.keyCode & key;
@@ -811,7 +817,7 @@ var filters = (function () {
   };
 }());
 
-// 快速创建播放器的对话框
+// 快速创建过滤器的对话框
 var fastFilterDialog = function (chose) {
   var dialogInner = function (inner) {
     inner.innerHTML = [html.fastFilterHeader,
@@ -1229,22 +1235,28 @@ var typedHtml = (function () {
   var base = function (base, binder) {
     return function () {
       var item = this;
+      // 引用的设置项
+      var ref = item.ref;
+      // 显示的文字
       var inp = '{{}}', outer = inp, inner = '', text;
       var hasInput = !!html['config' + base + 'Input'];
       if (!item.nogui) {
-        text = fillStr(item.text || '').replace(/\|/g, html['|']);
+        text = fillStr(item.text || '').replace(/\|\|/g, html['||']).replace(/\|/g, html['|']);
         if (hasInput && text.indexOf(inp) === -1) text = inp + text;
         outer = fillStr(html['config' + base], { 'text': text }, item);
       }
       if (hasInput) inner = fillStr(html['config' + base + 'Input'], item);
       var line = outer.replace(inp, inner);
+      // 在需要引用其他控件的地方留空
       if (!item.nogui) line = line.replace(/{{<([a-zA-Z0-9_-]*)>}}/g, function (m, p) {
-        return item.ref[p] ? fillStr(html.configPrefill, { 'id': p }) : m;
+        return ref[p] ? fillStr(html.configPrefill, { 'id': p }) : m;
       });
+      // 构造基本的文档
       var dom = cewih('div', line).firstChild;
+      // 将引用的设置控件填回
       var pf = Array.apply(Array, dom.querySelectorAll('span.yawf-configPrefill'));
       pf.forEach(function (pfi) {
-        pfi.parentNode.replaceChild(item.ref[pfi.id].show(), pfi);
+        pfi.parentNode.replaceChild(ref[pfi.id].show(), pfi);
       });
       if (binder) binder(dom, item);
       return dom;
@@ -1493,6 +1505,14 @@ var filterGroup = function (groupName) {
     'add': add
   };
   return filters.add(group);
+};
+
+// 把后面的对象的元素加到第一个上面去
+var extend = function (obj1) {
+  return Array.apply(Array, arguments).reduce(function (x, y) {
+    for (var k in y) x[k] = y[k];
+    return x;
+  });
 };
 
 // 当前是查看分组的页面吗？
@@ -2354,75 +2374,80 @@ var coloredConfigItem = function (details) {
       ',' + (100 - transparency) / 100 + ')';
   };
 
+  var color = {
+    'type': 'color',
+    'default': details.color || '#000000',
+  };
+  var transparency = {
+    'type': 'range',
+    'default': details.transparency || 0,
+    'min': 0,
+    'max': 100,
+  };
   return {
-    'type': 'boolean',
-    'key': details.key,
-    'ref': {
-      'color': {
-        'type': 'color',
-        'default': details.defaultColor || '#000000',
+    'color': color,
+    'transparency': transparency,
+    'rgba': {
+      'toString': function () {
+        return colorStr(color.conf, transparency.conf);
       },
-      'transparency': {
-        'type': 'range',
-        'default': details.defaultTransparency || 0,
-        'min': 0,
-        'max': 100,
-      },
-    },
-    'text': details.text,
-    'color': function () {
-      return colorStr(this.ref.color.conf, this.ref.transparency.conf);
-    },
-    'ainit': details.ainit,
+    }
   };
 };
 
 // 高亮显示白名单微博
-toolFilterGroup.add(coloredConfigItem({
+toolFilterGroup.add({
+  'type': 'boolean',
   'key': 'weibo.tool.whitelist_highlight',
-  'defaultColor': '#fef3da',
+  'ref': coloredConfigItem({ 'color': '#fef3da' }),
   'text': '{{whitelistHighlightDesc}}',
   'ainit': function () {
     css.add(fillStr(funcStr(function () { /*
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -20px 0 0 {{color}}, 20px 0 0 {{color}}; }
       [node-type="feed_list"] .WB_feed_together .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -10px 0 0 {{color}}, 10px 0 0 {{color}}; }
-    */ }), { 'color': this.color() }));
+    */ }), { 'color': '' + this.ref.rgba }));
   },
-}));
+});
 
 // 首页背景
-toolFilterGroup.add(coloredConfigItem({
+toolFilterGroup.add({
+  'type': 'boolean',
   'key': 'weibo.tool.my_background_color',
-  'defaultColor': '#ffffff',
-  'defaultTransparency': 30,
+  'ref': coloredConfigItem({
+    'color': '#ffffff',
+    'transparency': 30,
+  }),
   'text': '{{mainBackgroundColorOverride}}',
   'ainit': function () {
     css.add(fillStr(funcStr(function () { /*
       body:not(.S_profile) .W_main { background-image: none !important; background-color: {{color}} !important }
       body:not(.S_profile) .S_bg4, body:not(.S_profile) .W_main_a, body:not(.S_profile) .W_main_bg { background: transparent !important; }
-    */ }), { 'color': this.color() }));
+    */ }), { 'color': '' + this.ref.rgba }));
   },
-}));
+});
 
 // 个人主页背景
-toolFilterGroup.add(coloredConfigItem({
+toolFilterGroup.add({
+  'type': 'boolean',
   'key': 'weibo.tool.other_background_color',
-  'defaultColor': '#ffffff',
-  'defaultTransparency': 30,
+  'ref': coloredConfigItem({
+    'color': '#ffffff',
+    'transparency': 30,
+  }),
   'text': '{{profileBackgroundColorOverride}}',
   'ainit': function () {
     css.add(fillStr(funcStr(function () { /*
 			.S_profile .W_profile_bg, .S_profile .S_bg5 { background-color: {{color}} !important; }
       .S_profile .S_bg4:not(.W_profile_bg) { background: none transparent !important }
-    */ }), { 'color': this.color() }));
+    */ }), { 'color': '' + this.ref.rgba }));
   },
-}));
+});
 
 toolFilterGroup.add({
   'type': 'boolean',
   'text': '{{weiboOnly}}',
   'key': 'weibo.tool.weibo_only',
-  'ref': {
+  'ref': extend({
     // 宽度
     'width': {
       'type': 'range',
@@ -2440,10 +2465,14 @@ toolFilterGroup.add({
       'type': 'boolean',
       'default': false,
     },
-  },
+  }, coloredConfigItem({
+    // 颜色
+    'color': '#ffffff',
+    // 透明度
+    'transparent': 20,
+  })),
   'ainit': function () {
     var key = this.ref.key, attr = 'yawf-weibo-only';
-    css.add(fillStr('body.B_index[yawf-weibo-only] .W_main, body.B_profile[yawf-weibo-only] .W_main { width: {{width}}; }', { 'width': this.ref.width.conf + 'px' }));
     var switchMode = function () {
       if (document.body.getAttribute(attr)) document.body.removeAttribute(attr);
       else document.body.setAttribute(attr, attr);
@@ -2451,16 +2480,49 @@ toolFilterGroup.add({
     // 检查快捷键按键
     keys.reg(key.conf, switchMode);
     // 显示切换按钮
-    if (!this.ref['switch'].conf) return;
-    var showSwitch = function () {
-      var wbFeed = document.querySelector('.WB_feed:not([yawf-weibo-only-added])');
-      if (!wbFeed) return; wbFeed.setAttribute('yawf-weibo-only-added', 'added');
-      var weiboOnly = cewih('div', fillStr(html.weiboOnlyButton, { 'text': text.weiboOnlySwitch })).firstChild;
-      weiboOnly.addEventListener('click', switchMode);
-      wbFeed.parentNode.insertBefore(weiboOnly, wbFeed);
-      newNode.remove(showSwitch);
-    };
-    newNode.add(showSwitch);
+    if (this.ref['switch'].conf) {
+      var showSwitch = function () {
+        var rightBar = document.querySelector('.group_read .right_bar:not([yawf-weibo-only-added])');
+        if (!rightBar) return; rightBar.setAttribute('yawf-weibo-only-added', 'added');
+        var weiboOnly = cewih('div', fillStr(html.weiboOnlyButton, { 'text': text.weiboOnlyButton })).firstChild;
+        weiboOnly.addEventListener('click', switchMode);
+        rightBar.insertBefore(weiboOnly, rightBar.querySelector('.right_item~.right_item'));
+        newNode.remove(showSwitch);
+      };
+      newNode.add(showSwitch);
+    }
+    // 注册样式
+    css.add(fillStr(funcStr(function () { /*!CSS
+      body.B_index[yawf-weibo-only] .W_main_l,
+      body.B_index[yawf-weibo-only] .W_main_r,
+      body.B_index[yawf-weibo-only] #Box_center>div:not(#pl_content_homeFeed),
+      body.B_index[yawf-weibo-only] .global_footer { display: none; }
+      body.B_index[yawf-weibo-only] .WB_global_nav { position: absolute !important; }
+      body.B_index[yawf-weibo-only] .W_miniblog { padding-top: 60px; }
+      body.B_index[yawf-weibo-only] .W_main { width: {{width}} !important; background: {{bgcolor}} !important; }
+      body.B_index[yawf-weibo-only] #Box_center,
+      body.B_index[yawf-weibo-only] .W_main_a { width: {{width}}; }
+      body.B_index[yawf-weibo-only] .WB_feed .repeat .input textarea { width: 100%; }
+      body.B_index[yawf-weibo-only] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
+      body.B_index[yawf-weibo-only] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
+      body.B_index[yawf-weibo-only] .W_gotop { margin-left: calc({{width}} / 2) !important; }
+      body.B_profile[yawf-weibo-only] #Pl_Official_Header__1,
+      body.B_profile[yawf-weibo-only] #Pl_Core_Nav__2,
+      body.B_profile[yawf-weibo-only] .W_main_2r,
+      body.B_profile[yawf-weibo-only] .global_footer { display: none; }
+      body.B_profile[yawf-weibo-only] .WB_global_nav { position: absolute !important; }
+      body.B_profile[yawf-weibo-only] .W_miniblog { padding-top: 60px; }
+      body.B_profile[yawf-weibo-only] .W_main { width: {{width}} !important; background: {{bgcolor}}; }
+      body.B_profile[yawf-weibo-only] .W_main_c { padding-top: 9px; width: {{width}}; }
+      body.B_profile[yawf-weibo-only] .WB_feed .repeat .input textarea { width: 100%; }
+      body.B_profile[yawf-weibo-only] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
+      body.B_profile[yawf-weibo-only] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
+      body.B_profile[yawf-weibo-only] .W_gotop { margin-left: calc({{width}} / 2) !important; }
+      .input_search { float: left; }
+    */ }), {
+      'width': this.ref.width.conf + 'px',
+      'bgcolor': this.ref.rgba + '',
+    }));
   }
 });
 
@@ -2654,7 +2716,13 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawf-groupSubtitle { font-weight: bold; }
   .yawf-configInput { display: inline; }
   .yawf-configStringInput { display: block; }
-  .yawf-configItem, .yawf-groupText { margin: 5px 20px; padding: 5px 0; }
+  .yawf-configItem, .yawf-groupText { margin: 0 20px; padding: 0 0; }
+  .yawf-configItem { line-height: 30px; }
+  .yawf-groupText { line-height: 1em; }
+  .yawf-groupText p { margin: 2px 0 0; }
+  .yawf-configKeyInput button { padding: 0 1em; }
+  .yawf-configItem label+label { margin-left: 0.5em; }
+  .yawf-configItem br+label { margin-left: 4em; }
   .yawf-whitelistFilterTitle::before, .yawf-blacklistFilterTitle::before, .yawf-foldlistFilterTitle::before { content: " "; display: inline-block; width: 0.8em; height: 0.8em; border-radius: 1em; margin-right: 0.5em; border: 1px solid white; vertical-align: middle; }
   .yawf-whitelistFilterTitle::before { background: #37c837; box-shadow: 0 0 2px #37c837; }
   .yawf-blacklistFilterTitle::before { background: #c83737; box-shadow: 0 0 2px #c83737; }
@@ -2662,7 +2730,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawf-configString span { line-height: 16px; width:calc(100% - 56px); margin: 1px 1px -21px; padding: 2px 10px; display: block; position: relative; }
   .yawf-configString textarea.W_input { width: calc(100% - 20px); padding-top: 20px; min-height: 80px; resize: vertical; background: linear-gradient(to bottom, -moz-Dialog 0px, -moz-Dialog 20px, transparent 21px, transparent 100%); }
   .yawf-configStringsInput, .yawf-configUsersInput { margin: 5px; }
-  .yawf-configStringsItems, .yawf-configUsersItems { padding: 5px 10px; }
+  .yawf-configStringsItems, .yawf-configUsersItems { padding: 5px 10px; line-height: 1em; }
   .yawf-configStringsItem, .yawf-configUsersItem { display: inline-block; margin: 2px; }
   .yawf-configStringsItem a.icon_close, .yawf-configUsersItem a.icon_close { margin-left: 3px; vertical-align: -2px; }
   .yawf-configUsersItem .shield_object_card { display: inline-block; }
@@ -2715,47 +2783,6 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   #yawf-drop-area-content { height: 230px; width: 230px; position: relative; z-index: 10002; opacity: 0; }
   #yawf-fast-filter-chose { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
-  // 只看微博
-  body.B_index[yawf-weibo-only] .WB_global_nav,
-  body.B_profile[yawf-weibo-only] .WB_global_nav { position: absolute; }
-  body.B_profile[yawf-weibo-only] .W_main_l,
-  body.B_index[yawf-weibo-only] .W_main_l,
-  body.B_index[yawf-weibo-only] .W_main_r,
-  body.B_profile[yawf-weibo-only] .W_main_r,
-  body.B_index[yawf-weibo-only] #Box_center>div:not(#pl_content_homeFeed),
-  body.B_profile[yawf-weibo-only] #Box_center>div:not(#pl_content_homeFeed),
-  body.B_index[yawf-weibo-only] .group_read,
-  body.B_profile[yawf-weibo-only] .B_index .group_read,
-  body.B_index[yawf-weibo-only] .global_footer,
-  body.B_profile[yawf-weibo-only] .global_footer,
-  body.B_profile[yawf-weibo-only] #Pl_Official_Header__1,
-  body.B_profile[yawf-weibo-only] #Pl_Core_Nav__2,
-  body.B_profile[yawf-weibo-only] .group_read,
-  body.B_profile[yawf-weibo-only] .W_main_2r,
-  body.B_profile[yawf-weibo-only] .group_read,
-  body.B_profile[yawf-weibo-only] .global_footer { display: none }
-  body.B_index[yawf-weibo-only] .W_main,
-  body.B_profile[yawf-weibo-only] .W_main { background-size: 200% 100%; background-position: -300px 0px; max-width: 980px; min-width: 480px; }
-  body.B_index[yawf-weibo-only] #Box_center,
-  body.B_profile[yawf-weibo-only] #Box_center,
-  body.B_index[yawf-weibo-only] .W_main_a,
-  body.B_profile[yawf-weibo-only] .W_main_a { width: 100%; }
-  body.B_index[yawf-weibo-only] .WB_feed .repeat .input textarea,
-  body.B_profile[yawf-weibo-only] .WB_feed .repeat .input textarea { width: 100% }
-  body.B_index[yawf-weibo-only] .WB_feed .WB_screen { margin-left: calc(100% - 15px); position: relative; }
-  body.B_index[yawf-weibo-only] .B_index .WB_feed .type_text { margin-left: calc(100% - 150px); }
-  body.B_index[yawf-weibo-only] #base_scrollToTop,
-  body.B_profile[yawf-weibo-only] #base_scrollToTop { float: left; left: auto; margin: auto; position: relative; top: 1000px; }
-  body.B_index[yawf-weibo-only] #base_scrollToTop span,
-  body.B_profile[yawf-weibo-only] #base_scrollToTop span { position: fixed; bottom: 200px; width: 22px; height: 67px; background: #f2f2f2; background: -moz-element(#base_scrollToTop); background-origin: padding-box; border: 0 none; padding: 10px 1px 10px; }
-  body.B_profile[yawf-weibo-only] .W_main::after,
-  body.B_index[yawf-weibo-only] .W_main::after { content: " "; display: block; height: 1px; width: 100%; float: left; visibility: hidden; }
-  body.B_profile[yawf-weibo-only] .W_miniblog,
-  body.B_index[yawf-weibo-only] .W_miniblog { overflow: hidden; }
-  body.B_profile[yawf-weibo-only] .W_miniblog { padding-top: 60px; }
-  body.B_profile[yawf-weibo-only] .W_main_c { padding-top: 0; width: 100%; }
-  .yawf-weibo-only-button { bottom: calc(80px - 0.5em); float: right; position: relative; right: 25px; }
-  body[yawf-weibo-only] .yawf-weibo-only-button { bottom: calc(20px - 0.5em); }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
