@@ -1,3 +1,8 @@
+欢迎向我提交错误报告、功能建议以及推送请求。提交前请劳烦先阅读一下以下内容，谢谢。
+
+發帖不必在意漢字繁簡的問題，畢竟轉換工具都很方便，而且漢字本身也是表意符號。<br />
+Post written in Chinese is prefered. But you may also use English if you cannot read/write Chinese.
+
 == 错误提交 ==
 
 如果您发现了程序中的任何缺陷或错误，欢迎向我报告。
