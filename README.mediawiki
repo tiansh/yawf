@@ -1,4 +1,4 @@
-[https://tiansh.github.io/yawf/ 脚本主页 Script Homepage https://tiansh.github.io/yawf/]
+[https://tiansh.github.io/yawf/ 脚本主页 Script Homepage https://tiansh.github.io/yawf/]<br />
 [https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js 安装脚本 Install Script]
 
 脚本尚处于开发之中，功能尚不稳定<br />
@@ -20,6 +20,7 @@ This script have not been done. It may not stable.<br />
 
 == 关于 ==
 
-脚本以 MIT 协议授权。本脚本部分代码基于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦（新浪微博）]。<br />
+[https://github.com/tiansh/yawf/blob/master/LICENSE.wikimedia 脚本以 MIT 协议授权。]<br />
+本脚本部分代码基于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦（新浪微博）]。
 
 

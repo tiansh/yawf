@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.31 alpha
+// @version     0.2.32 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -347,7 +347,7 @@ var html = {
   'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span>{{inner}}</span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
   'fastFilterFooter': '</ul></div><div class="btn clearfix"><a node-type="ok" class="W_btn_a" action-type="ok" href="javascript:;"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div>',
   // 只看微博列表
-  'weiboOnlyButton': '<div class="right_item"><div><a class="W_btn_round2" href="javascript:void(0);"><span>{{text}}</span></a></div></div></div>',
+  'weiboOnlyButton': '<div class="right_item"><div><a class="W_btn_round2" href="javascript:void(0);" title="{{text}}{{shortcut}}"><span>{{text}}</span></a></div></div></div>',
 };
 
 var url = {
@@ -437,18 +437,17 @@ var fillStr = function (base, func) {
   else parseFunction = function (text) {
     var ret = null;
     datas.some(function (data) {
-      if (typeof data === 'object' && text in data && typeof data[text] === 'string') ret = data[text];
+      if (typeof data === 'object' && text in data) ret = '' + data[text];
       return ret !== null;
     });
     return ret;
   };
   return base.replace(/{{([\[{]?([a-zA-Z0-9_-]*)[\]}]?)}}/g, function (o, i, p) {
     var ret = parseFunction(p);
-    if (ret) {
-      if (i[0] === '{') return ret = fillStr(ret, parseFunction);
-      if (i[0] === '[') return escapeXml(ret);
-    }
-    return ret || o;
+    if (ret == null) return o;
+    if (i[0] === '{') return ret = fillStr(ret, parseFunction);
+    if (i[0] === '[') return escapeXml(ret);
+    return ret;
   });
 };
 
@@ -504,12 +503,16 @@ var config = function (uid) {
   // 导出成为字串
   var export_ = function () {
     var info = GM_info || {}, script = info.script || {};
+    var conf = {};
+    Object.keys(config)
+      .filter(function (x) { return x.indexOf('._') === -1; })
+      .forEach(function (x) { conf[x] = config[x]; })
     return JSON.stringify({
       'ua': navigator.userAgent,
       'yawf': script.name,
       'ver': script.version,
       'gm': (info.scriptHandler || '') + info.version,
-      'conf': config,
+      'conf': conf,
     }, null, 2);
   };
   // 清空设置
@@ -1170,6 +1173,7 @@ var typedConfig = (function () {
   var baseConfig = function (type) {
     return function (item) {
       var skey = item.key;
+      if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
       if (!item.getconf) item.getconf = function () {
         return item.conf = config.get(skey, item['default'] || type(), type);
       };
@@ -2469,23 +2473,38 @@ toolFilterGroup.add({
     // 颜色
     'color': '#ffffff',
     // 透明度
-    'transparent': 20,
-  })),
+    'transparency': 20,
+  }), {
+    'enabled': {
+      'type': 'boolean',
+      'default': false,
+      'internal': true,
+    },
+  }),
   'ainit': function () {
-    var key = this.ref.key, attr = 'yawf-weibo-only';
-    var switchMode = function () {
-      if (document.body.getAttribute(attr)) document.body.removeAttribute(attr);
-      else document.body.setAttribute(attr, attr);
+    var that = this;
+    var key = that.ref.key, attr = 'yawf-weibo-only';
+    // 切换阅读模式开关
+    var switchMode = function (enable) {
+      var enabled = document.body.hasAttribute(attr);
+      if (enable == null) enable = !enabled;
+      else if (enable === enabled) return;
+      if (enable) document.body.setAttribute(attr, attr);
+      else document.body.removeAttribute(attr);
+      that.ref.enabled.putconf(enable);
     };
     // 检查快捷键按键
-    keys.reg(key.conf, switchMode);
+    keys.reg(key.conf, switchMode.bind(that, null));
     // 显示切换按钮
-    if (this.ref['switch'].conf) {
+    if (that.ref['switch'].conf) {
       var showSwitch = function () {
         var rightBar = document.querySelector('.group_read .right_bar:not([yawf-weibo-only-added])');
         if (!rightBar) return; rightBar.setAttribute('yawf-weibo-only-added', 'added');
-        var weiboOnly = cewih('div', fillStr(html.weiboOnlyButton, { 'text': text.weiboOnlyButton })).firstChild;
-        weiboOnly.addEventListener('click', switchMode);
+        var weiboOnly = cewih('div', fillStr(html.weiboOnlyButton, {
+          'text': text.weiboOnlyButton,
+          'shortcut': key.conf === 0 ? '' : ' (' + keys.name(key.conf) + ')',
+        })).firstChild;
+        weiboOnly.addEventListener('click', switchMode.bind(that, null));
         rightBar.insertBefore(weiboOnly, rightBar.querySelector('.right_item~.right_item'));
         newNode.remove(showSwitch);
       };
@@ -2520,9 +2539,14 @@ toolFilterGroup.add({
       body.B_profile[yawf-weibo-only] .W_gotop { margin-left: calc({{width}} / 2) !important; }
       .input_search { float: left; }
     */ }), {
-      'width': this.ref.width.conf + 'px',
-      'bgcolor': this.ref.rgba + '',
+      'width': that.ref.width.conf + 'px',
+      'bgcolor': that.ref.rgba + '',
     }));
+    var updateModeByConf = function () {
+      switchMode.call(that, that.ref.enabled.getconf());
+    };
+    updateModeByConf();
+    window.addEventListener('focus', updateModeByConf);
   }
 });
 
