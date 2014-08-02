@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.33 alpha
+// @version     0.2.34 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -198,8 +198,15 @@ var text = {
   'layoutHideWeibo': { 'zh-cn': '微博内', 'zh-hk': '微博內', 'zh-tw': '微博內', 'en': 'In Weibo' },
   'layoutHideWeiboRecomFeed': { 'zh-cn': '精彩微博推荐', 'zh-hk': '精彩微博推薦', 'zh-tw': '精彩微博推薦', 'en': '精彩微博推荐 (Weibo you may interested in)' },
   'layoutHideWeiboTopicCard': { 'zh-cn': '话题卡片', 'zh-hk': '話題卡片', 'zh-tw': '話題卡片', 'en': 'Topic Cards' },
-  'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
   'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for Comment' },
+  'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
+  'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
+  'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '檢舉', 'zh-tw': '檢舉', 'en': 'Report' },
+  'layoutHideWeiboLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
+  'layoutHideWeiboForward': { 'zh-cn': '转发', 'zh-hk': '轉發', 'zh-tw': '轉發', 'en': 'Forward' },
+  'layoutHideWeiboFavourite': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favourite' },
+  'layoutHideWeiboBlockBySource': { 'zh-cn': '屏蔽来源', 'zh-hk': '屏蔽來源', 'zh-tw': '屏蔽來源', 'en': 'Block Source' },
+  'layoutHideWeiboBlockByKeyword': { 'zh-cn': '屏蔽关键词', 'zh-hk': '屏蔽關鍵詞', 'zh-tw': '屏蔽關鍵詞', 'en': 'Block Keywords' },
   // 个人主页
   'layoutHidePerson': { 'zh-cn': '个人主页', 'zh-hk': '個人主頁', 'zh-tw': '個人主頁', 'en': 'Ones home page' },
   'layoutHidePersonCover': { 'zh-cn': '封面图', 'zh-hk': '封面圖', 'zh-tw': '封面圖', 'en': 'Cover Picture' },
@@ -280,10 +287,10 @@ var text = {
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
-    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a href="https://tiansh.github.io/yawf/">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a href="https://github.com/tiansh/yawf/issues">反馈页面</a>提供报告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本脚本参考并使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。</p>',
-    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a href="https://tiansh.github.io/yawf/">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a href="https://github.com/tiansh/yawf/issues">回饋頁面</a>提供報告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a href="https://tiansh.github.io/yawf/">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a href="https://github.com/tiansh/yawf/issues">回饋頁面</a>提供報告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a href="https://tiansh.github.io/yawf/">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a href="https://github.com/tiansh/yawf/issues">feedback page</a>, or <a href="http://weibo.com/tsh90/weibo">send message to author</a>. </p><p>Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
+    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a target="_blank" href="https://tiansh.github.io/yawf/">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://github.com/tiansh/yawf/issues">反馈页面</a>提供报告，或直接<a target="_blank" href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本脚本参考并使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/">眼不见心不烦</a>脚本的部分代码。</p>',
+    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://github.com/tiansh/yawf/issues">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分原始碼。</p>',
+    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://github.com/tiansh/yawf/issues">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90/weibo">私信作者</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分原始碼。</p>',
+    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a target="_blank" href="https://tiansh.github.io/yawf/">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a target="_blank" href="https://github.com/tiansh/yawf/issues">feedback page</a>, or <a target="_blank" href="http://weibo.com/tsh90/weibo">send message to author</a>. </p><p>Some codes of this script come from <a target="_blank" href="https://code.google.com/p/weibo-content-filter/"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
   },
   // 拖拽
   'dropAreaTitle': { 'zh-cn': '拖放至此<br />快速创建过滤器', 'zh-hk': '拖放至此<br />快速創建篩選器', 'zh-tw': '拖放至此<br />快速創建篩選器', 'en': 'Drop Here to Create Filter' },
@@ -558,8 +565,9 @@ var rules = (function () {
   };
 }());
 
-var debug = !!GM_getValue('debug', false) ?
-  console.log.bind(console) : function () { };
+var debug = GM_getValue('debug', false) &&
+  console && console.log && console.log.bind(console) ||
+  function () { };
 
 // 显示右上角过滤器图标
 var showIcon = function () {
@@ -1295,9 +1303,9 @@ var typedHtml = (function () {
   // 字符串的设置项
   var string = base('String', function (dom, item) {
     var textarea = dom.querySelector('textarea');
-    bindInputValue.text(textarea, item);
+    var onchange = bindInputValue.text(textarea, item);
     textarea.addEventListener('keyup', function () {
-      call(function () { item.putconf(textarea.value); });
+      call(onchange);
     });
   });
 
@@ -2185,9 +2193,16 @@ var layouts = (function () {
 
   subtitle('Weibo');
   item('RecomFeed', '[node-type="feed_list_recommend"] { display: none !important; }');
+  item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('TopicCard', '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
   item('LocationCard', '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
-  item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
+  item('Source', '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2 { display: none !important; }');
+  item('Report', '.WB_time~.hover { display: none !important; }');
+  item('Like', 'a[action-type="feed_list_like"], a[action-type="feed_list_like"]+.S_txt3 { display: none !important; }');
+  item('Forward', 'a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3 { display: none !important; }');
+  item('Favourite', 'a[action-type="feed_list_favorite"], a[action-type="feed_list_favorite"]+.S_txt3 { display: none !important; }');
+  item('BlockBySource', 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_by_app"] { display: none !important; }');
+  item('BlockByKeyword', 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_setkeyword"] { display: none !important; }');
 
   subtitle('Person');
   item('Cover', funcStr(function () { /*!CSS
@@ -2407,6 +2422,7 @@ toolFilterGroup.add({
   'text': '{{whitelistHighlightDesc}}',
   'ainit': function () {
     css.add(fillStr(funcStr(function () { /*
+      .WB_media_expand .WB_arrow { display: none !important; }
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -20px 0 0 {{color}}, 20px 0 0 {{color}}; }
       [node-type="feed_list"] .WB_feed_together .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -10px 0 0 {{color}}, 10px 0 0 {{color}}; }
     */ }), { 'color': '' + this.ref.rgba }));
@@ -2482,6 +2498,8 @@ toolFilterGroup.add({
     },
   }),
   'ainit': function () {
+    if (!document.body.classList.contains('B_index') &&
+      !document.body.classList.contains('B_profile')) return;
     var that = this;
     var key = that.ref.key, attr = 'yawf-weibo-only';
     // 切换阅读模式开关
@@ -2512,35 +2530,41 @@ toolFilterGroup.add({
     }
     // 注册样式
     css.add(fillStr(funcStr(function () { /*!CSS
-      body.B_index[yawf-weibo-only] .W_main_l,
-      body.B_index[yawf-weibo-only] .W_main_r,
-      body.B_index[yawf-weibo-only] #Box_center>div:not(#pl_content_homeFeed),
-      body.B_index[yawf-weibo-only] .global_footer { display: none; }
-      body.B_index[yawf-weibo-only] .WB_global_nav { position: absolute !important; }
-      body.B_index[yawf-weibo-only] .W_miniblog { padding-top: 60px; }
-      body.B_index[yawf-weibo-only] .W_main { width: {{width}} !important; background: {{bgcolor}} !important; }
-      body.B_index[yawf-weibo-only] #Box_center,
-      body.B_index[yawf-weibo-only] .W_main_a { width: {{width}}; }
-      body.B_index[yawf-weibo-only] .WB_feed .repeat .input textarea { width: 100%; }
-      body.B_index[yawf-weibo-only] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
-      body.B_index[yawf-weibo-only] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
-      body.B_index[yawf-weibo-only] .W_gotop { margin-left: calc({{width}} / 2) !important; }
-      body.B_profile[yawf-weibo-only] #Pl_Official_Header__1,
-      body.B_profile[yawf-weibo-only] #Pl_Core_Nav__2,
-      body.B_profile[yawf-weibo-only] .W_main_2r,
-      body.B_profile[yawf-weibo-only] .global_footer { display: none; }
-      body.B_profile[yawf-weibo-only] .WB_global_nav { position: absolute !important; }
-      body.B_profile[yawf-weibo-only] .W_miniblog { padding-top: 60px; }
-      body.B_profile[yawf-weibo-only] .W_main { width: {{width}} !important; background: {{bgcolor}}; }
-      body.B_profile[yawf-weibo-only] .W_main_c { padding-top: 9px; width: {{width}}; }
-      body.B_profile[yawf-weibo-only] .WB_feed .repeat .input textarea { width: 100%; }
-      body.B_profile[yawf-weibo-only] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
-      body.B_profile[yawf-weibo-only] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
-      body.B_profile[yawf-weibo-only] .W_gotop { margin-left: calc({{width}} / 2) !important; }
+      body.B_index[{{attr}}] .W_main_l,
+      body.B_index[{{attr}}] .W_main_r,
+      body.B_index[{{attr}}] #Box_center>div:not(#pl_content_homeFeed),
+      body.B_index[{{attr}}] .global_footer { display: none; }
+      body.B_index[{{attr}}] .WB_global_nav { position: absolute !important; }
+      body.B_index[{{attr}}] .W_miniblog { padding-top: 60px; }
+      body.B_index[{{attr}}] .W_main { width: {{width}} !important; background: {{bgcolor}} !important; }
+      body.B_index[{{attr}}] #Box_center,
+      body.B_index[{{attr}}] .W_main_a { width: {{width}}; }
+      body.B_index[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
+      body.B_index[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
+      body.B_index[{{attr}}] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
+      body.B_index[{{attr}}] .W_gotop { margin-left: calc({{width}} / 2) !important; }
+      body.B_index[{{attr}}] .WB_feed .between_line { padding: 0 calc({{width}} / 2 - 132px) !important; }
+      body.B_index[{{attr}}] .WB_media_expand .WB_arrow { display: none !important; }
+      body.B_profile[{{attr}}] #Pl_Official_Header__1,
+      body.B_profile[{{attr}}] #Pl_Core_Header__1,
+      body.B_profile[{{attr}}] #Pl_Core_Nav__2,
+      body.B_profile[{{attr}}] .W_main_2r,
+      body.B_profile[{{attr}}] .global_footer { display: none; }
+      body.B_profile[{{attr}}] .WB_global_nav { position: absolute !important; }
+      body.B_profile[{{attr}}] .W_miniblog { padding-top: 60px; }
+      body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background: {{bgcolor}}; }
+      body.B_profile[{{attr}}] .W_main_c { padding-top: 9px; width: {{width}}; }
+      body.B_profile[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
+      body.B_profile[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
+      body.B_profile[{{attr}}] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
+      body.B_profile[{{attr}}] .W_gotop { margin-left: calc({{width}} / 2) !important; }
+      body.B_profile[{{attr}}] .WB_feed .between_line { padding: 0 calc({{width}} / 2 - 132px) !important; }
+      body.B_profile[{{attr}}] .WB_media_expand .WB_arrow { display: none !important; }
       .input_search { float: left; }
     */ }), {
       'width': that.ref.width.conf + 'px',
       'bgcolor': that.ref.rgba + '',
+      'attr': attr,
     }));
     var updateModeByConf = function () {
       switchMode.call(that, that.ref.enabled.getconf());
