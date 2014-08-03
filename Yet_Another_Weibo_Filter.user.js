@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.35 alpha
+// @version     0.2.36 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -232,20 +232,31 @@ var text = {
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
-  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
-  'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
-  'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
-  'userstyleEditDetails': { 'zh-cn': 'YAWF CSS: ', 'zh-hk': 'YAWF CSS: ', 'zh-tw': 'YAWF CSS: ', 'en': 'YAWF CSS: ' },
+  // 边栏
+  'sideColumnToolsTitle': { 'zh-cn': '边栏', 'zh-hk': '邊欄', 'zh-tw': '邊欄', 'en': 'Side Column' },
   'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
   'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息', 'zh-hk': '展開左欄消息', 'zh-tw': '展開左欄消息', 'en': 'Unfold news in left column' },
   'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}', 'en': 'Merge left &amp; right column | to {{<side>}}' },
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'mergeLeftRightRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
+  'fixedLeft': { 'zh-cn': '浮动左边栏|{{<items>}}', 'zh-hk': '浮動左邊欄|{{<items>}}', 'zh-tw': '浮動左邊欄|{{<items>}}', 'en': 'Float left column | {{<items>}}' },
+  'fixedLeftDefault': { 'zh-cn': '默认元素', 'zh-hk': '預設元素', 'zh-tw': '預設元素', 'en': 'default elements' },
+  'fixedLeftWhole': { 'zh-cn': '整个左栏', 'zh-hk': '整個左欄', 'zh-tw': '整個左欄', 'en': 'whole column' },
+  // 微博
+  'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
+  'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
   'personalRedirectWeibo': { 'zh-cn': '访问账号主页显示微博页面', 'zh-hk': '訪問帳號主頁顯示微博頁面', 'zh-tw': '訪問帳號主頁顯示微博頁面', 'en': 'Show Weibo page instead of personal mainpage by default' },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
+  // 脚本
+  'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
+  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
   'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
+  // 样式
+  'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
+  'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
+  'userstyleEditDetails': { 'zh-cn': 'YAWF CSS: ', 'zh-hk': 'YAWF CSS: ', 'zh-tw': 'YAWF CSS: ', 'en': 'YAWF CSS: ' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
@@ -856,8 +867,7 @@ var fastFilterDialog = function (chose) {
       });
       return active;
     };
-    if (checkboxList.length === 1) checkboxList[0].checked = true;
-    else checkboxList.forEach(function (checkbox) { checkbox.checked = false; });
+    checkboxList.forEach(function (checkbox) { checkbox.checked = true; });
     var updateOkButton = function () {
       if (allChecked().length) ok.classList.remove('W_btn_a_disable');
       else ok.classList.add('W_btn_a_disable');
@@ -2276,33 +2286,10 @@ var layouts = (function () {
 // 改造设置
 var toolFilterGroup = filterGroup('toolFilterGroup');
 
-// 快速创建过滤器
+// 边栏相关工具
 toolFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.tool.use_fast_creator',
-  'default': true,
-  'text': '{{useFastCreator}}',
-  'ainit': function () {
-    dropdown.init();
-  },
-});
-
-// 清除发布框中的默认话题 (wcf)
-toolFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.tool.clear_def_topic',
-  'text': '{{clearDefTopicDesc}}',
-  'ainit': function () {
-    var clearDefTopic = function () {
-      var inputBox = document.querySelector('#pl_content_publisherTop .send_weibo .input textarea');
-      if (inputBox && inputBox.hasAttribute('hottopic')) {
-        inputBox.removeAttribute('hottopic'); inputBox.removeAttribute('hottopicid');
-        inputBox.value = 'DUMMY'; inputBox.focus();
-        inputBox.value = ''; inputBox.blur();
-      }
-    };
-    newNode.add(clearDefTopic);
-  },
+  'type': 'subtitle',
+  'text': '{{sideColumnToolsTitle}}',
 });
 
 // 展开左栏分组
@@ -2322,7 +2309,7 @@ toolFilterGroup.add({
 });
 
 // 合并左右边栏
-toolFilterGroup.add({
+var mergeLeftRight = toolFilterGroup.add({
   'type': 'boolean',
   'key': 'weibo.tool.mergeColumns',
   'text': '{{mergeLeftRight}}',
@@ -2359,15 +2346,98 @@ toolFilterGroup.add({
       .W_main[yawf-merge-left="merge"] .W_main_l { width: 230px; padding: 0; float: none; }
       .W_main[yawf-merge-left="merge"] .WB_left_nav .lev a:hover, .WB_left_nav .lev2 a:hover, .WB_left_nav .lev2 a.lev_curr, .WB_left_nav .lev2 a.lev_curr:hover, .WB_left_nav .lev3 a:hover { background-image: none; box-shadow: -4px 0px 4px -4px #aaa inset; }
       .W_main[yawf-merge-left="merge"] { width: 830px; }
-      .W_main[yawf-merge-left="merge"] [node-type="left_fixed"] { height: auto !important; padding-top: 0 !important; position: static !important; top: 40px !important; animation: none; }
-      .W_main[yawf-merge-left="merge"] [node-type="right_module_fixed"] { padding-top: 0 !important; position: static !important; animation: none; }
+      body.B_index:not([yawf-weibo-only]) .W_main[yawf-merge-left="merge"]~.W_gotop { margin-left: 415px !important; }
+      body.B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 185px); }
     */ }));
     if (this.ref.side.conf === 'left') css.add(funcStr(function () { /*!CSS
       .W_main[yawf-merge-left="merge"] .W_main_r { float: left; }
       .W_main[yawf-merge-left="merge"] .W_main_c { float: right; }
       .W_main[yawf-merge-left="merge"] .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
       .W_main[yawf-merge-left="merge"] .send_weibo .input .arrow, .send_weibo .input.clicked .arrow { right: auto; left: -11px; transform: scaleX(-1); }
+      body.B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
     */ }));
+  },
+});
+
+// 左边栏浮动
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.fixedLeft',
+  'text': '{{fixedLeft}}',
+  'default': true,
+  'ref': {
+    'items': {
+      'type': 'select',
+      'select': [
+        { 'value': 'default', 'text': '{{fixedLeftDefault}}' },
+        { 'value': 'whole', 'text': '{{fixedLeftWhole}}' },
+      ],
+      'default': 'default',
+    }
+  },
+  'init': function () {
+    var left = document.querySelector('.W_main_l');
+    if (!left) return;
+    var type = this.conf ? this.ref.items.conf : 'none';
+    var merged = mergeLeftRight.conf;
+    // 完全默认的情况下不需要脚本
+    if (type === 'default' && !merged) return;
+    // 禁用掉默认的浮动
+    css.add('.W_main [node-type="left_fixed"]:not([yawf-fixed]) { height: auto !important; padding-top: 0 !important; position: static !important; top: 40px !important; animation: none; }');
+    // 不浮动的如果禁用了默认的浮动，那么就完成了
+    if (type === 'none') return;
+    // 否则如果合并了左右边栏，而且我要浮动，那么右面就不要动
+    css.add('.W_main[yawf-merge-left="merge"] [node-type="right_module_fixed"] { padding-top: 0 !important; position: static !important; animation: none; }');
+    // 最后自定义的浮动
+    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 40px; overflow: hidden; }');
+    var container = document.querySelector('.W_main');
+    var reference = merged && document.querySelector('.W_main_r') || left;
+    var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
+    var floating = false;
+    var updatePosition = function () {
+      if (!floating) {
+        if (reference.getClientRects()[0].bottom < 0) {
+          floating = true;
+          floatitem.setAttribute('yawf-fixed', '');
+        }
+      } else {
+        if (reference.getClientRects()[0].bottom > 40 - floatitem.clientHeight) {
+          floating = false;
+          floatitem.removeAttribute('yawf-fixed');
+          call(updatePosition);
+        }
+      }
+      var cip = container.getClientRects()[0];
+      var fip = floatitem.getClientRects()[0];
+      floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
+    };
+    document.addEventListener('scroll', updatePosition);
+    newNode.add(updatePosition);
+    updatePosition();
+  },
+});
+
+// 微博相关工具
+toolFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{weiboToolsTitle}}',
+});
+
+// 清除发布框中的默认话题 (wcf)
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.clear_def_topic',
+  'text': '{{clearDefTopicDesc}}',
+  'ainit': function () {
+    var clearDefTopic = function () {
+      var inputBox = document.querySelector('#pl_content_publisherTop .send_weibo .input textarea');
+      if (inputBox && inputBox.hasAttribute('hottopic')) {
+        inputBox.removeAttribute('hottopic'); inputBox.removeAttribute('hottopicid');
+        inputBox.value = 'DUMMY'; inputBox.focus();
+        inputBox.value = ''; inputBox.blur();
+      }
+    };
+    newNode.add(clearDefTopic);
   },
 });
 
@@ -2430,6 +2500,24 @@ toolFilterGroup.add({
   },
 });
 
+// 脚本工具
+toolFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{scriptToolsTitle}}',
+});
+
+// 快速创建过滤器
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.use_fast_creator',
+  'default': true,
+  'text': '{{useFastCreator}}',
+  'ainit': function () {
+    dropdown.init();
+  },
+});
+
+
 // 屏蔽隐藏微博
 toolFilterGroup.add({
   'type': 'boolean',
@@ -2446,6 +2534,12 @@ toolFilterGroup.add({
       });
     });
   }
+});
+
+// 样式相关工具
+toolFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{styleToolsTitle}}',
 });
 
 // 一个带有颜色/透明度的选框项
@@ -2600,32 +2694,34 @@ toolFilterGroup.add({
       body.B_index[{{attr}}] .W_main_r,
       body.B_index[{{attr}}] #Box_center>div:not(#pl_content_homeFeed),
       body.B_index[{{attr}}] .global_footer { display: none; }
-      body.B_index[{{attr}}] .WB_global_nav { position: absolute !important; }
-      body.B_index[{{attr}}] .W_miniblog { padding-top: 60px; }
-      body.B_index[{{attr}}] .W_main { width: {{width}} !important; background: {{bgcolor}} !important; }
-      body.B_index[{{attr}}] #Box_center,
-      body.B_index[{{attr}}] .W_main_a { width: {{width}}; }
-      body.B_index[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
-      body.B_index[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
-      body.B_index[{{attr}}] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
-      body.B_index[{{attr}}] .W_gotop { margin-left: calc({{width}} / 2) !important; }
-      body.B_index[{{attr}}] .WB_feed .between_line { padding: 0 calc({{width}} / 2 - 132px) !important; }
-      body.B_index[{{attr}}] .WB_media_expand .WB_arrow { display: none !important; }
       body.B_profile[{{attr}}] #Pl_Official_Header__1,
       body.B_profile[{{attr}}] #Pl_Core_Header__1,
       body.B_profile[{{attr}}] #Pl_Core_Nav__2,
       body.B_profile[{{attr}}] .W_main_2r,
       body.B_profile[{{attr}}] .global_footer { display: none; }
+      body.B_index[{{attr}}] .WB_global_nav,
       body.B_profile[{{attr}}] .WB_global_nav { position: absolute !important; }
+      body.B_index[{{attr}}] .W_miniblog,
       body.B_profile[{{attr}}] .W_miniblog { padding-top: 60px; }
-      body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background: {{bgcolor}}; }
-      body.B_profile[{{attr}}] .W_main_c { padding-top: 9px; width: {{width}}; }
-      body.B_profile[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
+      body.B_index[{{attr}}] .WB_feed .WB_screen,
       body.B_profile[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
+      body.B_index[{{attr}}] .W_main,
+      body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background: {{bgcolor}} !important; }
+      body.B_index[{{attr}}] #Box_center,
+      body.B_index[{{attr}}] .WB_feed .repeat .input textarea,
+      body.B_profile[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
+      body.B_index[{{attr}}] .WB_feed .type_text,
       body.B_profile[{{attr}}] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
+      body.B_index[{{attr}}] .W_gotop,
       body.B_profile[{{attr}}] .W_gotop { margin-left: calc({{width}} / 2) !important; }
+      body.B_index[{{attr}}] .WB_feed .between_line,
       body.B_profile[{{attr}}] .WB_feed .between_line { padding: 0 calc({{width}} / 2 - 132px) !important; }
+      body.B_index[{{attr}}] .WB_media_expand .WB_arrow,
       body.B_profile[{{attr}}] .WB_media_expand .WB_arrow { display: none !important; }
+      body.B_index[{{attr}}] #yawf-drop-area,
+      body.B_profile[{{attr}}] #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); top: 0; }
+      body.B_index[{{attr}}] .W_main_a { width: {{width}}; }
+      body.B_profile[{{attr}}] .W_main_c { padding-top: 9px; width: {{width}}; }
       .input_search { float: left; }
     */ }), {
       'width': that.ref.width.conf + 'px',
