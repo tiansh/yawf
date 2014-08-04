@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.37 alpha
+// @version     0.2.38 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -103,8 +103,8 @@ var text = {
   // 原创
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
-  'originalFilterDetails': { 'zh-cn': '转发自以下账号的微博', 'zh-hk': '隱藏轉發自以下帳號的微博', 'zh-tw': '隱藏轉發自以下帳號的微博', 'en': 'Hide Weibo forwarded from these accounts' },
-  'originalFilterFast': { 'zh-cn': '转发自“@{{name}}”的微博', 'zh-hk': '轉發自「@{{name}}」的微博', 'zh-tw': '轉發自「@{{name}}」的微博', 'en': 'Weibo forwarded from "@{{name}}"' },
+  'originalFilterDetails': { 'zh-cn': '原创是以下账号的微博', 'zh-hk': '原創是以下帳號的微博', 'zh-tw': '原創是以下帳號的微博', 'en': 'Hide Weibo orginal from these accounts' },
+  'originalFilterFast': { 'zh-cn': '原创是“@{{name}}”的微博', 'zh-hk': '原創是「@{{name}}」的微博', 'zh-tw': '原創是「@{{name}}」的微博', 'en': 'Weibo forwarded from "@{{name}}"' },
   // 提到
   'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
@@ -261,10 +261,10 @@ var text = {
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
   'weiboOnly': {
-    'zh-cn': '阅读视图|宽度{{<width>}}px|快捷键{{<key>}}||背景颜色{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博列表顶部显示快捷开关按钮',
-    'zh-hk': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||背景色彩{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'zh-tw': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||背景色彩{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'en': 'Reading View | width {{<width>}}px | shortcut {{<key>}} || backgroundcolor {{<color>}} | transparency {{<transparency>}} || {{<switch>}} show switch button at top of Weibo list'
+    'zh-cn': '阅读视图|宽度{{<width>}}px|快捷键{{<key>}}||{{<usebgc>}}使用指定背景色|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博列表顶部显示快捷开关按钮',
+    'zh-hk': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-tw': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'en': 'Reading View | width {{<width>}}px | shortcut {{<key>}} || {{<usebgc>}} override background color | with {{<color>}} | transparency {{<transparency>}} || {{<switch>}} show switch button at top of Weibo list'
   },
   'weiboOnlyButton': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'userstyleTitle': {
@@ -2627,6 +2627,7 @@ toolFilterGroup.add({
   },
 });
 
+// 阅读模式
 toolFilterGroup.add({
   'type': 'boolean',
   'text': '{{weiboOnly}}',
@@ -2648,6 +2649,9 @@ toolFilterGroup.add({
     'switch': {
       'type': 'boolean',
       'default': false,
+    },
+    'usebgc': {
+      'type': 'boolean',
     },
   }, coloredConfigItem({
     // 颜色
@@ -2714,7 +2718,7 @@ toolFilterGroup.add({
       body.B_index[{{attr}}] .WB_feed .WB_screen,
       body.B_profile[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
       body.B_index[{{attr}}] .W_main,
-      body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background: {{bgcolor}} !important; }
+      body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background-position: 40% center; background-size: 165% 100%;  }
       body.B_index[{{attr}}] #Box_center,
       body.B_index[{{attr}}] .WB_feed .repeat .input textarea,
       body.B_profile[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
@@ -2733,9 +2737,9 @@ toolFilterGroup.add({
       .input_search { float: left; }
     */ }), {
       'width': that.ref.width.conf + 'px',
-      'bgcolor': that.ref.rgba + '',
       'attr': attr,
     }));
+    if (that.ref.usebgc.conf) css.add('body.B_index[' + attr + '] .W_main, body.B_profile[' + attr + '] .W_main { background: ' + that.ref.rgba + ' !important; }');
     var updateModeByConf = function () {
       switchMode.call(that, that.ref.enabled.getconf());
     };
