@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.36 alpha
+// @version     0.2.37 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -2343,9 +2343,9 @@ var mergeLeftRight = toolFilterGroup.add({
     positionLeft();
     newNode.add(function () { positionLeft(); })
     css.add(funcStr(function () { /*!CSS
-      .W_main[yawf-merge-left="merge"] .W_main_l { width: 230px; padding: 0; float: none; }
-      .W_main[yawf-merge-left="merge"] .WB_left_nav .lev a:hover, .WB_left_nav .lev2 a:hover, .WB_left_nav .lev2 a.lev_curr, .WB_left_nav .lev2 a.lev_curr:hover, .WB_left_nav .lev3 a:hover { background-image: none; box-shadow: -4px 0px 4px -4px #aaa inset; }
-      .W_main[yawf-merge-left="merge"] { width: 830px; }
+      .W_main[yawf-merge-left="merge"] .W_main_l { width: 229px; padding: 0; float: none; }
+      .W_main[yawf-merge-left="merge"] .WB_left_nav .lev a:hover, .WB_left_nav .lev2 a:hover, .WB_left_nav .lev2 a.lev_curr, .WB_left_nav .lev2 a.lev_curr:hover, .WB_left_nav .lev3 a:hover { background-image: none; }
+      .W_main[yawf-merge-left="merge"] { width: 830px; background-position: -300px center; background-size: 200% 100%; }
       body.B_index:not([yawf-weibo-only]) .W_main[yawf-merge-left="merge"]~.W_gotop { margin-left: 415px !important; }
       body.B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 185px); }
     */ }));
@@ -2354,7 +2354,10 @@ var mergeLeftRight = toolFilterGroup.add({
       .W_main[yawf-merge-left="merge"] .W_main_c { float: right; }
       .W_main[yawf-merge-left="merge"] .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
       .W_main[yawf-merge-left="merge"] .send_weibo .input .arrow, .send_weibo .input.clicked .arrow { right: auto; left: -11px; transform: scaleX(-1); }
+      .W_main[yawf-merge-left="merge"] #Box_center { border-left: 2px solid rgba(128, 128, 128, 0.2); margin-left: -2px; }
       body.B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
+    */ })); else css.add(funcStr(function () { /*!CSS
+      .W_main[yawf-merge-left="merge"] #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
     */ }));
   },
 });
@@ -2389,19 +2392,20 @@ toolFilterGroup.add({
     // 否则如果合并了左右边栏，而且我要浮动，那么右面就不要动
     css.add('.W_main[yawf-merge-left="merge"] [node-type="right_module_fixed"] { padding-top: 0 !important; position: static !important; animation: none; }');
     // 最后自定义的浮动
-    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 40px; overflow: hidden; }');
+    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px; overflow: hidden; }');
+    if (merged) css.add('.W_main [yawf-fixed] { width: 229px; }');
     var container = document.querySelector('.W_main');
     var reference = merged && document.querySelector('.W_main_r') || left;
     var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
     var floating = false;
     var updatePosition = function () {
       if (!floating) {
-        if (reference.getClientRects()[0].bottom < 0) {
+        if (reference.getClientRects()[0].bottom < -65) {
           floating = true;
           floatitem.setAttribute('yawf-fixed', '');
         }
       } else {
-        if (reference.getClientRects()[0].bottom > 40 - floatitem.clientHeight) {
+        if (reference.getClientRects()[0].bottom > 65 - floatitem.clientHeight) {
           floating = false;
           floatitem.removeAttribute('yawf-fixed');
           call(updatePosition);
@@ -2672,7 +2676,11 @@ toolFilterGroup.add({
       that.ref.enabled.putconf(enable);
     };
     // 检查快捷键按键
-    keys.reg(key.conf, switchMode.bind(that, null));
+    keys.reg(key.conf, function () {
+      // 只有有切换按钮的时候才生效
+      if (document.querySelector('.group_read .right_bar[yawf-weibo-only-added]'))
+        switchMode();
+    });
     // 显示切换按钮
     if (that.ref['switch'].conf) {
       var showSwitch = function () {
