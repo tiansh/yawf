@@ -4,11 +4,11 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.2.38 alpha
+// @version     0.2.39 alpha
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
-// @copyright   2013+, 田生
+// @copyright   田生; The MIT License
 // @license     The MIT License (MIT); http://opensource.org/licenses/MIT
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
@@ -2383,16 +2383,23 @@ toolFilterGroup.add({
     if (!left) return;
     var type = this.conf ? this.ref.items.conf : 'none';
     var merged = mergeLeftRight.conf;
-    // 完全默认的情况下不需要脚本
-    if (type === 'default' && !merged) return;
     // 禁用掉默认的浮动
     css.add('.W_main [node-type="left_fixed"]:not([yawf-fixed]) { height: auto !important; padding-top: 0 !important; position: static !important; top: 40px !important; animation: none; }');
     // 不浮动的如果禁用了默认的浮动，那么就完成了
     if (type === 'none') return;
     // 否则如果合并了左右边栏，而且我要浮动，那么右面就不要动
-    css.add('.W_main[yawf-merge-left="merge"] [node-type="right_module_fixed"] { padding-top: 0 !important; position: static !important; animation: none; }');
+    if (merged) {
+      var removeRightFixed = function () {
+        var fixed = document.querySelector('.W_main_r [node-type="right_module_fixed"]');
+        if (!fixed) return;
+        while (fixed.firstChild) fixed.parentNode.insertBefore(fixed.firstChild, fixed);
+        fixed.parentNode.removeChild(fixed);
+      };
+      removeRightFixed();
+      newNode.add(removeRightFixed);
+    }
     // 最后自定义的浮动
-    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px; overflow: hidden; }');
+    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px; overflow: hidden; height: auto; }');
     if (merged) css.add('.W_main [yawf-fixed] { width: 229px; }');
     var container = document.querySelector('.W_main');
     var reference = merged && document.querySelector('.W_main_r') || left;
@@ -2411,9 +2418,11 @@ toolFilterGroup.add({
           call(updatePosition);
         }
       }
-      var cip = container.getClientRects()[0];
-      var fip = floatitem.getClientRects()[0];
-      floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
+      if (floating) {
+        var cip = container.getClientRects()[0];
+        var fip = floatitem.getClientRects()[0];
+        floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
+      }
     };
     document.addEventListener('scroll', updatePosition);
     newNode.add(updatePosition);
