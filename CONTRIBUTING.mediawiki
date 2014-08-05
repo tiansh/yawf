@@ -1,4 +1,5 @@
-欢迎向我提交错误报告、功能建议以及推送请求。提交前请劳烦先阅读一下以下内容，谢谢。
+欢迎向我提交错误报告、功能建议以及推送请求。提交前请劳烦先阅读一下以下内容，谢谢。<br />
+脚本使用的常见问题请参考[https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 常见问题]。
 
 發帖不必在意漢字繁簡的問題，畢竟轉換工具都很方便，而且漢字本身也是表意符號。<br />
 Post written in Chinese is prefered. But you may also use English if you cannot read/write Chinese.

@@ -1,22 +1,21 @@
 [https://tiansh.github.io/yawf/ 脚本主页 Script Homepage https://tiansh.github.io/yawf/]<br />
 [https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js 安装脚本 Install Script]
 
-脚本尚处于开发之中，功能尚不稳定<br />
-This script have not been done. It may not stable.<br />
-
 = 看真正想看的微博 Yet Another Weibo Filter =
 
 请使用 Greasemonkey 安装本脚本。
+
+使用中的遇到任何问题请参阅脚本的[https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 常见问题]。
 
 == 主要功能 ==
 
 * 根据关键字、正则式、作者、来源等过滤微博
 * 过滤推广微博等混入微博列表的东西
-* 其他一些广告过滤
-* 清理微博版面
 * 添加查看大图链接
 * 高亮显示白名单微博
 * 隐藏/折叠单人过多微博或单微博过多转发
+* 清理微博版面
+* 其他一些广告过滤
 
 == 关于 ==
 
