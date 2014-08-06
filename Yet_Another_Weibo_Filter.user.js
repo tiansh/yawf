@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.3.40 beta
+// @version     0.3.41 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -69,11 +69,14 @@ var text = {
   'keywordFilterGroupTitle': { 'zh-cn': '内容', 'zh-hk': '內容', 'zh-tw': '內容', 'en': 'Content' },
   'keywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterDetails': { 'zh-cn': '包含以下关键词的微博', 'zh-hk': '包含以下關鍵字的微博', 'zh-tw': '包含以下關鍵字的微博', 'en': 'Weibo with these keywords' },
-  'keywordFilterFast': { 'zh-cn': '包含关键词“{{text}}”的微博', 'zh-hk': '包含關鍵字「{{text}}」的微博', 'zh-tw': '包含關鍵字「{{text}}」的微博', 'en': 'Weibo contains keyword "{{text}}"' },
+  'keywordFilterFast': { 'zh-cn': '包含关键词', 'zh-hk': '包含關鍵字', 'zh-tw': '包含關鍵字', 'en': 'Weibo contains keyword ' },
+  'keywordFilterFastInput': { 'zh-cn': '“{{text}}”', 'zh-hk': '「{{text}}」', 'zh-tw': '「{{text}}」', 'en': '"{{text}}"' },
   // 正则表达式
   'regexpFilterGroupTitle': { 'zh-cn': '正则', 'zh-hk': '正則', 'zh-tw': '正規', 'en': 'Regexp' },
   'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'regexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的微博', 'zh-hk': '匹配以下正則表達式的微博', 'zh-tw': '匹配以下正規表示式的微博', 'en': 'Weibo matches these regular expressions' },
+  'regexpFilterFast': { 'zh-cn': '匹配正则式', 'zh-hk': '匹配正則式', 'zh-tw': '匹配正規式', 'en': 'Weibo matches regexp ' },
+  'regexpFilterFastInput': { 'zh-cn': '/{{text}}/', 'zh-hk': '/{{text}}/', 'zh-tw': '/{{text}}/', 'en': '/{{text}}/' },
   'regexpFilterRemark': {
     'zh-cn': '正则表达式的过滤方式提供了基于微博内容的高级过滤方式，如果只是需要简单地关键词过滤请使用内容标签页的关键词以获得更好的效率。正则表达式书写时不需要对“/”字符转义。',
     'zh-hk': '正則表達式的過濾方式提供了基於微博內容的高級過濾方式，如果只是需要簡單地關鍵字過濾請使用內容標籤頁的關鍵字以獲得更好的效率。正則表達式書寫時不需要對「/」字符轉義。',
@@ -104,7 +107,7 @@ var text = {
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterDetails': { 'zh-cn': '原创是以下账号的微博', 'zh-hk': '原創是以下帳號的微博', 'zh-tw': '原創是以下帳號的微博', 'en': 'Hide Weibo orginal from these accounts' },
-  'originalFilterFast': { 'zh-cn': '原创是“@{{name}}”的微博', 'zh-hk': '原創是「@{{name}}」的微博', 'zh-tw': '原創是「@{{name}}」的微博', 'en': 'Weibo forwarded from "@{{name}}"' },
+  'originalFilterFast': { 'zh-cn': '原创是“@{{name}}”的微博', 'zh-hk': '原創是「@{{name}}」的微博', 'zh-tw': '原創是「@{{name}}」的微博', 'en': 'Weibo original from "@{{name}}"' },
   // 提到
   'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
@@ -367,9 +370,11 @@ var html = {
   'viewOriginalLink': '<a target="_blank" class="show_big" suda-data="key=tblog_newimage_feed&value=view_original" action-type="maximum" href="javascript:;"><em class="W_ico12 ico_showbig"></em>{{viewOriginalText}}</a><i class="W_vline">|</i>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" class="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
-  'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-chose">',
-  'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span>{{inner}}</span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
+  'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
+  'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span class="yawf-fastFilterItemInner"></span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
   'fastFilterFooter': '</ul></div><div class="btn clearfix"><a node-type="ok" class="W_btn_a" action-type="ok" href="javascript:;"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div>',
+  'fastFilterString': '<label><span></span></label>',
+  'fastFilterStringInput': '<input width="12" class="input_default" type="text" />',
   // 只看微博列表
   'weiboOnlyButton': '<div class="right_item"><div><a class="W_btn_round2" href="javascript:void(0);" title="{{text}}{{shortcut}}"><span>{{text}}</span></a></div></div></div>',
   // 分组或特别关注的未读提示
@@ -850,12 +855,17 @@ var filters = (function () {
 // 快速创建过滤器的对话框
 var fastFilterDialog = function (chose) {
   var dialogInner = function (inner) {
-    inner.innerHTML = [html.fastFilterHeader,
-      chose.map(function (c) {
-        return fillStr(html.fastFilterItem, { 'inner': c.filter.desc(c.val) });
-      }).join(''),
-    html.fastFilterFooter].join('');
-    var checkboxList = Array.apply(Array, inner.querySelectorAll('input[type="checkbox"]'));
+    inner.innerHTML = html.fastFilterHeader + html.fastFilterFooter;
+    var items = inner.querySelector('#yawf-fast-filter-list');
+    var checkboxList = chose.map(function (c) {
+      var item = cewih('ul', html.fastFilterItem).firstChild;
+      var inner = item.querySelector('.yawf-fastFilterItemInner');
+      var checked = c.filter.desc(inner, c.val) !== false;
+      var checkbox = item.querySelector('input[type="checkbox"], input[type="radio"]');
+      checkbox.checked = checked;
+      items.appendChild(item);
+      return checkbox;
+    });
     var selectList = Array.apply(Array, inner.querySelectorAll('select'));
     selectList.forEach(function (select) { select.value = 'blacklist'; });
     // 找到所有选择了的过滤器
@@ -867,7 +877,6 @@ var fastFilterDialog = function (chose) {
       });
       return active;
     };
-    checkboxList.forEach(function (checkbox) { checkbox.checked = true; });
     var updateOkButton = function () {
       if (allChecked().length) ok.classList.remove('W_btn_a_disable');
       else ok.classList.add('W_btn_a_disable');
@@ -1596,7 +1605,9 @@ var allInOneFilters = function (details) {
       'valid': details.fast.valid,
       'desc': details.fast.desc,
       'add': function (val, action) {
-        rules[action].addconf(details.fast.add(val));
+        var value = details.fast.add(val);
+        if (details.add) value = details.add(value);
+        rules[action].addconf(value);
       },
     });
   }
@@ -1611,6 +1622,32 @@ var weiboContentSelector = function (feed, f) {
   if (content) items = items.concat(Array.apply(Array, f(content)));
   if (reason) items = items.concat(Array.apply(Array, f(reason)));
   return items;
+};
+
+var validKeywordItem = function (wrap) {
+  wrap = wrap || function (x) { return x; };
+  return function (element, callback) {
+    var valid = false;
+    if (element.nodeType === Node.TEXT_NODE) valid = true;
+    else if ((element.tagName || '').toLowerCase() === 'em' &&
+      element.firstChild === element.lastChild &&
+      element.firstChild.nodeType === Node.TEXT_NODE) valid = true;
+    if (valid) callback({ 'text': wrap(element.textContent) }); else callback();
+  };
+};
+
+var keywordOrRegexFastDesc = function (type) {
+  return function (dom, val) {
+    dom.innerHTML = fillStr('{{{' + type + 'FilterFast}}}');
+    var labelc = cewih('div', html.fastFilterString).firstChild;
+    labelc.querySelector('span').innerHTML = fillStr('{{{' + type + 'FilterFastInput}}}', { 'text': html.fastFilterStringInput });
+    var input = labelc.querySelector('input'); input.value = val.text;
+    var ref = dom.parentNode; ref.parentNode.insertBefore(labelc, ref.nextSibling);
+    input.addEventListener('change', function () { val.text = input.value; });
+    var checkbox = ref.parentNode.querySelector('input[type=checkbox]');
+    checkbox.type = 'radio'; checkbox.name = 'yawfKeywordOrRegexp';
+    return type === 'keyword';
+  };
 };
 
 // 关键字过滤
@@ -1631,17 +1668,8 @@ var keywordFilterGroup = allInOneFilters({
     if (match) return action; else return null;
   },
   'fast': {
-    'valid': function (element, callback) {
-      var valid = false;
-      if (element.nodeType === Node.TEXT_NODE) valid = true;
-      else if ((element.tagName || '').toLowerCase() === 'em' &&
-        element.firstChild === element.lastChild &&
-        element.firstChild.nodeType === Node.TEXT_NODE) valid = true;
-      if (valid) callback({ 'text': element.textContent }); else callback();
-    },
-    'desc': function (val) {
-      return fillStr('{{{keywordFilterFast}}}', { 'text': escapeXml(val.text) });
-    },
+    'valid': validKeywordItem(),
+    'desc': keywordOrRegexFastDesc('keyword'),
     'add': function (val) { return val.text; },
   }
 });
@@ -1679,6 +1707,13 @@ var regexpFilterGroup = allInOneFilters({
     });
     if (match) return action; else return null;
   },
+  'fast': {
+    'valid': validKeywordItem(function (s) {
+      return s.replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1");
+    }),
+    'desc': keywordOrRegexFastDesc('regexp'),
+    'add': function (val) { return val.text; },
+  }
 });
 
 // 关于正则式的说明
@@ -1752,8 +1787,9 @@ var accountFilterGroup = allInOneFilters({
   },
   'fast': {
     'valid': validUserElement,
-    'desc': function (val) {
-      return fillStr('{{{accountFilterFast}}}', { 'name': escapeXml(val.name) });
+    'desc': function (dom, val) {
+      dom.innerHTML = fillStr('{{{accountFilterFast}}}', { 'name': escapeXml(val.name) });
+      return true;
     },
     'add': function (val) { return val.id; },
   },
@@ -1784,8 +1820,9 @@ var originalFilterGroup = allInOneFilters({
   },
   'fast': {
     'valid': validUserElement,
-    'desc': function (val) {
-      return fillStr('{{{originalFilterFast}}}', { 'name': escapeXml(val.name) });
+    'desc': function (dom, val) {
+      dom.innerHTML = fillStr('{{{originalFilterFast}}}', { 'name': escapeXml(val.name) });
+      return true;
     },
     'add': function (val) { return val.id; },
   },
@@ -1815,8 +1852,9 @@ var mentionFilterGroup = allInOneFilters({
   },
   'fast': {
     'valid': validUserElement,
-    'desc': function (val) {
-      return fillStr('{{{mentionFilterFast}}}', { 'name': escapeXml(val.name) });
+    'desc': function (dom, val) {
+      dom.innerHTML = fillStr('{{{mentionFilterFast}}}', { 'name': escapeXml(val.name) });
+      return true;
     },
     'add': function (val) { return val.name; },
   },
@@ -1850,8 +1888,9 @@ var topicFilterGroup = allInOneFilters({
       } catch (e) { }
       callback();
     },
-    'desc': function (val) {
-      return fillStr('{{{topicFilterFast}}}', { 'topic': escapeXml(val.topic) });
+    'desc': function (dom, val) {
+      dom.innerHTML = fillStr('{{{topicFilterFast}}}', { 'topic': escapeXml(val.topic) });
+      return true;
     },
     'add': function (val) { return val.topic; },
   }
@@ -1900,8 +1939,9 @@ var sourceFilterGroup = allInOneFilters({
       } catch (e) { debug('%o: %o', e, e.stack); }
       callback();
     },
-    'desc': function (val) {
-      return fillStr('{{{sourceFilterFast}}}', { 'source': escapeXml(val.source) });
+    'desc': function (dom, val) {
+      dom.innerHTML = fillStr('{{{sourceFilterFast}}}', { 'source': escapeXml(val.source) });
+      return true;
     },
     'add': function (val) { return val.source; },
   }
@@ -1943,8 +1983,9 @@ var hyperlinkFilterGroup = allInOneFilters({
       } catch (e) { }
       callback();
     },
-    'desc': function (val) {
-      return fillStr('{{{hyperlinkFilterFast}}}', { 'host': escapeXml(val.host) });
+    'desc': function (dom, val) {
+      dom.innerHTML = fillStr('{{{hyperlinkFilterFast}}}', { 'host': escapeXml(val.host) });
+      return true;
     },
     'add': function (val) { return val.host; },
   },
@@ -3013,7 +3054,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawf-drop-area-title { font-size: 150%; font-weight: bold; }
   .yawf-drop-area-text { padding: 10px; }
   #yawf-drop-area-content { height: 230px; width: 230px; position: relative; z-index: 10002; opacity: 0; }
-  #yawf-fast-filter-chose { padding: 20px 40px; }
+  #yawf-fast-filter-chose, #yawf-fast-filter-list { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
