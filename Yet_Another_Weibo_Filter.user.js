@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.3.43 beta
+// @version     0.3.44 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -253,10 +253,17 @@ var text = {
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'expandShortenedLink': { 'zh-cn': '自动展开新浪 t.cn 短网址', 'zh-hk': '自動展開新浪 t.cn 短網址', 'zh-tw': '自動展開新浪 t.cn 短網址', 'en': 'Auto expand Sina shortened URL (t.cn)' },
+  'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view', },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
   'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
+  'autoLoadNewWeibo': {
+    'zh-cn': '有新微博时自动载入并过滤',
+    'zh-hk': '有新微博時自動載入並過濾',
+    'zh-tw': '有新微博時自動載入並過濾',
+    'en': 'Auto load and apply filter to new Weibo'
+  },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
   'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
@@ -380,6 +387,8 @@ var html = {
   'weiboOnlyButton': '<div class="right_item"><div><a class="W_btn_round2" href="javascript:void(0);" title="{{text}}{{shortcut}}"><span>{{text}}</span></a></div></div></div>',
   // 分组或特别关注的未读提示
   'noticeContainer': '<div class="WB_feed_type SW_fun S_line2" action-type="feed_list_item" yawf-display="notice"></div>',
+  // 有新微博的替代提示
+  'feedListNewBar': '<a class="notes" yawf-id="feed_list_newBar" href="javascript:void(0);"></a>',
 };
 
 var url = {
@@ -2451,13 +2460,16 @@ toolFilterGroup.add({
     var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
     var floating = false;
     var updatePosition = function () {
+      var refc = reference.getClientRects();
+      if (!refc || !refc[0]) return;
+      var pos = refc[0];
       if (!floating) {
-        if (reference.getClientRects()[0].bottom < -65) {
+        if (pos.bottom < -65) {
           floating = true;
           floatitem.setAttribute('yawf-fixed', '');
         }
       } else {
-        if (reference.getClientRects()[0].bottom > 65 - floatitem.clientHeight) {
+        if (pos.bottom > 65 - floatitem.clientHeight) {
           floating = false;
           floatitem.removeAttribute('yawf-fixed');
           call(updatePosition);
@@ -2466,7 +2478,9 @@ toolFilterGroup.add({
       if (floating) {
         var cip = container.getClientRects()[0];
         var fip = floatitem.getClientRects()[0];
-        floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
+        if (cip && fip) {
+          floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
+        }
       }
     };
     document.addEventListener('scroll', updatePosition);
@@ -2603,6 +2617,62 @@ toolFilterGroup.add({
       });
     });
   }
+});
+
+// 自动加载新微博以避免被隐藏微博显示新微博提示
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.auto_load_new_weibo',
+  'text': '{{autoLoadNewWeibo}}',
+  'ainit': function () {
+    var loading = false;
+
+    var updateUnreadCount = function () {
+      var count = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]').length;
+      var feedList = document.querySelector('.WB_feed');
+      var newFeed = feedList.querySelector('.WB_feed a.notes[yawf-id="feed_list_newBar"]');
+      if (!newFeed && count) {
+        newFeed = cewih('div', html.feedListNewBar).firstChild;
+        feedList.insertBefore(newFeed, feedList.firstChild);
+        newFeed.addEventListener('click', function () {
+          var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]'));
+          feeds.forEach(function (feed) { feed.setAttribute('yawf-unread', 'show'); });
+          updateUnreadCount();
+        });
+      }
+      if (count) newFeed.textContent = fillStr(text.newWeiboNotify, { 'count': count });
+      if (newFeed && !count) newFeed.parentNode.removeChild(newFeed);
+    };
+
+    // 隐藏掉微博原来的新消息提示框
+    css.add(funcStr(function () { /*
+    .WB_feed .WB_feed_type[yawf-unread="hidden"] { display: none !important; }
+    .WB_feed fieldset[node-type="feed_list_timeTip"] { display: none !important; }
+    .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none !important; }
+    .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
+  */ }));
+
+    // 自动点开有新微博的提示
+    newNode.add(function () {
+      var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]');
+      if (!newFeed) return;
+      newFeed.click(); loading = true;
+    });
+
+    // 看见有新微博了，看看是不是新加载出来的
+    eachWeibo.before(function (feed) {
+      var shown = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~*'));
+      if (shown.length < 8 || shown.indexOf(feed) !== -1 || loading === false) feed.setAttribute('yawf-unread', 'show');
+      else feed.setAttribute('yawf-unread', 'hidden');
+    });
+
+    // 走完过滤器之后，如果某条微博还没被隐藏掉，那么就提示用户有新微博要看了
+    eachWeibo.after(function (feed) {
+      if (feed.getAttribute('yawf-unread') !== 'hidden') return;
+      updateUnreadCount();
+    });
+
+  },
 });
 
 // 样式相关工具
