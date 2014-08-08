@@ -4,7 +4,7 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.3.44 beta
+// @version     0.3.45 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -264,6 +264,9 @@ var text = {
     'zh-tw': '有新微博時自動載入並過濾',
     'en': 'Auto load and apply filter to new Weibo'
   },
+  'timeTipHour': { 'zh-cn': '小时', 'zh-hk': '小時', 'zh-tw': '小時', 'en': ' hour' },
+  'timeTipMin': { 'zh-cn': '分钟', 'zh-hk': '分鐘', 'zh-tw': '分鐘', 'en': ' min' },
+  'timeTipText': { 'zh-cn': '前，你看到这里', 'zh-hk': '前，你看到這裡', 'zh-tw': '前，你看到這裡', 'en': ' ago, you see here' },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
   'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
@@ -389,6 +392,7 @@ var html = {
   'noticeContainer': '<div class="WB_feed_type SW_fun S_line2" action-type="feed_list_item" yawf-display="notice"></div>',
   // 有新微博的替代提示
   'feedListNewBar': '<a class="notes" yawf-id="feed_list_newBar" href="javascript:void(0);"></a>',
+  'feedTimeTip': '<fieldset class="S_line2 between_line" yawf-id="feed_list_timeTip"><legend class="S_txt3" yawf-id="feed_list_timeText">{{{time}}}</legend></fieldset>',
 };
 
 var url = {
@@ -2627,6 +2631,21 @@ toolFilterGroup.add({
   'ainit': function () {
     var loading = false;
 
+    var addTimetip = (function () {
+      var time0 = new Date(), tip = null;
+      return function (feed) {
+        if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
+        var time = time0; time0 = new Date();
+        time = Math.max(Math.round((time0 - time) / 6e4), 1);
+        var min = time % 60, hour = (time - min) / 60;
+        var text = '{{timeTipText}}';
+        if (hour) text = hour + '{{timeTipHour}}' + text;
+        if (min) text = min + '{{timeTipMin}}' + text;
+        tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
+        feed.parentNode.insertBefore(tip, feed.nextSibling);
+      };
+    }());
+
     var updateUnreadCount = function () {
       var count = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]').length;
       var feedList = document.querySelector('.WB_feed');
@@ -2634,11 +2653,12 @@ toolFilterGroup.add({
       if (!newFeed && count) {
         newFeed = cewih('div', html.feedListNewBar).firstChild;
         feedList.insertBefore(newFeed, feedList.firstChild);
-        newFeed.addEventListener('click', function () {
+        newFeed.addEventListener('click', withTry(function () {
           var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]'));
           feeds.forEach(function (feed) { feed.setAttribute('yawf-unread', 'show'); });
           updateUnreadCount();
-        });
+          addTimetip(feeds[feeds.length - 1]);
+        }));
       }
       if (count) newFeed.textContent = fillStr(text.newWeiboNotify, { 'count': count });
       if (newFeed && !count) newFeed.parentNode.removeChild(newFeed);
