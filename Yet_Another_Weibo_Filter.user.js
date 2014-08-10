@@ -5,7 +5,7 @@
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     0.3.46 beta
+// @version     0.3.47 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -287,6 +287,7 @@ var text = {
   'fixedLeft': { 'zh-cn': '浮动左边栏|{{<items>}}', 'zh-hk': '浮動左邊欄|{{<items>}}', 'zh-tw': '浮動左邊欄|{{<items>}}', 'en': 'Float left column | {{<items>}}' },
   'fixedLeftDefault': { 'zh-cn': '默认元素', 'zh-hk': '預設元素', 'zh-tw': '預設元素', 'en': 'default elements' },
   'fixedLeftWhole': { 'zh-cn': '整个左栏', 'zh-hk': '整個左欄', 'zh-tw': '整個左欄', 'en': 'whole column' },
+  'filteRightTopic': { 'zh-cn': '应用话题黑名单到右栏热门话题', 'zh-hk': '應用話題黑名單到右欄熱門話題', 'zh-tw': '應用話題黑名單到右欄熱門話題', 'en': 'Apply topic backlist to Hot Topic in right column' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
@@ -1110,7 +1111,7 @@ var dropdown = (function () {
       if (target && target.hover) target.hover(); target = null;
       dropArea.style.display = 'none';
     };
-    // 只接受从微博拽过来的东西
+    // 只接受从特定位置拽过来的东西
     var checkTarget = function () {
       var checker = target;
       for (; checker && checker !== document; checker = checker.parentNode) {
@@ -1118,6 +1119,7 @@ var dropdown = (function () {
         if (checker.classList.contains('WB_feed')) return true;
         if (checker.classList.contains('W_miniblog')) return false;
         if (checker.tagName.toLowerCase() === 'body') return true;
+        if (checker.classList.contains('right_content') && checker.classList.contains('hot_topic')) return true;
       }
       return false;
     };
@@ -1786,6 +1788,7 @@ var allInOneFilters = function (details) {
       },
     });
   }
+  typedFilterGroup.rules = rules;
   return typedFilterGroup;
 };
 
@@ -2062,6 +2065,11 @@ var topicFilterGroup = allInOneFilters({
       try {
         if (element.tagName.toLowerCase() === 'a' && element.classList.contains('a_topic')) a = element;
         else a = element.querySelector('a.a_topic');
+        if (a) return callback({ 'topic': a.textContent.trim().replace(/#/g, '') });
+      } catch (e) { }
+      try {
+        if (element.tagName.toLowerCase() === 'a' && element.getAttribute('suda-uatrack').indexOf('hottopic_r1') !== -1) a = element;
+        else a = element.querySelector('a[suda-uatrack*="hottopic_r1"]');
         if (a) return callback({ 'topic': a.textContent.trim().replace(/#/g, '') });
       } catch (e) { }
       callback();
@@ -2600,6 +2608,7 @@ if (notify.avaliableNotification().length) desktopNotification = otherFilterGrou
     if (this.ref.autohide) delay = this.ref.duration.conf + body.length * this.ref.durationc.conf;
     var showFeed = function () {
       autoExpand.expand(feed);
+      feed.scrollIntoView(false);
       feed.querySelector('[action-type="feed_list_comment]').click();
     };
     notify.showNotification(mid, author, body, face, delay, showFeed);
@@ -2901,6 +2910,27 @@ toolFilterGroup.add({
     updatePosition();
   },
 });
+
+// 将话题黑名单应用到右侧热门话题栏目
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.filte_right_topic',
+  'text': '{{filteRightTopic}}',
+  'ainit': function () {
+    css.add('.right_content.hot_topic li[yawf-rtopic="hidden"] { display: none !important; }');
+    console.log('filter right topic!');
+    newNode.add(function () {
+      console.log('filter right topic! ...');
+      var topics = Array.apply(Array, document.querySelectorAll('.right_content.hot_topic li:not([yawf-rtopic]) a[suda-uatrack*="hottopic_r1"]'));
+      topics.forEach(function (topic) {
+        var text = topic.title.replace(/#/g, '');
+        var li; for (li = topic; li.tagName.toLowerCase() !== 'li'; li = li.parentNode);
+        if (topicFilterGroup.rules.blacklist.conf.indexOf(text) !== -1) li.setAttribute('yawf-rtopic', 'hidden');
+        else li.setAttribute('yawf-rtopic', 'show');
+      });
+    });
+  },
+})
 
 // 微博相关工具
 toolFilterGroup.add({
