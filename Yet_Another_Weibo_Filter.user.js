@@ -4,7 +4,8 @@
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, original, topic, source, etc.; modify layout
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
-// @version     0.3.45 beta
+// @exclude     http://weibo.com/a/bind/test
+// @version     0.3.46 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -153,6 +154,46 @@ var text = {
   'otherGroupTitle': { 'zh-cn': '分组浏览', 'zh-hk': '分組流覽', 'zh-tw': '分組流覽', 'en': 'Browse by Group' },
   'accountByGroup': { 'zh-cn': '分组浏览时禁用按账号隐藏', 'zh-hk': '分組流覽時禁用按帳號隱藏', 'zh-tw': '分組流覽時禁用按帳號隱藏', 'en': 'Disable hide by account filter when browsing by group' },
   'sameAccountByGroup': { 'zh-cn': '浏览分组时禁用相同作者数量限制', 'zh-hk': '流覽分組時禁用相同作者數量限制', 'zh-tw': '流覽分組時禁用相同作者數量限制', 'en': 'Disable hide too many Weibo from same account filter when browsing by group' },
+  // 脚本
+  'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
+  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
+  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
+  // 自动载入
+  'autoLoadNewWeiboTitle': { 'zh-cn': '自动载入新微博', 'zh-hk': '自動載入新微博', 'zh-tw': '自動載入新微博', 'en': 'New Weibo Auto Load' },
+  'autoLoadNewWeibo': { 'zh-cn': '自动载入新微博', 'zh-hk': '自動載入新微博', 'zh-tw': '自動載入新微博', 'en': 'New Weibo auto load' },
+  // 分隔条
+  'timeTipHour': { 'zh-cn': '小时', 'zh-hk': '小時', 'zh-tw': '小時', 'en': ' hour' },
+  'timeTipMin': { 'zh-cn': '分钟', 'zh-hk': '分鐘', 'zh-tw': '分鐘', 'en': ' min' },
+  'timeTipText': { 'zh-cn': '前，你看到这里', 'zh-hk': '前，你看到這裡', 'zh-tw': '前，你看到這裡', 'en': ' ago, you see here' },
+  // 自动展开
+  'autoExpand': {
+    'zh-cn': '自动载入后直接展开显示||{{<etypes>}}仅对白名单的微博自动展开显示||{{<background>}}页面处于活动状态时暂停',
+    'zh-hk': '自動載入後直接展開顯示||{{<etypes>}}僅對白名單的微博自動展開顯示||{{<background>}}頁面處於活動狀態時暫停',
+    'zh-tw': '自動載入後直接展開顯示||{{<etypes>}}僅對白名單的微博自動展開顯示||{{<background>}}頁面處於活動狀態時暫停',
+    'en': 'Expand Weibo after auto load || {{<etypes>}} Only auto expand whitelist Weibo || {{<background>}} Pause when page actived',
+  },
+  'autoExpandAll': { 'zh-cn': '所有新微博', 'zh-hk': '所有新微博', 'zh-tw': '所有新微博', 'en': 'all new Weibo' },
+  'autoExpandWhite': { 'zh-cn': '白名单微博', 'zh-hk': '白名單微博', 'zh-tw': '白名單微博', 'en': 'whitelist Weibo' },
+  // 桌面提示
+  'desktopNotification': {
+    'zh-cn': '载入新微博后显示桌面提示||{{<types>}}仅对白名单的微博显示桌面提示||{{<autohide>}}桌面提醒延时自动关闭|显示{{<duration>}}毫秒|＋字数×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
+    'zh-hk': '载入新微博后顯示桌面提示||{{<types>}}僅對白名單的微博顯示桌面提示||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
+    'zh-tw': '载入新微博后顯示桌面提示||{{<types>}}僅對白名單的微博顯示桌面提示||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
+    'en': 'Show desktop notification after auto load | {{<types>}} Only show desktop notification for whitelist Weibo || {{<autohide>}} auto hide desktop notification after | {{<duration>}}ms | + {{<durationc>}}ms/char || {{<ntypes>}} Use webkitNotifications instead of Notification',
+  },
+  'desktopNotificationDisallowedTitle': { 'zh-cn': '桌面提示被阻止', 'zh-hk': '桌面提示被阻止', 'zh-tw': '桌面提示被阻止', 'en': 'Desktop Notification Disallowed' },
+  'desktopNotificationDisallowed': {
+    'zh-cn': '您的浏览器阻止了桌面提示。请按照如下步骤解除阻止：<br />右击网页—查看页面信息—权限—显示通知—允许<br />此外，如果您安装了 Tab notifier 等扩展，请到扩展的设置中允许显示桌面提示。',
+    'zh-hk': '您的流覽器阻止了桌面提示。請按照如下步驟解除阻止：<br />右擊網頁—檢視頁面資訊—權限—顯示通知—允許<br />此外，如果您安裝了 Tab notifier 等擴充套件，請到擴充套件的設置中允許顯示桌面提示。',
+    'zh-tw': '您的流覽器阻止了桌面提示。請按照如下步驟解除阻止：<br />右擊網頁—檢視頁面資訊—權限—顯示通知—允許<br />此外，如果您安裝了 Tab notifier 等擴充套件，請到擴充套件的設置中允許顯示桌面提示。',
+    'en': 'Your browser blocked desktop notifications. Please follow the instruction to unblock: <br />Right click webpage - View Page Info - Permission - Notifications - Allow. You should also check settings of extensions, if you installed extensions like Tab notifier.',
+  },
+  'autoCloseWarning': {
+    'zh-cn': '当前火狐浏览器提供的 Notification 会强制显示 4 秒后关闭，如果您希望显示较长时间，请考虑使用 Tab notifier 等扩展提供的 webkitNotifications。',
+    'zh-hk': '當前火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
+    'zh-tw': '當前火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
+    'en': 'Currently, Notification provided by Firefox will force be closed with 4 seconds delay after shown. You may need to use webkitNotifications provided by addons like Tab notifier for better user interface.',
+  },
   // 模块
   'layoutFilterGroupTitle': { 'zh-cn': '模块', 'zh-hk': '模組', 'zh-tw': '模組', 'en': 'Module' },
   'layoutFilterGroupDesc': { 'zh-cn': '隐藏以下模块', 'zh-hk': '隱藏以下模組', 'zh-tw': '隱藏以下模組', 'en': 'Hide following modules' },
@@ -233,6 +274,7 @@ var text = {
   'layoutHideOtherFooter': { 'zh-cn': '页面底部', 'zh-hk': '頁面底部', 'zh-tw': '頁面底部', 'en': 'Footer' },
   'layoutHideOtherWbIm': { 'zh-cn': '微博桌面推荐（右下）', 'zh-hk': '微博桌面推薦（右下）', 'zh-tw': '微博桌面推薦（右下）', 'en': '微博桌面2014 (Desktop Weibo), bottom right' },
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
+  'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
@@ -254,19 +296,6 @@ var text = {
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'expandShortenedLink': { 'zh-cn': '自动展开新浪 t.cn 短网址', 'zh-hk': '自動展開新浪 t.cn 短網址', 'zh-tw': '自動展開新浪 t.cn 短網址', 'en': 'Auto expand Sina shortened URL (t.cn)' },
   'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view', },
-  // 脚本
-  'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
-  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
-  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid load it again' },
-  'autoLoadNewWeibo': {
-    'zh-cn': '有新微博时自动载入并过滤',
-    'zh-hk': '有新微博時自動載入並過濾',
-    'zh-tw': '有新微博時自動載入並過濾',
-    'en': 'Auto load and apply filter to new Weibo'
-  },
-  'timeTipHour': { 'zh-cn': '小时', 'zh-hk': '小時', 'zh-tw': '小時', 'en': ' hour' },
-  'timeTipMin': { 'zh-cn': '分钟', 'zh-hk': '分鐘', 'zh-tw': '分鐘', 'en': ' min' },
-  'timeTipText': { 'zh-cn': '前，你看到这里', 'zh-hk': '前，你看到這裡', 'zh-tw': '前，你看到這裡', 'en': ' ago, you see here' },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
   'userstyleEditDesc': { 'zh-cn': '编辑微博自定义CSS', 'zh-hk': '編輯微博自訂CSS', 'zh-tw': '編輯微博自訂CSS', 'en': 'Edit Weibo Customize CSS' },
@@ -367,7 +396,7 @@ var html = {
   'configNumber': '<div class="yawf-configNumber yawf-configItem"><label>{{text}}</label></div>',
   'configNumberInput': '<div class="yawf-configInput yawf-configNumberInput"><input type="number" class="W_f14" style="width: 60px;" /></div>',
   'configRange': '<div class="yawf-configRange yawf-configItem"><label>{{text}}</label></div>',
-  'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" class="W_f14" style="width: 45px; text-align: right;" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
+  'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" class="W_f14" style="text-align: right;" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
   'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" /></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
@@ -603,9 +632,137 @@ var rules = (function () {
   };
 }());
 
+// 打印调试信息
 var debug = GM_getValue('debug', false) &&
   console && console.log && console.log.bind(console) ||
   function () { };
+
+var notify = (function () {
+  var avaliable = {};
+  var shown = [];
+  var use = {
+    'hasPermission': function () { return null; },
+    'requestPermission': function (callback) { return null; },
+    'hideNotification': function (notify) { return null; },
+    'showNotification': function (id, title, body, icon, delay, onclick) { return null; }
+  };
+
+  // 检查一个微博是不是已经被显示过了，如果显示过了不重复显示
+  var shownFeed = function (id) {
+    var shown = [];
+    try {
+      shown = JSON.parse(GM_getValue('notification', '[]'));
+      shown = Array.apply(Array, shown);
+      id = String(id);
+    } catch (e) { }
+    debug('%o %s shown feed list: %o', id, shown.indexOf(id) === -1 ? 'not in' : 'in', shown);
+    if (shown.indexOf(id) !== -1) return true;
+    shown.push(id); shown = shown.slice(-20);
+    GM_setValue('notification', JSON.stringify(shown));
+    return false;
+  };
+
+  // （mozNotification 是仅限移动端的）
+
+  // webkitNotifications
+  // Tab Notifier 扩展实现此接口，但显示的桌面提示最多只能显示前两行
+  if (typeof webkitNotifications !== 'undefined') avaliable.webkit = {
+    'hasPermission': function () {
+      return [true, null, false][webkitNotifications.checkPermission()];
+    },
+    'requestPermission': function (callback) {
+      return webkitNotifications.requestPermission(callback);
+    },
+    'hideNotification': function (notify) {
+      notify.cancel();
+    },
+    'showNotification': function (id, title, body, icon, delay, onclick) {
+      if (shownFeed(id)) return null;
+      debug('show (webkit) notification: %s - %s', title, body);
+      var notify = webkitNotifications.createNotification(icon, title, body);
+      if (delay && delay > 0) notify.addEventListener('display', function () {
+        setTimeout(function () { hideNotification(notify); }, delay);
+      });
+      if (onclick) notify.addEventListener('click', onclick);
+      notify.show();
+      return notify;
+    },
+  }
+
+  // Notification
+  // Firefox 22+
+  // 显示4秒会自动关闭 https://bugzilla.mozilla.org/show_bug.cgi?id=875114 
+  if (typeof Notification !== 'undefined') avaliable.standard = {
+    'hasPermission': function () {
+      return {
+        'granted': true,
+        'denied': false,
+        'default': null,
+      }[Notification.permission];
+    },
+    'requestPermission': function (callback) {
+      return Notification.requestPermission(callback);
+    },
+    'hideNotification': function (notify) {
+      notify.close();
+    },
+    'showNotification': function (id, title, body, icon, delay, onclick) {
+      if (shownFeed(id)) return null;
+      debug('show notification: %s - %s', title, body);
+      var notify = new Notification(title, { 'body': body, 'icon': icon });
+      if (delay && delay > 0) notify.addEventListener('show', function () {
+        setTimeout(function () { notify.close(); }, delay);
+      });
+      if (onclick) notify.addEventListener('click', onclick);
+      return notify;
+    },
+  }
+
+  // 有哪些接口可用
+  var avaliableNotification = function () {
+    return Object.keys(avaliable);
+  };
+  // 选择用哪个接口
+  var choseNotification = function (prefer) {
+    return use = prefer && avaliable[prefer] || avaliable.standard;
+  };
+  choseNotification();
+  // 检查权限
+  var hasPermission = function () {
+    return use.hasPermission.apply(this, arguments);
+  };
+  // 请求权限
+  var requestPermission = function () {
+    return use.requestPermission.apply(this, arguments);
+  };
+  // 显示消息
+  var showNotification = function (title, body, icon, delay, onclick) {
+    var notify = use.showNotification.apply(this, arguments);
+    shown.push(notify);
+    return notify;
+  };
+  // 隐藏已经显示的消息
+  var hideNotification = function (notify) {
+    use.hideNotification.apply(this, arguments);
+    shown = shown.filter(function (x) { return x !== notify; });
+    return notify;
+  };
+
+  document.addEventListener('unload', function () {
+    shown.forEach(hideNotification);
+    shown = [];
+  });
+
+  return {
+    'avaliableNotification': avaliableNotification,
+    'choseNotification': choseNotification,
+    'hasPermission': hasPermission,
+    'requestPermission': requestPermission,
+    'showNotification': showNotification,
+    'hideNotification': hideNotification
+  };
+
+}());
 
 // 显示右上角过滤器图标
 var showIcon = function () {
@@ -1460,11 +1617,15 @@ var typedHtml = (function () {
   var range = base('Range', function (dom, item) {
     var n = dom.querySelector('input[type="number"]');
     var r = dom.querySelector('input[type="range"]');
+    var step = item.step || 1;
     n.max = item.max; r.max = item.max;
     n.min = item.min; r.min = item.min;
+    n.step = step; r.step = step;
+    n.style.width = 10 * String(item.max).length + 15 + 'px';
     var onchange = bindInputValue.text(n, item, function (val) {
       if (isNaN(parseInt(val))) return item['default'] || item.min;
-      return Math.min(Math.max(parseInt(val), item.min), item.max);
+      var val = Math.min(Math.max(parseInt(val), item.min), item.max);
+      return Math.round((val - item.min) / step) * step + item.min;
     });
     r.value = n.value;
     var updateN = function () { if (r.value !== n.value) n.value = r.value; onchange(); };
@@ -2203,6 +2364,253 @@ var sameAccountByGroup = otherFilterGroup.add({
   'text': '{{sameAccountByGroup}}',
 });
 
+
+// 脚本工具
+otherFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{scriptToolsTitle}}',
+});
+
+// 快速创建过滤器
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.use_fast_creator',
+  'default': true,
+  'text': '{{useFastCreator}}',
+  'ainit': function () {
+    dropdown.init();
+  },
+});
+
+
+// 屏蔽隐藏微博
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.block_hidden',
+  'text': '{{blockHiddenWeiboDesc}}',
+  'ainit': function () {
+    eachWeibo.after(function (feed) {
+      [feed].concat(Array.apply(Array, feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
+        var display = feed.getAttribute('yawf-display');
+        if (display !== 'display-hidden') return;
+        if (!feed.getAttribute('mid')) return;
+        blockWeibo(feed.getAttribute('mid'));
+        feed.setAttribute('yawf-block', 'block');
+      });
+    });
+  }
+});
+
+// 自动载入
+otherFilterGroup.add({
+  'type': 'subtitle',
+  'text': '{{autoLoadNewWeiboTitle}}',
+});
+
+// 自动加载新微博以避免被隐藏微博显示新微博提示
+var autoLoad = otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.auto_load_new_weibo',
+  'text': '{{autoLoadNewWeibo}}',
+  'ainit': function () {
+    var that = this, loading = false;
+
+    // 展开新微博后添加和旧微博的分割线
+    var addTimetip = (function () {
+      var time0 = new Date(), tip = null;
+      return function (feed) {
+        if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
+        var time = time0; time0 = new Date();
+        time = Math.max(Math.round((time0 - time) / 6e4), 1);
+        var min = time % 60, hour = (time - min) / 60;
+        var text = '{{timeTipText}}';
+        if (hour) text = hour + '{{timeTipHour}}' + text;
+        if (min) text = min + '{{timeTipMin}}' + text;
+        tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
+        feed.parentNode.insertBefore(tip, feed.nextSibling);
+      };
+    }());
+
+    // 更新未读提示中的数字
+    var updateUnreadCount = function () {
+      var count = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]').length;
+      var feedList = document.querySelector('.WB_feed');
+      var newFeed = feedList.querySelector('.WB_feed a.notes[yawf-id="feed_list_newBar"]');
+      if (!newFeed && count) {
+        newFeed = cewih('div', html.feedListNewBar).firstChild;
+        feedList.insertBefore(newFeed, feedList.firstChild);
+        newFeed.addEventListener('click', function () {
+          var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]'));
+          feeds.forEach(function (feed) { feed.setAttribute('yawf-unread', 'show'); });
+          updateUnreadCount();
+          addTimetip(feeds[feeds.length - 1]);
+        });
+      }
+      if (count) newFeed.textContent = fillStr(text.newWeiboNotify, { 'count': count });
+      if (newFeed && !count) newFeed.parentNode.removeChild(newFeed);
+    };
+
+    // 隐藏掉微博原来的新消息提示框
+    css.add(funcStr(function () { /*
+      .WB_feed .WB_feed_type[yawf-unread="hidden"] { display: none !important; }
+      .WB_feed fieldset[node-type="feed_list_timeTip"] { display: none !important; }
+      .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none !important; }
+      .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
+    */ }));
+
+    // 自动点开有新微博的提示
+    newNode.add(function () {
+      var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]');
+      if (!newFeed) return;
+      newFeed.click(); loading = true;
+    });
+
+    // 看见有新微博了，看看是不是新加载出来的
+    eachWeibo.before(function (feed) {
+      var shown = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~*'));
+      if (shown.length < 8 || shown.indexOf(feed) !== -1 || loading === false) feed.setAttribute('yawf-unread', 'show');
+      else feed.setAttribute('yawf-unread', 'hidden');
+    });
+
+    // 走完过滤器之后，如果某条微博还没被隐藏掉，那么就提示用户有新微博要看了
+    eachWeibo.after(function (feed) {
+      if (feed.getAttribute('yawf-unread') !== 'hidden') return;
+      var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
+      if (display === 'hidden') return;
+      updateUnreadCount();
+      call(function () { autoExpand.expand(feed); updateUnreadCount(); });
+      if (desktopNotification) desktopNotification.notify(feed);
+    });
+
+  },
+});
+
+var autoExpand = otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.auto_expand',
+  'text': '{{autoExpand}}',
+  'ref': {
+    'etypes': {
+      'type': 'boolean',
+    },
+    'background': {
+      'type': 'boolean',
+      'default': true,
+    },
+  },
+  'expand': function (feed) {
+    var that = this;
+    var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
+    if (!that.conf) return;
+    if (that.ref.etypes.conf && display !== 'show') return;
+    if (feed.getAttribute('yawf-unread') !== 'hidden') return;
+    if (that.ref.background.conf && document.hasFocus()) {
+      document.addEventListener('blur', function () { autoExpand.expand(feed); });
+      return;
+    }
+    var unreads = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]');
+    var ref = unreads[unreads.length - 1];
+    ref.parentNode.insertBefore(feed, ref.nextSibling);
+    feed.setAttribute('yawf-unread', 'show');
+  },
+});
+
+var desktopNotification = null;
+
+if (notify.avaliableNotification().length) desktopNotification = otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.desktop_notification',
+  'text': '{{desktopNotification}}',
+  'ref': {
+    'types': {
+      'type': 'boolean',
+      'default': true,
+    },
+    'autohide': {
+      'type': 'boolean',
+      'default': true,
+    },
+    'duration': {
+      'type': 'range',
+      'step': 50,
+      'min': 1e3,
+      'default': 3e3,
+      'max': 1e4,
+    },
+    'durationc': {
+      'type': 'range',
+      'step': 10,
+      'min': 0,
+      'default': 150,
+      'max': 500,
+    },
+    'ntypes': {
+      'type': 'boolean',
+    },
+  },
+  'shown': function (dom) {
+    var that = this;
+    that.onopt = dom.querySelector('[name="yawf-weibo.other.desktop_notification"]');
+    that.onopt.addEventListener('change', that.update.bind(that));
+    var ntypes = dom.querySelector('[name="yawf-weibo.other.desktop_notification.ntypes"]');
+    if (notify.avaliableNotification().length <= 1) {
+      while (ntypes.tagName.toLowerCase() !== 'label') ntypes = ntypes.parentNode;
+      ntypes.style.display = 'none';
+    } else ntypes.addEventListener('change', function () {
+      that.ref.ntypes.putconf(ntypes.checked);
+      that.update();
+    });
+  },
+  'init': function () {
+    notify.choseNotification(this.ref.ntypes.conf ? 'webkit' : 'standard');
+  },
+  'update': function () {
+    var that = this, desktopNotify = that.onopt;
+    that.init();
+    if (!desktopNotify.checked) return;
+    var permission = notify.hasPermission();
+    if (permission === true) return;
+    desktopNotify.checked = false;
+    if (permission === null) notify.requestPermission(function () {
+      desktopNotify.checked = true;
+      that.update();
+    });
+    if (permission === false) Alert('notify-disabled', {
+      'title': fillStr('{{desktopNotificationDisallowedTitle}}'),
+      'text': fillStr('{{desktopNotificationDisallowed}}'),
+      'icon': 'error'
+    });
+  },
+  'notify': function (feed) {
+    var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
+    this.init(); if (!this.conf) return;
+    if (this.ref.types.conf && display !== 'show') return;
+    var mid, author, text, face, ori_author = '', ori_text = '';
+    mid = feed.getAttribute('mid'); if (!mid) return;
+    face = feed.querySelector('.WB_face img').src;
+    author = feed.querySelector('.WB_info .WB_name').textContent;
+    text = feed.querySelector('.WB_text').textContent;
+    try {
+      ori_author = feed.querySelector('.WB_media_expand .WB_info .WB_name').textContent;
+      ori_text = feed.querySelector('.WB_media_expand .WB_text').textContent;
+    } catch (e) { }
+    var body = text + (ori_text ? ('//' + ori_author + ': ' + ori_text) : '');
+    body = body.replace(/\s+/g, ' ').trim(); author = author.trim();
+    var delay = 0;
+    if (this.ref.autohide) delay = this.ref.duration.conf + body.length * this.ref.durationc.conf;
+    var showFeed = function () {
+      autoExpand.expand(feed);
+      feed.querySelector('[action-type="feed_list_comment]').click();
+    };
+    notify.showNotification(mid, author, body, face, delay, showFeed);
+  },
+});
+
+if (notify.avaliableNotification().length) otherFilterGroup.add({
+  'type': 'remark',
+  'text': '{{autoCloseWarning}}',
+});
+
 var layoutFilterGroup = filterGroup('layoutFilterGroup');
 
 layoutFilterGroup.add({
@@ -2310,11 +2718,12 @@ var layouts = (function () {
   item('HotWeibo', '.W_main_2r [id^="Pl_Core_RightPicText__"] { display: none !important; }');
 
   subtitle('Other');
-  item('Ads', '#plc_main [id^="pl_rightmod_ads"], #Box_right [id^="ads_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
+  item('Ads', '#plc_main [id^="pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('FeedRecom', '.W_main_2r [id^="Pl_Third_Inline__"] { display: none !important; }');
   item('Footer', '.global_footer { display: none !important; }');
   item('WbIm', '.WBIM_news { display: none !important; }');
   item('Tip', '.layer_tips { display: none !important; }');
+  item('IM', '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
 
   var tagRightbarMods = function () {
     var mods = document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id])');
@@ -2583,115 +2992,8 @@ toolFilterGroup.add({
       });
     };
     newNode.add(expandLink);
+    eachWeibo.before(expandLink);
     expandLink();
-  },
-});
-
-// 脚本工具
-toolFilterGroup.add({
-  'type': 'subtitle',
-  'text': '{{scriptToolsTitle}}',
-});
-
-// 快速创建过滤器
-toolFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.tool.use_fast_creator',
-  'default': true,
-  'text': '{{useFastCreator}}',
-  'ainit': function () {
-    dropdown.init();
-  },
-});
-
-
-// 屏蔽隐藏微博
-toolFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.tool.block_hidden',
-  'text': '{{blockHiddenWeiboDesc}}',
-  'ainit': function () {
-    eachWeibo.after(function (feed) {
-      [feed].concat(Array.apply(Array, feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
-        var display = feed.getAttribute('yawf-display');
-        if (display !== 'display-hidden') return;
-        if (!feed.getAttribute('mid')) return;
-        blockWeibo(feed.getAttribute('mid'));
-        feed.setAttribute('yawf-block', 'block');
-      });
-    });
-  }
-});
-
-// 自动加载新微博以避免被隐藏微博显示新微博提示
-toolFilterGroup.add({
-  'type': 'boolean',
-  'key': 'weibo.tool.auto_load_new_weibo',
-  'text': '{{autoLoadNewWeibo}}',
-  'ainit': function () {
-    var loading = false;
-
-    var addTimetip = (function () {
-      var time0 = new Date(), tip = null;
-      return function (feed) {
-        if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
-        var time = time0; time0 = new Date();
-        time = Math.max(Math.round((time0 - time) / 6e4), 1);
-        var min = time % 60, hour = (time - min) / 60;
-        var text = '{{timeTipText}}';
-        if (hour) text = hour + '{{timeTipHour}}' + text;
-        if (min) text = min + '{{timeTipMin}}' + text;
-        tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
-        feed.parentNode.insertBefore(tip, feed.nextSibling);
-      };
-    }());
-
-    var updateUnreadCount = function () {
-      var count = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]').length;
-      var feedList = document.querySelector('.WB_feed');
-      var newFeed = feedList.querySelector('.WB_feed a.notes[yawf-id="feed_list_newBar"]');
-      if (!newFeed && count) {
-        newFeed = cewih('div', html.feedListNewBar).firstChild;
-        feedList.insertBefore(newFeed, feedList.firstChild);
-        newFeed.addEventListener('click', withTry(function () {
-          var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]'));
-          feeds.forEach(function (feed) { feed.setAttribute('yawf-unread', 'show'); });
-          updateUnreadCount();
-          addTimetip(feeds[feeds.length - 1]);
-        }));
-      }
-      if (count) newFeed.textContent = fillStr(text.newWeiboNotify, { 'count': count });
-      if (newFeed && !count) newFeed.parentNode.removeChild(newFeed);
-    };
-
-    // 隐藏掉微博原来的新消息提示框
-    css.add(funcStr(function () { /*
-    .WB_feed .WB_feed_type[yawf-unread="hidden"] { display: none !important; }
-    .WB_feed fieldset[node-type="feed_list_timeTip"] { display: none !important; }
-    .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none !important; }
-    .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
-  */ }));
-
-    // 自动点开有新微博的提示
-    newNode.add(function () {
-      var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]');
-      if (!newFeed) return;
-      newFeed.click(); loading = true;
-    });
-
-    // 看见有新微博了，看看是不是新加载出来的
-    eachWeibo.before(function (feed) {
-      var shown = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~*'));
-      if (shown.length < 8 || shown.indexOf(feed) !== -1 || loading === false) feed.setAttribute('yawf-unread', 'show');
-      else feed.setAttribute('yawf-unread', 'hidden');
-    });
-
-    // 走完过滤器之后，如果某条微博还没被隐藏掉，那么就提示用户有新微博要看了
-    eachWeibo.after(function (feed) {
-      if (feed.getAttribute('yawf-unread') !== 'hidden') return;
-      updateUnreadCount();
-    });
-
   },
 });
 
