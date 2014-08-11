@@ -1,10 +1,15 @@
 ﻿@charset "utf-8";
 
-body { width: 800px; margin: 0 auto; font-size: 120%; font-family: sans-serif; background: #f3f3f3; }
+body { width: 800px; margin: 0 auto; font-size: 120%; font-family: sans-serif; background: #fff; }
 #lang { float: right; color: gray; font-size: 83%; }
 h2 { border-bottom: 2px solid #ccc; margin-top: 1em; }
-.install { font-size: 200%; display: block; width: 400px; height: 2em; line-height: 2em; background: #FFA00A; color: white; text-decoration: none; text-align: center; text-transform: uppercase; margin-left: 40px; }
-.install:hover { background: #ffb137; }
+dl { height: 4.8em; margin: 0 10px 0 20px; }
+dl a { text-decoration: none; display: block; height: 100%; }
+dl dt { clear: left; float: left; font-size: 200%; display: block; width: 400px; height: 2.2em; line-height: 2.2em; background: #ffa00a; margin-left: 40px; text-align: center; margin: 0.1em; }
+dl dt a { color: #fff; }
+dl dt a:hover { background: #ffb137; }
+dl dd { line-height: 2em; height: 2em; float: left; background: #f2f2f2; width: 150px; text-align: center; margin: 0.2em 10px; }
+dl dd a { color: #000; }
+dl dd a:hover { background: #ffb137; color: #fff; }
 #checkFx { display: none; }
 .in { margin-left: 40px; }
-.warning { color: #700; font-weight: bold; }
