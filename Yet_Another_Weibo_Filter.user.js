@@ -5,7 +5,7 @@
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     0.3.47 beta
+// @version     0.3.48 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -14,6 +14,7 @@
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setValue
 // @grant       GM_getValue
+// @grant       GM_deleteValue
 // @grant       GM_addStyle
 // @grant       GM_registerMenuCommand
 // @grant       GM_info
@@ -38,6 +39,9 @@ var cewih = function (tag, inner) {
   d.innerHTML = inner;
   return d;
 };
+
+var isGecko = navigator.userAgent.indexOf('Gecko') !== -1 &&
+  navigator.userAgent.indexOf('like Gecko') === -1;
 
 // 文本常量
 // 请以简体中文为原文，参考这些资料翻译
@@ -638,6 +642,7 @@ var debug = GM_getValue('debug', false) &&
   console && console.log && console.log.bind(console) ||
   function () { };
 
+// 桌面提示
 var notify = (function () {
   var avaliable = {};
   var shown = [];
@@ -662,8 +667,6 @@ var notify = (function () {
     GM_setValue('notification', JSON.stringify(shown));
     return false;
   };
-
-  // （mozNotification 是仅限移动端的）
 
   // webkitNotifications
   // Tab Notifier 扩展实现此接口，但显示的桌面提示最多只能显示前两行
@@ -1120,6 +1123,7 @@ var dropdown = (function () {
         if (checker.classList.contains('W_miniblog')) return false;
         if (checker.tagName.toLowerCase() === 'body') return true;
         if (checker.classList.contains('right_content') && checker.classList.contains('hot_topic')) return true;
+        if (checker.id === 'WB_webim') return false;
       }
       return false;
     };
@@ -2072,6 +2076,11 @@ var topicFilterGroup = allInOneFilters({
         else a = element.querySelector('a[suda-uatrack*="hottopic_r1"]');
         if (a) return callback({ 'topic': a.textContent.trim().replace(/#/g, '') });
       } catch (e) { }
+      try {
+        if (element.tagName.toLowerCase() === 'a' && element.getAttribute('suda-uatrack').indexOf('1022-topic') !== -1) a = element;
+        else a = element.querySelector('a[suda-uatrack*="1022-topic"]');
+        if (a) return callback({ 'topic': a.textContent.trim().replace(/#/g, '') });
+      } catch (e) { }
       callback();
     },
     'desc': function (dom, val) {
@@ -2380,7 +2389,7 @@ otherFilterGroup.add({
 });
 
 // 快速创建过滤器
-otherFilterGroup.add({
+if (isGecko) otherFilterGroup.add({
   'type': 'boolean',
   'key': 'weibo.tool.use_fast_creator',
   'default': true,
@@ -2605,7 +2614,7 @@ if (notify.avaliableNotification().length) desktopNotification = otherFilterGrou
     var body = text + (ori_text ? ('//' + ori_author + ': ' + ori_text) : '');
     body = body.replace(/\s+/g, ' ').trim(); author = author.trim();
     var delay = 0;
-    if (this.ref.autohide) delay = this.ref.duration.conf + body.length * this.ref.durationc.conf;
+    if (this.conf) delay = this.ref.duration.conf + body.length * this.ref.durationc.conf;
     var showFeed = function () {
       autoExpand.expand(feed);
       feed.scrollIntoView(false);
@@ -2657,7 +2666,7 @@ var layouts = (function () {
   item('VGirl', '.ico_vlady { display: none !important; }');
   item('Taobao', '.ico_taobao { display: none !important; }');
   item('Zongyika', '.zongyika2014 { display: none !important; }');
-  item('Youji', '.lvxing2014 { display: none !important; }');
+  item('Youji', '.lvxing2014, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
 
   subtitle('Nav');
   item('Main', '.gn_nav>div:nth-child(1) { display: none !important; }');
@@ -2730,7 +2739,7 @@ var layouts = (function () {
   item('Ads', '#plc_main [id^="pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('FeedRecom', '.W_main_2r [id^="Pl_Third_Inline__"] { display: none !important; }');
   item('Footer', '.global_footer { display: none !important; }');
-  item('WbIm', '.WBIM_news { display: none !important; }');
+  item('WbIm', '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
   item('Tip', '.layer_tips { display: none !important; }');
   item('IM', '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
 
@@ -2918,9 +2927,7 @@ toolFilterGroup.add({
   'text': '{{filteRightTopic}}',
   'ainit': function () {
     css.add('.right_content.hot_topic li[yawf-rtopic="hidden"] { display: none !important; }');
-    console.log('filter right topic!');
     newNode.add(function () {
-      console.log('filter right topic! ...');
       var topics = Array.apply(Array, document.querySelectorAll('.right_content.hot_topic li:not([yawf-rtopic]) a[suda-uatrack*="hottopic_r1"]'));
       topics.forEach(function (topic) {
         var text = topic.title.replace(/#/g, '');
@@ -3321,6 +3328,7 @@ scriptFilterGroup.add({
     var doReset = function () {
       config.clear();
       updateExportButton();
+      GM_deleteValue('notification');
     };
     br.addEventListener('click', function () {
       Confirm('yawf-config-reset-warning', {

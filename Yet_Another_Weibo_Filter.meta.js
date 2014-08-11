@@ -5,7 +5,7 @@
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     0.3.47 beta
+// @version     0.3.48 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
