@@ -13,3 +13,4 @@ dl dd a { color: #000; }
 dl dd a:hover { background: #ffb137; color: #fff; }
 #checkFx { display: none; }
 .in { margin-left: 40px; }
+pre { background: #eee; padding: 1em 2em; }
