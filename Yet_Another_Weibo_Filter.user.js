@@ -5,7 +5,7 @@
 // @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     0.3.48 beta
+// @version     0.3.49 beta
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @author      田生
@@ -2810,7 +2810,7 @@ var mergeLeftRight = toolFilterGroup.add({
   },
   'init': function () {
     if (!this.conf) return;
-    var main = document.querySelector('.W_main');
+    var main = document.body, side = this.ref.side.conf;
     var left = document.querySelector('.W_main_l');
     var attr = 'yawf-left';
     if (!left) return;
@@ -2821,28 +2821,29 @@ var mergeLeftRight = toolFilterGroup.add({
       var ref = document.querySelector('#pl_rightmod_myinfo')
       var leftn = document.querySelector('.W_main_l');
       if (leftn) { left = leftn; return; }
-      if (ref) ref.parentNode.insertBefore(left, ref.nextSibling);
-      else left0.parentNode.insertBefore(left, left0);
-      main.setAttribute('yawf-merge-left', ref ? 'merge' : 'none');
+      if (ref) {
+        ref.parentNode.insertBefore(left, ref.nextSibling);
+        main.setAttribute('yawf-merge-left', side);
+      } else left0.parentNode.insertBefore(left, left0);
     };
     positionLeft();
     newNode.add(function () { positionLeft(); })
     css.add(funcStr(function () { /*!CSS
-      .W_main[yawf-merge-left="merge"] .W_main_l { width: 229px; padding: 0; float: none; }
-      .W_main[yawf-merge-left="merge"] .WB_left_nav .lev a:hover, .WB_left_nav .lev2 a:hover, .WB_left_nav .lev2 a.lev_curr, .WB_left_nav .lev2 a.lev_curr:hover, .WB_left_nav .lev3 a:hover { background-image: none; }
-      .W_main[yawf-merge-left="merge"] { width: 830px; background-position: -300px center; background-size: 200% 100%; }
-      body.B_index:not([yawf-weibo-only]) .W_main[yawf-merge-left="merge"]~.W_gotop { margin-left: 415px !important; }
-      body.B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 185px); }
-    */ }));
-    if (this.ref.side.conf === 'left') css.add(funcStr(function () { /*!CSS
-      .W_main[yawf-merge-left="merge"] .W_main_r { float: left; }
-      .W_main[yawf-merge-left="merge"] .W_main_c { float: right; }
-      .W_main[yawf-merge-left="merge"] .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
-      .W_main[yawf-merge-left="merge"] .send_weibo .input .arrow, .send_weibo .input.clicked .arrow { right: auto; left: -11px; transform: scaleX(-1); }
-      .W_main[yawf-merge-left="merge"] #Box_center { border-left: 2px solid rgba(128, 128, 128, 0.2); margin-left: -2px; }
-      body.B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
-    */ })); else css.add(funcStr(function () { /*!CSS
-      .W_main[yawf-merge-left="merge"] #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
+      body[yawf-merge-left] .W_main .W_main_l { width: 229px; padding: 0; float: none; }
+      body[yawf-merge-left] .W_main .WB_left_nav .lev a:hover, .WB_left_nav .lev2 a:hover, .WB_left_nav .lev2 a.lev_curr, .WB_left_nav .lev2 a.lev_curr:hover, .WB_left_nav .lev3 a:hover { background-image: none; }
+      body[yawf-merge-left] .W_main { width: 830px; background-position: -300px center; background-size: 200% 100%; }
+      body[yawf-merge-left].B_index:not([yawf-weibo-only]) .W_main~.W_gotop { margin-left: 415px !important; }
+      body[yawf-merge-left].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 185px); }
+      body[yawf-merge-left] .global_footer { width: 790px !important; }
+      body[yawf-merge-left] .global_footer .list { margin-right: 0 !important; width: 155px !important; }
+      body[yawf-merge-left] .global_footer .copy { padding-top: 0 !important; margin-top: -46px; }
+      body[yawf-merge-left="left"] .W_main .W_main_r { float: left; }
+      body[yawf-merge-left="left"] .W_main .W_main_c { float: right; }
+      body[yawf-merge-left="left"] .W_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
+      body[yawf-merge-left="left"] .W_main .send_weibo .input .arrow, .send_weibo .input.clicked .arrow { right: auto; left: -11px; transform: scaleX(-1); }
+      body[yawf-merge-left="left"] .W_main #Box_center { border-left: 2px solid rgba(128, 128, 128, 0.2); margin-left: -2px; }
+      body[yawf-merge-left="left"].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
+      body[yawf-merge-left="right"] .W_main #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
     */ }));
   },
 });
@@ -3130,7 +3131,7 @@ toolFilterGroup.add({
     // 宽度
     'width': {
       'type': 'range',
-      'min': 480,
+      'min': 600,
       'max': 980,
       'default': 600,
     },
