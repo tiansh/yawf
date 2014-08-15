@@ -14,16 +14,19 @@
   <script src="main.js"></script>
 </head>
 <body>
-  <label id="lang">
-    Language:
-    <select id="lang_select">
-      <option lang="zh-cn" value="zh-cn">中文(简体)</option>
-      <option lang="zh-tw" value="zh-tw" selected="selected">中文(臺灣)</option>
-      <option lang="zh-hk" value="zh-hk">中文(香港)</option>
-      <option lang="en" value="en">English</option>
-    </select>
-  </label>
-  <h1>看真正想看的微博 (YAWF)</h1>
+  <header>
+    <label id="lang">
+      Language:
+      <select id="lang_select">
+        <option lang="zh-cn" value="zh-cn">中文(简体)</option>
+        <option lang="zh-tw" value="zh-tw" selected="selected">中文(臺灣)</option>
+        <option lang="zh-hk" value="zh-hk">中文(香港)</option>
+        <option lang="en" value="en">English</option>
+      </select>
+    </label>
+    <h1>看真正想看的微博 (YAWF)</h1>
+    <div id="version">1.0.50</div>
+  </header>
   <nav>
     <dl>
       <dt><a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a></dt>
@@ -33,44 +36,63 @@
       <dd><a target="_blank" href="https://github.com/tiansh/yawf">查閱項目</a></dd>
     </dl>
   </nav>
-  <header><p>新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。</p></header>
+  <p>新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。</p>
   <h2>安裝指導</h2>
   <div class="in">
-    <p id="checkFx">請使用<a href="http://www.mozilla.org/en-US/firefox/all/#zh-TW" target="_blank">Mozilla Firefox 瀏覽器</a>安裝本腳本。</p>
-    <p>您需要首先需要安裝<a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/" target="_blank">的Greasemonkey 附加元件</a>。安裝並重啟瀏覽器後，點擊上方的安裝腳本按鈕並確認安裝。</p>
+    <p id="checkFx">請使用 <a href="http://www.mozilla.org/en-US/firefox/all/#zh-TW" target="_blank">Mozilla Firefox 瀏覽器</a>安裝本腳本，<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#%E5%85%B6%E4%BB%96%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8%E8%AF%A5%E8%84%9A%E6%9C%AC">使用 Google Chrome 或 Opera 流覽器安裝腳本將無法使用部分功能</a>。</p>
+    <p>您需要首先需要安裝 <a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/" target="_blank">Greasemonkey 擴充套件</a>。安裝並重啟流覽器後，點擊上方的安裝腳本按鈕並確認安裝。</p>
     <p>安裝成功後，到新浪微博的頁面點擊右上角的漏斗圖示即可進入腳本設定。</p>
-    <img width="296" height="153" alt="點擊右上角漏斗圖示顯示腳本設定" src="useage.png" />
+    <img width="296" height="153" alt="點擊右上角漏斗圖示顯示腳本設定" src="./img/useage.png" /><br />
+    <p>除了在設置介面添加關鍵字、帳號、來源、連結的篩選器外，您還可以使用拖拽快速創建篩選器：將您要隱藏、折疊或高亮的內容使用滑鼠拖動，即可在右上角看到一個黃底的拖放區域，將對應內容拖放到該區域內鬆開滑鼠，根據彈出的對話方塊選擇即可快速創建篩選器。</p>
+    <img width="523" height="410" alt="拖動想要設置篩選器的內容顯示的釋放區域" src="./img/drop_cht.png" />
+    <img width="554" height="317" alt="釋放滑鼠後顯示“創建篩選器”的對話方塊" src="./img/fastcreate_cht.png" /><br />
     <p>關於詳細的使用指引，請參見<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">常見問題（簡體）</a>。</p>
   </div>
-  <h2>當前功能</h2>
+  <h2>主要功能</h2>
   <div class="in">
-    <p>
-      根據關鍵字、正規式、作者、來源等過濾微博<br />
-      過濾推廣微博等混入微博列表的東西<br />
-      其他一些廣告過濾<br />
-      清理微博版面<br />
-      添加查看大圖鏈接
-    </p>
+    <ul>
+      <li>根據關鍵字、作者、來源等隱藏、折疊或高亮微博</li>
+      <li>徹底屏蔽被隱藏的微博以免在手機上再看到他們</li>
+      <li>去掉推廣、投票、已刪除等各種微博，防洗版、版聊</li>
+      <li>新微博的桌面提醒（可能需要 Tab notifier 擴充套件）</li>
+      <li>清理各種版面上的各種部件，去廣告</li>
+      <li>自訂網頁外觀，合併邊欄，僅顯示微博清單的閱讀模式</li>
+      <li>查看原圖，展開 t.cn 短網址，清除發佈框預設話題</li>
+    </ul>
+    <p>腳本安裝後大部分功能不會預設啟用，您需要到腳本設置中啟用對應功能。</p>
   </div>
   <h2>隱私權政策</h2>
+  <h3>資訊收集</h3>
   <div class="in">
-    <p>腳本不會以任何方式收集您的任何個人資訊。腳本不會利用您的微博帳號發佈任何微博、消息。</p>
-    <p>
-      腳本的網路訪問限於訪問新浪網的相關介面，限於獲取或傳輸以下資料：
-      <ul>
-        <li>您在設置中選擇隱藏/顯示/折疊的帳號的資訊</li>
-        <li>如果您選擇告知伺服器被隱藏的微博，腳本會向微博的伺服器發送被隱藏的微博資訊</li>
-      </ul>
-    </p>
-    <p>您對腳本的設置和您的帳號id以未加密的形式存儲在<a href="https://support.mozilla.org/zh-TW/kb/Profiles#w_finding-your-profile-without-opening-firefox" target="_blank">瀏覽器設定檔中</a>，任何使用該電腦的使用者都可以讀寫該設定檔，所以請勿在公共電腦上使用。</p>
-    <p>如果您使用腳本的匯出設定的功能，匯出的檔以未加密的方式保存了您對腳本的所有設定，其中可能包括您的相關個人資訊，請勿隨意傳播給他人。</p>
+    <p>腳本不會以任何方式收集您的任何個人資訊。但您使用腳本過程中產生的網路訪問可能會被您的網路提供商以及對應網站所記錄。</p>
+  </div>
+  <h3>網路訪問</h3>
+  <div class="in">
+    <p>腳本的網路訪問限於訪問新浪網的相關介面，限於獲取或傳輸以下資料：</p>
+    <ul>
+      <li>您在設置中選擇隱藏、折疊、顯示的帳號的資訊</li>
+      <li>如果您選擇告知伺服器被隱藏的微博，腳本會向微博的伺服器發送被隱藏的微博資訊</li>
+    </ul>
+  </div>
+  <h3>本機存放區</h3>
+  <div class="in">
+    <p>腳本會存儲您的設置等相關資訊到<a href="https://support.mozilla.org/zh-TW/kb/Profiles#w_finding-your-profile-without-opening-firefox" target="_blank">瀏覽器設定檔中</a>，具體包括：</p>
+    <ul>
+      <li>腳本設置的隱藏、折疊或顯示的使用者編號、昵稱，您的帳號編號，及其他設置項；</li>
+      <li>如果您開啟了桌面提示功能，腳本還會記錄最近20條顯示桌面提示的微博的編號；</li>
+    </ul>
+    <p>任何該電腦的使用者都可以讀寫該設定檔，所以建議不要在公共電腦上使用。</p>
+  </div>
+  <h3>其他</h3>
+  <div class="in">
+    <p>腳本不會以您的身份發佈任何微博或消息。</p>
+    <p>如果您使用腳本的匯出設置的功能，匯出的檔以未加密的方式保存了您對腳本的所有設定，其中可能包括您的相關個人資訊，請勿隨意傳播給他人。</p>
   </div>
   <h2>關於</h2>
   <div class="in">
     <p>
       YAWF (Yet Another Weibo Filter) 使用 MIT 協議授權。<br />
       您可以訪問<a href="https://github.com/tiansh/yawf">腳本主頁</a>獲取詳細資訊。 <br />
-      如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a href="https://github.com/tiansh/yawf/issues">回饋頁面</a>提供報告，或直接<a href="http://weibo.com/tsh90/weibo">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">常見問題（簡體）</a>。
     </p>
     <p>本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分代碼。</p>
   </div>

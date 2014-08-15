@@ -14,63 +14,87 @@
   <script src="main.js"></script>
 </head>
 <body>
-  <label id="lang">
-    Language:
-    <select id="lang_select">
-      <option lang="zh-cn" value="zh-cn">中文(简体)</option>
-      <option lang="zh-tw" value="zh-tw">中文(臺灣)</option>
-      <option lang="zh-hk" value="zh-hk">中文(香港)</option>
-      <option lang="en" value="en" selected="selected">English</option>
-    </select>
-  </label>
-  <h1>Yet Another Weibo Filter</h1>
+  <header>
+    <label id="lang">
+      Language:
+      <select id="lang_select">
+        <option lang="zh-cn" value="zh-cn">中文(简体)</option>
+        <option lang="zh-tw" value="zh-tw">中文(臺灣)</option>
+        <option lang="zh-hk" value="zh-hk">中文(香港)</option>
+        <option lang="en" value="en" selected="selected">English</option>
+      </select>
+    </label>
+    <h1>Yet Another Weibo Filter</h1>
+    <div id="version">1.0.50</div>
+  </header>
   <nav>
     <dl>
-      <dt><a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">INSTALL SCRIPT</a></dt>
+      <dt><a id="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">INSTALL SCRIPT</a></dt>
       <dd><a target="_blank" href="http://weibo.com/tsh90">Connect Me</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">FQA <small style="font-size: 80%; line-height: 250%">(Chinese)</small></a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/issues">Open Issues</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf" style="font-size: 90%;">View on GitHub</a></dd>
     </dl>
   </nav>
-  <p>filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functional.</p>
+  <p>filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions</p>
   <h2>Installation Guide</h2>
   <div class="in">
     <p id="checkFx">Please use <a href="http://www.mozilla.org/en-US/firefox/all/" target="_blank">Mozilla Firefox Browser</a> to install this script.</p>
-    <p>You need to install <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/" target="_blank">Greasemonkey addon</a> first. After install and restart firefox, click the "INSTALL SCRIPT" button to apply install.</p>
+    <p>You need to install <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/" target="_blank">Greasemonkey extension</a> first. After install and restart Firefox, click the "INSTALL SCRIPT" button to apply install.</p>
     <p>After installation, click the funnel icon on right top of page to config this script.</p>
-    <img width="296" height="153" alt="Click the funnel icon on right top of page to show script setting" src="useage.png" />
-    <p>For more details about the script using, please checkout <a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">Common Questions (Chinese)</a>.</p>
+    <img width="296" height="153" alt="Click the funnel icon on right top of page to show script setting" src="./img/useage.png" />
+    <p>Instead of adding filters of keywords, accounts, sources and links from the setting panel, you may drag and drop to create filters: drag the contents you wish to hide, fold or highlight with your cursor, you can see there is a dropping area with yellow background at the top right corner, release your cursor in the dropping area and you may quickly create a filter by choosing the corresponding option from the pop-up dialogue box.</p>
+    <p>For more details about the script using, please checkout <a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">FQA (Chinese)</a>.</p>
+    <img width="520" height="380" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
+    <img width="550" height="310" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
   </div>
-  <h2>Current Function</h2>
+  <h2>Major Functions</h2>
   <div class="in">
-    <p>
-      Filter weibo by keyword, regexp, author, source, etc.<br />
-      Filter out suggestion Weibo and other contents in Weibo list<br />
-      Ad Block<br />
-      Clean webpage layout<br />
-      Add "View Original" link
-    </p>
+    <ul>
+      <li>Hide, fold or highlight weibo by keyword, regexp, author, and source etc.;</li>
+      <li>Completely block hidden weibo so that it won't be shown on mobile phone;</li>
+      <li>Filter out recommended Weibo, voting weibo, deleted weibo and other contents in Weibo list; Anti-spamming and chatting;</li>
+      <li>Desktop notification for new Weibo (may require Tab notifier extension);</li>
+      <li>Clear webpage layout, remove unnecessary modules and block advertisement;</li>
+      <li>Customized webpage layout, merge side columns, and reading mode that display only the weibo list;</li>
+      <li>Add "View Original" link, expand t.cn shortened url, and clear the default topic in weibo publishing box;</li>
+    </ul>
+    <p>Most functions of the script are disabled by default, you may need to enable them in the script settings.</p>
   </div>
   <h2>Privacy Policy</h2>
+  <h3>Data Collection</h3>
   <div class="in">
-    <p>The script do not collect any of your personal information. The script do not publish any Weibo or information using your account.</p>
+    <p>The script do not collect any of your personal information, but during the using this script, your network activities may be recorded by your ISP or related websites.</p>
+  </div>
+  <h3>Network Access</h3>
+  <div class="in">
+    <p>The network access of this script is limited in related interface of Sina Weibo. This script use network for access or transport the following datas:</p>
+    <ul>
+      <li>Accounts information if you hide, show, or fold someone</li>
+      <li>Report hidden Weibo to the server of Weibo if you enabled the function of blocking hidden Weibo</li>
+    </ul>
+  </div>
+  <h3>Local Storage</h3>
+  <div class="in">
     <p>
-      The network access of this script is limited in related interface of Sina Weibo. This script use network for access or transport the following datas: 
+      Your settings and related data are stored in <a href="https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data#w_finding-your-profile-without-opening-firefox" target="_blank">browser profile</a> without any encryption, which may include:
       <ul>
-        <li>Accounts information if you hide/show/fold some one</li>
-        <li>If you enabled the function of telling Weibo server you hidden, this script may report related Weibo to the server of weibo.com</li>
+        <li>The account ID and name of hidden/folded/highlighted accounts, your account ID and other settings of the script</li>
+        <li>If you enabled the function of desktop notification, this script will also stored the ID of the 20 weibo recently shown.</li>
       </ul>
     </p>
-    <p>Your settings and your account id is storaged in <a href="https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data#w_finding-your-profile-without-opening-firefox" target="_blank">browser profile</a> without any encryption. Anyone who use the same computer may access these data. So do not use this script in public computer.</p>
+    <p>Anyone who use the same computer may access these data. So do not use this script with public computer.</p>
+  </div>
+  <h3>Others</h3>
+  <div class="in">
+    <p>The script do not publish any Weibo or information by using your account.</p>
     <p>If you export settings, the exported file contains all your settings which may include some personal information. Please avoid to spread it to others.</p>
   </div>
   <h2>About</h2>
   <div class="in">
     <p>
       YAWF (Yet Another Weibo Filter) is under the MIT License.<br />
-      You may visit <a href="https://github.com/tiansh/yawf">project host page</a> for more information.<br />
-      If you find any bugs or have feature request, please report them in the <a href="https://github.com/tiansh/yawf/issues">feedback page</a>, or <a href="http://weibo.com/tsh90/weibo">send message to author</a>. Please read <a target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">Common Questions (Chinese)</a> page for common questions.
+      You may want to visit <a href="https://github.com/tiansh/yawf">project homepage</a> for more information.<br />
     </p>
     <p>Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>
   </div>

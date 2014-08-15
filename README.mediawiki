@@ -1,25 +1,29 @@
-[https://tiansh.github.io/yawf/ 脚本主页 Script Homepage https://tiansh.github.io/yawf/]<br />
-[https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js 安装脚本 Install Script]
+[https://tiansh.github.io/yawf/ 脚本主页] <br />
+[https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js 安装脚本] <br />
+[https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 常见问题] <br />
+[https://github.com/tiansh/yawf/issues 问题汇报] <br />
+[http://weibo.com/tsh90 联系作者] <br />
 
 = 看真正想看的微博 Yet Another Weibo Filter =
 
-请使用 Greasemonkey 安装本脚本。
-
-使用中的遇到任何问题请参阅脚本的[https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 常见问题]。
+请使用 Mozilla Firefox 浏览器 Greasemonkey 扩展安装本脚本。
 
 == 主要功能 ==
 
-* 根据关键字、正则式、作者、来源等过滤微博
-* 过滤推广微博等混入微博列表的东西
-* 添加查看大图链接
-* 高亮显示白名单微博
-* 隐藏/折叠单人过多微博或单微博过多转发
-* 清理微博版面
-* 其他一些广告过滤
+* 根据关键字、作者、来源等隐藏、折叠或高亮微博
+* 彻底屏蔽被隐藏的微博以免在手机上再看到他们
+* 去掉推广、投票、已删除等各种微博，防刷屏、版聊
+* 新微博的桌面提醒（可能需要 Tab notifier 扩展）
+* 清理各种版面上的各种部件，去广告
+* 自定义网页外观，合并边栏，仅显示微博列表的阅读模式
+* 查看原图，展开 t.cn 短网址，清除发布框默认话题
+脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。
 
 == 关于 ==
 
-[https://github.com/tiansh/yawf/blob/master/LICENSE.wikimedia 脚本以 MIT 协议授权。]<br />
-本脚本部分代码基于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦（新浪微博）]。
+YAWF (Yet Another Weibo Filter) [https://github.com/tiansh/yawf/blob/master/LICENSE.wikimedia 使用 MIT 协议授权]。<br />
+您可以访问脚本主页获取详细信息。
+
+本脚本参考并使用了于[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦]脚本的部分代码。
 
 

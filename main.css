@@ -1,7 +1,10 @@
 ﻿@charset "utf-8";
 
 body { width: 800px; margin: 0 auto; font-size: 120%; font-family: sans-serif; background: #fff; }
-#lang { float: right; color: gray; font-size: 83%; }
+header { height: 5em; }
+h1 { float: left; line-height: 1.5em; margin: 0.5em 0; font-size: 200%; }
+#version { float: left; margin: 1.5em 0 0 1em; }
+#lang { float: right; color: gray; font-size: 83%; margin: 1.8em 0 0; }
 h2 { border-bottom: 2px solid #ccc; margin-top: 1em; }
 dl { height: 4.8em; margin: 0 10px 0 20px; }
 dl a { text-decoration: none; display: block; height: 100%; }
