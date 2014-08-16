@@ -2,10 +2,10 @@
 // @name        Yet Another Weibo Filter
 // @namespace   https://github.com/tiansh
 // @description 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
-// @include     http://weibo.com/*
 // @include     http://www.weibo.com/*
+// @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.0.50
+// @version     1.0.51
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -261,6 +261,7 @@ var text = {
   'layoutHideWeiboBlockByKeyword': { 'zh-cn': '屏蔽关键词', 'zh-hk': '屏蔽關鍵詞', 'zh-tw': '屏蔽關鍵詞', 'en': 'Block Keywords' },
   // 个人主页
   'layoutHidePerson': { 'zh-cn': '个人主页', 'zh-hk': '個人主頁', 'zh-tw': '個人主頁', 'en': 'Ones home page' },
+  'layoutHidePersonMoveThings': { 'zh-cn': '移动部件（会员模板）', 'zh-hk': '移動部件（會員模板）', 'zh-tw': '移動部件（會員模板）', 'en': 'Moving Things (VIP Template)' },
   'layoutHidePersonCover': { 'zh-cn': '封面图', 'zh-hk': '封面圖', 'zh-tw': '封面圖', 'en': 'Cover Picture' },
   'layoutHidePersonTemplate': { 'zh-cn': '模板设置', 'zh-hk': '模板設置', 'zh-tw': '模板設置', 'en': 'Template Settings' },
   'layoutHidePersonBadgeIcon': { 'zh-cn': '勋章', 'zh-hk': '勳章', 'zh-tw': '勳章', 'en': 'Badges' },
@@ -432,9 +433,10 @@ var html = {
 };
 
 var url = {
-  'newcard': '/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
+  'host': location.hostname === 'weibo.com' ? 'weibo.com' : 'www.weibo.com',
+  'newcard': '//{{host}}/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
   'view_ori': 'http://photo.weibo.com/{{uid}}/wbphotos/large/mid/{{mid}}/pid/{{pid}}',
-  'block_wb': '/aj/user/block?_wv=5&__rnd={{rnd}}',
+  'block_wb': '//{{host}}/aj/user/block?_wv=5&__rnd={{rnd}}',
 };
 
 // 将按键编号或将显示编号对应名称
@@ -935,7 +937,7 @@ var account = (function () {
     // 请求获取
     GM_xmlhttpRequest({
       'method': 'GET',
-      'url': fillStr(url.newcard, { 'query': queryStr, 'callback': 'STK_' + dateStr() }),
+      'url': fillStr(url.newcard, { 'query': queryStr, 'callback': 'STK_' + dateStr(), 'host': url.host }),
       'onload': withTry(function (resp) {
         var respJson = JSON.parse(resp.responseText.replace(/^try{[^{]*\(/, '').replace(/\)}catch\(e\){};$/, ''));
         var namecard = cewih('div', respJson.data);
@@ -1170,7 +1172,7 @@ var blockWeibo = (function () {
     debug('blocking weibo %s', mid);
     GM_xmlhttpRequest({
       'method': 'POST',
-      'url': fillStr(url.block_wb, { 'rnd': dateStr() }),
+      'url': fillStr(url.block_wb, { 'rnd': dateStr(), 'host': url.host }),
       'headers': {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Cache-Control': 'no-cache',
@@ -2688,7 +2690,7 @@ var layouts = (function () {
   item('MemberTip', '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
 
   subtitle('Right');
-  item('Template', '.templete_enter { display: none !important; }');
+  item('Template', '.templete_enter { display: none !important; }'); // Spelling as is
   item('Info', '.W_person_info { display: none !important; }');
   item('Atten', '#pl_rightmod_myinfo .user_atten { display: none !important; }');
   item('Trial', '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
@@ -2717,6 +2719,7 @@ var layouts = (function () {
   item('BlockByKeyword', 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_setkeyword"] { display: none !important; }');
 
   subtitle('Person');
+  item('MoveThings', '.S_profile .profile_move_things { display: none !important; }');
   item('Cover', funcStr(function () { /*!CSS
     .S_profile_pic { display: none; }
     .profile_top { margin-top: 20px; }
