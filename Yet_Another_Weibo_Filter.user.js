@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.1.52
+// @version     1.1.53
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -1976,6 +1976,7 @@ var contentTypes = (function (types) {
       'type': 'boolean',
       'text': '{{contentTypes' + tt + '}}',
       'key': 'weibo.content.types_' + t,
+      'default': types[t],
       'ainit': function () {
         getWeiboContent.active(t);
       },
