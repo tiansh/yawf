@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.1.53
+// @version     1.1.54
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -259,6 +259,7 @@ var text = {
   'layoutHideWeiboRecomFeed': { 'zh-cn': '精彩微博推荐', 'zh-hk': '精彩微博推薦', 'zh-tw': '精彩微博推薦', 'en': '精彩微博推荐 (Weibo you may interested in)' },
   'layoutHideWeiboTopicCard': { 'zh-cn': '话题卡片', 'zh-hk': '話題卡片', 'zh-tw': '話題卡片', 'en': 'Topic Cards' },
   'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for Comment' },
+  'layoutHideWeiboTopComment': { 'zh-cn': '热门评论', 'zh-hk': '热门评论', 'zh-tw': '热门评论'/* as is */, 'en': 'Top comments' },
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
   'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
@@ -2811,6 +2812,20 @@ var layouts = (function () {
   item('RecomFeed', '[node-type="feed_list_recommend"] { display: none !important; }');
   item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('TopicCard', '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
+  layoutFilterGroup.add({
+    'type': 'boolean',
+    'key': 'weibo.layoutHideWeiboTopComment',
+    'default': false,
+    'text': '{{layoutHideWeiboTopComment}}',
+    'ainit': function () {
+      newNode.add(function () {
+        var split = document.querySelector('.comment_lists[node-type="feed_list_commentList"] .between_line_v2 a[action-data*="filter=hot"]');
+        if (!split) return;
+        while (!split.classList.contains('between_line_v2')) split = split.parentNode;
+        while (split.parentNode) split.parentNode.removeChild(split.parentNode.firstChild);
+      });
+    },
+  });
   item('SonTitle', '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
   item('LocationCard', '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
   item('Source', '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2 { display: none !important; }');
