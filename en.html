@@ -14,7 +14,7 @@
   <script src="main.js"></script>
 </head>
 <body>
-  <header>
+  <header itemscope itemtype="http://schema.org/SoftwareApplication">
     <label id="lang">
       Language:
       <select id="lang_select">
@@ -24,12 +24,12 @@
         <option lang="en" value="en" selected="selected">English</option>
       </select>
     </label>
-    <h1>Yet Another Weibo Filter</h1>
-    <div id="version">1.1.52</div>
+    <h1 itemprop="name">Yet Another Weibo Filter</h1>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->1.1.54<!-- /VER --></div>
   </header>
   <nav>
     <dl>
-      <dt><a id="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">INSTALL SCRIPT</a></dt>
+      <dt><a itemprop="installUrl" id="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">INSTALL SCRIPT</a></dt>
       <dd><a target="_blank" href="http://weibo.com/tsh90">Connect Me</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">FQA <small style="font-size: 80%; line-height: 250%">(Chinese)</small></a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/issues">Open Issues</a></dd>
@@ -42,16 +42,16 @@
     <p id="checkFx">Please use <a href="http://www.mozilla.org/en-US/firefox/all/" target="_blank">Mozilla Firefox Browser</a> to install this script.</p>
     <p>You need to install <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/" target="_blank">Greasemonkey extension</a> first. After install and restart Firefox, click the "INSTALL SCRIPT" button to apply install.</p>
     <p>After installation, click the funnel icon on right top of page to config this script.</p>
-    <img width="296" height="153" alt="Click the funnel icon on right top of page to show script setting" src="./img/useage.png" />
+    <img itemprop="screenshot" width="296" height="153" alt="Click the funnel icon on right top of page to show script setting" src="./img/useage.png" />
     <p>Instead of adding filters of keywords, accounts, sources and links from the setting panel, you may drag and drop to create filters: drag the contents you wish to hide, fold or highlight with your cursor, you can see there is a dropping area with yellow background at the top right corner, release your cursor in the dropping area and you may quickly create a filter by choosing the corresponding option from the pop-up dialogue box.</p>
-    <img width="520" height="380" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
-    <img width="550" height="310" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
+    <img itemprop="screenshot" width="520" height="380" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
+    <img itemprop="screenshot" width="550" height="310" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
     <p>For users who used Weibo Content Filter, you may convert and import script setting from that script by using this <a href="https://tiansh.github.io/yawf/wcf_convert.html">Setting Convert Tool (Chinese)</a>.</p>
     <p>For more details about the script using, please checkout <a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">FQA (Chinese)</a>.</p>
   </div>
   <h2>Major Functions</h2>
   <div class="in">
-    <ul>
+    <ul itemprop="featureList">
       <li>Hide, fold or highlight weibo by keyword, regexp, author, and source etc.;</li>
       <li>Completely block hidden weibo so that it won't be shown on mobile phone;</li>
       <li>Filter out recommended Weibo, voting weibo, deleted weibo and other contents in Weibo list; Anti-spamming and chatting;</li>
@@ -94,7 +94,7 @@
   <h2>About</h2>
   <div class="in">
     <p>
-      YAWF (Yet Another Weibo Filter) is under the MIT License.<br />
+      YAWF (Yet Another Weibo Filter) is under the <a rel="license" href="http://opensource.org/licenses/MIT">MIT License</a>.<br />
       You may want to visit <a href="https://github.com/tiansh/yawf">project homepage</a> for more information.<br />
     </p>
     <p>Some codes of this script come from <a href="https://code.google.com/p/weibo-content-filter/"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>

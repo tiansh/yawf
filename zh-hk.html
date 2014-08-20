@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="main.css" />
   <script src="main.js"></script>
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/SoftwareApplication">
   <header>
     <label id="lang">
       Language:
@@ -24,12 +24,12 @@
         <option lang="en" value="en">English</option>
       </select>
     </label>
-    <h1>看真正想看的微博 (YAWF)</h1>
-    <div id="version">1.1.52</div>
+    <h1 itemprop="name">看真正想看的微博 (YAWF)</h1>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->1.1.54<!-- /VER --></div>
   </header>
   <nav>
     <dl>
-      <dt><a class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a></dt>
+      <dt><a itemprop="installUrl" class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a></dt>
       <dd><a target="_blank" href="http://weibo.com/tsh90">聯繫作者</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">常見問題</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/issues">問題彙報</a></dd>
@@ -42,16 +42,16 @@
     <p id="checkFx">請使用 <a href="http://www.mozilla.org/en-US/firefox/all/#zh-TW" target="_blank">Mozilla Firefox 瀏覽器</a>安裝本腳本，<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#%E5%85%B6%E4%BB%96%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8%E8%AF%A5%E8%84%9A%E6%9C%AC">使用 Google Chrome 或 Opera 流覽器安裝腳本將無法使用部分功能</a>。</p>
     <p>您需要首先需要安裝 <a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/" target="_blank">Greasemonkey 擴充套件</a>。安裝並重啟流覽器後，點擊上方的安裝腳本按鈕並確認安裝。</p>
     <p>安裝成功後，到新浪微博的頁面點擊右上角的漏斗圖示即可進入腳本設定。</p>
-    <img width="296" height="153" alt="點擊右上角漏斗圖示顯示腳本設定" src="./img/useage.png" /><br />
+    <img itemprop="screenshot" width="296" height="153" alt="點擊右上角漏斗圖示顯示腳本設定" src="./img/useage.png" /><br />
     <p>除了在設置介面添加關鍵字、帳號、來源、連結的篩選器外，您還可以使用拖拽快速創建篩選器：將您要隱藏、折疊或高亮的內容使用滑鼠拖動，即可在右上角看到一個黃底的拖放區域，將對應內容拖放到該區域內鬆開滑鼠，根據彈出的對話方塊選擇即可快速創建篩選器。</p>
-    <img width="523" height="410" alt="拖動想要設置篩選器的內容顯示的釋放區域" src="./img/drop_cht.png" />
-    <img width="554" height="317" alt="釋放滑鼠後顯示“創建篩選器”的對話方塊" src="./img/fastcreate_cht.png" /><br />
+    <img itemprop="screenshot" width="523" height="410" alt="拖動想要設置篩選器的內容顯示的釋放區域" src="./img/drop_cht.png" />
+    <img itemprop="screenshot" width="554" height="317" alt="釋放滑鼠後顯示“創建篩選器”的對話方塊" src="./img/fastcreate_cht.png" /><br />
     <p>如果您之前使用眼不見心不煩腳本，您可以使用<a href="https://tiansh.github.io/yawf/wcf_convert.html">設置轉換工具</a>將該腳本的設置導入到本腳本中。</p>
     <p>關於詳細的使用指引，請參見<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">常見問題（簡體）</a>。</p>
   </div>
   <h2>主要功能</h2>
   <div class="in">
-    <ul>
+    <ul itemprop="featureList">
       <li>根據關鍵字、作者、來源等隱藏、折疊或高亮微博</li>
       <li>徹底屏蔽被隱藏的微博以免在手機上再看到他們</li>
       <li>去掉推廣、投票、已刪除等各種微博，防洗版、版聊</li>
@@ -92,10 +92,10 @@
   <h2>關於</h2>
   <div class="in">
     <p>
-      YAWF (Yet Another Weibo Filter) 使用 MIT 協議授權。<br />
+      YAWF (Yet Another Weibo Filter) 使用 <a rel="license" href="http://opensource.org/licenses/MIT">MIT 協議</a>授權。<br />
       您可以訪問<a href="https://github.com/tiansh/yawf">腳本主頁</a>獲取詳細資訊。 <br />
     </p>
     <p>本腳本參考並使用了<a href="https://code.google.com/p/weibo-content-filter/">眼不見心不煩</a>腳本的部分代碼。</p>
   </div>
-</body>
+  </body>
 </html>

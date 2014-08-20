@@ -22,4 +22,3 @@
 // @grant       unsafeWindow
 // @run-at      document-start
 // ==/UserScript==
-
