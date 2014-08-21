@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.1.54
+// @version     1.1.55
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -2552,6 +2552,7 @@ var autoLoad = otherFilterGroup.add({
         if (hour) text = hour + '{{timeTipHour}}' + text;
         tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
         feed.parentNode.insertBefore(tip, feed.nextSibling);
+        feed.classList.add('WB_feed_new');
       };
     }());
 
@@ -2567,7 +2568,10 @@ var autoLoad = otherFilterGroup.add({
         feedList.insertBefore(newFeed, feedList.firstChild);
         newFeed.addEventListener('click', function () {
           var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]'));
-          feeds.forEach(function (feed) { feed.setAttribute('yawf-unread', 'show'); });
+          feeds.forEach(function (feed) {
+            feed.setAttribute('yawf-unread', 'show');
+            feed.classList.remove('WB_feed_new');
+          });
           updateUnreadCount();
           addTimetip(feeds[feeds.length - 1]);
         });
