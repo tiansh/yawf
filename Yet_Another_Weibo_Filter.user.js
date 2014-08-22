@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.1.56
+// @version     1.2.57
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -41,8 +41,21 @@ var cewih = function (tag, inner) {
   return d;
 };
 
+// 检查是否是 Gecko 浏览器，部分特性不支持其他浏览器
 var isGecko = navigator.userAgent.indexOf('Gecko') !== -1 &&
   navigator.userAgent.indexOf('like Gecko') === -1;
+
+// 检查是否是从原站安装的脚本
+// 基于安全考虑，不在从 GF 安装的脚本启用扩展功能
+var isOriginalScript = (function () {
+  try {
+    var meta = GM_info.scriptMetaStr;
+    var downloadURL = meta.match(new RegExp('// @(updateURL)(?:\\s+(.*))'))[2];
+    var supportURL = meta.match(new RegExp('// @(supportURL)(?:\\s+(.*))'))[2];
+    if (!downloadURL || !supportURL) return false;
+    return downloadURL.indexOf(supportURL) === 0;
+  } catch (e) { return false; }
+}());
 
 // 文本常量
 // 请以简体中文为原文，参考这些资料翻译
@@ -376,6 +389,24 @@ var text = {
   'dropAreaText': { 'zh-cn': '将文字或链接拖放至此，快速创建过滤器。', 'zh-hk': '將文字或連結拖放至此，快速創建篩選器。', 'zh-tw': '將文字或連結拖放至此，快速創建篩選器。', 'en': 'Drop text or link here to create filter.' },
   'fastCreateChoseTitle': { 'zh-cn': '创建过滤器', 'zh-hk': '創建篩選器', 'zh-tw': '創建篩選器', 'en': 'Create Filter' },
   'fastFilterChoseText': { 'zh-cn': '请选择要创建的过滤器：', 'zh-hk': '請選擇要創建的篩選器：', 'zh-tw': '請選擇要創建的篩選器：', 'en': 'Chose the filter(s) you want:' },
+  // 扩展
+  'scriptExtensionTitle': { 'zh-cn': '扩展', 'zh-hk': '擴充', 'zh-tw': '擴充', 'en': 'Extension' },
+  'scriptExtensionEnable': { 'zh-cn': '启用对 YAWF 的扩展', 'zh-hk': '啟用對 YAWF 的擴充', 'zh-tw': '啟用對 YAWF 的擴充', 'en': 'Enable Extension for YAWF' },
+  'scriptExtensionWarning': {
+    'zh-cn': '注意，扩展以用户脚本的形式安装，您只应当从您信任的来源安装用户脚本，恶意的脚本可能会侵犯您的隐私并在您不知情的情况下以您的名义进行操作。如果您希望编写 YAWF 的扩展，请参考常见问题。',
+    'zh-hk': '注意，擴充以用戶腳本的形式安裝，您只應當從您信任的來源安裝用戶腳本，惡意的腳本可能會危害您的隱私，並在您不知情的情況下以您的名義執行。如果您希望撰寫 YAWF 的擴展，請參考常見問題（簡體）。',
+    'zh-tw': '注意，擴充以用戶腳本的形式安裝，您只應當從您信任的來源安裝用戶腳本，惡意的腳本可能會危害您的隱私，並在您不知情的情況下以您的名義執行。如果您希望撰寫 YAWF 的擴展，請參考常見問題（簡體）。',
+    'en': 'Notice: Extension was installed as userscript. You should only install scripts trusted. Malicious scripts can violate your privacy and act on your behalf without your knowledge. Please refer to the FQA Page, if you want to write your extension for YAWF.',
+  },
+  'sandboxSupportWarning': {
+    'zh-cn': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱机制的脚本宿主。\\n出于安全考虑，建议禁用 YAWF 的扩展功能。\\n如果您执意要在没有沙箱的环境下使用，您可以在设置中禁用本警告。',
+    'zh-hk': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱機制的腳本裝載。\\n出於安全考慮，請禁用 YAWF 的擴充功能。\\n如果您執意要在沒有沙箱的環境下使用，您可以在設置中禁用本警告。',
+    'zh-tw': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱機制的腳本裝載。\\n出於安全考慮，請禁用 YAWF 的擴充功能。\\n如果您執意要在沒有沙箱的環境下使用，您可以在設置中禁用本警告。',
+    'en': 'You are running Greasemonkey 1.x or other script host which do not support sandbox. \\nDisabling Extension for YAWF is suggested due to security reason. \\nYou may also disalbe this warning if you still want to use this extension for YAWF. ',
+  },
+  'sandboxSupportWarningTitle': { 'zh-cn': '禁用警告', 'zh-hk': '禁用警告', 'zh-tw': '禁用警告', 'en': 'Disable Warning' },
+  'sandboxSupportWarningDisable': { 'zh-cn': '禁用对没有完整沙箱机制的警告', 'zh-hk': '禁用對沒有完整沙箱機制的警告', 'zh-tw': '禁用對沒有完整沙箱機制的警告', 'en': 'Disable warning for incomplete sandbox support' },
+  'extensionFilterGroupTitle': { 'zh-cn': '扩展', 'zh-hk': '擴充', 'zh-tw': '擴充', 'en': 'Extension' },
 };
 
 // 页面常量
@@ -562,7 +593,7 @@ var config = function (uid) {
   };
   // 写入到内存
   var put = function (key, value) {
-    if (keys.indexOf(key) === -1) return;
+    // if (keys.indexOf(key) === -1) return;
     tonputs(key, value, config[key]);
     config[key] = value;
     write();
@@ -1209,6 +1240,31 @@ var blockWeibo = (function () {
   };
 }());
 
+// 管理可扩展模块
+var extent = (function () {
+  var extp = {};
+  var add = function (key, func) {
+    if (typeof extp[key] === 'function') return;
+    else {
+      var words = extp[key] || [];
+      extp[key] = func;
+      func(words);
+    }
+  };
+  var exports = function (key, words) {
+    if (typeof extp[key] === 'function') return extp[key](words);
+    else extp[key] = (extp[key] || []).concat(words);
+  };
+  var list = function () {
+    return Object.keys(extp);
+  };
+  return {
+    'add': add,
+    'list': list,
+    'exports': exports,
+  };
+}());
+
 // 有新节点时分发事件监听
 var newNode = (function () {
   var callbacks = [], actived = false;
@@ -1418,6 +1474,7 @@ var typedConfig = (function () {
   // 集合类型的add/del操作
   var itemsConfig = function (item) {
     var value = baseConfig(Array)(item);
+    // 除了基本的get/put外，提供高级的add/del
     if (!item.delconf) item.delconf = function (str) {
       var val = item.getconf();
       val = val.filter(function (x) { return x !== str; });
@@ -1428,6 +1485,14 @@ var typedConfig = (function () {
       var val = item.getconf(); val.push(str);
       return item.putconf(val);
     };
+    // 此外还有供扩展用的extent
+    if (extent && item.extent && item.extent.constructor === Array && !item.extentconf) {
+      item.extentconf = function (words) {
+        if (item.add) words = words.map(item.add);
+        item.extent = item.extent.concat(words);
+      };
+      extent.add(item.key, item.extentconf);
+    }
     return value;
   };
   return {
@@ -1473,14 +1538,15 @@ var typedHtml = (function () {
       // 引用的设置项
       var ref = item.ref;
       // 显示的文字
-      var inp = '{{}}', outer = inp, inner = '', text;
+      var inp = '{{}}', outer = inp, inner = '', text, etext;
       var hasInput = !!html['config' + base + 'Input'];
+      if (item.i18n && item.i18n.local) etext = item.i18n.local; else etext = {};
       if (!item.nogui) {
-        text = fillStr(item.text || '').replace(/\|\|/g, html['||']).replace(/\|/g, html['|']);
+        text = fillStr(item.text || '', etext).replace(/\|\|/g, html['||']).replace(/\|/g, html['|']);
         if (hasInput && text.indexOf(inp) === -1) text = inp + text;
-        outer = fillStr(html['config' + base], { 'text': text }, item);
+        outer = fillStr(html['config' + base], { 'text': text }, item, etext);
       }
-      if (hasInput) inner = fillStr(html['config' + base + 'Input'], item);
+      if (hasInput) inner = fillStr(html['config' + base + 'Input'], item, etext);
       var line = outer.replace(inp, inner);
       // 在需要引用其他控件的地方留空
       if (!item.nogui) line = line.replace(/{{<([a-zA-Z0-9_-]*)>}}/g, function (m, p) {
@@ -1706,14 +1772,13 @@ var filterGroup = function (groupName) {
     });
     // 再加入自己
     items.push(item);
-    return item;
-  };
-  // 网页被初始化时初始化所有过滤器
-  var init = function () {
-    items.forEach(withTry(function (item) {
+    // 初始化函数
+    item._init = function () {
       // 初始化过滤器的设置
       if (item.type && typedConfig[item.type])
         item.conf = typedConfig[item.type](item);
+      // 初始化过滤器内的文本
+      if (item.i18n) i18n(item.i18n);
       // 初始化过滤器的显示
       if (!item.show && item.type && typedHtml[item.type])
         item.show = typedHtml[item.type].bind(item);
@@ -1723,8 +1788,11 @@ var filterGroup = function (groupName) {
       if (item.type === 'boolean' && item.conf && item.ainit) item.ainit();
       // 将规则加入到列表中
       if (item.rule) rules.add(item.priority || 0, item.rule.bind(item));
-    }));
+    };
+    return item;
   };
+  // 网页被初始化时初始化所有过滤器
+  var init = function () { items.forEach(function (item) { withTry(item._init)(); }); };
   // 需要显示选项时生成界面
   var show = function (inner) {
     items.forEach(withTry(function (item) {
@@ -1785,6 +1853,7 @@ var allInOneFilters = function (details, typedFilterGroup) {
       'key': 'weibo.filters.' + details.name + '.' + filter.type,
       'priority': filter.priority,
       'text': '{{' + details.name + 'FilterDesc}}',
+      'extent': [],
     };
     if (details.add) rule.add = details.add.bind(rule);
     if (details.display) rule.display = details.display.bind(rule);
@@ -1899,7 +1968,7 @@ var keywordFilterGroup = allInOneFilters({
   'name': 'keyword',
   'add': function (s) { return s.trim(); },
   'rule': function keywordMatch(action, feed) {
-    var keywords = this.conf;
+    var keywords = this.conf.concat(this.extent);
     var texts = getWeiboContent(feed).toUpperCase();
     var match = keywords.some(function (keyword) {
       if (!keyword) return false;
@@ -1929,7 +1998,7 @@ var addRegexpChecker = function (s) {
 };
 
 var compileRegexen = function () {
-  if (!this.regexen) this.regexen = this.conf.map(function (s) {
+  this.regexen = this.conf.concat(this.extent).map(function (s) {
     try { return RegExp(s); }
     catch (e) { debug('erorr while compile regexp %s : %o', s, e); }
   }).filter(function (x) { return x; });
@@ -2045,7 +2114,7 @@ var accountFilterGroup = allInOneFilters({
   'name': 'account',
   'type': 'users',
   'rule': function accountMatch(action, feed) {
-    var accounts = this.conf, id = getFeedAuthorId(feed);
+    var accounts = this.conf.concat(this.extent), id = getFeedAuthorId(feed);
     if (!id) return null;
     var match = accounts.some(function (x) { return x === id; });
     if (match) return action; else return null;
@@ -2086,7 +2155,7 @@ var originalFilterGroup = allInOneFilters({
   'name': 'original',
   'type': 'users',
   'rule': function originalMatch(action, feed) {
-    var originals = this.conf, id = getFeedOriginalId(feed);
+    var originals = this.conf.concat(this.extent), id = getFeedOriginalId(feed);
     if (!id) return null;
     var match = originals.some(function (x) { return x === id; });
     if (match) return action; else return null;
@@ -2117,7 +2186,7 @@ var mentionFilterGroup = allInOneFilters({
   'add': function (s) { return s.trim().replace(/^@/, ''); },
   'display': function (s) { return '@' + s; },
   'rule': function mentionMatch(action, feed) {
-    var mentions = this.conf, users = getFeedMentionList(feed);
+    var mentions = this.conf.concat(this.extent), users = getFeedMentionList(feed);
     var match = users.some(function (name) {
       return mentions.indexOf(name) !== -1;
     });
@@ -2166,7 +2235,7 @@ var topicFilterGroup = allInOneFilters({
   'add': function (s) { return s.trim().replace(/#/g, ''); },
   'display': function (s) { return '#' + s + '#'; },
   'rule': function topicMatch(action, feed) {
-    var topics = this.conf;
+    var topics = this.conf.concat(this.extent);
     var text = getFeedTopicList(feed).join('##');
     var match = topics.some(function (topic) { return text.indexOf(topic) !== -1; });
     if (match) return action; else return null;
@@ -2225,7 +2294,7 @@ var sourceFilterGroup = allInOneFilters({
     return s;
   },
   'rule': function sourceMatch(action, feed) {
-    var sources = this.conf, _sources = getFeedSourceList(feed);
+    var sources = this.conf.concat(this.extent), _sources = getFeedSourceList(feed);
     var match = _sources.some(function (s) { return sources.indexOf(s) !== -1; });
     if (match) return action; else return null;
   },
@@ -2263,7 +2332,7 @@ var hyperlinkFilterGroup = allInOneFilters({
   'name': 'hyperlink',
   'add': function (s) { return s.trim(); },
   'rule': function hyperlinkMatch(action, feed) {
-    var links = this.conf, _links = getFeedHyperlinkList(feed);
+    var links = this.conf.concat(this.extent), _links = getFeedHyperlinkList(feed);
     var match = _links.some(function (l) {
       return links.some(function (link) {
         return l.indexOf(link) !== -1;
@@ -3510,6 +3579,26 @@ scriptFilterGroup.add({
   },
 });
 
+// 扩展
+if (isOriginalScript && extent) {
+  scriptFilterGroup.add({
+    'type': 'subtitle',
+    'text': '{{scriptExtensionTitle}}',
+  });
+
+  scriptFilterGroup.add({
+    'type': 'boolean',
+    'text': '{{scriptExtensionEnable}}',
+    'getconf': function () { return !!GM_getValue('extent', true); },
+    'putconf': function (value) { GM_setValue('extent', !!value); return !!value; },
+  });
+
+  scriptFilterGroup.add({
+    'type': 'remark',
+    'text': '{{scriptExtensionWarning}}',
+  });
+}
+
 // 添加一些样式
 scriptFilterGroup.add({
   'init': function () {
@@ -3521,6 +3610,77 @@ scriptFilterGroup.add({
     }));
   },
 });
+
+// 可扩展区域
+var extension = (function () {
+  if (!extent || !isOriginalScript || !GM_getValue('extent')) return null;
+
+  var loaded = false;
+
+  var group = function () {
+    var fg = filterGroup('extensionFilterGroup');
+    group = function () { return fg; };
+    return group();
+  };
+
+  // 暴露给外部的函数
+  var yawf = {};
+  // 检查 YAWF 加载成功
+  yawf.ping = function (callback) {
+    withTry(callback)();
+  };
+  // 添加一个过滤器项
+  yawf.filter = function (details) {
+    if (details.key) details.key = 'weibo.extent.' + details.key;
+    var filter = group().add(details);
+    if (loaded && filter._init) filter._init();
+  };
+  // 向已有的内容、账号等等过滤器中添加规则
+  yawf.extent = function (name, type, words) {
+    var key = 'weibo.filters.' + name + '.' + type;
+    extent.exports(key, words);
+  };
+
+  // 向 unsafeWindow 暴露接口
+  var push = withTry(function (args) {
+    args = Array.apply(Array, args);
+    var cmd = args[0], args = args.slice(1);
+    debug('$_YAWF_$.%s(%o)', cmd, args);
+    if (yawf[cmd]) call(function () {
+      withTry(yawf[cmd]).apply(this, args);
+    });
+  }.bind(window));
+  if (unsafeWindow.$_YAWF_$) {
+    Array.apply(Array, unsafeWindow.$_YAWF_$).forEach(push);
+  }
+  unsafeWindow.$_YAWF_$ = { 'push': push };
+  var init = function () {
+    // 检查是否沙箱机制可用，如果没有沙箱提示用户不安全
+    // （有沙箱的话，从网页中直接调用这些函数会抛出异常提示没有权限。）
+    location.href = fillStr('javascript:void(' + function () {
+      try {
+        /* 可选择禁用沙箱机制的警告 */
+        $_YAWF_$.push(['filter', {
+          'type': 'subtitle',
+          'text': '{{sandboxSupportWarningTitle}}',
+        }]);
+        $_YAWF_$.push(['filter', {
+          'type': 'boolean',
+          'text': '{{sandboxSupportWarningDisable}}',
+          /* 这里不能使用 GM_getValue / GM_setValue ，使用 localStorage 代替 */
+          'getconf': function () { return localStorage.YAWF_extension_warning_disable === 'true'; },
+          'putconf': function (value) { localStorage.YAWF_extension_warning_disable = String(!!value); return !!value; },
+          'init': function () { if (this.conf) return; alert('{{sandboxSupportWarning}}'); }
+        }]);
+      } catch (e) { }
+    } + '());');
+    loaded = true;
+  };
+
+  return {
+    'init': init,
+  };
+}());
 
 // 检查是否要在本页上运行
 var validPage = function () {
@@ -3543,6 +3703,8 @@ var dcl = function () {
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
   // 初始化所有过滤器
   filters.init();
+  // 初始化扩展
+  if (extension) extension.init();
   // 初始化折叠微博后的显示
   fixFoldWeibo.init();
   // 注册样式
