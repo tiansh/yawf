@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.1.55
+// @version     1.1.56
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -155,6 +155,7 @@ var text = {
   // 隐藏
   'otherBlacklistTitle': { 'zh-cn': '隐藏以下内容', 'zh-hk': '隱藏以下內容', 'zh-tw': '隱藏以下內容', 'en': 'Hide following content' },
   'adfeedFilterDesc': { 'zh-cn': '推广微博', 'zh-hk': '推廣微博', 'zh-tw': '推廣微博', 'en': 'Ad Weibo' },
+  'fansTopFilterDesc': { 'zh-cn': '粉丝头条', 'zh-hk': '粉丝头条', 'zh-tw': '粉丝头条'/* as is */, 'en': 'Fans top Weibo' },
   'recommandFeedDesc': { 'zh-cn': '推荐微博', 'zh-hk': '建議微博', 'zh-tw': '建議微博', 'en': 'Recommended Weibo' },
   'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容', 'zh-hk': '混入微博列表的其它內容', 'zh-tw': '混入微博列表的其它內容', 'en': 'Other contents in Weibo list' },
   'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-hk': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Forward of deleted Weibo' },
@@ -1860,7 +1861,7 @@ var getWeiboContent = (function () {
     },
     'topic': function (node) {
       if (node.tagName.toLowerCase() === 'a' && node.classList.contains('a_topic'))
-        return node.textContent;
+        return node.textContent.trim();
     },
     'link': function (node) {
       if (node.tagName.toLowerCase() === 'a' && node.getAttribute('mt') === 'url')
@@ -2354,6 +2355,18 @@ otherFilterGroup.add({
   },
 });
 
+// 粉丝头条
+otherFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.other.fans_top',
+  'text': '{{fansTopFilterDesc}}',
+  'priority': 1e5 + 1e3, // 优先于白名单
+  'rule': function fansTopFilterRule(feed) {
+    if (!this.conf) return null;
+    return feed.querySelector('[action-type="feed_list_fansTopFeed"]') ? 'hidden' : null;
+  },
+});
+
 // 混入新鲜事流的其他东西
 otherFilterGroup.add({
   'type': 'boolean',
@@ -2552,7 +2565,10 @@ var autoLoad = otherFilterGroup.add({
         if (hour) text = hour + '{{timeTipHour}}' + text;
         tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
         feed.parentNode.insertBefore(tip, feed.nextSibling);
-        feed.classList.add('WB_feed_new');
+        setTimeout(function () {
+          while (feed && !feed.clientHeight) feed = feed.previousSibling;
+          if (feed) feed.classList.add('WB_feed_new');
+        });
       };
     }());
 
@@ -3593,7 +3609,8 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   [yawf-display$="-hidden"] { display: none !important; }
   [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; border-bottom: #e6e6e6 1px solid; } 
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(.WB_feed_new)::before { border-bottom: #e6e6e6 1px solid; } 
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { height: 45px; overflow: hidden; cursor: pointer; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail,
