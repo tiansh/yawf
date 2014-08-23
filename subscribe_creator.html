@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-  <title>YAWF 订阅创建器</title>
+  <title>YAWF 设置共享创建器</title>
   <meta name="keywords" content="Weibo, Sina Weibo, 微博, 新浪微博, 过滤, Filter, YAWF, Yet Another Weibo Filter, 看真正想看的微博" />
   <meta name="description" content="根据 Yet Another Weibo Filter 脚本的设置创建扩展脚本以方便共享给他人使用。" />
   <link rel="canonical" href="https://tiansh.github.io/yawf/subscribe_creator.html">
@@ -91,11 +91,12 @@
               script = script.concat(["    unsafeWindow.$_YAWF_$.push(['extent', '" + name + "', '" + type + "', " + JSON.stringify(rules[key]) + "]);"]);
           });
         });
+        if (rules['weibo.tool.userstyle'])
+          script = script.concat(["    GM_addStyle('" + rules['weibo.tool.userstyle'].replace(/[\s\r\n]/g, ' ') + "');"]);
         script = script.concat([
           "  },",
           "}]);",
         ]);
-        if (rules['weibo.tool.userstyle']) script = script.concat(["GM_addStyle('" + rules['weibo.tool.userstyle'].replace(/[\s\r\n]/g, ' ') + "');"]);
         startDownload(script.join('\n'), key + '.user.js');
       });
     });
@@ -116,16 +117,16 @@
         <li><span class="meta">@description</span><span class="input"><input type="text" required name="description" placeholder="对脚本的一句话简介（简介可以随意使用汉字）" /></span></li>
         <li><span class="meta">@version</span><span class="input"><input type="text" required name="version" placeholder="版本号" /></span></li>
         <li><span class="meta">@copyright</span><span class="input"><input type="text" name="copyright" placeholder="该订阅文件的版权信息（选填）" /></span></li>
-        <li><span class="meta">设置文件</span><span class="input"><input required name="file" placeholder="YAWF 导出的设置文件" type="file" /></span></li>
+        <li><span class="meta">YAWF设置文件</span><span class="input"><input required name="file" placeholder="YAWF 导出的设置文件" type="file" /></span></li>
         <li><span class="meta">设置项(zh-cn)</span><span class="input"><input type="text" required name="zh-cn" placeholder="显示在 YAWF 设置中的设置项文本 (zh-cn)" /></span></li>
         <li><span class="meta">设置项(zh-hk)</span><span class="input"><input type="text" name="zh-hk" placeholder="显示在 YAWF 设置中的设置项文本 (zh-hk)" /></span></li>
         <li><span class="meta">设置项(zh-tw)</span><span class="input"><input type="text" name="zh-tw" placeholder="显示在 YAWF 设置中的设置项文本 (zh-tw)" /></span></li>
         <li><span class="meta">设置项(en)</span><span class="input"><input type="text" name="en" placeholder="显示在 YAWF 设置中的设置项文本 (en)" /></span></li>
       </ul>
-      <div><button id="gen" type="submit">生成配置文件</button></div>
+      <div><button id="gen" type="submit">生成扩展脚本</button></div>
     </form>
   </div>
-  <h2>发布脚本</h2>
+  <h2>共享和安装配置</h2>
   <div class="in">
     <p>如果您希望和更多人共享您的设置，您可以将它们发布到网上供他人下载。如果可以仅修改内容而不修改 URL ，那么您修改的内容还可以通过自动更新的方式推送给他人，实现订阅的效果。下面以 Gist 为例介绍如何共享和安装。如果您熟悉用户脚本的共享方式，您可以忽略本段内容。</p>
     <h3>Gist</h3>
