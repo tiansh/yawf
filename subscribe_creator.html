@@ -11,8 +11,13 @@
   <style>
     .script ul { font-family: monospace; }
     .script ul, li { list-style: none; margin: 0; padding: 0; line-height: 2em; }
-    .script input { float: right; padding: calc(0.5em - 2px) 4px; width: calc(100% - 16em); }
-    #gen { float: right; font-size: 120%; padding: 0.5em 2em; background: #ffa00a; color: #fff; text-decoration: none; border: 0 none; cursor: pointer; }
+    .script li { clear: both; height: 2em; display: block; }
+    .script li span { display: block; float: left; }
+    .script li span.meta { width: 16em; }
+    .script li span.input { width: calc(100% - 16em); }
+    .script input { float: right; padding: calc(0.5em - 2px) 4px; width: 100%; }
+    .buttons { height: 3em; }
+    #gen { float: right; font-size: 120%; line-height: 2.5em; padding: 0 2em; background: #ffa00a; color: #fff; text-decoration: none; border: 0 none; cursor: pointer; }
     #gen:hover { background: #ffb137; }
   </style>
   <script>
@@ -31,6 +36,7 @@
 
     window.addEventListener('load', function () {
       var file = document.querySelector('input[type="file"]');
+      var items = document.querySelector('#items');
       var rules = null;
       var updateFile = function () {
         var reader = new FileReader();
@@ -43,7 +49,7 @@
             file.value = '';
           }
         });
-        reader.readAsText(file.files[0]);
+        if (file.files[0]) reader.readAsText(file.files[0]);
       };
       file.addEventListener('change', updateFile); updateFile();
       items.addEventListener('submit', function (e) {
@@ -123,7 +129,7 @@
         <li><span class="meta">设置项(zh-tw)</span><span class="input"><input type="text" name="zh-tw" placeholder="显示在 YAWF 设置中的设置项文本 (zh-tw)" /></span></li>
         <li><span class="meta">设置项(en)</span><span class="input"><input type="text" name="en" placeholder="显示在 YAWF 设置中的设置项文本 (en)" /></span></li>
       </ul>
-      <div><button id="gen" type="submit">生成扩展脚本</button></div>
+      <div class="buttons"><button id="gen" type="submit">生成扩展脚本</button></div>
     </form>
   </div>
   <h2>共享和安装配置</h2>
