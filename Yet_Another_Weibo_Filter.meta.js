@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.2.58
+// @version     1.2.59
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/

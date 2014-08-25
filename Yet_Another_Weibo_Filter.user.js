@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.2.58
+// @version     1.2.59
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -46,7 +46,6 @@ var isGecko = navigator.userAgent.indexOf('Gecko') !== -1 &&
   navigator.userAgent.indexOf('like Gecko') === -1;
 
 // 检查是否是从原站安装的脚本
-// 基于安全考虑，不在从 GF 安装的脚本启用扩展功能
 var isOriginalScript = (function () {
   try {
     var meta = GM_info.scriptMetaStr;
@@ -398,11 +397,12 @@ var text = {
     'zh-tw': '注意，擴充以用戶腳本的形式安裝，您只應當從您信任的來源安裝用戶腳本，惡意的腳本可能會危害您的隱私，並在您不知情的情況下以您的名義執行。如果您希望撰寫 YAWF 的擴展，請參考常見問題（簡體）。',
     'en': 'Notice: Extension was installed as userscript. You should only install scripts trusted. Malicious scripts can violate your privacy and act on your behalf without your knowledge. Please refer to the FQA Page, if you want to write your extension for YAWF.',
   },
-  'sandboxSupportWarning': {
-    'zh-cn': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱机制的脚本宿主。\\n出于安全考虑，建议禁用 YAWF 的扩展功能。\\n如果您执意要在没有沙箱的环境下使用，您可以在设置中禁用本警告。',
-    'zh-hk': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱機制的腳本裝載。\\n出於安全考慮，請禁用 YAWF 的擴充功能。\\n如果您執意要在沒有沙箱的環境下使用，您可以在設置中禁用本警告。',
-    'zh-tw': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱機制的腳本裝載。\\n出於安全考慮，請禁用 YAWF 的擴充功能。\\n如果您執意要在沒有沙箱的環境下使用，您可以在設置中禁用本警告。',
-    'en': 'You are running Greasemonkey 1.x or other script host which do not support sandbox. \\nDisabling Extension for YAWF is suggested due to security reason. \\nYou may also disalbe this warning if you still want to use this extension for YAWF. ',
+  'sandboxSupportWarningMsgTitle': { 'zh-cn': 'YAWF 扩展', 'zh-hk': 'YAWF 擴充', 'zh-tw': 'YAWF 擴充', 'en': 'YAWF Extension' },
+  'sandboxSupportWarningMsg': {
+    'zh-cn': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱机制的脚本宿主。出于安全考虑，建议禁用 YAWF 的扩展功能。如果您执意要在没有沙箱的环境下使用，您可以在设置中禁用本警告。',
+    'zh-hk': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱機制的腳本裝載。出於安全考慮，請禁用 YAWF 的擴充功能。如果您執意要在沒有沙箱的環境下使用，您可以在設置中禁用本警告。',
+    'zh-tw': '您正在使用 Greasemonkey 1.x 或其他不支持沙箱機制的腳本裝載。出於安全考慮，請禁用 YAWF 的擴充功能。如果您執意要在沒有沙箱的環境下使用，您可以在設置中禁用本警告。',
+    'en': 'You are running Greasemonkey 1.x or other script host which do not support sandbox. Disabling Extension for YAWF is suggested due to security reason. You may also disalbe this warning if you still want to use this extension for YAWF. ',
   },
   'sandboxSupportWarningTitle': { 'zh-cn': '禁用警告', 'zh-hk': '禁用警告', 'zh-tw': '禁用警告', 'en': 'Disable Warning' },
   'sandboxSupportWarningDisable': { 'zh-cn': '禁用对没有完整沙箱机制的警告', 'zh-hk': '禁用對沒有完整沙箱機制的警告', 'zh-tw': '禁用對沒有完整沙箱機制的警告', 'en': 'Disable warning for incomplete sandbox support' },
@@ -577,7 +577,7 @@ var fillStr = function (base, func) {
 };
 
 // 设置项
-var config = function (uid) {
+var config = function (uid, nick) {
   var config = {}, keys = [], onputs = [], storageKey = 'user' + uid + 'config';
   var tonputs = function (key, value, oldValue) {
     onputs.map(function (f) { f(key, value, oldValue); });
@@ -650,7 +650,7 @@ var config = function (uid) {
   var reg = function (key) { keys.push(key); };
   // 初始化
   return {
-    'uid': uid,
+    'uid': uid, 'nick': nick,
     'put': put, 'get': get, 'onput': onput,
     'read': read, 'write': write,
     'import': import_, 'export': export_,
@@ -2403,7 +2403,7 @@ otherFilterGroup.add({
   'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
   'rule': function showMentionMeRule(feed) {
     if (!this.conf) return;
-    if (getFeedMentionList(feed).indexOf(config.uid) !== -1) return 'showme'; else return null;
+    if (getFeedMentionList(feed).indexOf(config.nick) !== -1) return 'showme'; else return null;
   },
 });
 
@@ -3032,11 +3032,17 @@ var mergeLeftRight = toolFilterGroup.add({
     var positionLeft = function () {
       var ref = document.querySelector('#pl_rightmod_myinfo')
       var leftn = document.querySelector('.W_main_l');
-      if (leftn) { left = leftn; return; }
+      if (leftn) { left = leftn; }
       if (ref) {
-        ref.parentNode.insertBefore(left, ref.nextSibling);
-        main.setAttribute('yawf-merge-left', side);
-      } else left0.parentNode.insertBefore(left, left0);
+        if (ref.nextSibling !== left) {
+          ref.parentNode.insertBefore(left, ref.nextSibling);
+          main.setAttribute('yawf-merge-left', side);
+        }
+      } else {
+        if (left0.previousSibling !== left) {
+          left0.parentNode.insertBefore(left, left0);
+        }
+      }
     };
     positionLeft();
     newNode.add(function () { positionLeft(); })
@@ -3099,11 +3105,11 @@ toolFilterGroup.add({
     // 最后自定义的浮动
     css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px; overflow: hidden; height: auto; }');
     css.add('body[yawf-merge-left] .W_main [yawf-fixed] { width: 229px; }');
-    var container = document.querySelector('.W_main');
-    var reference = merged && document.querySelector('.W_main_r') || left;
-    var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
     var floating = false;
     var updatePosition = function () {
+      var container = document.querySelector('.W_main');
+      var reference = merged && document.querySelector('.W_main_r') || left;
+      var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
       var refc = reference.getClientRects();
       if (!refc || !refc[0]) return;
       var pos = refc[0];
@@ -3580,7 +3586,7 @@ scriptFilterGroup.add({
 });
 
 // 扩展
-if (isOriginalScript && extent) {
+if (extent) {
   scriptFilterGroup.add({
     'type': 'subtitle',
     'text': '{{scriptExtensionTitle}}',
@@ -3613,7 +3619,7 @@ scriptFilterGroup.add({
 
 // 可扩展区域
 var extension = (function () {
-  if (!extent || !isOriginalScript || !GM_getValue('extent')) return null;
+  if (!extent || !GM_getValue('extent')) return null;
 
   var loaded = false;
 
@@ -3640,6 +3646,17 @@ var extension = (function () {
     var key = 'weibo.filters.' + name + '.' + type;
     extent.exports(key, words);
   };
+  // 在过滤每条微博之前/后调用的回调函数
+  yawf.before = function (callback) { eachWeibo.before(callback); };
+  yawf.after = function (callback) { eachWeibo.after(callback); };
+  // 对话框
+  yawf.alert = function (id, details) { Alert(id, details); };
+  yawf.confirm = function (id, details) { Confirm(id, details); };
+  yawf.dialog = function (id, details) {
+    var dialog = Dialog(id, details.title, details.fill);
+    dialog.show();
+    details.shown(dialog);
+  };
 
   // 向 unsafeWindow 暴露接口
   var push = withTry(function (args) {
@@ -3654,6 +3671,7 @@ var extension = (function () {
     Array.apply(Array, unsafeWindow.$_YAWF_$).forEach(push);
   }
   unsafeWindow.$_YAWF_$ = { 'push': push };
+
   var init = function () {
     // 检查是否沙箱机制可用，如果没有沙箱提示用户不安全
     // （有沙箱的话，从网页中直接调用这些函数会抛出异常提示没有权限。）
@@ -3661,16 +3679,19 @@ var extension = (function () {
       try {
         /* 可选择禁用沙箱机制的警告 */
         $_YAWF_$.push(['filter', {
-          'type': 'subtitle',
-          'text': '{{sandboxSupportWarningTitle}}',
-        }]);
-        $_YAWF_$.push(['filter', {
           'type': 'boolean',
           'text': '{{sandboxSupportWarningDisable}}',
           /* 这里不能使用 GM_getValue / GM_setValue ，使用 localStorage 代替 */
           'getconf': function () { return localStorage.YAWF_extension_warning_disable === 'true'; },
           'putconf': function (value) { localStorage.YAWF_extension_warning_disable = String(!!value); return !!value; },
-          'init': function () { if (this.conf) return; alert('{{sandboxSupportWarning}}'); }
+          'init': function () {
+            if (this.conf) return;
+            /* 虽然这里也能用 STK.ui.alert ，不过既然主程序已经躲开他了，就不用他了吧 */
+            $_YAWF_$.push(['alert', 'yawf-sandbox-warning', {
+              'title': '{{sandboxSupportWarningMsgTitle}}',
+              'text': '{{sandboxSupportWarningMsg}}',
+            }]);
+          }
         }]);
       } catch (e) { }
     } + '());');
@@ -3687,6 +3708,7 @@ var validPage = function () {
   if (self !== top) return false;
   if (!unsafeWindow.$CONFIG) return false;
   if (!unsafeWindow.$CONFIG.uid) return false;
+  if (!unsafeWindow.$CONFIG.nick) return false;
   if (!unsafeWindow.$CONFIG.lang) return false;
   return true;
 };
@@ -3697,7 +3719,7 @@ var dcl = function () {
   // 初始化用户语言
   i18n(unsafeWindow.$CONFIG.lang);
   // 加载用户配置
-  config = config(unsafeWindow.$CONFIG.uid);
+  config = config(unsafeWindow.$CONFIG.uid, unsafeWindow.$CONFIG.nick);
   // 初始化文本和网页数据（基于用户选择的语言）
   Object.keys(text).map(function (key) { i18n(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = fillStr(html[key]); });
