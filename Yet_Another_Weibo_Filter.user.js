@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.2.59
+// @version     1.2.60
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -583,17 +583,24 @@ var config = function (uid, nick) {
     onputs.map(function (f) { f(key, value, oldValue); });
   };
   // 读取到内存
+  var readp = false;
   var read = function () {
+    if (readp) return;
+    call(function () { readp = false; });
+    readp = true;
+    debug('read GM value');
     try { config = JSON.parse(GM_getValue(storageKey, '{}')); }
     catch (e) { config = {}; }
   };
   // 从内存写出
   var write = function () {
+    debug('write GM value');
     GM_setValue(storageKey, JSON.stringify(config));
   };
   // 写入到内存
   var put = function (key, value) {
     // if (keys.indexOf(key) === -1) return;
+    if (config[key] === value) return value;
     tonputs(key, value, config[key]);
     config[key] = value;
     write();
