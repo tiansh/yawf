@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.2.60
+// @version     1.2.61
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -578,10 +578,15 @@ var fillStr = function (base, func) {
 
 // 设置项
 var config = function (uid, nick) {
-  var config = {}, keys = [], onputs = [], storageKey = 'user' + uid + 'config';
+  var config = {}, config_bak = null;
+  var keys = [], onputs = [];
+  var storageKey = 'user' + uid + 'config';
   var tonputs = function (key, value, oldValue) {
     onputs.map(function (f) { f(key, value, oldValue); });
   };
+  var updateBak = function () {
+    config_bak = JSON.parse(JSON.stringify(config));
+  }
   // 读取到内存
   var readp = false;
   var read = function () {
@@ -591,6 +596,7 @@ var config = function (uid, nick) {
     debug('read GM value');
     try { config = JSON.parse(GM_getValue(storageKey, '{}')); }
     catch (e) { config = {}; }
+    updateBak();
   };
   // 从内存写出
   var write = function () {
@@ -600,9 +606,10 @@ var config = function (uid, nick) {
   // 写入到内存
   var put = function (key, value) {
     // if (keys.indexOf(key) === -1) return;
-    if (config[key] === value) return value;
+    if (JSON.stringify(config_bak[key]) === JSON.stringify(value)) return value;
     tonputs(key, value, config[key]);
     config[key] = value;
+    updateBak();
     write();
     return value;
   };
@@ -650,6 +657,7 @@ var config = function (uid, nick) {
   // 清空设置
   var clear = function () {
     config = {};
+    updateBak();
     tonputs();
     write();
   };
