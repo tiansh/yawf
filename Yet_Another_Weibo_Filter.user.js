@@ -5,7 +5,7 @@
 // @include     http://www.weibo.com/*
 // @include     http://weibo.com/*
 // @exclude     http://weibo.com/a/bind/test
-// @version     1.2.61
+// @version     1.2.62
 // @updateURL   https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL  https://tiansh.github.io/yawf/
@@ -1634,8 +1634,9 @@ var typedHtml = (function () {
 
   // 字符串数组设置项模板
   var items = function (base, genli) {
-    var item = this;
-    var dom = cewih('div', fillStr(base, item)).firstChild;
+    var item = this, etext = {};
+    if (item.i18n && item.i18n.local) etext = item.i18n.local;
+    var dom = cewih('div', fillStr(base, item, etext)).firstChild;
     var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
     var shown = {};
     // 将某个已经有的字符串显示到末尾
@@ -2916,6 +2917,7 @@ var layouts = (function () {
   item('RecomFeed', '[node-type="feed_list_recommend"] { display: none !important; }');
   item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('TopicCard', '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
+  item('LocationCard', '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
   layoutFilterGroup.add({
     'type': 'boolean',
     'key': 'weibo.layoutHideWeiboTopComment',
@@ -2923,7 +2925,7 @@ var layouts = (function () {
     'text': '{{layoutHideWeiboTopComment}}',
     'ainit': function () {
       newNode.add(function () {
-        var split = document.querySelector('.comment_lists[node-type="feed_list_commentList"] .between_line_v2 a[action-data*="filter=hot"]');
+        var split = document.querySelector('.comment_lists .between_line_v2 a[action-data*="filter=hot"]');
         if (!split) return;
         while (!split.classList.contains('between_line_v2')) split = split.parentNode;
         while (split.parentNode) split.parentNode.removeChild(split.parentNode.firstChild);
@@ -2931,7 +2933,6 @@ var layouts = (function () {
     },
   });
   item('SonTitle', '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
-  item('LocationCard', '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
   item('Source', '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2 { display: none !important; }');
   item('Report', '.WB_time~.hover { display: none !important; }');
   item('Like', 'a[action-type="feed_list_like"], a[action-type="feed_list_like"]+.S_txt3 { display: none !important; }');
@@ -3683,9 +3684,11 @@ var extension = (function () {
     });
   }.bind(window));
   if (unsafeWindow.$_YAWF_$) {
+    debug('before loaded: %o', unsafeWindow.$_YAWF_$);
     Array.apply(Array, unsafeWindow.$_YAWF_$).forEach(push);
   }
   unsafeWindow.$_YAWF_$ = { 'push': push };
+  debug('YWAF loaded');
 
   var init = function () {
     // 检查是否沙箱机制可用，如果没有沙箱提示用户不安全
