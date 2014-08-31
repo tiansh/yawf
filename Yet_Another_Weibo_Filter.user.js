@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.63
+// @version           1.2.64
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3243,13 +3243,20 @@ toolFilterGroup.add({
   'text': '{{viewOriginalDesc}}',
   'ainit': function () {
     var addOriLink = function () {
-      var a = document.querySelector('a.show_big[action-data]:not([yawf-viewori])');
+      var a = document.querySelector('a.show_big[action-data]:not([yawf-viewori])'), l;
       if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
-      var arg = a.getAttribute('action-data').match(/pid=(\w+)&mid=(\d+)&uid=(\d+)/);
-      if (!arg) return;
-      var vol = cewih('div', fillStr(html.viewOriginalLink)), l = vol.firstChild;
-      l.href = fillStr(url.view_ori, { 'uid': arg[3], 'mid': arg[2], 'pid': arg[1] });
-      while (vol.firstChild) a.parentNode.insertBefore(vol.firstChild, a);
+      var updateLink = function () {
+        var arg = a.getAttribute('action-data').match(/pid=(\w+)&mid=(\d+)&uid=(\d+)/);
+        if (!arg) return;
+        if (!l) {
+          var vol = cewih('div', fillStr(html.viewOriginalLink));
+          l = vol.firstChild;
+          while (vol.firstChild) a.parentNode.insertBefore(vol.firstChild, a);
+        }
+        l.href = fillStr(url.view_ori, { 'uid': arg[3], 'mid': arg[2], 'pid': arg[1] });
+      };
+      updateLink();
+      (new MutationObserver(updateLink)).observe(a, { 'attributes': true });
     };
     newNode.add(addOriLink);
   },
