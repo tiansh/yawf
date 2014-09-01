@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.65
+// @version           1.2.66
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2123,7 +2123,7 @@ var validUserElement = function (element, callback) {
     if (function () {
       // 排除话题页面
       a = document.querySelector('.pf_name .name');
-      if (!a || !a.textContent || a.indexOf('#') === 0) return false;
+      if (!a || !a.textContent || a.textContent.indexOf('#') === 0) return false;
       // 头像和链接
       var pf_head_pic = document.querySelector('.B_profile .pf_head_pic img');
       var pf_lin = document.querySelector('.B_profile .pf_lin'), a;
@@ -3665,6 +3665,8 @@ scriptFilterGroup.add({
     var isEn = i18n.lang === 'en';
     css.add(fillStr(funcStr(function () { /*!CSS
       .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
+      #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
+      #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
     */ }), {
       'layoutOptionWidth': isEn ? '320px' : '160px',
     }));
