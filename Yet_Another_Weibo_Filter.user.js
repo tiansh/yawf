@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.66
+// @version           1.2.67
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1045,12 +1045,14 @@ var filters = (function () {
   var dialogTabs = function (list, inner, page) {
     var alist = Array.apply(Array, inner.querySelectorAll('.yawf-config-header a'));
     var llist = Array.apply(Array, inner.querySelectorAll('.yawf-config-body .yawf-config-layer'));
+    var body = inner.querySelector('.yawf-config-body');
     var choseLList = function (i) {
       llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
       alist.forEach(function (a) { a.classList.remove('current'); a.classList.remove('S_bg5'); a.classList.add('S_bg1'); });
       llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
       alist[i].classList.add('current'); alist[i].classList.remove('S_bg1'); alist[i].classList.add('S_bg5');
       lastTab = i;
+      call(function () { body.scrollTop = 0; });
     };
     list.map(function (filter, i) {
       var a = alist[i];
@@ -3088,6 +3090,7 @@ var mergeLeftRight = toolFilterGroup.add({
       } else {
         if (left0.previousSibling !== left) {
           left0.parentNode.insertBefore(left, left0);
+          main.removeAttribute('yawf-merge-left');
         }
       }
     };
@@ -3665,11 +3668,13 @@ scriptFilterGroup.add({
     var isEn = i18n.lang === 'en';
     css.add(fillStr(funcStr(function () { /*!CSS
       .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
-      #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
-      #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
     */ }), {
       'layoutOptionWidth': isEn ? '320px' : '160px',
     }));
+    if (isEn) css.add(funcStr(function () { /*!CSS
+      #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
+      #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
+    */ }));
   },
 });
 
@@ -3884,6 +3889,8 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   #yawf-drop-area-content { height: 230px; width: 230px; position: relative; z-index: 10002; opacity: 0; }
   #yawf-fast-filter-chose, #yawf-fast-filter-list { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
+  // 其他页面优化设置
+  #pl_rightmod_myinfo:empty { height: 136px; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
