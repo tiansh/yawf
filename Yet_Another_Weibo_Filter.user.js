@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.64
+// @version           1.2.65
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1187,6 +1187,8 @@ var dropdown = (function () {
       for (; checker && checker !== document; checker = checker.parentNode) {
         if (!checker.classList || !checker.classList.contains || !checker.tagName) continue;
         if (checker.classList.contains('WB_feed')) return true;
+        if (checker.classList.contains('pf_head_pic')) return true;
+        if (checker.classList.contains('pf_lin')) return true;
         if (checker.classList.contains('W_miniblog')) return false;
         if (checker.tagName.toLowerCase() === 'body') return true;
         if (checker.classList.contains('right_content') && checker.classList.contains('hot_topic')) return true;
@@ -2116,6 +2118,29 @@ var validUserElement = function (element, callback) {
       return account.id(a.getAttribute('usercard').slice(3), callback, callback);
     }
   } catch (e) { }
+  // 用户页面的头像和链接
+  try {
+    if (function () {
+      // 排除话题页面
+      a = document.querySelector('.pf_name .name');
+      if (!a || !a.textContent || a.indexOf('#') === 0) return false;
+      // 头像和链接
+      var pf_head_pic = document.querySelector('.B_profile .pf_head_pic img');
+      var pf_lin = document.querySelector('.B_profile .pf_lin'), a;
+      // 看元素是图片还是链接
+      if (!element.tagName || !element.tagName.toLowerCase) return false;
+      var tag = element.tagName.toLowerCase();
+      if (tag === 'img' || tag === 'a') a = element; else a = element.querySelector('img, a');
+      tag = a.tagName.toLowerCase();
+      // 比较图片或链接是否相同
+      if (tag === 'img' && a.src === pf_head_pic.src) return true;
+      if (tag === 'a' && a.classList.contains('pf_lin')) return true;
+      return false;
+    }()) {
+      a = document.querySelector('.pf_name .name');
+      return account.name(a.textContent, callback, callback);
+    }
+  } catch (e) { }
   // 其他
   try {
     if (element.getAttribute('title') && element.getAttribute('uid')) a = element;
@@ -2190,7 +2215,7 @@ var originalFilterGroup = allInOneFilters({
     },
     'add': function (val) { return val.id; },
   },
-}, accountFilterGroup);
+});
 
 // 找到在一条微博里面被提到的人的昵称
 var getFeedMentionList = function (feed) {
@@ -2222,7 +2247,7 @@ var mentionFilterGroup = allInOneFilters({
     },
     'add': function (val) { return val.name; },
   },
-}, accountFilterGroup);
+});
 
 var getFeedTopicList = function (feed) {
   return weiboContentSelector(feed, function (m) {
