@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.67
+// @version           1.2.68
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -73,11 +73,17 @@ var text = {
   'closeButtonTitle': { 'zh-cn': '关闭', 'zh-hk': '關閉', 'zh-tw': '關閉', 'en': 'Close' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
-  'foldedWeiboText': {
+  'foldedWeiboTextAuthor': {
     'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博被折叠，请点击查看"',
     'zh-hk': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"',
     'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"',
     'en': '"A Weibo from @" attr(yawf-author) " was folded, click to view."'
+  },
+  'foldedWeiboText': {
+    'zh-cn': '"一条微博被折叠，请点击查看"',
+    'zh-hk': '"一條微博被折疊，請點擊查看"',
+    'zh-tw': '"一條微博被折疊，請點擊查看"',
+    'en': '"A Weibo was folded, click to view."'
   },
   'disabledKey': { 'zh-cn': '(已禁用)', 'zh-hk': '(已停用)', 'zh-tw': '(已停用)', 'en': '(Disabled)' },
   // 设置框
@@ -334,6 +340,7 @@ var text = {
   'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view', },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
+  'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
@@ -1335,7 +1342,7 @@ var fixFoldWeibo = (function () {
       feed.setAttribute('yawf-display', display);
       feed.removeEventListener('click', showFeed);
     };
-    var author = feed.querySelector('.WB_name[usercard]').getAttribute('title');
+    var author = feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]').getAttribute('title');
     feed.setAttribute('yawf-author', author);
     feed.addEventListener('click', showFeed);
   });
@@ -1348,6 +1355,7 @@ var fixFoldWeibo = (function () {
     });
   };
   fix.init = function () {
+    css.add(fillStr('[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"][yawf-author]::before { content: {{foldedWeiboTextAuthor}}; }'));
     css.add(fillStr('[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { content: {{foldedWeiboText}}; }'));
   };
   return fix;
@@ -2089,7 +2097,7 @@ var contentTypes = (function (types) {
 
 // 从一条微博中找到他的作者
 var getFeedAuthorId = function (feed) {
-  var author = feed.querySelector('.WB_name[usercard]');
+  var author = feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]');
   if (!author) return null;
   return author.getAttribute('usercard').split('=')[1];
 };
@@ -3348,6 +3356,16 @@ var coloredConfigItem = function (details) {
   };
 };
 
+// 鼠标滑过折叠微博时自动展示内容
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.hover_show_fold',
+  'text': '{{hoverShowFold}}',
+  'ainit': function () {
+    css.add('[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { max-height: 1000px; }');
+  },
+});
+
 // 高亮显示白名单微博
 toolFilterGroup.add({
   'type': 'boolean',
@@ -3856,12 +3874,14 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   [yawf-display$="-hidden"] { display: none !important; }
   [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; width: 100%; height: 24px; line-height: 24px; padding: 0 2em 20px; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(.WB_feed_new)::before { border-bottom: #e6e6e6 1px solid; } 
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { height: 45px; overflow: hidden; cursor: pointer; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; height: 1em; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { opacity: 1; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail,
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos { display: none !important; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover) .WB_feed_datail { padding: 0; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover) .type_spe_pos,
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover)>*:first-child:not(.WB_screen) { display: none !important; }
   // 子微博
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-hidden"]+.WB_feed_type[yawf-display$="-son"],
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]+.WB_feed_type[yawf-display$="-son"] { display: none !important; }
@@ -3890,7 +3910,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   #yawf-fast-filter-chose, #yawf-fast-filter-list { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
   // 其他页面优化设置
-  #pl_rightmod_myinfo:empty { height: 136px; }
+  #pl_rightmod_myinfo:empty { height: 156px; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
