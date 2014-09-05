@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.69
+// @version           1.2.70
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2676,6 +2676,10 @@ var autoLoad = otherFilterGroup.add({
   'key': 'weibo.other.auto_load_new_weibo',
   'text': '{{autoLoadNewWeibo}}',
   'ainit': function () {
+    // 只在第一页工作
+    var page = location.search.match(/[?&]page=(\d+)/);
+    if (page && page[1] > 1) return;
+
     var that = this, loading = false;
 
     // 展开新微博后添加和旧微博的分割线
@@ -2700,7 +2704,7 @@ var autoLoad = otherFilterGroup.add({
 
     // 更新未读提示中的数字
     var updateUnreadCount = function () {
-      var count = document.querySelectorAll('.WB_feed>.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]:not([yawf-display$="-son"]').length;
+      var count = document.querySelectorAll('.WB_feed>.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]):not([yawf-display$="-son"])').length;
       var feedList = document.querySelector('.WB_feed');
       var newFeed = feedList.querySelector('.WB_feed a.notes[yawf-id="feed_list_newBar"]');
       // 先移除旧的，再放上新的
@@ -2724,21 +2728,20 @@ var autoLoad = otherFilterGroup.add({
     // 隐藏掉微博原来的新消息提示框
     css.add(funcStr(function () { /*
       .WB_feed .WB_feed_type[yawf-unread="hidden"] { display: none !important; }
-      .WB_feed[pagenum="1"] fieldset[node-type="feed_list_timeTip"] { display: none !important; }
-      .WB_feed[pagenum="1"] a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none !important; }
-      .WB_feed[pagenum="1"] div.W_loading[requesttype="newFeed"] { display: none !important; }
+      .WB_feed fieldset[node-type="feed_list_timeTip"] { display: none !important; }
+      .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none !important; }
+      .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
     */ }));
 
     // 自动点开有新微博的提示
     newNode.add(function () {
-      var newFeed = document.querySelector('.WB_feed[pagenum="1"] a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]');
+      var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]');
       if (!newFeed) return;
       newFeed.click(); loading = true;
     });
 
     // 看见有新微博了，看看是不是新加载出来的
     eachWeibo.before(function (feed) {
-      if (!document.querySelector('.WB_feed[pagenum="1"]')) return;
       var shown = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~*'));
       if (shown.length < 8 || shown.indexOf(feed) !== -1 || loading === false) feed.setAttribute('yawf-unread', 'show');
       else feed.setAttribute('yawf-unread', 'hidden');
