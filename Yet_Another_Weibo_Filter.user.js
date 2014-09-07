@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.71
+// @version           1.2.72
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -284,6 +284,7 @@ var text = {
   'layoutHideWeiboRecomFeed': { 'zh-cn': '精彩微博推荐', 'zh-hk': '精彩微博推薦', 'zh-tw': '精彩微博推薦', 'en': '精彩微博推荐 (Weibo you may interested in)' },
   'layoutHideWeiboTopicCard': { 'zh-cn': '话题卡片', 'zh-hk': '話題卡片', 'zh-tw': '話題卡片', 'en': 'Topic Cards' },
   'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for Comment' },
+  'layoutHideWeiboLastPic': { 'zh-cn': '图片列表封底', 'zh-hk': '圖片清單封底', 'zh-tw': '圖片清單封底', 'en': 'Back cover of picture list' },
   'layoutHideWeiboTopComment': { 'zh-cn': '热门评论', 'zh-hk': '热门评论', 'zh-tw': '热门评论'/* as is */, 'en': 'Top comments' },
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
   'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
@@ -2973,8 +2974,26 @@ var layouts = (function () {
   item('LocationCard', '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
   layoutFilterGroup.add({
     'type': 'boolean',
+    'key': 'weibo.layoutHideWeiboLastPic',
+    'text': '{{layoutHideWeiboLastPic}}',
+    'ainit': function () {
+      newNode.add(function () {
+        var last;
+        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
+        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
+        if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
+        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
+        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
+        if (last) last.removeAttribute('yawf-piclast');
+        var close = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view .artwork_box .W_close');
+        if (close) close.click();
+      });
+      css.add('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t5/style/images/common/small.cur"), auto !important; }')
+    },
+  });
+  layoutFilterGroup.add({
+    'type': 'boolean',
     'key': 'weibo.layoutHideWeiboTopComment',
-    'default': false,
     'text': '{{layoutHideWeiboTopComment}}',
     'ainit': function () {
       newNode.add(function () {
