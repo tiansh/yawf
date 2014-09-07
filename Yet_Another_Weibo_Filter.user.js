@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name              Yet Another Weibo Filter
-// @name:zh           看真正想看的微博 (YAWF)
+// @name:zh           Yet Another Weibo Filter 看真正想看的微博
 // @name:en           Yet Another Weibo Filter
 // @namespace         https://github.com/tiansh
 // @description       新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.70
+// @version           1.2.71
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1423,7 +1423,7 @@ var fixSonWeiboDisplay = function (feed) {
   var another = feed.cloneNode(true);
   feed.parentNode.insertBefore(another, feed.nextSibling);
   feed.setAttribute('yawf-withson', 'son');
-  another.setAttribute('yawf-display', 'display-son');
+  another.setAttribute('yawf-display', sonCount ? 'display-son' : 'display-son-hidden');
   fixFoldWeibo(feed);
   fixFoldWeibo(another);
 };
@@ -2676,10 +2676,6 @@ var autoLoad = otherFilterGroup.add({
   'key': 'weibo.other.auto_load_new_weibo',
   'text': '{{autoLoadNewWeibo}}',
   'ainit': function () {
-    // 只在第一页工作
-    var page = location.search.match(/[?&]page=(\d+)/);
-    if (page && page[1] > 1) return;
-
     var that = this, loading = false;
 
     // 展开新微博后添加和旧微博的分割线
@@ -2729,19 +2725,31 @@ var autoLoad = otherFilterGroup.add({
     css.add(funcStr(function () { /*
       .WB_feed .WB_feed_type[yawf-unread="hidden"] { display: none !important; }
       .WB_feed fieldset[node-type="feed_list_timeTip"] { display: none !important; }
-      .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none !important; }
+      .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none; }
       .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
     */ }));
 
+    // 只在第一页工作
+    var validPage = function () {
+      var page = location.search.match(/[?&]page=(\d+)/);
+      return !(page && page[1] > 1);
+    };
+
     // 自动点开有新微博的提示
     newNode.add(function () {
-      var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]');
+      var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]:not([yawf-noted])');
       if (!newFeed) return;
-      newFeed.click(); loading = true;
+      if (validPage()) {
+        newFeed.click(); loading = true;
+      } else {
+        newFeed.style.display = 'block';
+        newFeed.setAttribute('yawf-noted', 'yawf-noted');
+      }
     });
 
     // 看见有新微博了，看看是不是新加载出来的
     eachWeibo.before(function (feed) {
+      if (!validPage()) return;
       var shown = Array.apply(Array, document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~*'));
       if (shown.length < 8 || shown.indexOf(feed) !== -1 || loading === false) feed.setAttribute('yawf-unread', 'show');
       else feed.setAttribute('yawf-unread', 'hidden');
