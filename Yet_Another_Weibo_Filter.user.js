@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.72
+// @version           1.2.73
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -184,7 +184,7 @@ var text = {
   'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容', 'zh-hk': '混入微博列表的其它內容', 'zh-tw': '混入微博列表的其它內容', 'en': 'Other contents in Weibo list' },
   'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-hk': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Forward of deleted Weibo' },
   'voteWeiboFilterDesc': { 'zh-cn': '投票微博', 'zh-hk': '投票微博', 'zh-tw': '投票微博', 'en': 'Voting weibo' },
-  'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝或天猫商品的微博', 'zh-hk': '帶有淘寶或天貓商品的微博', 'zh-tw': '帶有淘寶或天貓商品的微博', 'en': 'Weibo with Taobao / Tmall commodity' },
+  'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity' },
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：|超过{{<number>}}条|时{{<action>}}', 'zh-hk': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'zh-tw': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'en': 'Weibo from same account: |{{<action>}} the part | which exceeds {{<number>}} Weibo' },
@@ -2135,6 +2135,8 @@ var validUserElement = function (element, callback) {
       // 排除话题页面
       a = document.querySelector('.pf_name .name');
       if (!a || !a.textContent || a.textContent.indexOf('#') === 0) return false;
+      // 必须有 oid
+      if (!unsafeWindow.$CONFIG.oid) return false;
       // 头像和链接
       var pf_head_pic = document.querySelector('.B_profile .pf_head_pic img');
       var pf_lin = document.querySelector('.B_profile .pf_lin'), a;
@@ -2148,8 +2150,7 @@ var validUserElement = function (element, callback) {
       if (tag === 'a' && a.classList.contains('pf_lin')) return true;
       return false;
     }()) {
-      a = document.querySelector('.pf_name .name');
-      return account.name(a.textContent, callback, callback);
+      return account.id(unsafeWindow.$CONFIG.oid, callback, callback);
     }
   } catch (e) { }
   // 其他
@@ -2539,7 +2540,7 @@ otherFilterGroup.add({
   'text': '{{taobaoTianmaoWeibo}}',
   'rule': function taobaoTianmaoFilterRule(feed) {
     if (!this.conf) return null;
-    if (feed.querySelector('a .icon_fl_tb, a .icon_fl_tmall'))
+    if (feed.querySelector('a .icon_fl_tb, a .icon_fl_tmall, a .icon_fl_ju'))
       return 'hidden';
     return null;
   },
