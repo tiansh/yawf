@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.74
+// @version           1.2.75
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -309,6 +309,10 @@ var text = {
   'layoutHidePersonAlbum': { 'zh-cn': '图片', 'zh-hk': '相冊', 'zh-tw': '相冊', 'en': 'Album' },
   'layoutHidePersonHotTopic': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'layoutHidePersonHotWeibo': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
+  // 添加好友
+  'layoutHideAttention': { 'zh-cn': '添加关注', 'zh-hk': '添加關注', 'zh-tw': '添加關注', 'en': 'Add Following' },
+  'layoutHideAttentionSuccess': { 'zh-cn': '关注成功对话框', 'zh-hk': '關注成功對話方塊', 'zh-tw': '關注成功對話方塊', 'en': 'Dialog for adding following success' },
+  'layoutHideAttentionRecommend': { 'zh-cn': '公开推荐分组', 'zh-hk': '公开推荐的分组', 'zh-tw': '公开推荐的分组'/* as is */, 'en': '公开推荐的分组 (Public Recommend Group)' },
   // 杂项
   'layoutHideOther': { 'zh-cn': '杂项', 'zh-hk': '雜項', 'zh-tw': '雜項', 'en': 'Others' },
   'layoutHideOtherAds': { 'zh-cn': '广告', 'zh-hk': '廣告', 'zh-tw': '廣告', 'en': 'Advertisement' },
@@ -341,6 +345,7 @@ var text = {
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'expandShortenedLink': { 'zh-cn': '自动展开新浪 t.cn 短网址', 'zh-hk': '自動展開新浪 t.cn 短網址', 'zh-tw': '自動展開新浪 t.cn 短網址', 'en': 'Auto expand Sina shortened URL (t.cn)' },
   'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view', },
+  'UncheckRecomJoin': { 'zh-cn': '取消勾选建议加到该组', 'zh-hk': '取消勾選建议加到该组', 'zh-tw': '取消勾選建议加到该组'/* as is */, 'en': 'Uncheck recommed adding to group' },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
   'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
@@ -2917,16 +2922,17 @@ var layouts = (function () {
     current = name;
   };
 
-  var item = function (name, cssText, defaultValue) {
+  var item = function (name, content, defaultValue) {
+    if (typeof content !== 'function') content = css(content);
     layoutFilterGroup.add({
       'type': 'boolean',
       'key': 'weibo.layoutHide' + current + name,
       'default': defaultValue || false,
       'text': '{{layoutHide' + current + name + '}}',
-      'ainit': css(cssText),
+      'ainit': content
     });
   };
-
+  
   subtitle('Icon');
   item('Level', '.icon_bed[node-type="level"], .W_level_ico { display: none !important; }');
   item('Member', '.W_ico16[class*="ico_member"], .ico_member_dis, [class^="ico_vip"] { display: none !important; }');
@@ -2975,37 +2981,27 @@ var layouts = (function () {
   item('FeedTip', '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('TopicCard', '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
   item('LocationCard', '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
-  layoutFilterGroup.add({
-    'type': 'boolean',
-    'key': 'weibo.layoutHideWeiboLastPic',
-    'text': '{{layoutHideWeiboLastPic}}',
-    'ainit': function () {
-      newNode.add(function () {
-        var last;
-        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
-        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
-        if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
-        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
-        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
-        if (last) last.removeAttribute('yawf-piclast');
-        var close = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view .artwork_box .W_close');
-        if (close) close.click();
-      });
-      css.add('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t5/style/images/common/small.cur"), auto !important; }')
-    },
+  item('LastPic', function () {
+    newNode.add(function () {
+      var last;
+      last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
+      while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
+      if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
+      last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
+      while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
+      if (last) last.removeAttribute('yawf-piclast');
+      var close = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view .artwork_box .W_close');
+      if (close) close.click();
+    });
+    css.add('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t5/style/images/common/small.cur"), auto !important; }')
   });
-  layoutFilterGroup.add({
-    'type': 'boolean',
-    'key': 'weibo.layoutHideWeiboTopComment',
-    'text': '{{layoutHideWeiboTopComment}}',
-    'ainit': function () {
-      newNode.add(function () {
-        var split = document.querySelector('.comment_lists .between_line_v2 a[action-data*="filter=hot"]');
-        if (!split) return;
-        while (!split.classList.contains('between_line_v2')) split = split.parentNode;
-        while (split.parentNode) split.parentNode.removeChild(split.parentNode.firstChild);
-      });
-    },
+  item('TopComment', function () {
+    newNode.add(function () {
+      var split = document.querySelector('.comment_lists .between_line_v2 a[action-data*="filter=hot"]');
+      if (!split) return;
+      while (!split.classList.contains('between_line_v2')) split = split.parentNode;
+      while (split.parentNode) split.parentNode.removeChild(split.parentNode.firstChild);
+    });
   });
   item('SonTitle', '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
   item('Source', '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2 { display: none !important; }');
@@ -3037,6 +3033,23 @@ var layouts = (function () {
   item('Album', '.W_main_2r [id^="Pl_Core_RightPicMulti__"] { display: none !important; }');
   item('HotTopic', '.W_main_2r [id^="Pl_Core_RightTextSingle__"] { display: none !important; }');
   item('HotWeibo', '.W_main_2r [id^="Pl_Core_RightPicText__"] { display: none !important; }');
+
+  subtitle('Attention');
+  item('Success', function () {
+    newNode.add(function () {
+      var close = document.querySelector('.W_close[suda-uatrack="key=group_aftermark&value=close"]:not([yawf-close])');
+      if (!close) return; close.setAttribute('yawf-close', 'yawf-close');
+      close.click();
+    });
+  });
+  item('Recommend', function () {
+    newNode.add(function () {
+      var reca = document.querySelector('.W_layer .W_close~.layer_recommend_attention:not([yawf-close])');
+      if (!reca) return; reca.setAttribute('yawf-close', 'yawf-close');
+      while (!reca.classList.contains('W_close') && reca.previousSibling) reca = reca.previousSibling;
+      reca.click();
+    });
+  });
 
   subtitle('Other');
   item('Ads', '#plc_main [id^="pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
@@ -3365,6 +3378,20 @@ toolFilterGroup.add({
     newNode.add(expandLink);
     eachWeibo.before(expandLink);
     expandLink();
+  },
+});
+
+// 添加好友时自动取消勾选推荐分组
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.uncheck_recom_join',
+  'text': '{{UncheckRecomJoin}}',
+  'ainit': function () {
+    newNode.add(function () {
+      var recom_join = document.querySelector('.follow_success input[recom_join="1"]:not([yawf-select])');
+      if (!recom_join) return; recom_join.setAttribute('yawf-select', 'yawf-select');
+      recom_join.checked = false;
+    });
   },
 });
 
