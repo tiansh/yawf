@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.73
+// @version           1.2.74
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -333,6 +333,8 @@ var text = {
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
+  'publishToPublicDefault': { 'zh-cn': '分组浏览时默认发布公开微博', 'zh-hk': '分組流覽時默認發佈公開微博', 'zh-tw': '分組流覽時默認發佈公開微博', 'en': 'Publish to public by default when browsing by group' },
+  'publishToPublicText': { 'zh-cn': '公开', 'zh-hk': '公開', 'zh-tw': '公開', 'en': 'Public' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
   'personalRedirectWeibo': { 'zh-cn': '访问帐号主页显示微博页面', 'zh-hk': '訪問帳號主頁顯示微博頁面', 'zh-tw': '訪問帳號主頁顯示微博頁面', 'en': 'Show Weibo page instead of personal main page by default' },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
@@ -3269,6 +3271,22 @@ toolFilterGroup.add({
       }
     };
     newNode.add(clearDefTopic);
+  },
+});
+
+// 分组浏览时默认发布方式为公开
+toolFilterGroup.add({
+  'type': 'boolean',
+  'key': 'weibo.tool.public_by_default',
+  'text': '{{publishToPublicDefault}}',
+  'ainit': function () {
+    newNode.add(function () {
+      var publish = document.querySelector('a[action-type="showPublishTo"]:not([yawf-publish])');
+      if (!publish) return; publish.setAttribute('yawf-publish', 'yawf-publish');
+      var text = publish.querySelector('[node-type="publishTotext"]');
+      publish.setAttribute('action-data', 'rank=0');
+      text.textContent = fillStr('{{publishToPublicText}}');
+    });
   },
 });
 
