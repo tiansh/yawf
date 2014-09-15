@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.75
+// @version           1.2.76
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3037,17 +3037,18 @@ var layouts = (function () {
   subtitle('Attention');
   item('Success', function () {
     newNode.add(function () {
-      var close = document.querySelector('.W_close[suda-uatrack="key=group_aftermark&value=close"]:not([yawf-close])');
-      if (!close) return; close.setAttribute('yawf-close', 'yawf-close');
-      close.click();
+      var close = document.querySelector('.W_layer:not([style*="display"]) .W_close[suda-uatrack="key=group_aftermark&value=close"]:not([yawf-close])');
+      if (!close) return; close.click();
+      debug('Attention Success closed');
     });
   });
   item('Recommend', function () {
     newNode.add(function () {
-      var reca = document.querySelector('.W_layer .W_close~.layer_recommend_attention:not([yawf-close])');
-      if (!reca) return; reca.setAttribute('yawf-close', 'yawf-close');
+      var reca = document.querySelector('.W_layer:not([style*="display"]) .W_close~.layer_recommend_attention:not([yawf-close])');
+      if (!reca) return;
       while (!reca.classList.contains('W_close') && reca.previousSibling) reca = reca.previousSibling;
       reca.click();
+      debug('Attention Recommend closed');
     });
   });
 
