@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.77
+// @version           1.2.78
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -528,22 +528,29 @@ var keys = (function () {
     return ret;
   };
   // 注册全局监听按键
-  var triggers = {};
-  var reg = function (key, callback) {
-    triggers[key] = triggers[key] || [];
-    triggers[key].push(withTry(callback));
+  var triggers = [];
+  var reg = function (type, key, callback, ignoreInInput) {
+    triggers.push({
+      'type': type,
+      'key': key,
+      'callback': withTry(callback),
+      'ignoreInInput': !!ignoreInInput
+    });
   };
   // 监听按键
   var baseEvent = function (e) {
     var code = get(e);
-    if (!triggers[code]) return [];
-    e.stopPropagation(); e.preventDefault();
-    return triggers[code];
+    var inInput = /^select|textarea|input$/.test(e.target.nodeName.toLowerCase());
+    var actived = triggers.filter(function (trigger) {
+      if (inInput && trigger.ignoreInInput) return false;
+      return trigger.type === e.type && trigger.key === code;
+    });
+    if (!actived) return;
+    actived.forEach(function (trigger) { trigger.callback(e); });
   };
-  document.addEventListener('keydown', function (e) {
-    baseEvent(e).forEach(function (f) { f(); })
+  ['keydown', 'keypress', 'keyup'].forEach(function (type) {
+    document.documentElement.addEventListener(type, baseEvent);
   });
-  document.addEventListener('keyup', baseEvent);
   return {
     'get': get,
     'name': name,
@@ -2683,6 +2690,37 @@ var autoLoad = otherFilterGroup.add({
   'type': 'boolean',
   'key': 'weibo.other.auto_load_new_weibo',
   'text': '{{autoLoadNewWeibo}}',
+  // 展开新微博后添加和旧微博的分割线
+  'timetip': (function () {
+    var time0 = new Date(), tip = null;
+    return function (feed) {
+      if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
+      var time = time0; time0 = new Date();
+      time = Math.max(Math.round((time0 - time) / 6e4), 2);
+      var min = time % 60, hour = (time - min) / 60;
+      var text = '{{timeTipText}}';
+      if (min) text = min + '{{timeTipMin}}' + text;
+      if (hour) text = hour + '{{timeTipHour}}' + text;
+      tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
+      feed.parentNode.insertBefore(tip, feed.nextSibling);
+      setTimeout(function () {
+        while (feed && !feed.clientHeight) feed = feed.previousSibling;
+        if (feed) feed.classList.add('WB_feed_new');
+      });
+    };
+  }()),
+  // 显示新的微博
+  'showNew': function () {
+    var newFeed = document.querySelector('.WB_feed a.notes[yawf-id="feed_list_newBar"]'); if (!newFeed) return;
+    var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed>.WB_feed_type[yawf-unread="hidden"]'));
+    feeds.forEach(function (feed) {
+      feed.setAttribute('yawf-unread', 'show');
+      feed.classList.remove('WB_feed_new');
+    });
+    this.counter();
+    this.timetip(feeds[feeds.length - 1]);
+  },
+  // 显示未读提示
   'counter': function () {
     var count = document.querySelectorAll('.WB_feed>.WB_feed_type[yawf-unread="hidden"]:not([yawf-display$="-hidden"]):not([yawf-display$="-son"])').length;
     var feedList = document.querySelector('.WB_feed');
@@ -2692,46 +2730,12 @@ var autoLoad = otherFilterGroup.add({
     if (count) {
       newFeed = cewih('div', html.feedListNewBar).firstChild;
       feedList.insertBefore(newFeed, feedList.firstChild);
-      // TODO 处理 R 键，按下该键时同样显示新微博
-      newFeed.addEventListener('click', loadNewFeed);
+      newFeed.addEventListener('click', this.showNew.bind(this));
       newFeed.textContent = fillStr(text.newWeiboNotify, { 'count': count });
     }
   },
   'ainit': function () {
     var that = this, loading = false;
-
-    // 展开新微博后添加和旧微博的分割线
-    var addTimetip = (function () {
-      var time0 = new Date(), tip = null;
-      return function (feed) {
-        if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
-        var time = time0; time0 = new Date();
-        time = Math.max(Math.round((time0 - time) / 6e4), 2);
-        var min = time % 60, hour = (time - min) / 60;
-        var text = '{{timeTipText}}';
-        if (min) text = min + '{{timeTipMin}}' + text;
-        if (hour) text = hour + '{{timeTipHour}}' + text;
-        tip = cewih('div', fillStr(html.feedTimeTip, { 'time': text })).firstChild;
-        feed.parentNode.insertBefore(tip, feed.nextSibling);
-        setTimeout(function () {
-          while (feed && !feed.clientHeight) feed = feed.previousSibling;
-          if (feed) feed.classList.add('WB_feed_new');
-        });
-      };
-    }());
-
-    // 加载新微博
-    var loadNewFeed = function () {
-      var newFeed = document.querySelector('.WB_feed a.notes[yawf-id="feed_list_newBar"]'); if (!newFeed) return;
-      var feeds = Array.apply(Array, document.querySelectorAll('.WB_feed>.WB_feed_type[yawf-unread="hidden"]'));
-      feeds.forEach(function (feed) {
-        feed.setAttribute('yawf-unread', 'show');
-        feed.classList.remove('WB_feed_new');
-      });
-      that.counter();
-      addTimetip(feeds[feeds.length - 1]);
-    };
-
     // 更新未读提示中的数字
     // 隐藏掉微博原来的新消息提示框
     css.add(funcStr(function () { /*
@@ -3572,7 +3576,10 @@ toolFilterGroup.add({
       that.ref.enabled.putconf(enable);
     };
     // 检查快捷键按键
-    if (key.conf) keys.reg(key.conf, function () { switchMode(); });
+    if (key.conf) keys.reg('keyup', key.conf, function (e) {
+      switchMode();
+      e.stopPropagation();
+    });
     // 显示切换按钮
     if (that.ref['switch'].conf) {
       var showSwitch = function () {
