@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.2.78
+// @version           1.2.79
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -506,6 +506,7 @@ var url = {
 var keys = (function () {
   var ctrl = 1 << 8, shift = 1 << 9, alt = 1 << 10, meta = 1 << 11, key = ctrl - 1;
   var namelist = '#0;#1;#2;Cancel;#4;#5;Help;#7;BackSpace;TAB;#10;#11;Clear;Enter;EnterSpecial;#15;;;;Pause;CapsLock;Kana;Eisu;Junja;Final;Hanja;#26;Esc;Convert;Nonconvert;Accept;ModeChange;Space;PageUp;PageDown;End;Home;Left;Up;Right;Down;Select;Print;Execute;PrintScreen;Insert;Delete;#47;0;1;2;3;4;5;6;7;8;9;Colon;Semicolon;LessThan;Equals;GreaterThan;QuestionMark;At;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;Win;#92;ContextMenu;#94;Sleep;NumPad0;NumPad1;NumPad2;NumPad3;NumPad4;NumPad5;NumPad6;NumPad7;NumPad8;NumPad9;Multiply;Add;Separator;Subtract;Decimal;Divide;F1;F2;F3;F4;F5;F6;F7;F8;F9;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;#136;#137;#138;#139;#140;#141;#142;#143;NumLock;ScrollLocK;WIN_OEM_FJ_JISHO;WIN_OEM_FJ_MASSHOU;WIN_OEM_FJ_TOUROKU;WIN_OEM_FJ_LOYA;WIN_OEM_FJ_ROYA;#151;#152;#153;#154;#155;#156;#157;#158;#159;Circumflex;Exclamation;DoubleQuote;Hash;Dollar;Percent;Ampersand;Underscore;OpenParen;CloseParen;Asterisk;Plus;Pipe;HyphenMinus;OpenCurlyBracket;CloseCurlyBracket;Tilde;#177;#178;#179;#180;VolumeMute;VolumeDown;VolumeUp;#184;#185;#186;#187;Comma;#189;Period;Slash;BackQuote;#193;#194;#195;#196;#197;#198;#199;#200;#201;#202;#203;#204;#205;#206;#207;#208;#209;#210;#211;#212;#213;#214;#215;#216;#217;#218;OpenBracket;BackSlash;CloseBracket;Quote;#223;;AltGr;#226;WIN_ICO_HELP;WIN_ICO_00;#229;WIN_ICO_CLEAR;#231;#232;WIN_OEM_RESET;WIN_OEM_JUMP;WIN_OEM_PA1;WIN_OEM_PA2;WIN_OEM_PA3;WIN_OEM_WSCTRL;WIN_OEM_CUSEL;WIN_OEM_ATTN;WIN_OEM_FINISH;WIN_OEM_COPY;WIN_OEM_AUTO;WIN_OEM_ENLW;WIN_OEM_BACKTAB;Attn;Crsel;Exsel;Ereof;Play;Zoom;#252;PA1;WIN_OEM_CLEAR;#255'.split(';');
+  var code = {}; namelist.forEach(function (name, index) { code[name] = index; });
   // 对一个按键事件做编号
   var get = function (e) {
     var code = e.keyCode & key;
@@ -555,9 +556,9 @@ var keys = (function () {
     'get': get,
     'name': name,
     'reg': reg,
+    'code': code,
   };
 }());
-
 
 // 根据用户界面上的语言做不同调整
 var i18n = (function () {
@@ -2751,14 +2752,16 @@ var autoLoad = otherFilterGroup.add({
       return !(page && page[1] > 1);
     };
 
+    var fakeR = false;
     // 自动点开有新微博的提示
     newNode.add(function () {
       var newFeed = document.querySelector('.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]:not([yawf-noted])');
       if (!newFeed) return;
       if (validPage()) {
         // 模拟在网页上按 R 键载入新微博，因为如果模拟点击事件，会影响聊天窗口
+        fakeR = true;
         var evt = document.createEvent("KeyboardEvent");
-        evt.initKeyEvent('keyup', true, true, null, false, false, false, false, 82, 0);
+        evt.initKeyEvent('keyup', true, true, null, false, false, false, false, keys.code.R, 0);
         document.documentElement.dispatchEvent(evt);
         loading = true;
       } else {
@@ -2785,6 +2788,21 @@ var autoLoad = otherFilterGroup.add({
       if (desktopNotification) desktopNotification.notify(feed);
     });
 
+    // 允许按 R 显示新微博
+    keys.reg('keyup', keys.code.R, function () {
+      if (fakeR) { fakeR = false; return; }
+      that.showNew();
+    }, true);
+
+
+  },
+  // 隐藏重复微博
+  'rule': function hideDuplicate(feed) {
+    if (!this.conf) return null;
+    if (feed.getAttribute('yawf-display')) return null;
+    var mid = feed.getAttribute('mid'); if (!mid) return null;
+    var another = document.querySelector('[node-type="feed_list"] .WB_feed_type[mid="' + mid + '"][yawf-display]');
+    if (another) return 'duplicate-hidden';
   },
 });
 
@@ -2816,14 +2834,6 @@ var autoExpand = otherFilterGroup.add({
     ref.parentNode.insertBefore(feed, ref.nextSibling);
     feed.setAttribute('yawf-unread', 'show');
     autoLoad.counter();
-  },
-  // 隐藏重复微博
-  'rule': function hideDuplicate(feed) {
-    if (!this.conf) return null;
-    if (feed.getAttribute('yawf-display')) return null;
-    var mid = feed.getAttribute('mid'); if (!mid) return null;
-    var another = document.querySelector('[node-type="feed_list"] .WB_feed_type[mid="' + mid + '"][yawf-display]');
-    if (another) return 'duplicate-hidden';
   },
 });
 
@@ -3539,7 +3549,7 @@ toolFilterGroup.add({
     // 快捷键
     'key': {
       'type': 'key',
-      'default': 119 // F8
+      'default': keys.code.F8,
     },
     // 是否显示快捷链接
     'switch': {
