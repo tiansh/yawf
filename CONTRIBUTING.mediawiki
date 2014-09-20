@@ -40,7 +40,7 @@ Post written in Chinese is prefered. But you may also use English if you cannot 
 
 脚本使用 MIT 协议许可，如果您希望为脚本贡献代码，并且希望将自己的代码以 MIT 协议授权，那么您可以通过推送请求（Pull Request）的方式向我提交代码。
 
-当前只接受针对脚本缺陷的修复（包括代码逻辑的问题，也包括措辞、翻译的问题），[https://code.google.com/p/weibo-content-filter/ 眼不见心不烦脚本]提供但是本脚本未提供的功能，以及其他在已报告问题列表中采纳的功能建议。
+当前只接受针对脚本缺陷的修复（包括代码逻辑的问题，也包括措辞、翻译的问题），[https://github.com/tiansh/yawf/wiki/%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9 以及在 wiki 中列出的已知问题与待办事项]。
 
 开发时请在最新的版本上进行修改，并尽量保持代码风格的一致性，并在最新的稳定版 Mozilla Firefox 浏览器和 GreaseMonkey 下正常工作。修改时无需修改版本号。推送请求请送至 tiansh/yawf 的 master 分支。
 
