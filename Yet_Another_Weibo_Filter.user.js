@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.81
+// @version           1.3.82
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3503,7 +3503,9 @@ filterItem({
   'key': 'weibo.tool.hover_show_fold',
   'text': '{{hoverShowFold}}',
   'ainit': function () {
-    css.add('[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { max-height: 1000px; }');
+    css.add(funcStr(function () { /*
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { max-height: 1000px; padding: 0 0 11px; }
+    */ }));
   },
 }).group(toolFilterGroup);
 
@@ -4050,7 +4052,7 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover) .WB_feed_datail { padding: 0; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover) .type_spe_pos,
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover)>*:first-child:not(.WB_screen) { display: none !important; }
   // 子微博
