@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.82
+// @version           1.3.83
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -184,7 +184,7 @@ var text = {
   // 隐藏
   'otherBlacklistTitle': { 'zh-cn': '隐藏以下内容', 'zh-hk': '隱藏以下內容', 'zh-tw': '隱藏以下內容', 'en': 'Hide following content' },
   'adfeedFilterDesc': { 'zh-cn': '推广微博', 'zh-hk': '推廣微博', 'zh-tw': '推廣微博', 'en': 'Ad Weibo' },
-  'fansTopFilterDesc': { 'zh-cn': '粉丝头条', 'zh-hk': '粉丝头条', 'zh-tw': '粉丝头条'/* as is */, 'en': 'Fans top Weibo' },
+  'fansTopFilterDesc': { 'zh-cn': '粉丝头条', 'zh-hk': '粉丝头条', 'zh-tw': '粉丝头条'/* as is */, 'en': 'Fans top / Headline Weibo' },
   'recommandFeedDesc': { 'zh-cn': '推荐微博', 'zh-hk': '建議微博', 'zh-tw': '建議微博', 'en': 'Recommended Weibo' },
   'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容', 'zh-hk': '混入微博列表的其它內容', 'zh-tw': '混入微博列表的其它內容', 'en': 'Other contents in Weibo list' },
   'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-hk': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Forward of deleted Weibo' },
@@ -1825,6 +1825,22 @@ var typedHtml = (function () {
   };
 }());
 
+// 根据分组重新排列设置界面的若干设置项
+var reorderFilterItems = function (items) {
+  var sorted = [], item, i, j;
+  items = items.map(function (x) { return [false, x]; })
+  for (i = 0; i < items.length; i++) {
+    if (items[i][0]) continue;
+    sorted.push(item = items[i][1]);
+    if (!item.order || item.type !== 'subtitle') continue;
+    for (j = i + 1; j < items.length; j++) if (item.order === items[j][1].order) {
+      items[j][0] = true;
+      if (items[j][1].type !== 'subtitle') sorted.push(items[j][1]);
+    }
+  }
+  return sorted;
+};
+
 // 过滤器组
 var filterGroup = function (groupName) {
   var items = [];
@@ -1834,6 +1850,7 @@ var filterGroup = function (groupName) {
   var init = function () { };
   // 需要显示选项时生成界面
   var show = function (inner) {
+    items = reorderFilterItems(items);
     items.forEach(function (item) { item._show(inner); });
   };
   // 注册到过滤器分组
