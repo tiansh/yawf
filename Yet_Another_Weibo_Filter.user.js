@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.86
+// @version           1.3.87
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -258,7 +258,8 @@ var text = {
   'layoutHideNavHot': { 'zh-cn': '热门', 'zh-hk': '熱門', 'zh-tw': '熱門', 'en': 'Hot' },
   'layoutHideNavApp': { 'zh-cn': '应用', 'zh-hk': '應用', 'zh-tw': '應用', 'en': 'Apps' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
-  'layoutHideNavMember': { 'zh-cn': '会员菜单', 'zh-hk': '會員功能表', 'zh-tw': '會員功能表', 'en': 'VIP Menu' },
+  'layoutHideNavNoticeNew': { 'zh-cn': '新消息提示红点', 'zh-hk': '新消息提示紅點', 'zh-tw': '新消息提示紅點', 'en': 'Red dot for new notice' },
+  'layoutHideNavMember': { 'zh-cn': '会员菜单', 'zh-hk': '會員功能表', 'zh-tw': '會員功能表', 'en': 'VIP menu' },
   // 左栏
   'layoutHideLeft': { 'zh-cn': '左栏', 'zh-hk': '左欄', 'zh-tw': '左欄', 'en': 'Left Column' },
   'layoutHideLeftToMe': { 'zh-cn': '发给我的', 'zh-hk': '發給我的', 'zh-tw': '發給我的', 'en': 'Send to me' },
@@ -3136,6 +3137,7 @@ var layouts = (function () {
   item('Hot', 5, '.gn_nav>div:nth-child(2) { display: none !important; }');
   item('App', 5, '.gn_nav>div:nth-child(3) { display: none !important; }');
   item('Game', 5, '.gn_nav>div:nth-child(4) { display: none !important; }');
+  item('NoticeNew', 87, '.WB_global_nav .gn_notice_new .W_new { display: none; } .WB_global_nav .gn_setting .gn_notice_new .ico { background-position: -275px -6px; }');
   item('Member', 5, '.gn_setting[node-type="member"] { display: none !important; }');
 
   subtitle('Left');
