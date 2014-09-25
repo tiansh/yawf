@@ -11,7 +11,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.85
+// @version           1.3.86
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2960,18 +2960,20 @@ var autoExpand = filterItem({
   'expand': function (feed, force) {
     var that = this;
     var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
-    if (!that.conf && !force) return;
+    var act = function () {
+      var unreads = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]');
+      var ref = unreads[unreads.length - 1];
+      ref.parentNode.insertBefore(feed, ref.nextSibling);
+      feed.setAttribute('yawf-unread', 'show');
+      autoLoad.counter();
+    };
+    if (force) return act();
+    if (!that.conf) return;
     if (that.ref.etypes.conf && display !== 'show') return;
     if (feed.getAttribute('yawf-unread') !== 'hidden') return;
     if (that.ref.background.conf && document.hasFocus()) {
       document.addEventListener('blur', function () { autoExpand.expand(feed); });
-      return;
-    }
-    var unreads = document.querySelectorAll('.WB_feed_type[yawf-unread="hidden"]');
-    var ref = unreads[unreads.length - 1];
-    ref.parentNode.insertBefore(feed, ref.nextSibling);
-    feed.setAttribute('yawf-unread', 'show');
-    autoLoad.counter();
+    } else act();
   },
 }).addto(otherFilterGroup);
 
