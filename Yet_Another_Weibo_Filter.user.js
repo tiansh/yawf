@@ -1,6 +1,8 @@
 // ==UserScript==
 // @name              Yet Another Weibo Filter
-// @name:zh           Yet Another Weibo Filter 看真正想看的微博
+// @name:zh-CN        Yet Another Weibo Filter 看真正想看的微博
+// @name:zh-HK        Yet Another Weibo Filter 看真正想看的微博
+// @name:zh-TW        Yet Another Weibo Filter 看真正想看的微博
 // @name:en           Yet Another Weibo Filter
 // @namespace         https://github.com/tiansh
 // @description       新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
@@ -77,7 +79,7 @@ var text = {
   'closeButtonTitle': { 'zh-cn': '关闭', 'zh-hk': '關閉', 'zh-tw': '關閉', 'en': 'Close' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
-  'foldedWeiboTextDesc': { 'zh-cn': '折叠微博显示|{{<text>}}', 'zh-hk': '折疊微博顯示|{{<text>}}', 'zh-tw': '折疊微博顯示|{{<text>}}', 'en': 'Show information for folded weibo|{{<text>}}'},
+  'foldedWeiboTextDesc': { 'zh-cn': '折叠微博显示|{{<text>}}', 'zh-hk': '折疊微博顯示|{{<text>}}', 'zh-tw': '折疊微博顯示|{{<text>}}', 'en': 'Show information for folded weibo | {{<text>}}'},
   'foldedWeiboTextAuthorDesc': { 'zh-cn': '作者', 'zh-hk': '作者', 'zh-tw': '作者', 'en': 'Author'},
   'foldedWeiboTextReasonDesc': { 'zh-cn': '折叠原因', 'zh-hk': '折疊原因', 'zh-tw': '折疊原因', 'en': 'Reason'},
   'foldedWeiboTextAuthorReasonDesc': { 'zh-cn': '作者和折叠原因', 'zh-hk': '作者和折疊原因', 'zh-tw': '作者和折疊原因', 'en': 'Author and reason'},
@@ -94,15 +96,15 @@ var text = {
     'en': '"A Weibo from @" attr(yawf-author) " was folded, click to view."'
   },
   'foldedWeiboTextReason': {
-    'zh-cn': '"一条微博" attr(yawf-reason) "被折叠，请点击查看"',
-    'zh-hk': '"一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
-    'zh-tw': '"一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
+    'zh-cn': '"一条微博" attr(yawf-reason) "而被折叠，请点击查看"',
+    'zh-hk': '"一條微博" attr(yawf-reason) "而被折疊，請點擊查看"',
+    'zh-tw': '"一條微博" attr(yawf-reason) "而被折疊，請點擊查看"',
     'en': '"A Weibo was folded due to " attr(yawf-reason) ", click to view."'
   },
   'foldedWeiboTextAuthorReason': {
-    'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博" attr(yawf-reason) "被折叠，请点击查看"',
-    'zh-hk': '"來自 @" attr(yawf-author) " 的一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
-    'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
+    'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博" attr(yawf-reason) "而被折叠，请点击查看"',
+    'zh-hk': '"來自 @" attr(yawf-author) " 的一條微博" attr(yawf-reason) "而被折疊，請點擊查看"',
+    'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博" attr(yawf-reason) "而被折疊，請點擊查看"',
     'en': '"A Weibo from @" attr(yawf-author) " was folded due to " attr(yawf-reason) ", click to view."'
   },
   'disabledKey': { 'zh-cn': '(已禁用)', 'zh-hk': '(已停用)', 'zh-tw': '(已停用)', 'en': '(Disabled)' },
@@ -432,9 +434,9 @@ var text = {
   'installSuccessTitle': { 'zh-cn': 'YAWF 安装成功', 'zh-hk': '安裝成功', 'zh-tw': '安裝成功', 'en': 'Installation successed' },
   'installSuccessText': {
     'zh-cn': '感谢您安装 YAWF 脚本。您可以点击右上角的漏斗图标打开过滤器设置。此外您还可以选中并拖拽关键字、帐号、话题、来源等内容到网页右上角，快速创建过滤器。',
-	'zh-hk': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖標打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
-	'zh-tw': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖標打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
-	'en': 'Thank you for installing YAWF. You can click on the funnel icon at the top-right corner to open up filter setting menu. You may also quickly create filters by dragging and dropping keywords, accounts, topics and sources to the top-right corner.'
+    'zh-hk': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖標打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
+    'zh-tw': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖標打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
+    'en': 'Thank you for installing YAWF. You can click on the funnel icon at the top-right corner to open up filter setting menu. You may also quickly create filters by dragging and dropping keywords, accounts, topics and sources to the top-right corner.'
   },
   'updateSuccessTitle': { 'zh-cn': 'Yet Another Weibo Filter 新功能提示', 'zh-hk': 'Yet Another Weibo Filter 新功能提示', 'zh-tw': 'Yet Another Weibo Filter 新功能提示', 'en': 'Yet Another Weibo Filter new features notification'},
   'updateSuccessHeader': { 'zh-cn': '您的 YAWF 脚本已更新', 'zh-hk': '您的 YAWF 腳本已更新', 'zh-tw': '您的 YAWF 腳本已更新', 'en': 'Your YAWF script has been updated'},
@@ -3814,7 +3816,7 @@ filterItem({
   'text': '{{profileBackgroundColorOverride}}',
   'ainit': function () {
     css.add(fillStr(funcStr(function () { /*
-			.S_profile .W_profile_bg, .S_profile .S_bg5 { background-color: {{color}} !important; }
+      .S_profile .W_profile_bg, .S_profile .S_bg5 { background-color: {{color}} !important; }
       .S_profile .S_bg4:not(.W_profile_bg) { background: none transparent !important }
     */ }), { 'color': '' + this.ref.rgba }));
   },
