@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.90
+// @version           1.3.91
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3946,6 +3946,8 @@ filterItem({
       body.B_profile[{{attr}}] .W_miniblog { padding-top: 60px; }
       body.B_index[{{attr}}] .WB_feed .WB_screen,
       body.B_profile[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
+      body.B_index[{{attr}}] .WB_feed .WB_feed_together .WB_screen,
+      body.B_profile[{{attr}}] .WB_feed .WB_feed_together .WB_screen { margin-left: calc({{width}} - 141px); }
       body.B_index[{{attr}}] .W_main,
       body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background-position: 40% center; background-size: 165% 100%;  }
       body.B_index[{{attr}}] #Box_center,
