@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.88
+// @version           1.3.89
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1875,7 +1875,6 @@ var filterItemCollection = (function () {
   // 初始化所有过滤器
   var init = function () {
     items.forEach(function (item) {
-      console.log('init: %o', item._init);
       withTry(item._init)();
     });
   };
@@ -2497,8 +2496,8 @@ var regexpTopicFilterGroup = allInOneFilters({
 
 // 获取一条微博的所有来源（包括转发）
 var getFeedSourceList = function (feed) {
-  return ['[node-type="feed_list_funcLink"] [action-type="app_source"]',
-  '.WB_media_expand [action-type="app_source"]'].map(function (qs) {
+  return ['[node-type="feed_list_funcLink"] .WB_from [suda-data="key=tblog_home_new&value=feed_come_from"]',
+  '.WB_media_expand .WB_from [action-type="app_source"], .WB_media_expand .WB_from a[href$="&from=feed_card"]'].map(function (qs) {
     var st = feed.querySelector(qs); if (!st) return null;
     return st.getAttribute('title') || st.textContent || '未通过审核应用';
   }).filter(function (x) { return x; });
@@ -2536,6 +2535,22 @@ var sourceFilterGroup = allInOneFilters({
       try {
         if (element.getAttribute('action-type') === 'app_source') a = element;
         else a = element.querySelector('[action-type="app_source"]');
+        if (a) {
+          var source = a.getAttribute('title') || a.textContent || '未通过审核应用';
+          if (source && source !== '微博 weibo.com') return callback({ 'source': source });
+        }
+      } catch (e) { debug('%o: %o', e, e.stack); }
+      try {
+        if (element.getAttribute('suda-data') === 'key=tblog_home_new&value=feed_come_from') a = element;
+        else a = element.querySelector('[suda-data="key=tblog_home_new&value=feed_come_from"]');
+        if (a) {
+          var source = a.getAttribute('title') || a.textContent || '未通过审核应用';
+          if (source && source !== '微博 weibo.com') return callback({ 'source': source });
+        }
+      } catch (e) { debug('%o: %o', e, e.stack); }
+      try {
+        if (element.tagName.toLowerCase() === 'a' && element.href.match(/&from=feed_card$/)) a = element;
+        else a = element.querySelector('a[href$="&from=feed_card"]');
         if (a) {
           var source = a.getAttribute('title') || a.textContent || '未通过审核应用';
           if (source && source !== '微博 weibo.com') return callback({ 'source': source });
@@ -3473,7 +3488,7 @@ filterItem({
       newNode.add(removeRightFixed);
     }
     // 最后自定义的浮动
-    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px; overflow: hidden; height: auto; }');
+    css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px; overflow: hidden; height: auto; width: 150px; }');
     css.add('body[yawf-merge-left] .W_main [yawf-fixed] { width: 229px; }');
     var floating = false;
     var updatePosition = function () {
