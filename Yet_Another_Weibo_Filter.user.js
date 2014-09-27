@@ -5,7 +5,7 @@
 // @name:zh-TW        Yet Another Weibo Filter 看真正想看的微博
 // @name:en           Yet Another Weibo Filter
 // @namespace         https://github.com/tiansh
-// @description       新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
+// @description       新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
 // @description:zh-CN 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。
 // @description:zh-HK 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。
 // @description:zh-TW 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。
@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.89
+// @version           1.3.90
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -434,8 +434,8 @@ var text = {
   'installSuccessTitle': { 'zh-cn': 'YAWF 安装成功', 'zh-hk': '安裝成功', 'zh-tw': '安裝成功', 'en': 'Installation successed' },
   'installSuccessText': {
     'zh-cn': '感谢您安装 YAWF 脚本。您可以点击右上角的漏斗图标打开过滤器设置。此外您还可以选中并拖拽关键字、帐号、话题、来源等内容到网页右上角，快速创建过滤器。',
-    'zh-hk': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖標打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
-    'zh-tw': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖標打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
+    'zh-hk': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖示打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
+    'zh-tw': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖示打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
     'en': 'Thank you for installing YAWF. You can click on the funnel icon at the top-right corner to open up filter setting menu. You may also quickly create filters by dragging and dropping keywords, accounts, topics and sources to the top-right corner.'
   },
   'updateSuccessTitle': { 'zh-cn': 'Yet Another Weibo Filter 新功能提示', 'zh-hk': 'Yet Another Weibo Filter 新功能提示', 'zh-tw': 'Yet Another Weibo Filter 新功能提示', 'en': 'Yet Another Weibo Filter new features notification'},
@@ -492,6 +492,7 @@ var html = {
   'configLayerBottom': '</div>',
   'configFooter': '',
   // 设置窗口内文字
+  'configTitle': '<div class="yawf-groupTitle">{{{text}}}</div>',
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawf-groupText">{{{text}}}</div>',
   'configRemark': '<div class="yawf-groupRemark">{{{text}}}</div>',
@@ -605,6 +606,18 @@ var keys = (function () {
   };
 }());
 
+// 语言相关样式
+var langCss = function (lang) {
+  var isEn = lang === 'en';
+  css.add(fillStr(funcStr(function () { /*!CSS
+    .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
+  */ }), { 'layoutOptionWidth': isEn ? '320px' : '160px', }));
+  if (isEn) css.add(funcStr(function () { /*!CSS
+    #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
+    #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
+  */ }));
+};
+
 // 根据用户界面上的语言做不同调整
 var i18n = (function () {
   var defaultLang = 'zh-cn';
@@ -619,6 +632,7 @@ var i18n = (function () {
     pending = [];
     i18n = chose;
     i18n.lang = l;
+    langCss(lang);
   };
 }());
 
@@ -1976,8 +1990,12 @@ var filterItem = function (item) {
     var dom = item.show && item.show(dom) || null;
     if (dom && item.shown) item.shown(dom);
     if (dom) inner.appendChild(dom);
+    return dom;
   });
-  item.addto = function (group) { group.add(item); return item; };
+  item.addto = function (group) {
+    item.grouped = (item.grouped || []).concat([group]);
+    group.add(item); return item;
+  };
   return filterItemCollection.add(item);
 };
 
@@ -4067,26 +4085,44 @@ filterItem({
 // 更新
 (function (currentVersion) {
   if (!currentVersion) return;
-  var 未完成功能 = true;
+  // 显示新用户介绍
   var showUserGuide = function () {
     Alert('yawf-user-guide', {
       'title': '{{installSuccessTitle}}',
       'text': '{{installSuccessText}}',
     });
   };
+  // 显示新功能提示
   var showWhatsNew = function (sourceVersion) {
-    var newFilters = filterItemCollection.list(function (filter) {
-      if (!filter.version || filter.version <= sourceVersion) return false;
+    // 列出新的功能
+    var newFilters = filterItemCollection.list(function (item) {
+      if (!item.version) return false;
+      if (item.version <= sourceVersion) return false;
+      if (item.version > currentVersion) return false;
+      if (!item.show) return false;
       return true;
     });
+    // 数数有多少
     var count = newFilters.filter(function (x) {
       return x.type !== 'subtitle' && x.type !== 'text' && x.type !== 'remark';
     }).length;
+    // 如果没有的话，就当什么都没发生好了
+    if (count === 0) return;
+    // 显示对话框
     var dialog = Dialog('yawf-whats-new', fillStr('{{updateSuccessTitle}}'), function (inner) {
       var es = [html.whatsNewHeader, fillStr(html.whatsNewBody, { 'count': count }), html.whatsNewBottom, html.whatsNewFooter];
       es = es.map(function (x) { return cewih('div', fillStr(x)).firstChild; });
       var header = es[0], body = es[1], bottom = es[2], footer = es[3];
-      newFilters.forEach(function (item) { item._show(body); }); updateNotify._show(footer);
+      // 依次列出所有新的设置项
+      newFilters.forEach(function (item) {
+        // 在列出时标明所属分类 
+        if (item.type === 'subtitle' && item.grouped && item.grouped.length) {
+          var text = '{{' + item.grouped[0].name + 'Title}}';
+          var title = cewih('div', fillStr(html.configTitle, { 'text': text })).firstChild;
+          body.appendChild(title);
+        }
+        item._show(body);
+      }); updateNotify._show(footer);
       body.appendChild(bottom);
       inner.appendChild(header); inner.appendChild(body); inner.appendChild(footer);
     });
@@ -4096,24 +4132,20 @@ filterItem({
     'group': 'update',
     'type': 'subtitle',
     'text': '{{updateInfoTitle}}',
-    'nogui': 未完成功能,
   }).addto(scriptFilterGroup);
   var updateNotify = filterItem({
     'group': 'update',
-    'version': 未完成功能 ? 0 : 83,
+    'version': 90,
     'type': 'boolean',
     'default': true,
     'text': '{{updateInfoDescription}}',
     'init': function () { config.reg('weibo._yawf_version'); },
     'ainit': function () {
       var sourceVersion = config.get('weibo._yawf_version', null, Number);
-      if (!未完成功能) {
-        if (!sourceVersion) showUserGuide();
-        else if (sourceVersion < currentVersion) showWhatsNew(sourceVersion);
-      }
+      if (!sourceVersion) call(showUserGuide);
+      else if (sourceVersion < currentVersion) call(showWhatsNew, sourceVersion);
       config.put('weibo._yawf_version', currentVersion);
     },
-    'nogui': 未完成功能,
   }).addto(scriptFilterGroup);
 }(function () {
   var version = ((GM_info || {}).script || {}).version || '';
@@ -4176,23 +4208,6 @@ if (extent) {
     'text': '{{scriptExtensionWarning}}',
   }).addto(scriptFilterGroup);
 }
-
-// 添加一些样式
-filterItem({
-  'nogui': true,
-  'init': function () {
-    var isEn = i18n.lang === 'en';
-    css.add(fillStr(funcStr(function () { /*!CSS
-      .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
-    */ }), {
-      'layoutOptionWidth': isEn ? '320px' : '160px',
-    }));
-    if (isEn) css.add(funcStr(function () { /*!CSS
-      #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
-      #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
-    */ }));
-  },
-});
 
 // 可扩展区域
 var extension = (function () {
@@ -4321,6 +4336,8 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   .yawf-config-layer { padding-bottom: 20px; }
   .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; }
   .yawf-groupSubtitle { font-weight: bold; }
+  .yawf-groupTitle::after { content: "-"; margin-left: 0.5em; }
+  .yawf-groupTitle { float: left; font-weight: bold; margin: 5px 0.5em 5px 10px; padding: 10px 0 0; }
   .yawf-configInput { display: inline; }
   .yawf-configStringInput { display: block; }
   .yawf-configItem, .yawf-groupText { margin: 0 20px; padding: 0 0; }

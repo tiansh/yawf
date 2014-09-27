@@ -5,7 +5,7 @@
 // @name:zh-TW        Yet Another Weibo Filter 看真正想看的微博
 // @name:en           Yet Another Weibo Filter
 // @namespace         https://github.com/tiansh
-// @description       新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
+// @description       新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。 filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
 // @description:zh-CN 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面。
 // @description:zh-HK 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。
 // @description:zh-TW 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。
@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.89
+// @version           1.3.90
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
