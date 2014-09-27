@@ -77,17 +77,33 @@ var text = {
   'closeButtonTitle': { 'zh-cn': '关闭', 'zh-hk': '關閉', 'zh-tw': '關閉', 'en': 'Close' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
+  'foldedWeiboTextDesc': { 'zh-cn': '折叠微博显示微博|{{<text>}}', },
+  'foldedWeiboTextAuthorDesc': { 'zh-cn': '作者', },
+  'foldedWeiboTextReasonDesc': { 'zh-cn': '折叠原因', },
+  'foldedWeiboTextAuthorReasonDesc': { 'zh-cn': '作者和折叠原因', },
+  'foldedWeiboText': {
+    'zh-cn': '"一条微博被折叠，请点击查看"',
+    'zh-hk': '"一條微博被折疊，請點擊查看"',
+    'zh-tw': '"一條微博被折疊，請點擊查看"',
+    'en': '"A Weibo was folded, click to view."'
+  },
   'foldedWeiboTextAuthor': {
     'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博被折叠，请点击查看"',
     'zh-hk': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"',
     'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博被折疊，請點擊查看"',
     'en': '"A Weibo from @" attr(yawf-author) " was folded, click to view."'
   },
-  'foldedWeiboText': {
-    'zh-cn': '"一条微博被折叠，请点击查看"',
-    'zh-hk': '"一條微博被折疊，請點擊查看"',
-    'zh-tw': '"一條微博被折疊，請點擊查看"',
-    'en': '"A Weibo was folded, click to view."'
+  'foldedWeiboTextReason': {
+    'zh-cn': '"一条微博" attr(yawf-reason) "被折叠，请点击查看"',
+    'zh-hk': '"一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
+    'zh-tw': '"一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
+    'en': '"A Weibo was folded due to " attr(yawf-reason) ", click to view."'
+  },
+  'foldedWeiboTextAuthorReason': {
+    'zh-cn': '"来自 @" attr(yawf-author) " 的一条微博" attr(yawf-reason) "被折叠，请点击查看"',
+    'zh-hk': '"來自 @" attr(yawf-author) " 的一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
+    'zh-tw': '"來自 @" attr(yawf-author) " 的一條微博" attr(yawf-reason) "被折疊，請點擊查看"',
+    'en': '"A Weibo from @" attr(yawf-author) " was folded due to " attr(yawf-reason) ", click to view."'
   },
   'disabledKey': { 'zh-cn': '(已禁用)', 'zh-hk': '(已停用)', 'zh-tw': '(已停用)', 'en': '(Disabled)' },
   // 设置框
@@ -107,12 +123,14 @@ var text = {
   'keywordFilterDetails': { 'zh-cn': '包含以下关键词的微博', 'zh-hk': '包含以下關鍵字的微博', 'zh-tw': '包含以下關鍵字的微博', 'en': 'Weibo with these keywords' },
   'keywordFilterFast': { 'zh-cn': '包含关键词', 'zh-hk': '包含關鍵字', 'zh-tw': '包含關鍵字', 'en': 'Weibo contains keyword ' },
   'keywordFilterFastInput': { 'zh-cn': '“{{text}}”', 'zh-hk': '「{{text}}」', 'zh-tw': '「{{text}}」', 'en': '"{{text}}"' },
+  'keywordFilterReason': {'zh-cn': '因包含关键词“{{detail}}”'},
   // 正则表达式
   'regexpFilterGroupTitle': { 'zh-cn': '正则', 'zh-hk': '正則', 'zh-tw': '正規', 'en': 'Regexp' },
   'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'regexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的微博', 'zh-hk': '匹配以下正則表達式的微博', 'zh-tw': '匹配以下正規表示式的微博', 'en': 'Weibo matches these regular expressions' },
   'regexpFilterFast': { 'zh-cn': '匹配正则式', 'zh-hk': '匹配正則式', 'zh-tw': '匹配正規式', 'en': 'Weibo matches regexp ' },
   'regexpFilterFastInput': { 'zh-cn': '/{{text}}/', 'zh-hk': '/{{text}}/', 'zh-tw': '/{{text}}/', 'en': '/{{text}}/' },
+  'regexpFilterReason': { 'zh-cn': '因匹配正则式 {{detail}} ' },
   'regexpFilterRemark': {
     'zh-cn': '正则表达式的过滤方式提供了基于微博内容的高级过滤方式，如果只是需要简单地关键词过滤请使用内容标签页的关键词以获得更好的效率。正则表达式书写时不需要对“/”字符转义。',
     'zh-hk': '正則表達式的篩選方式提供了基於微博內容的高級篩選方式，如果只是需要簡單地關鍵字篩選請使用內容標籤頁的關鍵字以獲得更好的效率。正則表達式書寫時不需要對「/」字符轉義。',
@@ -137,6 +155,7 @@ var text = {
   'accountFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDetails': { 'zh-cn': '来自以下帐号的微博', 'zh-hk': '來自以下帳號的微博', 'zh-tw': '來自以下帳號的微博', 'en': 'Weibo from these accounts' },
   'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的微博', 'zh-hk': '作者是「@{{name}}」的微博', 'zh-tw': '作者是「@{{name}}」的微博', 'en': 'Weibo by "@{{name}}"', },
+  'accountFilterReason': { 'zh-cn': '因来自 @{{detail}} ' },
   'accountFilterRemark': {
     'zh-cn': '推荐您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隐私设置 - 屏蔽账号</a>屏蔽您关注了但不想在首页看到的帐号。',
     'zh-hk': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
@@ -150,18 +169,22 @@ var text = {
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterDetails': { 'zh-cn': '原创是以下账号的微博', 'zh-hk': '原創是以下帳號的微博', 'zh-tw': '原創是以下帳號的微博', 'en': 'Hide original Weibo from these accounts' },
   'originalFilterFast': { 'zh-cn': '原创是“@{{name}}”的微博', 'zh-hk': '原創是「@{{name}}」的微博', 'zh-tw': '原創是「@{{name}}」的微博', 'en': 'Original Weibo from "@{{name}}"' },
+  'originalFilterReason': { 'zh-cn': '因转发自 @{{detail}} ' },
   // 提到
   'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'mentionFilterDetails': { 'zh-cn': '提到以下帐号的微博', 'zh-hk': '提到以下帳號的微博', 'zh-tw': '提到以下帳號的微博', 'en': 'Weibo mentioned these accounts' },
   'mentionFilterFast': { 'zh-cn': '提到了“@{{name}}”的微博', 'zh-hk': '提到了「@{{name}}」的微博', 'zh-tw': '提到了「@{{name}}」的微博', 'en': 'Weibo mentioned "@{{name}}"' },
+  'mentionFilterReason': { 'zh-cn': '因提到 @{{detail}} ' },
   // 话题
   'topicFilterGroupTitle': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDesc': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDetails': { 'zh-cn': '包含以下话题的微博', 'zh-hk': '包含以下話題的微博', 'zh-tw': '包含以下話題的微博', 'en': 'Weibo with these topics' },
   'topicFilterFast': { 'zh-cn': '包含“#{{topic}}#”话题的微博', 'zh-hk': '包含「#{{topic}}#」話題的微博', 'zh-tw': '包含「#{{topic}}#」話題的微博', 'en': 'Weibo contained topic "#{{topic}}#"' },
+  'topicFilterReason': { 'zh-cn': '因包含话题 #{{detail}}# ' },
   'rtopicFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'rtopicFilterDetails': { 'zh-cn': '包含匹配以下正则表达式的话题的微博', 'zh-hk': '包含匹配以下正則表達式的话题的微博', 'zh-tw': '包含匹配以下正規表示式的话题的微博', 'en': 'Weibo with topic matches these regular expressions' },
+  'rtopicFilterReason': { 'zh-cn': '因包含话题匹配 {{detail}} ' },
   // 来源
   'sourceFilterGroupTitle': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'sourceFilterDesc': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Via' },
@@ -169,11 +192,13 @@ var text = {
   'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「{{source}}」的微博', 'zh-tw': '來自「{{source}}」的微博', 'en': 'Weibo via "{{source}}"' },
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能添加默认来源', 'zh-hk': '不能新增預設來源', 'zh-tw': '不能新增預設來源', 'en': 'You cannot add default source' },
+  'sourceFilterReason': { 'zh-cn': '因来自“{{detail}}”' },
   // 超链接
   'hyperlinkFilterGroupTitle': { 'zh-cn': '链接', 'zh-hk': '連結', 'zh-tw': '連結', 'en': 'Link' },
   'hyperlinkFilterDesc': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
   'hyperlinkFilterDetails': { 'zh-cn': '包含指向以下网站的超链接的微博', 'zh-hk': '包含指向以下站點的超連結的微博', 'zh-tw': '包含指向以下站點的超連結的微博', 'en': 'Weibo with hyperlink to these website' },
   'hyperlinkFilterFast': { 'zh-cn': '包含指向包含“{{host}}”地址链接的微博', 'zh-hk': '包含指向包含「{{host}}」位址連結的微博', 'zh-tw': '包含指向包含「{{host}}」位址連結的微博', 'en': 'Weibo contains hyperlink to "{{host}}"' },
+  'hyperlinkFilterReason': { 'zh-cn': '因链接到“{{detail}}”' },
   // 更多
   'otherFilterGroupTitle': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 显示
@@ -193,7 +218,9 @@ var text = {
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：|超过{{<number>}}条|时{{<action>}}', 'zh-hk': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'zh-tw': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'en': 'Weibo from same account: |{{<action>}} the part | which exceeds {{<number>}} Weibo' },
+  'sameAccountFilterReason': { 'zh-cn': '因刷屏' },
   'sameForwardFilterDesc': { 'zh-cn': '相同微博的转发：|超过{{<number>}}条|时{{<action>}}', 'zh-hk': '相同微博的轉發：|超過{{<number>}}條|時{{<action>}}', 'zh-tw': '相同微博的轉發：|超過{{<number>}}條|時{{<action>}}', 'en': 'Forward from same Weibo: |{{<action>}} the part | which exceeds {{<number>}} Weibo' },
+  'sameForwardFilterReason': { 'zh-cn': '因版聊' },
   // 分组浏览
   'otherGroupTitle': { 'zh-cn': '分组浏览', 'zh-hk': '分組流覽', 'zh-tw': '分組流覽', 'en': 'Browse by Group' },
   'accountByGroup': { 'zh-cn': '分组浏览时禁用按帐号隐藏', 'zh-hk': '分組流覽時禁用按帳號隱藏', 'zh-tw': '分組流覽時禁用按帳號隱藏', 'en': 'Disable hide by account filter when browsing by group' },
@@ -1393,10 +1420,6 @@ var fixFoldWeibo = (function () {
       fixOne(feed);
     });
   };
-  fix.init = function () {
-    css.add(fillStr('[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"][yawf-author]::before { content: {{foldedWeiboTextAuthor}}; }'));
-    css.add(fillStr('[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { content: {{foldedWeiboText}}; }'));
-  };
   return fix;
 }());
 
@@ -1846,7 +1869,10 @@ var filterItemCollection = (function () {
   };
   // 初始化所有过滤器
   var init = function () {
-    items.forEach(function (item) { withTry(item._init)(); });
+    items.forEach(function (item) {
+      console.log('init: %o', item._init);
+      withTry(item._init)();
+    });
   };
   // 根据分组重新排列设置界面的若干设置项
   var order = function (items) {
@@ -2107,7 +2133,9 @@ var keywordFilterGroup = allInOneFilters({
     var texts = getWeiboContent(feed).toUpperCase();
     var match = keywords.some(function (keyword) {
       if (!keyword) return false;
-      return texts.indexOf(keyword.toUpperCase()) !== -1;
+      if (texts.indexOf(keyword.toUpperCase()) === -1) return false;
+      feed.setAttribute('yawf-reason', fillStr(text.keywordFilterReason, { 'detail': keyword }));
+      return true;
     });
     if (match) return action; else return null;
   },
@@ -2150,7 +2178,9 @@ var regexpFilterGroup = allInOneFilters({
     var regexen = this.regexen;
     var texts = getWeiboContent(feed);
     var match = regexen.some(function (regexp) {
-      return !!(regexp.exec(texts));
+      if (!regexp.exec(texts)) return false;
+      feed.setAttribute('yawf-reason', fillStr(text.regexpFilterReason, { 'detail': regexp + '' }));
+      return true;
     });
     if (match) return action; else return null;
   },
@@ -2206,6 +2236,11 @@ var getFeedAuthorId = function (feed) {
   var author = feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]');
   if (!author) return null;
   return author.getAttribute('usercard').split('=')[1];
+};
+var getFeedAuthorName = function (feed) {
+  var author = feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]');
+  if (!author) return null;
+  return author.textContent.trim();
 };
 
 // 检查一个元素是不是用户相关的
@@ -2282,6 +2317,7 @@ var accountFilterGroup = allInOneFilters({
     var accounts = this.conf.concat(this.extent), id = getFeedAuthorId(feed);
     if (!id) return null;
     var match = accounts.some(function (x) { return x === id; });
+    if (match) feed.setAttribute('yawf-reason', fillStr(text.accountFilterReason, { 'detail': getFeedAuthorName(feed) }));
     if (match) return action; else return null;
   },
   'blacklist': {
@@ -2309,11 +2345,16 @@ filterItem({
 }).addto(accountFilterGroup);
 
 
-// 从一条微博中找到他的作者
+// 从一条微博中找到他的原作者
 var getFeedOriginalId = function (feed) {
   var originalAuthor = feed.querySelector('.WB_media_expand .WB_info .WB_name');
   if (!originalAuthor) return null;
   return originalAuthor.getAttribute('usercard').split('=')[1];
+};
+var getFeedOriginalName = function (feed) {
+  var originalAuthor = feed.querySelector('.WB_media_expand .WB_info .WB_name');
+  if (!originalAuthor) return null;
+  return originalAuthor.textContent.trim().replace(/^@/, '');
 };
 
 // 原创用户过滤
@@ -2325,6 +2366,7 @@ var originalFilterGroup = allInOneFilters({
     var originals = this.conf.concat(this.extent), id = getFeedOriginalId(feed);
     if (!id) return null;
     var match = originals.some(function (x) { return x === id; });
+    if (match) feed.setAttribute('yawf-reason', fillStr(text.originalFilterReason, { 'detail': getFeedOriginalName(feed) }));
     if (match) return action; else return null;
   },
   'fast': {
@@ -2356,7 +2398,10 @@ var mentionFilterGroup = allInOneFilters({
   'rule': function mentionMatch(action, feed) {
     var mentions = this.conf.concat(this.extent), users = getFeedMentionList(feed);
     var match = users.some(function (name) {
-      return mentions.indexOf(name) !== -1;
+      var index = mentions.indexOf(name);
+      if (index === -1) return false;
+      feed.setAttribute('yawf-reason', fillStr(text.mentionFilterReason, { 'detail': mentions[index] }));
+      return true;
     });
     if (match) return action; else return null;
   },
@@ -2405,8 +2450,12 @@ var topicFilterGroup = allInOneFilters({
   'display': function (s) { return '#' + s + '#'; },
   'rule': function topicMatch(action, feed) {
     var topics = this.conf.concat(this.extent);
-    var text = getFeedTopicList(feed).join('##');
-    var match = topics.some(function (topic) { return text.indexOf(topic) !== -1; });
+    var topicText = getFeedTopicList(feed).join('##');
+    var match = topics.some(function (topic) {
+      if (topicText.indexOf(topic) === -1) return false;
+      feed.setAttribute('yawf-reason', fillStr(text.topicFilterReason, { 'detail': topic }));
+      return true;
+    });
     if (match) return action; else return null;
   },
   'fast': {
@@ -2431,7 +2480,9 @@ var regexpTopicFilterGroup = allInOneFilters({
     var topics = getFeedTopicList(feed);
     var match = regexen.some(function (regexp) {
       return topics.some(function (topic) {
-        return !!regexp.exec(topic);
+        if (!regexp.exec(topic)) return false;
+        feed.setAttribute('yawf-reason', fillStr(text.rtopicFilterReason, { 'detail': regexp + '' }));
+        return true;
       });
     });
     if (match) return action; else return null;
@@ -2466,7 +2517,11 @@ var sourceFilterGroup = allInOneFilters({
   },
   'rule': function sourceMatch(action, feed) {
     var sources = this.conf.concat(this.extent), _sources = getFeedSourceList(feed);
-    var match = _sources.some(function (s) { return sources.indexOf(s) !== -1; });
+    var match = _sources.some(function (s) {
+      if (sources.indexOf(s) === -1) return false;
+      feed.setAttribute('yawf-reason', fillStr(text.sourceFilterReason, { 'detail': s }));
+      return true;
+    });
     if (match) return action; else return null;
   },
   'fast': {
@@ -2507,7 +2562,9 @@ var hyperlinkFilterGroup = allInOneFilters({
     var links = this.conf.concat(this.extent), _links = getFeedHyperlinkList(feed);
     var match = _links.some(function (l) {
       return links.some(function (link) {
-        return l.indexOf(link) !== -1;
+        if (l.indexOf(link) === -1) return false;
+        feed.setAttribute('yawf-reason', fillStr(text.hyperlinkFilterReason, { 'detail': link }));
+        return true;
       });
     });
     if (match) return action; else return null;
@@ -2709,7 +2766,6 @@ var lotShown = function (defnum, defact) {
 filterItem({
   'group': 'spam',
   'version': 25,
-  'version': 19,
   'type': 'boolean',
   'priority': -1e6, // 低优先级
   'key': 'weibo.other.same_account',
@@ -2725,7 +2781,10 @@ filterItem({
     var number = document.querySelectorAll('[node-type="feed_list"] ' +
       '.WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])' +
       '>.WB_feed_datail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]').length;
-    if (number >= this.ref.number.conf) return 'account-' + this.ref.action.conf; else return null;
+    if (number >= this.ref.number.conf) {
+      feed.setAttribute('yawf-reason', text.sameAccountFilterReason);
+      return 'account-' + this.ref.action.conf;
+    } else return null;
   },
 }).addto(otherFilterGroup);
 
@@ -2744,7 +2803,10 @@ filterItem({
     if (!omid) return null;
     var number = document.querySelectorAll('[node-type="feed_list"] ' +
       '.WB_feed_type[omid="' + omid + '"][yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])').length;
-    if (number >= this.ref.number.conf) return 'forward-' + this.ref.action.conf; else return null;
+    if (number >= this.ref.number.conf) {
+      feed.setAttribute('yawf-reason', text.sameForwardFilterReason);
+      return 'forward-' + this.ref.action.conf; 
+    } else return null;
   },
 }).addto(otherFilterGroup);
 
@@ -3153,7 +3215,7 @@ var layouts = (function () {
   subtitle('Right');
   item('Template', 5, '.templete_enter { display: none !important; }'); // Spelling as is
   item('Info', 5, '.W_person_info, .send_weibo .input .arrow { display: none !important; }');
-  item('Atten', '#pl_rightmod_myinfo .user_atten { display: none !important; }');
+  item('Atten', 5, '#pl_rightmod_myinfo .user_atten { display: none !important; }');
   item('Trial', 5, '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
@@ -3649,6 +3711,43 @@ var coloredConfigItem = function (details) {
   };
 };
 
+// 折叠微博外观
+
+filterItem({
+  'group': 'stylish',
+  'version': 88,
+  'type': 'boolean',
+  'ref': {
+    'text': {
+      'type': 'select',
+      'default': 'author-reason',
+      'select': [
+        { 'value': 'author', 'text': '{{foldedWeiboTextAuthorDesc}}' },
+        { 'value': 'reason', 'text': '{{foldedWeiboTextReasonDesc}}' },
+        { 'value': 'author-reason', 'text': '{{foldedWeiboTextAuthorReasonDesc}}' },
+      ],
+    },
+  },
+  'text': '{{foldedWeiboTextDesc}}',
+  'init': function () {
+    var types = ['author', 'reason'], that = this;
+    var enabled = types.map(function (type) { return that.conf && that.ref.text.conf.indexOf(type) !== -1; });
+    var x;
+    css.add(function genCss(index, chosen, prefix) {
+      if (index === types.length)
+        return '[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]' +
+          chosen + '::before ' +
+          '{ content: ' + fillStr('{{{' + prefix + '}}}') + '; }\n';
+      var type = types[index], typed = '[yawf-' + type + ']';
+      return [false, true].map(function (chose) {
+        return genCss(index + 1,
+          chose ? typed + chosen : chosen + ':not(' + typed + ')',
+          prefix + (chose && enabled[index] ? type[0].toUpperCase() + type.slice(1) : ''));
+      }).join('');
+    }(0, '', 'foldedWeiboText'));
+  },
+}).addto(toolFilterGroup);
+
 // 鼠标滑过折叠微博时自动展示内容
 filterItem({
   'group': 'stylish',
@@ -3964,7 +4063,7 @@ filterItem({
       return x.type !== 'subtitle' && x.type !== 'text' && x.type !== 'remark';
     }).length;
     var dialog = Dialog('yawf-whats-new', fillStr('{{updateSuccessTitle}}'), function (inner) {
-      var es = [html.whatsNewHeader, html.whatsNewBody, html.whatsNewBottom, html.whatsNewFooter];
+      var es = [html.whatsNewHeader, fillStr(html.whatsNewBody, { 'count': count }), html.whatsNewBottom, html.whatsNewFooter];
       es = es.map(function (x) { return cewih('div', fillStr(x)).firstChild; });
       var header = es[0], body = es[1], bottom = es[2], footer = es[3];
       newFilters.forEach(function (item) { item._show(body); }); updateNotify._show(footer);
@@ -4129,7 +4228,6 @@ var extension = (function () {
   // 向 unsafeWindow 暴露接口
   var push = withTry(function (args) {
     // 别问我为啥，反正现在沙箱31 32 33一个版本一改 WQNMLGDSBCNM
-    debug('args: %o, %o', args, args.wrappedJSObject);
     args = args.wrappedJSObject || args;
     var method = args.method, params = args.params;
     debug('$_YAWF_$.%s(%o)', method, params);
@@ -4179,8 +4277,6 @@ var dcl = function () {
   filterGroupCollection.init(); filterItemCollection.init();
   // 初始化扩展
   if (extension) extension.init();
-  // 初始化折叠微博后的显示
-  fixFoldWeibo.init();
   // 注册样式
   css.init();
   // 初始化界面
@@ -4253,9 +4349,9 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
   [yawf-display$="-hidden"] { display: none !important; }
   [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; height: 1em; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { opacity: 1; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
