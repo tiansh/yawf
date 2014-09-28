@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.91
+// @version           1.3.92
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1427,9 +1427,12 @@ var fixFoldWeibo = (function () {
       feed.setAttribute('yawf-display', display);
       feed.removeEventListener('click', showFeed);
     };
-    var author = feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]').getAttribute('title');
-    feed.setAttribute('yawf-author', author);
     feed.addEventListener('click', showFeed);
+    // 添加作者信息
+    try {
+      var author = feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]').getAttribute('title');
+      feed.setAttribute('yawf-author', author);
+    } catch (e) { }
   });
   var fix = function (feed) {
     var feeds = [feed].concat(Array.from(feed.querySelectorAll('.WB_feed_type')));
@@ -4090,8 +4093,8 @@ filterItem({
   // 显示新用户介绍
   var showUserGuide = function () {
     Alert('yawf-user-guide', {
-      'title': '{{installSuccessTitle}}',
-      'text': '{{installSuccessText}}',
+      'title': fillStr('{{installSuccessTitle}}'),
+      'text': fillStr('{{installSuccessText}}'),
     });
   };
   // 显示新功能提示
@@ -4181,7 +4184,8 @@ filterItem({
 
 filterItem({
   'group': 'about',
-  'type': 'text', 'text': '',
+  'type': 'remark',
+  'text': '',
   'shown': function (dom) {
     dom.innerHTML = fillStr(text.scriptAbout, {
       'version': ((GM_info || {}).script || {}).version || '?'
