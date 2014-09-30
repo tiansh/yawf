@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.93
+// @version           1.3.94
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -50,7 +50,7 @@ var cewih = function (tag, inner) {
 };
 
 // 一些兼容性代码
-if (!Array.from) Array.from = Function().call.bind([].slice);
+if (!Array.from) Array.from = Function.prototype.call.bind([].slice);
 // 检查是否是 Firefox 浏览器，部分特性不支持其他浏览器
 var firefoxVersion = (function () {
   var m = navigator.userAgent.match(/^Mozilla\/5.0 \([^)]+; rv:([\d.]+)\) Gecko\/[\d]{8} Firefox\/[\d.]+$/);
@@ -79,10 +79,10 @@ var text = {
   'closeButtonTitle': { 'zh-cn': '关闭', 'zh-hk': '關閉', 'zh-tw': '關閉', 'en': 'Close' },
   'configStringsAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
-  'foldedWeiboTextDesc': { 'zh-cn': '折叠微博显示|{{<text>}}', 'zh-hk': '折疊微博顯示|{{<text>}}', 'zh-tw': '折疊微博顯示|{{<text>}}', 'en': 'Show information for folded weibo | {{<text>}}'},
-  'foldedWeiboTextAuthorDesc': { 'zh-cn': '作者', 'zh-hk': '作者', 'zh-tw': '作者', 'en': 'Author'},
-  'foldedWeiboTextReasonDesc': { 'zh-cn': '折叠原因', 'zh-hk': '折疊原因', 'zh-tw': '折疊原因', 'en': 'Reason'},
-  'foldedWeiboTextAuthorReasonDesc': { 'zh-cn': '作者和折叠原因', 'zh-hk': '作者和折疊原因', 'zh-tw': '作者和折疊原因', 'en': 'Author and reason'},
+  'foldedWeiboTextDesc': { 'zh-cn': '折叠微博显示|{{<text>}}', 'zh-hk': '折疊微博顯示|{{<text>}}', 'zh-tw': '折疊微博顯示|{{<text>}}', 'en': 'Show information for folded weibo | {{<text>}}' },
+  'foldedWeiboTextAuthorDesc': { 'zh-cn': '作者', 'zh-hk': '作者', 'zh-tw': '作者', 'en': 'Author' },
+  'foldedWeiboTextReasonDesc': { 'zh-cn': '折叠原因', 'zh-hk': '折疊原因', 'zh-tw': '折疊原因', 'en': 'Reason' },
+  'foldedWeiboTextAuthorReasonDesc': { 'zh-cn': '作者和折叠原因', 'zh-hk': '作者和折疊原因', 'zh-tw': '作者和折疊原因', 'en': 'Author and reason' },
   'foldedWeiboText': {
     'zh-cn': '"一条微博被折叠，请点击查看"',
     'zh-hk': '"一條微博被折疊，請點擊查看"',
@@ -125,7 +125,7 @@ var text = {
   'keywordFilterDetails': { 'zh-cn': '包含以下关键词的微博', 'zh-hk': '包含以下關鍵字的微博', 'zh-tw': '包含以下關鍵字的微博', 'en': 'Weibo with these keywords' },
   'keywordFilterFast': { 'zh-cn': '包含关键词', 'zh-hk': '包含關鍵字', 'zh-tw': '包含關鍵字', 'en': 'Weibo contains keyword ' },
   'keywordFilterFastInput': { 'zh-cn': '“{{text}}”', 'zh-hk': '「{{text}}」', 'zh-tw': '「{{text}}」', 'en': '"{{text}}"' },
-  'keywordFilterReason': {'zh-cn': '因包含关键词“{{detail}}”', 'zh-hk': '因包含關鍵詞「{{detail}}」', 'zh-tw': '因包含關鍵詞「{{detail}}」', 'en': 'because it contains keyword "{{detail}}"'},
+  'keywordFilterReason': { 'zh-cn': '因包含关键词“{{detail}}”', 'zh-hk': '因包含關鍵詞「{{detail}}」', 'zh-tw': '因包含關鍵詞「{{detail}}」', 'en': 'because it contains keyword "{{detail}}"' },
   // 正则表达式
   'regexpFilterGroupTitle': { 'zh-cn': '正则', 'zh-hk': '正則', 'zh-tw': '正規', 'en': 'Regexp' },
   'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
@@ -171,7 +171,7 @@ var text = {
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterDetails': { 'zh-cn': '原创是以下帐号的微博', 'zh-hk': '原創是以下帳號的微博', 'zh-tw': '原創是以下帳號的微博', 'en': 'Hide original Weibo from these accounts' },
   'originalFilterFast': { 'zh-cn': '原创是“@{{name}}”的微博', 'zh-hk': '原創是「@{{name}}」的微博', 'zh-tw': '原創是「@{{name}}」的微博', 'en': 'Original Weibo from "@{{name}}"' },
-  'originalFilterReason': { 'zh-cn': '因转发自 @{{detail}} ', 'zh-hk': '因轉發自 @{{detail}} ', 'zh-tw': '因轉發自 @{{detail}} ', 'en': 'because it is forwarded from @{{detail}} '},
+  'originalFilterReason': { 'zh-cn': '因转发自 @{{detail}} ', 'zh-hk': '因轉發自 @{{detail}} ', 'zh-tw': '因轉發自 @{{detail}} ', 'en': 'because it is forwarded from @{{detail}} ' },
   // 提到
   'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
@@ -284,6 +284,7 @@ var text = {
   'layoutHideIconYouji': { 'zh-cn': '邂逅有机', 'zh-hk': '邂逅有机'/* as is */, 'zh-tw': '邂逅有机', 'en': '邂逅有机 (Travel notes)' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '导航栏', 'zh-hk': '導覽列', 'zh-tw': '導覽列', 'en': 'Navigation Bar' },
+  'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
   'layoutHideNavHot': { 'zh-cn': '热门', 'zh-hk': '熱門', 'zh-tw': '熱門', 'en': 'Hot' },
   'layoutHideNavApp': { 'zh-cn': '应用', 'zh-hk': '應用', 'zh-tw': '應用', 'en': 'Apps' },
@@ -435,13 +436,13 @@ var text = {
   'installSuccessTitle': { 'zh-cn': 'YAWF 安装成功', 'zh-hk': '安裝成功', 'zh-tw': '安裝成功', 'en': 'Installation successed' },
   'installSuccessText': {
     'zh-cn': '感谢您安装 YAWF 脚本。您可以点击右上角的漏斗图标打开过滤器设置。此外您还可以选中并拖拽关键字、帐号、话题、来源等内容到网页右上角，快速创建过滤器。',
-    'zh-hk': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖示打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
-    'zh-tw': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖示打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。', 
+    'zh-hk': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖示打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。',
+    'zh-tw': '感謝您安裝 YAWF 腳本。您可以點擊右上角的漏斗圖示打開過濾器設置。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建過濾器。',
     'en': 'Thank you for installing YAWF. You can click on the funnel icon at the top-right corner to open up filter setting menu. You may also quickly create filters by dragging and dropping keywords, accounts, topics and sources to the top-right corner.'
   },
-  'updateSuccessTitle': { 'zh-cn': 'Yet Another Weibo Filter 新功能提示', 'zh-hk': 'Yet Another Weibo Filter 新功能提示', 'zh-tw': 'Yet Another Weibo Filter 新功能提示', 'en': 'Yet Another Weibo Filter new features notification'},
-  'updateSuccessHeader': { 'zh-cn': '您的 YAWF 脚本已更新', 'zh-hk': '您的 YAWF 腳本已更新', 'zh-tw': '您的 YAWF 腳本已更新', 'en': 'Your YAWF script has been updated'},
-  'updateSuccessDesc': { 'zh-cn': '当前版本添加或更新了以下{{count}}项功能', 'zh-hk': '當前版本添加或更新了以下{{count}}項功能', 'zh-tw': '當前版本添加或更新了以下{{count}}項功能', 'en': 'The current version has added or updated the following {{count}} feature(s)'},
+  'updateSuccessTitle': { 'zh-cn': 'Yet Another Weibo Filter 新功能提示', 'zh-hk': 'Yet Another Weibo Filter 新功能提示', 'zh-tw': 'Yet Another Weibo Filter 新功能提示', 'en': 'Yet Another Weibo Filter new features notification' },
+  'updateSuccessHeader': { 'zh-cn': '您的 YAWF 脚本已更新', 'zh-hk': '您的 YAWF 腳本已更新', 'zh-tw': '您的 YAWF 腳本已更新', 'en': 'Your YAWF script has been updated' },
+  'updateSuccessDesc': { 'zh-cn': '当前版本添加或更新了以下{{count}}项功能', 'zh-hk': '當前版本添加或更新了以下{{count}}項功能', 'zh-tw': '當前版本添加或更新了以下{{count}}項功能', 'en': 'The current version has added or updated the following {{count}} feature(s)' },
   // 调试
   'scriptDebugTitle': { 'zh-cn': '调试', 'zh-hk': '偵錯', 'zh-tw': '偵錯', 'en': 'Debug' },
   'scriptDebug': { 'zh-cn': '在控制台打印调试信息', 'zh-hk': '將偵錯訊息列印到主控台', 'zh-tw': '將偵錯訊息列印到主控台', 'en': 'Print debug info to console' },
@@ -520,7 +521,7 @@ var html = {
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   // 新功能提示对话框
-  'whatsNewHeader':'<div class="yawf-whats-new-header">{{updateSuccessHeader}}</div>',
+  'whatsNewHeader': '<div class="yawf-whats-new-header">{{updateSuccessHeader}}</div>',
   'whatsNewBody': '<div class="yawf-whats-new-body"><div class="yawf-whats-new-desc">{{updateSuccessDesc}}</div></div>',
   'whatsNewFooter': '<div class="yawf-whats-new-footer"><hr /></div>',
   'whatsNewBottom': '<div class="yawf-whats-new-bottom"></div>',
@@ -540,6 +541,8 @@ var html = {
   // 有新微博的替代提示
   'feedListNewBar': '<a class="notes" yawf-id="feed_list_newBar" href="javascript:void(0);"></a>',
   'feedTimeTip': '<fieldset class="S_line2 between_line" yawf-id="feed_list_timeTip"><legend class="S_txt3" yawf-id="feed_list_timeText">{{{time}}}</legend></fieldset>',
+  // 顶栏徽标
+  'navLogo': '<span class="logo"></span>',
 };
 
 var url = {
@@ -2196,7 +2199,7 @@ var compileRegexen = function () {
 // 按照正则式过滤
 var regexpFilterGroup = allInOneFilters({
   'name': 'regexp',
-  'version': 8, 
+  'version': 8,
   'add': addRegexpChecker,
   'display': function (s) { return '/' + s + '/'; },
   'rule': function regexpMatch(action, feed) {
@@ -2552,13 +2555,13 @@ var sourceFilterGroup = allInOneFilters({
   },
   'fast': {
     'valid': function (element, callback) {
-      var a = null;
+      var a = null, source;
       if (element.nodeType === Node.TEXT_NODE) return callback();
       try {
         if (element.getAttribute('action-type') === 'app_source') a = element;
         else a = element.querySelector('[action-type="app_source"]');
         if (a) {
-          var source = a.getAttribute('title') || a.textContent || '未通过审核应用';
+          source = a.getAttribute('title') || a.textContent || '未通过审核应用';
           if (source && source !== '微博 weibo.com') return callback({ 'source': source });
         }
       } catch (e) { debug('%o: %o', e, e.stack); }
@@ -2566,7 +2569,7 @@ var sourceFilterGroup = allInOneFilters({
         if (element.getAttribute('suda-data') === 'key=tblog_home_new&value=feed_come_from') a = element;
         else a = element.querySelector('[suda-data="key=tblog_home_new&value=feed_come_from"]');
         if (a) {
-          var source = a.getAttribute('title') || a.textContent || '未通过审核应用';
+          source = a.getAttribute('title') || a.textContent || '未通过审核应用';
           if (source && source !== '微博 weibo.com') return callback({ 'source': source });
         }
       } catch (e) { debug('%o: %o', e, e.stack); }
@@ -2574,7 +2577,7 @@ var sourceFilterGroup = allInOneFilters({
         if (element.tagName.toLowerCase() === 'a' && element.href.match(/&from=feed_card$/)) a = element;
         else a = element.querySelector('a[href$="&from=feed_card"]');
         if (a) {
-          var source = a.getAttribute('title') || a.textContent || '未通过审核应用';
+          source = a.getAttribute('title') || a.textContent || '未通过审核应用';
           if (source && source !== '微博 weibo.com') return callback({ 'source': source });
         }
       } catch (e) { debug('%o: %o', e, e.stack); }
@@ -2847,7 +2850,7 @@ filterItem({
       '.WB_feed_type[omid="' + omid + '"][yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])').length;
     if (number >= this.ref.number.conf) {
       feed.setAttribute('yawf-reason', text.sameForwardFilterReason);
-      return 'forward-' + this.ref.action.conf; 
+      return 'forward-' + this.ref.action.conf;
     } else return null;
   },
 }).addto(otherFilterGroup);
@@ -3238,6 +3241,14 @@ var layouts = (function () {
   item('Youji', 35, '.lvxing2014, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
 
   subtitle('Nav');
+  item('LogoImg', 94, function replaceLogo() {
+    var box = document.querySelector('.WB_global_nav .gn_logo_v2 .box');
+    if (!box) return setTimeout(replaceLogo, 100);
+    var img = document.querySelector('.WB_global_nav .gn_logo_v2 .box img');
+    if (!img) return;
+    var logo = cewih('div', html.navLogo).firstChild;
+    img.parentNode.replaceChild(logo, img);
+  });
   item('Main', 5, '.gn_nav>div:nth-child(1) { display: none !important; }');
   item('Hot', 5, '.gn_nav>div:nth-child(2) { display: none !important; }');
   item('App', 5, '.gn_nav>div:nth-child(3) { display: none !important; }');
@@ -4434,3 +4445,4 @@ GM_addStyle(fillStr((funcStr(function () { /*!CSS
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
 }));
+
