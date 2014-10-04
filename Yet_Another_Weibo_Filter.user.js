@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           1.3.94
+// @version           1.3.95
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3447,11 +3447,17 @@ var mergeLeftRight = filterItem({
     left.parentNode.removeChild(left);
     var positionLeft = function () {
       var ref = document.querySelector('#pl_rightmod_myinfo');
+      var right = document.querySelector('.W_main_r');
       var leftn = document.querySelector('.W_main_l');
       if (leftn) { left = leftn; }
       if (ref) {
         if (ref.nextSibling !== left) {
           ref.parentNode.insertBefore(left, ref.nextSibling);
+          main.setAttribute('yawf-merge-left', side);
+        }
+      } else if (right) {
+        if (right.firstChild !== left) {
+          right.insertBefore(left, right.firstChild);
           main.setAttribute('yawf-merge-left', side);
         }
       } else {
