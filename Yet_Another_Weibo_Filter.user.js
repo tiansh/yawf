@@ -2381,10 +2381,7 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
         if (details.add) value = details.add(value);
         return value;
       },
-      'addconf': function (value, action) {
-        console.log('addconf!: %o, %o', value, action);
-        rules[action].addconf(value);
-      },
+      'addconf': function (value, action) { rules[action].addconf(value); },
       'contextmenu': details.fast.contextmenu,
       'menudesc': details.fast.menudesc,
       'menugrouped': details.fast.menugrouped,
