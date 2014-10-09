@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.99
+// @version           2.0.100
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2381,7 +2381,10 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
         if (details.add) value = details.add(value);
         return value;
       },
-      'addconf': function (value, action) { rules[action].addconf(value); },
+      'addconf': function (value, action) {
+        console.log('addconf!: %o, %o', value, action);
+        rules[action].addconf(value);
+      },
       'contextmenu': details.fast.contextmenu,
       'menudesc': details.fast.menudesc,
       'menugrouped': details.fast.menugrouped,
@@ -2473,10 +2476,8 @@ filter.fast.account.recognizer = function (element, callback) {
   else if (info.name) network.account.name(info.name, callback, callback);
   else callback();
 };
-filter.fast.account.add = function (val) {
-  return val.text;
-};
-filter.fast.author = {};
+filter.fast.account.addname = function (val) { return val.name; };
+filter.fast.account.addid = function (val) { return val.id; };
 
 // 快速创建话题过滤器相关函数
 filter.fast.topic = {};
@@ -2774,7 +2775,7 @@ filter.groups.account = filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
-    'add': filter.fast.content.add,
+    'add': filter.fast.account.addid,
     'description': function (dom, val) {
       dom.innerHTML = util.str.fill('{{{accountFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
       return true;
@@ -2807,7 +2808,7 @@ filter.groups.original = filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
-    'add': filter.fast.content.add,
+    'add': filter.fast.account.addid,
     'description': function (dom, val) {
       dom.innerHTML = util.str.fill('{{{originalFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
       return true;
@@ -2839,7 +2840,7 @@ filter.groups.mention = filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
-    'add': filter.fast.content.add,
+    'add': filter.fast.account.addname,
     'description': function (dom, val) {
       dom.innerHTML = util.str.fill('{{{mentionFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
       return true;
