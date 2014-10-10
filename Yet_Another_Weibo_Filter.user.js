@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.101
+// @version           2.0.102
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -293,6 +293,7 @@ var text = {
   'layoutHideRightInfo': { 'zh-cn': '头像', 'zh-hk': '頭像', 'zh-tw': '頭像', 'en': 'Avatar' },
   'layoutHideRightTrial': { 'zh-cn': '登录赢会员', 'zh-hk': '登录赢会员', 'zh-tw': '登录赢会员'/* as is */, 'en': '登录赢会员 (Login for VIP Trial)' },
   'layoutHideRightAtten': { 'zh-cn': '关注/粉丝/微博数', 'zh-hk': '關注/粉絲/微博數', 'zh-tw': '關注/粉絲/微博數', 'en': 'Numbers of Following/Followers/Weibo' },
+  'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
   'layoutHideRightInterest': { 'zh-cn': '可能感兴趣的人', 'zh-hk': '可能感興趣的人', 'zh-tw': '可能感興趣的人', 'en': 'You may know' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightMember': { 'zh-cn': '会员专区', 'zh-hk': '會員專區', 'zh-tw': '會員專區', 'en': 'Weibo VIP' },
@@ -313,6 +314,7 @@ var text = {
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
   'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
+  'layoutHideWeiboAppCard': { 'zh-cn': '来源卡片', 'zh-hk': '來源卡片', 'zh-tw': '來源卡片', 'en': 'Source card' },
   'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '檢舉', 'zh-tw': '檢舉', 'en': 'Report' },
   'layoutHideWeiboLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
   'layoutHideWeiboForward': { 'zh-cn': '转发', 'zh-hk': '轉發', 'zh-tw': '轉發', 'en': 'Forward' },
@@ -1470,7 +1472,7 @@ filter.dialog = (function () {
     });
     choseLList(page);
   };
-  return function (page, count) {
+  return function showDialog(page, count) {
     var showDialogInner = function (inner) {
       var list = filter.collection.group.list;
       inner.innerHTML = [html.configHeaderTop,
@@ -1616,24 +1618,24 @@ filter.fast.recognize = (function () {
 filter.fast.right = (function () {
   var counter = 0, filters = [];
   var addmenu = function (feed) {
-    var menu = document.createElement('menu'), itemnum = 0;
+    var menu = document.createElement('menu');
     menu.setAttribute('type', 'context');
     var submenu = menu.appendChild(document.createElement('menu'));
     submenu.setAttribute('label', text.contextMenuCreateLabel);
     filters.forEach(function (details) {
       var items = details.contextmenu(feed);
+      if (!items) return;
       if (!Array.isArray(items)) items = [items];
       if (!items.length) return;
-      itemnum += items.length;
       var container = submenu;
       if (details.menugrouped) {
-        container = container.appendChild(document.createElement('menu'));
+        container = document.createElement('menu');
         container.setAttribute('label', util.str.fill(details.menugrouped));
       }
       var itemtext = {};
       items.forEach(function (item) {
-        var text = util.str.fill(details.menudesc(item));
-        if (itemtext[text]) return; itemtext[text] = true;
+        var text = details.menudesc(item);
+        if (!text || itemtext[text]) return; itemtext[text] = true;
         var menuitem = document.createElement('menuitem');
         menuitem.setAttribute('label', text);
         menuitem.addEventListener('click', function () {
@@ -1643,21 +1645,19 @@ filter.fast.right = (function () {
         });
         container.appendChild(menuitem);
       });
+      if (details.menugrouped && container.firstChild) submenu.appendChild(container);
     });
-    if (!itemnum) return;
-    feed.appendChild(menu);
-    feed.setAttribute('contextmenu', (menu.id = 'yawf-weibo-menu-' + ++counter));
-  }
-  var active = function () {
-    observer.weibo.after(addmenu);
+    if (menu.firstChild) {
+      feed.appendChild(menu);
+      feed.setAttribute('contextmenu', (menu.id = 'yawf-weibo-menu-' + ++counter));
+    }
   };
-  var add = function (details) {
-    if (details.contextmenu) filters.push(details);
-  };
+  var active = function () { observer.weibo.before(addmenu); };
+  var add = function (details) { if (details.contextmenu) filters.push(details); };
   return {
     'add': add,
     'active': active,
-  }
+  };
 }());
 
 filter.fast.item = function (details) {
@@ -2640,12 +2640,14 @@ weibo.topics.text = function (feed) {
 // 获取一条微博的所有来源（包括转发）
 weibo.sources = {};
 weibo.sources.dom = function (feed) {
-  return ['[node-type="feed_list_funcLink"] .WB_from [suda-data="key=tblog_home_new&value=feed_come_from"]',
-  '.WB_media_expand .WB_from [action-type="app_source"], .WB_media_expand .WB_from a[href$="&from=feed_card"]'].map(function (qs) {
-    return st = feed.querySelector(qs) || null;
-  }).filter(Boolean);
+  return Array.from(feed.querySelectorAll([
+    '.WB_from [suda-data="key=tblog_home_new&value=feed_come_from"]',
+    '.WB_from [action-type="app_source"]',
+    '.WB_from a[href$="&from=feed_card"]',
+  ].join(',')));
 };
 weibo.sources.text = function (feed) {
+
   return weibo.sources.dom(feed).map(function (st) {
     return st.getAttribute('title') || st.textContent || text.sourceUnkown;
   }).filter(Boolean);
@@ -2779,7 +2781,7 @@ filter.groups.account = filter.predef.wbfc({
     },
     'contextmenu': weibo.author.dom,
     'menudesc': function (author) {
-      return util.str.fill(text.accountFilterContextMenu,{ 'name': author.textContent.trim() });
+      return util.str.fill(text.accountFilterContextMenu, { 'name': author.textContent.trim() });
     },
   }
 });
@@ -2812,7 +2814,7 @@ filter.groups.original = filter.predef.wbfc({
     },
     'contextmenu': function (feed) { return weibo.original.dom(feed) || []; },
     'menudesc': function (original) {
-      return util.str.fill(text.originalFilterContextMenu,{ 'name': original.textContent.trim().replace(/^@/, '') });
+      return util.str.fill(text.originalFilterContextMenu, { 'name': original.textContent.trim().replace(/^@/, '') });
     },
   }
 });
@@ -2940,18 +2942,12 @@ filter.groups.source = filter.predef.wbfc({
       dom.innerHTML = util.str.fill('{{{sourceFilterFast}}}', { 'source': util.str.escape.xml(val.source) });
       return true;
     },
-    'contextmenu': function (feed) {
-      return  weibo.sources.dom(feed).filter(function (source) {
-        var valid = true;
-        filter.fast.source.recognizer(source, function (value) { if (!value) valid = false; });
-        return valid;
-      });
-    },
+    'contextmenu': weibo.sources.dom,
     'menugrouped': '{{sourceFilterContextMenuGroup}}',
     'menudesc': function (source) {
-      var text = '';
+      var text = null;
       filter.fast.source.recognizer(source, function (value) {
-        text = util.str.fill('{{{sourceFilterContextMenu}}}', value);
+        if (value) text = util.str.fill('{{{sourceFilterContextMenu}}}', value);
       });
       return text;
     },
@@ -3639,6 +3635,7 @@ filter.predef.group('layout');
   item('Template', 5, '.templete_enter { display: none !important; }'); // Spelling as is
   item('Info', 5, '.W_person_info, .send_weibo .input .arrow { display: none !important; }');
   item('Atten', 5, '#pl_rightmod_myinfo .user_atten { display: none !important; }');
+  item('Groups', 102, '#pl_rightmod_groups { display: none; }');
   item('Trial', 5, '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
@@ -3678,6 +3675,16 @@ filter.predef.group('layout');
   });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
   item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }');
+  item('AppCard', 102, function () {
+    observer.dom.add(function () {
+      var appcard = document.querySelector('.W_layer:not([yawf-appcard-hidden]) .layer_appcard');
+      if (appcard) {
+        while (!appcard.classList.contains('W_layer')) appcard = appcard.parentNode;
+        appcard.setAttribute('yawf-appcard-hidden', 'yawf-appcard-hidden');
+      }
+    });
+    util.css.add('.W_layer[yawf-appcard-hidden] { display: none !important; }');
+  });
   item('Report', 34, '.WB_time~.hover { display: none !important; }');
   item('Like', 34, 'a[action-type="feed_list_like"], a[action-type="feed_list_like"]+.S_txt3, [node-type="multi_image_like"], [action-type="feed_list_image_like"], [action-type="object_like"], [action-type="like_object"] { display: none !important; }');
   item('Forward', 34, 'a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3, .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"], .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"]+.S_txt3, [action-type="widget_publish"] { display: none !important; }');
