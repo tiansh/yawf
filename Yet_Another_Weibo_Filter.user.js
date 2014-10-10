@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.100
+// @version           2.0.101
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -4757,6 +4757,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-son"]>.WB_feed_datail>.WB_face,
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-son"]>.WB_feed_datail>.WB_detail>*:not(.WB_feed_together) { display: none !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-son"]>.WB_feed_datail>.WB_detail { margin-top: -20px; margin-bottom: -10px; }
+  .WB_feed .WB_feed_type[yawf-display$="-son"]>.type_text { display: none; }
   // 其他
   .WB_feed_together .wft_users { display: none; }
   .WB_feed_together[yawf-sonfold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
