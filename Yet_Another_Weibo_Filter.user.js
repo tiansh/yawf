@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.103
+// @version           2.0.104
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -176,7 +176,8 @@ var text = {
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能添加默认来源', 'zh-hk': '不能新增預設來源', 'zh-tw': '不能新增預設來源', 'en': 'You cannot add default source' },
   'sourceFilterReason': { 'zh-cn': '因来自“{{detail}}”', 'zh-hk': '因來自「{{detail}}」', 'zh-tw': '因來自「{{detail}}」', 'en': 'because it is posted via "{{detail}}" ' },
-  'sourceUnkown': { 'zh-cn': '未通过审核应用', 'zh-tw': '未通过审核应用', 'zh-hk': '未通过审核应用', 'en': '未通过审核应用' },
+  'sourceUnkown': { 'zh-cn': '未通过审核应用', 'zh-hk': '未通过审核应用', 'zh-tw': '未通过审核应用', 'en': '未通过审核应用' },
+  'defaultSource': { 'zh-cn': '微博 weibo.com', 'zh-hk': '微博 weibo.com', 'zh-tw': '微博 weibo.com', 'en': '微博 weibo.com' },
   // 超链接
   'hyperlinkFilterGroupTitle': { 'zh-cn': '链接', 'zh-hk': '連結', 'zh-tw': '連結', 'en': 'Link' },
   'hyperlinkFilterDesc': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
@@ -201,6 +202,10 @@ var text = {
   'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-hk': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Forward of deleted Weibo' },
   'voteWeiboFilterDesc': { 'zh-cn': '投票微博', 'zh-hk': '投票微博', 'zh-tw': '投票微博', 'en': 'Voting weibo' },
   'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity' },
+  'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博', 'zh-hk': '來自微話題的微博', 'zh-tw': '來自微話題的微博', 'en': 'Weibo via 微话题 (micro Topic)' },
+  'customizeSourceWeibo': { 'zh-cn': '自定义来源微博|{{<action>}}', 'zh-hk': '自訂來源微博|{{<action>}}', 'zh-tw': '自訂來源微博|{{<action>}}', 'en': 'Weibo with customize source | {{<action>}}' },
+  'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博',  'en': 'hide Weibo' },
+  'customizeSourceReset': { 'zh-cn': '将来源改为“微博 weibo.com”', 'zh-hk': '將來源改為「微博 weibo.com」', 'zh-tw': '將來源改為「微博 weibo.com」', 'en': 'modify source to "微博 weibo.com"' },
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：|超过{{<number>}}条|时{{<action>}}', 'zh-hk': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'zh-tw': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'en': 'Weibo from same account: |{{<action>}} the part | which exceeds {{<number>}} Weibo' },
@@ -1647,12 +1652,12 @@ filter.fast.right = (function () {
       });
       if (details.menugrouped && container.firstChild) submenu.appendChild(container);
     });
-    if (menu.firstChild) {
+    if (menu.firstChild && submenu.firstChild) {
       feed.appendChild(menu);
       feed.setAttribute('contextmenu', (menu.id = 'yawf-weibo-menu-' + ++counter));
     }
   };
-  var active = function () { observer.weibo.before(addmenu); };
+  var active = function () { observer.weibo.after(addmenu); };
   var add = function (details) { if (details.contextmenu) filters.push(details); };
   return {
     'add': add,
@@ -2511,7 +2516,7 @@ filter.fast.source.recognizer = function (element, callback) {
   var source = c.querySelector('[action-type="app_source"], ' +
   '[suda-data="key=tblog_home_new&value=feed_come_from"], a[href$="&from=feed_card"]');
   source = source && (source.getAttribute('title') || source.textContent || text.sourceUnkown);
-  if (source && source !== '微博 weibo.com') return callback({ 'source': source });
+  if (source && source !== text.defaultSource) return callback({ 'source': source });
   else return callback();
 };
 filter.fast.source.add = function (val) { return val.source; };
@@ -2918,7 +2923,7 @@ filter.groups.source = filter.predef.wbfc({
   'version': 2,
   'add': function (s) {
     s = s.trim();
-    if (s === '微博 weibo.com') {
+    if (s === text.defaultSource) {
       util.ui.alert('yawf-source-filter-warning', {
         'title': util.str.fill('{{sourceFilterWarningTitle}}'),
         'text': util.str.fill('{{sourceFilterWarning}}'),
@@ -3130,6 +3135,53 @@ filter.items.other.hidethese.tb_tm_wb = filter.item({
     if (!this.conf) return null;
     if (feed.querySelector('a .icon_fl_tb, a .icon_fl_tmall, a .icon_fl_ju'))
       return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 微话题微博
+filter.items.other.hidethese.wei_huati = filter.item({
+  'group': 'hidethese',
+  'version': 104,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_huati',
+  'text': '{{huatiSourceWeibo}}',
+  'rule': function huatiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 自定义来源微博
+filter.items.other.hidethese.customize_source = filter.item({
+  'group': 'hidethese',
+  'version': 104,
+  'type': 'boolean',
+  'key': 'weibo.other.customize_source',
+  'text': '{{customizeSourceWeibo}}',
+  'ref': {
+    'action': {
+      'type': 'select',
+      'default': 'hidden',
+      'select': [
+        {'value': 'hidden', text: '{{customizeSourceHidden}}'},
+        {'value': 'reset', text: '{{customizeSourceReset}}'},
+      ],
+    }
+  },
+  'rule': function customizeSourceRule(feed) {
+    if (!this.conf) return null;
+    // 当前自定义来源微博与来自“微博 weibo.com”微博的唯一区别在于其中的文本
+    var sources = Array.from(feed.querySelectorAll('a[action-type="app_source"][href="http://weibo.com/"]'));
+    sources = sources.filter(function (source) { return source.textContent.trim() !== text.defaultSource; });
+    if (sources.length) {
+      if (this.ref.action.conf === 'hidden') return 'hidden';
+      sources.forEach(function (source) {
+        source.textContent = text.defaultSource;
+      });
+    }
     return null;
   },
 }).addto(filter.groups.other);
