@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.104
+// @version           2.0.105
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2449,6 +2449,8 @@ filter.fast.account.validator = function (element) {
   var c = util.dom.create('body', element.outerHTML);
   // 可以处理对用户的链接
   if (c.querySelector('[usercard*="name="], [usercard*="id="]')) return true;
+  // 用户卡片里面的头像和链接
+  if (c.querySelector('[uid][title]')) return true;
   // 可以处理用户页面的头像和链接
   var name = document.querySelector('.pf_name .name');
   if (name && name.textContent && name[0] !== '#' && unsafeWindow.$CONFIG.oid &&
@@ -2467,6 +2469,12 @@ filter.fast.account.recognizer = function (element, callback) {
     if (ucinfo.name) info.name = ucinfo.name;
     if (ucinfo.id) info.id = ucinfo.id;
   }());
+  // 用户卡片
+  var uid = c.querySelector('[uid][title]');
+  if (uid) {
+    info.id = uid.getAttribute('uid');
+    info.name = uid.getAttribute('title');
+  }
   // 如果是头像或者链接的话
   if (oid) (function () {
     var link = c.querySelector('a.pf_lin');
@@ -2655,7 +2663,6 @@ weibo.sources.dom = function (feed) {
   ].join(',')));
 };
 weibo.sources.text = function (feed) {
-
   return weibo.sources.dom(feed).map(function (st) {
     return st.getAttribute('title') || st.textContent || text.sourceUnkown;
   }).filter(Boolean);
@@ -2664,7 +2671,9 @@ weibo.sources.text = function (feed) {
 // 从一条微博中找到所有超链接
 weibo.hyperlinks = {};
 weibo.hyperlinks.dom = function (feed) {
-  return Array.from(feed.querySelectorAll('a[title][href^="http://t.cn/"]'));
+  return weibo.content(feed, function (m) {
+    return Array.from(m.querySelectorAll('a[title][href^="http://t.cn/"]'));
+  });
 };
 weibo.hyperlinks.text = function (feed) {
   return weibo.hyperlinks.dom(feed)
@@ -4806,8 +4815,8 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover) .type_spe_pos,
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:not(:hover)>*:first-child:not(.WB_screen) { display: none !important; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen) { display: none !important; }
   // 其他
   .WB_feed_together .wft_users { display: none; }
   .WB_feed_together[yawf-sonfold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
