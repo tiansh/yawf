@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.105
+// @version           2.0.106
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -286,6 +286,7 @@ var text = {
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
   'layoutHideLeftApp': { 'zh-cn': '应用', 'zh-hk': '应用', 'zh-tw': '应用'/* as is */, 'en': 'Apps' },
   'layoutHideLeftNew': { 'zh-cn': '新微博提示红点', 'zh-hk': '新微博提示紅點', 'zh-tw': '新微博提示紅點', 'en': 'Red dot for new Weibo' },
+  'layoutHideLeftNews': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Counts for News' },
   'layoutHideLeftCount': { 'zh-cn': '新分组微博计数', 'zh-hk': '新分組微博計數', 'zh-tw': '新分組微博計數', 'en': 'Counts for Weibo by Group' },
   // 中栏
   'layoutHideMiddle': { 'zh-cn': '隐藏模块 - 中栏', 'zh-hk': '隱藏模組 - 中欄', 'zh-tw': '隱藏模組 - 中欄', 'en': 'Hide modules - Middle Column' },
@@ -3687,8 +3688,9 @@ filter.predef.group('layout');
   item('ToMe', 5, '#pl_leftnav_common a[href^="/direct/tome"] { display: none !important; }');
   item('Friends', 5, '#pl_leftnav_group > div[node-type="groupList"] > .level_1_Box, #pl_leftnav_common .level_1_Box > form.left_nav_line { display: none !important; }');
   item('App', 5, '#pl_leftnav_app { display: none !important; }');
-  item('New', 5, '.WB_left_nav .lev .W_new { display: none !important; }');
-  item('Count', 5, '.WB_left_nav .W_new_count { display: none !important; }');
+  item('New', 106, '.WB_left_nav .lev .W_new { display: none !important; }');
+  item('News', 106, '.WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
+  item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count { display: none !important; }');
 
   subtitle('Middle');
   item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"] { display: none !important; }');
