@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name              Yet Another Weibo Filter
 // @name:zh-CN        Yet Another Weibo Filter 看真正想看的微博
 // @name:zh-HK        Yet Another Weibo Filter 看真正想看的微博
@@ -13,7 +13,7 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.106
+// @version           2.0.107
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -265,9 +265,10 @@ var text = {
   'layoutHideIconMember': { 'zh-cn': '微博会员', 'zh-hk': '微博會員', 'zh-tw': '微博會員', 'en': 'Weibo VIP / Member' },
   'layoutHideIconApprove': { 'zh-cn': '个人认证', 'zh-hk': '個人認證', 'zh-tw': '個人認證', 'en': 'Personal Authentication / 個人認證' },
   'layoutHideIconApproveCo': { 'zh-cn': '机构认证', 'zh-hk': '企業認證', 'zh-tw': '企業認證', 'en': 'Weibo Verification / 企業認證' },
+  'layoutHideIconApproveDead': { 'zh-cn': '失效认证', 'zh-hk': '失效認證', 'zh-tw': '失效認證', 'en': 'Failed verification' },
   'layoutHideIconClub': { 'zh-cn': '微博达人', 'zh-hk': '微博達人', 'zh-tw': '微博達人', 'en': 'Pioneer' },
   'layoutHideIconVGirl': { 'zh-cn': '微博女郎', 'zh-hk': '微博女郎', 'zh-tw': '微博女郎', 'en': 'Weibo girl' },
-  'layoutHideIconTaobao': { 'zh-cn': '淘宝商户', 'zh-hk': '淘寶商戶', 'zh-tw': '淘寶商戶', 'en': 'Taobao Merchant' },
+  'layoutHideIconTaobao': { 'zh-cn': '淘宝/天猫商户', 'zh-hk': '淘寶/天貓商戶', 'zh-tw': '淘寶/天貓商戶', 'en': 'Taobao / Tmall Merchant' },
   'layoutHideIconGongyi': { 'zh-cn': '益起来', 'zh-hk': '益起来', 'zh-tw': '益起来'/* as is */, 'en': '益起来 (Weibo public interest)' },
   'layoutHideIconZongyika': { 'zh-cn': '我是综艺咖', 'zh-hk': '我是综艺咖'/* as is */, 'zh-tw': '我是综艺咖', 'en': '我是综艺咖 (Variety Wack)' },
   'layoutHideIconYouji': { 'zh-cn': '邂逅有机', 'zh-hk': '邂逅有机'/* as is */, 'zh-tw': '邂逅有机', 'en': '邂逅有机 (Travel Notes)' },
@@ -275,7 +276,7 @@ var text = {
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
-  'layoutHideNavHot': { 'zh-cn': '热门', 'zh-hk': '熱門', 'zh-tw': '熱門', 'en': 'Hot' },
+  'layoutHideNavHot': { 'zh-cn': '热门/发现', 'zh-hk': '熱門/发现', 'zh-tw': '熱門/发现', 'en': 'Hot/发现' },
   'layoutHideNavApp': { 'zh-cn': '应用', 'zh-hk': '應用', 'zh-tw': '應用', 'en': 'Apps' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息提示红点', 'zh-hk': '新消息提示紅點', 'zh-tw': '新消息提示紅點', 'en': 'Red dot for new notice' },
@@ -482,16 +483,24 @@ var html = {
   'option': '<option value="{{value}}">{{{text}}}</option>',
   // 对话框
   'cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: #000; opacity: 0.3; z-index: 10001;"></div>',
+  '~v6~cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 1263px; height: 622px; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999;"></div>',
   'dialog': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title"><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"></div></div></td></tr></tbody></table></div></div>',
+  '~v6~dialog': '<div id="{{id}}" class="W_layer yawf-Layer" style="top: 193px; left: 376px;"><div tabindex="0"></div><div class="content" node-type="autoHeight"><div class="W_layer_title" node-type="title" style="">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);" node-type="close">X</a></div><div node-type="inner"></div></div></div>',
   'alert': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textSmall" class="S_txt2"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
+  '~v6~alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
   'confirm': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textComplex" class="S_txt2" style="display: none;"></p><p node-type="textSmall" class="S_txt2" style="display: none;"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" href="javascript:void(0)"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
+  '~v6~confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
   // 漏斗图标
   'icon': '<div class="gn_setting" node-type="filter"><i><a class="gn_tab gn_filter" href="#"><span class="ico">{{filter}}</span></a></i></div>',
+  '~v6~icon': '<div class="gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">=</em></a></div>',
   'menuitem': '<ul class="gn_text_list"><li><a href="javascript:void(0);" class="yawf-config-menuitem">{{filterMenuItem}}</a></li></ul>',
   // 设置窗口
   'configHeaderTop': '<div class="profile_tab S_line5 yawf-config-header" node-type="yawf-config-header"><ul class="pftb_ul S_line1">',
   'configHeaderItem': '<li class="pftb_itm S_line1 {{liclass}}"><a class="pftb_lk S_line5 S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a>',
   'configHeaderBottom': '</ul></div>',
+  '~v6~configHeaderTop': '<div class="WB_minitab yawf-config-header" node-type="yawf-config-header"><ul class="minitb_ul S_line1 S_bg1 clearfix">',
+  '~v6~configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="cur_block"></span></li>',
+  '~v6~configHeaderBottom': '</ul></div>',
   'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
@@ -518,8 +527,10 @@ var html = {
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_arrow tag yawf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
+  '~v6~configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item"><span class="W_arrow_bor W_arrow_bor_l"><i class="S_line3"></i><em class="S_bg2_br"></em></span>{{[item]}}<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a></li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
+  '~v6~configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
@@ -918,12 +929,21 @@ util.i18n = {};
 // 语言相关样式
 util.i18n.stylish = function (lang) {
   var isEn = lang === 'en';
+  // FIXME current加的位置已经变了，而且 class 好像也不同
   util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
     .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
+    #yawf-config .WB_minitab .current.minitb_lk { font-weight: bold; }
   */ }), { 'layoutOptionWidth': isEn ? '320px' : '160px', }));
   if (isEn) util.css.add(util.str.cmt(function () { /*!CSS
     #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
     #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
+    #yawf-config .WB_minitab .current.minitb_lk { padding-left: 8px !important; padding-right: 8px !important; }
+    #yawf-config .WB_minitab .minitb_lk { padding-left: 10px !important; padding-right: 10px !important; }
+    #yawf-config .WB_minitab .minitb_lk { width: auto; }
+  */ })); else util.css.add(util.str.cmt(function () { /*!CSS
+    #yawf-config .WB_minitab .current.minitb_lk { padding-left: 11px !important; padding-right: 11px !important; }
+    #yawf-config .WB_minitab .minitb_lk { padding-left: 13px !important; padding-right: 13px !important; }
+    #yawf-config .WB_minitab .minitb_lk { width: auto; }
   */ }));
 };
 
@@ -1054,7 +1074,26 @@ util._storage = function () {
   };
 };
 
+util.v6 = null;
+
+// 版本相关
+util.version = {};
+
+// 弄一些新版的小玩意儿
+util.version.fix = function (obj) {
+  if (!util.v6) return;
+  Object.keys(obj).forEach(function (key) {
+    if (key.indexOf('~v6~') !== 0) return;
+    obj[key.slice(4)] = obj[key];
+  });
+};
+util.version.chose = function (v5, v6) {
+  return util.v6 ? v6 : v5;
+};
+
 util.init(function () {
+  // 检查版本
+  util.v6 = unsafeWindow.$CONFIG.jsPath.indexOf('t6') !== -1;
   // 保存用户信息
   util.info.uid = unsafeWindow.$CONFIG.uid;
   util.info.nick = unsafeWindow.$CONFIG.nick;
@@ -1062,6 +1101,8 @@ util.init(function () {
   util.i18n.chose = util._languages(unsafeWindow.$CONFIG.lang);
   Object.keys(text).map(function (key) { util.i18n.chose(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = util.str.fill(html[key]); });
+  util.version.fix(text);
+  util.version.fix(html);
   // 初始化设置集
   util.config = util._storage();
 }, util.priority.FIRST);
@@ -1218,12 +1259,17 @@ util.ui = {};
 // 包括右上角过滤器图标和设置菜单中的菜单项
 util.ui.icon = util.init(function () {
   var onClick = util.func.catched(function (e) { filter.dialog(); e.preventDefault(); });
-  var icon = function () {
+  var icon = util.version.chose(function () {
     var p = document.querySelector('.WB_global_nav .gn_person');
     if (!p) return setTimeout(icon, 100);
     var d = util.dom.create(html.icon); p.appendChild(d);
     document.querySelector('.gn_filter').addEventListener('click', onClick);
-  };
+  }, function () {
+    var p = document.querySelector('.WB_global_nav .gn_set_list');
+    if (!p) return setTimeout(icon, 100);
+    var d = util.dom.create(html.icon); p.parentNode.insertBefore(d, p);
+    document.querySelector('.gn_filter').addEventListener('click', onClick);
+  });
   var menuitem = function () {
     var a = document.querySelector('.WB_global_nav .gn_person .gn_setting[node-type="account"] .gn_func');
     if (!a) return setTimeout(menuitem, 100);
@@ -1235,10 +1281,10 @@ util.ui.icon = util.init(function () {
 
 // 对话框
 util.ui.form = function (dom, display, details) {
-  var ok = dom.querySelector('[node-type="OK"]');
+  var ok = dom.querySelector('[node-type="OK"], [node-type="ok"]');
   var cancel = dom.querySelector('[node-type="cancel"]');
   var close = dom.querySelector('[node-type="close"]');
-  var title = dom.querySelector('.title');
+  var title = dom.querySelector('.title, .W_layer_title');
   var mouse = null, pos;
   // 定位对话框的位置
   var setPos = function (pos) {
@@ -1463,14 +1509,21 @@ filter.dialog = (function () {
     var alist = Array.from(inner.querySelectorAll('.yawf-config-header a'));
     var llist = Array.from(inner.querySelectorAll('.yawf-config-body .yawf-config-layer'));
     var body = inner.querySelector('.yawf-config-body');
-    var choseLList = function (i) {
+    var choseLList = util.version.chose(function (i) {
       llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
       alist.forEach(function (a) { a.classList.remove('current'); a.classList.remove('S_bg5'); a.classList.add('S_bg1'); });
       llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
       alist[i].classList.add('current'); alist[i].classList.remove('S_bg1'); alist[i].classList.add('S_bg5');
       lastTab = i;
       util.func.call(function () { body.scrollTop = 0; });
-    };
+    }, function (i) {
+      llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
+      alist.forEach(function (a) { a.parentNode.classList.remove('current'); a.classList.remove('S_bg2'); });
+      llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
+      alist[i].parentNode.classList.add('current'); alist[i].classList.add('S_bg2');
+      lastTab = i;
+      util.func.call(function () { body.scrollTop = 0; });
+    });
     list.map(function (item, i) {
       var a = alist[i];
       a.addEventListener('mousedown', function () { choseLList(i); });
@@ -1483,11 +1536,15 @@ filter.dialog = (function () {
       var list = filter.collection.group.list;
       inner.innerHTML = [html.configHeaderTop,
         list.map(function (item, index) {
-          return util.str.fill(html.configHeaderItem, {
+          return util.version.chose(util.str.fill(html.configHeaderItem, {
             'name': text[item.name + 'FilterGroupTitle'],
             'aclass': index === 0 ? 'S_bg5 current' : 'S_bg1',
             'liclass': index === list.length - 1 ? 'pftb_itm_lst' : ' ',
-          });
+          }), util.str.fill(html.configHeaderItem, {
+            'name': text[item.name + 'FilterGroupTitle'],
+            'aclass': index === 0 ? 'S_bg2' : '',
+            'liclass': index === 0 ? 'current' : ' ',
+          }));
         }).join(''),
         html.configHeaderBottom,
         html.configLayerTop,
@@ -2064,7 +2121,7 @@ filter.typed.dom = (function () {
         if (ondone) ondone();
         if (!str || !li) return;
         if (shown[str]) return moveToEnd(shown[str]);
-        var del = li.querySelector('a.icon_close');
+        var del = li.querySelector('a.icon_close, a.ficon_close');
         del.addEventListener('click', function () {
           delete shown[str];
           if (item.del) item.del(str);
@@ -2502,7 +2559,7 @@ filter.fast.topic.recognizer = {};
 filter.fast.topic.recognizer.topic = function (element, callback) {
   if (element.nodeType === Node.TEXT_NODE) return callback();
   var c = util.dom.create('body', element.outerHTML);
-  var topic = c.querySelector('a.a_topic, a[suda-uatrack*="hottopic_r1"], a[suda-uatrack*="1022-topic"]');
+  var topic = c.querySelector('a.a_topic, a[suda-uatrack*="hottopic_r1"], a[suda-uatrack*="hottopic_r2"], a[suda-uatrack*="1022-topic"]');
   if (topic) return callback({ 'topic': topic.textContent.trim().replace(/#/g, '') });
   else return callback();
 };
@@ -2600,7 +2657,7 @@ weibo.text = (function () {
 // 从一条微博中找到他的作者
 weibo.author = {};
 weibo.author.dom = function (feed) {
-  return feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard]');
+  return feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard], .WB_detail>.WB_info>.W_fb[usercard]');
 };
 weibo.author.id = function (feed) {
   var author = weibo.author.dom(feed);
@@ -2616,7 +2673,7 @@ weibo.author.name = function (feed) {
 // 从一条微博中找到他的原作者
 weibo.original = {};
 weibo.original.dom = function (feed) {
-  return feed.querySelector('.WB_media_expand .WB_info .WB_name');
+  return feed.querySelector('.WB_media_expand .WB_info .WB_name, .WB_expand .WB_info .W_fb');
 };
 weibo.original.id = function (feed) {
   var originalAuthor = weibo.original.dom(feed);
@@ -3114,7 +3171,7 @@ filter.items.other.hidethese.deleted_forward = filter.item({
   'rule': function deletedForwardFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.getAttribute('isforward') === '1' &&
-      !feed.querySelector('.WB_media_expand .WB_info .WB_name')) return 'hidden';
+      !weibo.original.dom(feed)) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -3240,9 +3297,12 @@ filter.items.other.spam.same_account = filter.item({
     var author = feed.querySelector('.WB_name[usercard]');
     if (!author) return null;
     var id = author.getAttribute('usercard').split('=')[1];
-    var number = document.querySelectorAll('[node-type="feed_list"] ' +
-      '.WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])' +
-      '>.WB_feed_datail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]').length;
+    var number = document.querySelectorAll(
+      // v5
+      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_datail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]' + ',' +
+      // v6 TODO
+      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_detail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]'
+    ).length;
     if (number >= this.ref.number.conf) {
       feed.setAttribute('yawf-reason', text.sameAccountFilterReason);
       return 'account-' + this.ref.action.conf;
@@ -3657,16 +3717,17 @@ filter.predef.group('layout');
   };
 
   subtitle('Icon');
-  item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico { display: none !important; }');
-  item('Member', 5, '.W_ico16[class*="ico_member"], .ico_member_dis, [class^="ico_vip"] { display: none !important; }');
-  item('Approve', 5, '.approve { display: none !important; }');
-  item('ApproveCo', 5, '.approve_co { display: none !important; }');
+  item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
+  item('Member', 5, '.W_ico16[class*="ico_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
+  item('Approve', 5, '.approve, .icon_approve { display: none !important; }');
+  item('ApproveCo', 5, '.approve_co, .icon_approve_co { display: none !important; }');
+  item('ApproveDead', 107, '.icon_approve_dead { display: none !important; }');
   item('Club', 5, '.ico_club { display: none !important; }');
   item('VGirl', 5, '.ico_vlady { display: none !important; }');
-  item('Taobao', 5, '.ico_taobao { display: none !important; }');
-  item('Gongyi', 93, '.ico_gongyi { display: none !important; }');
-  item('Zongyika', 29, '.zongyika2014 { display: none !important; }');
-  item('Youji', 35, '.lvxing2014, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
+  item('Taobao', 5, '.ico_taobao, .icon_tmall { display: none !important; }');
+  item('Gongyi', 93, '.icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
+  item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }');
+  item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
 
   subtitle('Nav');
   item('LogoImg', 94, function replaceLogo() {
@@ -3677,10 +3738,10 @@ filter.predef.group('layout');
     var logo = util.dom.create(html.navLogo);
     img.parentNode.replaceChild(logo, img);
   });
-  item('Main', 5, '.gn_nav>div:nth-child(1) { display: none !important; }');
-  item('Hot', 5, '.gn_nav>div:nth-child(2) { display: none !important; }');
+  item('Main', 5, '.gn_nav>div:nth-child(1), .gn_nav_list>li:nth-child(1) { display: none !important; }');
+  item('Hot', 5, '.gn_nav>div:nth-child(2), .gn_nav_list>li:nth-child(2) { display: none !important; }');
   item('App', 5, '.gn_nav>div:nth-child(3) { display: none !important; }');
-  item('Game', 5, '.gn_nav>div:nth-child(4) { display: none !important; }');
+  item('Game', 5, '.gn_nav>div:nth-child(4), .gn_nav_list>li:nth-child(3) { display: none !important; }');
   item('NoticeNew', 87, '.WB_global_nav .gn_notice_new .W_new { display: none; } .WB_global_nav .gn_setting .gn_notice_new .ico { background-position: -275px -6px; }');
   item('Member', 5, '.gn_setting[node-type="member"] { display: none !important; }');
 
@@ -3693,7 +3754,7 @@ filter.predef.group('layout');
   item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count { display: none !important; }');
 
   subtitle('Middle');
-  item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"] { display: none !important; }');
+  item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"], #v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
   item('FeedRecommand', 35, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]) { display: none !important; }');
   item('MemberTip', 5, '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
 
@@ -3705,13 +3766,13 @@ filter.predef.group('layout');
   item('Trial', 5, '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
-  item('Member', 5, '#trustPagelet_recom_memberv5 { display: none !important; }');
+  item('Member', 5, '#trustPagelet_recom_memberv5, #v6_trustPagelet_recom_member { display: none !important; }');
   item('Weibo', 5, '[yawf-id="rightmod_recom_weibo"] { display: none !important; }');
   item('Location', 5, '[yawf-id="rightmod_recom_location"] { display: none !important; }');
   item('Music', 5, '[yawf-id="rightmod_recom_music"] { display: none !important; }');
   item('Movie', 5, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('Book', 5, '[yawf-id="rightmod_recom_book"] { display: none !important; }');
-  item('Notice', 5, '#pl_rightmod_noticeboard { display: none !important; }');
+  item('Notice', 5, '#pl_rightmod_noticeboard, #v6_pl_rightmod_noticeboard { display: none !important; }');
 
   subtitle('Weibo');
   item('RecomFeed', 2, '[node-type="feed_list_recommend"] { display: none !important; }');
@@ -3807,7 +3868,7 @@ filter.predef.group('layout');
   });
 
   subtitle('Other');
-  item('Ads', 2, '#plc_main [id^="pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
+  item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('FeedRecom', 5, '.W_main_2r [id^="Pl_Third_Inline__"] { display: none !important; }');
   item('Footer', 5, '.global_footer { display: none !important; }');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
@@ -4090,7 +4151,15 @@ filter.items.tool.weibotool.unwrap_text = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.unwrapText',
   'text': '{{unwrapTextDesc}}',
-  'ainit': util.css('.WB_info, .WB_text { display: inline } .WB_info+.WB_text::before { content: ": " } .WB_func { margin-top: 5px } .B_index .WB_feed .W_ico16 { vertical-align: -3px !important }'),
+  'ainit': function () {
+    util.css.add(util.version.chose(util.str.cmt(function () { /* !CSS
+      .WB_feed .WB_feed_type .WB_info, .WB_feed .WB_feed_type .WB_info+.WB_text { display: inline }
+      .WB_feed .WB_feed_type .WB_info+.WB_text::before { content: ": " }
+      .WB_feed .WB_feed_type .WB_func { margin-top: 5px }
+      .WB_feed .WB_feed_type .B_index .WB_feed .W_ico16 { vertical-align: -3px !important }
+    */ }), '/* TODO */'
+    ));
+  },
 }).addto(filter.groups.tool);
 
 // 个人主页自动打开微博列表
@@ -4262,6 +4331,7 @@ filter.items.tool.stylish.hover_show_fold = filter.item({
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { max-height: 1000px; padding: 0 0 11px; }
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; padding: 0 0 11px; }
     */ }));
   },
 }).addto(filter.groups.tool);
@@ -4747,16 +4817,23 @@ var extension = (function () {
   }, util.priority.DEFAULT + util.priority.AFTER);
 }());
 
-GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
-  // 在顶部添加按钮
+util.init(function () {
+  util.css.add(util.str.cmt(util.version.chose(function () { /*! CSS
   .gn_setting[node-type="member"]:last-child { margin-right: 44px; }
   .WB_global_nav .gn_setting .gn_tab.gn_filter .ico { background-image: url("{{filter-img}}"); !important; background-position: 0 0 !important; }
   .WB_global_nav .gn_search { width: 210px !important; left: 440px !important; position: absolute !important; }
   .WB_global_nav .gn_search .gn_input { width: 168px !important; }
+  .yawf-config-body { margin: -20px; padding: 20px; }
+  */ }, function () { /*! CSS
+  .WB_global_Atest .gn_search .W_input { width: 210px; }
+  */ })));
+}, util.priority.DEFAULT);
+
+GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   // 设置框相关样式
   .yawf-Layer.yawf-drag { opacity: 0.67; -moz-user-select: none; user-select: none; }
   #yawf-config [node-type="inner"] { padding: 20px; }
-  .yawf-config-body { margin: -20px; max-height: 360px; overflow-y: auto; padding: 20px; width: 760px; }
+  .yawf-config-body { max-height: 360px; overflow-y: auto; width: 760px; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
   .yawf-config-layer { padding-bottom: 20px; }
   .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; }
@@ -4807,18 +4884,25 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-whats-new-body { max-height: 300px; overflow: auto; padding: 0 20px; }
   .yawf-whats-new-footer { margin: 0 0 20px; color: #555; line-height: 20px; padding: 0 20px; }
   .yawf-whats-new-footer .yawf-configItem, .yawf-groupText { margin: 0; }
+  .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus) { display: none; }
   // 隐藏微博
   [yawf-display$="-hidden"] { display: none !important; }
   [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { opacity: 1; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen):not(.WB_feed_detail) { display: none !important; }
+  // v5
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen) { display: none !important; }
+  // v6 TODO
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { transition: max-height 0.3s; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding: 0; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
   // 其他
   .WB_feed_together .wft_users { display: none; }
   .WB_feed_together[yawf-sonfold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
@@ -4826,7 +4910,6 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
   .W_miniblog { visibility: hidden; }
   .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
-  input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus) { display: none; }
   // 拖拽
   #yawf-drop-area { background: rgba(251, 251, 216, 0.8); display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
   .yawf-drop-area-desc { height: 170px; width: 170px; margin: 16px 16px -206px 16px; padding: 10px; -moz-user-select: none; user-select: none; border: 4px dashed #ddd; border-radius: 20px; }
