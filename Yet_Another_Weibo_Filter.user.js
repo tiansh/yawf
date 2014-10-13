@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name              Yet Another Weibo Filter
 // @name:zh-CN        Yet Another Weibo Filter 看真正想看的微博
 // @name:zh-HK        Yet Another Weibo Filter 看真正想看的微博
@@ -12,8 +12,9 @@
 // @description:en    filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
+// @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.107
+// @version           2.0.108
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -541,6 +542,7 @@ var html = {
   'whatsNewBottom': '<div class="yawf-whats-new-bottom"></div>',
   // 查看原图
   'viewOriginalLink': '<a target="_blank" class="show_big" suda-data="key=tblog_newimage_feed&value=view_original" action-type="maximum" href="javascript:;"><em class="W_ico12 ico_showbig"></em>{{viewOriginalText}}</a><i class="W_vline">|</i>',
+  '~v6~viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" class="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -3718,7 +3720,7 @@ filter.predef.group('layout');
 
   subtitle('Icon');
   item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
-  item('Member', 5, '.W_ico16[class*="ico_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
+  item('Member', 5, '.W_ico16[class*="ico_member"], .W_icon[class*="icon_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
   item('Approve', 5, '.approve, .icon_approve { display: none !important; }');
   item('ApproveCo', 5, '.approve_co, .icon_approve_co { display: none !important; }');
   item('ApproveDead', 107, '.icon_approve_dead { display: none !important; }');
@@ -3876,7 +3878,7 @@ filter.predef.group('layout');
   item('IM', 46, '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
 
   var tagRightbarMods = function () {
-    var mods = document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id])');
+    var mods = document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])');
     if (!mods) return;
     var identifiers = {
       '.right_content.hot_topic': 'rightmod_zt_hottopic',
@@ -3885,7 +3887,12 @@ filter.predef.group('layout');
       '[change-data*="key=index_LBS"]': 'rightmod_recom_location',
       '[change-data*="key=index_song"]': 'rightmod_recom_music',
       '[change-data*="key=index_mov"]': 'rightmod_recom_movie',
-      '[change-data*="key=index_book"]': 'rightmod_recom_book'
+      '[change-data*="key=index_book"]': 'rightmod_recom_book',
+      // v6
+      '[change-data*="key=hottopic_r2"]': 'rightmod_zt_hottopic',
+      '[change-data*="key=interest_r2"]': 'rightmod_recom_interest',
+      '[change-data*="key=weibo_r2"]': 'rightmod_recom_weibo',
+      '[change-data*="key=song_r2"]': 'rightmod_recom_music',
     };
     Array.from(mods).forEach(function (mod) {
       Object.keys(identifiers).forEach(function (qs) {
@@ -4197,15 +4204,17 @@ filter.items.tool.weibotool.view_original = filter.item({
   'text': '{{viewOriginalDesc}}',
   'ainit': function () {
     var addOriLink = function () {
-      var a = document.querySelector('a.show_big[action-data]:not([yawf-viewori])'), l;
+      var a = document.querySelector('a.show_big[action-data]:not([yawf-viewori]), [action-type="widget_photoview"]:not([yawf-viewori])'), l;
       if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
+      var ref;
       var updateLink = function () {
         var arg = a.getAttribute('action-data').match(/pid=(\w+)&mid=(\d+)&uid=(\d+)/);
         if (!arg) return;
         if (!l) {
           var vol = util.dom.create('div', util.str.fill(html.viewOriginalLink));
-          l = vol.firstChild;
-          while (vol.firstChild) a.parentNode.insertBefore(vol.firstChild, a);
+          l = vol.querySelector('a');
+          if (util.v6) ref = a.parentNode.parentNode; else ref = a;
+          while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
         }
         l.href = util.str.fill(url.view_ori, { 'uid': arg[3], 'mid': arg[2], 'pid': arg[1] });
       };
@@ -4345,11 +4354,13 @@ filter.items.tool.stylish.whitelist_highlight = filter.item({
   'ref': filter.ref.rgba('#dafee4'),
   'text': '{{whitelistHighlightDesc}}',
   'ainit': function () {
-    util.css.add(util.str.fill(util.str.cmt(function () { /*
+    util.css.add(util.str.fill(util.str.cmt(util.version.chose(function () { /*
       .WB_media_expand .WB_arrow { display: none !important; }
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -20px 0 0 {{color}}, 20px 0 0 {{color}}; }
       [node-type="feed_list"] .WB_feed_together .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -10px 0 0 {{color}}, 10px 0 0 {{color}}; }
-    */ }), { 'color': '' + this.ref.rgba }));
+    */ }, function () { /*
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important;
+    */})), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.tool);
 
@@ -4826,6 +4837,8 @@ util.init(function () {
   .yawf-config-body { margin: -20px; padding: 20px; }
   */ }, function () { /*! CSS
   .WB_global_Atest .gn_search .W_input { width: 210px; }
+  .WB_global_nav .gn_search .W_input { width: 210px; }
+  .WB_global_nav .gn_header { width: 1000px; }
   */ })));
 }, util.priority.DEFAULT);
 
