@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.110
+// @version           2.0.111
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -208,7 +208,7 @@ var text = {
   'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity' },
   'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博', 'zh-hk': '來自微話題的微博', 'zh-tw': '來自微話題的微博', 'en': 'Weibo via 微话题 (micro Topic)' },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博|{{<action>}}', 'zh-hk': '自訂來源微博|{{<action>}}', 'zh-tw': '自訂來源微博|{{<action>}}', 'en': 'Weibo with customize source | {{<action>}}' },
-  'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博',  'en': 'hide Weibo' },
+  'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博', 'en': 'hide Weibo' },
   'customizeSourceReset': { 'zh-cn': '将来源改为“微博 weibo.com”', 'zh-hk': '將來源改為「微博 weibo.com」', 'zh-tw': '將來源改為「微博 weibo.com」', 'en': 'modify source to "微博 weibo.com"' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
   // 刷屏与版聊
@@ -1527,7 +1527,7 @@ filter.rules = (function () {
 // 单条微博页面永远不应当隐藏微博
 filter.rules.add(1e6, function singleWeiboPageUnsetRule(feed) {
   return document.querySelector('[id^="Pl_Official_WeiboDetail__"]') ? 'unset' : null;
-})
+});
 
 // 过滤器的对话框
 filter.dialog = (function () {
@@ -3278,8 +3278,8 @@ filter.items.other.hidethese.customize_source = filter.item({
       'type': 'select',
       'default': 'hidden',
       'select': [
-        {'value': 'hidden', text: '{{customizeSourceHidden}}'},
-        {'value': 'reset', text: '{{customizeSourceReset}}'},
+        { 'value': 'hidden', text: '{{customizeSourceHidden}}' },
+        { 'value': 'reset', text: '{{customizeSourceReset}}' },
       ],
     }
   },
@@ -3293,7 +3293,7 @@ filter.items.other.hidethese.customize_source = filter.item({
       if (this.ref.action.conf === 'hidden') return 'hidden';
       from.forEach(function (from) {
         from.textContent = util.str.fill(' {{weiboViaText}} ');
-        var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom)); 
+        var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
         from.parentNode.appendChild(wb);
       });
     } else {
@@ -3306,7 +3306,7 @@ filter.items.other.hidethese.customize_source = filter.item({
           source.textContent = text.defaultSource;
         });
       }
-    };
+    }
     return null;
   },
 }).addto(filter.groups.other);
@@ -3589,7 +3589,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
         var base = function (b, c) {
           var a = window.STK;
           var d = {}, e = a.lib.feed.API(b, c);
-          for (var f in e) !d[f] && (d[f] = e[f]);
+          for (var f in e) !d[f] && (d[f] = e[f]); /* as is */
           action(d, c);
         };
         /* STK.pl.content.homefeed.source.homefeed.feedList */
@@ -3887,7 +3887,7 @@ filter.predef.group('layout');
 
   subtitle('Middle');
   item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"], #v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
-  item('FeedRecommand', 35, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]) { display: none !important; }');
+  item('FeedRecommand', 35, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]), .WB_feed_newuser[node-type="recommfeed"] { display: none !important; }');
   item('MemberTip', 5, '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
 
   subtitle('Right');
@@ -3909,7 +3909,7 @@ filter.predef.group('layout');
   item('Notice', 5, '#pl_rightmod_noticeboard, #v6_pl_rightmod_noticeboard { display: none !important; }');
 
   subtitle('Weibo');
-  item('RecomFeed', 2, '[node-type="feed_list_recommend"] { display: none !important; }');
+  item('RecomFeed', 2, '[node-type="feed_list_recommend"]{ display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.type_spe_pos { display: none; }');
   item('TopicCard', 5, '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
@@ -4974,7 +4974,7 @@ util.init(function () {
   */ }), {
     'filter-img': images.filter,
   }), util.str.cmt(function () { /*! CSS
-  .WB_global_Atest .gn_search .W_input { box-sizing: border-box; height: 32px; }
+  .gn_search .W_input { box-sizing: border-box !important; height: 32px !important; }
   .gn_filter .W_ficon { font-family: "yawf-iconfont"; }
   .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
   .yawf-config-header { margin-bottom: -50px; }
