@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.112
+// @version           2.1.113
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -462,14 +462,19 @@ var text = {
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
-    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或直接<a target="_blank" href="http://weibo.com/tsh90/weibo" rel="noreferrer">私信作者</a>；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>本脚本参考并使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不见心不烦</a>脚本的部分代码。</p>',
-    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90/weibo" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90/weibo" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">feedback page</a>, or <a target="_blank" href="http://weibo.com/tsh90/weibo" rel="noreferrer">send message to author</a>. Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>Some codes of this script come from <a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
+    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>本脚本参考并使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不见心不烦</a>脚本的部分代码。</p>',
+    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
+    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
+    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">feedback page</a>, or <a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">send message to author</a>. Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>Some codes of this script come from <a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
   },
   // 拖拽
   'dropAreaTitle': { 'zh-cn': '拖放至此<br />快速创建过滤器', 'zh-hk': '拖放至此<br />快速創建篩選器', 'zh-tw': '拖放至此<br />快速創建篩選器', 'en': 'Drop Here to Create Filter' },
-  'dropAreaText': { 'zh-cn': '将文字或链接拖放至此，快速创建过滤器。', 'zh-hk': '將文字或連結拖放至此，快速創建篩選器。', 'zh-tw': '將文字或連結拖放至此，快速創建篩選器。', 'en': 'Drop text or link here to create filter.' },
+  'dropAreaText': {
+    'zh-cn': '将要设置过滤器的内容拖拽至此，即可快速创建过滤器。现已可识别：<br /><ul><li>微博正文的文字或链接</li><li>用户头像或链接</li><li>话题</li><li>来源链接</li></ul>',
+    'zh-hk': '將要設置篩選器的內容拖拽至此，即可快速創建篩選器。現已可識別：<br /><ul><li>微博正文的文字或連結</li><li>使用者頭像或連結</li><li>話題</li><li>來源連結</li></ul>',
+    'zh-tw': '將要設置篩選器的內容拖拽至此，即可快速創建篩選器。現已可識別：<br /><ul><li>微博正文的文字或連結</li><li>使用者頭像或連結</li><li>話題</li><li>來源連結</li></ul>',
+    'en': 'Drop items here to create filter. These items may be recognized:<br /><ul><li>Text or link in Weibo content</li><li>Avatar or user link</li><li>topic</li><li>source</li></ul>'
+  },
   'fastCreateChoseTitle': { 'zh-cn': '创建过滤器', 'zh-hk': '創建篩選器', 'zh-tw': '創建篩選器', 'en': 'Create Filter' },
   'fastFilterChoseText': { 'zh-cn': '请选择要创建的过滤器：', 'zh-hk': '請選擇要創建的篩選器：', 'zh-tw': '請選擇要創建的篩選器：', 'en': 'Chose the filter(s) you want:' },
   // 扩展
@@ -1678,13 +1683,14 @@ filter.fast.valid = (function () {
 // 从拖拽得到的东西里面找出来我们关心的东西
 filter.fast.recognize = (function () {
   var listeners = [];
-  var got = function (element) {
+  var got = function (element, element2) {
     util.debug('got %o', element);
+    if (!element) if (element2) return got(element2); else return;
     // 问所有过滤器是不是需要
     var candidate = [];
     listeners.forEach(function (details, i) { candidate[i] = null; });
     listeners.forEach(function (details, i) {
-      util.func.catched(details.recognizer)(element, function callback(val) {
+      var callback = function callback(val) {
         if (!val) return callback([]);
         else if (!Array.isArray(val)) return callback([val]);
         else candidate[i] = val.map(function (val) { return { 'filter': details, 'value': val }; });
@@ -1693,7 +1699,9 @@ filter.fast.recognize = (function () {
         // 找到所有备选的情况给用户做选择
         var chosen = candidate.reduce(function (x, y) { return x.concat(y); });
         if (chosen.length) filter.fast.dialog(chosen);
-      });
+        else if (element2) got(element2);
+      };
+      util.func.catched(details.recognizer)(element, callback);
     });
   };
   var add = function (details) {
@@ -1760,13 +1768,8 @@ filter.fast.item = function (details) {
 // 将文本、链接等拖拽到框内，快速创建过滤器
 filter.fast.active = (function () {
   // 获得拖拽释放的元素之后，根据不同过滤器的设置处理元素
-  var got = function (element) {
-    if (!element) return;
-    // 忽略最外面套的em/strong
-    if (element.tagName && element.firstChild === element.lastChild &&
-      ['strong', 'em'].indexOf(element.tagName.toLowerCase()) !== -1)
-      element = element.firstChild;
-    filter.fast.recognize.got(element);
+  var got = function (element, target) {
+    filter.fast.recognize.got(element, target);
   };
   var area = (function () {
     var dropArea, cont, target = null, active = false;
@@ -1793,7 +1796,7 @@ filter.fast.active = (function () {
       document.body.appendChild(dropArea);
     };
     var content = function () {
-      util.debug('cont: %o', cont);
+      util.debug('content: %o', cont.innerHTML);
       if (cont.firstChild === cont.lastChild) return cont.firstChild;
       else return cont;
     };
@@ -1815,7 +1818,7 @@ filter.fast.active = (function () {
     document.addEventListener('dragend', function (e) {
       if (area.done()) return;
       // e.preventDefault(); e.stopPropagation();
-      got(area.content());
+      got(area.content(), e.target);
       area.clear();
       area.hide();
     }, false);
@@ -1951,39 +1954,46 @@ filter.fix.son = function (feed) {
 
 // 真正微博过滤的核心模块
 filter.active = function (feed) {
-  // 同源合并的微博
-  var sonFeeds = Array.from(feed.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
-  var action = null, parentAction = null;
-  var needSwap = function (action) {
-    if (!sonFeeds.length) return false;
-    if (['hidden', 'fold'].indexOf(action) === -1) return false;
-    return true;
-  };
-  var setAction = function (feed, action) {
-    feed.setAttribute('yawf-display', 'display-' + action);
-  };
-  while (true) {
-    action = filter.rules.parse(feed) || 'unset';
-    // 如果父微博被屏蔽或折叠，那么就把下面一条没被屏蔽的拉上来换个位置
-    if (!needSwap(action)) break;
-    setAction(filter.fix.swap(feed, sonFeeds.pop()), action);
-  }
-  parentAction = action;
-  // 最后处理所有下面的子微博
-  var fixSonWeibo = function (son) {
-    var action = filter.rules.parse(son) || 'unset';
-    setAction(son, action);
-    // 如果一列里面有白名单的，那么把白名单的特别换到外面去
-    if (parentAction !== 'show' && action === 'show') {
-      setAction(filter.fix.swap(feed, son), parentAction);
-      parentAction = action;
+  (util.version.chose(function () {
+    // 同源合并的微博
+    var sonFeeds = Array.from(feed.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
+    var action = null, parentAction = null;
+    var needSwap = function (action) {
+      if (!sonFeeds.length) return false;
+      if (['hidden', 'fold'].indexOf(action) === -1) return false;
+      return true;
+    };
+    var setAction = function (feed, action) {
+      feed.setAttribute('yawf-display', 'display-' + action);
+    };
+    while (true) {
+      action = filter.rules.parse(feed) || 'unset';
+      // 如果父微博被屏蔽或折叠，那么就把下面一条没被屏蔽的拉上来换个位置
+      if (!needSwap(action)) break;
+      setAction(filter.fix.swap(feed, sonFeeds.pop()), action);
     }
-  };
-  while (sonFeeds.length) fixSonWeibo(sonFeeds.shift());
-  setAction(feed, parentAction);
-  // 修一下转发合并和折叠展开
-  filter.fix.son(feed);
-  filter.fix.fold(feed);
+    parentAction = action;
+    // 最后处理所有下面的子微博
+    var fixSonWeibo = function (son) {
+      var action = filter.rules.parse(son) || 'unset';
+      setAction(son, action);
+      // 如果一列里面有白名单的，那么把白名单的特别换到外面去
+      if (parentAction !== 'show' && action === 'show') {
+        setAction(filter.fix.swap(feed, son), parentAction);
+        parentAction = action;
+      }
+    };
+    while (sonFeeds.length) fixSonWeibo(sonFeeds.shift());
+    setAction(feed, parentAction);
+    // 修一下转发合并和折叠展开
+    filter.fix.son(feed);
+    filter.fix.fold(feed);
+  }, function () {
+    // 新版当前不支持对同源转发合并微博的处理
+    action = filter.rules.parse(feed) || 'unset';
+    feed.setAttribute('yawf-display', 'display-' + action);
+    filter.fix.fold(feed);
+  })());
 };
 
 // 按类型过滤器函数
@@ -2516,9 +2526,13 @@ filter.fast.content.validator = function (element) {
   return util.dom.matches(element.parentNode, '.WB_text, .WB_text *');
 };
 filter.fast.content.recognizer = {};
-filter.fast.content.recognizer.keyword = function (element, callback) {
+filter.fast.content.recognizer.keyword = function keyword(element, callback) {
   if (element.nodeType === Node.TEXT_NODE)
     callback({ 'text': element.textContent });
+  else if (element.tagName && ['a', 'img'].indexOf(element.tagName.toLocaleLowerCase()) !== -1)
+    callback();
+  else if (element.firstChild === element.lastChild)
+    keyword(element.firstChild, callback);
   else callback();
 };
 filter.fast.content.recognizer.regexp = function (element, callback) {
@@ -3425,7 +3439,7 @@ filter.item({
 filter.items.other.scripttool = {};
 
 // 快速创建过滤器
-if (util.browser.fx.avaliable) filter.items.other.scripttool.use_fast_creator = filter.item({
+filter.items.other.scripttool.use_fast_creator = filter.item({
   'group': 'scripttool',
   'version': 36,
   'type': 'boolean',
@@ -3597,12 +3611,17 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
           base(b, { plNode: b });
         };
         /* check for home_new_feed_tip and auto load new feeds... */
+        var pending = false;
         (new MutationObserver(function (mutations) {
           if (!window.STK) return; /* we need stk to work */
           var tip = window.STK.sizzle('#home_new_feed_tip');
           if (!tip.length) return;
-          feedList(window.STK.sizzle('#v6_pl_content_homefeed')[0]);
           window.STK.removeNode(tip[0]);
+          if (pending) return; pending = true;
+          setTimeout(function () {
+            pending = false;
+            feedList(window.STK.sizzle('#v6_pl_content_homefeed')[0]);
+          }, 100);
         })).observe(document.body, { 'childList': true, 'subtree': true });
       } + '') + '())';
     } else {
@@ -3883,7 +3902,7 @@ filter.predef.group('layout');
   item('App', 5, '#pl_leftnav_app { display: none !important; }');
   item('New', 106, '.WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
-  item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count { display: none !important; }');
+  item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count { display: none !important; }');
 
   subtitle('Middle');
   item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"], #v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
@@ -4975,11 +4994,11 @@ util.init(function () {
     'filter-img': images.filter,
   }), util.str.cmt(function () { /*! CSS
   .gn_search .W_input { box-sizing: border-box !important; height: 32px !important; }
-  .gn_filter .W_ficon { font-family: "yawf-iconfont"; }
+  .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
   .yawf-config-header { margin-bottom: -50px; }
   .yawf-config-header ul { position: absolute; top: 9px; left: 10em; }
-  #yawf-config .W_layer_title { margin-top: 8px; line-height: 30px; }
+  #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   */ })));
   if (util.v6) util.css.add(fonts.iconfont);
 }, util.priority.DEFAULT);
@@ -5073,6 +5092,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-drop-area-content { height: 230px; width: 230px; position: relative; z-index: 10002; opacity: 0; }
   #yawf-fast-filter-chose, #yawf-fast-filter-list { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
+  #yawf-drop-area ul { list-style: disc; margin-left: 2em; }
   // 其他页面优化设置
   #pl_rightmod_myinfo:empty { height: 156px; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
