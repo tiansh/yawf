@@ -19,6 +19,6 @@ pre { background: #eee; padding: 1em 2em; }
 .browser { display: none; margin-bottom: 1em; }
 .support { min-height: 80px; padding-left: 80px; }
 .browser-icon { float: left; margin: 8px; margin-left: -80px; }
-#show_all { display: block; background: #dedede; color: #777; text-align: center; line-height: 1.6em; cursor: pointer; }
+#show_all { background: #dedede; color: #777; text-align: center; line-height: 1.6em; cursor: pointer; }
 .v6support { font-weight: bold; color: #300; }
-.nosupport { font-weight: bold; color: #300; }
+.v6support { font-weight: bold; color: #300; }

@@ -10,13 +10,14 @@
   <link rel="alternate" hreflang="zh-cn" href="https://tiansh.github.io/yawf/zh-cn.html" />
   <link rel="alternate" hreflang="zh-tw" href="https://tiansh.github.io/yawf/zh-tw.html" />
   <link rel="alternate" hreflang="zh-hk" href="https://tiansh.github.io/yawf/zh-hk.html" />
-  <link rel="alternate" hreflang="x-default" href=https://tiansh.github.io/yawf/" />
+  <link rel="alternate" hreflang="x-default" href="https://tiansh.github.io/yawf/" />
   <link rel="canonical" href="https://tiansh.github.io/yawf/en.html">
   <link rel="stylesheet" href="main.css" />
   <script src="main.js"></script>
+  <script>document.write(browserCss());</script>
 </head>
-<body>
-  <header itemscope itemtype="http://schema.org/SoftwareApplication">
+<body itemscope itemtype="http://schema.org/SoftwareApplication">
+  <header>
     <label id="lang">
       Language:
       <select id="lang_select">
@@ -32,23 +33,48 @@
   <nav>
     <dl>
       <dt><a itemprop="installUrl" id="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">INSTALL SCRIPT</a></dt>
-      <dd><a target="_blank" href="http://weibo.com/tsh90">Connect Me</a></dd>
+      <dd><a target="_blank" href="http://weibo.com/tsh90">Contact Me</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">FQA <small style="font-size: 80%; line-height: 250%">(Chinese)</small></a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/issues">Open Issues</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf" style="font-size: 90%;">View on GitHub</a></dd>
     </dl>
   </nav>
-  <p>filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions</p>
+  <p>Filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions</p>
+  <p class="v6support">Attention, some advanced functions do not support Weibo v6, <a href="https://github.com/tiansh/yawf/issues/17">View detailed issue list(Chinese)</a>.</p>
   <h2>Installation Guide</h2>
   <div class="in">
-    <p id="checkFx">Please use <a href="http://www.mozilla.org/en-US/firefox/all/" target="_blank">Mozilla Firefox Browser</a> to install this script.</p>
-    <p>You need to install <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/" target="_blank">Greasemonkey extension</a> first. After install and restart Firefox, click the "INSTALL SCRIPT" button to apply install.</p>
+  <div class="browser odd ie safari nosupport"><p>Sorry, your current web browser is not supported. Please choose one of the following supported browsers.</p></div>
+    <div class="browser firefox support all odd ie safari unknown">
+      <a href="https://www.mozilla.org/en-US/firefox/all/#en-GB" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
+      <div>
+        Mozilla Firefox users need to install <a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">GreaseMonkey extension</a> to run this script.<br />
+        If you have already installed this extension, <a href="replace_bilibili_bofqi.user.js">click here to install script</a>, and confirm the script installation.
+      </div>
+    </div>
+    <div class="browser opera support all odd ie safari unknown">
+      <a href="http://www.opera.com/" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
+      <div>
+        Opera users need to install <a href="https://addons.opera.com/en/extensions/details/tampermonkey-beta/">Tampermonkey Beta add-on</a> to run this script.<br />
+        If you have already installed this add-on, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.
+      </div>
+    </div>
+    <div class="browser chrome chromium support all odd ie safari unknown">
+      <a href="https://www.google.com/chrome/browser/" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
+      <div>
+        Google Chrome users need to install <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey extension</a> to run this script.<br />
+        If you have already installed this extension, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.
+      </div>
+    </div>
+    <div id="show_all" class="browser firefox opera chrome chromium">Click to view all supported web browsers</div>
+  </div>
+  <h2>Using The Script</h2>
+  <div class="in">
     <p>After installation, click the funnel icon on right top of page to config this script.</p>
     <img itemprop="screenshot" width="296" height="153" alt="Click the funnel icon on right top of page to show script setting" src="./img/useage.png" />
     <p>Instead of adding filters of keywords, accounts, sources and links from the setting panel, you may drag and drop or use right-click menu to create filters.</p>
     <p>Drag the contents you wish to hide, fold or highlight with your cursor, you can see there is a dropping area with yellow background at the top right corner, release your cursor in the dropping area and you may quickly create a filter by choosing the corresponding option from the pop-up dialogue box.</p>
     <img itemprop="screenshot" width="520" height="380" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
-    <p>Right click on Weibo, and chose filter in the right-click menu.</p>
+    <p>Right click on Weibo, and chose filter in the right-click menu.(Only supported in Firefox)</p>
     <img itemprop="screenshot" width="750" height="326" alt="Context menu shown after right-click on Weibo" src="./img/contextmenu_cht.png" />
     <img itemprop="screenshot" width="550" height="310" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
     <p>For users who used Weibo Content Filter, you may convert and import script setting from that script by using this <a href="https://tiansh.github.io/yawf/wcf_convert.html">Setting Convert Tool (Chinese)</a>.</p>
