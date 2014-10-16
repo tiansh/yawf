@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.0.111
+// @version           2.0.112
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1884,7 +1884,7 @@ filter.fix.fold = (function () {
 // 将父微博和下面的子微博交换
 filter.fix.swap = function (parent, son) {
   var x = util.dom.create('div', '');
-  ['.WB_face', '.WB_info', '.WB_text', '.WB_func'].map(function (q) {
+  ['.WB_face', '.WB_info', '.WB_text', '.WB_detail>.WB_func'].map(function (q) {
     (function (a, b) {
       b.parentNode.replaceChild(x, b);
       a.parentNode.replaceChild(b, a);
