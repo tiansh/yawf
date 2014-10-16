@@ -10,10 +10,11 @@
   <link rel="alternate" hreflang="zh-tw" href="https://tiansh.github.io/yawf/zh-tw.html" />
   <link rel="alternate" hreflang="zh-hk" href="https://tiansh.github.io/yawf/zh-hk.html" />
   <link rel="alternate" hreflang="en" href="https://tiansh.github.io/yawf/en.html" />
-  <link rel="alternate" hreflang="x-default" href=https://tiansh.github.io/yawf/" />
+  <link rel="alternate" hreflang="x-default" href="https://tiansh.github.io/yawf/" />
   <link rel="canonical" href="https://tiansh.github.io/yawf/zh-cn.html">
   <link rel="stylesheet" href="main.css" />
   <script src="main.js"></script>
+  <script>document.write(browserCss());</script>
 </head>
 <body itemscope itemtype="http://schema.org/SoftwareApplication">
   <header>
@@ -39,16 +40,41 @@
     </dl>
   </nav>
   <p itemprop="description">新浪微博根据关键词、作者、话题、来源等过滤微博，修改版面，以及其他相关功能。</p>
+  <p class="v6support">注意，当前部分高级功能无法支持新版 v6 微博，<a href="https://github.com/tiansh/yawf/issues/17">查看详细地问题列表</a>。</p>
   <h2>安装教程</h2>
   <div class="in">
-    <p id="checkFx">请使用 <a href="http://www.mozilla.org/en-US/firefox/all/#zh-CN" target="_blank">Mozilla Firefox 浏览器</a>安装本脚本，<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#%E5%85%B6%E4%BB%96%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8%E8%AF%A5%E8%84%9A%E6%9C%AC">使用 Google Chrome 或 Opera 浏览器安装脚本将无法使用部分功能</a>。</p>
-    <p>您需要首先需要安装 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/" target="_blank">Greasemonkey 扩展</a>。安装并重启浏览器后，点击上方的安装脚本按钮并确认安装。</p>
+    <div class="browser odd ie safari nosupport"><p>对不起，脚本当前不支持您使用的浏览器。请考虑选择以下几个支持的浏览器之一。</p></div>
+    <div class="browser firefox support all odd ie safari">
+      <a href="http://www.mozilla.org/en-US/firefox/all/#zh-CN" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
+      <div>
+        使用Mozilla Firefox浏览器的用户，需要安装<a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/">GreaseMonkey附加组件</a>以运行本脚本。<br />
+        如果您已经安装了这个附加组件，<a href="replace_bilibili_bofqi.user.js">点此安装本脚本</a>，在弹出的对话框中确认脚本安装即可。
+      </div>
+    </div>
+    <div class="browser opera support all odd ie safari">
+      <a href="http://www.opera.com/zh-cn" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
+      <div>
+        使用Opera的用户，需要安装<a href="https://addons.opera.com/zh-cn/extensions/details/tampermonkey-beta/">TamperMonkey Beta 扩展</a>以运行本脚本。<br />
+        如果您已经安装了这个扩展，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>，在打开的页面中确认脚本安装即可。
+      </div>
+    </div>
+    <div class="browser chrome chromium support all odd ie safari">
+      <a href="https://www.google.com/intl/zh-CN/chrome/browser/?standalone=1" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
+      <div>
+        使用Google Chrome的用户，需要安装<a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-CN">TamperMonkey 扩展程序</a>以运行本脚本。<br />
+        如果您已经安装了这个扩展程序，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>，在打开的页面中确认脚本安装即可。
+      </div>
+    </div>
+    <div id="show_all" class="browser firefox opera chrome chromium">点击以查看所有支持的浏览器</div>
+  </div>
+  <h2>使用脚本</h2>
+  <div class="in">
     <p>安装成功后，到新浪微博的页面点击右上角的漏斗图标即可进入脚本设置</p>
     <img itemprop="screenshot" width="296" height="153" alt="点击右上角漏斗图标显示脚本设置" src="./img/useage.png" /><br />
     <p>除了在设置界面添加关键字、用户、来源、链接的过滤器外，您还可以使用拖拽或右键菜单快速创建过滤器。（仅限 Firefox 浏览器）</p>
     <p>将您要隐藏、折叠或高亮的内容使用鼠标拖动，即可在右上角看到一个黄底的拖放区域，将对应内容拖放到该区域内松开鼠标，根据弹出的对话框选择即可快速创建过滤器。</p>
     <img itemprop="screenshot" width="520" height="380" alt="拖动想要设置过滤器的内容显示的释放区域" src="./img/drop_chs.png" />
-    <p>在微博上点击右键，可以在菜单中找到快速创建过滤器的相关选项。</p>
+    <p>在微博上点击右键，可以在菜单中找到快速创建过滤器的相关选项。（右键菜单功能仅支持 Mozilla Firefox 浏览器）</p>
     <img itemprop="screenshot" width="750" height="326" alt="在微博上点击右键显示菜单" src="./img/contextmenu_chs.png" />
     <img itemprop="screenshot" width="550" height="310" alt="释放鼠标后显示“创建过滤器”的对话框" src="./img/fastcreate_chs.png" /><br />
     <p>如果您之前使用眼不见心不烦脚本，您可以使用<a href="https://tiansh.github.io/yawf/wcf_convert.html">设置转换工具</a>将该脚本的设置导入到本脚本中。</p>

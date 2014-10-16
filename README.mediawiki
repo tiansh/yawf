@@ -6,7 +6,9 @@
 
 = 看真正想看的微博 Yet Another Weibo Filter =
 
-请使用 Mozilla Firefox 浏览器 Greasemonkey 扩展安装本脚本。
+Mozilla Firefox 浏览器用户，请使用 Greasemonkey 扩展安装本脚本。<br />
+Opera 浏览器用户，请使用 Tampermonkey Beta 扩展安装本脚本。<br />
+Google Chrome 浏览器用户，请使用 Tampermonkey 扩展安装本脚本。
 
 == 主要功能 ==
 

@@ -14,6 +14,11 @@ dl dt a:hover { background: #ffb137; }
 dl dd { line-height: 2em; height: 2em; float: left; background: #f2f2f2; width: 150px; text-align: center; margin: 0.2em 10px; }
 dl dd a { color: #000; }
 dl dd a:hover { background: #ffb137; color: #fff; }
-#checkFx { display: none; }
 .in { margin-left: 40px; }
 pre { background: #eee; padding: 1em 2em; }
+.browser { display: none; margin-bottom: 1em; }
+.support { min-height: 80px; padding-left: 80px; }
+.browser-icon { float: left; margin: 8px; margin-left: -80px; }
+#show_all { display: block; background: #dedede; color: #777; text-align: center; line-height: 1.6em; cursor: pointer; }
+.v6support { font-weight: bold; color: #300; }
+.nosupport { font-weight: bold; color: #300; }
