@@ -22,3 +22,5 @@ pre { background: #eee; padding: 1em 2em; }
 #show_all { background: #dedede; color: #777; text-align: center; line-height: 1.6em; cursor: pointer; }
 .v6support { font-weight: bold; color: #300; }
 .v6support { font-weight: bold; color: #300; }
+@font-face { font-family: "yawf-iconfont"; font-style: normal; font-weight: normal; src: url(img/yawf-iconfont.woff) format("woff"), url(img/yawf-iconfont.svg) format("svg"); }
+.yawf-iconfont { font-family: yawf-iconfont; }
