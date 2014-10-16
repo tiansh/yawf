@@ -12,7 +12,11 @@ dl a { text-decoration: none; display: block; height: 100%; }
 dl dt { clear: left; float: left; font-size: 200%; display: block; width: 400px; height: 2.2em; line-height: 2.2em; background: #ffa00a; margin-left: 40px; text-align: center; margin: 0.1em; }
 dl dt a { color: #fff; }
 dl dt a:hover { background: #ffb137; }
+<<<<<<< HEAD
 dl dd { line-height: 2em; height: 2em; float: left; background: #eee; width: 150px; text-align: center; margin: 0.2em 10px; }
+=======
+dl dd { line-height: 2em; height: 2em; float: left; background: #fff; width: 150px; text-align: center; margin: 0.2em 10px; }
+>>>>>>> 2052c8270b4967003857d4c0742c3bf5b4082723
 dl dd a { color: #000; }
 dl dd a:hover { background: #ffb137; color: #fff; }
 .in { margin-left: 40px; }
