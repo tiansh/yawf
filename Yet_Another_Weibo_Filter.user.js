@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.113
+// @version           2.1.114
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -958,11 +958,13 @@ util.i18n.stylish = function (lang) {
   if (isEn) util.css.add(util.str.cmt(function () { /*!CSS
     #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
     #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
-    #yawf-config .WB_minitab .current.minitb_lk { padding-left: 8px !important; padding-right: 8px !important; }
-    #yawf-config .WB_minitab .minitb_lk { padding-left: 10px !important; padding-right: 10px !important; }
+    #yawf-config .WB_minitab .minitb_lk:hover,
+    #yawf-config .WB_minitab .current .minitb_lk { font-weight: normal; }
+    #yawf-config .WB_minitab .minitb_lk { padding-left: 8px !important; padding-right: 8px !important; }
     #yawf-config .WB_minitab .minitb_lk { width: auto; }
   */ })); else util.css.add(util.str.cmt(function () { /*!CSS
-    #yawf-config .WB_minitab .current.minitb_lk { padding-left: 11px !important; padding-right: 11px !important; }
+    #yawf-config .WB_minitab .minitb_lk:hover,
+    #yawf-config .WB_minitab .current .minitb_lk { font-weight: normal; }
     #yawf-config .WB_minitab .minitb_lk { padding-left: 13px !important; padding-right: 13px !important; }
     #yawf-config .WB_minitab .minitb_lk { width: auto; }
   */ }));
@@ -1266,10 +1268,10 @@ util.notify = (function () {
 
 // 管理样式
 util.css = (function () {
-  var styleText = '';
+  var styleText = '', added = false;
   var fun = function (css) { return fun.add.bind(fun, css); };
-  fun.add = function (css) { styleText += css + '\n'; };
-  util.init(function () { GM_addStyle(styleText); }, util.priority.LAST);
+  fun.add = function (css) { if (!added) styleText += css + '\n'; else GM_addStyle(css); };
+  util.init(function () { GM_addStyle(styleText); added = true; }, util.priority.LAST);
   return fun;
 }());
 
@@ -3632,7 +3634,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
         ));
         if (!newFeed) return;
         if (validPage()) {
-          // 模拟在网页上按 R 键（v6则是 . 键）载入新微博，因为如果模拟点击事件，会影响聊天窗口
+          // 模拟在网页上按 R 键载入新微博，因为如果模拟点击事件，会影响聊天窗口
           fakeKey = true;
           var evt = document.createEvent("KeyboardEvent");
           evt.initKeyEvent('keyup', true, true, null, false, false, false, false, loadKey, 0);
@@ -4058,7 +4060,7 @@ filter.predef.group('layout');
 
   observer.dom.add(tagRightbarMods);
   tagRightbarMods();
-  util.css.add('.W_miniblog { visibility: visible !important; }');
+  util.css.add('.W_miniblog, .WB_miniblog { visibility: visible !important; }');
 
 }());
 
@@ -4110,18 +4112,18 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       'default': 'right',
     }
   },
-  'init': function () {
+  'init': function mergeLeftRight() {
     if (!this.conf) return;
     var main = document.body, side = this.ref.side.conf;
-    var left = document.querySelector('.W_main_l');
-    if (!left) return;
+    var left = document.querySelector('.W_main_l, .WB_main_l');
+    if (!left) return setTimeout(util.func.catched(mergeLeftRight.bind(this)), 100);
     var left0 = util.dom.create('div', '');
     left.parentNode.insertBefore(left0, left);
     left.parentNode.removeChild(left);
     var positionLeft = function () {
-      var ref = document.querySelector('#pl_rightmod_myinfo');
-      var right = document.querySelector('.W_main_r');
-      var leftn = document.querySelector('.W_main_l');
+      var ref = document.querySelector('#pl_rightmod_myinfo, #v6_pl_rightmod_myinfo');
+      var right = document.querySelector('.W_main_r, .WB_main_r');
+      var leftn = document.querySelector('.W_main_l, .WB_main_l');
       if (leftn) { left = leftn; }
       if (ref) {
         if (ref.nextSibling !== left) {
@@ -4142,7 +4144,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     };
     positionLeft();
     observer.dom.add(function () { positionLeft(); });
-    util.css.add(util.str.cmt(function () { /*!CSS
+    util.css.add(util.str.cmt(util.version.chose(function () { /*!CSS
       body[yawf-merge-left] .W_main .W_main_l { width: 229px; padding: 0; float: none; }
       body[yawf-merge-left] .W_main .WB_left_nav .lev a:hover, body[yawf-merge-left] .WB_left_nav .lev2 a:hover, body[yawf-merge-left] .WB_left_nav .lev2 a.lev_curr, body[yawf-merge-left] .WB_left_nav .lev2 a.lev_curr:hover, body[yawf-merge-left] .WB_left_nav .lev3 a:hover { background-image: none; }
       body[yawf-merge-left] .W_main { width: 830px; background-position: -300px center; background-size: 200% 100%; }
@@ -4160,7 +4162,31 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left="left"] .W_main #Box_center { border-left: 2px solid rgba(128, 128, 128, 0.2); margin-left: -2px; }
       body[yawf-merge-left="left"].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
       body[yawf-merge-left="right"] .W_main #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
-    */ }));
+    */ }, function () { /*
+      body[yawf-merge-left] .WB_main .WB_main_l,
+      body[yawf-merge-left] .WB_main .WB_left_nav { width: 229px; padding: 0; float: none; }
+      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollView,
+      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContainer,
+      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContent { height: auto !important; }
+      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContent { width: calc(100% + 30px) !important; }
+      body[yawf-merge-left] .WB_main .WB_frame { width: 840px; padding: 10px; background-position: -300px center; }
+      body[yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
+      body[yawf-merge-left="left"] .WB_main .WB_main_r { float: left; }
+      body[yawf-merge-left="left"] .WB_main .WB_main_c { float: right; }
+      body[yawf-merge-left="left"] .WB_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
+      body[yawf-merge-left="left"] .WB_main .WB_left_nav .lev_line fieldset { padding-left: 190px; }
+    */ })));
+    if (util.v6) {
+      var removeRightFixed = function () {
+        var fixed = Array.from(document.querySelectorAll('.WB_main_r [fixed-inbox="true"][right-module="true"]'));
+        fixed.forEach(function (fi) {
+          fi.removeAttribute('fixed-inbox');
+        });
+      };
+      removeRightFixed();
+      observer.dom.add(removeRightFixed);
+      util.css.add('.WB_left_nav:nth-last-child(2) { visibility: visible !important; } .WB_left_nav+.WB_left_nav { display : none; }');
+    }
   },
 }).addto(filter.groups.tool);
 
@@ -4183,59 +4209,63 @@ filter.items.tool.sidebar.fixed_left = filter.item({
     }
   },
   'init': function () {
-    var left = document.querySelector('.W_main_l');
-    if (!left) return;
-    var type = this.conf ? this.ref.items.conf : 'none';
-    var merged = filter.items.tool.sidebar.merge_left_right.conf;
-    // 禁用掉默认的浮动
-    util.css.add('.W_main [node-type="left_fixed"]:not([yawf-fixed]) { height: auto !important; padding-top: 0 !important; position: static !important; top: 40px !important; animation: none; }');
-    // 不浮动的如果禁用了默认的浮动，那么就完成了
-    if (type === 'none') return;
-    // 否则如果合并了左右边栏，而且我要浮动，那么右面就不要动
-    if (merged) {
-      var removeRightFixed = function () {
-        var fixed = document.querySelector('.W_main_r [node-type="right_module_fixed"]');
-        if (!fixed) return;
-        while (fixed.firstChild) fixed.parentNode.insertBefore(fixed.firstChild, fixed);
-        fixed.parentNode.removeChild(fixed);
+    if (util.v6) {
+      // TODO not implemented
+    } else {
+      var left = document.querySelector('.W_main_l');
+      if (!left) return;
+      var type = this.conf ? this.ref.items.conf : 'none';
+      var merged = filter.items.tool.sidebar.merge_left_right.conf;
+      // 禁用掉默认的浮动
+      util.css.add('.W_main [node-type="left_fixed"]:not([yawf-fixed]) { height: auto !important; padding-top: 0 !important; position: static !important; top: 40px !important; animation: none; }');
+      // 不浮动的如果禁用了默认的浮动，那么就完成了
+      if (type === 'none') return;
+      // 否则如果合并了左右边栏，而且我要浮动，那么右面就不要动
+      if (merged) {
+        var removeRightFixed = function () {
+          var fixed = document.querySelector('.W_main_r [node-type="right_module_fixed"]');
+          if (!fixed) return;
+          while (fixed.firstChild) fixed.parentNode.insertBefore(fixed.firstChild, fixed);
+          fixed.parentNode.removeChild(fixed);
+        };
+        removeRightFixed();
+        observer.dom.add(removeRightFixed);
+      }
+      // 最后自定义的浮动
+      util.css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }');
+      util.css.add('body[yawf-merge-left] .W_main [yawf-fixed] { width: 229px; }');
+      var floating = false;
+      var updatePosition = function () {
+        var container = document.querySelector('.W_main');
+        var reference = merged && document.querySelector('.W_main_r') || left;
+        var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
+        var refc = reference.getClientRects();
+        if (!refc || !refc[0]) return;
+        var pos = refc[0];
+        if (!floating) {
+          if (pos.bottom < -65) {
+            floating = true;
+            floatitem.setAttribute('yawf-fixed', '');
+          }
+        } else {
+          if (pos.bottom > 65 - floatitem.clientHeight) {
+            floating = false;
+            floatitem.removeAttribute('yawf-fixed');
+            util.func.call(updatePosition);
+          }
+        }
+        if (floating) {
+          var cip = container.getClientRects()[0];
+          var fip = floatitem.getClientRects()[0];
+          if (cip && fip) {
+            floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
+          }
+        }
       };
-      removeRightFixed();
-      observer.dom.add(removeRightFixed);
+      document.addEventListener('scroll', updatePosition);
+      observer.dom.add(updatePosition);
+      updatePosition();
     }
-    // 最后自定义的浮动
-    util.css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }');
-    util.css.add('body[yawf-merge-left] .W_main [yawf-fixed] { width: 229px; }');
-    var floating = false;
-    var updatePosition = function () {
-      var container = document.querySelector('.W_main');
-      var reference = merged && document.querySelector('.W_main_r') || left;
-      var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
-      var refc = reference.getClientRects();
-      if (!refc || !refc[0]) return;
-      var pos = refc[0];
-      if (!floating) {
-        if (pos.bottom < -65) {
-          floating = true;
-          floatitem.setAttribute('yawf-fixed', '');
-        }
-      } else {
-        if (pos.bottom > 65 - floatitem.clientHeight) {
-          floating = false;
-          floatitem.removeAttribute('yawf-fixed');
-          util.func.call(updatePosition);
-        }
-      }
-      if (floating) {
-        var cip = container.getClientRects()[0];
-        var fip = floatitem.getClientRects()[0];
-        if (cip && fip) {
-          floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
-        }
-      }
-    };
-    document.addEventListener('scroll', updatePosition);
-    observer.dom.add(updatePosition);
-    updatePosition();
   },
 }).addto(filter.groups.tool);
 
@@ -5082,7 +5112,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .WB_feed_together[yawf-sonfold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_seeAll"],
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
-  .W_miniblog { visibility: hidden; }
+  .W_miniblog, .WB_miniblog { visibility: hidden; }
   .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
   // 拖拽
   #yawf-drop-area { background: rgba(251, 251, 216, 0.8); display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
