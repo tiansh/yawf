@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.114
+// @version           2.1.115
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -353,11 +353,11 @@ var text = {
   // 消息页面
   'layoutHideMessages': { 'zh-cn': '隐藏模块 - 消息页面', 'zh-hk': '隱藏模組 - 消息網頁', 'zh-tw': '隱藏模組 - 消息網頁', 'en': 'Hide modules - News Page' },
   'layoutHideMessagesHelp': { 'zh-cn': '使用小帮助', 'zh-hk': '使用小幫助', 'zh-tw': '使用小幫助', 'en': 'Tips' },
-  'layoutHideMessagesDesktop': { 'zh-cn': '微博桌面', 'zh-hk': '微博桌面', 'zh-tw': '微博桌面', 'en': 'Weibo desktop' },
   'layoutHideMessagesFeedback': { 'zh-cn': '微博意见反馈', 'zh-hk': '微博意见反馈', 'zh-tw': '微博意见反馈'/* as is */, 'en': 'Feed Back'/* as is */ },
-  'layoutHideMessagesCommentTop': { 'zh-cn': '热评微博', 'zh-hk': '熱評微博', 'zh-tw': '熱評微博', 'en': 'Popular Weibo' },
-  'layoutHideMessagesReport': { 'zh-cn': '微博举报处理中心', 'zh-hk': '微博舉報處理中心', 'zh-tw': '微博檢舉處理中心', 'en': 'Report' },
-  'layoutHideMessagesYoudao': { 'zh-cn': '导出收藏夹', 'zh-hk': '导出收藏夹', 'zh-tw': '导出收藏夹', 'en': 'Export favorites' },
+  'layoutHideMessagesDesktop': { 'zh-cn': '微博桌面', 'zh-hk': '微博桌面', 'zh-tw': '微博桌面', 'en': 'Weibo desktop' }, // v5Only?
+  'layoutHideMessagesCommentTop': { 'zh-cn': '热评微博', 'zh-hk': '熱評微博', 'zh-tw': '熱評微博', 'en': 'Popular Weibo' }, // v5Only?
+  'layoutHideMessagesReport': { 'zh-cn': '微博举报处理中心', 'zh-hk': '微博舉報處理中心', 'zh-tw': '微博檢舉處理中心', 'en': 'Report' }, // v5Only?
+  'layoutHideMessagesYoudao': { 'zh-cn': '导出收藏夹', 'zh-hk': '导出收藏夹', 'zh-tw': '导出收藏夹', 'en': 'Export favorites' }, // v5Only?
   // 添加好友
   'layoutHideAttention': { 'zh-cn': '隐藏模块 - 添加关注', 'zh-hk': '隱藏模組 - 添加關注', 'zh-tw': '隱藏模組 - 添加關注', 'en': 'Hide modules - Add Following' },
   'layoutHideAttentionSuccess': { 'zh-cn': '关注成功对话框', 'zh-hk': '關注成功對話方塊', 'zh-tw': '關注成功對話方塊', 'en': 'Dialog for adding following success' },
@@ -381,8 +381,8 @@ var text = {
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'mergeLeftRightRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
   'fixedLeft': { 'zh-cn': '浮动左边栏|{{<items>}}', 'zh-hk': '浮動左邊欄|{{<items>}}', 'zh-tw': '浮動左邊欄|{{<items>}}', 'en': 'Float left column | {{<items>}}' },
-  'fixedLeftDefault': { 'zh-cn': '默认元素', 'zh-hk': '預設元素', 'zh-tw': '預設元素', 'en': 'default elements' },
-  'fixedLeftWhole': { 'zh-cn': '整个左栏', 'zh-hk': '整個左欄', 'zh-tw': '整個左欄', 'en': 'whole column' },
+  'fixedLeftDefault': { 'zh-cn': '默认元素 (v5)', 'zh-hk': '預設元素 (v5)', 'zh-tw': '預設元素 (v5)', 'en': 'default elements (v5)' },
+  'fixedLeftWhole': { 'zh-cn': '整个左栏 (v5)', 'zh-hk': '整個左欄 (v5)', 'zh-tw': '整個左欄 (v5)', 'en': 'whole column (v5)' },
   'filteRightTopic': { 'zh-cn': '应用话题黑名单到右栏热门话题', 'zh-hk': '應用話題黑名單到右欄熱門話題', 'zh-tw': '應用話題黑名單到右欄熱門話題', 'en': 'Apply topic blacklist to Hot Topic in right column' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
@@ -3875,7 +3875,7 @@ filter.predef.group('layout');
   item('Club', 5, '.ico_club, .icon_pf_club { display: none !important; }');
   item('VGirl', 5, '.ico_vlady, .icon_pf_vlady { display: none !important; }');
   item('Taobao', 5, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }');
-  item('Gongyi', 93, '.icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
+  item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }');
   item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
 
@@ -3998,22 +3998,24 @@ filter.predef.group('layout');
   item('HotWeibo', 5, '.W_main_2r [id^="Pl_Core_RightPicText__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
 
   subtitle('Messages');
-  item('Help', 97, '#Pl_Rightmod_Helpbox, #pl_rightmod_helpat, #pl_rightmod_helpcomment, #pl_rightmod_helplike, #Pl_Rightmod_Littlehelp, #Pl_Rightmod_Helpnotebox, #pl_rightmod_helpfav { display: none !important; }');
+  item('Help', 97, '#Pl_Rightmod_Helpbox, #pl_rightmod_helpat, #pl_rightmod_helpcomment, #pl_rightmod_helplike, #Pl_Rightmod_Littlehelp, #Pl_Rightmod_Helpnotebox, #pl_rightmod_helpfav, #v6_pl_rightmod_helpat, #v6_pl_rightmod_helpcomment, #v6_pl_rightmod_helplike, #v6_pl_rightmod_helpnotebox { display: none !important; }');
+  item('Feedback', 97, '#pl_rightmod_feedback, #v6_pl_rightmod_feedback { display: none !important; }');
   item('Desktop', 97, '#pl_rightmod_weibodesk { display: none !important; }');
-  item('Feedback', 97, '#pl_rightmod_feedback { display: none !important; }');
   item('CommentTop', 97, '#pl_content_commentTopNav { display: none !important; }');
   item('Report', 97, '#pl_common_reportentry, #pl_rightmod_reportentry { display: none !important; }');
   item('Youdao', 97, '#pl_rightmod_favyoudao { display: none !important; }');
 
   subtitle('Attention');
   item('Success', 75, function () {
+    if (util.v6) return; // TODO
     observer.dom.add(function () {
-      var close = document.querySelector('.W_layer:not([style*="display"]) .W_close[suda-uatrack="key=group_aftermark&value=close"]:not([yawf-close])');
+      var close = document.querySelector('.W_layer:not([style*="display"]) .W_close[suda-uatrack="key=group_aftermark&value=close"]');
       if (!close) return; close.click();
       util.debug('Attention Success closed');
     });
   });
   item('Recommend', 75, function () {
+    if (util.v6) return; // TODO
     observer.dom.add(function () {
       var reca = document.querySelector('.W_layer:not([style*="display"]) .W_close~.layer_recommend_attention:not([yawf-close])');
       if (!reca) return;
@@ -4171,21 +4173,18 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContent { width: calc(100% + 30px) !important; }
       body[yawf-merge-left] .WB_main .WB_frame { width: 840px; padding: 10px; background-position: -300px center; }
       body[yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
+      body[yawf-merge-left] .WB_main .WB_left_nav .lev_line fieldset { padding-left: 190px; }
       body[yawf-merge-left="left"] .WB_main .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_main .WB_main_c { float: right; }
       body[yawf-merge-left="left"] .WB_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
-      body[yawf-merge-left="left"] .WB_main .WB_left_nav .lev_line fieldset { padding-left: 190px; }
     */ })));
-    if (util.v6) {
+    if (util.v6 && filter.items.tool.sidebar.fixed_left.conf) {
       var removeRightFixed = function () {
-        var fixed = Array.from(document.querySelectorAll('.WB_main_r [fixed-inbox="true"][right-module="true"]'));
-        fixed.forEach(function (fi) {
-          fi.removeAttribute('fixed-inbox');
-        });
+        var fixed = Array.from(document.querySelectorAll('.WB_main_r [fixed-inbox]'));
+        fixed.forEach(function (fi) { fi.removeAttribute('fixed-inbox'); });
       };
       removeRightFixed();
       observer.dom.add(removeRightFixed);
-      util.css.add('.WB_left_nav:nth-last-child(2) { visibility: visible !important; } .WB_left_nav+.WB_left_nav { display : none; }');
     }
   },
 }).addto(filter.groups.tool);
@@ -4209,9 +4208,7 @@ filter.items.tool.sidebar.fixed_left = filter.item({
     }
   },
   'init': function () {
-    if (util.v6) {
-      // TODO not implemented
-    } else {
+    util.func.catched(util.version.chose(function () {
       var left = document.querySelector('.W_main_l');
       if (!left) return;
       var type = this.conf ? this.ref.items.conf : 'none';
@@ -4265,7 +4262,37 @@ filter.items.tool.sidebar.fixed_left = filter.item({
       document.addEventListener('scroll', updatePosition);
       observer.dom.add(updatePosition);
       updatePosition();
-    }
+    }.bind(this), function () {
+      if (!this.conf) {
+        util.css.add('.WB_left_nav:nth-last-child(2) { visibility: visible !important; } .WB_left_nav+.WB_left_nav { display : none !important; }');
+      } else if (filter.items.tool.sidebar.merge_left_right.conf) {
+        util.css.add('.WB_main_r:not([yawf-fixed]) .WB_left_nav:nth-last-child(2) { visibility: visible !important; } .WB_main_r:not([yawf-fixed]) .WB_left_nav+.WB_left_nav { display : none !important; }');
+        var floating = false;
+        var updatePosition = function () {
+          var left = document.querySelector('.WB_left_nav');
+          var reference = document.querySelector('.WB_main_r');
+          if (!left || !reference) return;
+          var refc = reference.getClientRects();
+          if (!refc || !refc[0]) return;
+          var pos = refc[0];
+          if (!floating) {
+            if (pos.bottom < -65) {
+              floating = true;
+              reference.setAttribute('yawf-fixed', '');
+            }
+          } else {
+            if (pos.bottom > 65) {
+              floating = false;
+              reference.removeAttribute('yawf-fixed');
+              util.func.call(updatePosition);
+            }
+          }
+        };
+        document.addEventListener('scroll', updatePosition);
+        observer.dom.add(updatePosition);
+        updatePosition();
+      }
+    }.bind(this)))();
   },
 }).addto(filter.groups.tool);
 
