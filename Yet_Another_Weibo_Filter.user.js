@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.115
+// @version           2.1.116
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -375,8 +375,8 @@ var text = {
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
   'sideColumnToolsTitle': { 'zh-cn': '边栏', 'zh-hk': '邊欄', 'zh-tw': '邊欄', 'en': 'Side Column' },
-  'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
-  'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息', 'zh-hk': '展開左欄消息', 'zh-tw': '展開左欄消息', 'en': 'Unfold news in left column' },
+  'showAllGroupDesc': { 'zh-cn': '展开左栏分组 (v5)', 'zh-hk': '展開左欄分組 (v5)', 'zh-tw': '展開左欄分組 (v5)', 'en': 'Unfold groups in left column (v5)' },
+  'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息 (v5)', 'zh-hk': '展開左欄消息 (v5)', 'zh-tw': '展開左欄消息 (v5)', 'en': 'Unfold news in left column (v5)' },
   'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}', 'en': 'Merge left &amp; right column | to {{<side>}}' },
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'mergeLeftRightRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
@@ -1769,12 +1769,13 @@ filter.fast.item = function (details) {
 
 // 将文本、链接等拖拽到框内，快速创建过滤器
 filter.fast.active = (function () {
+  var dropArea = null;
   // 获得拖拽释放的元素之后，根据不同过滤器的设置处理元素
   var got = function (element, target) {
     filter.fast.recognize.got(element, target);
   };
   var area = (function () {
-    var dropArea, cont, target = null, active = false;
+    var cont, target = null, active = false;
     var start = function (element) {
       if (!filter.fast.valid.test(element)) return false;
       target = element;
@@ -1803,23 +1804,28 @@ filter.fast.active = (function () {
       else return cont;
     };
     var clear = function () { cont.innerHTML = ''; };
+    var enter = function () { dropArea.classList.add('valid'); };
+    var leave = function () { dropArea.classList.remove('valid'); };
     return {
       'show': show, 'hide': hide,
       'start': start, 'done': done,
       'content': content, 'clear': clear,
       'init': init,
+      'enter': enter, 'leave': leave,
     };
   }());
   // 初始化拖拽相关事件监听
   var events = function () {
+    var valid = false;
     // 开始拽
     document.addEventListener('dragstart', function (e) {
+      valid = false; area.leave();
       if (area.start(e.target)) area.show();
     }, false);
     // 拽完了
     document.addEventListener('dragend', function (e) {
+      if (!valid) return;
       if (area.done()) return;
-      // e.preventDefault(); e.stopPropagation();
       got(area.content(), e.target);
       area.clear();
       area.hide();
@@ -1829,6 +1835,8 @@ filter.fast.active = (function () {
       if (area.done()) return;
       area.hide();
     });
+    dropArea.addEventListener('dragenter', function (e) { valid = true; area.enter(); });
+    dropArea.addEventListener('dragleave', function (e) { valid = false; area.leave(); });
   };
   return function () {
     area.init();
@@ -3368,14 +3376,13 @@ filter.items.other.spam.same_account = filter.item({
     if (!this.conf) return null;
     // 如果在分组页面，而且用户设置了分组页面忽略该过滤器，则不工作
     if (filter.items.other.grouping.group_same_account.conf && util.page.group()) return null;
-    var author = feed.querySelector('.WB_name[usercard]');
-    if (!author) return null;
-    var id = author.getAttribute('usercard').split('=')[1];
+    var id = weibo.author.id(feed);
+    if (!id) return;
     var number = document.querySelectorAll(
       // v5
       '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_datail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]' + ',' +
-      // v6 TODO
-      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_detail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]'
+      // v6
+      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_detail>.WB_detail>.WB_info>.W_fb[usercard="id=' + id + '"]'
     ).length;
     if (number >= this.ref.number.conf) {
       feed.setAttribute('yawf-reason', text.sameAccountFilterReason);
@@ -5142,7 +5149,8 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .W_miniblog, .WB_miniblog { visibility: hidden; }
   .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
   // 拖拽
-  #yawf-drop-area { background: rgba(251, 251, 216, 0.8); display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
+  #yawf-drop-area { background: rgba(251, 251, 216, 1); opacity: 0.8; display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
+  #yawf-drop-area.valid { opacity: 1; }
   .yawf-drop-area-desc { height: 170px; width: 170px; margin: 16px 16px -206px 16px; padding: 10px; -moz-user-select: none; user-select: none; border: 4px dashed #ddd; border-radius: 20px; }
   .yawf-drop-area-title { font-size: 150%; font-weight: bold; }
   .yawf-drop-area-text { padding: 10px; }
