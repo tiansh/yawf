@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.117
+// @version           2.1.118
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -331,6 +331,7 @@ var text = {
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboAppCard': { 'zh-cn': '来源卡片', 'zh-hk': '來源卡片', 'zh-tw': '來源卡片', 'en': 'Source card' },
   'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '檢舉', 'zh-tw': '檢舉', 'en': 'Report' },
+  'layoutHideWeiboPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
   'layoutHideWeiboLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
   'layoutHideWeiboForward': { 'zh-cn': '转发', 'zh-hk': '轉發', 'zh-tw': '轉發', 'en': 'Forward' },
   'layoutHideWeiboFavourite': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favourite' },
@@ -953,10 +954,10 @@ util.i18n = {};
 // 语言相关样式
 util.i18n.stylish = function (lang) {
   var isEn = lang === 'en';
-  // FIXME current加的位置已经变了，而且 class 好像也不同
   util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
     .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
     #yawf-config .WB_minitab .current.minitb_lk { font-weight: bold; }
+    .layoutFilterGroupLayer .yawf-configBoolean.yawf-layoutConfig-line { width: 100%; }
   */ }), { 'layoutOptionWidth': isEn ? '320px' : '160px', }));
   if (isEn) util.css.add(util.str.cmt(function () { /*!CSS
     #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
@@ -3147,7 +3148,7 @@ filter.items.other.showthese.my_weibo = filter.item({
   'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
   'rule': function showMyWeiboRule(feed) {
     if (!this.conf) return;
-    if (weibo.author.id(feed) === util.config.uid) return 'showme'; else return null;
+    if (weibo.author.id(feed) === util.info.uid) return 'showme'; else return null;
   },
 }).addto(filter.groups.other);
 
@@ -3161,7 +3162,7 @@ filter.items.other.showthese.my_original = filter.item({
   'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
   'rule': function showMyOriginalRule(feed) {
     if (!this.conf) return;
-    if (weibo.original.id(feed) === util.config.uid) return 'showme'; else return null;
+    if (weibo.original.id(feed) === util.info.uid) return 'showme'; else return null;
   },
 }).addto(filter.groups.other);
 
@@ -3175,7 +3176,7 @@ filter.items.other.showthese.mention_me = filter.item({
   'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
   'rule': function showMentionMeRule(feed) {
     if (!this.conf) return;
-    if (weibo.mentions.name(feed).indexOf(util.config.nick) !== -1) return 'showme'; else return null;
+    if (weibo.mentions.name(feed).indexOf(util.info.nick) !== -1) return 'showme'; else return null;
   },
 }).addto(filter.groups.other);
 
@@ -3970,7 +3971,8 @@ filter.predef.group('layout');
     });
   });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
-  item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }');
+  item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }' + 
+    '.WB_feed_detail .WB_from a[date]::after { content: " "; display: block; } .WB_feed_detail .WB_from { height: 16px; overflow: hidden; }');
   item('AppCard', 102, function () {
     observer.dom.add(function () {
       var appcard = document.querySelector('.W_layer:not([yawf-appcard-hidden]) .layer_appcard');
@@ -3981,12 +3983,54 @@ filter.predef.group('layout');
     });
     util.css.add('.W_layer[yawf-appcard-hidden] { display: none !important; }');
   });
-  item('Report', 34, '.WB_time~.hover { display: none !important; }');
-  item('Like', 34, 'a[action-type="feed_list_like"], a[action-type="feed_list_like"]+.S_txt3, [node-type="multi_image_like"], [action-type="feed_list_image_like"], [action-type="object_like"], [action-type="like_object"] { display: none !important; }');
-  item('Forward', 34, 'a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3, .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"], .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"]+.S_txt3 { display: none !important; }');
-  item('Favourite', 34, 'a[action-type="feed_list_favorite"], a[action-type="feed_list_favorite"]+.S_txt3 { display: none !important; }');
+  item('Report', 34, '.WB_time~.hover, div.layer_menu_list[action-type="feed_list_layer"] a[onclick*="service.account.weibo.com/reportspam"] { display: none !important; }');
+  item('Pop', 118, '.WB_feed_datail a[action-type="fl_pop"], .WB_feed_datail a[action-type="fl_pop"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="This Weibo cannot be promoted"], .WB_feed_datail .WB_handle i[title="This Weibo cannot be promoted"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="此条微博无法使用推广功能"], .WB_feed_datail .WB_handle i[title="此条微博无法使用推广功能"]+.S_txt3,' +
+    '.WB_handle .WB_row_line li[yawf-handle-type="fl_pop"] { display: none !important; }');
+  item('Like', 34, 'a[action-type="feed_list_like"], a[action-type="feed_list_like"]+.S_txt3, ' +
+    '[node-type="multi_image_like"], [action-type="feed_list_image_like"], ' +
+    '[action-type="object_like"], [action-type="like_object"], ' +
+    '.WB_feed_datail a[action-type="fl_like"], .WB_feed_datail a[action-type="fl_like"]+.S_txt3, ' +
+    '.WB_expand .WB_handle.W_fr li:nth-child(3), ' +
+    '.WB_feed_together .WB_func .WB_handle li:nth-child(4),' +
+    '.WB_handle .WB_row_line li[yawf-handle-type="fl_like"] { display: none !important; }');
+  item('Forward', 34, 'a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3, ' +
+    '.WB_media_expand .WB_handle a.S_func4[href$="?type=repost"], .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"]+.S_txt3, ' +
+    '.WB_feed_datail a[action-type="fl_forward"], .WB_feed_datail a[action-type="fl_forward"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="该条为私密微博，无法转发"], .WB_feed_datail .WB_handle i[title="该条为私密微博，无法转发"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="无法转发带权限微博喔"], .WB_feed_datail .WB_handle i[title="无法转发带权限微博喔"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="此條為私密微博，無法轉發"], .WB_feed_datail .WB_handle i[title="此條為私密微博，無法轉發"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="無法轉發有設定權限微博喔　"], .WB_feed_datail .WB_handle i[title="無法轉發有設定權限微博喔　"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="該條為私密微博，無法轉發"], .WB_feed_datail .WB_handle i[title="該條為私密微博，無法轉發"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="無法轉發帶權限微博喔"], .WB_feed_datail .WB_handle i[title="無法轉發帶權限微博喔"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="Can not forward this access-restricted weibo!"], .WB_feed_datail .WB_handle i[title="Can not forward this access-restricted weibo!"]+.S_txt3, ' +
+    '.WB_feed_datail .WB_handle i[title="Private weibo, can not be forward"], .WB_feed_datail .WB_handle i[title="Private weibo, can not be forward"]+.S_txt3, ' +
+    '.WB_expand .WB_handle.W_fr li:nth-child(1), ' +
+    '.WB_feed_together .WB_func .WB_handle li:nth-child(2), ' +
+    '.WB_handle .WB_row_line li[yawf-handle-type="fl_forward"] ' +
+    ' { display: none !important; }');
+  item('Favourite', 34, 'a[action-type="feed_list_favorite"], a[action-type="feed_list_favorite"]+.S_txt3, ' +
+    '.WB_feed_datail a[action-type="fl_favorite"], .WB_feed_datail a[action-type="fl_favorite"]+.S_txt3, ' +
+    '.WB_feed_together .WB_func .WB_handle li:nth-child(1), ' +
+    '.WB_handle .WB_row_line li[yawf-handle-type="fl_favorite"] { display: none !important; }');
   item('BlockBySource', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_by_app"] { display: none !important; }');
   item('BlockByKeyword', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_setkeyword"] { display: none !important; }');
+  // 处理 v6 下微博按钮的平均分布
+  observer.weibo.after(function (feed) {
+    if (!util.v6) return;
+    var ul = feed.querySelector('.WB_handle .WB_row_line');
+    var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li'));
+    li.forEach(function (li) {
+      var type = li.querySelector('a').getAttribute('action-type');
+      li.setAttribute('yawf-handle-type', type);
+    });
+    util.func.call(function () {
+      var classNames = ['yawf-WB_row_r0', 'WB_row_r1', 'WB_row_r2', 'WB_row_r3', 'WB_row_r4'];
+      classNames.forEach(function (className) { ul.classList.remove(className); });
+      ul.classList.add(classNames[li.filter(function (li) { return li.clientWidth > 0; }).length]);
+    });
+  });
 
   subtitle('Person');
   item('MoveThings', 51, '.S_profile .profile_move_things { display: none !important; }');
@@ -4192,14 +4236,9 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left="left"] .WB_main .WB_main_c { float: right; }
       body[yawf-merge-left="left"] .WB_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
     */ })));
+    // 如果合并了左右栏，而且左栏有浮动内容，那么右栏就不要浮动了
     if (util.v6 && filter.items.tool.sidebar.fixed_left.conf) {
-      var removeRightFixed = function () {
-        var fixed = Array.from(document.querySelectorAll('.WB_main_r [fixed-inbox]'));
-        fixed.forEach(function (fi) { fi.removeAttribute('fixed-inbox'); });
-      };
-      removeRightFixed();
-      observer.dom.add(removeRightFixed);
-      util.css.add('.WB_main_r>div[style*=fixed] { position: static !important; margin-left: 0 !important; }');
+      util.css.add('.WB_main_r>div[style*="fixed"] { position: static !important; margin-left: 0 !important; }');
     }
   },
 }).addto(filter.groups.tool);
@@ -4278,9 +4317,12 @@ filter.items.tool.sidebar.fixed_left = filter.item({
       observer.dom.add(updatePosition);
       updatePosition();
     }.bind(this), function () {
+      // 如果不想让左栏浮动，那么直接样式禁止掉
       if (!this.conf) {
         util.css.add('.WB_left_nav:nth-last-child(2) { visibility: visible !important; } .WB_left_nav+.WB_left_nav { display : none !important; }');
-      } else if (filter.items.tool.sidebar.merge_left_right.conf) {
+      }
+      // 如果想让左栏浮动，那系统提供的默认的就可以了，除非做了边栏合并
+      else if (filter.items.tool.sidebar.merge_left_right.conf) {
         util.css.add('.WB_main_r:not([yawf-fixed]) .WB_left_nav:nth-last-child(2) { visibility: visible !important; } .WB_main_r:not([yawf-fixed]) .WB_left_nav+.WB_left_nav { display : none !important; }');
         var floating = false;
         var updatePosition = function () {
