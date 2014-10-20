@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.119
+// @version           2.1.120
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -404,10 +404,10 @@ var text = {
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
   'weiboOnly': {
-    'zh-cn': '阅读视图|宽度{{<width>}}px|快捷键{{<key>}}||{{<usebgc>}}使用指定背景色|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博列表顶部显示快捷开关按钮',
-    'zh-hk': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'zh-tw': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'en': 'Reading View | width {{<width>}}px | shortcut {{<key>}} || {{<usebgc>}} override background color | with {{<color>}} | transparency {{<transparency>}} || {{<switch>}} show switch button at top of Weibo list'
+    'zh-cn': '阅读视图|宽度{{<width>}}px|快捷键{{<key>}}||{{<usebgc>}}使用指定背景色 (v5)|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博列表顶部显示快捷开关按钮',
+    'zh-hk': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色 (v5)|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-tw': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色 (v5)|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'en': 'Reading View | width {{<width>}}px | shortcut {{<key>}} || {{<usebgc>}} override background color (v5) | with {{<color>}} | transparency {{<transparency>}} || {{<switch>}} show switch button at top of Weibo list'
   },
   'weiboOnlyButton': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'keyInputTip': { 'zh-cn': '按下键盘修改快捷键设置', 'zh-hk': '按下鍵盤修改快速鍵設置', 'zh-tw': '按下鍵盤修改快速鍵設置', 'en': 'Press key to modify shortcut key setting' },
@@ -1121,6 +1121,7 @@ util.version.chose = function (v5, v6) {
 util.init(function () {
   // 检查版本
   util.v6 = unsafeWindow.$CONFIG.jsPath.indexOf('t6') !== -1;
+  document.body.setAttribute('yawf-weibo-version', util.v6 ? 'v6' : 'v5');
   // 保存用户信息
   util.info.uid = unsafeWindow.$CONFIG.uid;
   util.info.nick = unsafeWindow.$CONFIG.nick;
@@ -1879,6 +1880,7 @@ filter.fix.fold = (function () {
     var showFeed = function () {
       feed.setAttribute('yawf-display', display);
       feed.removeEventListener('click', showFeed);
+      filter.items.layout.weibo.fix_handle(feed);
     };
     feed.addEventListener('click', showFeed);
     // 添加作者信息
@@ -3546,6 +3548,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
     feeds.forEach(function (feed) {
       feed.setAttribute('yawf-unread', 'show');
       feed.classList.remove('WB_feed_new');
+      filter.items.layout.weibo.fix_handle(feed);
     });
     this.counter();
     this.timetip(feeds[feeds.length - 1]);
@@ -3732,6 +3735,7 @@ filter.items.other.autoload.auto_expand = filter.item({
       ref.parentNode.insertBefore(feed, ref.nextSibling);
       feed.setAttribute('yawf-unread', 'show');
       filter.items.other.autoload.auto_load_new_weibo.counter();
+      filter.items.layout.weibo.fix_handle(feed);
     };
     if (force) return act();
     if (!that.conf) return;
@@ -4013,6 +4017,16 @@ filter.predef.group('layout');
     '.WB_handle .WB_row_line li[yawf-handle-type="fl_favorite"] { display: none !important; }');
   item('BlockBySource', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_by_app"] { display: none !important; }');
   item('BlockByKeyword', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_setkeyword"] { display: none !important; }');
+
+  filter.items.layout.weibo.fix_handle = function (feed) {
+    util.func.call(function () {
+      var ul = feed.querySelector('.WB_handle .WB_row_line');
+      var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li'));
+      var classNames = ['yawf-WB_row_r0', 'WB_row_r1', 'WB_row_r2', 'WB_row_r3', 'WB_row_r4'];
+      classNames.forEach(function (className) { ul.classList.remove(className); });
+      ul.classList.add(classNames[li.filter(function (li) { return li.clientWidth > 0; }).length]);
+    });
+  };
   // 处理 v6 下微博按钮的平均分布
   observer.weibo.after(function (feed) {
     if (!util.v6) return;
@@ -4021,13 +4035,7 @@ filter.predef.group('layout');
       var type = li.querySelector('a').getAttribute('action-type');
       li.setAttribute('yawf-handle-type', type);
     });
-    util.func.call(function () {
-      var ul = feed.querySelector('.WB_handle .WB_row_line');
-      var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li'));
-      var classNames = ['yawf-WB_row_r0', 'WB_row_r1', 'WB_row_r2', 'WB_row_r3', 'WB_row_r4'];
-      classNames.forEach(function (className) { ul.classList.remove(className); });
-      ul.classList.add(classNames[li.filter(function (li) { return li.clientWidth > 0; }).length]);
-    });
+    filter.items.layout.weibo.fix_handle(feed);
   });
 
   subtitle('Person');
@@ -4696,10 +4704,11 @@ filter.items.tool.stylish.hover_show_fold = filter.item({
   'key': 'weibo.tool.hover_show_fold',
   'text': '{{hoverShowFold}}',
   'ainit': function () {
-    util.css.add(util.str.cmt(function () { /*
+    util.css.add(util.str.cmt(util.version.chose(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { max-height: 1000px; padding: 0 0 11px; }
-      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; padding: 0 0 11px; }
-    */ }));
+    */ }, function () { /*!CSS
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; }
+    */})));
   },
 }).addto(filter.groups.tool);
 
@@ -5232,28 +5241,24 @@ var extension = (function () {
 }());
 
 util.init(function () {
-  util.css.add(util.version.chose(util.str.fill(util.str.cmt(function () { /*! CSS
-  .gn_setting[node-type="member"]:last-child { margin-right: 44px; }
-  .WB_global_nav .gn_setting .gn_tab.gn_filter .ico { background-image: url("{{filter-img}}"); !important; background-position: 0 0 !important; }
-  .WB_global_nav .gn_search { width: 210px !important; left: 440px !important; position: absolute !important; }
-  .WB_global_nav .gn_search .gn_input { width: 168px !important; }
-  .yawf-config-body { margin: -20px; padding: 20px; }
-  */ }), {
-    'filter-img': images.filter,
-  }), util.str.cmt(function () { /*! CSS
-  .gn_search .W_input { box-sizing: border-box !important; height: 32px !important; }
-  .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
-  .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
-  .yawf-config-header { margin-bottom: -50px; }
-  .yawf-config-header ul { position: absolute; top: 9px; left: 10em; }
-  #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
-  #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
-  */ })));
   if (util.v6) util.css.add(fonts.iconfont);
 }, util.priority.DEFAULT);
 
 GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
+  // 漏斗图标
+  body[yawf-weibo-version="v5"] .gn_setting[node-type="member"]:last-child { margin-right: 44px; }
+  body[yawf-weibo-version="v5"] .WB_global_nav .gn_setting .gn_tab.gn_filter .ico { background-image: url("{{filter-img}}"); !important; background-position: 0 0 !important; }
+  body[yawf-weibo-version="v5"] .WB_global_nav .gn_search { width: 210px !important; left: 440px !important; position: absolute !important; }
+  body[yawf-weibo-version="v5"] .WB_global_nav .gn_search .gn_input { width: 168px !important; }
+  body[yawf-weibo-version="v6"] .gn_search .W_input { box-sizing: border-box !important; height: 32px !important; }
+  body[yawf-weibo-version="v6"] .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
+  {{yawf-icon-font}}
   // 设置框相关样式
+  body[yawf-weibo-version="v5"] .yawf-config-body { margin: -20px; padding: 20px; }
+  body[yawf-weibo-version="v6"] .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
+  body[yawf-weibo-version="v6"] .yawf-config-header { margin-bottom: -50px; }
+  body[yawf-weibo-version="v6"] .yawf-config-header ul { position: absolute; top: 9px; left: 10em; }
+  body[yawf-weibo-version="v6"] #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   .yawf-Layer.yawf-drag { opacity: 0.67; -moz-user-select: none; user-select: none; }
   #yawf-config [node-type="inner"] { padding: 20px; }
   .yawf-config-body { max-height: 360px; overflow-y: auto; width: 760px; }
@@ -5312,20 +5317,24 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [yawf-display$="-hidden"] { display: none !important; }
   [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
   // 折叠微博
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { opacity: 1; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen):not(.WB_feed_detail) { display: none !important; }
   // v5
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
-  // v6 TODO
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { transition: max-height 0.3s; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding: 0; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
+  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
+  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
+  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
+  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
+  // v6
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { transition: max-height 0.3s; }
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding: 0; }
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { padding: 20px 15px 5px 20px; }
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 2em; border: 1px solid; border-color: transparent; margin: 0 1em; width: calc(100% - 6em - 2px); cursor: pointer; opacity: 0.8; }
+  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child { padding-top: 10px; }
+  // Common
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { opacity: 1; }
   // 其他
   .WB_feed_together .wft_users { display: none; }
   .WB_feed_together[yawf-sonfold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
@@ -5344,7 +5353,10 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-fast-filter-text { font-weight: bold; }
   #yawf-drop-area ul { list-style: disc; margin-left: 2em; }
   // 其他页面优化设置
-  #pl_rightmod_myinfo:empty { height: 156px; }
+  #pl_rightmod_myinfo:empty { hegiht: 156px; }
+  // 切换视图
+  body[yawf-weibo-version="v6"] #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
+  'yawf-icon-font' :util.css.add(fonts.iconfont),
 }));
