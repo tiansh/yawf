@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.121
+// @version           2.1.122
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -337,6 +337,14 @@ var text = {
   'layoutHideWeiboFavourite': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favourite' },
   'layoutHideWeiboBlockBySource': { 'zh-cn': '屏蔽来源', 'zh-hk': '屏蔽來源', 'zh-tw': '屏蔽來源', 'en': 'Block Source' },
   'layoutHideWeiboBlockByKeyword': { 'zh-cn': '屏蔽关键词', 'zh-hk': '屏蔽關鍵詞', 'zh-tw': '屏蔽關鍵詞', 'en': 'Block Keywords' },
+  // 微博按钮
+  'layoutReorderTitle': { 'zh-cn': '重新排列微博控制按钮 (v6)', 'zh-hk': '重新排列微博控制按鈕 (v6)', 'zh-tw': '重新排列微博控制按鈕 (v6)', 'en': 'Reorder Weibo control buttons (v6)' },
+  'layoutReorderDesc': { 'zh-cn': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}', 'zh-hk': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}', 'zh-tw': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}', 'en': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}' },
+  'layoutReorderPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
+  'layoutReorderFavorite': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favourite' },
+  'layoutReorderForward': { 'zh-cn': '转发', 'zh-hk': '轉發', 'zh-tw': '轉發', 'en': 'Forward' },
+  'layoutReorderComment': { 'zh-cn': '评论', 'zh-hk': '評論', 'zh-tw': '評論', 'en': 'Comment' },
+  'layoutReorderLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
   // 个人主页
   'layoutHidePerson': { 'zh-cn': '隐藏模块 - 个人主页', 'zh-hk': '隱藏模組 - 個人主頁', 'zh-tw': '隱藏模組 - 個人主頁', 'en': 'Hide modules - Personal home page' },
   'layoutHidePersonMoveThings': { 'zh-cn': '移动部件（会员模板）', 'zh-hk': '移動部件（會員模板）', 'zh-tw': '移動部件（會員模板）', 'en': 'Moving Things (VIP Template)' },
@@ -526,6 +534,7 @@ var html = {
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawf-groupText">{{{text}}}</div>',
   'configRemark': '<div class="yawf-groupRemark">{{{text}}}</div>',
+  'configLabel': '<div class="yawf-groupLabel"><label>{{{text}}}</label></div>',
   // 设置项
   'configBoolean': '<div class="yawf-configBoolean yawf-configItem"><label>{{text}}</label></div>',
   'configBooleanInput': '<div class="yawf-configInput yawf-configBooleanInput"><input id="yawf-{{key}}" class="W_checkbox yawf-configBooleanInput" type="checkbox" name="yawf-{{key}}"></div>',
@@ -2110,6 +2119,8 @@ filter.typed.dom = (function () {
   var text = base('Text');
   // 不缩进的文本
   var remark = base('Remark');
+  // 一个空的 label
+  var label = base('Label');
 
   // 真假值的设置项
   var boolean = base('Boolean', function (dom, item) {
@@ -2288,6 +2299,7 @@ filter.typed.dom = (function () {
     'subtitle': subtitle,
     'text': text,
     'remark': remark,
+    'label': label,
     'string': string,
     'color': color,
     'number': number,
@@ -4015,6 +4027,61 @@ filter.predef.group('layout');
   item('BlockBySource', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_by_app"] { display: none !important; }');
   item('BlockByKeyword', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_setkeyword"] { display: none !important; }');
 
+  filter.items.layout.reorder = {};
+  filter.items.layout.reorder.title = filter.item({
+    'group': 'reorder',
+    'type': 'subtitle',
+    'text': '{{layoutReorderTitle}}',
+  }).addto(filter.groups.layout);
+  var reorderItem = function (def) {
+    return {
+      'type': 'select',
+      'default': def,
+      'select': ['pop', 'favorite', 'forward', 'comment', 'like'].map(function (n) {
+        return { 'value': n, 'text': '{{layoutReorder' + n[0].toUpperCase() + n.slice(1) + '}}' };
+      }),
+    };
+  };
+  filter.items.layout.reorder.title = filter.item({
+    'group': 'reorder',
+    'version': 122,
+    'key': 'weibo.layout.reorder',
+    'ref': {
+      '1': reorderItem('pop'),
+      '2': reorderItem('favorite'),
+      '3': reorderItem('forward'),
+      '4': reorderItem('comment'),
+      '5': reorderItem('like'),
+    },
+    'text': '{{layoutReorderDesc}}',
+    'type': 'label',
+    'shown': function (dom) {
+      var selects = Array.from(dom.querySelectorAll('select'))
+      var values = function () { return selects.map(function (s) { return s.value; }); };
+      var lastv = values();
+      selects.forEach(function (select, index) {
+        select.addEventListener('change', function () {
+          if (select.value === lastv[index]) return;
+          selects[lastv.indexOf(select.value)].value = lastv[index];
+          lastv = values();
+          // 强制刷新以保存新的设置
+          var evt = document.createEvent('HTMLEvents');
+          evt.initEvent("change", false, true);
+          selects.forEach(function (s) { s.dispatchEvent(evt); });
+        });
+      });
+    },
+    'init': function () {
+      if (!util.v6) return;
+      var ref = this.ref;
+      util.css.add(['1', '2', '3', '4', '5'].map(function (key) {
+        return '.WB_handle ul li[yawf-handle-type="fl_' + ref[key].conf + '"] { order: ' + key + '; }';
+      }).join('\n'));
+      console.log(this.ref[1].conf);
+    },
+  }).addto(filter.groups.layout);
+
+
   // 处理 v6 下微博按钮的平均分布
   observer.weibo.after(function (feed) {
     if (!util.v6) return;
@@ -5256,6 +5323,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
   .yawf-config-layer { padding-bottom: 20px; }
   .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; }
+  .yawf-groupLabel { margin: 5px 10px; padding: 10px 0 0 2em; }
   .yawf-groupSubtitle { font-weight: bold; }
   .yawf-groupTitle::after { content: "-"; margin-left: 0.5em; }
   .yawf-groupTitle { float: left; font-weight: bold; margin: 5px 0.5em 5px 10px; padding: 10px 0 0; }
