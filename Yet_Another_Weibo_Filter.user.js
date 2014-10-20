@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.120
+// @version           2.1.121
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1880,7 +1880,6 @@ filter.fix.fold = (function () {
     var showFeed = function () {
       feed.setAttribute('yawf-display', display);
       feed.removeEventListener('click', showFeed);
-      filter.items.layout.weibo.fix_handle(feed);
     };
     feed.addEventListener('click', showFeed);
     // 添加作者信息
@@ -3548,7 +3547,6 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
     feeds.forEach(function (feed) {
       feed.setAttribute('yawf-unread', 'show');
       feed.classList.remove('WB_feed_new');
-      filter.items.layout.weibo.fix_handle(feed);
     });
     this.counter();
     this.timetip(feeds[feeds.length - 1]);
@@ -3735,7 +3733,6 @@ filter.items.other.autoload.auto_expand = filter.item({
       ref.parentNode.insertBefore(feed, ref.nextSibling);
       feed.setAttribute('yawf-unread', 'show');
       filter.items.other.autoload.auto_load_new_weibo.counter();
-      filter.items.layout.weibo.fix_handle(feed);
     };
     if (force) return act();
     if (!that.conf) return;
@@ -4018,15 +4015,6 @@ filter.predef.group('layout');
   item('BlockBySource', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_by_app"] { display: none !important; }');
   item('BlockByKeyword', 34, 'div.layer_menu_list[action-type="feed_list_layer"] a[action-type="feed_list_shield_setkeyword"] { display: none !important; }');
 
-  filter.items.layout.weibo.fix_handle = function (feed) {
-    util.func.call(function () {
-      var ul = feed.querySelector('.WB_handle .WB_row_line');
-      var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li'));
-      var classNames = ['yawf-WB_row_r0', 'WB_row_r1', 'WB_row_r2', 'WB_row_r3', 'WB_row_r4'];
-      classNames.forEach(function (className) { ul.classList.remove(className); });
-      ul.classList.add(classNames[li.filter(function (li) { return li.clientWidth > 0; }).length]);
-    });
-  };
   // 处理 v6 下微博按钮的平均分布
   observer.weibo.after(function (feed) {
     if (!util.v6) return;
@@ -4035,7 +4023,10 @@ filter.predef.group('layout');
       var type = li.querySelector('a').getAttribute('action-type');
       li.setAttribute('yawf-handle-type', type);
     });
-    filter.items.layout.weibo.fix_handle(feed);
+    var fwli = Array.from(feed.querySelectorAll('.WB_feed_expand .WB_func .WB_handle li'));
+    if (fwli.length) fwli.forEach(function (li, index) {
+      li.setAttribute('yawf-handle-type', ['fl_forward', 'fl_comment', 'fl_like'][index]);
+    });
   });
 
   subtitle('Person');
@@ -5356,6 +5347,9 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #pl_rightmod_myinfo:empty { hegiht: 156px; }
   // 切换视图
   body[yawf-weibo-version="v6"] #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
+  // v6 微博按钮的平均分布
+  body[yawf-weibo-version="v6"] .WB_handle ul { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; }
+  body[yawf-weibo-version="v6"] .WB_handle ul li { flex-grow: 1; float: none; width: auto; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
   'yawf-icon-font' :util.css.add(fonts.iconfont),
