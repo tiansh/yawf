@@ -156,6 +156,7 @@
     #export[href] { background: #ffa00a; }
     #export:hover { background: #ffb137; }
     #message { color: #710; font-weight: bold; }
+    #wrap { height: 50px; }
     body { padding-bottom: 120px; }
   </style>
 </head>
@@ -170,8 +171,9 @@
       <textarea id="settingsString"></textarea>
     </div>
     <div id="message" style="visibility: hidden;">转换时发生错误，您输入的设置信息可能不正确或不完整。</div>
-    <div id="yawf"><a id="export" download="wcf_convert.yawf">保存 YAWF 配置文件</a></div>
+    <div id="wrap"><div id="yawf"><a id="export" download="wcf_convert.yawf">保存 YAWF 配置文件</a></div></div>
   </div>
+  <p>相关工具：<a href="convert_wcf.html">从 YAWF 转换到眼不见心不烦的工具</a></p>
   <h2>简介</h2>
   <div class="in">
     <p>本工具可以帮助你将眼不见心不烦（Weibo Content Filter）的设置转换为 Yet Another Weibo Filter 的设置文件。</p>
