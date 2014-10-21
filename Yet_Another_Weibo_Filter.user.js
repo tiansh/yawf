@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.125
+// @version           2.1.126
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2016,7 +2016,7 @@ filter.active = function (feed) {
     filter.fix.fold(feed);
   }, function () {
     // 新版当前不支持对同源转发合并微博的处理
-    action = filter.rules.parse(feed) || 'unset';
+    var action = filter.rules.parse(feed) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
     filter.fix.fold(feed);
   })());
@@ -3908,7 +3908,7 @@ filter.predef.group('layout');
   item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }');
   item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
-  item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }')
+  item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }');
 
   subtitle('Nav');
   item('LogoImg', 94, function replaceLogo() {
@@ -4059,7 +4059,7 @@ filter.predef.group('layout');
     'text': '{{layoutReorderDesc}}',
     'type': 'label',
     'shown': function (dom) {
-      var selects = Array.from(dom.querySelectorAll('select'))
+      var selects = Array.from(dom.querySelectorAll('select'));
       var values = function () { return selects.map(function (s) { return s.value; }); };
       var lastv = values();
       selects.forEach(function (select, index) {
@@ -4313,9 +4313,9 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         body[yawf-merge-left] .WB_main .WB_frame { width: 600px !important; }
         body[yawf-merge-left="left"] .WB_main .WB_main_c { float: none; }
         body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; transform: scaleX(-1); }
-        body[yawf-merge-left="left"] .W_fold.W_fold_out { left: 270px; }
+        body[yawf-merge-left="left"] .W_fold.W_fold_out { left: 269px; }
         body[yawf-merge-left="left"] .WB_main_r { right: auto; left: 0px; transform: translateX(-100%) translateZ(0px); }
-        body[yawf-merge-left="left"] .WB_main_r.W_fold_layer { left: 270px; }
+        body[yawf-merge-left="left"] .WB_main_r.W_fold_layer { left: 269px; }
         body[yawf-merge-left="left"] .WB_main_r { direction: rtl; }
         body[yawf-merge-left="left"] .WB_main_r .WB_cardwrap { direction: ltr; }
       }
