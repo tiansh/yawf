@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.127
+// @version           2.1.128
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3982,18 +3982,33 @@ filter.predef.group('layout');
   item('TopicCard', 5, '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
   item('LocationCard', 5, '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
   item('LastPic', 72, function () {
-    observer.dom.add(function () {
-      var last;
-      last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
-      while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
-      if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
-      last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
-      while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
-      if (last) last.removeAttribute('yawf-piclast');
-      var close = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view .artwork_box .W_close');
-      if (close) close.click();
-    });
-    util.css.add('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t5/style/images/common/small.cur"), auto !important; }');
+    if (util.v6) {
+      observer.dom.add(function () {
+        var last;
+        last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
+        while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
+        if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
+        last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
+        while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
+        if (last) last.removeAttribute('yawf-piclast');
+        var close = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view .artwork_box .ficon_close ');
+        if (close) close.click();
+      });
+      util.css.add('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/small.cur"), auto !important; }');
+    } else {
+      observer.dom.add(function () {
+        var last;
+        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
+        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
+        if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
+        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
+        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
+        if (last) last.removeAttribute('yawf-piclast');
+        var close = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view .artwork_box .W_close');
+        if (close) close.click();
+      });
+      util.css.add('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t5/style/images/common/small.cur"), auto !important; }');
+    }
   });
   item('TopComment', 54, function () {
     observer.dom.add(function () {
