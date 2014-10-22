@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.126
+// @version           2.1.127
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -554,7 +554,7 @@ var html = {
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_arrow tag yawf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
-  '~v6~configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item"><span class="W_arrow_bor W_arrow_bor_l"><i class="S_line3"></i><em class="S_bg2_br"></em></span>{{[item]}}<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a></li>',
+  '~v6~configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item">{{[item]}}<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a></li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
   '~v6~configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
@@ -860,14 +860,22 @@ observer.dom = (function () {
     });
     return found;
   };
-  var callAll = function (mutation) {
-    callbacks.forEach(function (c) { c(mutation); });
+  var actived = null;
+  var act = function () {
+    callbacks.forEach(function (c) { c(); });
   };
+  var active = util.func.catched(function (mutation) {
+    if (actived === false) actived = true;
+    if (actived !== null) return;
+    act(); actived = false;
+    setTimeout(function () {
+      if (actived === true) act(); actived = null;
+    }, 100);
+  });
   var observe = function () {
-    callAll(); // 初始化
-    (new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) { callAll(mutation); });
-    })).observe(document.body, { 'childList': true, 'subtree': true });
+    active(); // 初始化
+    (new MutationObserver(active))
+      .observe(document.body, { 'childList': true, 'subtree': true });
   };
   util.init(function () {
     observe();
@@ -1978,6 +1986,12 @@ filter.fix.son = function (feed) {
   recount();
 };
 
+// 隐藏的微博直接从列表中去掉，减少开销是次要的，主要是兼容 v6 的 jk 按键
+filter.fix.hidden = function (feed) {
+  if (feed.getAttribute('yawf-display').lastIndexOf('-hidden') === -1) return;
+  setTimeout(function () { feed.parentNode.removeChild(feed); }, 100);
+};
+
 // 真正微博过滤的核心模块
 filter.active = function (feed) {
   (util.version.chose(function () {
@@ -2019,6 +2033,7 @@ filter.active = function (feed) {
     var action = filter.rules.parse(feed) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
     filter.fix.fold(feed);
+    filter.fix.hidden(feed);
   })());
 };
 
@@ -4080,7 +4095,6 @@ filter.predef.group('layout');
       util.css.add(['1', '2', '3', '4', '5'].map(function (key) {
         return '.WB_handle ul li[yawf-handle-type="fl_' + ref[key].conf + '"] { order: ' + key + '; }';
       }).join('\n'));
-      console.log(this.ref[1].conf);
     },
   }).addto(filter.groups.layout);
 
@@ -4161,8 +4175,8 @@ filter.predef.group('layout');
   item('IM', 46, '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
 
   var tagRightbarMods = function () {
-    var mods = document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])');
-    if (!mods) return;
+    var mods = Array.from(document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])'));
+    if (!mods.length) return;
     var identifiers = {
       // v5 抄自眼不见心不烦
       '.right_content.hot_topic': 'rightmod_zt_hottopic',
@@ -4179,7 +4193,8 @@ filter.predef.group('layout');
       '[change-data*="key=song_r2"]': 'rightmod_recom_music',
       '[change-data*="key=mov_r2"]': 'rightmod_recom_movie',
     };
-    Array.from(mods).forEach(function (mod) {
+    mods.forEach(function (mod) {
+      mod.setAttribute('yawf-id', '');
       Object.keys(identifiers).forEach(function (qs) {
         if (mod.querySelector(qs)) mod.setAttribute('yawf-id', identifiers[qs]);
       });
@@ -4327,7 +4342,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       }
       body[yawf-merge-left][yawf-weibo-only] #yawf-drop-area { left: calc(50% + 70px); }
 
-      .yawf-WB_left_nav{ width:150px;}
+      .yawf-WB_left_nav { width:150px; overflow: hidden; }
       .yawf-WB_left_nav .lev_Box_noborder{ border-bottom:none;}
       .yawf-WB_left_nav .lev_line::before{ border-top: 1px solid; content: " "; display: block; margin: 11px 0 -12px; opacity: 0.3; }
       .yawf-WB_left_nav .lev_line fieldset{ display:block; height:22px;padding: 0 0 0 120px; zoom:1; clear:both; border-top: none;}
@@ -4464,6 +4479,7 @@ filter.items.tool.sidebar.fixed_left = filter.item({
       var query = attrs.map(function (x) { return prefix + '[' + x + ']'; }).join(', ');
       var removeFixed = function () {
         var items = Array.from(document.querySelectorAll(query));
+        if (!items.length) return;
         items.forEach(function (fixed) {
           var x = fixed.cloneNode(true);
           attrs.forEach(function (attr) { x.removeAttribute(attr); });
@@ -4475,26 +4491,34 @@ filter.items.tool.sidebar.fixed_left = filter.item({
       observer.dom.add(removeFixed, 100);
       // 最后修正在左右栏合并后左栏的浮动
       if (fleft) {
-        util.css.add('.WB_main_r[yawf-fixed] .WB_main_l { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }');
+        util.css.add('.WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }');
         util.css.add('body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }');
         var floating = false;
         var updatePosition = function () {
           var left = document.querySelector('.WB_left_nav, .yawf-WB_left_nav');
           var reference = document.querySelector('.WB_main_r');
+          var container = document.querySelector('#plc_main');
           if (!left || !reference) return;
           var refc = reference.getClientRects();
           if (!refc || !refc[0]) return;
           var pos = refc[0];
           if (!floating) {
-            if (pos.bottom < -65) {
+            if (pos.bottom < 0) {
               floating = true;
               reference.setAttribute('yawf-fixed', '');
             }
           } else {
-            if (pos.bottom > 65) {
+            if (pos.bottom + left.clientHeight > 60) {
               floating = false;
               reference.removeAttribute('yawf-fixed');
               util.func.call(updatePosition);
+            }
+          }
+          if (floating) {
+            var cip = container.getClientRects()[0];
+            var fip = left.getClientRects()[0];
+            if (cip && fip) {
+              left.style.maxHeight = Math.max(cip.bottom - fip.top - 10, 0) + 'px';
             }
           }
         };
