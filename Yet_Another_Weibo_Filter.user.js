@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.128
+// @version           2.1.129
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -4626,12 +4626,11 @@ filter.items.tool.weibotool.unwrap_text = filter.item({
       .WB_feed .WB_feed_type .WB_func { margin-top: 5px }
       .WB_feed .WB_feed_type .B_index .WB_feed .W_ico16 { vertical-align: -3px !important }
     */ }, function () { /*!CSS
-      .WB_detail>.WB_info, .WB_detail>.WB_info+.WB_text { display: inline; }
-      .WB_detail>.WB_info::after { content: "："; }
+      .WB_detail { overflow: hidden; }
+      .WB_detail>.WB_info, .WB_detail>.WB_info+.WB_text, .WB_expand>.WB_info, .WB_expand>.WB_info+.WB_text { display: inline; word-wrap: break-word; }
+      .WB_detail>.WB_info::after, .WB_expand>.WB_info::after { content: "："; }
       .WB_detail>.WB_info+.WB_text::before { display: block; float: right; content: " "; width: 1.5em; height: 1px; }
       .WB_detail>.WB_info+.WB_text+.WB_from { margin-top: 1em; }
-      .WB_expand>.WB_info, .WB_expand>.WB_info+.WB_text { display: inline; }
-      .WB_expand>.WB_info::after { content: "："; }
     */ })));
   },
 }).addto(filter.groups.tool);
@@ -5458,7 +5457,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   // 切换视图
   body[yawf-weibo-version="v6"] #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
   // v6 微博按钮的平均分布
-  body[yawf-weibo-version="v6"] .WB_handle ul { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; }
+  body[yawf-weibo-version="v6"] .WB_handle ul { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; margin-left: -4px; }
   body[yawf-weibo-version="v6"] .WB_handle ul li { flex-grow: 1; float: none; width: auto; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
