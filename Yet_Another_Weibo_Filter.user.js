@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.134
+// @version           2.1.135
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -647,6 +647,11 @@ util.priority = {
 
 // 函数相关操作
 util.func = {};
+
+// 在页面执行一个函数
+util.func.page = function (f) {
+  location.href = 'javascript: void(' + encodeURIComponent(f + '') + '())';
+};
 
 // 延迟调用函数
 util.func.call = function (f) {
@@ -3642,7 +3647,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
     // 自动点开有新微博的提示
     if (util.v6) {
       // 我知道我在干什么
-      location.href = 'javascript: void(' + encodeURIComponent(function () {
+      util.func.page(function () {
         /* STK.lib.feed.inter */
         var action = function (b, e) {
           var a = window.STK;
@@ -3685,7 +3690,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
             feedList(window.STK.sizzle('#v6_pl_content_homefeed')[0]);
           }, 100);
         })).observe(document.body, { 'childList': true, 'subtree': true });
-      } + '') + '())';
+      });
     } else {
       observer.dom.add(function () {
         var newFeed = document.querySelector(util.version.chose(
@@ -4331,7 +4336,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       var ref = document.querySelector('#pl_rightmod_myinfo, #v6_pl_rightmod_myinfo');
       var right = document.querySelector('.W_main_r, .WB_main_r');
       var leftn = document.querySelector('.W_main_l, .WB_main_l');
-      if (leftn) { left = leftn; }
+      if (leftn && left !== leftn) { left = leftn; }
       if (ref) {
         if (ref.nextSibling !== left) {
           ref.parentNode.insertBefore(left, ref.nextSibling);
@@ -4343,6 +4348,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
           right.insertBefore(left, right.firstChild);
           main.setAttribute('yawf-merge-left', side);
           fixStylish(true);
+          if (util.v6) fixMsgboxLeftNav();
         }
       } else {
         if (left0.previousSibling !== left) {
@@ -4384,6 +4390,8 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
       body[yawf-merge-left] .WB_main .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
       body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
+      body[yawf-merge-left] .webim_contacts_mod { position: static !important; }
+      body[yawf-merge-left] .webim_contacts_bd { height: auto !important; }
       body[yawf-merge-left="left"] .WB_main .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_main .WB_main_c { float: right; }
       body[yawf-merge-left="left"] .WB_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
@@ -4459,6 +4467,22 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     positionLeft();
     observer.dom.add(function () { positionLeft(); });
     observer.dom.add(fixStylish);
+
+    var fixMsgboxLeftNav = function () {
+      util.func.page(function () {
+        if (typeof STK === 'undefined') return;
+        var a = STK;
+        var d = a.pl.msgbox.leftNav.source.init;
+        if (!d) return;
+        var b = a.sizzle('.yawf-WB_left_nav')[0]
+        if (!b) return;
+        var c = b.cloneNode(!0);
+        a.insertBefore(c, b);
+        a.removeNode(b);
+        d(c);
+      })
+    };
+
   },
 }).addto(filter.groups.tool);
 
