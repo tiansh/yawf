@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.131
+// @version           2.1.132
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -395,6 +395,7 @@ var text = {
   'fixedLeftDefault': { 'zh-cn': '默认元素 (v5)', 'zh-hk': '預設元素 (v5)', 'zh-tw': '預設元素 (v5)', 'en': 'default elements (v5)' },
   'fixedLeftWhole': { 'zh-cn': '整个左栏 (v5)', 'zh-hk': '整個左欄 (v5)', 'zh-tw': '整個左欄 (v5)', 'en': 'whole column (v5)' },
   'filteRightTopic': { 'zh-cn': '应用话题黑名单到右栏热门话题', 'zh-hk': '應用話題黑名單到右欄熱門話題', 'zh-tw': '應用話題黑名單到右欄熱門話題', 'en': 'Apply topic blacklist to Hot Topic in right column' },
+  'filteRightTopicCount': { 'zh-cn': '热门话题列表隐藏|阅读数少于{{<number>}}万的话题', 'zh-hk': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'zh-tw': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'en': 'Hidden Hot Topic with | less than {{<number>}}万 reading' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
@@ -4563,6 +4564,39 @@ filter.items.tool.sidebar.filte_right_topic = filter.item({
         var li; for (li = topic; li.tagName.toLowerCase() !== 'li'; li = li.parentNode);
         if (filter.items.topic.topic.blacklist.conf.indexOf(text) !== -1) li.setAttribute('yawf-rtopic', 'hidden');
         else li.setAttribute('yawf-rtopic', 'show');
+      });
+    });
+  },
+}).addto(filter.groups.tool);
+
+// 隐藏阅读量太少的热门话题
+filter.items.tool.sidebar.filte_right_topic_count = filter.item({
+  'group': 'sidebar',
+  'version': 132,
+  'type': 'boolean',
+  'key': 'weibo.tool.filte_right_topic_count',
+  'ref': {
+    'number': {
+      'type': 'range',
+      'min': 100,
+      'max': 20000,
+      'step': 100,
+      'default': 200,
+    }
+  },
+  'text': '{{filteRightTopicCount}}',
+  'ainit': function () {
+    util.css.add('.hot_topic li[yawf-rtopic-count="hidden"] { display: none !important; }');
+    var that = this;
+    observer.dom.add(function () {
+      var counts = Array.from(document.querySelectorAll('.hot_topic li:not([yawf-rtopic-count]) .total'));
+      counts.forEach(function (count) {
+        // 网站中数字由 xxx万 ， xx.x亿 的方式表示；且没有繁体或英文版本
+        // 注意有时前面的数字会有小数点，所以要替换为 e4, e8 而非 0000, 00000000
+        var number = Number(count.textContent.replace('万', 'e4').replace('亿', 'e8'));
+        var li; for (li = count; li.tagName.toLowerCase() !== 'li'; li = li.parentNode);
+        if (isNaN(number) || that.ref.number.conf * 1e4 > number) li.setAttribute('yawf-rtopic-count', 'hidden');
+        else li.setAttribute('yawf-rtopic-count', 'show');
       });
     });
   },
