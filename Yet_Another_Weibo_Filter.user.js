@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.132
+// @version           2.1.133
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -1493,7 +1493,7 @@ network.account = (function () {
 network.weibo = {};
 // 告诉服务器屏蔽被隐藏的微博
 network.weibo.block = (function () {
-  var buffer = [], busy = false;
+  var buffer = [], busy = false, all = [];
   var delay = function () { return 3000 + Math.round(20 * Math.random()) * 100; };
   var block = function (mid, callback) {
     var done = function () { setTimeout(callback, delay()); };
@@ -1524,12 +1524,12 @@ network.weibo.block = (function () {
     block(mid, active);
   };
   return function (mid) {
-    buffer.push(mid);
+    if (all.indexOf(mid) !== -1) return null;
+    buffer.push(mid); all.push(mid);
     if (!busy) active();
     return mid;
   };
 }());
-
 
 // 过滤器
 var filter = {};
@@ -1540,10 +1540,10 @@ filter.rules = (function () {
     list.push({ 'priority': priority, 'rule': rule });
     list.sort(function (x, y) { return y.priority - x.priority; });
   };
-  var parse = function (feed) {
+  var parse = function (feed, isChild) {
     var result = null;
     list.some(function (item) {
-      try { result = item.rule(feed) || result; }
+      try { result = item.rule(feed, isChild) || result; }
       catch (e) { util.debug('error while parsing rule %o: %o', item.rule, e); }
       if (result) util.debug('%o(%o) -> %s', item.rule, feed, result);
       return result;
@@ -1743,7 +1743,7 @@ filter.fast.recognize = (function () {
 // 使用右键菜单屏蔽
 filter.fast.right = (function () {
   var counter = 0, filters = [];
-  var addmenu = function (feed) {
+  var addmenu = function (feed, isChild) {
     var menu = document.createElement('menu');
     menu.setAttribute('type', 'context');
     var submenu = menu.appendChild(document.createElement('menu'));
@@ -1778,7 +1778,16 @@ filter.fast.right = (function () {
       feed.setAttribute('contextmenu', (menu.id = 'yawf-weibo-menu-' + ++counter));
     }
   };
-  var active = function () { observer.weibo.after(addmenu); };
+  var active = function () {
+    if (util.v6) {
+      observer.weibo.after(function (feed) {
+        var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
+        [feed].concat(son).forEach(function (feed, index) { addmenu(feed, !!index); });
+      });
+    } else {
+      observer.weibo.after(addmenu);
+    }
+  };
   var add = function (details) { if (details.contextmenu) filters.push(details); };
   return {
     'add': add,
@@ -2028,10 +2037,13 @@ filter.active = function (feed) {
     filter.fix.fold(feed);
   }, function () {
     // 新版当前不支持对同源转发合并微博的处理
-    var action = filter.rules.parse(feed) || 'unset';
-    feed.setAttribute('yawf-display', 'display-' + action);
-    filter.fix.fold(feed);
-    filter.fix.hidden(feed);
+    var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
+    ([feed]).concat(son).forEach(function (feed, index) {
+      var action = filter.rules.parse(feed, !!index) || 'unset';
+      feed.setAttribute('yawf-display', 'display-' + action);
+      filter.fix.fold(feed);
+      filter.fix.hidden(feed);
+    });
   })());
 };
 
@@ -2746,7 +2758,8 @@ weibo.avatar = function (feed) {
 // 从一条微博中找到他的作者
 weibo.author = {};
 weibo.author.dom = function (feed) {
-  return feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard], .WB_detail>.WB_info>.W_fb[usercard]');
+  return feed.querySelector('.WB_detail>.WB_info>.WB_name[usercard], .WB_detail>.WB_info>.W_fb[usercard]') ||
+    feed.querySelector('.WB_text>a.W_fb[usercard]:first-child');
 };
 weibo.author.id = function (feed) {
   var author = weibo.author.dom(feed);
@@ -3515,13 +3528,12 @@ filter.items.other.scripttool.block_hidden = filter.item({
   'text': '{{blockHiddenWeiboDesc}}',
   'ainit': function () {
     observer.weibo.after(function (feed) {
-      [feed].concat(Array.from(feed.querySelectorAll('.WB_feed_type'))).forEach(function (feed) {
-        var display = feed.getAttribute('yawf-display');
-        if (display !== 'display-hidden') return;
-        if (!feed.getAttribute('mid')) return;
-        network.weibo.block(feed.getAttribute('mid'));
-        feed.setAttribute('yawf-block', 'block');
-      });
+      var display = feed.getAttribute('yawf-display');
+      if (display !== 'display-hidden') return;
+      var mid = feed.getAttribute('mid');
+      if (!mid) return;
+      network.weibo.block(mid);
+      feed.setAttribute('yawf-block', 'block');
     });
   }
 }).addto(filter.groups.other);
@@ -4586,7 +4598,7 @@ filter.items.tool.sidebar.filte_right_topic_count = filter.item({
   },
   'text': '{{filteRightTopicCount}}',
   'ainit': function () {
-    util.css.add('.hot_topic li[yawf-rtopic-count="hidden"] { display: none !important; }');
+    util.css.add('.hot_topic li[yawf-rtopic-count="hidden"], #topicAD { display: none !important; }');
     var that = this;
     observer.dom.add(function () {
       var counts = Array.from(document.querySelectorAll('.hot_topic li:not([yawf-rtopic-count]) .total'));
