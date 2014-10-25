@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.133
+// @version           2.1.134
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -360,8 +360,11 @@ var text = {
   'layoutHidePersonAlbum': { 'zh-cn': '图片', 'zh-hk': '相冊', 'zh-tw': '相冊', 'en': 'Album' },
   'layoutHidePersonHotTopic': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'layoutHidePersonHotWeibo': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
+  // 个人主页边栏模块
+  'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏 (v6)', 'zh-hk': '隱藏模組 - 個人主頁邊欄 (v6)', 'zh-tw': '隱藏模組 - 個人主頁邊欄 (v6)', 'en': 'Hide modules - Side column of personal homepage (v6)' },
+  'layoutHidePLeftDesc': { 'zh-cn': '隐藏个人主页边栏中以下标题的模块<br />模块', 'zh-hk': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'zh-tw': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'en': 'Hide modules on personal homepage with these titles<br />Modules' },
   // 消息页面
-  'layoutHideMessages': { 'zh-cn': '隐藏模块 - 消息页面', 'zh-hk': '隱藏模組 - 消息網頁', 'zh-tw': '隱藏模組 - 消息網頁', 'en': 'Hide modules - News Page' },
+  'layoutHideMessages': { 'zh-cn': '隐藏模块 - 消息页面', 'zh-hk': '隱藏模組 - 消息網頁', 'zh-tw': '隱藏模組 - 消息網頁', 'en': 'Hide modules - News page' },
   'layoutHideMessagesHelp': { 'zh-cn': '使用小帮助', 'zh-hk': '使用小幫助', 'zh-tw': '使用小幫助', 'en': 'Tips' },
   'layoutHideMessagesFeedback': { 'zh-cn': '微博意见反馈', 'zh-hk': '微博意见反馈', 'zh-tw': '微博意见反馈'/* as is */, 'en': 'Feed Back'/* as is */ },
   'layoutHideMessagesDesktop': { 'zh-cn': '微博桌面 (v5)', 'zh-hk': '微博桌面 (v5)', 'zh-tw': '微博桌面 (v5)', 'en': 'Weibo desktop (v5)' },
@@ -369,7 +372,7 @@ var text = {
   'layoutHideMessagesReport': { 'zh-cn': '微博举报处理中心 (v5)', 'zh-hk': '微博舉報處理中心 (v5)', 'zh-tw': '微博檢舉處理中心 (v5)', 'en': 'Report (v5)' },
   'layoutHideMessagesYoudao': { 'zh-cn': '导出收藏夹 (v5)', 'zh-hk': '导出收藏夹 (v5)', 'zh-tw': '导出收藏夹 (v5)', 'en': 'Export favorites (v5)' },
   // 添加好友
-  'layoutHideAttention': { 'zh-cn': '隐藏模块 - 添加关注 (v5)', 'zh-hk': '隱藏模組 - 添加關注 (v5)', 'zh-tw': '隱藏模組 - 添加關注 (v5)', 'en': 'Hide modules - Add Following (v5)' },
+  'layoutHideAttention': { 'zh-cn': '隐藏模块 - 添加关注 (v5)', 'zh-hk': '隱藏模組 - 添加關注 (v5)', 'zh-tw': '隱藏模組 - 添加關注 (v5)', 'en': 'Hide modules - Add following (v5)' },
   'layoutHideAttentionSuccess': { 'zh-cn': '关注成功对话框', 'zh-hk': '關注成功對話方塊', 'zh-tw': '關注成功對話方塊', 'en': 'Dialog for adding following success' },
   'layoutHideAttentionRecommend': { 'zh-cn': '公开推荐分组', 'zh-hk': '公开推荐的分组', 'zh-tw': '公开推荐的分组'/* as is */, 'en': '公开推荐的分组 (Public Recommend Group)' },
   // 杂项
@@ -382,6 +385,7 @@ var text = {
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
   'layoutHideOtherMusic': { 'zh-cn': '微音乐 (v6)', 'zh-hk': '微音乐 (v6)', 'zh-tw': '微音乐 (v6)'/* as is */, 'en': '微音乐 (v6, Weibo Music)' },
   'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
+  'layoutHideOtherRelatedWB': { 'zh-cn': '相关微博推荐 (v6)', 'zh-hk': '相关微博推荐 (v6)', 'zh-tw': '相关微博推荐 (v6)', 'en': '相关微博推荐 (v6, Suggested related weibo)' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
@@ -755,7 +759,10 @@ util.str.rgba = function (color, transparency) {
     ',' + (100 - transparency) / 100 + ')';
 };
 
-
+// 字符串 base64 编码
+util.str.base64 = function (str) {
+  return btoa(unescape(encodeURIComponent(str)));
+};
 
 // 文档相关工具
 util.dom = {};
@@ -4126,7 +4133,6 @@ filter.predef.group('layout');
     },
   }).addto(filter.groups.layout);
 
-
   // 处理 v6 下微博按钮的平均分布
   observer.weibo.after(function (feed) {
     if (!util.v6) return;
@@ -4160,9 +4166,25 @@ filter.predef.group('layout');
   item('Group', 12, '.W_main_2r [id^="Pl_Core_RightGroupsBtn__"], .WB_frame_b [id^="Pl_Core_RightGroupsBtn__"] { display: none !important; }');
   item('SuggestUser', 10, '.W_main_2r [id^="Pl_Core_RightUserList__"], .WB_frame_b [id^="Pl_Core_RightUserList__"] { display: none !important; }');
   item('Relation', 5, '.W_main_2r [id^="Pl_Core_RightUserGrid__"], .WB_frame_b [id^="Pl_Core_RightUserGrid__"] { display: none !important; }');
-  item('Album', 5, '.W_main_2r [id^="Pl_Core_RightPicMulti__"], .WB_frame_b [id^="Pl_Core_RightPicMulti__"] { display: none !important; }');
+  item('Album', 5, '.W_main_2r [id^="Pl_Core_RightPicMulti__"], .WB_frame_b [id^="Pl_Core_RightPicMulti__"], [yawf-obj-name="相冊"], [yawf-obj-name="相册"] { display: none !important; }');
   item('HotTopic', 5, '.W_main_2r [id^="Pl_Core_RightTextSingle__"], .WB_frame_b [id^="Pl_Core_RightTextSingle__"] { display: none !important; }');
   item('HotWeibo', 5, '.W_main_2r [id^="Pl_Core_RightPicText__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
+
+  subtitle('PLeft');
+  filter.items.layout.pleft.mods = filter.item({
+    'group': 'pleft',
+    'version': 134,
+    'key': 'weibo.layout.pleft',
+    'text': '{{layoutHidePLeftDesc}}',
+    'type': 'strings',
+    'add': function (s) { return s.trim(); },
+    'init': function () {
+      if (!this.conf.length) return;
+      util.css.add(this.conf.map(function (s) {
+        return '[yawf-obj-name="' + util.str.base64(s) + '"]';
+      }).join(', ') + ' { display: none !important; }');
+    }
+  }).addto(filter.groups.layout);
 
   subtitle('Messages');
   item('Help', 97, '#Pl_Rightmod_Helpbox, #pl_rightmod_helpat, #pl_rightmod_helpcomment, #pl_rightmod_helplike, #Pl_Rightmod_Littlehelp, #Pl_Rightmod_Helpnotebox, #pl_rightmod_helpfav, #v6_pl_rightmod_helpat, #v6_pl_rightmod_helpcomment, #v6_pl_rightmod_helplike, #v6_pl_rightmod_helpnotebox, #v6_pl_rightmod_helpfav { display: none !important; }');
@@ -4201,6 +4223,7 @@ filter.predef.group('layout');
   item('Tip', 8, '.layer_tips { display: none !important; }');
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('IM', 46, '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
+  item('RelatedWB', 134, '[yawf-obj-name="55u45YWz5o6o6I2Q"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
 
   var tagRightbarMods = function () {
     var mods = Array.from(document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])'));
@@ -4228,9 +4251,22 @@ filter.predef.group('layout');
       });
     });
   };
-
   observer.dom.add(tagRightbarMods);
   tagRightbarMods();
+  
+  var tagPLeftMods = function () {
+    var names = Array.from(document.querySelectorAll('.WB_frame_b>div:not([yawf-obj-name]) .WB_cardtitle_b h4.obj_name'));
+    if (!names.length) return;
+    names.forEach(function (title) {
+      var name = title && title.textContent.trim() || '';
+      var p = title, d;
+      for (; !p.classList.contains('WB_frame_b') ; p = p.parentNode) d = p;
+      d.setAttribute('yawf-obj-name', util.str.base64(name));
+    });
+  };
+  observer.dom.add(tagPLeftMods);
+  tagPLeftMods();
+
   util.css.add('.W_miniblog, .WB_miniblog { visibility: visible !important; }');
 
 }());
@@ -5120,7 +5156,7 @@ filter.items.script.importexport.importexport = filter.item({
     // 导出按钮
     var updateExportButton = function () {
       be.href = 'data:application/octet-stream;base64,' +
-        btoa(unescape(encodeURIComponent(util.config.export())));
+        util.str.base64(util.config.export());
       be.setAttribute('download', 'yawf-config.yawf');
     };
     // 导入按钮
