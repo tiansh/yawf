@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.129
+// @version           2.1.130
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -364,12 +364,12 @@ var text = {
   'layoutHideMessages': { 'zh-cn': '隐藏模块 - 消息页面', 'zh-hk': '隱藏模組 - 消息網頁', 'zh-tw': '隱藏模組 - 消息網頁', 'en': 'Hide modules - News Page' },
   'layoutHideMessagesHelp': { 'zh-cn': '使用小帮助', 'zh-hk': '使用小幫助', 'zh-tw': '使用小幫助', 'en': 'Tips' },
   'layoutHideMessagesFeedback': { 'zh-cn': '微博意见反馈', 'zh-hk': '微博意见反馈', 'zh-tw': '微博意见反馈'/* as is */, 'en': 'Feed Back'/* as is */ },
-  'layoutHideMessagesDesktop': { 'zh-cn': '微博桌面', 'zh-hk': '微博桌面', 'zh-tw': '微博桌面', 'en': 'Weibo desktop' }, // v5Only?
-  'layoutHideMessagesCommentTop': { 'zh-cn': '热评微博', 'zh-hk': '熱評微博', 'zh-tw': '熱評微博', 'en': 'Popular Weibo' }, // v5Only?
-  'layoutHideMessagesReport': { 'zh-cn': '微博举报处理中心', 'zh-hk': '微博舉報處理中心', 'zh-tw': '微博檢舉處理中心', 'en': 'Report' }, // v5Only?
-  'layoutHideMessagesYoudao': { 'zh-cn': '导出收藏夹', 'zh-hk': '导出收藏夹', 'zh-tw': '导出收藏夹', 'en': 'Export favorites' }, // v5Only?
+  'layoutHideMessagesDesktop': { 'zh-cn': '微博桌面 (v5)', 'zh-hk': '微博桌面 (v5)', 'zh-tw': '微博桌面 (v5)', 'en': 'Weibo desktop (v5)' },
+  'layoutHideMessagesCommentTop': { 'zh-cn': '热评微博 (v5)', 'zh-hk': '熱評微博 (v5)', 'zh-tw': '熱評微博 (v5)', 'en': 'Popular Weibo (v5)' },
+  'layoutHideMessagesReport': { 'zh-cn': '微博举报处理中心 (v5)', 'zh-hk': '微博舉報處理中心 (v5)', 'zh-tw': '微博檢舉處理中心 (v5)', 'en': 'Report (v5)' },
+  'layoutHideMessagesYoudao': { 'zh-cn': '导出收藏夹 (v5)', 'zh-hk': '导出收藏夹 (v5)', 'zh-tw': '导出收藏夹 (v5)', 'en': 'Export favorites (v5)' },
   // 添加好友
-  'layoutHideAttention': { 'zh-cn': '隐藏模块 - 添加关注', 'zh-hk': '隱藏模組 - 添加關注', 'zh-tw': '隱藏模組 - 添加關注', 'en': 'Hide modules - Add Following' },
+  'layoutHideAttention': { 'zh-cn': '隐藏模块 - 添加关注 (v5)', 'zh-hk': '隱藏模組 - 添加關注 (v5)', 'zh-tw': '隱藏模組 - 添加關注 (v5)', 'en': 'Hide modules - Add Following (v5)' },
   'layoutHideAttentionSuccess': { 'zh-cn': '关注成功对话框', 'zh-hk': '關注成功對話方塊', 'zh-tw': '關注成功對話方塊', 'en': 'Dialog for adding following success' },
   'layoutHideAttentionRecommend': { 'zh-cn': '公开推荐分组', 'zh-hk': '公开推荐的分组', 'zh-tw': '公开推荐的分组'/* as is */, 'en': '公开推荐的分组 (Public Recommend Group)' },
   // 杂项
@@ -1848,17 +1848,14 @@ filter.fast.active = (function () {
     }, false);
     // 拽完了
     document.addEventListener('dragend', function (e) {
-      if (!valid) return;
       if (area.done()) return;
-      got(area.content(), e.target);
+      if (valid) got(area.content(), e.target);
       area.clear();
+      console.log('hide?');
       area.hide();
     }, false);
     // 拽出去了
-    document.addEventListener('mouseout', function (e) {
-      if (area.done()) return;
-      area.hide();
-    });
+    document.addEventListener('mouseout', function (e) { if (area.done()) return; area.hide(); });
     dropArea.addEventListener('dragenter', function (e) { valid = true; area.enter(); });
     dropArea.addEventListener('dragleave', function (e) { valid = false; area.leave(); });
   };
@@ -3288,6 +3285,8 @@ filter.items.other.hidethese.vote_weibo = filter.item({
       return 'hidden';
     if (feed.querySelector('.WB_feed_spec_cont a[action-data*="vote.weibo.com"]'))
       return 'hidden';
+    if (feed.querySelector('.icon_sw_vote'))
+      return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -3927,6 +3926,7 @@ filter.predef.group('layout');
 
   subtitle('Nav');
   item('LogoImg', 94, function replaceLogo() {
+    if (util.v6) return; // v6 至今未见到特殊 logo ，所以不予处理
     var box = document.querySelector('.WB_global_nav .gn_logo_v2 .box');
     if (!box) return setTimeout(replaceLogo, 100);
     var img = document.querySelector('.WB_global_nav .gn_logo_v2 .box img');
@@ -3950,7 +3950,7 @@ filter.predef.group('layout');
   item('App', 5, '#pl_leftnav_app { display: none !important; }');
   item('New', 106, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
-  item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count { display: none !important; }');
+  item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
 
   subtitle('Middle');
   item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"], #v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
@@ -4161,7 +4161,7 @@ filter.predef.group('layout');
 
   subtitle('Attention');
   item('Success', 75, function () {
-    if (util.v6) return; // TODO
+    if (util.v6) return;
     observer.dom.add(function () {
       var close = document.querySelector('.W_layer:not([style*="display"]) .W_close[suda-uatrack="key=group_aftermark&value=close"]');
       if (!close) return; close.click();
@@ -4169,7 +4169,7 @@ filter.predef.group('layout');
     });
   });
   item('Recommend', 75, function () {
-    if (util.v6) return; // TODO
+    if (util.v6) return;
     observer.dom.add(function () {
       var reca = document.querySelector('.W_layer:not([style*="display"]) .W_close~.layer_recommend_attention:not([yawf-close])');
       if (!reca) return;
@@ -4334,13 +4334,15 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .WB_left_nav .lev a:hover, .WB_left_nav .lev_curr, .WB_left_nav .lev_curr:hover, .WB_left_nav .levmore .more { background: rgba(128, 128, 128, 0.1) !important; }
       body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
       body[yawf-merge-left] .WB_main .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
+      body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
       body[yawf-merge-left="left"] .WB_main .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_main .WB_main_c { float: right; }
       body[yawf-merge-left="left"] .WB_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
 
-      @media screen and (max-width:1006px) {
+      @media screen and (max-width: 1006px) {
         body[yawf-merge-left] .W_main { width: 600px !important; }
         body[yawf-merge-left] .WB_main .WB_frame { width: 600px !important; }
+        body[yawf-merge-left] a.W_gotop { margin-left: 310px; }
         body[yawf-merge-left="left"] .WB_main .WB_main_c { float: none; }
         body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; transform: scaleX(-1); }
         body[yawf-merge-left="left"] .W_fold.W_fold_out { left: 269px; }
@@ -5444,8 +5446,9 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
   // 拖拽
   #yawf-drop-area { background: rgba(251, 251, 216, 1); opacity: 0.8; display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
+  [yawf-weibo-version="v6"] #yawf-drop-area { top: 50px; }
   #yawf-drop-area.valid { opacity: 1; }
-  .yawf-drop-area-desc { height: 170px; width: 170px; margin: 16px 16px -206px 16px; padding: 10px; -moz-user-select: none; user-select: none; border: 4px dashed #ddd; border-radius: 20px; }
+  .yawf-drop-area-desc { height: 170px; width: 170px; margin: 16px 16px -206px 16px; padding: 10px; -moz-user-select: none; user-select: none; border: 4px dashed #ddd; border-radius: 20px; color: #000; }
   .yawf-drop-area-title { font-size: 150%; font-weight: bold; }
   .yawf-drop-area-text { padding: 10px; }
   #yawf-drop-area-content { height: 230px; width: 230px; position: relative; z-index: 10002; opacity: 0; }
