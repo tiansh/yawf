@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.135
+// @version           2.1.136
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -436,6 +436,8 @@ var text = {
   'userstyleEditDetails': { 'zh-cn': 'YAWF 自定义 CSS：', 'zh-hk': 'YAWF 自訂 CSS：', 'zh-tw': 'YAWF 自訂 CSS：', 'en': 'YAWF Customize CSS：' },
   // 脚本
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
+  // 全选该分组
+  'configSelectAll': { 'zh-cn': '全选本组', 'zh-hk': '全選本組', 'zh-tw': '全選本組', 'en': 'Select Group' },
   // 导入导出
   'configImportAndExport': { 'zh-cn': '设置', 'zh-hk': '設定', 'zh-tw': '設定', 'en': 'Setting' },
   'configImportButton': { 'zh-cn': '导入', 'zh-hk': '匯入', 'zh-tw': '匯入', 'en': 'Import' },
@@ -564,6 +566,8 @@ var html = {
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
   '~v6~configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
+  // 选中当前分组所有
+  'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAll}}</span></a></div>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   // 新功能提示对话框
@@ -3912,7 +3916,7 @@ filter.predef.group('layout');
 // 大部分选择器参考了 眼不见心不烦 脚本
 (function () {
   var current = null, group;
-  var subtitle = function (name) {
+  var subtitle = function (name, allButton) {
     group = (current = name).toLocaleLowerCase();
     filter.items.layout[group] = {};
     filter.items.layout[group].title = filter.item({
@@ -3920,6 +3924,26 @@ filter.predef.group('layout');
       'type': 'subtitle',
       'text': '{{layoutHide' + name + '}}',
     }).addto(filter.groups.layout);
+    if (!allButton) return;
+    filter.items.layout[group].all = filter.item({
+      'group': group,
+      'show': function () {
+        var dom = util.dom.create(html.configSelectAll);
+        var a = dom.querySelector('a');
+        a.addEventListener('click', function () {
+          for (var x = dom.nextSibling; ; x = x.nextSibling) {
+            if (x.nodeType === Node.TEXT_NODE) continue;
+            if (x.classList.contains('yawf-configBoolean')) {
+              var y = x.querySelector('input');
+              if (!y.checked) y.click();
+            }
+            if (x.classList.contains('yawf-groupSubtitle')) break;
+          }
+        });
+        return dom;
+      }
+    }).addto(filter.groups.layout);
+
   };
 
   var item = function (name, version, content, defaultValue) {
@@ -3935,7 +3959,7 @@ filter.predef.group('layout');
     }).addto(filter.groups.layout);
   };
 
-  subtitle('Icon');
+  subtitle('Icon', true);
   item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
   item('Member', 5, '.W_ico16[class*="ico_member"], .W_icon[class*="icon_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
   item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve { display: none !important; }');
@@ -3949,7 +3973,7 @@ filter.predef.group('layout');
   item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
   item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }');
 
-  subtitle('Nav');
+  subtitle('Nav', true);
   item('LogoImg', 94, function replaceLogo() {
     if (util.v6) return; // v6 至今未见到特殊 logo ，所以不予处理
     var box = document.querySelector('.WB_global_nav .gn_logo_v2 .box');
@@ -3969,7 +3993,7 @@ filter.predef.group('layout');
   ));
   item('Member', 5, '.gn_setting[node-type="member"] { display: none !important; }');
 
-  subtitle('Left');
+  subtitle('Left', true);
   item('ToMe', 5, '#pl_leftnav_common a[href^="/direct/tome"] { display: none !important; }');
   item('Friends', 5, '#pl_leftnav_group > div[node-type="groupList"] > .level_1_Box, #pl_leftnav_common .level_1_Box > form.left_nav_line { display: none !important; }');
   item('App', 5, '#pl_leftnav_app { display: none !important; }');
@@ -3977,12 +4001,12 @@ filter.predef.group('layout');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
   item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
 
-  subtitle('Middle');
+  subtitle('Middle', true);
   item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"], #v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
   item('FeedRecommand', 35, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]), .WB_feed_newuser[node-type="recommfeed"] { display: none !important; }');
   item('MemberTip', 5, '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
 
-  subtitle('Right');
+  subtitle('Right', true);
   item('Template', 5, '.templete_enter, #v6_pl_content_setskin { display: none !important; }'); // Spelling as is
   item('Info', 5, '.W_person_info, .send_weibo .input .arrow { display: none !important; }');
   item('Atten', 5, '#pl_rightmod_myinfo .user_atten { display: none !important; }');
@@ -4000,7 +4024,7 @@ filter.predef.group('layout');
   item('Book', 5, '[yawf-id="rightmod_recom_book"] { display: none !important; }');
   item('Notice', 5, '#pl_rightmod_noticeboard, #v6_pl_rightmod_noticeboard { display: none !important; }');
 
-  subtitle('Weibo');
+  subtitle('Weibo', true);
   item('RecomFeed', 2, '[node-type="feed_list_recommend"]{ display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.type_spe_pos { display: none; }');
@@ -4152,7 +4176,7 @@ filter.predef.group('layout');
     });
   });
 
-  subtitle('Person');
+  subtitle('Person', true);
   item('MoveThings', 51, '.S_profile .profile_move_things { display: none !important; }');
   item('Template', 110, '.WB_frame_a .icon_setskin { display: none !important; }');
   item('Cover', 5, util.str.cmt(function () { /*!CSS
@@ -4191,7 +4215,7 @@ filter.predef.group('layout');
     }
   }).addto(filter.groups.layout);
 
-  subtitle('Messages');
+  subtitle('Messages', true);
   item('Help', 97, '#Pl_Rightmod_Helpbox, #pl_rightmod_helpat, #pl_rightmod_helpcomment, #pl_rightmod_helplike, #Pl_Rightmod_Littlehelp, #Pl_Rightmod_Helpnotebox, #pl_rightmod_helpfav, #v6_pl_rightmod_helpat, #v6_pl_rightmod_helpcomment, #v6_pl_rightmod_helplike, #v6_pl_rightmod_helpnotebox, #v6_pl_rightmod_helpfav { display: none !important; }');
   item('Feedback', 97, '#pl_rightmod_feedback, #v6_pl_rightmod_feedback { display: none !important; }');
   item('Desktop', 97, '#pl_rightmod_weibodesk { display: none !important; }');
@@ -4199,7 +4223,7 @@ filter.predef.group('layout');
   item('Report', 97, '#pl_common_reportentry, #pl_rightmod_reportentry { display: none !important; }');
   item('Youdao', 97, '#pl_rightmod_favyoudao { display: none !important; }');
 
-  subtitle('Attention');
+  subtitle('Attention', true);
   item('Success', 75, function () {
     if (util.v6) return;
     observer.dom.add(function () {
@@ -4219,7 +4243,7 @@ filter.predef.group('layout');
     });
   });
 
-  subtitle('Other');
+  subtitle('Other', true);
   item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('HomeTip', 124, '#pl_content_hometip, #v6_pl_content_hometip { display: none !important }');
   item('FeedRecom', 5, '.W_main_2r [id^="Pl_Third_Inline__"] { display: none !important; }');
@@ -5505,6 +5529,8 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configUsersItem .shield_object_card .object_info { height: 22px; margin-top: 2px; }
   .yawf-configUsersItem .shield_object_card .object_name { line-height: 22px; overflow: hidden; }
   .yawf-configUsersItem .shield_object_card .other_info { line-height: 24px; }
+  .yawf-configSelectAll { float: right; margin-top: -23px; height: 21px !important; line-height: 19px; }
+  .yawf-configSelectAll * { line-height: 19px !important; height: 19px !important; }
   .yawf-configImportExport [node-type] { margin-right: 20px; }
   .yawf-configAdd { appearance: none; }
   #yawf-config .btn { border-top: 1px solid #ccc; margin: 15px 0 0; padding: 10px 0 0; }
