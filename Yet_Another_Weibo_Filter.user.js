@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.137
+// @version           2.1.138
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -2722,7 +2722,7 @@ var weibo = {};
 // 选取微博内容、微博转发的内容
 weibo.content = function (feed, f) {
   var content = feed.querySelector('[node-type="feed_list_content"]');
-  var reason = feed.querySelector('[node-type="feed_list_reason"] em');
+  var reason = feed.querySelector(util.version.chose('[node-type="feed_list_reason"] em', '[node-type="feed_list_reason"]'));
   var items = [];
   if (content) items = items.concat(Array.from(f(content)));
   if (reason) items = items.concat(Array.from(f(reason)));
