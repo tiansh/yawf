@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.136
+// @version           2.1.137
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -386,6 +386,7 @@ var text = {
   'layoutHideOtherMusic': { 'zh-cn': '微音乐 (v6)', 'zh-hk': '微音乐 (v6)', 'zh-tw': '微音乐 (v6)'/* as is */, 'en': '微音乐 (v6, Weibo Music)' },
   'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
   'layoutHideOtherRelatedWB': { 'zh-cn': '相关微博推荐 (v6)', 'zh-hk': '相关微博推荐 (v6)', 'zh-tw': '相关微博推荐 (v6)', 'en': '相关微博推荐 (v6, Suggested related weibo)' },
+  'layoutHideOtherUpgradeV6': { 'zh-cn': '强制升级 v6 弹层 (v5)', 'zh-hk': '強制升級 v6 彈層 (v5)', 'zh-tw': '強制升級 v6 彈層 (v5)', 'en': 'Popup for force upgrade to v6 (v5)' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
@@ -2916,7 +2917,7 @@ filter.predef.wbfc({
 // 关于正则式的说明
 filter.items.content.regexp.remark = filter.item({
   'group': 'regexp',
-  'type': 'text',
+  'type': 'remark',
   'text': '{{regexpFilterRemark}}',
 }).addto(filter.groups.content);
 
@@ -2988,7 +2989,7 @@ filter.groups.account = filter.predef.wbfc({
 
 filter.items.account.remark = filter.item({
   'group': 'account',
-  'type': 'text',
+  'type': 'remark',
   'text': '{{accountFilterRemark}}',
 }).addto(filter.groups.account);
 
@@ -3905,11 +3906,14 @@ if (util.notify.avaliableNotification().length) filter.items.other.autoload.desk
   },
 }).addto(filter.groups.other);
 
-if (util.notify.avaliableNotification().length) filter.items.other.autoload.remark = filter.item({
-  'group': 'autoload',
-  'type': 'text',
-  'text': '{{autoCloseWarning}}',
-}).addto(filter.groups.other);
+// 提示火狐用户桌面提示问题
+if (util.notify.avaliableNotification().length && util.browser.fx.avaliable) {
+  filter.items.other.autoload.remark = filter.item({
+    'group': 'autoload',
+    'type': 'remark',
+    'text': '{{autoCloseWarning}}',
+  }).addto(filter.groups.other);
+}
 
 filter.predef.group('layout');
 
@@ -4253,6 +4257,7 @@ filter.predef.group('layout');
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('IM', 46, '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="55u45YWz5o6o6I2Q"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
+  item('UpgradeV6', 137, '.W_layer[class*="v6"] { display: none !important; }', true);
 
   var tagRightbarMods = function () {
     var mods = Array.from(document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])'));
