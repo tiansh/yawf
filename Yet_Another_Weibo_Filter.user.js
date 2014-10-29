@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.138
+// @version           2.1.139
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -4376,8 +4376,8 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         if (right.firstChild !== left) {
           right.insertBefore(left, right.firstChild);
           main.setAttribute('yawf-merge-left', side);
-          fixStylish(true);
           if (util.v6) fixMsgboxLeftNav();
+          fixStylish(true);
         }
       } else {
         if (left0.previousSibling !== left) {
@@ -4406,28 +4406,28 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left="left"].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
       body[yawf-merge-left="right"] .W_main #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
     */ }, function () { /*
-      body[yawf-merge-left] .WB_main .WB_main_l,
-      body[yawf-merge-left] .WB_main .yawf-WB_left_nav, body[yawf-merge-left] .WB_main .WB_left_nav { width: 229px; padding: 0; float: none; }
-      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollView,
-      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContainer,
-      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContent { height: auto !important; }
-      body[yawf-merge-left] .WB_main .WB_main_l .UI_scrollContent { width: calc(100% + 30px) !important; }
-      body[yawf-merge-left] .WB_main .WB_frame { width: 840px; padding: 10px; background-position: -300px center; }
+      body[yawf-merge-left] .WB_frame .WB_main_l,
+      body[yawf-merge-left] .WB_frame .yawf-WB_left_nav, body[yawf-merge-left] .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
+      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollView,
+      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollContainer,
+      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollContent { height: auto !important; }
+      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollContent { width: calc(100% + 30px) !important; }
+      body[yawf-merge-left] .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
       body[yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
-      body[yawf-merge-left] .WB_main .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_main .WB_left_nav .lev_line fieldset { padding-left: 190px; }
+      body[yawf-merge-left] .WB_frame .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_frame .WB_left_nav .lev_line fieldset { padding-left: 190px; }
       body[yawf-merge-left] .WB_left_nav .lev a:hover, .WB_left_nav .lev_curr, .WB_left_nav .lev_curr:hover, .WB_left_nav .levmore .more { background: rgba(128, 128, 128, 0.1) !important; }
       body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
-      body[yawf-merge-left] .WB_main .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
+      body[yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
       body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
       body[yawf-merge-left] .webim_contacts_mod { position: static !important; }
       body[yawf-merge-left] .webim_contacts_bd { height: auto !important; }
-      body[yawf-merge-left="left"] .WB_main .WB_main_r { float: left; }
-      body[yawf-merge-left="left"] .WB_main .WB_main_c { float: right; }
-      body[yawf-merge-left="left"] .WB_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
+      body[yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
+      body[yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
+      body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
 
       @media screen and (max-width: 1006px) {
         body[yawf-merge-left] .W_main { width: 600px !important; }
-        body[yawf-merge-left] .WB_main .WB_frame { width: 600px !important; }
+        body[yawf-merge-left] .WB_frame { width: 600px !important; }
         body[yawf-merge-left] a.W_gotop { margin-left: 310px; }
         body[yawf-merge-left="left"] .WB_main .WB_main_c { float: none; }
         body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; transform: scaleX(-1); }
@@ -4493,9 +4493,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         if (nav.className !== className) nav.className = className;
       };
     }());
-    positionLeft();
-    observer.dom.add(function () { positionLeft(); });
-    observer.dom.add(fixStylish);
 
     var fixMsgboxLeftNav = function () {
       util.func.page(function () {
@@ -4511,6 +4508,9 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         d(c);
       })
     };
+
+    positionLeft(); fixStylish();
+    observer.dom.add(function () { positionLeft(); fixStylish(); });
 
   },
 }).addto(filter.groups.tool);
