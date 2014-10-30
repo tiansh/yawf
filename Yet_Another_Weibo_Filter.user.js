@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.140
+// @version           2.1.141
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -386,7 +386,6 @@ var text = {
   'layoutHideOtherMusic': { 'zh-cn': '微音乐 (v6)', 'zh-hk': '微音乐 (v6)', 'zh-tw': '微音乐 (v6)'/* as is */, 'en': '微音乐 (v6, Weibo Music)' },
   'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
   'layoutHideOtherRelatedWB': { 'zh-cn': '相关微博推荐 (v6)', 'zh-hk': '相关微博推荐 (v6)', 'zh-tw': '相关微博推荐 (v6)', 'en': '相关微博推荐 (v6, Suggested related weibo)' },
-  'layoutHideOtherUpgradeV6': { 'zh-cn': '强制升级 v6 弹层 (v5)', 'zh-hk': '強制升級 v6 彈層 (v5)', 'zh-tw': '強制升級 v6 彈層 (v5)', 'en': 'Popup for force upgrade to v6 (v5)' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
@@ -4260,7 +4259,6 @@ filter.predef.group('layout');
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('IM', 46, '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="55u45YWz5o6o6I2Q"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
-  item('UpgradeV6', 137, '.W_layer[class*="v6"] { display: none !important; }', true);
 
   var tagRightbarMods = function () {
     var mods = Array.from(document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])'));
@@ -4956,11 +4954,18 @@ filter.items.tool.stylish.weibo_large_font = filter.item({
     },
   },
   'ainit': function () {
-    util.css.add({
-      '120': '.WB_info, .WB_text, .WB_info *, .WB_text * { font-size: 16px !important; line-height: 22px !important; } .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: 14px !important; line-height: 20px !important; } .WB_text .W_btn_c, .WB_empty .W_btn_c { height: 20px !important; }',
-      '150': '.WB_info, .WB_text, .WB_info *, .WB_text * { font-size: 21px !important; line-height: 28px !important; } .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: 18px !important; line-height: 25px !important; } .WB_text .W_btn_c, .WB_empty .W_btn_c { height: 25px !important; }',
-      '200':' .WB_info, .WB_text, .WB_info *, .WB_text * { font-size: 28px !important; line-height: 36px !important; } .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: 24px !important; line-height: 32px !important; } .WB_text .W_btn_c, .WB_empty .W_btn_c { height: 32px !important; }',
-    }[this.ref.ratio.conf] || '')
+    util.css.add(util.str.fill(util.str.cmt(function () { /*
+      .WB_info, .WB_text, .WB_info *, .WB_text * { font-size: {{fs}}px !important; line-height: {{lh}}px !important; }
+      .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: {{fs2}}px !important; line-height: {{lh2}}px !important; }
+      .WB_text .W_btn_c { height: {{h}}px !important; }
+      .WB_text .W_btn_c, .WB_text .W_btn_c * { line-height: {{h}}px !important; font-size: {{fs2}}px !important; }
+      .WB_feed_expand .WB_text .W_btn_c { height: {{h2}}px !important; }
+      .WB_feed_expand .WB_text .W_btn_c, .WB_feed_expand .WB_text .W_btn_c * { line-height: {{h2}}px; font-size: {{fs3}}px !important; }
+    */ }), {
+      '120': { 'fs': '16', 'lh': '24', 'fs2': '14', 'lh': '22', 'h': '20', 'h2': '18', 'fs3': '12' },
+      '150': { 'fs': '21', 'lh': '30', 'fs2': '18', 'lh': '27', 'h': '25', 'h2': '23', 'fs3': '14' },
+      '200': { 'fs': '28', 'lh': '38', 'fs2': '24', 'lh': '34', 'h': '33', 'h2': '29', 'fs3': '19' },
+    }[this.ref.ratio.conf]));
   },
 }).addto(filter.groups.tool);
 
