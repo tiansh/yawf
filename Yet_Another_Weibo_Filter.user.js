@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.138
+// @version           2.1.139
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -415,6 +415,10 @@ var text = {
   'UncheckRecomJoin': { 'zh-cn': '取消勾选建议加到该组', 'zh-hk': '取消勾選建议加到该组', 'zh-tw': '取消勾選建议加到该组'/* as is */, 'en': 'Uncheck recommed adding to group' },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
+  'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}} (v6)', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}} (v6)', 'zh-tw': '', 'en': 'Increase font size of Weibo content to | {{<ratio>}} (v6)' },
+  'weiboLargeFont120': { 'zh-cn': '120%', 'zh-hk': '120%', 'zh-tw': '120%', 'en': '120%' },
+  'weiboLargeFont150': { 'zh-cn': '150%', 'zh-hk': '150%', 'zh-tw': '150%', 'en': '150%' },
+  'weiboLargeFont200': { 'zh-cn': '200%', 'zh-hk': '200%', 'zh-tw': '200%', 'en': '200%' },
   'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
@@ -1878,7 +1882,6 @@ filter.fast.active = (function () {
       if (area.done()) return;
       if (valid) got(area.content(), e.target);
       area.clear();
-      console.log('hide?');
       area.hide();
     }, false);
     // 拽出去了
@@ -4639,6 +4642,8 @@ filter.items.tool.sidebar.fixed_left = filter.item({
             if (cip && fip) {
               left.style.maxHeight = Math.max(cip.bottom - fip.top - 10, 0) + 'px';
             }
+          } else {
+            left.style.maxHeight = 'auto';
           }
         };
         document.addEventListener('scroll', updatePosition);
@@ -4929,6 +4934,33 @@ filter.items.tool.stylish.fold_text = filter.item({
           prefix + (chose && enabled[index] ? type[0].toUpperCase() + type.slice(1) : ''));
       }).join('');
     }(0, '', 'foldedWeiboText'));
+  },
+}).addto(filter.groups.tool);
+
+// 增大 v6 下微博字号
+filter.items.tool.stylish.weibo_large_font = filter.item({
+  'group': 'stylish',
+  'version': 139,
+  'type': 'boolean',
+  'key': 'weibo.tool.weibo_large_font',
+  'text': '{{weiboLargeFont}}',
+  'ref': {
+    'ratio': {
+      'type': 'select',
+      'select': [
+        { 'value': '120', 'text': '{{weiboLargeFont120}}' },
+        { 'value': '150', 'text': '{{weiboLargeFont150}}' },
+        { 'value': '200', 'text': '{{weiboLargeFont200}}' },
+      ],
+      'default': '120',
+    },
+  },
+  'ainit': function () {
+    util.css.add({
+      '120': '.WB_info, .WB_text, .WB_info *, .WB_text * { font-size: 16px !important; line-height: 22px !important; } .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: 14px !important; line-height: 20px !important; } .WB_text .W_btn_c, .WB_empty .W_btn_c { height: 20px !important; }',
+      '150': '.WB_info, .WB_text, .WB_info *, .WB_text * { font-size: 21px !important; line-height: 28px !important; } .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: 18px !important; line-height: 25px !important; } .WB_text .W_btn_c, .WB_empty .W_btn_c { height: 25px !important; }',
+      '200':' .WB_info, .WB_text, .WB_info *, .WB_text * { font-size: 28px !important; line-height: 36px !important; } .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: 24px !important; line-height: 32px !important; } .WB_text .W_btn_c, .WB_empty .W_btn_c { height: 32px !important; }',
+    }[this.ref.ratio.conf] || '')
   },
 }).addto(filter.groups.tool);
 
@@ -5596,9 +5628,15 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #pl_rightmod_myinfo:empty { hegiht: 156px; }
   // 切换视图
   body[yawf-weibo-version="v6"] #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
-  // v6 微博按钮的平均分布
-  body[yawf-weibo-version="v6"] .WB_handle ul { display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; margin-left: -4px; }
-  body[yawf-weibo-version="v6"] .WB_handle ul li { flex-grow: 1; float: none; width: auto; }
+  // v6 微博按钮的平均分布 -webkit-flex 是 Safari 兼容
+  body[yawf-weibo-version="v6"] .WB_handle ul {
+    display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch; margin-left: -4px;
+    display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; margin-left: -4px;
+  }
+  body[yawf-weibo-version="v6"] .WB_handle ul li {
+    -webkit-flex-grow: 1; float: none; width: auto;
+    flex-grow: 1; float: none; width: auto;
+  }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,
   'yawf-icon-font' :util.css.add(fonts.iconfont),
