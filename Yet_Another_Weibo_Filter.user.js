@@ -4940,7 +4940,7 @@ filter.items.tool.stylish.fold_text = filter.item({
 // 增大 v6 下微博字号
 filter.items.tool.stylish.weibo_large_font = filter.item({
   'group': 'stylish',
-  'version': 139,
+  'version': 140,
   'type': 'boolean',
   'key': 'weibo.tool.weibo_large_font',
   'text': '{{weiboLargeFont}}',
