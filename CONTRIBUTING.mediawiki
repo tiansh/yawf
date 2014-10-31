@@ -1,4 +1,4 @@
-欢迎向我提交错误报告、功能建议以及推送请求。提交前请劳烦先阅读一下以下内容，谢谢。<br />
+欢迎向我提交错误报告、功能建议以及拉取请求。提交前请劳烦先阅读一下以下内容，谢谢。<br />
 脚本使用的常见问题请参考[https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 常见问题]。
 
 發帖不必在意漢字繁簡的問題，畢竟轉換工具都很方便，而且漢字本身也是表意符號。<br />
@@ -21,8 +21,8 @@ Post written in Chinese is prefered. But you may also use English if you cannot 
 
 如果您没有找到类似的问题报告，您可以[https://github.com/tiansh/yawf/issues/new 创建一个新的问题报告]。报告时请务必提供以下信息：
 
-* 您的 Mozilla Firefox 浏览器、 GreaseMonkey 附加组件和操作系统的版本（包括语言）。
-* 您登录微博后的网页地址是 http://www.weibo.com/…… 还是 http://weibo.com/…… ，您微博界面上选择的语言。
+* 您的浏览器、 GreaseMonkey / Tampermonkey 附加组件和操作系统的版本（包括语言）。
+* 您微博界面上选择的语言。
 * 对脚本出问题有关键作用的几个配置项您是如何选择的，或脚本导出的配置文件。
 ** 注意，脚本导出的配置文件中可能包含您的隐私内容，请在上传前使用文本编辑器打开以进行检查，如有隐私内容请事先将其隐去。或者您可以将配置文件[http://weibo.com/tsh90/weibo 在微博上私信给我]。
 * 出现问题前详细的操作步骤，如打开的是首页还是个人主页，点击了哪些按钮，输入了哪些内容。
@@ -36,9 +36,9 @@ Post written in Chinese is prefered. But you may also use English if you cannot 
 
 提交之前，您同样应当先在[https://github.com/tiansh/yawf/issues?q=is%3Aopen+is%3Aissue 已报告的问题列表]中确认一下是否已经有人提出了类似的问题，如果没有，您可以[https://github.com/tiansh/yawf/issues/new 提交一个新的功能建议]。
 
-== 推送请求 ==
+== 拉取请求 ==
 
-脚本使用 MIT 协议许可，如果您希望为脚本贡献代码，并且希望将自己的代码以 MIT 协议授权，那么您可以通过推送请求（Pull Request）的方式向我提交代码。
+脚本使用 MIT 协议许可，如果您希望为脚本贡献代码，并且希望将自己的代码以 MIT 协议授权，那么您可以通过拉取请求（Pull Request）的方式向我提交代码。
 
 当前只接受针对脚本缺陷的修复（包括代码逻辑的问题，也包括措辞、翻译的问题），[https://github.com/tiansh/yawf/wiki/%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98%E4%B8%8E%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9 以及在 wiki 中列出的已知问题与待办事项]。
 
