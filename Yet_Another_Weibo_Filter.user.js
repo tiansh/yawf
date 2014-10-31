@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.142
+// @version           2.1.143
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -4621,7 +4621,7 @@ filter.items.tool.sidebar.fixed_left = filter.item({
           if (!refc || !refc[0]) return;
           var pos = refc[0];
           if (!floating) {
-            if (pos.bottom < 0) {
+            if (pos.bottom < -60) {
               floating = true;
               reference.setAttribute('yawf-fixed', '');
             }
@@ -4673,6 +4673,7 @@ filter.items.tool.sidebar.fixed_left = filter.item({
         };
 
         document.addEventListener('scroll', updatePosition);
+        window.addEventListener('resize', updatePosition);
         observer.dom.add(updatePosition);
         updatePosition();
       }
