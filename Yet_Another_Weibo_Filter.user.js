@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.141
+// @version           2.1.142
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -390,7 +390,7 @@ var text = {
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
   'sideColumnToolsTitle': { 'zh-cn': '边栏', 'zh-hk': '邊欄', 'zh-tw': '邊欄', 'en': 'Side Column' },
-  'showAllGroupDesc': { 'zh-cn': '展开左栏分组 (v5)', 'zh-hk': '展開左欄分組 (v5)', 'zh-tw': '展開左欄分組 (v5)', 'en': 'Unfold groups in left column (v5)' },
+  'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
   'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息 (v5)', 'zh-hk': '展開左欄消息 (v5)', 'zh-tw': '展開左欄消息 (v5)', 'en': 'Unfold news in left column (v5)' },
   'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}', 'en': 'Merge left &amp; right column | to {{<side>}}' },
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
@@ -4324,7 +4324,10 @@ filter.items.tool.sidebar.show_all_group = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.showAllGroup',
   'text': '{{showAllGroupDesc}}',
-  'ainit': util.css('#pl_leftnav_group div[node-type="moreList"] { display: block !important } #pl_leftnav_group > div[node-type="groupList"] > .level_2_Box > .levmore { display: none }'),
+  'ainit': function () {
+    if (util.v6) util.css.add('.lev_Box .levmore { display: none !important; } .lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }');
+    else util.css.add('#pl_leftnav_group div[node-type="moreList"] { display: block !important } #pl_leftnav_group > div[node-type="groupList"] > .level_2_Box > .levmore { display: none }');
+  },
 }).addto(filter.groups.tool);
 
 // 展开左栏消息
@@ -4409,10 +4412,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     */ }, function () { /*
       body[yawf-merge-left] .WB_frame .WB_main_l,
       body[yawf-merge-left] .WB_frame .yawf-WB_left_nav, body[yawf-merge-left] .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
-      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollView,
-      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollContainer,
-      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollContent { height: auto !important; }
-      body[yawf-merge-left] .WB_frame .WB_main_l .UI_scrollContent { width: calc(100% + 30px) !important; }
       body[yawf-merge-left] .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
       body[yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
       body[yawf-merge-left] .WB_frame .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_frame .WB_left_nav .lev_line fieldset { padding-left: 190px; }
@@ -4475,7 +4474,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       .yawf-WB_left_nav .levmore .more{ position:relative; height:14px; line-height:14px; padding:2px 6px; border-radius:3px; text-decoration:none; zoom:1;}
       .yawf-WB_left_nav .levmore .W_btn_b{ margin:8px 10px 8px 0;}
       .yawf-WB_left_nav .levmore .W_new{ position:absolute;top:0; right:-1px;}
-      .yawf-WB_left_nav .UI_scrollView{ position:relative;}
       .yawf-WB_left_nav .W_scroll_y{ right:0;}
 
     */ })));
@@ -4631,19 +4629,49 @@ filter.items.tool.sidebar.fixed_left = filter.item({
             if (pos.bottom + left.clientHeight > 60) {
               floating = false;
               reference.removeAttribute('yawf-fixed');
-              util.func.call(updatePosition);
             }
           }
+          var updateMaxHeight = function (maxHeight) {
+            var none = maxHeight === 'none';
+            var text = none ? 'none' : maxHeight + 'px';
+            var srl = left.querySelector('[node-type="leftnav_scroll"]');
+            var mod;
+            if (left.style.maxHeight !== text) {
+              mod = (left.style.maxHeight || 'none') !== text;
+              if (mod) left.style.maxHeight = text;
+              if (none) srl.setAttribute('style', '');
+              else {
+                var lev = left.querySelectorAll('.lev_Box'); lev = lev[lev.length - 1];
+                var height = Math.min(maxHeight - srl.offsetTop, lev.clientHeight) + 'px';
+                mod = mod || srl.style.height !== height;
+                if (mod) {
+                  srl.style.height = height;
+                  srl.style.position = 'relative';
+                }
+              }
+              if (mod && srl) updateScroll();
+            }
+          };
           if (floating) {
             var cip = container.getClientRects()[0];
             var fip = left.getClientRects()[0];
-            if (cip && fip) {
-              left.style.maxHeight = Math.max(cip.bottom - fip.top - 10, 0) + 'px';
-            }
-          } else {
-            left.style.maxHeight = 'auto';
-          }
+            var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
+            if (cip && fip) updateMaxHeight(maxHeight);
+          } else { updateMaxHeight('none'); }
         };
+
+        var updateScroll = function () {
+          util.func.page(function () {
+            window.$YAWF$ = window.$YAWF$ || {};
+            if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
+              var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
+              var g = STK.ui.scrollView(y);
+              return function () { g.reset(); };
+            }());
+            $YAWF$.updateLeftScroll();
+          });
+        };
+
         document.addEventListener('scroll', updatePosition);
         observer.dom.add(updatePosition);
         updatePosition();
