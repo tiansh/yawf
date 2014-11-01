@@ -1,8 +1,9 @@
 ﻿@charset "utf-8";
 
 html, body { background: #f1f2f3; }
-body { width: 800px; margin: 0 auto; font-size: 120%; font-family: sans-serif; }
+body { width: 800px; margin: 0 auto; font-size: 18px; font-family: sans-serif; }
 header { height: 5em; }
+#icon { width: 64px; height: 64px; float: left; margin: 10px 0.5em 0 0; }
 h1 { float: left; line-height: 1.5em; margin: 0.5em 0; font-size: 200%; }
 #version { float: left; margin: 1.5em 0 0 1em; }
 #lang { float: right; color: gray; font-size: 83%; margin: 1.8em 0 0; }
