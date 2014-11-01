@@ -1,3 +1,4 @@
+<img src="https://tiansh.github.io/yawf/img/yawf.svg" width="128" height="128" style="float: right;" />
 [https://tiansh.github.io/yawf/ 脚本主页] （简单地安装使用教程见此） <br />
 [https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js 安装脚本]  （已安装 Greasemonkey 的点此直接安装）<br />
 [https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98 常见问题]  （详细使用说明见此）<br />
