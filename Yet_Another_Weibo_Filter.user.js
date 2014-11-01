@@ -14,10 +14,12 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.144
+// @version           2.1.145
+// @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
-// @supportURL        https://tiansh.github.io/yawf/
+// @homepageURL       https://tiansh.github.io/yawf/
+// @supportURL        https://github.com/tiansh/yawf/issues
 // @author            田生 http://weibo.com/tsh90
 // @copyright         田生; The MIT License
 // @license           The MIT License (MIT); http://opensource.org/licenses/MIT
@@ -570,6 +572,7 @@ var html = {
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
   '~v6~configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
+  'scriptIcon': '<div id="yawf-script-icon" style="background: url({{icon}}); width: 72px; height: 72px; float: right; margin: 0 2em"></div>',
   // 选中当前分组所有
   'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAll}}</span></a></div>',
   // 导入导出
@@ -631,15 +634,11 @@ util.browser.fx.avaliable = !!util.browser.fx.version;
 
 // 脚本识别
 util.script = {};
-// 检查是否是从原站安装的脚本
-util.script.original = (function () {
+// 获得脚本图标
+util.script.icon = (function () {
   try {
-    var meta = GM_info.scriptMetaStr;
-    var downloadURL = meta.match(new RegExp('// @(updateURL)(?:\\s+(.*))'))[2];
-    var supportURL = meta.match(new RegExp('// @(supportURL)(?:\\s+(.*))'))[2];
-    if (!downloadURL || !supportURL) return false;
-    return downloadURL.indexOf(supportURL) === 0;
-  } catch (e) { return false; }
+    return GM_info.scriptMetaStr.match(new RegExp('// @(icon)(?:\\s+(.*))'))[2];
+  } catch (e) { return 'https://tiansh.github.io/yawf/img/yawf.png'; }
 }());
 
 // 优先级设置
@@ -5455,9 +5454,11 @@ filter.items.script.about.remark = filter.item({
   'type': 'remark',
   'text': '',
   'shown': function (dom) {
-    dom.innerHTML = util.str.fill(text.scriptAbout, {
-      'version': ((GM_info || {}).script || {}).version || '?'
+    dom.innerHTML = util.str.fill(html.scriptIcon + text.scriptAbout, {
+      'icon': util.script.icon,
+      'version': ((GM_info || {}).script || {}).version || '?',
     });
+    dom.style.minHeight = '72px';
   },
 }).addto(filter.groups.script);
 
@@ -5692,3 +5693,4 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   'filter-img': images.filter,
   'yawf-icon-font' :util.css.add(fonts.iconfont),
 }));
+
