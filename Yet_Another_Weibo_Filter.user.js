@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.143
+// @version           2.1.144
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
 // @supportURL        https://tiansh.github.io/yawf/
@@ -3993,10 +3993,12 @@ filter.predef.group('layout');
   item('Hot', 5, '.gn_nav>div:nth-child(2), .gn_nav_list>li:nth-child(2) { display: none !important; }');
   item('App', 5, '.gn_nav>div:nth-child(3) { display: none !important; }');
   item('Game', 5, '.gn_nav>div:nth-child(4), .gn_nav_list>li:nth-child(3) { display: none !important; }');
-  item('NoticeNew', 87, util.version.chose(
-    '.WB_global_nav .gn_notice_new .W_new { display: none; } .WB_global_nav .gn_setting .gn_notice_new .ico { background-position: -275px -6px; }',
-    '.WB_global_nav .gn_set_list .W_new_count { display: none; }'
-  ));
+  item('NoticeNew', 87, function () {
+    util.css.add(util.version.chose(
+      '.WB_global_nav .gn_notice_new .W_new { display: none; } .WB_global_nav .gn_setting .gn_notice_new .ico { background-position: -275px -6px; }',
+      '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }'
+    ));
+  });
   item('Member', 5, '.gn_setting[node-type="member"] { display: none !important; }');
 
   subtitle('Left', true);
@@ -4392,9 +4394,9 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       }
     };
     util.css.add(util.str.cmt(util.version.chose(function () { /*!CSS
-      body[yawf-merge-left] .W_main .W_main_l { width: 229px; padding: 0; float: none; }
+      body[yawf-merge-left]:not([yawf-weibo-only]) .W_main .W_main_l { width: 229px; padding: 0; float: none; }
       body[yawf-merge-left] .W_main .WB_left_nav .lev a:hover, body[yawf-merge-left] .WB_left_nav .lev2 a:hover, body[yawf-merge-left] .WB_left_nav .lev2 a.lev_curr, body[yawf-merge-left] .WB_left_nav .lev2 a.lev_curr:hover, body[yawf-merge-left] .WB_left_nav .lev3 a:hover { background-image: none; }
-      body[yawf-merge-left] .W_main { width: 830px; background-position: -300px center; background-size: 200% 100%; }
+      body[yawf-merge-left]:not([yawf-weibo-only]) .W_main { width: 830px; background-position: -300px center; background-size: 200% 100%; }
       body[yawf-merge-left].B_index:not([yawf-weibo-only]) .W_main~.W_gotop { margin-left: 415px !important; }
       body[yawf-merge-left].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 185px); }
       body[yawf-merge-left] .global_footer { width: 790px !important; }
@@ -4411,8 +4413,8 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left="right"] .W_main #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
     */ }, function () { /*
       body[yawf-merge-left] .WB_frame .WB_main_l,
-      body[yawf-merge-left] .WB_frame .yawf-WB_left_nav, body[yawf-merge-left] .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
-      body[yawf-merge-left] .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
+      body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .yawf-WB_left_nav, body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
+      body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
       body[yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
       body[yawf-merge-left] .WB_frame .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_frame .WB_left_nav .lev_line fieldset { padding-left: 190px; }
       body[yawf-merge-left] .WB_left_nav .lev a:hover, .WB_left_nav .lev_curr, .WB_left_nav .lev_curr:hover, .WB_left_nav .levmore .more { background: rgba(128, 128, 128, 0.1) !important; }
@@ -4426,8 +4428,8 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
 
       @media screen and (max-width: 1006px) {
-        body[yawf-merge-left] .W_main { width: 600px !important; }
-        body[yawf-merge-left] .WB_frame { width: 600px !important; }
+        body[yawf-merge-left]:not([yawf-weibo-only]) .W_main { width: 600px !important; }
+        body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 600px !important; }
         body[yawf-merge-left] a.W_gotop { margin-left: 310px; }
         body[yawf-merge-left="left"] .WB_main .WB_main_c { float: none; }
         body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; transform: scaleX(-1); }
@@ -4711,9 +4713,9 @@ filter.items.tool.sidebar.filte_right_topic_count = filter.item({
   'ref': {
     'number': {
       'type': 'range',
-      'min': 100,
-      'max': 20000,
-      'step': 100,
+      'min': 10,
+      'max': 1000,
+      'step': 10,
       'default': 200,
     }
   },
@@ -4964,6 +4966,7 @@ filter.items.tool.stylish.fold_text = filter.item({
   },
 }).addto(filter.groups.tool);
 
+
 // 增大 v6 下微博字号
 filter.items.tool.stylish.weibo_large_font = filter.item({
   'group': 'stylish',
@@ -4982,6 +4985,20 @@ filter.items.tool.stylish.weibo_large_font = filter.item({
       'default': '120',
     },
   },
+  'pref': {
+    '120': { 'fs': '16', 'lh': '26', 'fs2': '14', 'lh2': '24', 'h': '20', 'h2': '18', 'fs3': '12' },
+    '150': { 'fs': '21', 'lh': '32', 'fs2': '18', 'lh2': '29', 'h': '25', 'h2': '23', 'fs3': '14' },
+    '200': { 'fs': '28', 'lh': '42', 'fs2': '24', 'lh2': '36', 'h': '33', 'h2': '29', 'fs3': '19' },
+  },
+  'shown': function (dom) {
+    var s = dom.querySelector('select');
+    var o = Array.from(s.querySelectorAll('option'));
+    var that = this;
+    s.style.height = '20px';
+    o.forEach(function (o) {
+      o.style.fontSize = that.pref[o.value].fs + 'px';
+    });
+  },
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*
       .WB_info, .WB_text, .WB_info *, .WB_text * { font-size: {{fs}}px !important; line-height: {{lh}}px !important; }
@@ -4990,11 +5007,7 @@ filter.items.tool.stylish.weibo_large_font = filter.item({
       .WB_text .W_btn_c, .WB_text .W_btn_c * { line-height: {{h}}px !important; font-size: {{fs2}}px !important; }
       .WB_feed_expand .WB_text .W_btn_c { height: {{h2}}px !important; }
       .WB_feed_expand .WB_text .W_btn_c, .WB_feed_expand .WB_text .W_btn_c * { line-height: {{h2}}px; font-size: {{fs3}}px !important; }
-    */ }), {
-      '120': { 'fs': '16', 'lh': '24', 'fs2': '14', 'lh': '22', 'h': '20', 'h2': '18', 'fs3': '12' },
-      '150': { 'fs': '21', 'lh': '30', 'fs2': '18', 'lh': '27', 'h': '25', 'h2': '23', 'fs3': '14' },
-      '200': { 'fs': '28', 'lh': '38', 'fs2': '24', 'lh': '34', 'h': '33', 'h2': '29', 'fs3': '19' },
-    }[this.ref.ratio.conf]));
+    */ }), this.pref[this.ref.ratio.conf]));
   },
 }).addto(filter.groups.tool);
 
@@ -5092,9 +5105,10 @@ filter.items.tool.stylish.weibo_only = filter.item({
     // 宽度
     'width': {
       'type': 'range',
-      'min': 600,
-      'max': 980,
+      'min': 480,
+      'max': 1280,
       'default': 600,
+      'step': 10,
     },
     // 快捷键
     'key': {
@@ -5116,23 +5130,22 @@ filter.items.tool.stylish.weibo_only = filter.item({
     },
   }),
   'ainit': function () {
-    if (!document.body.classList.contains('B_index') &&
-      !document.body.classList.contains('B_profile') &&
-      !document.body.classList.contains('B_page')) return;
     var that = this;
     var key = that.ref.key, attr = 'yawf-weibo-only';
     // 切换阅读模式开关
-    var switchMode = function (enable) {
+    var updateMode = function (enable) {
       var enabled = document.body.hasAttribute(attr);
-      if (enable == null) enable = !enabled;
-      else if (enable === enabled) return;
-      if (enable) document.body.setAttribute(attr, attr);
-      else document.body.removeAttribute(attr);
+      if (enable === null) enable = !enabled;
+      var valid = enable && (!!document.querySelector('.WB_frame_c, #v6_pl_content_homefeed'));
+      if (valid !== enabled) {
+        if (valid) document.body.setAttribute(attr, attr);
+        else document.body.removeAttribute(attr);
+      }
       that.ref.enabled.putconf(enable);
     };
     // 检查快捷键按键
     if (key.conf) util.keyboard.reg('keyup', key.conf, function (e) {
-      switchMode();
+      updateMode(null);
       e.stopPropagation();
     });
     // 显示切换按钮
@@ -5144,7 +5157,7 @@ filter.items.tool.stylish.weibo_only = filter.item({
           'text': text.weiboOnlyButton,
           'shortcut': key.conf === 0 ? '' : ' (' + util.keyboard.name(key.conf) + ')',
         })).firstChild;
-        weiboOnly.addEventListener('click', switchMode.bind(that, null));
+        weiboOnly.addEventListener('click', updateMode.bind(that, null));
         rightBar.insertBefore(weiboOnly, rightBar.querySelector('.right_item~.right_item'));
       };
       observer.dom.add(showSwitch);
@@ -5156,7 +5169,7 @@ filter.items.tool.stylish.weibo_only = filter.item({
           'text': text.weiboOnlyButton,
           'shortcut': key.conf === 0 ? '' : ' (' + util.keyboard.name(key.conf) + ')',
         })).firstChild;
-        weiboOnly.addEventListener('click', switchMode.bind(that, null));
+        weiboOnly.addEventListener('click', updateMode.bind(that, null));
         search.parentNode.appendChild(weiboOnly);
         observer.dom.remove(showSwitch);
       };
@@ -5204,14 +5217,17 @@ filter.items.tool.stylish.weibo_only = filter.item({
       body[{{attr}}] #plc_main>*:not(.WB_main_c):not(.WB_frame_c):not(.WB_main_r):not(.WB_frame_b),
       body[{{attr}}] .WB_main_c>*:not(#v6_pl_content_homefeed),
       body[{{attr}}] #plc_bot .WB_footer, body[{{attr}}] #plc_bot .W_fold, body[{{attr}}] #pl_common_footer { display: none !important; }
+      body[{{attr}}] .WB_main .WB_main_c { float: right !important; }
       body[{{attr}}] #plc_main>.WB_main_r { visibility: hidden; margin-right: -230px; }
       body[{{attr}}] #plc_main>.WB_frame_b { visibility: hidden; margin-right: -300px; }
-      body[{{attr}}] .WB_frame, body[{{attr}}][yawf-merge-left="left"] .WB_main .WB_frame { width: {{width}}; }
-      body[{{attr}}] #plc_main { width: calc({{width}} + 10px); }
+      body[{{attr}}] .WB_frame, body[{{attr}}][yawf-merge-left="left"] .WB_main .WB_frame { width: calc({{width}} + 20px) !important; max-width: 100%; }
+      body[{{attr}}] #plc_main { width: calc({{width}} + 20px) !important; max-width: 100%; }
       body[{{attr}}] .WB_global_nav { position: static; margin-top: -50px; }
-      body[{{attr}}] .WB_main_c { width: {{width}}; }
-      body[{{attr}}] .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+      body[{{attr}}] .WB_main_c { width: {{width}}; max-width: calc(100% - 20px); }
+      body[{{attr}}] .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); max-width: calc(100% - 300px); } 
+      body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
+      body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
+      body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
     */ })), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
@@ -5221,10 +5237,11 @@ filter.items.tool.stylish.weibo_only = filter.item({
       else util.css.add('body.B_index[' + attr + '] .W_main, body.B_profile[' + attr + '] .W_main { background: ' + that.ref.rgba + ' !important; }');
     }
     var updateModeByConf = function () {
-      switchMode.call(that, that.ref.enabled.getconf());
+      updateMode.call(that, that.ref.enabled.getconf());
     };
     updateModeByConf();
     window.addEventListener('focus', updateModeByConf);
+    observer.dom.add(updateModeByConf);
   }
 }).addto(filter.groups.tool);
 
