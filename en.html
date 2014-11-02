@@ -22,10 +22,11 @@
   <header>
     <label id="lang">
       <select id="lang_select">
+        <option value="" disabled="disabled" selected="selected">LANGUAGE</option>
         <option lang="zh-cn" value="zh-cn">中文(简体)</option>
         <option lang="zh-tw" value="zh-tw">中文(臺灣)</option>
         <option lang="zh-hk" value="zh-hk">中文(香港)</option>
-        <option lang="en" value="en" selected="selected">English</option>
+        <option lang="en" value="en">English</option>
       </select>
     </label>
     <div id="icon">
@@ -36,7 +37,7 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->2.1.145<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.0.146<!-- /VER --></div>
   </header>
   <nav>
     <dl>
@@ -47,7 +48,8 @@
       <dd><a target="_blank" href="https://github.com/tiansh/yawf" style="font-size: 90%;">View on GitHub</a></dd>
     </dl>
   </nav>
-  <p>Filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions</p>
+  <p itemprop="description">Filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions</p>
+  <p>Current version of script only support Weibo v6. Last version with Weibo v5 supporting is 2.1.145. Users who have not upgraded to v6, please <a href="https://github.com/tiansh/yawf/raw/bd0d46dc78ea3733d8ce3837c59f7b494a76f16d/Yet_Another_Weibo_Filter.user.js">Install version 2.1</a>, and disable script auto upgrade.</p>
   <h2>Installation Guide</h2>
   <div class="in">
   <div class="browser odd ie safari nosupport"><p>Sorry, your current web browser is not supported. Please choose one of the following supported browsers.</p></div>
@@ -86,7 +88,7 @@
     <p>Drag the contents you wish to hide, fold or highlight with your cursor, you can see there is a dropping area with yellow background at the top right corner, release your cursor in the dropping area and you may quickly create a filter by choosing the corresponding option from the pop-up dialogue box.</p>
     <img itemprop="screenshot" width="287" height="338" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
     <p>Right click on Weibo, and chose filter in the right-click menu.(Only supported in Firefox)</p>
-    <img itemprop="screenshot" width="750" height="381" alt="Context menu shown after right-click on Weibo" src="./img/contextmenu_cht.png" />
+    <img itemprop="screenshot" width="750" height="381" alt="Context menu shown after right-click on Weibo" src="./img/contextmenu_en.png" />
     <img itemprop="screenshot" width="485" height="311" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
     <p>For users who used Weibo Content Filter, you may convert and import script setting from that script by using this <a href="https://tiansh.github.io/yawf/wcf_convert.html">Setting Convert Tool (Chinese)</a>.</p>
     <p>For more details about the script using, please checkout <a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">FQA (Chinese)</a>.</p>

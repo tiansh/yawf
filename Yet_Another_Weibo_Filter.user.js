@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           2.1.145
+// @version           3.0.146
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -234,8 +234,7 @@ var text = {
   // 分隔条
   'timeTipHour': { 'zh-cn': '小时', 'zh-hk': '小時', 'zh-tw': '小時', 'en': ' hour' },
   'timeTipMin': { 'zh-cn': '分钟', 'zh-hk': '分鐘', 'zh-tw': '分鐘', 'en': ' min' },
-  'timeTipText': { 'zh-cn': '前，你看到这里', 'zh-hk': '前，你看到這裡', 'zh-tw': '前，你看到這裡', 'en': ' ago, you see here' /* as is */ },
-  '~v6~timeTipText': { 'zh-cn': '你看到这里', 'zh-hk': '你看到這裡', 'zh-tw': '你看到這裡', 'en': ' 你看到这里' /* as is */ },
+  'timeTipText': { 'zh-cn': '你看到这里', 'zh-hk': '你看到這裡', 'zh-tw': '你看到這裡', 'en': ' 你看到这里' /* as is */ },
   // 自动展开
   'autoExpand': {
     'zh-cn': '自动载入后直接展开显示||{{<etypes>}}仅对白名单的微博自动展开显示||{{<background>}}页面处于活动状态时暂停',
@@ -279,6 +278,7 @@ var text = {
   'layoutHideIconTaobao': { 'zh-cn': '淘宝/天猫商户', 'zh-hk': '淘寶/天貓商戶', 'zh-tw': '淘寶/天貓商戶', 'en': 'Taobao / Tmall Merchant' },
   'layoutHideIconGongyi': { 'zh-cn': '益起来', 'zh-hk': '益起来', 'zh-tw': '益起来'/* as is */, 'en': '益起来 (Weibo public interest)' },
   'layoutHideIconZongyika': { 'zh-cn': '我是综艺咖', 'zh-hk': '我是综艺咖'/* as is */, 'zh-tw': '我是综艺咖', 'en': '我是综艺咖 (Variety Wack)' },
+  'layoutHideIconSuishoupai': { 'zh-cn': '随手拍', 'zh-hk': '随手拍'/* as is */, 'zh-tw': '随手拍', 'en': '随手拍' },
   'layoutHideIconYouji': { 'zh-cn': '邂逅有机', 'zh-hk': '邂逅有机'/* as is */, 'zh-tw': '邂逅有机', 'en': '邂逅有机 (Travel Notes)' },
   'layoutHideIconDouble11': { 'zh-cn': '我的双11', 'zh-hk': '我的双11'/* as is */, 'zh-tw': '我的双11', 'en': '我的双11 (My Nov. 11<sup>th</sup>)' },
   // 导航栏
@@ -286,7 +286,6 @@ var text = {
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
   'layoutHideNavHot': { 'zh-cn': '热门/发现', 'zh-hk': '熱門/发现', 'zh-tw': '熱門/发现', 'en': 'Hot/发现' },
-  'layoutHideNavApp': { 'zh-cn': '应用', 'zh-hk': '應用', 'zh-tw': '應用', 'en': 'Apps' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息提示', 'zh-hk': '新消息提示', 'zh-tw': '新消息提示', 'en': 'Tips for new notice' },
   'layoutHideNavMember': { 'zh-cn': '会员菜单', 'zh-hk': '會員功能表', 'zh-tw': '會員功能表', 'en': 'VIP menu' },
@@ -307,8 +306,7 @@ var text = {
   'layoutHideRight': { 'zh-cn': '隐藏模块 - 右栏', 'zh-hk': '隱藏模組 - 右欄', 'zh-tw': '隱藏模組 - 右欄', 'en': 'Hide modules - Right Column' },
   'layoutHideRightTemplate': { 'zh-cn': '设置模板', 'zh-hk': '背景設定', 'zh-tw': '背景設定', 'en': 'Template Settings' },
   'layoutHideRightInfo': { 'zh-cn': '头像', 'zh-hk': '頭像', 'zh-tw': '頭像', 'en': 'Avatar' },
-  'layoutHideRightV6UpdateV6': { 'zh-cn': '新版微博介绍 (v6)', 'zh-hk': '新版微博介绍 (v6)', 'zh-tw': '新版微博介绍 (v6)'/* as is */, 'en': '新版微博介绍 (v6, Introduce to Weibo v6)' },
-  'layoutHideRightV5UpdateV6': { 'zh-cn': '升级新版微博 (v5)', 'zh-hk': '升级新版微博 (v5)', 'zh-tw': '升级新版微博 (v5)'/* as is */, 'en': '升级新版微博 (v5, Update to Weibo v6)' },
+  'layoutHideRightV6UpdateV6': { 'zh-cn': '新版微博介绍', 'zh-hk': '新版微博介绍', 'zh-tw': '新版微博介绍'/* as is */, 'en': '新版微博介绍 (Introduce to Weibo v6)' },
   'layoutHideRightTrial': { 'zh-cn': '登录赢会员', 'zh-hk': '登录赢会员', 'zh-tw': '登录赢会员'/* as is */, 'en': '登录赢会员 (Login for VIP Trial)' },
   'layoutHideRightAtten': { 'zh-cn': '关注/粉丝/微博数', 'zh-hk': '關注/粉絲/微博數', 'zh-tw': '關注/粉絲/微博數', 'en': 'Numbers of Following/Followers/Weibo' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
@@ -341,7 +339,7 @@ var text = {
   'layoutHideWeiboBlockBySource': { 'zh-cn': '屏蔽来源', 'zh-hk': '屏蔽來源', 'zh-tw': '屏蔽來源', 'en': 'Block Source' },
   'layoutHideWeiboBlockByKeyword': { 'zh-cn': '屏蔽关键词', 'zh-hk': '屏蔽關鍵詞', 'zh-tw': '屏蔽關鍵詞', 'en': 'Block Keywords' },
   // 微博按钮
-  'layoutReorderTitle': { 'zh-cn': '重新排列微博控制按钮 (v6)', 'zh-hk': '重新排列微博控制按鈕 (v6)', 'zh-tw': '重新排列微博控制按鈕 (v6)', 'en': 'Reorder Weibo control buttons (v6)' },
+  'layoutReorderTitle': { 'zh-cn': '重新排列微博控制按钮', 'zh-hk': '重新排列微博控制按鈕', 'zh-tw': '重新排列微博控制按鈕', 'en': 'Reorder Weibo control buttons' },
   'layoutReorderDesc': { 'zh-cn': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}', 'zh-hk': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}', 'zh-tw': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}', 'en': '{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}' },
   'layoutReorderPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
   'layoutReorderFavorite': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favourite' },
@@ -351,7 +349,7 @@ var text = {
   // 个人主页
   'layoutHidePerson': { 'zh-cn': '隐藏模块 - 个人主页', 'zh-hk': '隱藏模組 - 個人主頁', 'zh-tw': '隱藏模組 - 個人主頁', 'en': 'Hide modules - Personal home page' },
   'layoutHidePersonMoveThings': { 'zh-cn': '移动部件（会员模板）', 'zh-hk': '移動部件（會員模板）', 'zh-tw': '移動部件（會員模板）', 'en': 'Moving Things (VIP Template)' },
-  'layoutHidePersonCover': { 'zh-cn': '封面图 (v5)', 'zh-hk': '封面圖 (v5)', 'zh-tw': '封面圖 (v5)', 'en': 'Cover Picture (v5)' },
+  'layoutHidePersonCover': { 'zh-cn': '封面图', 'zh-hk': '封面圖', 'zh-tw': '封面圖', 'en': 'Cover Picture' },
   'layoutHidePersonTemplate': { 'zh-cn': '模板设置', 'zh-hk': '模板設置', 'zh-tw': '模板設置', 'en': 'Template Settings' },
   'layoutHidePersonBadgeIcon': { 'zh-cn': '勋章', 'zh-hk': '勳章', 'zh-tw': '勳章', 'en': 'Badges' },
   'layoutHidePersonStats': { 'zh-cn': '关注/粉丝/微博数', 'zh-hk': '關注/粉絲/微博數', 'zh-tw': '關注/粉絲/微博數', 'en': 'Numbers of Following/Followers/Weibo' },
@@ -363,20 +361,12 @@ var text = {
   'layoutHidePersonHotTopic': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'layoutHidePersonHotWeibo': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   // 个人主页边栏模块
-  'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏 (v6)', 'zh-hk': '隱藏模組 - 個人主頁邊欄 (v6)', 'zh-tw': '隱藏模組 - 個人主頁邊欄 (v6)', 'en': 'Hide modules - Side column of personal homepage (v6)' },
+  'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏', 'zh-hk': '隱藏模組 - 個人主頁邊欄', 'zh-tw': '隱藏模組 - 個人主頁邊欄', 'en': 'Hide modules - Side column of personal homepage' },
   'layoutHidePLeftDesc': { 'zh-cn': '隐藏个人主页边栏中以下标题的模块<br />模块', 'zh-hk': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'zh-tw': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'en': 'Hide modules on personal homepage with these titles<br />Modules' },
   // 消息页面
   'layoutHideMessages': { 'zh-cn': '隐藏模块 - 消息页面', 'zh-hk': '隱藏模組 - 消息網頁', 'zh-tw': '隱藏模組 - 消息網頁', 'en': 'Hide modules - News page' },
   'layoutHideMessagesHelp': { 'zh-cn': '使用小帮助', 'zh-hk': '使用小幫助', 'zh-tw': '使用小幫助', 'en': 'Tips' },
   'layoutHideMessagesFeedback': { 'zh-cn': '微博意见反馈', 'zh-hk': '微博意见反馈', 'zh-tw': '微博意见反馈'/* as is */, 'en': 'Feed Back'/* as is */ },
-  'layoutHideMessagesDesktop': { 'zh-cn': '微博桌面 (v5)', 'zh-hk': '微博桌面 (v5)', 'zh-tw': '微博桌面 (v5)', 'en': 'Weibo desktop (v5)' },
-  'layoutHideMessagesCommentTop': { 'zh-cn': '热评微博 (v5)', 'zh-hk': '熱評微博 (v5)', 'zh-tw': '熱評微博 (v5)', 'en': 'Popular Weibo (v5)' },
-  'layoutHideMessagesReport': { 'zh-cn': '微博举报处理中心 (v5)', 'zh-hk': '微博舉報處理中心 (v5)', 'zh-tw': '微博檢舉處理中心 (v5)', 'en': 'Report (v5)' },
-  'layoutHideMessagesYoudao': { 'zh-cn': '导出收藏夹 (v5)', 'zh-hk': '导出收藏夹 (v5)', 'zh-tw': '导出收藏夹 (v5)', 'en': 'Export favorites (v5)' },
-  // 添加好友
-  'layoutHideAttention': { 'zh-cn': '隐藏模块 - 添加关注 (v5)', 'zh-hk': '隱藏模組 - 添加關注 (v5)', 'zh-tw': '隱藏模組 - 添加關注 (v5)', 'en': 'Hide modules - Add following (v5)' },
-  'layoutHideAttentionSuccess': { 'zh-cn': '关注成功对话框', 'zh-hk': '關注成功對話方塊', 'zh-tw': '關注成功對話方塊', 'en': 'Dialog for adding following success' },
-  'layoutHideAttentionRecommend': { 'zh-cn': '公开推荐分组', 'zh-hk': '公开推荐的分组', 'zh-tw': '公开推荐的分组'/* as is */, 'en': '公开推荐的分组 (Public Recommend Group)' },
   // 杂项
   'layoutHideOther': { 'zh-cn': '隐藏模块 - 杂项', 'zh-hk': '隱藏模組 - 雜項', 'zh-tw': '隱藏模組 - 雜項', 'en': 'Hide modules - Others' },
   'layoutHideOtherAds': { 'zh-cn': '广告', 'zh-hk': '廣告', 'zh-tw': '廣告', 'en': 'Advertisement' },
@@ -385,21 +375,19 @@ var text = {
   'layoutHideOtherFooter': { 'zh-cn': '页面底部', 'zh-hk': '頁面底部', 'zh-tw': '頁面底部', 'en': 'Footer' },
   'layoutHideOtherWbIm': { 'zh-cn': '微博桌面推荐（右下）', 'zh-hk': '微博桌面推薦（右下）', 'zh-tw': '微博桌面推薦（右下）', 'en': '微博桌面2014 (Desktop Weibo), bottom right' },
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
-  'layoutHideOtherMusic': { 'zh-cn': '微音乐 (v6)', 'zh-hk': '微音乐 (v6)', 'zh-tw': '微音乐 (v6)'/* as is */, 'en': '微音乐 (v6, Weibo Music)' },
+  'layoutHideOtherMusic': { 'zh-cn': '微音乐', 'zh-hk': '微音乐', 'zh-tw': '微音乐'/* as is */, 'en': '微音乐 (Weibo Music)' },
   'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
-  'layoutHideOtherRelatedWB': { 'zh-cn': '相关微博推荐 (v6)', 'zh-hk': '相关微博推荐 (v6)', 'zh-tw': '相关微博推荐 (v6)', 'en': '相关微博推荐 (v6, Suggested related weibo)' },
+  'layoutHideOtherRelatedWB': { 'zh-cn': '相关微博推荐', 'zh-hk': '相关微博推荐', 'zh-tw': '相关微博推荐', 'en': '相关微博推荐 (v6, Suggested related weibo)' },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '工具', 'zh-hk': '工具', 'zh-tw': '工具', 'en': 'Tool' },
   // 边栏
   'sideColumnToolsTitle': { 'zh-cn': '边栏', 'zh-hk': '邊欄', 'zh-tw': '邊欄', 'en': 'Side Column' },
   'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
-  'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息 (v5)', 'zh-hk': '展開左欄消息 (v5)', 'zh-tw': '展開左欄消息 (v5)', 'en': 'Unfold news in left column (v5)' },
   'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}', 'en': 'Merge left &amp; right column | to {{<side>}}' },
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'mergeLeftRightRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
-  'fixedLeft': { 'zh-cn': '浮动左边栏|{{<items>}}', 'zh-hk': '浮動左邊欄|{{<items>}}', 'zh-tw': '浮動左邊欄|{{<items>}}', 'en': 'Float left column | {{<items>}}' },
-  'fixedLeftDefault': { 'zh-cn': '默认元素 (v5)', 'zh-hk': '預設元素 (v5)', 'zh-tw': '預設元素 (v5)', 'en': 'default elements (v5)' },
-  'fixedLeftWhole': { 'zh-cn': '整个左栏 (v5)', 'zh-hk': '整個左欄 (v5)', 'zh-tw': '整個左欄 (v5)', 'en': 'whole column (v5)' },
+  'fixedLeft': { 'zh-cn': '浮动左边栏', 'zh-hk': '浮動左邊欄', 'zh-tw': '浮動左邊欄', 'en': 'Float left column' },
+  'fixedRight': { 'zh-cn': '浮动右边栏', 'zh-hk': '浮動右邊欄', 'zh-tw': '浮動右邊欄', 'en': 'Float right column' },
   'filteRightTopic': { 'zh-cn': '应用话题黑名单到右栏热门话题', 'zh-hk': '應用話題黑名單到右欄熱門話題', 'zh-tw': '應用話題黑名單到右欄熱門話題', 'en': 'Apply topic blacklist to Hot Topic in right column' },
   'filteRightTopicCount': { 'zh-cn': '热门话题列表隐藏|阅读数少于{{<number>}}万的话题', 'zh-hk': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'zh-tw': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'en': 'Hidden Hot Topic with | less than {{<number>}}万 reading' },
   // 微博
@@ -408,7 +396,6 @@ var text = {
   'publishToPublicDefault': { 'zh-cn': '分组浏览时默认发布公开微博', 'zh-hk': '分組流覽時默認發佈公開微博', 'zh-tw': '分組流覽時默認發佈公開微博', 'en': 'Publish to public by default when browsing by group' },
   'publishToPublicText': { 'zh-cn': '公开', 'zh-hk': '公開', 'zh-tw': '公開', 'en': 'Public' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
-  'personalRedirectWeibo': { 'zh-cn': '访问帐号主页显示微博页面 (v5)', 'zh-hk': '訪問帳號主頁顯示微博頁面 (v5)', 'zh-tw': '訪問帳號主頁顯示微博頁面 (v5)', 'en': 'Show Weibo page instead of personal main page by default (v5)' },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'expandShortenedLink': { 'zh-cn': '自动展开新浪 t.cn 短网址', 'zh-hk': '自動展開新浪 t.cn 短網址', 'zh-tw': '自動展開新浪 t.cn 短網址', 'en': 'Auto expand Sina shortened URL (t.cn)' },
@@ -416,7 +403,7 @@ var text = {
   'UncheckRecomJoin': { 'zh-cn': '取消勾选建议加到该组', 'zh-hk': '取消勾選建议加到该组', 'zh-tw': '取消勾選建议加到该组'/* as is */, 'en': 'Uncheck recommed adding to group' },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
-  'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}} (v6)', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}} (v6)', 'zh-tw': '', 'en': 'Increase font size of Weibo content to | {{<ratio>}} (v6)' },
+  'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}}', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'zh-tw': '', 'en': 'Increase font size of Weibo content to | {{<ratio>}}' },
   'weiboLargeFont120': { 'zh-cn': '120%', 'zh-hk': '120%', 'zh-tw': '120%', 'en': '120%' },
   'weiboLargeFont150': { 'zh-cn': '150%', 'zh-hk': '150%', 'zh-tw': '150%', 'en': '150%' },
   'weiboLargeFont200': { 'zh-cn': '200%', 'zh-hk': '200%', 'zh-tw': '200%', 'en': '200%' },
@@ -425,10 +412,10 @@ var text = {
   'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
   'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
   'weiboOnly': {
-    'zh-cn': '阅读视图|宽度{{<width>}}px|快捷键{{<key>}}||{{<usebgc>}}使用指定背景色 (v5)|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博列表顶部显示快捷开关按钮',
-    'zh-hk': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色 (v5)|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'zh-tw': '閱讀視圖|寬度{{<width>}}px|快速鍵{{<key>}}||{{<usebgc>}}使用指定背景色 (v5)|{{<color>}}|透明度{{<transparency>}}%||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'en': 'Reading View | width {{<width>}}px | shortcut {{<key>}} || {{<usebgc>}} override background color (v5) | with {{<color>}} | transparency {{<transparency>}} || {{<switch>}} show switch button at top of Weibo list'
+    'zh-cn': '阅读视图|宽度{{<width>}}px||快捷键{{<key>}}||{{<switch>}}在微博列表顶部显示快捷开关按钮',
+    'zh-hk': '閱讀視圖|寬度{{<width>}}px||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-tw': '閱讀視圖|寬度{{<width>}}px||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'en': 'Reading View | width {{<width>}}px || shortcut {{<key>}} || {{<switch>}} show switch button at top of Weibo list'
   },
   'weiboOnlyButton': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'keyInputTip': { 'zh-cn': '按下键盘修改快捷键设置', 'zh-hk': '按下鍵盤修改快速鍵設置', 'zh-tw': '按下鍵盤修改快速鍵設置', 'en': 'Press key to modify shortcut key setting' },
@@ -520,26 +507,17 @@ var html = {
   'select': '<select>{{options}}</select>',
   'option': '<option value="{{value}}">{{{text}}}</option>',
   // 对话框
-  'cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: #000; opacity: 0.3; z-index: 10001;"></div>',
-  '~v6~cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999;"></div>',
-  'dialog': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title"><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"></div></div></td></tr></tbody></table></div></div>',
-  '~v6~dialog': '<div id="{{id}}" class="W_layer yawf-Layer" style="top: 193px; left: 376px;"><div tabindex="0"></div><div class="content" node-type="autoHeight"><div class="W_layer_title" node-type="title" style="">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);" node-type="close">X</a></div><div node-type="inner"></div></div></div>',
-  'alert': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textSmall" class="S_txt2"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
-  '~v6~alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
-  'confirm': '<div style="position: absolute; z-index: 10001;" node-type="outer" class="W_layer yawf-Layer" id="{{id}}"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div node-type="layoutContent" class="content"><div node-type="title" class="title" style=""><span node-type="title_content">{{title}}</span></div><a node-type="close" title="{{closeButtonTitle}}" class="W_close" href="javascript:void(0);"></a><div node-type="inner"><div class="layer_point" node-type="outer"><dl class="point clearfix"><dt><span node-type="icon" class="icon_{{icon}}M"></span></dt><dd node-type="inner"><p node-type="textLarge" class="S_txt1">{{text}}</p><p node-type="textComplex" class="S_txt2" style="display: none;"></p><p node-type="textSmall" class="S_txt2" style="display: none;"></p></dd></dl><div class="btn"><a node-type="OK" class="W_btn_a" href="javascript:void(0)"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" href="javascript:void(0)"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div></div></div></td></tr></tbody></table></div></div>',
-  '~v6~confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
+  'cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999;"></div>',
+  'dialog': '<div id="{{id}}" class="W_layer yawf-Layer" style="top: 193px; left: 376px;"><div tabindex="0"></div><div class="content" node-type="autoHeight"><div class="W_layer_title" node-type="title" style="">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);" node-type="close">X</a></div><div node-type="inner"></div></div></div>',
+  'alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
+  'confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
   // 漏斗图标
-  'icon': '<div class="gn_setting" node-type="filter"><i><a class="gn_tab gn_filter" href="#"><span class="ico">{{filter}}</span></a></i></div>',
-  '~v6~icon': '<div class="gn_set_list yawf-gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">Y</em></a></div>',
-  'menuitem': '<ul class="gn_text_list"><li><a href="javascript:void(0);" class="yawf-config-menuitem">{{filterMenuItem}}</a></li></ul>',
-  '~v6~menuitem': '<ul><li class="line S_line1 yawf-config-menuline"></li><li><a href="javascript:void(0);" class="yawf-config-menuitem">{{filterMenuItem}}</a></li></ul>',
+  'icon': '<div class="gn_set_list yawf-gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">Y</em></a></div>',
+  'menuitem': '<ul><li class="line S_line1 yawf-config-menuline"></li><li><a href="javascript:void(0);" class="yawf-config-menuitem">{{filterMenuItem}}</a></li></ul>',
   // 设置窗口
-  'configHeaderTop': '<div class="profile_tab S_line5 yawf-config-header" node-type="yawf-config-header"><ul class="pftb_ul S_line1">',
-  'configHeaderItem': '<li class="pftb_itm S_line1 {{liclass}}"><a class="pftb_lk S_line5 S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a>',
+  'configHeaderTop': '<div class="WB_minitab yawf-config-header" node-type="yawf-config-header"><ul class="minitb_ul S_line1 S_bg1 clearfix">',
+  'configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="cur_block"></span></li>',
   'configHeaderBottom': '</ul></div>',
-  '~v6~configHeaderTop': '<div class="WB_minitab yawf-config-header" node-type="yawf-config-header"><ul class="minitb_ul S_line1 S_bg1 clearfix">',
-  '~v6~configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="cur_block"></span></li>',
-  '~v6~configHeaderBottom': '</ul></div>',
   'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
@@ -566,11 +544,9 @@ var html = {
   'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
-  'configStringsItem': '<li class="W_btn_arrow tag yawf-configStringsItem"><span>{{[item]}}<a class="W_ico12 icon_close" href="javascript:void(0);"></a></span></li>',
-  '~v6~configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item">{{[item]}}<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a></li>',
+  'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item">{{[item]}}<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a></li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
-  'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ico12 icon_close" action-data="uid={{id}}" href="javascript:void(0);"></a></p></div><div class="other_info"></div></div></div></div></li>',
-  '~v6~configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
+  'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
   'scriptIcon': '<div id="yawf-script-icon" style="background: url({{icon}}); width: 72px; height: 72px; float: right; margin: 0 2em"></div>',
   // 选中当前分组所有
@@ -585,26 +561,21 @@ var html = {
   // 合并左边栏占位符
   'leftFake': '<div style="display: none !important;" id="yawf-left-fake"></div>',
   // 查看原图
-  'viewOriginalLink': '<a target="_blank" class="show_big" suda-data="key=tblog_newimage_feed&value=view_original" action-type="maximum" href="javascript:;"><em class="W_ico12 ico_showbig"></em>{{viewOriginalText}}</a><i class="W_vline">|</i>',
-  '~v6~viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
+  'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" class="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
   'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span class="yawf-fastFilterItemInner"></span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
-  'fastFilterFooter': '</ul></div><div class="btn clearfix"><a node-type="ok" class="W_btn_a" action-type="ok" href="javascript:;"><span class="btn_30px W_f14">{{okButtonTitle}}</span></a><a node-type="cancel" class="W_btn_b" action-type="cancel" href="javascript:;"><span class="btn_30px W_f14">{{cancelButtonTitle}}</span></a></div></div>',
-  '~v6~fastFilterFooter': '</ul></div><div class="W_layer_btn S_bg2"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div>',
+  'fastFilterFooter': '</ul></div><div class="W_layer_btn S_bg2"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div>',
   'fastFilterString': '<label><span></span></label>',
   'fastFilterStringInput': '<input width="12" class="input_default" type="text" />',
   // 只看微博列表
-  'weiboOnlyButton': '<div class="right_item"><div><a class="W_btn_round2" href="javascript:void(0);" title="{{text}}{{shortcut}}"><span>{{text}}</span></a></div></div></div>',
-  '~v6~weiboOnlyButton': '<div id="yawf-weibo-only"><span><a class="S_txt1" href="javascript:void(0);">{{text}}</a></span></div>',
+  'weiboOnlyButton': '<div id="yawf-weibo-only"><span><a class="S_txt1" href="javascript:void(0);">{{text}}</a></span></div>',
   // 分组或特别关注的未读提示
   'noticeContainer': '<div class="WB_feed_type SW_fun S_line2" action-type="feed_list_item" yawf-display="notice"></div>',
   // 有新微博的替代提示
-  'feedListNewBar': '<a class="notes" yawf-id="feed_list_newBar" href="javascript:void(0);"></a>',
-  '~v6~feedListNewBar': '<div class="WB_cardwrap WB_notes" yawf-id="home_new_feed_tip"><a href="javascript:void(0);"></a></div>',
-  'feedTimeTip': '<fieldset class="S_line2 between_line" yawf-id="feed_list_timeTip"><legend class="S_txt3" yawf-id="feed_list_timeText">{{{time}}}</legend></fieldset>',
-  '~v6~feedTimeTip': '<div class="WB_cardwrap S_bg2 yawf-timeTip" node-type="feed_list_timeTip"><div class="WB_cardtitle_a W_tc" node-type="feed_list_timeText">{{{time}}}</div></div>',
+  'feedListNewBar': '<div class="WB_cardwrap WB_notes" yawf-id="home_new_feed_tip"><a href="javascript:void(0);"></a></div>',
+  'feedTimeTip': '<div class="WB_cardwrap S_bg2 yawf-timeTip" node-type="feed_list_timeTip"><div class="WB_cardtitle_a W_tc" node-type="feed_list_timeText">{{{time}}}</div></div>',
   // 顶栏徽标
   'navLogo': '<span class="logo"></span>',
   // 来自 微博 weibo.com
@@ -1140,27 +1111,7 @@ util._storage = function () {
   };
 };
 
-util.v6 = null;
-
-// 版本相关
-util.version = {};
-
-// 弄一些新版的小玩意儿
-util.version.fix = function (obj) {
-  if (!util.v6) return;
-  Object.keys(obj).forEach(function (key) {
-    if (key.indexOf('~v6~') !== 0) return;
-    obj[key.slice(4)] = obj[key];
-  });
-};
-util.version.chose = function (v5, v6) {
-  return util.v6 ? v6 : v5;
-};
-
 util.init(function () {
-  // 检查版本
-  util.v6 = unsafeWindow.$CONFIG.jsPath.indexOf('t6') !== -1;
-  document.body.setAttribute('yawf-weibo-version', util.v6 ? 'v6' : 'v5');
   // 保存用户信息
   util.info.uid = unsafeWindow.$CONFIG.uid;
   util.info.nick = unsafeWindow.$CONFIG.nick;
@@ -1168,8 +1119,6 @@ util.init(function () {
   util.i18n.chose = util._languages(unsafeWindow.$CONFIG.lang);
   Object.keys(text).map(function (key) { util.i18n.chose(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = util.str.fill(html[key]); });
-  util.version.fix(text);
-  util.version.fix(html);
   // 初始化设置集
   util.config = util._storage();
 }, util.priority.FIRST);
@@ -1326,30 +1275,20 @@ util.ui = {};
 // 包括右上角过滤器图标和设置菜单中的菜单项
 util.ui.icon = util.init(function () {
   var onClick = util.func.catched(function (e) { filter.dialog(); e.preventDefault(); });
-  var icon = util.version.chose(function () {
-    var p = document.querySelector('.WB_global_nav .gn_person');
-    if (!p) return setTimeout(icon, 100);
-    var d = util.dom.create(html.icon); p.appendChild(d);
-    document.querySelector('.gn_filter').addEventListener('click', onClick);
-  }, function () {
+  var icon = function () {
     var p = document.querySelector('.WB_global_nav .gn_set_list');
     if (!p) return setTimeout(icon, 100);
     var d = util.dom.create(html.icon); p.parentNode.insertBefore(d, p);
     document.querySelector('.gn_filter').addEventListener('click', onClick);
-  });
-  var menuitem = util.version.chose(function () {
-    var a = document.querySelector('.WB_global_nav .gn_person .gn_setting[node-type="account"] .gn_func');
-    if (!a) return setTimeout(menuitem, 100);
-    var m = util.dom.create(html.menuitem); a.parentNode.insertBefore(m, a);
-    document.querySelector('.yawf-config-menuitem').addEventListener('click', onClick);
-  }, function () {
+  };
+  var menuitem = function () {
     var a = document.querySelectorAll('.gn_topmenulist ul li.line');
     if (!a || !a.length) return setTimeout(menuitem, 100);
     a = a[a.length - 1];
     var m = util.dom.create(html.menuitem);
     while (m.firstChild) a.parentNode.insertBefore(m.firstChild, a);
     document.querySelector('.yawf-config-menuitem').addEventListener('click', onClick);
-  });
+  };
   icon(); menuitem();
 }, util.priority.LAST);
 
@@ -1588,21 +1527,14 @@ filter.dialog = (function () {
     var alist = Array.from(inner.querySelectorAll('.yawf-config-header a'));
     var llist = Array.from(inner.querySelectorAll('.yawf-config-body .yawf-config-layer'));
     var body = inner.querySelector('.yawf-config-body');
-    var choseLList = util.version.chose(function (i) {
-      llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
-      alist.forEach(function (a) { a.classList.remove('current'); a.classList.remove('S_bg5'); a.classList.add('S_bg1'); });
-      llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
-      alist[i].classList.add('current'); alist[i].classList.remove('S_bg1'); alist[i].classList.add('S_bg5');
-      lastTab = i;
-      util.func.call(function () { body.scrollTop = 0; });
-    }, function (i) {
+    var choseLList = function (i) {
       llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
       alist.forEach(function (a) { a.parentNode.classList.remove('current'); a.classList.remove('S_bg2'); });
       llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
       alist[i].parentNode.classList.add('current'); alist[i].classList.add('S_bg2');
       lastTab = i;
       util.func.call(function () { body.scrollTop = 0; });
-    });
+    };
     list.map(function (item, i) {
       var a = alist[i];
       a.addEventListener('mousedown', function () { choseLList(i); });
@@ -1615,15 +1547,11 @@ filter.dialog = (function () {
       var list = filter.collection.group.list;
       inner.innerHTML = [html.configHeaderTop,
         list.map(function (item, index) {
-          return util.version.chose(util.str.fill(html.configHeaderItem, {
+          return util.str.fill(html.configHeaderItem, {
             'name': text[item.name + 'FilterGroupTitle'],
             'aclass': index === 0 ? 'S_bg5 current' : 'S_bg1',
             'liclass': index === list.length - 1 ? 'pftb_itm_lst' : ' ',
-          }), util.str.fill(html.configHeaderItem, {
-            'name': text[item.name + 'FilterGroupTitle'],
-            'aclass': index === 0 ? 'S_bg2' : '',
-            'liclass': index === 0 ? 'current' : ' ',
-          }));
+          });
         }).join(''),
         html.configHeaderBottom,
         html.configLayerTop,
@@ -1798,14 +1726,10 @@ filter.fast.right = (function () {
     }
   };
   var active = function () {
-    if (util.v6) {
-      observer.weibo.after(function (feed) {
-        var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
-        [feed].concat(son).forEach(function (feed, index) { addmenu(feed, !!index); });
-      });
-    } else {
-      observer.weibo.after(addmenu);
-    }
+    observer.weibo.after(function (feed) {
+      var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
+      [feed].concat(son).forEach(function (feed, index) { addmenu(feed, !!index); });
+    });
   };
   var add = function (details) { if (details.contextmenu) filters.push(details); };
   return {
@@ -2011,7 +1935,7 @@ filter.fix.son = function (feed) {
   recount();
 };
 
-// 隐藏的微博直接从列表中去掉，减少开销是次要的，主要是兼容 v6 的 jk 按键
+// 隐藏的微博直接从列表中去掉，减少开销是次要的，主要是兼容 JK 等快捷键
 filter.fix.hidden = function (feed) {
   if (feed.getAttribute('yawf-display').lastIndexOf('-hidden') === -1) return;
   setTimeout(function () { feed.parentNode.removeChild(feed); }, 100);
@@ -2019,50 +1943,14 @@ filter.fix.hidden = function (feed) {
 
 // 真正微博过滤的核心模块
 filter.active = function (feed) {
-  (util.version.chose(function () {
-    // 同源合并的微博
-    var sonFeeds = Array.from(feed.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
-    var action = null, parentAction = null;
-    var needSwap = function (action) {
-      if (!sonFeeds.length) return false;
-      if (['hidden', 'fold'].indexOf(action) === -1) return false;
-      return true;
-    };
-    var setAction = function (feed, action) {
-      feed.setAttribute('yawf-display', 'display-' + action);
-    };
-    while (true) {
-      action = filter.rules.parse(feed) || 'unset';
-      // 如果父微博被屏蔽或折叠，那么就把下面一条没被屏蔽的拉上来换个位置
-      if (!needSwap(action)) break;
-      setAction(filter.fix.swap(feed, sonFeeds.pop()), action);
-    }
-    parentAction = action;
-    // 最后处理所有下面的子微博
-    var fixSonWeibo = function (son) {
-      var action = filter.rules.parse(son) || 'unset';
-      setAction(son, action);
-      // 如果一列里面有白名单的，那么把白名单的特别换到外面去
-      if (parentAction !== 'show' && action === 'show') {
-        setAction(filter.fix.swap(feed, son), parentAction);
-        parentAction = action;
-      }
-    };
-    while (sonFeeds.length) fixSonWeibo(sonFeeds.shift());
-    setAction(feed, parentAction);
-    // 修一下转发合并和折叠展开
-    filter.fix.son(feed);
+  // 新版当前不支持对同源转发合并微博的处理
+  var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
+  ([feed]).concat(son).forEach(function (feed, index) {
+    var action = filter.rules.parse(feed, !!index) || 'unset';
+    feed.setAttribute('yawf-display', 'display-' + action);
     filter.fix.fold(feed);
-  }, function () {
-    // 新版当前不支持对同源转发合并微博的处理
-    var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
-    ([feed]).concat(son).forEach(function (feed, index) {
-      var action = filter.rules.parse(feed, !!index) || 'unset';
-      feed.setAttribute('yawf-display', 'display-' + action);
-      filter.fix.fold(feed);
-      filter.fix.hidden(feed);
-    });
-  })());
+    filter.fix.hidden(feed);
+  });
 };
 
 // 按类型过滤器函数
@@ -2723,7 +2611,7 @@ var weibo = {};
 // 选取微博内容、微博转发的内容
 weibo.content = function (feed, f) {
   var content = feed.querySelector('[node-type="feed_list_content"]');
-  var reason = feed.querySelector(util.version.chose('[node-type="feed_list_reason"] em', '[node-type="feed_list_reason"]'));
+  var reason = feed.querySelector('[node-type="feed_list_reason"]');
   var items = [];
   if (content) items = items.concat(Array.from(f(content)));
   if (reason) items = items.concat(Array.from(f(reason)));
@@ -2806,11 +2694,7 @@ weibo.original.name = function (feed) {
   return originalAuthor.textContent.trim().replace(/^@/, '');
 };
 weibo.original.text = function (feed) {
-  if (util.v6) {
-    return feed.querySelector('.WB_expand .WB_text').textContent;
-  } else {
-    return feed.querySelector('.WB_media_expand .WB_text').textContent;
-  }
+  return feed.querySelector('.WB_expand .WB_text').textContent;
 };
 
 // 找到在一条微博里面被提到的人的昵称
@@ -3270,8 +3154,7 @@ filter.items.other.hidethese.fans_top = filter.item({
   'priority': 1e5 + 1e3, // 优先于白名单
   'rule': function fansTopFilterRule(feed) {
     if (!this.conf) return null;
-    if (util.v6) return feed.querySelector('[adcard="fanstop"]') ? 'hidden' : null;
-    return feed.querySelector('[action-type="feed_list_fansTopFeed"]') ? 'hidden' : null;
+    return feed.querySelector('[adcard="fanstop"]') ? 'hidden' : null;
   },
 }).addto(filter.groups.other);
 
@@ -3374,28 +3257,16 @@ filter.items.other.hidethese.customize_source = filter.item({
   },
   'rule': function customizeSourceRule(feed) {
     if (!this.conf) return null;
-    if (util.v6) {
-      var from = Array.from(feed.querySelectorAll('.WB_from'));
-      from = from.filter(function (from) { return !from.querySelector('[action-type="app_source"]'); })
-        .map(function (from) { return from.lastChild; });
-      if (!from.length) return;
-      if (this.ref.action.conf === 'hidden') return 'hidden';
-      from.forEach(function (from) {
-        from.textContent = util.str.fill(' {{weiboViaText}} ');
-        var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
-        from.parentNode.appendChild(wb);
-      });
-    } else {
-      // 当前自定义来源微博与来自“微博 weibo.com”微博的唯一区别在于其中的文本
-      var sources = Array.from(feed.querySelectorAll('a[action-type="app_source"][href="http://weibo.com/"]'));
-      sources = sources.filter(function (source) { return source.textContent.trim() !== text.defaultSource; });
-      if (sources.length) {
-        if (this.ref.action.conf === 'hidden') return 'hidden';
-        sources.forEach(function (source) {
-          source.textContent = text.defaultSource;
-        });
-      }
-    }
+    var from = Array.from(feed.querySelectorAll('.WB_from'));
+    from = from.filter(function (from) { return !from.querySelector('[action-type="app_source"]'); })
+      .map(function (from) { return from.lastChild; });
+    if (!from.length) return;
+    if (this.ref.action.conf === 'hidden') return 'hidden';
+    from.forEach(function (from) {
+      from.textContent = util.str.fill(' {{weiboViaText}} ');
+      var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
+      from.parentNode.appendChild(wb);
+    });
     return null;
   },
 }).addto(filter.groups.other);
@@ -3444,9 +3315,6 @@ filter.items.other.spam.same_account = filter.item({
     var id = weibo.author.id(feed);
     if (!id) return;
     var number = document.querySelectorAll(
-      // v5
-      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_datail>.WB_detail>.WB_info>a.WB_name[usercard="id=' + id + '"]' + ',' +
-      // v6
       '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_detail>.WB_detail>.WB_info>.W_fb[usercard="id=' + id + '"]'
     ).length;
     if (number >= this.ref.number.conf) {
@@ -3575,28 +3443,12 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
   'timetip': (function () {
     var time0 = new Date(), tip = null;
     return function (feed) {
-      (util.version.chose(function (feed) {
-        if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
-        var time = time0; time0 = new Date();
-        time = Math.max(Math.round((time0 - time) / 6e4), 2);
-        var min = time % 60, hour = (time - min) / 60;
-        var text = '{{timeTipText}}';
-        if (min) text = min + '{{timeTipMin}}' + text;
-        if (hour) text = hour + '{{timeTipHour}}' + text;
-        tip = util.dom.create(util.str.fill(html.feedTimeTip, { 'time': text }));
-        feed.parentNode.insertBefore(tip, feed.nextSibling);
-        setTimeout(function () {
-          while (feed && !feed.clientHeight) feed = feed.previousSibling;
-          if (feed) feed.classList.add('WB_feed_new');
-        });
-      }, function (feed) {
-        var time = time0; time0 = new Date();
-        var text = '{{timeTipText}}';
-        if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
-        tip = util.dom.create(util.str.fill(html.feedTimeTip, { 'time': text }));
-        tip.setAttribute('date', String(Number(time)));
-        feed.parentNode.insertBefore(tip, feed.nextSibling);
-      })(feed));
+      var time = time0; time0 = new Date();
+      var text = '{{timeTipText}}';
+      if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
+      tip = util.dom.create(util.str.fill(html.feedTimeTip, { 'time': text }));
+      tip.setAttribute('date', String(Number(time)));
+      feed.parentNode.insertBefore(tip, feed.nextSibling);
     };
   }()),
   // 显示新的微博
@@ -3622,11 +3474,9 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
     if (newFeed) newFeed.parentNode.removeChild(newFeed);
     if (count) {
       newFeed = util.dom.create(html.feedListNewBar);
-      if (util.v6) feedList.parentNode.insertBefore(newFeed, feedList);
-      else feedList.insertBefore(newFeed, feedList.firstChild);
+      feedList.parentNode.insertBefore(newFeed, feedList);
       newFeed.addEventListener('click', this.showNew.bind(this));
-      if (util.v6) newFeed.firstChild.textContent = util.str.fill(text.newWeiboNotify, { 'count': count });
-      else newFeed.textContent = util.str.fill(text.newWeiboNotify, { 'count': count });
+      newFeed.firstChild.textContent = util.str.fill(text.newWeiboNotify, { 'count': count });
     }
   },
   'ainit': function () {
@@ -3641,7 +3491,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
       .WB_feed .WB_notes[requesttype="newFeed"] { display: none !important; }
     */ }));
 
-    var loadKey = util.version.chose(util.keyboard.code.R, util.keyboard.code.PERIOD);
+    var loadKey = util.keyboard.code.PERIOD;
 
     // 只在第一页工作
     var validPage = function () {
@@ -3651,93 +3501,61 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
 
     var fakeKey = false;
     // 自动点开有新微博的提示
-    if (util.v6) {
       // 我知道我在干什么
-      util.func.page(function () {
-        /* STK.lib.feed.inter */
-        var action = function (b, e) {
-          var a = window.STK;
-          var c = a.core.json.merge,
-            j = e[2] || {},
-            k = a.queryToJson(window.FM.getURL().query),
-            g = a.conf.trans.feed.feed,
-            h = a.core.obj.parseParam({
-              loadFeedTransKey: "getfeed",
-              plNode: null
-            }, e);
-          var l = c(k, { since_id: b.getEndId() });
-          g.request(h.loadFeedTransKey, {
-            onSuccess: function (a) { b.updateFeed(a.data, "top", "newFeed"); },
-            onFail: function () { b.showError("top", "newFeed"); },
-            onError: function () { b.showError("top", "newFeed"); }
-          }, c(l, j));
-        };
-        /* STK.lib.feed.base */
-        var base = function (b, c) {
-          var a = window.STK;
-          var d = {}, e = a.lib.feed.API(b, c);
-          for (var f in e) !d[f] && (d[f] = e[f]); /* as is */
-          action(d, c);
-        };
-        /* STK.pl.content.homefeed.source.homefeed.feedList */
-        var feedList = function (b) {
-          base(b, { plNode: b });
-        };
-        /* check for home_new_feed_tip and auto load new feeds... */
-        var pending = false;
-        (new MutationObserver(function (mutations) {
-          if (!window.STK) return; /* we need stk to work */
-          var tip = window.STK.sizzle('#home_new_feed_tip');
-          if (!tip.length) return;
-          window.STK.removeNode(tip[0]);
-          if (pending) return; pending = true;
-          setTimeout(function () {
-            pending = false;
-            feedList(window.STK.sizzle('#v6_pl_content_homefeed')[0]);
-          }, 100);
-        })).observe(document.body, { 'childList': true, 'subtree': true });
-      });
-    } else {
-      observer.dom.add(function () {
-        var newFeed = document.querySelector(util.version.chose(
-          '.WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"]:not([yawf-noted])',
-          '#home_new_feed_tip a'
-        ));
-        if (!newFeed) return;
-        if (validPage()) {
-          // 模拟在网页上按 R 键载入新微博，因为如果模拟点击事件，会影响聊天窗口
-          fakeKey = true;
-          var evt = document.createEvent("KeyboardEvent");
-          evt.initKeyEvent('keyup', true, true, null, false, false, false, false, loadKey, 0);
-          document.documentElement.dispatchEvent(evt);
-          loading = true;
-        } else {
-          newFeed.style.display = 'block';
-          newFeed.setAttribute('yawf-noted', 'yawf-noted');
-        }
-      });
-    }
+    util.func.page(function () {
+      /* STK.lib.feed.inter */
+      var action = function (b, e) {
+        var a = window.STK;
+        var c = a.core.json.merge,
+          j = e[2] || {},
+          k = a.queryToJson(window.FM.getURL().query),
+          g = a.conf.trans.feed.feed,
+          h = a.core.obj.parseParam({
+            loadFeedTransKey: "getfeed",
+            plNode: null
+          }, e);
+        var l = c(k, { since_id: b.getEndId() });
+        g.request(h.loadFeedTransKey, {
+          onSuccess: function (a) { b.updateFeed(a.data, "top", "newFeed"); },
+          onFail: function () { b.showError("top", "newFeed"); },
+          onError: function () { b.showError("top", "newFeed"); }
+        }, c(l, j));
+      };
+      /* STK.lib.feed.base */
+      var base = function (b, c) {
+        var a = window.STK;
+        var d = {}, e = a.lib.feed.API(b, c);
+        for (var f in e) !d[f] && (d[f] = e[f]); /* as is */
+        action(d, c);
+      };
+      /* STK.pl.content.homefeed.source.homefeed.feedList */
+      var feedList = function (b) {
+        base(b, { plNode: b });
+      };
+      /* check for home_new_feed_tip and auto load new feeds... */
+      var pending = false;
+      (new MutationObserver(function (mutations) {
+        if (!window.STK) return; /* we need stk to work */
+        var tip = window.STK.sizzle('#home_new_feed_tip');
+        if (!tip.length) return;
+        window.STK.removeNode(tip[0]);
+        if (pending) return; pending = true;
+        setTimeout(function () {
+          pending = false;
+          feedList(window.STK.sizzle('#v6_pl_content_homefeed')[0]);
+        }, 100);
+      })).observe(document.body, { 'childList': true, 'subtree': true });
+    });
 
     // 看见有新微博了，看看是不是新加载出来的
-    if (util.v6) {
-      observer.weibo.before(function (feed) {
-        if (!validPage()) return;
-        var feeds = Array.from(document.querySelectorAll('.WB_feed .WB_feed_type'));
-        var shown = Array.from(document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~.WB_feed_type, .WB_feed_type[yawf-unread="show"]~* .WB_feed_type'));
-        if (feeds.indexOf(feed) === -1) feed.setAttribute('yawf-unread', 'show');
-        else if (shown.length < 8 || shown.indexOf(feed) !== -1) feed.setAttribute('yawf-unread', 'show');
-        else feed.setAttribute('yawf-unread', 'hidden');
-      });
-    } else {
-      observer.weibo.before(function (feed) {
-        if (!validPage()) return;
-        var feeds = Array.from(document.querySelectorAll('.WB_feed .WB_feed_type'));
-        var shown = Array.from(document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~.WB_feed_type'));
-        if (feeds.indexOf(feed) === -1) feed.setAttribute('yawf-unread', 'show');
-        else if (shown.length < 8 || shown.indexOf(feed) !== -1 || loading === false) feed.setAttribute('yawf-unread', 'show');
-        else feed.setAttribute('yawf-unread', 'hidden');
-      });
-    }
+    observer.weibo.before(function (feed) {
+      if (!validPage()) return;
+      var feeds = Array.from(document.querySelectorAll('.WB_feed .WB_feed_type'));
+      var shown = Array.from(document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~.WB_feed_type, .WB_feed_type[yawf-unread="show"]~* .WB_feed_type'));
+      if (feeds.indexOf(feed) === -1) feed.setAttribute('yawf-unread', 'show');
+      else if (shown.length < 8 || shown.indexOf(feed) !== -1) feed.setAttribute('yawf-unread', 'show');
+      else feed.setAttribute('yawf-unread', 'hidden');
+    });
 
     // 走完过滤器之后，如果某条微博还没被隐藏掉，那么就提示用户有新微博要看了
     observer.weibo.after(function (feed) {
@@ -3966,7 +3784,7 @@ filter.predef.group('layout');
 
   subtitle('Icon', true);
   item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
-  item('Member', 5, '.W_ico16[class*="ico_member"], .W_icon[class*="icon_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
+  item('Member', 5, '.W_icon[class*="icon_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
   item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve { display: none !important; }');
   item('ApproveCo', 5, '.approve_co, .icon_approve_co, .icon_pf_approve_co { display: none !important; }');
   item('ApproveDead', 107, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }');
@@ -3974,13 +3792,14 @@ filter.predef.group('layout');
   item('VGirl', 5, '.ico_vlady, .icon_pf_vlady, .icon_vlady { display: none !important; }');
   item('Taobao', 5, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }');
   item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
+  item('Suishoupai', 146, '.suishoupai2014, .icon_suishoupai2014 { display: none !important; }');
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }');
   item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
   item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }');
 
   subtitle('Nav', true);
   item('LogoImg', 94, function replaceLogo() {
-    if (util.v6) return; // v6 至今未见到特殊 logo ，所以不予处理
+    return; // v6 至今未见到特殊 logo ，所以不予处理
     var box = document.querySelector('.WB_global_nav .gn_logo_v2 .box');
     if (!box) return setTimeout(replaceLogo, 100);
     var img = document.querySelector('.WB_global_nav .gn_logo_v2 .box img');
@@ -3988,48 +3807,40 @@ filter.predef.group('layout');
     var logo = util.dom.create(html.navLogo);
     img.parentNode.replaceChild(logo, img);
   });
-  item('Main', 5, '.gn_nav>div:nth-child(1), .gn_nav_list>li:nth-child(1) { display: none !important; }');
-  item('Hot', 5, '.gn_nav>div:nth-child(2), .gn_nav_list>li:nth-child(2) { display: none !important; }');
-  item('App', 5, '.gn_nav>div:nth-child(3) { display: none !important; }');
-  item('Game', 5, '.gn_nav>div:nth-child(4), .gn_nav_list>li:nth-child(3) { display: none !important; }');
-  item('NoticeNew', 87, function () {
-    util.css.add(util.version.chose(
-      '.WB_global_nav .gn_notice_new .W_new { display: none; } .WB_global_nav .gn_setting .gn_notice_new .ico { background-position: -275px -6px; }',
-      '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }'
-    ));
-  });
+  item('Main', 5, '.gn_nav_list>li:nth-child(1) { display: none !important; }');
+  item('Hot', 5, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
+  item('Game', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
+  item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('Member', 5, '.gn_setting[node-type="member"] { display: none !important; }');
 
   subtitle('Left', true);
-  item('ToMe', 5, '#pl_leftnav_common a[href^="/direct/tome"] { display: none !important; }');
-  item('Friends', 5, '#pl_leftnav_group > div[node-type="groupList"] > .level_1_Box, #pl_leftnav_common .level_1_Box > form.left_nav_line { display: none !important; }');
+  item('Friends', 5, '.lev_line ~ * .lev_Box>.lev:first-child { display: none !important; }');
   item('App', 5, '#pl_leftnav_app { display: none !important; }');
   item('New', 106, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
   item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
 
   subtitle('Middle', true);
-  item('RecommendedTopic', 5, '#pl_content_publisherTop div[node-type="recommendTopic"], #v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
+  item('RecommendedTopic', 5, '#v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
   item('FeedRecommand', 35, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]), .WB_feed_newuser[node-type="recommfeed"] { display: none !important; }');
   item('MemberTip', 5, '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
 
   subtitle('Right', true);
-  item('Template', 5, '.templete_enter, #v6_pl_content_setskin { display: none !important; }'); // Spelling as is
+  item('Template', 5, '#v6_pl_content_setskin { display: none !important; }'); // Spelling as is
   item('Info', 5, '.W_person_info, .send_weibo .input .arrow { display: none !important; }');
   item('Atten', 5, '#pl_rightmod_myinfo .user_atten { display: none !important; }');
   item('Groups', 102, '#pl_rightmod_groups { display: none; }');
   item('V6UpdateV6', 110, '#v6_pl_rightmod_updatev6 { display: none !important; }');
-  item('V5UpdateV6', 110, '#v5_pl_rightmod_updatev6 { display: none !important; }');
   item('Trial', 5, '#trustPagelet_checkin_lotteryv5 { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
-  item('Member', 5, '#trustPagelet_recom_memberv5, #v6_trustPagelet_recom_member { display: none !important; }');
+  item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
   item('Weibo', 5, '[yawf-id="rightmod_recom_weibo"] { display: none !important; }');
   item('Location', 5, '[yawf-id="rightmod_recom_location"] { display: none !important; }');
   item('Music', 5, '[yawf-id="rightmod_recom_music"] { display: none !important; }');
   item('Movie', 5, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('Book', 5, '[yawf-id="rightmod_recom_book"] { display: none !important; }');
-  item('Notice', 5, '#pl_rightmod_noticeboard, #v6_pl_rightmod_noticeboard { display: none !important; }');
+  item('Notice', 5, '#v6_pl_rightmod_noticeboard { display: none !important; }');
 
   subtitle('Weibo', true);
   item('RecomFeed', 2, '[node-type="feed_list_recommend"]{ display: none !important; }');
@@ -4038,33 +3849,18 @@ filter.predef.group('layout');
   item('TopicCard', 5, '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
   item('LocationCard', 5, '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
   item('LastPic', 72, function () {
-    if (util.v6) {
-      observer.dom.add(function () {
-        var last;
-        last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
-        while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
-        if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
-        last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
-        while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
-        if (last) last.removeAttribute('yawf-piclast');
-        var close = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view .artwork_box .ficon_close ');
-        if (close) close.click();
-      });
-      util.css.add('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/small.cur"), auto !important; }');
-    } else {
-      observer.dom.add(function () {
-        var last;
-        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
-        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
-        if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
-        last = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
-        while (last && !last.classList.contains('pic_list_view')) last = last.parentNode;
-        if (last) last.removeAttribute('yawf-piclast');
-        var close = document.querySelector('.WB_feed_type .WB_media_expand .pic_list_view .artwork_box .W_close');
-        if (close) close.click();
-      });
-      util.css.add('.WB_feed_type .WB_media_expand .pic_list_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t5/style/images/common/small.cur"), auto !important; }');
-    }
+    observer.dom.add(function () {
+      var last;
+      last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
+      while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
+      if (last) last.setAttribute('yawf-piclast', 'yawf-piclast');
+      last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .pic_choose_box li:not(:last-child) a.current');
+      while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
+      if (last) last.removeAttribute('yawf-piclast');
+      var close = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view .artwork_box .ficon_close ');
+      if (close) close.click();
+    });
+    util.css.add('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/small.cur"), auto !important; }');
   });
   item('TopComment', 54, function () {
     observer.dom.add(function () {
@@ -4161,7 +3957,6 @@ filter.predef.group('layout');
       });
     },
     'init': function () {
-      if (!util.v6) return;
       var ref = this.ref;
       util.css.add(['1', '2', '3', '4', '5'].map(function (key) {
         return '.WB_handle ul li[yawf-handle-type="fl_' + ref[key].conf + '"] { order: ' + key + '; }';
@@ -4169,9 +3964,8 @@ filter.predef.group('layout');
     },
   }).addto(filter.groups.layout);
 
-  // 处理 v6 下微博按钮的平均分布
+  // 处理微博按钮的平均分布
   observer.weibo.after(function (feed) {
-    if (!util.v6) return;
     var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
     li.forEach(function (li) {
       var type = li.querySelector('a').getAttribute('action-type');
@@ -4187,14 +3981,15 @@ filter.predef.group('layout');
   item('MoveThings', 51, '.S_profile .profile_move_things { display: none !important; }');
   item('Template', 110, '.WB_frame_a .icon_setskin { display: none !important; }');
   item('Cover', 5, util.str.cmt(function () { /*!CSS
-    .S_profile_pic { display: none; }
-    .profile_top { margin-top: 20px; }
-    .profile_top .pf_head { top: 5px; margin-top: 0 !important; }
-    .profile_top .pf_head_pic { height: 120px; width: 120px; float: right; }
-    .profile_top .pf_head_pic img { height: 120px; }
-    .profile_top .pf_head .user_atten { width: 60px; float: left; height: 120px; }
-    .profile_top .pf_head .user_atten li, .profile_top .pf_head .user_atten .follower { width: 54px; padding: 0 3px 3px; height: 37px; border-right: none; }
-    .profile_top .pf_head .user_atten li strong { margin: 3px 0 0; }
+    .PCD_header, .PCD_header .pf_wrap, .PCD_header .shadow { height: 130px; }
+    .PCD_header .pf_photo { margin: 10px 20px 10px calc(50% - 280px); float: left; }
+    .PCD_header .pf_username, .PCD_header .pf_intro { text-shadow: 0 0 4px #000; }
+    .PCD_header .pf_username, .PCD_header .pf_intro, .PCD_header .pf_opt { text-align: left; margin-left: 140px; }
+    .PCD_header .pf_wrap .pf_use_num, .PCD_header .pf_wrap .pf_copy_icon, .PCD_header .upcover { display: none; }
+    .PCD_header .S_shadow, .PCD_header .cover_wrap { background: none !important; }
+    .PCD_header .shadow { margin: 0 calc(50% - 300px); width: 600px; }
+    .PCD_header .pf_intro { height: 36px; line-height: 18px; }
+    .PCD_header .pf_opt { margin-top: 8px; }
   */ }));
   item('BadgeIcon', 10, '.pf_badge_icon { display: none !important; }');
   item('Stats', 5, '.profile_top .user_atten { display: none !important; } .profile_top .pf_head { margin-top: 51px; } ');
@@ -4225,30 +4020,6 @@ filter.predef.group('layout');
   subtitle('Messages', true);
   item('Help', 97, '#Pl_Rightmod_Helpbox, #pl_rightmod_helpat, #pl_rightmod_helpcomment, #pl_rightmod_helplike, #Pl_Rightmod_Littlehelp, #Pl_Rightmod_Helpnotebox, #pl_rightmod_helpfav, #v6_pl_rightmod_helpat, #v6_pl_rightmod_helpcomment, #v6_pl_rightmod_helplike, #v6_pl_rightmod_helpnotebox, #v6_pl_rightmod_helpfav { display: none !important; }');
   item('Feedback', 97, '#pl_rightmod_feedback, #v6_pl_rightmod_feedback { display: none !important; }');
-  item('Desktop', 97, '#pl_rightmod_weibodesk { display: none !important; }');
-  item('CommentTop', 97, '#pl_content_commentTopNav { display: none !important; }');
-  item('Report', 97, '#pl_common_reportentry, #pl_rightmod_reportentry { display: none !important; }');
-  item('Youdao', 97, '#pl_rightmod_favyoudao { display: none !important; }');
-
-  subtitle('Attention', true);
-  item('Success', 75, function () {
-    if (util.v6) return;
-    observer.dom.add(function () {
-      var close = document.querySelector('.W_layer:not([style*="display"]) .W_close[suda-uatrack="key=group_aftermark&value=close"]');
-      if (!close) return; close.click();
-      util.debug('Attention Success closed');
-    });
-  });
-  item('Recommend', 75, function () {
-    if (util.v6) return;
-    observer.dom.add(function () {
-      var reca = document.querySelector('.W_layer:not([style*="display"]) .W_close~.layer_recommend_attention:not([yawf-close])');
-      if (!reca) return;
-      while (!reca.classList.contains('W_close') && reca.previousSibling) reca = reca.previousSibling;
-      reca.click();
-      util.debug('Attention Recommend closed');
-    });
-  });
 
   subtitle('Other', true);
   item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
@@ -4326,19 +4097,8 @@ filter.items.tool.sidebar.show_all_group = filter.item({
   'key': 'weibo.tool.showAllGroup',
   'text': '{{showAllGroupDesc}}',
   'ainit': function () {
-    if (util.v6) util.css.add('.lev_Box .levmore { display: none !important; } .lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }');
-    else util.css.add('#pl_leftnav_group div[node-type="moreList"] { display: block !important } #pl_leftnav_group > div[node-type="groupList"] > .level_2_Box > .levmore { display: none }');
+    util.css.add('.lev_Box .levmore { display: none !important; } .lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }');
   },
-}).addto(filter.groups.tool);
-
-// 展开左栏消息
-filter.items.tool.sidebar.show_all_msg_nav = filter.item({
-  'group': 'sidebar',
-  'version': 10,
-  'type': 'boolean',
-  'key': 'weibo.tool.showAllMsgNav',
-  'text': '{{showAllMsgNavDesc}}',
-  'ainit': util.css('#pl_leftnav_common > .level_1_Box > .lev2_new { display: block !important }'),
 }).addto(filter.groups.tool);
 
 // 合并左右边栏
@@ -4381,7 +4141,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         if (right.firstChild !== left) {
           right.insertBefore(left, right.firstChild);
           main.setAttribute('yawf-merge-left', side);
-          if (util.v6) fixMsgboxLeftNav();
+          fixMsgboxLeftNav();
           fixStylish(true);
         }
       } else {
@@ -4392,25 +4152,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         }
       }
     };
-    util.css.add(util.str.cmt(util.version.chose(function () { /*!CSS
-      body[yawf-merge-left]:not([yawf-weibo-only]) .W_main .W_main_l { width: 229px; padding: 0; float: none; }
-      body[yawf-merge-left] .W_main .WB_left_nav .lev a:hover, body[yawf-merge-left] .WB_left_nav .lev2 a:hover, body[yawf-merge-left] .WB_left_nav .lev2 a.lev_curr, body[yawf-merge-left] .WB_left_nav .lev2 a.lev_curr:hover, body[yawf-merge-left] .WB_left_nav .lev3 a:hover { background-image: none; }
-      body[yawf-merge-left]:not([yawf-weibo-only]) .W_main { width: 830px; background-position: -300px center; background-size: 200% 100%; }
-      body[yawf-merge-left].B_index:not([yawf-weibo-only]) .W_main~.W_gotop { margin-left: 415px !important; }
-      body[yawf-merge-left].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 185px); }
-      body[yawf-merge-left] .global_footer { width: 790px !important; }
-      body[yawf-merge-left] .global_footer .list { margin-right: 0 !important; width: 155px !important; }
-      body[yawf-merge-left] .global_footer .copy { padding-top: 0 !important; margin-top: -46px; }
-      body[yawf-merge-left] .W_main_r>.W_main_l:first-child { margin-bottom: 20px; }
-      body[yawf-merge-left="left"] .W_main .W_main_r { float: left; }
-      body[yawf-merge-left="left"] .W_main .W_main_c { float: right; }
-      body[yawf-merge-left="left"] .W_main .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
-      body[yawf-merge-left="left"] .W_main .send_weibo .input .arrow, body[yawf-merge-left="left"] .send_weibo .input.clicked .arrow { right: auto; left: -11px; transform: scaleX(-1); }
-      body[yawf-merge-left="left"] .W_main .send_weibo .input { box-shadow: -1px 1px 1px 0 #eaeaea inset !important; }
-      body[yawf-merge-left="left"] .W_main #Box_center { border-left: 2px solid rgba(128, 128, 128, 0.2); margin-left: -2px; }
-      body[yawf-merge-left="left"].B_index:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - 415px); }
-      body[yawf-merge-left="right"] .W_main #Box_center { border-right: 2px solid rgba(128, 128, 128, 0.2); margin-right: -2px; }
-    */ }, function () { /*
+    util.css.add(util.str.cmt(function () { /*
       body[yawf-merge-left] .WB_frame .WB_main_l,
       body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .yawf-WB_left_nav, body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
       body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
@@ -4477,12 +4219,14 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       .yawf-WB_left_nav .levmore .W_new{ position:absolute;top:0; right:-1px;}
       .yawf-WB_left_nav .W_scroll_y{ right:0;}
 
-    */ })));
-    // 这是一段丧心病狂的代码，谁能找到更好的办法请告诉我改掉
+    */ }));
+
+    // 将左栏的样式改为卡片效果（或改回）
+    // 由于左栏样式都加在 .WB_left_nav 上，所以使用 .yawf-WB_left_nav 来躲开这些样式
+    // 但相关需要保留的样式，在上面重新添加
     var fixStylish = (function () {
       var r = false;
-      if (!util.v6) return function () { };
-      // 如果是 v6 ，左栏合并过去之后要改一下样式
+      // 左栏合并过去之后要改一下样式
       // 考虑到要能适应各种模板，所以就改得稍微有点过分
       // 比如说压根就么有 .WB_left_nav 这个属性了，免得颜色乱掉
       return function (onRight) {
@@ -4494,7 +4238,10 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       };
     }());
 
+    // 消息页面的左栏在在变成卡片之后当前页面的勾会显示有问题需要修正
     var fixMsgboxLeftNav = function () {
+      // 我知道我在干嘛
+      // 这里每次重新加载右栏的时候重绘左栏，以保证其功能
       util.func.page(function () {
         if (typeof STK === 'undefined') return;
         var a = STK;
@@ -4523,162 +4270,112 @@ filter.items.tool.sidebar.fixed_left = filter.item({
   'key': 'weibo.tool.fixedLeft',
   'text': '{{fixedLeft}}',
   'default': true,
-  'ref': {
-    'items': {
-      'type': 'select',
-      'select': [
-        { 'value': 'default', 'text': '{{fixedLeftDefault}}' },
-        { 'value': 'whole', 'text': '{{fixedLeftWhole}}' },
-      ],
-      'default': 'default',
-    }
+  'ainit': function () {
+    // 禁用左栏浮动的相关代码在 fixed_right 那边可以找到
+    // 如果合并了边栏，那么会因为禁用右栏浮动而同时禁用在右栏里面的左栏
+    // 这时候左栏如果还要浮动，那么就要重新让他动起来
+    // 这里的程序是为了让左栏再动起来的
+    if (!filter.items.tool.sidebar.merge_left_right.conf) return;
+    util.css.add(util.str.cmt(function () { /*!CSS 
+      .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }
+      body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
+    */ }));
+    var floating = false;
+    var updatePosition = function () {
+      var left = document.querySelector('.WB_left_nav, .yawf-WB_left_nav');
+      var reference = document.querySelector('.WB_main_r');
+      var container = document.querySelector('#plc_main');
+      if (!left || !reference) return;
+      var refc = reference.getClientRects();
+      if (!refc || !refc[0]) return;
+      var pos = refc[0];
+      if (!floating) {
+        if (pos.bottom < -60) {
+          floating = true;
+          reference.setAttribute('yawf-fixed', '');
+        }
+      } else {
+        if (pos.bottom + left.clientHeight > 60) {
+          floating = false;
+          reference.removeAttribute('yawf-fixed');
+        }
+      }
+      var updateMaxHeight = function (maxHeight) {
+        var none = maxHeight === 'none';
+        var text = none ? 'none' : maxHeight + 'px';
+        var srl = left.querySelector('[node-type="leftnav_scroll"]');
+        var mod;
+        if (left.style.maxHeight !== text) {
+          mod = (left.style.maxHeight || 'none') !== text;
+          if (mod) left.style.maxHeight = text;
+          if (none) srl.setAttribute('style', '');
+          else {
+            var lev = left.querySelectorAll('.lev_Box'); lev = lev[lev.length - 1];
+            var height = Math.min(maxHeight - srl.offsetTop, lev.clientHeight) + 'px';
+            mod = mod || srl.style.height !== height;
+            if (mod) {
+              srl.style.height = height;
+              srl.style.position = 'relative';
+            }
+          }
+          if (mod && srl) updateScroll();
+        }
+      };
+      if (floating) {
+        var cip = container.getClientRects()[0];
+        var fip = left.getClientRects()[0];
+        var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
+        if (cip && fip) updateMaxHeight(maxHeight);
+      } else { updateMaxHeight('none'); }
+    };
+
+    var updateScroll = function () {
+      util.func.page(function () {
+        window.$YAWF$ = window.$YAWF$ || {};
+        if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
+          var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
+          var g = STK.ui.scrollView(y);
+          return function () { g.reset(); };
+        }());
+        $YAWF$.updateLeftScroll();
+      });
+    };
+
+    document.addEventListener('scroll', updatePosition);
+    window.addEventListener('resize', updatePosition);
+    observer.dom.add(updatePosition);
+    updatePosition();
   },
+}).addto(filter.groups.tool);
+
+// 右边栏浮动
+filter.items.tool.sidebar.fixed_right = filter.item({
+  'group': 'sidebar',
+  'version': 146,
+  'type': 'boolean',
+  'key': 'weibo.tool.fixedRight',
+  'text': '{{fixedRight}}',
+  'default': true,
   'init': function () {
-    util.func.catched(util.version.chose(function () {
-      var left = document.querySelector('.W_main_l');
-      if (!left) return;
-      var type = this.conf ? this.ref.items.conf : 'none';
-      var merged = filter.items.tool.sidebar.merge_left_right.conf;
-      // 禁用掉默认的浮动
-      util.css.add('.W_main [node-type="left_fixed"]:not([yawf-fixed]) { height: auto !important; padding-top: 0 !important; position: static !important; top: 40px !important; animation: none; }');
-      // 不浮动的如果禁用了默认的浮动，那么就完成了
-      if (type === 'none') return;
-      // 否则如果合并了左右边栏，而且我要浮动，那么右面就不要动
-      if (merged) {
-        var removeRightFixed = function () {
-          var fixed = document.querySelector('.W_main_r [node-type="right_module_fixed"]');
-          if (!fixed) return;
-          while (fixed.firstChild) fixed.parentNode.insertBefore(fixed.firstChild, fixed);
-          fixed.parentNode.removeChild(fixed);
-        };
-        removeRightFixed();
-        observer.dom.add(removeRightFixed);
-      }
-      // 最后自定义的浮动
-      util.css.add('.W_main [yawf-fixed] { animation-duration: 0.5s; animation-iteration-count: 1; animation-name: dropdown; animation-timing-function: ease; position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }');
-      util.css.add('body[yawf-merge-left] .W_main [yawf-fixed] { width: 229px; }');
-      var floating = false;
-      var updatePosition = function () {
-        var container = document.querySelector('.W_main');
-        var reference = merged && document.querySelector('.W_main_r') || left;
-        var floatitem = type === 'default' && left.querySelector('[node-type="left_fixed"]') || left.querySelector('[node-type="left_all"]');
-        var refc = reference.getClientRects();
-        if (!refc || !refc[0]) return;
-        var pos = refc[0];
-        if (!floating) {
-          if (pos.bottom < -65) {
-            floating = true;
-            floatitem.setAttribute('yawf-fixed', '');
-          }
-        } else {
-          if (pos.bottom > 65 - floatitem.clientHeight) {
-            floating = false;
-            floatitem.removeAttribute('yawf-fixed');
-            util.func.call(updatePosition);
-          }
-        }
-        if (floating) {
-          var cip = container.getClientRects()[0];
-          var fip = floatitem.getClientRects()[0];
-          if (cip && fip) {
-            floatitem.style.maxHeight = Math.max(cip.bottom - fip.top - 20, 0) + 'px';
-          }
-        }
-      };
-      document.addEventListener('scroll', updatePosition);
-      observer.dom.add(updatePosition);
-      updatePosition();
-    }.bind(this), function () {
-      // 如果全部是默认设置，那么什么都不用做
-      var merge = filter.items.tool.sidebar.merge_left_right.conf, fleft = this.conf;
-      if (!merge && fleft) return;
-      // 首先禁用掉默认的浮动，如果要求左栏不浮动那么只禁用左栏的
-      var attrs = ['fixed-item', 'fixed-box', 'fixed-inbox'], prefix = '';
-      if (!fleft) prefix = '.WB_main_l ';
-      var query = attrs.map(function (x) { return prefix + '[' + x + ']'; }).join(', ');
-      var removeFixed = function () {
-        var items = Array.from(document.querySelectorAll(query));
-        if (!items.length) return;
-        items.forEach(function (fixed) {
-          var x = fixed.cloneNode(true);
-          attrs.forEach(function (attr) { x.removeAttribute(attr); });
-          fixed.parentNode.insertBefore(x, fixed);
-          fixed.parentNode.removeChild(fixed);
-        });
-      };
-      removeFixed();
-      observer.dom.add(removeFixed, 100);
-      // 最后修正在左右栏合并后左栏的浮动
-      if (fleft) {
-        util.css.add('.WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }');
-        util.css.add('body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }');
-        var floating = false;
-        var updatePosition = function () {
-          var left = document.querySelector('.WB_left_nav, .yawf-WB_left_nav');
-          var reference = document.querySelector('.WB_main_r');
-          var container = document.querySelector('#plc_main');
-          if (!left || !reference) return;
-          var refc = reference.getClientRects();
-          if (!refc || !refc[0]) return;
-          var pos = refc[0];
-          if (!floating) {
-            if (pos.bottom < -60) {
-              floating = true;
-              reference.setAttribute('yawf-fixed', '');
-            }
-          } else {
-            if (pos.bottom + left.clientHeight > 60) {
-              floating = false;
-              reference.removeAttribute('yawf-fixed');
-            }
-          }
-          var updateMaxHeight = function (maxHeight) {
-            var none = maxHeight === 'none';
-            var text = none ? 'none' : maxHeight + 'px';
-            var srl = left.querySelector('[node-type="leftnav_scroll"]');
-            var mod;
-            if (left.style.maxHeight !== text) {
-              mod = (left.style.maxHeight || 'none') !== text;
-              if (mod) left.style.maxHeight = text;
-              if (none) srl.setAttribute('style', '');
-              else {
-                var lev = left.querySelectorAll('.lev_Box'); lev = lev[lev.length - 1];
-                var height = Math.min(maxHeight - srl.offsetTop, lev.clientHeight) + 'px';
-                mod = mod || srl.style.height !== height;
-                if (mod) {
-                  srl.style.height = height;
-                  srl.style.position = 'relative';
-                }
-              }
-              if (mod && srl) updateScroll();
-            }
-          };
-          if (floating) {
-            var cip = container.getClientRects()[0];
-            var fip = left.getClientRects()[0];
-            var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
-            if (cip && fip) updateMaxHeight(maxHeight);
-          } else { updateMaxHeight('none'); }
-        };
-
-        var updateScroll = function () {
-          util.func.page(function () {
-            window.$YAWF$ = window.$YAWF$ || {};
-            if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
-              var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
-              var g = STK.ui.scrollView(y);
-              return function () { g.reset(); };
-            }());
-            $YAWF$.updateLeftScroll();
-          });
-        };
-
-        document.addEventListener('scroll', updatePosition);
-        window.addEventListener('resize', updatePosition);
-        observer.dom.add(updatePosition);
-        updatePosition();
-      }
-    }.bind(this)))();
+    var merge = filter.items.tool.sidebar.merge_left_right.conf;
+    var fleft = filter.items.tool.sidebar.fixed_left.conf;
+    var fright = filter.items.tool.sidebar.fixed_right.conf && !(merge && fleft);
+    var attrs = ['fixed-item', 'fixed-box', 'fixed-inbox'], query = [];
+    if (!fright) query = query.concat(attrs.map(function (a) { return '.WB_main_r [' + a + ']'; }));
+    if (!fleft) query = query.concat(attrs.map(function (a) { return '.WB_main_l [' + a + ']'; }));
+    query = query.join(',');
+    var removeFixed = function () {
+      var items = Array.from(document.querySelectorAll(query));
+      if (!items.length) return;
+      items.forEach(function (fixed) {
+        var x = fixed.cloneNode(true);
+        attrs.forEach(function (attr) { x.removeAttribute(attr); });
+        fixed.parentNode.insertBefore(x, fixed);
+        fixed.parentNode.removeChild(fixed);
+      });
+    };
+    removeFixed();
+    observer.dom.add(removeFixed, 100);
   },
 }).addto(filter.groups.tool);
 
@@ -4790,43 +4487,13 @@ filter.items.tool.weibotool.unwrap_text = filter.item({
   'key': 'weibo.tool.unwrapText',
   'text': '{{unwrapTextDesc}}',
   'ainit': function () {
-    util.css.add(util.str.cmt(util.version.chose(function () { /*!CSS
-      .WB_feed .WB_feed_type .WB_info, .WB_feed .WB_feed_type .WB_info+.WB_text { display: inline }
-      .WB_feed .WB_feed_type .WB_info+.WB_text::before { content: ": " }
-      .WB_feed .WB_feed_type .WB_func { margin-top: 5px }
-      .WB_feed .WB_feed_type .B_index .WB_feed .W_ico16 { vertical-align: -3px !important }
-    */ }, function () { /*!CSS
+    util.css.add(util.str.cmt(function () { /*!CSS
       .WB_detail { overflow: hidden; }
       .WB_detail>.WB_info, .WB_detail>.WB_info+.WB_text, .WB_expand>.WB_info, .WB_expand>.WB_info+.WB_text { display: inline; word-wrap: break-word; }
       .WB_detail>.WB_info::after, .WB_expand>.WB_info::after { content: "："; }
       .WB_detail>.WB_info+.WB_text::before { display: block; float: right; content: " "; width: 1.5em; height: 1px; }
       .WB_detail>.WB_info+.WB_text+.WB_from { margin-top: 1em; }
-    */ })));
-  },
-}).addto(filter.groups.tool);
-
-// 个人主页自动打开微博列表
-filter.items.tool.weibotool.redirect_weibo = filter.item({
-  'group': 'weibotool',
-  'version': 21,
-  'type': 'boolean',
-  'key': 'weibo.tool.redirectWeibo',
-  'text': '{{personalRedirectWeibo}}',
-  'ainit': function () {
-    var locat = unsafeWindow.$CONFIG.location;
-    if (!locat || locat.slice(-5) !== '_home') return;
-    if (!document.body.classList.contains('B_profile')) return;
-    var from = (location.search.match(/from=([^&]*)/) || {})[1];
-    if (locat.indexOf(from) === 0) return;
-    var redirect = function () {
-      var link = document.querySelector('.PRF_tab_noicon li.pftb_itm a[href*="/weibo?"]'); if (!link) return;
-      if (!link) return false;
-      observer.dom.remove(redirect);
-      window.stop(); // 虽然不知道为什么，但是加上就正常了……
-      location.replace(link.href);
-    };
-    observer.dom.add(redirect);
-    redirect();
+    */ }));
   },
 }).addto(filter.groups.tool);
 
@@ -4849,7 +4516,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         if (!l) {
           var vol = util.dom.create('div', util.str.fill(html.viewOriginalLink));
           l = vol.querySelector('a');
-          if (util.v6) ref = a.parentNode.parentNode; else ref = a;
+          ref = a.parentNode.parentNode;
           while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
         }
         l.href = util.str.fill(url.view_ori, { 'uid': arg[3], 'mid': arg[2], 'pid': arg[1] });
@@ -5018,11 +4685,9 @@ filter.items.tool.stylish.hover_show_fold = filter.item({
   'key': 'weibo.tool.hover_show_fold',
   'text': '{{hoverShowFold}}',
   'ainit': function () {
-    util.css.add(util.str.cmt(util.version.chose(function () { /*!CSS
-      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { max-height: 1000px; padding: 0 0 11px; }
-    */ }, function () { /*!CSS
+    util.css.add(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; }
-    */})));
+    */ }));
   },
 }).addto(filter.groups.tool);
 
@@ -5035,13 +4700,9 @@ filter.items.tool.stylish.whitelist_highlight = filter.item({
   'ref': filter.ref.rgba('#dafee4'),
   'text': '{{whitelistHighlightDesc}}',
   'ainit': function () {
-    util.css.add(util.str.fill(util.str.cmt(util.version.chose(function () { /*
-      .WB_media_expand .WB_arrow { display: none !important; }
-      [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -20px 0 0 {{color}}, 20px 0 0 {{color}}; }
-      [node-type="feed_list"] .WB_feed_together .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; box-shadow: -10px 0 0 {{color}}, 10px 0 0 {{color}}; }
-    */ }, function () { /*
+    util.css.add(util.str.fill(util.str.cmt(function () { /*
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; }
-    */})), { 'color': '' + this.ref.rgba }));
+    */}), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.tool);
 
@@ -5054,10 +4715,7 @@ filter.items.tool.stylish.my_background_color = filter.item({
   'ref': filter.ref.rgba('#ffffff', 30),
   'text': '{{mainBackgroundColorOverride}}',
   'ainit': function () {
-    util.css.add(util.str.fill(util.str.cmt(util.version.chose(function () { /*! CSS
-      body:not(.S_profile) .W_main { background-image: none !important; background-color: {{color}} !important }
-      body:not(.S_profile) .S_bg4, body:not(.S_profile) .W_main_a, body:not(.S_profile) .W_main_bg { background: transparent !important; }
-    */ }, function () { /*! CSS
+    util.css.add(util.str.fill(util.str.cmt(function () { /*! CSS
       body.FRAME_main .S_bg2 { background-color: {{color}} !important; }
       body.FRAME_main .S_bg2_br { border-color: {{color}}; }
       body.FRAME_main .WB_tab_a .tab_box_a_r5 .tab li.S_bg2 { background-color: transparent !important; }
@@ -5065,7 +4723,7 @@ filter.items.tool.stylish.my_background_color = filter.item({
       body.FRAME_main .WB_tab_a .tab_box_a_r5 .tab .b .W_arrow_bor { padding-left: 30px; }
       body.FRAME_main .WB_tab_a .tab .b .W_arrow_bor i { border-width: 0 8px 9px; }
       body.FRAME_main .WB_feed_expand .W_arrow_bor { height: 9px; margin-top: 1px; }
-    */ })), { 'color': '' + this.ref.rgba }));
+    */ }), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.tool);
 
@@ -5078,10 +4736,7 @@ filter.items.tool.stylish.other_background_color = filter.item({
   'ref': filter.ref.rgba('#ffffff', 30),
   'text': '{{profileBackgroundColorOverride}}',
   'ainit': function () {
-    util.css.add(util.str.fill(util.str.cmt(util.version.chose(function () { /*!CSS
-      .S_profile .W_profile_bg, .S_profile .S_bg5 { background-color: {{color}} !important; }
-      .S_profile .S_bg4:not(.W_profile_bg) { background: none transparent !important }
-    */ }, function () { /*!CSS
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body.FRAME_page .S_bg2 { background-color: {{color}} !important; }
       body.FRAME_page .S_bg2_br { border-color: {{color}}; }
       body.FRAME_page .WB_tab_a .tab_box_a_r5 .tab li.S_bg2 { background-color: transparent !important; }
@@ -5089,7 +4744,7 @@ filter.items.tool.stylish.other_background_color = filter.item({
       body.FRAME_page .WB_tab_a .tab_box_a_r5 .tab .b .W_arrow_bor { padding-left: 30px; }
       body.FRAME_page .WB_tab_a .tab .b .W_arrow_bor i { border-width: 0 8px 9px; }
       body.FRAME_page .WB_feed_expand .W_arrow_bor { height: 9px; margin-top: 1px; }
-    */ })), { 'color': '' + this.ref.rgba }));
+    */ }), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.tool);
 
@@ -5100,7 +4755,7 @@ filter.items.tool.stylish.weibo_only = filter.item({
   'type': 'boolean',
   'text': '{{weiboOnly}}',
   'key': 'weibo.tool.weibo_only',
-  'ref': filter.ref.rgba('#ffffff', 20, 'color', 'transparency', 'rgba', {
+  'ref': {
     // 宽度
     'width': {
       'type': 'range',
@@ -5119,15 +4774,12 @@ filter.items.tool.stylish.weibo_only = filter.item({
       'type': 'boolean',
       'default': false,
     },
-    'usebgc': {
-      'type': 'boolean',
-    },
     'enabled': {
       'type': 'boolean',
       'default': false,
       'internal': true,
     },
-  }),
+  },
   'ainit': function () {
     var that = this;
     var key = that.ref.key, attr = 'yawf-weibo-only';
@@ -5148,19 +4800,7 @@ filter.items.tool.stylish.weibo_only = filter.item({
       e.stopPropagation();
     });
     // 显示切换按钮
-    if (that.ref['switch'].conf) (util.version.chose(function () {
-      var showSwitch = function () {
-        var rightBar = document.querySelector('.group_read .right_bar:not([yawf-weibo-only-added])');
-        if (!rightBar) return; rightBar.setAttribute('yawf-weibo-only-added', 'added');
-        var weiboOnly = util.dom.create('div', util.str.fill(html.weiboOnlyButton, {
-          'text': text.weiboOnlyButton,
-          'shortcut': key.conf === 0 ? '' : ' (' + util.keyboard.name(key.conf) + ')',
-        })).firstChild;
-        weiboOnly.addEventListener('click', updateMode.bind(that, null));
-        rightBar.insertBefore(weiboOnly, rightBar.querySelector('.right_item~.right_item'));
-      };
-      observer.dom.add(showSwitch);
-    }, function () {
+    if (that.ref['switch'].conf) {
       var showSwitch = function () {
         var search = document.querySelector('#v6_pl_content_homefeed .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added]), div[id^="Pl_Official_ProfileFeedNav__"] .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added])');
         if (!search) return; search.setAttribute('yawf-weibo-only-added', 'added');
@@ -5173,45 +4813,9 @@ filter.items.tool.stylish.weibo_only = filter.item({
         observer.dom.remove(showSwitch);
       };
       observer.dom.add(showSwitch);
-    })());
+    }
     // 注册样式
-    util.css.add(util.str.fill(util.str.cmt(util.version.chose(function () { /*!CSS
-      body.B_index[{{attr}}] .W_main_l,
-      body.B_index[{{attr}}] .W_main_r,
-      body.B_index[{{attr}}] #Box_center>div:not(#pl_content_homeFeed),
-      body.B_index[{{attr}}] .global_footer { display: none; }
-      body.B_profile[{{attr}}] #Pl_Official_Header__1,
-      body.B_profile[{{attr}}] #Pl_Core_Header__1,
-      body.B_profile[{{attr}}] #Pl_Core_Nav__2,
-      body.B_profile[{{attr}}] .W_main_2r,
-      body.B_profile[{{attr}}] .global_footer { display: none; }
-      body.B_index[{{attr}}] .WB_global_nav,
-      body.B_profile[{{attr}}] .WB_global_nav { position: absolute !important; }
-      body.B_index[{{attr}}] .W_miniblog,
-      body.B_profile[{{attr}}] .W_miniblog { padding-top: 60px; }
-      body.B_index[{{attr}}] .WB_feed .WB_screen,
-      body.B_profile[{{attr}}] .WB_feed .WB_screen { margin-left: calc({{width}} - 48px); }
-      body.B_index[{{attr}}] .WB_feed .WB_feed_together .WB_screen,
-      body.B_profile[{{attr}}] .WB_feed .WB_feed_together .WB_screen { margin-left: calc({{width}} - 141px); }
-      body.B_index[{{attr}}] .W_main,
-      body.B_profile[{{attr}}] .W_main { width: {{width}} !important; background-position: 40% center; background-size: 165% 100%;  }
-      body.B_index[{{attr}}] #Box_center,
-      body.B_index[{{attr}}] .WB_feed .repeat .input textarea,
-      body.B_profile[{{attr}}] .WB_feed .repeat .input textarea { width: 100%; }
-      body.B_index[{{attr}}] .WB_feed .type_text,
-      body.B_profile[{{attr}}] .WB_feed .type_text { margin-left: calc({{width}} - 165px); }
-      body.B_index[{{attr}}] .W_gotop,
-      body.B_profile[{{attr}}] .W_gotop { margin-left: calc({{width}} / 2) !important; }
-      body.B_index[{{attr}}] .WB_feed .between_line,
-      body.B_profile[{{attr}}] .WB_feed .between_line { padding: 0 calc({{width}} / 2 - 132px) !important; }
-      body.B_index[{{attr}}] .WB_media_expand .WB_arrow,
-      body.B_profile[{{attr}}] .WB_media_expand .WB_arrow { display: none !important; }
-      body.B_index[{{attr}}] #yawf-drop-area,
-      body.B_profile[{{attr}}] #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); top: 0; }
-      body.B_index[{{attr}}] .W_main_a { width: {{width}}; }
-      body.B_profile[{{attr}}] .W_main_c { padding-top: 9px; width: {{width}}; }
-      .input_search { float: left; }
-    */ }, function () { /*!CSS
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body[{{attr}}] .WB_frame>*:not(#plc_main),
       body[{{attr}}] #plc_main>*:not(.WB_main_c):not(.WB_frame_c):not(.WB_main_r):not(.WB_frame_b),
       body[{{attr}}] .WB_main_c>*:not(#v6_pl_content_homefeed),
@@ -5227,20 +4831,20 @@ filter.items.tool.stylish.weibo_only = filter.item({
       body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
-    */ })), {
+    */ }), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
     }));
-    if (that.ref.usebgc.conf) {
-      if (util.v6);
-      else util.css.add('body.B_index[' + attr + '] .W_main, body.B_profile[' + attr + '] .W_main { background: ' + that.ref.rgba + ' !important; }');
-    }
     var updateModeByConf = function () {
       updateMode.call(that, that.ref.enabled.getconf());
     };
     updateModeByConf();
-    window.addEventListener('focus', updateModeByConf);
-    observer.dom.add(updateModeByConf);
+    window.addEventListener('focus', function () {
+      updateMode.call(that, that.ref.enabled.getconf());
+    });
+    observer.dom.add(function () {
+      updateMode.call(that, that.ref.enabled.conf);
+    });
   }
 }).addto(filter.groups.tool);
 
@@ -5560,25 +5164,15 @@ var extension = (function () {
   }, util.priority.DEFAULT + util.priority.AFTER);
 }());
 
-util.init(function () {
-  if (util.v6) util.css.add(fonts.iconfont);
-}, util.priority.DEFAULT);
-
 GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
-  // 漏斗图标
-  body[yawf-weibo-version="v5"] .gn_setting[node-type="member"]:last-child { margin-right: 44px; }
-  body[yawf-weibo-version="v5"] .WB_global_nav .gn_setting .gn_tab.gn_filter .ico { background-image: url("{{filter-img}}"); !important; background-position: 0 0 !important; }
-  body[yawf-weibo-version="v5"] .WB_global_nav .gn_search { width: 210px !important; left: 440px !important; position: absolute !important; }
-  body[yawf-weibo-version="v5"] .WB_global_nav .gn_search .gn_input { width: 168px !important; }
-  body[yawf-weibo-version="v6"] .gn_search .W_input { box-sizing: border-box !important; height: 32px !important; }
-  body[yawf-weibo-version="v6"] .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
+  .gn_search .W_input { -moz-box-sizing: border-box; box-sizing: border-box !important; height: 32px !important; }
+  .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   {{yawf-icon-font}}
   // 设置框相关样式
-  body[yawf-weibo-version="v5"] .yawf-config-body { margin: -20px; padding: 20px; }
-  body[yawf-weibo-version="v6"] .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
-  body[yawf-weibo-version="v6"] .yawf-config-header { margin-bottom: -50px; }
-  body[yawf-weibo-version="v6"] .yawf-config-header ul { position: absolute; top: 9px; left: 10em; }
-  body[yawf-weibo-version="v6"] #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
+  .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
+  .yawf-config-header { margin-bottom: -50px; }
+  .yawf-config-header ul { position: absolute; top: 9px; left: 10em; }
+  #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   .yawf-Layer.yawf-drag { opacity: 0.67; -moz-user-select: none; user-select: none; }
   #yawf-config [node-type="inner"] { padding: 20px; }
   .yawf-config-body { max-height: 360px; overflow-y: auto; width: 760px; }
@@ -5643,19 +5237,13 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen):not(.WB_feed_detail) { display: none !important; }
-  // v5
-  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
-  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_datail:not(:hover) { transition: max-height 0.3s; }
-  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_datail { padding: 0; }
-  body[yawf-weibo-version="v5"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 1.5em; border: 1px solid; border-color: transparent; margin: 0 0 20px; width: calc(100% - 3em - 2px); cursor: pointer; opacity: 0.8; }
-  // v6
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { transition: max-height 0.3s; }
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding: 0; }
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { padding: 20px 15px 0; }
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 20px; border: 1px solid; border-color: transparent; margin: 0 1em; width: calc(100% - 6em - 2px); cursor: pointer; opacity: 0.8; }
-  body[yawf-weibo-version="v6"] [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child { padding-top: 20px; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { transition: max-height 0.3s; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding: 0; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { padding: 20px 15px 0; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 0.5em 20px; border: 1px solid; border-color: transparent; margin: 0 1em; width: calc(100% - 6em - 2px); cursor: pointer; opacity: 0.8; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child { padding-top: 20px; }
   // Common
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { opacity: 1; }
   // 其他
@@ -5666,8 +5254,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .W_miniblog, .WB_miniblog { visibility: hidden; }
   .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
   // 拖拽
-  #yawf-drop-area { background: rgba(251, 251, 216, 1); opacity: 0.8; display: none; height: 230px; left: calc(50% + 260px); position: fixed; top: 40px; width: 230px; z-index: 9999; }
-  [yawf-weibo-version="v6"] #yawf-drop-area { top: 50px; }
+  #yawf-drop-area { background: rgba(251, 251, 216, 1); opacity: 0.8; display: none; height: 230px; left: calc(50% + 260px); position: fixed; width: 230px; z-index: 9999; top: 50px; }
   #yawf-drop-area.valid { opacity: 1; }
   .yawf-drop-area-desc { height: 170px; width: 170px; margin: 16px 16px -206px 16px; padding: 10px; -moz-user-select: none; user-select: none; border: 4px dashed #ddd; border-radius: 20px; color: #000; }
   .yawf-drop-area-title { font-size: 150%; font-weight: bold; }
@@ -5679,15 +5266,17 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   // 其他页面优化设置
   #pl_rightmod_myinfo:empty { hegiht: 156px; }
   // 切换视图
-  body[yawf-weibo-version="v6"] #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
+  body #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
   // v6 微博按钮的平均分布 -webkit-flex 是 Safari 兼容
-  body[yawf-weibo-version="v6"] .WB_handle ul {
-    display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch; margin-left: -4px;
-    display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch; margin-left: -4px;
+  body .WB_handle ul {
+    display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
+    display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
+    display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch;
+    margin-left: -4px;
   }
-  body[yawf-weibo-version="v6"] .WB_handle ul li {
-    -webkit-flex-grow: 1; float: none; width: auto;
-    flex-grow: 1; float: none; width: auto;
+  body .WB_handle ul li {
+    -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
+    float: none; width: auto;
   }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'filter-img': images.filter,

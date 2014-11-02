@@ -22,9 +22,10 @@
   <header>
     <label id="lang">
       <select id="lang_select">
+        <option value="" disabled="disabled" selected="selected">LANGUAGE</option>
         <option lang="zh-cn" value="zh-cn">中文(简体)</option>
         <option lang="zh-tw" value="zh-tw">中文(臺灣)</option>
-        <option lang="zh-hk" value="zh-hk" selected="selected">中文(香港)</option>
+        <option lang="zh-hk" value="zh-hk">中文(香港)</option>
         <option lang="en" value="en">English</option>
       </select>
     </label>
@@ -36,7 +37,7 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->2.1.145<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.0.146<!-- /VER --></div>
   </header>
   <nav>
     <dl>
@@ -47,7 +48,8 @@
       <dd><a target="_blank" href="https://github.com/tiansh/yawf">查閱項目</a></dd>
     </dl>
   </nav>
-  <p>新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。</p>
+  <p itemprop="description">新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。</p>
+  <p>最新版僅支持新版 v6 微博，最後一個支持 v5 微博的版本是 2.1.145 。如果您尚未升級到 v6 ，您需要<a href="https://github.com/tiansh/yawf/raw/bd0d46dc78ea3733d8ce3837c59f7b494a76f16d/Yet_Another_Weibo_Filter.user.js">安裝 2.1 版本腳本</a>，並在擴充套件中禁用腳本自動升級。</p>
   <h2>安裝教程</h2>
   <div class="in">
     <div class="browser odd ie safari nosupport"><p>對不起，腳本當前不支援您使用的瀏覽器。請考慮選擇以下幾個支持的流覽器之一。</p></div>
