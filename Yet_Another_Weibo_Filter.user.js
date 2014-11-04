@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.0.148
+// @version           3.0.149
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -213,6 +213,7 @@ var text = {
   'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博', 'en': 'hide Weibo' },
   'customizeSourceReset': { 'zh-cn': '将来源改为“微博 weibo.com”', 'zh-hk': '將來源改為「微博 weibo.com」', 'zh-tw': '將來源改為「微博 weibo.com」', 'en': 'modify source to "微博 weibo.com"' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
+  'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博', 'en': 'Weibo mentioned | not less than {{<num>}} topics' },
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：|超过{{<number>}}条|时{{<action>}}', 'zh-hk': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'zh-tw': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'en': 'Weibo from same account: |{{<action>}} the part | which exceeds {{<number>}} Weibo' },
@@ -3272,6 +3273,29 @@ filter.items.other.hidethese.customize_source = filter.item({
       var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
       from.parentNode.appendChild(wb);
     });
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 含有过多话题的微博
+filter.items.other.hidethese.multi_topic = filter.item({
+  'group': 'hidethese',
+  'version': 149,
+  'type': 'boolean',
+  'key': 'weibo.other.multi_topic',
+  'text': '{{multiTopic}}',
+  'ref': {
+    'num': {
+      'type': 'range',
+      'min': 3,
+      'max': 10,
+      'default': 5,
+    }
+  },
+  'rule': function multiTopicRule(feed) {
+    if (!this.conf) return null;
+    var topics = weibo.topics.dom(feed);
+    if (topics.length >= this.ref.num.conf) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
