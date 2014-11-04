@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.0.147
+// @version           3.0.148
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -3498,12 +3498,6 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
 
     var loadKey = util.keyboard.code.PERIOD;
 
-    // 只在第一页工作
-    var validPage = function () {
-      var arg = util.str.parsearg(location.search.replace(/^\?/, ''));
-      return !(arg.page && arg.page > 1);
-    };
-
     var fakeKey = false;
     // 自动点开有新微博的提示
     // 我知道我在干什么
@@ -3554,7 +3548,6 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
 
     // 看见有新微博了，看看是不是新加载出来的
     observer.weibo.before(function (feed) {
-      if (!validPage()) return;
       var feeds = Array.from(document.querySelectorAll('.WB_feed .WB_feed_type'));
       var shown = Array.from(document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~.WB_feed_type, .WB_feed_type[yawf-unread="show"]~* .WB_feed_type'));
       if (feeds.indexOf(feed) === -1) feed.setAttribute('yawf-unread', 'show');
@@ -4750,7 +4743,7 @@ filter.items.tool.stylish.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       // 微博下方按钮
       .WB_from { margin-top: 15px; }
-      .WB_feed_handle>.WB_handle { float: right; height: auto; margin-top: -30px; }
+      .WB_feed_handle>.WB_handle { float: right; height: auto; margin: -30px 10px 0 0; }
       .WB_feed_handle .WB_row_line { border-top: 0 none !important; }
       .WB_row_line li, .WB_row_line a, .WB_row_line .line { margin: 0; padding: 0; width: auto; height: 31px; }
       .WB_row_line li { padding: 0 10px; }
