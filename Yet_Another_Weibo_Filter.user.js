@@ -14,7 +14,7 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.0.149
+// @version           3.0.150
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -407,7 +407,10 @@ var text = {
   'UncheckRecomJoin': { 'zh-cn': '取消勾选建议加到该组', 'zh-hk': '取消勾選建议加到该组', 'zh-tw': '取消勾選建议加到该组'/* as is */, 'en': 'Uncheck recommed adding to group' },
   // 样式
   'styleToolsTitle': { 'zh-cn': '外观', 'zh-hk': '外觀', 'zh-tw': '外觀', 'en': 'Appearance' },
-  'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}}', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'zh-tw': '', 'en': 'Increase font size of Weibo content to | {{<ratio>}}' },
+  'avatarShape': { 'zh-cn': '统一头像形状为|{{<shape>}}', 'zh-hk': '統一頭像形狀為|{{<shape>}}', 'zh-tw': '統一頭像形狀為|{{<shape>}}', 'en': 'Show all avatars as | {{<shape>}}' },
+  'avatarShapeCircle': { 'zh-cn': '圆形', 'zh-hk': '圓形', 'zh-tw': '圓形', 'en': 'Circle' },
+  'avatarShapeSquare': { 'zh-cn': '方形', 'zh-hk': '方形', 'zh-tw': '方形', 'en': 'Square' },
+  'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}}', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'zh-tw': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'en': 'Increase font size of Weibo content to | {{<ratio>}}' },
   'weiboLargeFont120': { 'zh-cn': '120%', 'zh-hk': '120%', 'zh-tw': '120%', 'en': '120%' },
   'weiboLargeFont150': { 'zh-cn': '150%', 'zh-hk': '150%', 'zh-tw': '150%', 'en': '150%' },
   'weiboLargeFont200': { 'zh-cn': '200%', 'zh-hk': '200%', 'zh-tw': '200%', 'en': '200%' },
@@ -4184,8 +4187,8 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
       body[yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
       body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
-      body[yawf-merge-left] .webim_contacts_mod { position: static !important; }
-      body[yawf-merge-left] .webim_contacts_bd { height: auto !important; }
+      body[yawf-merge-left] .webim_contacts_mod { height: calc(100% - 280px) !important; }
+      body[yawf-merge-left] .webim_contacts_bd { height: calc(100% - 60px) !important; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
       body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
@@ -4652,6 +4655,33 @@ filter.ref.rgba = function (defcolor, deft, color, transparency, rgba, base) {
   return base;
 };
 
+// 统一头像形状
+filter.items.tool.stylish.avatar_shape = filter.item({
+  'group': 'stylish',
+  'version': 150,
+  'type': 'boolean',
+  'key': 'weibo.tool.avatar_shape',
+  'text': '{{avatarShape}}',
+  'ref': {
+    'shape': {
+      'type': 'select',
+      'select': [
+        { 'value': 'circle', 'text': '{{avatarShapeCircle}}' },
+        { 'value': 'square', 'text': '{{avatarShapeSquare}}' },
+      ],
+      'default': 'square',
+    },
+  },
+  'ainit': function () {
+    util.css.add(util.str.cmt(this.ref.shape.conf === 'square' ? function () { /*!CSS
+      .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box { border-radius: 0 !important; }
+    */ } : function () { /*!CSS
+      img[usercard] { border-radius: 50% !important; } 
+    */ }));
+  },
+}).addto(filter.groups.tool);
+
+
 // 折叠微博外观
 filter.items.tool.stylish.fold_text = filter.item({
   'group': 'stylish',
@@ -4688,7 +4718,6 @@ filter.items.tool.stylish.fold_text = filter.item({
   },
 }).addto(filter.groups.tool);
 
-
 // 增大 v6 下微博字号
 filter.items.tool.stylish.weibo_large_font = filter.item({
   'group': 'stylish',
@@ -4722,7 +4751,7 @@ filter.items.tool.stylish.weibo_large_font = filter.item({
     });
   },
   'ainit': function () {
-    util.css.add(util.str.fill(util.str.cmt(function () { /*
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       .WB_info, .WB_text, .WB_info *, .WB_text * { font-size: {{fs}}px !important; line-height: {{lh}}px !important; }
       .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: {{fs2}}px !important; line-height: {{lh2}}px !important; }
       .WB_text .W_btn_c { height: {{h}}px !important; }
@@ -4780,8 +4809,9 @@ filter.items.tool.stylish.no_weibo_space = filter.item({
       .WB_feed .WB_cardwrap { padding: 0; margin: 0; box-shadow: none; border-radius: 0; }
       .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3); padding: 10px 0; margin: -1px 0 1px !important; box-shadow: none; border-radius: 0; }
       .WB_feed { box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); border-radius: 2px; overflow: hidden; }
+      .WB_feed_repeat { margin-bottom: -10px; }
       // 新微博加载提示
-      .WB_feed [node-type="feed_list_timeTip"] { display: block; height: 30px; margin-bottom: -30px !important; position: relative; top: -15px; line-height: 30px; background: transparent !important; text-align: center; }
+      .WB_feed [node-type="feed_list_timeTip"] { display: block; height: 30px; margin-bottom: -30px !important; position: relative; top: -15px; line-height: 30px; background: transparent !important; text-align: center; border: 0 none; }
       .WB_feed [node-type="feed_list_timeText"] { display: inline-block; color: rgba(128, 128, 128, 0.6); }
     */ }).replace(/\/\/.*\n/g, '\n'));
     observer.dom.add(function () {
