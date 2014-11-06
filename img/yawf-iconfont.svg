@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg">
-<defs>
-<font id="yawf-iconfont" horiz-adv-x="1024">
+<svg xmlns="http://www.w3.org/2000/svg"><defs>
+  <font id="yawf-iconfont" horiz-adv-x="1024">
   <font-face font-family="yawf-iconfont" font-weight="500" font-stretch="normal" units-per-em="1024" panose-1="2 0 6 9 0 0 0 0 0 0" ascent="812" descent="-212" x-height="616" cap-height="614" bbox="-2.5 -225 1026 800" underline-thickness="50" underline-position="-100" unicode-range="U+0022-2026"/>
     <glyph glyph-name="Y" unicode="Y" d="M885 664h-766l260 -400v-395h267v395l260 400zM530 -20h-35v295l-205 290h467l-205 -290v-295z"/>
   </font>
