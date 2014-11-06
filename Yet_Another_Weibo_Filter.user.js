@@ -13,8 +13,9 @@
 // @include           http://www.weibo.com/*
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
+// @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.0.152
+// @version           3.1.153
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -476,6 +477,7 @@ var text = {
   // 调试
   'scriptDebugTitle': { 'zh-cn': '调试', 'zh-hk': '偵錯', 'zh-tw': '偵錯', 'en': 'Debug' },
   'scriptDebug': { 'zh-cn': '在控制台打印调试信息', 'zh-hk': '將偵錯訊息列印到主控台', 'zh-tw': '將偵錯訊息列印到主控台', 'en': 'Print debug info to console' },
+  'searchEnable': { 'zh-cn': '在搜索页面启用脚本（试验性）', 'zh-hk': '在搜尋網頁啟用腳本（試驗性）', 'zh-tw': '在搜尋網頁啟用腳本（試驗性）', 'en': 'Enable on search page (Experimental)' },
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
@@ -515,6 +517,7 @@ var html = {
   // 对话框
   'cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999;"></div>',
   'dialog': '<div id="{{id}}" class="W_layer yawf-Layer" style="top: 193px; left: 376px;"><div tabindex="0"></div><div class="content" node-type="autoHeight"><div class="W_layer_title" node-type="title" style="">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);" node-type="close">X</a></div><div node-type="inner"></div></div></div>',
+  '~s~dialog': '<div id="{{id}}" class="W_layer" style="position: absolute; z-index: 10001;" node-type="outer"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div class="content" node-type="layoutContent"><div class="title" node-type="title" style="cursor: move;"><span node-type="title_content">{{title}}</span></div><a class="W_close" node-type="close" title="{{closeButtonTitle}}" href="javascript:void(0);"></a><div class="detail" node-type="inner" style=""></div></td></tr></tbody></table></div></div>',
   'alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
   'confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
   // 漏斗图标
@@ -524,6 +527,11 @@ var html = {
   'configHeaderTop': '<div class="WB_minitab yawf-config-header" node-type="yawf-config-header"><ul class="minitb_ul S_line1 S_bg1 clearfix">',
   'configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="cur_block"></span></li>',
   'configHeaderBottom': '</ul></div>',
+  'configHeaderSplit': '',
+  '~s~configHeaderTop': '<div class="tab tab_bottom tab_forward W_texta yawf-config-header">',
+  '~s~configHeaderItem': '<a class="{{aclass}}" onclick="return false;" href="#">{{name}}</a>',
+  '~s~configHeaderBottom': '</div>',
+  '~s~configHeaderSplit': '<em class="W_vline">|</em>',
   'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
@@ -799,7 +807,6 @@ util.dom.bind = (function () {
   };
 }());
 
-
 // 对网页的判断
 util.page = {};
 
@@ -810,12 +817,34 @@ util.page.valid = function () {
   if (!unsafeWindow.$CONFIG.uid) return false;
   if (!unsafeWindow.$CONFIG.nick) return false;
   if (!unsafeWindow.$CONFIG.lang) return false;
+  // 如果是搜索页，而且未于搜索页面启用，则不工作
+  if (util.page.search && !util.page.searchenable) return false;
   return true;
 };
 
 // 当前是查看分组的页面吗
 util.page.group = function () {
   return location.pathname.slice(-9) === '/mygroups';
+};
+
+// 当前是搜索页面吗
+util.page.search = (function () {
+  return location.hostname === 's.weibo.com';
+}());
+// 以及在搜索也启用吗
+util.page.searchenable = (function () {
+  return !!GM_getValue('search_enable', false);
+}());
+
+// 对不同页面使用不同常量设置
+util.page.fix = function (obj) {
+  var prefix = null;
+  if (util.page.search) prefix = '~s~';
+  if (!prefix) return;
+  Object.keys(obj).forEach(function (key) {
+    if (key.indexOf(prefix) !== 0) return;
+    obj[key.slice(prefix.length)] = obj[key];
+  });
 };
 
 // 初始化
@@ -887,8 +916,8 @@ observer.dom = (function () {
 observer.weibo = (function () {
   var befores = [], afters = [];
   observer.dom.add(function () {
-    var feeds = Array.from(
-      document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
+    var feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
+    if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]'));
     [befores, [filter.active], afters].forEach(function (callbacks) {
       feeds.forEach(function (feed) {
         callbacks.forEach(function (f) { f(feed); });
@@ -1125,6 +1154,9 @@ util.init(function () {
   util.i18n.chose = util._languages(unsafeWindow.$CONFIG.lang);
   Object.keys(text).map(function (key) { util.i18n.chose(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = util.str.fill(html[key]); });
+  // 初始化搜索页面
+  util.page.fix(text);
+  util.page.fix(html);
   // 初始化设置集
   util.config = util._storage();
 }, util.priority.FIRST);
@@ -1541,6 +1573,14 @@ filter.dialog = (function () {
       lastTab = i;
       util.func.call(function () { body.scrollTop = 0; });
     };
+    if (util.page.search) choseLList = function (i) {
+      llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
+      alist.forEach(function (a) { a.classList.remove('current'); a.classList.remove('W_texta'); });
+      llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
+      alist[i].classList.add('current'); alist[i].classList.add('W_texta');
+      lastTab = i;
+      util.func.call(function () { body.scrollTop = 0; });
+    };
     list.map(function (item, i) {
       var a = alist[i];
       a.addEventListener('mousedown', function () { choseLList(i); });
@@ -1553,12 +1593,15 @@ filter.dialog = (function () {
       var list = filter.collection.group.list;
       inner.innerHTML = [html.configHeaderTop,
         list.map(function (item, index) {
-          return util.str.fill(html.configHeaderItem, {
+          return util.str.fill(html.configHeaderItem, util.page.search ? {
+            'name': text[item.name + 'FilterGroupTitle'],
+            'aclass': index === 0 ? 'current W_texta' : '',
+          } : {
             'name': text[item.name + 'FilterGroupTitle'],
             'aclass': index === 0 ? 'S_bg5 current' : 'S_bg1',
             'liclass': index === list.length - 1 ? 'pftb_itm_lst' : ' ',
           });
-        }).join(''),
+        }).join(html.configHeaderSplit),
         html.configHeaderBottom,
         html.configLayerTop,
         list.map(function (item) {
@@ -1570,8 +1613,9 @@ filter.dialog = (function () {
         html.configFooter,
       ].join('');
       util.func.call(function () { dialog.show(0); });
-      if (list.indexOf(page) === -1) dialogTabs(list, inner, lastTab);
-      else dialogTabs(list, inner, list.indexOf(page));
+      var pgnum = list.indexOf(page);
+      if (pgnum === -1) pgnum = lastTab;
+      dialogTabs(list, inner, pgnum);
     };
     if (!(dialog = util.ui.dialog('yawf-config', '{{configDialogTitle}}', showDialogInner))) {
       if (!count || count < 100) setTimeout(showDialog, 100, page, (count || 0) + 1);
@@ -4812,10 +4856,6 @@ filter.items.tool.stylish.no_weibo_space = filter.item({
       .WB_feed [node-type="feed_list_timeTip"] { display: block; height: 30px; margin-bottom: -31px !important; position: relative; top: -15px; line-height: 30px; background: transparent !important; text-align: center; border: 0 none; }
       .WB_feed [node-type="feed_list_timeText"] { display: inline-block; color: rgba(128, 128, 128, 0.6); }
     */ }).replace(/\/\/.*\n/g, '\n'));
-    observer.dom.add(function () {
-      var tip = document.querySelector('.WB_feed [node-type="feed_list_timeText"]:not(.S_bg2)');
-      if (tip) tip.classList.add('S_bg2');
-    });
   },
 }).addto(filter.groups.tool);
 
@@ -5187,6 +5227,15 @@ filter.items.script.debug.debug = filter.item({
   'putconf': function (value) { GM_setValue('debug', !!value); return !!value; },
 }).addto(filter.groups.script);
 
+filter.items.script.debug.search_enable = filter.item({
+  'group': 'debug',
+  'version': 0,
+  'type': 'boolean',
+  'text': '{{searchEnable}}',
+  'getconf': function () { return !!GM_getValue('search_enable', false); },
+  'putconf': function (value) { GM_setValue('search_enable', !!value); return !!value; },
+}).addto(filter.groups.script);
+
 // 关于
 filter.items.script.about = {};
 filter.items.script.about.title = filter.item({
@@ -5424,3 +5473,22 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
 }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': util.css.add(fonts.iconfont),
 }));
+
+if (util.page.search && util.page.searchenable) GM_addStyle(util.str.cmt(function () { /*!CSS
+  .WB_global_nav .W_ficon, .WB_global_nav .W_ficon:hover { background: none !important; text-indent: 0 !important; } 
+  .WB_global_nav .ficon_send { text-align: center !important; background: linear-gradient(to bottom, #fa7d3c, #f56010) !important; }
+  .WB_global_nav .ficon_send:hover { background: linear-gradient(to bottom, #f4712c, #f15909) !important; }
+  .yawf-config-header { margin: -10px 0 0 !important; }
+
+  body .feed_action ul {
+    display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
+    display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
+    display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch;
+    margin-left: -4px;
+  }
+  body .feed_action ul li {
+    -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
+    float: none; width: auto;
+  }
+
+*/ }));
