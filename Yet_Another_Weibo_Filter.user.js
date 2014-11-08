@@ -3881,7 +3881,7 @@ filter.predef.group('layout');
   item('Member', 5, '.gn_setting[node-type="member"] { display: none !important; }');
 
   subtitle('Left', true);
-  item('Friends', 5, '.lev_line ~ * .lev_Box>.lev:first-child { display: none !important; }');
+  item('Friends', 5, '.lev_line ~ * .lev_Box:first-child>.lev:first-child { display: none !important; }');
   item('App', 5, '#pl_leftnav_app { display: none !important; }');
   item('New', 106, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
