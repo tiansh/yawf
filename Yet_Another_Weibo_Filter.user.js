@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.153
+// @version           3.1.154
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -321,12 +321,12 @@ var text = {
   // 微博内
   'layoutHideWeibo': { 'zh-cn': '隐藏模块 - 微博内', 'zh-hk': '隱藏模組 - 微博內', 'zh-tw': '隱藏模組 - 微博內', 'en': 'Hide modules - In Weibo' },
   'layoutHideWeiboRecomFeed': { 'zh-cn': '精彩微博推荐', 'zh-hk': '精彩微博推薦', 'zh-tw': '精彩微博推薦', 'en': '精彩微博推荐 (Weibo you may interested in)' },
-  'layoutHideWeiboTopicCard': { 'zh-cn': '话题卡片', 'zh-hk': '話題卡片', 'zh-tw': '話題卡片', 'en': 'Topic Cards' },
   'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for Comment' },
   'layoutHideWeiboGroupTip': { 'zh-cn': '分组未读提示', 'zh-hk': '分組未讀提示', 'zh-tw': '分組未讀提示', 'en': 'Group unread tip' },
   'layoutHideWeiboLastPic': { 'zh-cn': '图片列表封底', 'zh-hk': '圖片清單封底', 'zh-tw': '圖片清單封底', 'en': 'Back cover of picture list' },
   'layoutHideWeiboTopComment': { 'zh-cn': '热门评论', 'zh-hk': '热门评论', 'zh-tw': '热门评论'/* as is */, 'en': 'Top comments' },
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
+  'layoutHideWeiboTopicCard': { 'zh-cn': '话题卡片', 'zh-hk': '話題卡片', 'zh-tw': '話題卡片', 'en': 'Topic Cards' },
   'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboAppCard': { 'zh-cn': '来源卡片', 'zh-hk': '來源卡片', 'zh-tw': '來源卡片', 'en': 'Source card' },
@@ -395,6 +395,7 @@ var text = {
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
+  'uncheckFollowPresenter': { 'zh-cn': '话题页面发布框取消默认勾选关注主持人', 'zh-hk': '話題頁面發佈框取消預設勾選關注主持人', 'zh-tw': '話題頁面發佈框取消預設勾選關注主持人', 'en': 'Uncheck follow presenter in topic page' },
   'publishToPublicDefault': { 'zh-cn': '分组浏览时默认发布公开微博', 'zh-hk': '分組流覽時默認發佈公開微博', 'zh-tw': '分組流覽時默認發佈公開微博', 'en': 'Publish to public by default when browsing by group' },
   'publishToPublicText': { 'zh-cn': '公开', 'zh-hk': '公開', 'zh-tw': '公開', 'en': 'Public' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
@@ -3909,7 +3910,7 @@ filter.predef.group('layout');
   item('Notice', 5, '#v6_pl_rightmod_noticeboard { display: none !important; }');
 
   subtitle('Weibo', true);
-  item('RecomFeed', 2, '[node-type="feed_list_recommend"]{ display: none !important; }');
+  item('RecomFeed', 2, '[node-type="feed_list_recommend"] { display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.type_spe_pos { display: none; }');
   item('TopicCard', 5, '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
@@ -4343,7 +4344,7 @@ filter.items.tool.sidebar.fixed_left = filter.item({
     // 这里的程序是为了让左栏再动起来的
     if (!filter.items.tool.sidebar.merge_left_right.conf) return;
     util.css.add(util.str.cmt(function () { /*!CSS 
-      .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 65px !important; overflow: hidden; height: auto !important; width: 150px; }
+      .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
       body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
     */ }));
     var floating = false;
@@ -4550,7 +4551,7 @@ filter.items.tool.weibotool.clear_def_topic = filter.item({
   'text': '{{clearDefTopicDesc}}',
   'ainit': function () {
     var clearDefTopic = function () {
-      var inputBox = document.querySelector('#pl_content_publisherTop .send_weibo .input textarea, #v6_pl_content_publishertop .send_weibo .input textarea'); // not tested in v6
+      var inputBox = document.querySelector('#pl_content_publisherTop .send_weibo .input textarea, #v6_pl_content_publishertop .send_weibo .input textarea');
       if (inputBox && inputBox.hasAttribute('hottopic')) {
         inputBox.removeAttribute('hottopic'); inputBox.removeAttribute('hottopicid');
         inputBox.value = 'DUMMY'; inputBox.focus();
@@ -4558,6 +4559,23 @@ filter.items.tool.weibotool.clear_def_topic = filter.item({
       }
     };
     observer.dom.add(clearDefTopic);
+  },
+}).addto(filter.groups.tool);
+
+// 取消勾选话题页面发布框“自动关注话题主持人”
+filter.items.tool.weibotool.uncheck_follow_presenter = filter.item({
+  'group': 'weibotool',
+  'version': 154,
+  'type': 'boolean',
+  'key': 'weibo.tool.uncheck_follow_presenter',
+  'text': '{{uncheckFollowPresenter}}',
+  'ainit': function () {
+    var uncheckFollowPresenter = function () {
+      var checkbox = document.querySelector('input[node-type="followpresenter"]:not([yawf-uncheck])');
+      if (checkbox.checked) checkbox.click();
+      checkbox.setAttribute('yawf-uncheck', '');
+    };
+    observer.dom.add(uncheckFollowPresenter);
   },
 }).addto(filter.groups.tool);
 
