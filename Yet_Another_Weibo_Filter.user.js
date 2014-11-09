@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.155
+// @version           3.1.156
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -292,7 +292,6 @@ var text = {
   'layoutHideLeft': { 'zh-cn': '隐藏模块 - 左栏', 'zh-hk': '隱藏模組 - 左欄', 'zh-tw': '隱藏模組 - 左欄', 'en': 'Hide modules - Left Column' },
   'layoutHideLeftToMe': { 'zh-cn': '发给我的', 'zh-hk': '發給我的', 'zh-tw': '發給我的', 'en': 'Send to me' },
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
-  'layoutHideLeftApp': { 'zh-cn': '应用', 'zh-hk': '应用', 'zh-tw': '应用'/* as is */, 'en': 'Apps' },
   'layoutHideLeftNew': { 'zh-cn': '新微博提示红点', 'zh-hk': '新微博提示紅點', 'zh-tw': '新微博提示紅點', 'en': 'Red dot for new Weibo' },
   'layoutHideLeftNews': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Counts for News' },
   'layoutHideLeftCount': { 'zh-cn': '新分组微博计数', 'zh-hk': '新分組微博計數', 'zh-tw': '新分組微博計數', 'en': 'Counts for Weibo by Group' },
@@ -462,6 +461,13 @@ var text = {
   'configResetButton': { 'zh-cn': '重置', 'zh-hk': '重設', 'zh-tw': '重設', 'en': 'Reset' },
   'configResetWarningTitle': { 'zh-cn': '设置重置', 'zh-hk': '設定重設', 'zh-tw': '設定重設', 'en': 'Setting Reset' },
   'configResetWarning': { 'zh-cn': '这将会清空您当前的所有配置，确实要重置设置吗？', 'zh-hk': '這將會清空您當前的所有設定，您確定要重置設定嗎？', 'zh-tw': '這將會清空您當前的所有設定，您確定要重置設定嗎？', 'en': 'You are deleting all your settings. Are you sure you want to reset your settings?' },
+  'configImportWbpButton': { 'zh-cn': '从“眼不见心不烦”导入设置', 'zh-hk': '從“眼不見心不煩”匯入設定', 'zh-tw': '從“眼不見心不煩”匯入設定', 'en': 'Import from Weibo Cleaner (眼不见心不烦)' },
+  'configImportWbpWarning': {
+    'zh-cn': '注意：从其他脚本导入设置时，因为脚本的具体功能与实现方式等不同，导入工具的能力限制等原因，转换前后并非完全相同。',
+    'zh-hk': '注意：從其他腳本匯入設定時，因為腳本的具體功能與實現方式等不同，導入工具的能力限制等原因，轉換前後並非完全相同。',
+    'zh-tw': '注意：從其他腳本匯入設定時，因為腳本的具體功能與實現方式等不同，導入工具的能力限制等原因，轉換前後並非完全相同。',
+    'en': 'Note: Settings imported from other scripts may be modified due to the difference of functions and implementations, and the limitation of this settings importing tool.',
+  },
   // 更新
   'updateInfoTitle': { 'zh-cn': '更新', 'zh-hk': '更新', 'zh-tw': '更新', 'en': 'Update' },
   'updateInfoDescription': { 'zh-cn': '更新后显示新功能提示', 'zh-hk': '更新後顯示新功能提示', 'zh-tw': '更新後顯示新功能提示', 'en': 'Show new features after update' },
@@ -482,10 +488,10 @@ var text = {
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
-    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>本脚本参考并使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不见心不烦</a>脚本的部分代码。</p>',
-    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">feedback page</a>, or <a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">send message to author</a>. Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>Some codes of this script come from <a target="_blank" href="https://code.google.com/p/weibo-content-filter/" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Content Filter)</a> script.</p>',
+    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>本脚本参考并使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer">眼不见心不烦</a>脚本的部分代码。</p>',
+    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
+    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
+    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">feedback page</a>, or <a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">send message to author</a>. Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>Some codes of this script come from <a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> script.</p>',
   },
   // 拖拽
   'dropAreaTitle': { 'zh-cn': '拖放至此<br />快速创建过滤器', 'zh-hk': '拖放至此<br />快速創建篩選器', 'zh-tw': '拖放至此<br />快速創建篩選器', 'en': 'Drop Here to Create Filter' },
@@ -567,7 +573,8 @@ var html = {
   // 选中当前分组所有
   'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAll}}</span></a></div>',
   // 导入导出
-  'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span node-type="import" class="W_btn_b" action-type="import"><span class="W_f14">{{configImportButton}}</span></span></label><a node-type="export" class="W_btn_b" action-type="export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a node-type="reset" class="W_btn_b" action-type="reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
+  'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
+  'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-configRemark">{{configImportWbpWarning}}</div></div>',
   // 新功能提示对话框
   'whatsNewHeader': '<div class="yawf-whats-new-header">{{updateSuccessHeader}}</div>',
   'whatsNewBody': '<div class="yawf-whats-new-body"><div class="yawf-whats-new-desc">{{updateSuccessDesc}}</div></div>',
@@ -643,7 +650,8 @@ util.func = {};
 
 // 在页面执行一个函数
 util.func.page = function (f) {
-  location.href = 'javascript: void(' + encodeURIComponent(f + '') + '())';
+  var args = JSON.stringify(Array.from(arguments).slice(1)).slice(1, -1);
+  location.href = 'javascript: void(' + encodeURIComponent(f + '') + '(' + args + '))';
 };
 
 // 延迟调用函数
@@ -875,7 +883,7 @@ var observer = {};
 observer.dom = (function () {
   var callbacks = [];
   var add = function (callback) {
-    callbacks.push(util.func.catched(callback));
+    callbacks.push(callback);
     return callback;
   };
   var remove = function (callback) {
@@ -889,7 +897,7 @@ observer.dom = (function () {
   };
   var actived = null;
   var act = function () {
-    callbacks.forEach(function (c) { c(); });
+    callbacks.forEach(function (c) { util.func.catched(c)(); });
   };
   var active = util.func.catched(function (mutation) {
     if (actived === false) actived = true;
@@ -1599,8 +1607,8 @@ filter.dialog = (function () {
             'aclass': index === 0 ? 'current W_texta' : '',
           } : {
             'name': text[item.name + 'FilterGroupTitle'],
-            'aclass': index === 0 ? 'S_bg5 current' : 'S_bg1',
-            'liclass': index === list.length - 1 ? 'pftb_itm_lst' : ' ',
+            'aclass': index === 0 ? 'S_bg5' : 'S_bg1',
+            'liclass': index === 0 ? 'current' : ' ',
           });
         }).join(html.configHeaderSplit),
         html.configHeaderBottom,
@@ -3882,7 +3890,6 @@ filter.predef.group('layout');
 
   subtitle('Left', true);
   item('Friends', 5, '.lev_line ~ * .lev_Box:first-child>.lev:first-child { display: none !important; }');
-  item('App', 5, '#pl_leftnav_app { display: none !important; }');
   item('New', 106, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
   item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
@@ -4430,7 +4437,7 @@ filter.items.tool.sidebar.fixed_right = filter.item({
     var attrs = ['fixed-item', 'fixed-box', 'fixed-inbox'], query = [];
     if (!fright) query = query.concat(attrs.map(function (a) { return '.WB_main_r [' + a + ']'; }));
     if (!fleft) query = query.concat(attrs.map(function (a) { return '.WB_main_l [' + a + ']'; }));
-    query = query.join(',');
+    if (query.length === 0) return; else query = query.join(',');
     var removeFixed = function () {
       var items = Array.from(document.querySelectorAll(query));
       if (!items.length) return;
@@ -4466,14 +4473,15 @@ filter.items.tool.sidebar.chose_side = filter.item({
   'ainit': function () {
     var side = this.ref.side.conf;
     observer.dom.add(function () {
+      var b, c, p;
       if (side === 'left') {
-        var b = document.querySelector('#plc_main>.WB_frame_c:first-child+.WB_frame_b:last-child'); if (!b) return;
-        var p = b.parentNode;
+        b = document.querySelector('#plc_main>.WB_frame_c:first-child+.WB_frame_b:last-child'); if (!b) return;
+        p = b.parentNode;
         p.insertBefore(b, p.firstChild);
       } else if (side === 'right') {
-        var c = document.querySelector('#plc_main>.WB_frame_b:first-child+.WB_frame_c:last-child'); if (!c) return;
-        var p = c.parentNode;
-        var b; for (b = p.firstChild; b.nodeType === Node.TEXT_NODE; b = b.nextSibling);
+        c = document.querySelector('#plc_main>.WB_frame_b:first-child+.WB_frame_c:last-child'); if (!c) return;
+        p = c.parentNode;
+        b; for (b = p.firstChild; b.nodeType === Node.TEXT_NODE; b = b.nextSibling);
         p.appendChild(b);
       }
     });
@@ -4572,8 +4580,9 @@ filter.items.tool.weibotool.uncheck_follow_presenter = filter.item({
   'ainit': function () {
     var uncheckFollowPresenter = function () {
       var checkbox = document.querySelector('input[node-type="followpresenter"]:not([yawf-uncheck])');
-      if (checkbox.checked) checkbox.click();
+      if (!checkbox) return;
       checkbox.setAttribute('yawf-uncheck', '');
+      if (checkbox.checked) checkbox.click();
     };
     observer.dom.add(uncheckFollowPresenter);
   },
@@ -5087,72 +5096,250 @@ filter.items.script.importexport.title = filter.item({
 filter.items.script.importexport.importexport = filter.item({
   'group': 'importexport',
   'version': 6,
-  'show': function () {
-    var dom = util.dom.create(html.configImportExport);
-    var bii = dom.querySelector('input[type="file"]');
-    var be = dom.querySelector('[node-type="export"]');
-    var br = dom.querySelector('[node-type="reset"]');
-    // 导出按钮
-    var updateExportButton = function () {
+  'import': function (text) {
+    var that = this;
+    // 导入成功
+    var success = function () {
+      util.ui.alert('yawf-config-import-success', {
+        'title': util.str.fill('{{configImportSuccessTitle}}'),
+        'text': util.str.fill('{{configImportSuccess}}'),
+        'icon': 'succ'
+      });
+    };
+    // 导入失败
+    var error = function () {
+      util.ui.alert('yawf-config-import-fail', {
+        'title': util.str.fill('{{configImportFailTitle}}'),
+        'text': util.str.fill('{{configImportFail}}'),
+        'icon': 'error'
+      });
+    };
+    // 确认导入
+    util.ui.confirm('yawf-config-import-warning', {
+      'title': util.str.fill('{{configImportWarningTitle}}'),
+      'text': util.str.fill('{{configImportWarning}}'),
+      'onOk': function () {
+        if (util.config.import(text)) {
+          that.export();
+          success();
+        } else error();
+      },
+    });
+  }, 
+  'export': function (be) {
+    var conf = util.config.export();
+    be = be || document.querySelector('a.yawf-export');
+    if (be) {
       be.href = 'data:application/octet-stream;base64,' +
         util.str.base64(util.config.export());
       be.setAttribute('download', 'yawf-config.yawf');
-    };
+    }
+    return conf;
+  },
+  'reset': function () {
+    var that = this;
+    util.ui.confirm('yawf-config-reset-warning', {
+      'title': util.str.fill('{{configResetWarningTitle}}'),
+      'text': util.str.fill('{{configResetWarning}}'),
+      'onOk': function () {
+        util.config.clear();
+        GM_deleteValue('notification');
+        that.export();
+
+      },
+    });
+  },
+  'show': function () {
+    var that = this;
+    var dom = util.dom.create(html.configImportExport);
+    var bii = dom.querySelector('input[type="file"]');
+    var be = dom.querySelector('a.yawf-export');
+    var br = dom.querySelector('a.yawf-reset');
     // 导入按钮
-    var doImport = function (file) {
+    bii.addEventListener('change', function () {
+      var file = bii.files[0];
       var reader = new FileReader();
-      // 导入成功
-      var success = function () {
-        util.ui.alert('yawf-config-import-success', {
-          'title': util.str.fill('{{configImportSuccessTitle}}'),
-          'text': util.str.fill('{{configImportSuccess}}'),
-          'icon': 'succ'
-        });
-      };
-      // 导入失败
-      var error = function () {
-        util.ui.alert('yawf-config-import-fail', {
-          'title': util.str.fill('{{configImportFailTitle}}'),
-          'text': util.str.fill('{{configImportFail}}'),
-          'icon': 'error'
-        });
-      };
-      // 读文件
       if (file.size > (1 << 24)) error();
       else reader.addEventListener('load', function () {
-        if (util.config.import(reader.result)) {
-          updateExportButton();
-          success();
-        } else error();
+        that.import(reader.result).call(that);
       });
       reader.readAsText(file);
       bii.value = '';
-    };
-    bii.addEventListener('change', function () {
-      var file = bii.files[0];
-      util.ui.confirm('yawf-config-import-warning', {
-        'title': util.str.fill('{{configImportWarningTitle}}'),
-        'text': util.str.fill('{{configImportWarning}}'),
-        'onOk': function () { doImport(file); },
-      });
     });
-    updateExportButton();
+    // 导出按钮
+    that.export(be);
     // 重置按钮
-    var doReset = function () {
-      util.config.clear();
-      updateExportButton();
-      GM_deleteValue('notification');
-    };
-    br.addEventListener('click', function () {
-      util.ui.confirm('yawf-config-reset-warning', {
-        'title': util.str.fill('{{configResetWarningTitle}}'),
-        'text': util.str.fill('{{configResetWarning}}'),
-        'onOk': doReset,
-      });
-    });
+    br.addEventListener('click', that.reset.bind(that));
     return dom;
   },
 }).addto(filter.groups.script);
+
+// 从“眼不见心不烦”导入设置
+util.init(function () {
+  // 设置转换
+  var convert = util.func.catched(function (w) {
+    w = JSON.parse(w);
+    var v = {
+      'yawf': 'WCF - YAWF Converter',
+      'conf': {
+        'weibo.other.same_forward.action': 'hidden',
+        'weibo.other.same_account.action': 'hidden',
+        'weibo.tool.mergeColumns.side': 'right',
+        'weibo.tool.avatar_shape': 'square',
+        'weibo.tool.fold_text': true,
+        'weibo.tool.fold_text.text': 'author-reason',
+      },
+    };
+    var r = v.conf;
+    var addItem = function (key, item) {
+      r[key] = r[key] || [];
+      r[key].push(item);
+    };
+    [
+      ['whiteKeywords', 'weibo.filters.keyword.whitelist', 'weibo.filters.regexp.whitelist'],
+      ['blackKeywords', 'weibo.filters.keyword.blacklist', 'weibo.filters.regexp.blacklist'],
+      ['grayKeywords', 'weibo.filters.keyword.foldlist', 'weibo.filters.regexp.foldlist'],
+    ].forEach(function (l) {
+      (w[l[0]] || []).map(function (s) {
+        try {
+          if (s.length > 2 && s[0] === '/' && s[s.length - 1] === '/') {
+            return RegExp(s.slice(1, -1));
+          }
+        } catch (e) { }
+        try {
+          if (s.indexOf('+') !== -1) return RegExp(s.split('+').map(function (p) {
+            return '(?=.*' + p.replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1") + ')';
+          }).join(''));
+        } catch (e) { }
+        return s;
+      }).forEach(function (s) {
+        if (s.constructor === RegExp) addItem(l[2], (s + '').slice(1, -1));
+        else addItem(l[1], s);
+      });
+    });
+    [
+      ['weibo.content.types_emotion', 'filterSmiley'],
+      ['weibo.content.types_mention', 'filterName'],
+      ['weibo.filters.hyperlink.blacklist', 'URLKeywords'],
+      ['weibo.filters.account.blacklist', 'userBlacklist'],
+      ['weibo.filters.original.blacklist', 'userBlacklist'],
+      ['weibo.filters.source.blacklist', 'sourceKeywords'],
+      ['weibo.filters.hyperlink.foldlist', 'sourceGrayKeywords'],
+      ['weibo.other.my_weibo', 'filterOthersOnly'],
+      ['weibo.other.ad_feed', 'filterPromotions'],
+      ['weibo.other.deleted_forward', 'filterDeleted'],
+      ['weibo.other.tb_tm_wb', 'filterTaobao'],
+      ['weibo.other.same_forward', 'filterDupFwd'],
+      ['weibo.other.same_forward.number', 'maxDupFwd', Number, String],
+      ['weibo.other.same_account', 'filterFlood'],
+      ['weibo.other.same_account.number', 'maxFlood', Number, String],
+      ['weibo.tool.mergeColumns', 'mergeSidebars'],
+      ['weibo.tool.showAllGroup', 'showAllGroups'],
+      ['weibo.tool.showAllMsgNav', 'showAllMsgNav'],
+      ['weibo.tool.unwrapText', 'unwrapText'],
+      ['weibo.tool.viewOriginal', 'directBigImg'],
+      ['weibo.tool.redirectWeibo', 'directFeeds'],
+      ['weibo.tool.clear_def_topic', 'clearDefTopic'],
+      ['weibo.tool.weibo_only.width', 'readerModeWidth', Number, String],
+      ['weibo.tool.userstyle', 'customStyles'],
+      ['weibo.tool.no_weibo_space', 'noHomeMargins'],
+      ['weibo.tool.avatar_shape', 'squareAvatar'],
+    ].forEach(function (l) {
+      if (l[1] in w) r[l[0]] = w[l[1]];
+      if (l[2]) r[l[0]] = l[2](r[l[0]]);
+    });
+    if ('hideMods' in w)[
+      ['weibo.layoutHideOtherAds', 'Ads'],
+      ['weibo.layoutHideOtherFooter', 'Footer'],
+      ['weibo.layoutHideMiddleRecommendedTopic', 'RecommendedTopic'],
+      ['weibo.layoutHideLeftApp', 'App'],
+      ['weibo.layoutHideWeiboFeedTip', 'CommentTip'],
+      ['weibo.layoutHideMiddleMemberTip', 'MemberTip'],
+      ['weibo.layoutHideOtherWbIm', 'IMNews'],
+      ['weibo.layoutHideMiddleFeedRecommand', 'RecomFeed'],
+      ['weibo.other.fake_weibo', 'TimelineMods'],
+      ['weibo.layoutHideWeiboTopicCard', 'TopicCard'],
+      ['weibo.layoutHideWeiboLocationCard', 'LocationCard'],
+      ['weibo.layoutHideRightInfo', 'Avatar'],
+      ['weibo.layoutHideRightAtten', 'Stats'],
+      ['weibo.layoutHideLeftToMe', 'ToMe'],
+      ['weibo.layoutHideLeftFriends', 'Friends'],
+      ['weibo.layoutHideRightInterest', 'InterestUser'],
+      ['weibo.layoutHideRightHotTopic', 'Topic'],
+      ['weibo.layoutHideRightWeibo', 'WeiboRecom'],
+      ['weibo.layoutHideRightLocation', 'LocationRecom'],
+      ['weibo.layoutHideRightMusic', 'MusicRecom'],
+      ['weibo.layoutHideRightMovie', 'MovieRecom'],
+      ['weibo.layoutHideRightBook', 'BookRecom'],
+      ['weibo.layoutHideRightMember', 'Member'],
+      ['weibo.layoutHideRightNotice', 'Notice'],
+      ['weibo.layoutHideIconApprove', 'VerifyIcon'],
+      ['weibo.layoutHideIconApproveCo', 'VerifyIcon'],
+      ['weibo.layoutHideIconClub', 'DarenIcon'],
+      ['weibo.layoutHideIconMember', 'MemberIcon'],
+      ['weibo.layoutHideIconVGirl', 'VgirlIcon'],
+      ['weibo.layoutHideIconTaobao', 'TaobaoIcon'],
+      ['weibo.layoutHideIconZongyika', 'ZongyiIcon'],
+      ['weibo.layoutHideIconDouble11', 'Double11Icon'],
+      ['weibo.layoutHideIconGongyi', 'GongyiIcon'],
+      ['weibo.layoutHidePersonCover', 'ProfCover'],
+      ['weibo.layoutHidePersonMyData', 'ProfStats'],
+      ['weibo.layoutHidePersonMyData', 'MyMicroworld'],
+      ['weibo.layoutHidePersonRelation', 'Relation'],
+      ['weibo.layoutHidePersonAlbum', 'Album'],
+      ['weibo.layoutHidePersonHotTopic', 'ProfHotTopic'],
+      ['weibo.layoutHidePersonHotWeibo', 'ProfHotWeibo'],
+      ['weibo.layoutHideOtherFeedRecom', 'FeedRecom'],
+      ['weibo.layoutHideOtherMusic', 'MusicPlayer'],
+    ].forEach(function (l) {
+      if (w.hideMods.indexOf(l[1]) !== -1) r[l[0]] = true;
+    });
+    if ('floatSetting' in w) r['weibo.tool.fixedLeft'] = w.floatSetting != 'None';
+    return JSON.stringify(v);
+  });
+  // 读取“眼不见心不烦”的设置
+  var readWbpConfig = function (callback) {
+    var id = "yawf." + ('' + Math.random()).slice(2) + '.' + Number(new Date());
+    document.addEventListener('wbpPost', function getData(event) {
+      if (event.detail[0] !== '=') return;
+      event.stopPropagation(); event.preventDefault();
+      var details = event.detail.split(/=([^=]*)=/); var config = details[2];
+      if (details[1] !== id) return;
+      document.removeEventListener('wbpPost', getData);
+      callback(config);
+    }, true);
+    util.func.page(function (uid, id) {
+      document.dispatchEvent(new CustomEvent('wbpGet', {
+        detail: { name: uid, defVal: void (0), id: '=' + id }
+      }));
+    }, util.info.uid, id);
+  };
+  // 检查是否安装了“眼不见心不烦”
+  var checkWbp = function checkWbp() {
+    var wbp = document.querySelector('#wbpShowSettings'); if (!wbp) return;
+    observer.dom.remove(checkWbp);
+    setupImport();
+  };
+  observer.dom.add(checkWbp);
+  setTimeout(function () { observer.dom.remove(checkWbp); }, 3e4);
+  // 向设置窗口添加导入按钮
+  var setupImport = function () {
+    filter.items.script.importexport.importwbp = filter.item({
+      'group': 'importexport',
+      'version': 0,
+      'show': function () {
+        var dom = util.dom.create(html.configImportWbp);
+        var a = dom.querySelector('a');
+        a.addEventListener('click', function () {
+          readWbpConfig(function (config) {
+            filter.items.script.importexport.importexport.import(convert(config));
+          });
+        });
+        return dom;
+      },
+    }).addto(filter.groups.script);
+  };
+}, util.priority.LAST + util.priority.AFTER);
 
 // 更新
 (function (currentVersion) {
@@ -5378,13 +5565,12 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   {{yawf-icon-font}}
   // 设置框相关样式
-  .yawf-config-body { margin: 0 -20px -20px; padding: 0 20px 20px; }
   .yawf-config-header { margin-bottom: -50px; }
   .yawf-config-header ul { position: absolute; top: 9px; left: 10em; }
   #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   .yawf-Layer.yawf-drag { opacity: 0.67; -moz-user-select: none; user-select: none; }
   #yawf-config [node-type="inner"] { padding: 20px; }
-  .yawf-config-body { max-height: 360px; overflow-y: auto; width: 760px; }
+  .yawf-config-body { max-height: 360px; overflow-y: auto; width: 760px; margin: 0 -20px -20px; padding: 0 20px 20px; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
   .yawf-config-layer { padding-bottom: 20px; }
   .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; }
@@ -5423,7 +5609,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configUsersItem .shield_object_card .other_info { line-height: 24px; }
   .yawf-configSelectAll { float: right; margin-top: -23px; height: 21px !important; line-height: 19px; }
   .yawf-configSelectAll * { line-height: 19px !important; height: 19px !important; }
-  .yawf-configImportExport [node-type] { margin-right: 20px; }
+  .yawf-configImportExport a { margin-left: 20px; }
   .yawf-configAdd { appearance: none; }
   #yawf-config .btn { border-top: 1px solid #ccc; margin: 15px 0 0; padding: 10px 0 0; }
   #yawf-config .btn .W_btn_b_disable:hover { border-color: #d9d9d9; }
@@ -5489,7 +5675,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   }
 */
 }) + '\n').replace(/\/\/.*\n/g, '\n'), {
-  'yawf-icon-font': util.css.add(fonts.iconfont),
+  'yawf-icon-font': fonts.iconfont,
 }));
 
 if (util.page.search && util.page.searchenable) GM_addStyle(util.str.cmt(function () { /*!CSS

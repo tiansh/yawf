@@ -34,6 +34,9 @@
               'weibo.other.same_forward.action': 'hidden',
               'weibo.other.same_account.action': 'hidden',
               'weibo.tool.mergeColumns.side': 'right',
+              'weibo.tool.avatar_shape': 'square',
+              'weibo.tool.fold_text': true,
+              'weibo.tool.fold_text.text': 'author-reason',
             },
           };
           var r = v.conf;
@@ -65,6 +68,7 @@
           });
           [
             ['weibo.content.types_emotion', 'filterSmiley'],
+            ['weibo.content.types_mention', 'filterName'],
             ['weibo.filters.hyperlink.blacklist', 'URLKeywords'],
             ['weibo.filters.account.blacklist', 'userBlacklist'],
             ['weibo.filters.original.blacklist', 'userBlacklist'],
@@ -75,9 +79,9 @@
             ['weibo.other.deleted_forward', 'filterDeleted'],
             ['weibo.other.tb_tm_wb', 'filterTaobao'],
             ['weibo.other.same_forward', 'filterDupFwd'],
-            ['weibo.other.same_forward.number', 'maxDupFwd', Number],
+            ['weibo.other.same_forward.number', 'maxDupFwd', Number, String],
             ['weibo.other.same_account', 'filterFlood'],
-            ['weibo.other.same_account.number', 'maxFlood', Number],
+            ['weibo.other.same_account.number', 'maxFlood', Number, String],
             ['weibo.tool.mergeColumns', 'mergeSidebars'],
             ['weibo.tool.showAllGroup', 'showAllGroups'],
             ['weibo.tool.showAllMsgNav', 'showAllMsgNav'],
@@ -85,13 +89,15 @@
             ['weibo.tool.viewOriginal', 'directBigImg'],
             ['weibo.tool.redirectWeibo', 'directFeeds'],
             ['weibo.tool.clear_def_topic', 'clearDefTopic'],
-            ['weibo.tool.weibo_only.width', 'readerModeWidth', Number],
+            ['weibo.tool.weibo_only.width', 'readerModeWidth', Number, String],
             ['weibo.tool.userstyle', 'customStyles'],
+            ['weibo.tool.no_weibo_space', 'noHomeMargins'],
+            ['weibo.tool.avatar_shape', 'squareAvatar'],
           ].forEach(function (l) {
             if (l[1] in w) r[l[0]] = w[l[1]];
             if (l[2]) r[l[0]] = l[2](r[l[0]]);
           });
-          if ('hideMods' in w)[
+          if ('hideMods' in w) [
             ['weibo.layoutHideOtherAds', 'Ads'],
             ['weibo.layoutHideOtherFooter', 'Footer'],
             ['weibo.layoutHideMiddleRecommendedTopic', 'RecommendedTopic'],
@@ -122,6 +128,8 @@
             ['weibo.layoutHideIconMember', 'MemberIcon'],
             ['weibo.layoutHideIconVGirl', 'VgirlIcon'],
             ['weibo.layoutHideIconTaobao', 'TaobaoIcon'],
+            ['weibo.layoutHideIconZongyika', 'ZongyiIcon'],
+            ['weibo.layoutHideIconDouble11', 'Double11Icon'],
             ['weibo.layoutHidePersonCover', 'ProfCover'],
             ['weibo.layoutHidePersonMyData', 'ProfStats'],
             ['weibo.layoutHidePersonMyData', 'MyMicroworld'],
@@ -130,6 +138,7 @@
             ['weibo.layoutHidePersonHotTopic', 'ProfHotTopic'],
             ['weibo.layoutHidePersonHotWeibo', 'ProfHotWeibo'],
             ['weibo.layoutHideOtherFeedRecom', 'FeedRecom'],
+            ['weibo.layoutHideOtherMusic', 'MusicPlayer'],
           ].forEach(function (l) {
             if (w.hideMods.indexOf(l[1]) !== -1) r[l[0]] = true;
           });
@@ -181,6 +190,7 @@
     <p>如果转换工具有任何问题，请参考 Yet Another Weibo Filter 的反馈方式进行反馈。</p>
     <p>本工具是在您的浏览器中本地执行的，不会将您的设置发送到服务器上，请放心使用。（需要启用 JavaScript）</p>
   </div>
+<!--
   <h2>帮助</h2>
   <div class="in">
     <p>如果您的眼不见心不烦脚本设置对话框不能打开，您可以按照如下方法操作获取脚本的设置项。您可以选择下面两种方法的一个获取您脚本的设置项。</p>
@@ -199,7 +209,7 @@
 // @include http://www.weibo.com/*
 // @include http://weibo.com/*
 // ==/UserScript==
-self==top&&(uid=unsafeWindow.$CONFIG.uid)&&
+self==top&amp;&amp;(uid=unsafeWindow.$CONFIG.uid)&amp;&amp;
 prompt('wcf settings:',GM_getValue(''+uid));
 </pre></li>
       <li>安装后，回到微博页面，访问微博首页；</li>
@@ -217,5 +227,6 @@ prompt('wcf settings:',GM_getValue(''+uid));
       <li>对应您微博 uid 的那个单元格右侧 value 列的值即为您脚本的设置项；右击该单元格选择 Copy Cell 即可拷贝该内容到剪贴板。</li>
     </ul>
   </div>
+-->
 </body>
 </html>

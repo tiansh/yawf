@@ -40,6 +40,7 @@
           });
           [
             ['weibo.content.types_emotion', 'filterSmiley'],
+            ['weibo.content.types_mention', 'filterName'],
             ['weibo.filters.hyperlink.blacklist', 'URLKeywords'],
             ['weibo.filters.account.blacklist', 'userBlacklist'],
             ['weibo.filters.original.blacklist', 'userBlacklist'],
@@ -62,6 +63,8 @@
             ['weibo.tool.clear_def_topic', 'clearDefTopic'],
             ['weibo.tool.weibo_only.width', 'readerModeWidth', Number, String],
             ['weibo.tool.userstyle', 'customStyles'],
+            ['weibo.tool.no_weibo_space', 'noHomeMargins'],
+            ['weibo.tool.avatar_shape', 'squareAvatar'],
           ].forEach(function (l) {
             if (l[0] in w) r[l[1]] = w[l[0]];
             if (l[3]) r[l[1]] = l[3](r[l[1]]);
@@ -97,6 +100,8 @@
             ['weibo.layoutHideIconMember', 'MemberIcon'],
             ['weibo.layoutHideIconVGirl', 'VgirlIcon'],
             ['weibo.layoutHideIconTaobao', 'TaobaoIcon'],
+            ['weibo.layoutHideIconZongyika', 'ZongyiIcon'],
+            ['weibo.layoutHideIconDouble11', 'Double11Icon'],
             ['weibo.layoutHidePersonCover', 'ProfCover'],
             ['weibo.layoutHidePersonMyData', 'ProfStats'],
             ['weibo.layoutHidePersonMyData', 'MyMicroworld'],
@@ -105,6 +110,7 @@
             ['weibo.layoutHidePersonHotTopic', 'ProfHotTopic'],
             ['weibo.layoutHidePersonHotWeibo', 'ProfHotWeibo'],
             ['weibo.layoutHideOtherFeedRecom', 'FeedRecom'],
+            ['weibo.layoutHideOtherMusic', 'MusicPlayer'],
           ].forEach(function (l) {
             if (w[l[0]]) r.hideMods.push(l[1]);
           });
