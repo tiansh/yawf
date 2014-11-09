@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.157
+// @version           3.1.158
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4865,6 +4865,8 @@ filter.items.tool.stylish.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       // 微博下方按钮
       .WB_from { margin-top: 15px; }
+      .WB_feed_handle { min-height: 10px; }
+      .WB_feed_handle~.WB_feed_repeat { margin-top: -10px; }
       .WB_feed_handle>.WB_handle { float: right; height: auto; margin: -30px 10px 0 0; }
       .WB_feed_handle .WB_row_line { border-top: 0 none !important; }
       .WB_row_line li, .WB_row_line a, .WB_row_line .line { margin: 0; padding: 0; width: auto; height: 31px; }
@@ -4876,10 +4878,8 @@ filter.items.tool.stylish.no_weibo_space = filter.item({
       .WB_feed_together [feedtype="subfeed"] { padding-left: 60px; }
       // 边框
       .WB_feed .WB_cardwrap { padding: 0; margin: 0; box-shadow: none; border-radius: 0; }
-      .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3); padding: 10px 0; margin: -1px 0 1px !important; box-shadow: none; border-radius: 0; }
+      .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3); padding: 10px 0 0; margin: -1px 0 1px !important; box-shadow: none; border-radius: 0; }
       .WB_feed { box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); border-radius: 2px; overflow: hidden; }
-      .WB_feed_repeat { margin-bottom: -10px; }
-      .WB_feed_repeat .repeat_list { width: calc(100% - 32px); }
       // 新微博加载提示
       .WB_feed [node-type="feed_list_timeTip"] { display: block; height: 30px; margin-bottom: -31px !important; position: relative; top: -15px; line-height: 30px; background: transparent !important; text-align: center; border: 0 none; }
       .WB_feed [node-type="feed_list_timeText"] { display: inline-block; color: rgba(128, 128, 128, 0.6); }
