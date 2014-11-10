@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.159
+// @version           3.1.160
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -327,6 +327,7 @@ var text = {
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
   'layoutHideWeiboTopicCard': { 'zh-cn': '话题卡片', 'zh-hk': '話題卡片', 'zh-tw': '話題卡片', 'en': 'Topic Cards' },
   'layoutHideWeiboLocationCard': { 'zh-cn': '位置卡片', 'zh-hk': '位置卡片', 'zh-tw': '位置卡片', 'en': 'Location Cards' },
+  'layoutHideWeiboWebpageCard': { 'zh-cn': '网页卡片', 'zh-hk': '網頁卡片', 'zh-tw': '網頁卡片', 'en': 'Webpage Cards' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboAppCard': { 'zh-cn': '来源卡片', 'zh-hk': '來源卡片', 'zh-tw': '來源卡片', 'en': 'Source card' },
   'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '檢舉', 'zh-tw': '檢舉', 'en': 'Report' },
@@ -384,13 +385,16 @@ var text = {
   'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}', 'en': 'Merge left &amp; right column | to {{<side>}}' },
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'mergeLeftRightRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
-  'fixedLeft': { 'zh-cn': '浮动左边栏', 'zh-hk': '浮動左邊欄', 'zh-tw': '浮動左邊欄', 'en': 'Float left column' },
-  'fixedRight': { 'zh-cn': '浮动右边栏', 'zh-hk': '浮動右邊欄', 'zh-tw': '浮動右邊欄', 'en': 'Float right column' },
   'choseSide': { 'zh-cn': '统一个人主页、话题、单条微博等页面侧栏|到{{<side>}}', 'zh-hk': '統一個人主頁、話題、單條微博等頁面側欄|到{{<side>}}', 'zh-tw': '統一個人主頁、話題、單條微博等頁面側欄|到{{<side>}}', 'en': 'Relocate side bar for pages of user, topic, and, single Weibo | to {{<side>}}' },
   'choseSideLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'choseSideRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
   'filteRightTopic': { 'zh-cn': '应用话题黑名单到右栏热门话题', 'zh-hk': '應用話題黑名單到右欄熱門話題', 'zh-tw': '應用話題黑名單到右欄熱門話題', 'en': 'Apply topic blacklist to Hot Topic in right column' },
   'filteRightTopicCount': { 'zh-cn': '热门话题列表隐藏|阅读数少于{{<number>}}万的话题', 'zh-hk': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'zh-tw': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'en': 'Hidden Hot Topic with | less than {{<number>}}万 reading' },
+  // 浮动元素
+  'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
+  'fixedLeft': { 'zh-cn': '允许首页左边栏随页面滚动始终显示', 'zh-hk': '允許首頁左邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁左邊欄隨頁面滾動始終顯示', 'en': 'Floating left column' },
+  'fixedRight': { 'zh-cn': '允许首页右边栏随页面滚动始终显示', 'zh-hk': '允許首頁右邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁右邊欄隨頁面滾動始終顯示', 'en': 'Floating right column' },
+  'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
@@ -3922,6 +3926,7 @@ filter.predef.group('layout');
   item('GroupTip', 97, '.type_spe_pos { display: none; }');
   item('TopicCard', 5, '.WB_feed_spec[exp-data*="value=1022-topic"] { display: none !important; }');
   item('LocationCard', 5, '.WB_feed_spec[exp-data*="value=1022-place"] { display: none !important; }');
+  item('WebpageCard', 160, '.WB_feed_spec[exp-data*="value=1022-webpage"] { display: none !important; }');
   item('LastPic', 72, function () {
     observer.dom.add(function () {
       var last;
@@ -4336,123 +4341,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 左边栏浮动
-filter.items.tool.sidebar.fixed_left = filter.item({
-  'group': 'sidebar',
-  'version': 36,
-  'type': 'boolean',
-  'key': 'weibo.tool.fixedLeft',
-  'text': '{{fixedLeft}}',
-  'default': true,
-  'ainit': function () {
-    // 禁用左栏浮动的相关代码在 fixed_right 那边可以找到
-    // 如果合并了边栏，那么会因为禁用右栏浮动而同时禁用在右栏里面的左栏
-    // 这时候左栏如果还要浮动，那么就要重新让他动起来
-    // 这里的程序是为了让左栏再动起来的
-    if (!filter.items.tool.sidebar.merge_left_right.conf) return;
-    util.css.add(util.str.cmt(function () { /*!CSS 
-      .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
-      body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
-    */ }));
-    var floating = false;
-    var updatePosition = function () {
-      var left = document.querySelector('.WB_left_nav, .yawf-WB_left_nav');
-      var reference = document.querySelector('.WB_main_r');
-      var container = document.querySelector('#plc_main');
-      if (!left || !reference) return;
-      var refc = reference.getClientRects();
-      if (!refc || !refc[0]) return;
-      var pos = refc[0];
-      if (!floating) {
-        if (pos.bottom < -60) {
-          floating = true;
-          reference.setAttribute('yawf-fixed', '');
-        }
-      } else {
-        if (pos.bottom + left.clientHeight > 60) {
-          floating = false;
-          reference.removeAttribute('yawf-fixed');
-        }
-      }
-      var updateMaxHeight = function (maxHeight) {
-        var none = maxHeight === 'none';
-        var text = none ? 'none' : maxHeight + 'px';
-        var srl = left.querySelector('[node-type="leftnav_scroll"]');
-        var mod;
-        if (left.style.maxHeight !== text) {
-          mod = (left.style.maxHeight || 'none') !== text;
-          if (mod) left.style.maxHeight = text;
-          if (none) srl.setAttribute('style', '');
-          else {
-            var lev = left.querySelectorAll('.lev_Box'); lev = lev[lev.length - 1];
-            var height = Math.min(maxHeight - srl.offsetTop, lev.clientHeight) + 'px';
-            mod = mod || srl.style.height !== height;
-            if (mod) {
-              srl.style.height = height;
-              srl.style.position = 'relative';
-            }
-          }
-          if (mod && srl) updateScroll();
-        }
-      };
-      if (floating) {
-        var cip = container.getClientRects()[0];
-        var fip = left.getClientRects()[0];
-        var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
-        if (cip && fip) updateMaxHeight(maxHeight);
-      } else { updateMaxHeight('none'); }
-    };
-
-    var updateScroll = function () {
-      util.func.page(function () {
-        window.$YAWF$ = window.$YAWF$ || {};
-        if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
-          var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
-          var g = STK.ui.scrollView(y);
-          return function () { g.reset(); };
-        }());
-        $YAWF$.updateLeftScroll();
-      });
-    };
-
-    document.addEventListener('scroll', updatePosition);
-    window.addEventListener('resize', updatePosition);
-    observer.dom.add(updatePosition);
-    updatePosition();
-  },
-}).addto(filter.groups.tool);
-
-// 右边栏浮动
-filter.items.tool.sidebar.fixed_right = filter.item({
-  'group': 'sidebar',
-  'version': 146,
-  'type': 'boolean',
-  'key': 'weibo.tool.fixedRight',
-  'text': '{{fixedRight}}',
-  'default': true,
-  'init': function () {
-    var merge = filter.items.tool.sidebar.merge_left_right.conf;
-    var fleft = filter.items.tool.sidebar.fixed_left.conf;
-    var fright = filter.items.tool.sidebar.fixed_right.conf && !(merge && fleft);
-    var attrs = ['fixed-item', 'fixed-box', 'fixed-inbox'], query = [];
-    if (!fright) query = query.concat(attrs.map(function (a) { return '.WB_main_r [' + a + ']'; }));
-    if (!fleft) query = query.concat(attrs.map(function (a) { return '.WB_main_l [' + a + ']'; }));
-    if (query.length === 0) return; else query = query.join(',');
-    var removeFixed = function () {
-      var items = Array.from(document.querySelectorAll(query));
-      if (!items.length) return;
-      items.forEach(function (fixed) {
-        var x = fixed.cloneNode(true);
-        attrs.forEach(function (attr) { x.removeAttribute(attr); });
-        fixed.parentNode.insertBefore(x, fixed);
-        fixed.parentNode.removeChild(fixed);
-      });
-    };
-    removeFixed();
-    observer.dom.add(removeFixed, 100);
-  },
-}).addto(filter.groups.tool);
-
 // 将话题黑名单应用到右侧热门话题栏目
 filter.items.tool.sidebar.chose_side = filter.item({
   'group': 'sidebar',
@@ -4540,6 +4428,147 @@ filter.items.tool.sidebar.filte_right_topic_count = filter.item({
       });
     });
   },
+}).addto(filter.groups.tool);
+
+
+// 浮动元素
+filter.items.tool.floating = {};
+filter.items.tool.floating.title = filter.item({
+  'group': 'fixed',
+  'type': 'subtitle',
+  'text': '{{fixedItemsTitle}}',
+}).addto(filter.groups.tool);
+
+// 左边栏浮动
+filter.items.tool.sidebar.fixed_left = filter.item({
+  'group': 'fixed',
+  'version': 160,
+  'type': 'boolean',
+  'key': 'weibo.tool.fixedLeft',
+  'text': '{{fixedLeft}}',
+  'default': true,
+  'ainit': function () {
+    // 禁用左栏浮动的相关代码在 fixed_right 那边可以找到
+    // 如果合并了边栏，那么会因为禁用右栏浮动而同时禁用在右栏里面的左栏
+    // 这时候左栏如果还要浮动，那么就要重新让他动起来
+    // 这里的程序是为了让左栏再动起来的
+    if (!filter.items.tool.sidebar.merge_left_right.conf) return;
+    util.css.add(util.str.cmt(function () { /*!CSS 
+      .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
+      body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
+    */ }));
+    var floating = false;
+    var updatePosition = function () {
+      var left = document.querySelector('.WB_left_nav, .yawf-WB_left_nav');
+      var reference = document.querySelector('.WB_main_r');
+      var container = document.querySelector('#plc_main');
+      if (!left || !reference) return;
+      var refc = reference.getClientRects();
+      if (!refc || !refc[0]) return;
+      var pos = refc[0];
+      if (!floating) {
+        if (pos.bottom < -60) {
+          floating = true;
+          reference.setAttribute('yawf-fixed', '');
+        }
+      } else {
+        if (pos.bottom + left.clientHeight > 60) {
+          floating = false;
+          reference.removeAttribute('yawf-fixed');
+        }
+      }
+      var updateMaxHeight = function (maxHeight) {
+        var none = maxHeight === 'none';
+        var text = none ? 'none' : maxHeight + 'px';
+        var srl = left.querySelector('[node-type="leftnav_scroll"]');
+        var mod;
+        if (left.style.maxHeight !== text) {
+          mod = (left.style.maxHeight || 'none') !== text;
+          if (mod) left.style.maxHeight = text;
+          if (none) srl.setAttribute('style', '');
+          else {
+            var lev = left.querySelectorAll('.lev_Box'); lev = lev[lev.length - 1];
+            var height = Math.min(maxHeight - srl.offsetTop, lev.clientHeight) + 'px';
+            mod = mod || srl.style.height !== height;
+            if (mod) {
+              srl.style.height = height;
+              srl.style.position = 'relative';
+            }
+          }
+          if (mod && srl) updateScroll();
+        }
+      };
+      if (floating) {
+        var cip = container.getClientRects()[0];
+        var fip = left.getClientRects()[0];
+        var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
+        if (cip && fip) updateMaxHeight(maxHeight);
+      } else { updateMaxHeight('none'); }
+    };
+
+    var updateScroll = function () {
+      util.func.page(function () {
+        window.$YAWF$ = window.$YAWF$ || {};
+        if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
+          var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
+          var g = STK.ui.scrollView(y);
+          return function () { g.reset(); };
+        }());
+        $YAWF$.updateLeftScroll();
+      });
+    };
+
+    document.addEventListener('scroll', updatePosition);
+    window.addEventListener('resize', updatePosition);
+    observer.dom.add(updatePosition);
+    updatePosition();
+  },
+}).addto(filter.groups.tool);
+
+// 右边栏浮动
+filter.items.tool.sidebar.fixed_right = filter.item({
+  'group': 'fixed',
+  'version': 160,
+  'type': 'boolean',
+  'key': 'weibo.tool.fixedRight',
+  'text': '{{fixedRight}}',
+  'default': true,
+  'init': function () {
+    var sidebar = filter.items.tool.sidebar;
+    var merge = sidebar.merge_left_right.conf;
+    var fleft = sidebar.fixed_left.conf;
+    var fright = sidebar.fixed_right.conf && !(merge && fleft);
+    var fother = sidebar.fixed_others.conf;
+    var attrs = ['fixed-item', 'fixed-box', 'fixed-inbox'], query = [];
+    var subs = function (s) {
+      query = query.concat(attrs.map(function (a) { return s + ' [' + a + ']'; }));
+    };
+    if (!fright) subs('.WB_main_r');
+    if (!fleft) subs('.WB_main_l');
+    if (!fother) subs('.WB_frame_b'), subs('.WB_frame_c');
+    if (query.length === 0) return; else query = query.join(',');
+    var removeFixed = function () {
+      var items = Array.from(document.querySelectorAll(query));
+      if (!items.length) return;
+      items.forEach(function (fixed) {
+        var x = fixed.cloneNode(true);
+        attrs.forEach(function (attr) { x.removeAttribute(attr); });
+        fixed.parentNode.insertBefore(x, fixed);
+        fixed.parentNode.removeChild(fixed);
+      });
+    };
+    removeFixed();
+    observer.dom.add(removeFixed, 100);
+  },
+}).addto(filter.groups.tool);
+
+filter.items.tool.sidebar.fixed_others = filter.item({
+  'group': 'fixed',
+  'version': 160,
+  'type': 'boolean',
+  'key': 'weibo.tool.fixedOthers',
+  'text': '{{fixedOthers}}',
+  'default': true,
 }).addto(filter.groups.tool);
 
 // 微博相关工具
