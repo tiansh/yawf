@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.160
+// @version           3.1.161
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -722,6 +722,14 @@ util.str.fill = function (base, func) {
     return ret;
   });
 };
+
+// 产生一个假的回调函数
+util.str.fcb = (function () {
+  var last = 0;
+  return function () {
+    return '' + (last = Math.max(last + 1, Number(new Date())));
+  };
+}());
 
 // 检查一个字串是否是正则式，如果出错报告用户
 // 返回为正则式或 null
@@ -1448,14 +1456,6 @@ util.ui.confirm = function (id, details) {
   return form;
 };
 
-// 产生一个假的回调函数
-var dateStr = (function () {
-  var last = 0;
-  return function () {
-    return '' + (last = Math.max(last + 1, Number(new Date())));
-  };
-}());
-
 // 网络访问相关
 var network = {};
 // 维护帐号信息，用于显示
@@ -1472,7 +1472,7 @@ network.account = (function () {
     // 请求获取
     GM_xmlhttpRequest({
       'method': 'GET',
-      'url': util.str.fill(url.newcard, { 'query': queryStr, 'callback': 'STK_' + dateStr() }),
+      'url': util.str.fill(url.newcard, { 'query': queryStr, 'callback': 'STK_' + util.str.fcb() }),
       'onload': util.func.catched(function (resp) {
         // 永远不要试图理解一个用 JSON 包裹 HTML 的 API
         var respJson = JSON.parse(resp.responseText.replace(/^try{[^{]*\(/, '').replace(/\)}catch\(e\){};$/, ''));
@@ -1509,7 +1509,7 @@ network.weibo.block = (function () {
     util.debug('blocking weibo %s', mid);
     GM_xmlhttpRequest({
       'method': 'POST',
-      'url': util.str.fill(url.block_wb, { 'rnd': dateStr() }),
+      'url': util.str.fill(url.block_wb, { 'rnd': util.str.fcb() }),
       'headers': {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Cache-Control': 'no-cache',
@@ -1870,7 +1870,7 @@ filter.fast.active = (function () {
       area.hide();
     }, false);
     // 拽出去了
-    document.addEventListener('mouseout', function (e) { if (area.done()) return; area.hide(); });
+    document.body.addEventListener('mouseleave', function (e) { if (area.done()) return; area.hide(); });
     dropArea.addEventListener('dragenter', function (e) { valid = true; area.enter(); });
     dropArea.addEventListener('dragleave', function (e) { valid = false; area.leave(); });
   };
@@ -1929,74 +1929,6 @@ filter.fix.fold = (function () {
   };
   return fix;
 }());
-
-// 将父微博和下面的子微博交换
-filter.fix.swap = function (parent, son) {
-  var x = util.dom.create('div', '');
-  ['.WB_face', '.WB_info', '.WB_text', '.WB_detail>.WB_func'].map(function (q) {
-    (function (a, b) {
-      b.parentNode.replaceChild(x, b);
-      a.parentNode.replaceChild(b, a);
-      x.parentNode.replaceChild(a, x);
-    }(parent.querySelector(q), son.querySelector(q)));
-  });
-  var mid = parent.getAttribute('mid');
-  parent.setAttribute('mid', son.getAttribute('mid'));
-  son.setAttribute('mid', mid);
-  // 各种细节的修补（原网站做的太乱了……）
-  var pf = parent.querySelector('.WB_face'), sf = son.querySelector('.WB_face');
-  var pfa = pf.querySelector('a'), pfi = pf.querySelector('img');
-  var sfa = sf.querySelector('a'), sfi = sf.querySelector('img');
-  if (pfa.href.indexOf('?') === -1) pfa.href += '?from=feed&loc=avatar';
-  if (sfa.href.indexOf('?') !== -1) sfa.href = sfa.href.slice(0, sfa.href.indexOf('?'));
-  if (!pfa.title) pfa.title = pfi.title;
-  if (sfa.title) sfa.removeAttribute('title');
-  sfi.width = sfi.height = '30'; pfi.width = pfi.height = '50';
-  return son;
-};
-
-// 如果有一个微博的子微博都隐藏了，那么就隐藏这个微博的子微博框
-filter.fix.son = function (feed) {
-  if (!feed.querySelector('.WB_feed_together')) return;
-  // 重新对子微博排序
-  var reorder = function () {
-    var sonList = Array.from(feed.querySelectorAll('.WB_feed_together .WB_sonFeed .WB_feed_type[yawf-display]'));
-    // 交换两个子微博
-    var swapSon = function (p, q) {
-      var x = sonList[p], y = sonList[q];
-      var fakeNode = document.createElement('div');
-      x.parentNode.insertBefore(fakeNode, x);
-      y.parentNode.insertBefore(x, y);
-      fakeNode.parentNode.insertBefore(y, fakeNode);
-      fakeNode.parentNode.removeChild(fakeNode);
-      sonList[p] = y; sonList[q] = x;
-    };
-    // 把子微博重新排序一下，按照从想看到不想看的顺序排列，排序算法和一趟快排差不多
-    var p = 0, q;
-    ['show', 'unset', 'unfold', 'fold', 'hidden'].forEach(function (display) {
-      q = sonList.length - 1;
-      while (p < q) {
-        if (sonList[p].getAttribute('yawf-display').lastIndexOf(display) !== -1) p++;
-        else if (sonList[q].getAttribute('yawf-display').lastIndexOf(display) === -1) q--;
-        else swapSon(p, q);
-      }
-    });
-  };
-  // 重新对子微博计数
-  var recount = function () {
-    // 看看还有多少显示出来的子微博，更新一下子微博的计数
-    var sonCount = feed.querySelectorAll('.WB_feed_together .WB_sonFeed .WB_feed_type:not([yawf-display$="-hidden"])').length;
-    if (sonCount === 0) feed.querySelector('.WB_feed_together').setAttribute('yawf-display', 'display-hidden');
-    else feed.querySelector('[node-type="followNum"]').textContent = sonCount;
-    // 如果下面更多的按钮已经没用了，就藏起来吧
-    var foldSonCount = feed.querySelectorAll('[node-type="feed_list_wrapForward"] .WB_feed_type:not([yawf-display$="-hidden"])').length;
-    if (foldSonCount === 0 && feed.querySelector('[node-type="feed_list_wrapForward"]')) {
-      feed.querySelector('.WB_feed_together').setAttribute('yawf-sonfold', 'display');
-    }
-  };
-  reorder();
-  recount();
-};
 
 // 隐藏的微博直接从列表中去掉，减少开销是次要的，主要是兼容 JK 等快捷键
 filter.fix.hidden = function (feed) {
@@ -4197,11 +4129,10 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       'default': 'right',
     }
   },
-  'init': function mergeLeftRight() {
-    if (!this.conf) return;
+  'ainit': function mergeLeftRight() {
     var main = document.body, side = this.ref.side.conf;
     var left = document.querySelector('.W_main_l, .WB_main_l');
-    if (!left) return setTimeout(util.func.catched(mergeLeftRight.bind(this)), 100);
+    if (!left) return setTimeout(mergeLeftRight.bind(this), 100);
     var left0 = util.dom.create(html.leftFake);
     left.parentNode.insertBefore(left0, left);
     left.parentNode.removeChild(left);
@@ -4220,7 +4151,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         if (right.firstChild !== left) {
           right.insertBefore(left, right.firstChild);
           main.setAttribute('yawf-merge-left', side);
-          fixMsgboxLeftNav();
           fixStylish(true);
         }
       } else {
@@ -4317,26 +4247,26 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       };
     }());
 
-    // 消息页面的左栏在在变成卡片之后当前页面的勾会显示有问题需要修正
-    var fixMsgboxLeftNav = function () {
-      // 我知道我在干嘛
-      // 这里每次重新加载右栏的时候重绘左栏，以保证其功能
-      util.func.page(function () {
-        if (typeof STK === 'undefined') return;
-        var a = STK;
-        var d = a.pl.msgbox.leftNav.source.init;
-        if (!d) return;
-        var b = a.sizzle('.yawf-WB_left_nav')[0];
-        if (!b) return;
-        var c = b.cloneNode(!0);
-        a.insertBefore(c, b);
-        a.removeNode(b);
-        d(c);
-      });
-    };
+    // 强制点击链接时刷新页面，以解决因暴力修改造成的问题
+    var forceReflush = (function () {
+      var l = null;
+      return function () {
+        if (l === left) return; else l = left;
+        left.addEventListener('click', function (e) {
+          if (!util.dom.matches(e.target, 'a')) return;
+          if (!e.target.href.match(/^http:\/\//)) return;
+          e.stopPropagation();
+        });
+      };
+    }());
 
-    positionLeft(); fixStylish();
-    observer.dom.add(function () { positionLeft(); fixStylish(); });
+    var fleft = function () {
+      positionLeft();
+      fixStylish();
+      forceReflush();
+    };
+    fleft();
+    observer.dom.add(fleft);
 
   },
 }).addto(filter.groups.tool);
