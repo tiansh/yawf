@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.164
+// @version           3.1.165
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -414,11 +414,12 @@ var text = {
   'avatarShape': { 'zh-cn': '统一头像形状为|{{<shape>}}', 'zh-hk': '統一頭像形狀為|{{<shape>}}', 'zh-tw': '統一頭像形狀為|{{<shape>}}', 'en': 'Show all avatars as | {{<shape>}}' },
   'avatarShapeCircle': { 'zh-cn': '圆形', 'zh-hk': '圓形', 'zh-tw': '圓形', 'en': 'Circle' },
   'avatarShapeSquare': { 'zh-cn': '方形', 'zh-hk': '方形', 'zh-tw': '方形', 'en': 'Square' },
+  'darkNavBar': { 'zh-cn': '使用深色的导航栏', 'zh-hk': '使用深色的導覽列', 'zh-tw': '使用深色的導覽列', 'en': 'Dark nav bar' },
+  'reorderNavBar': { 'zh-cn': '交换导航栏中导航链接与搜索框的位置', 'zh-hk': '交換導覽列中導覽連結與搜索框的位置', 'zh-tw': '交換導覽列中導覽連結與搜索框的位置', 'en': 'Exchange position of search box and navigator links' },
   'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}}', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'zh-tw': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'en': 'Increase font size of Weibo content to | {{<ratio>}}' },
   'weiboLargeFont120': { 'zh-cn': '120%', 'zh-hk': '120%', 'zh-tw': '120%', 'en': '120%' },
   'weiboLargeFont150': { 'zh-cn': '150%', 'zh-hk': '150%', 'zh-tw': '150%', 'en': '150%' },
   'weiboLargeFont200': { 'zh-cn': '200%', 'zh-hk': '200%', 'zh-tw': '200%', 'en': '200%' },
-  'darkNavBar': { 'zh-cn': '使用深色的导航栏', 'zh-hk': '使用深色的導覽列', 'zh-tw': '使用深色的導覽列', 'en': 'Dark nav bar' },
   'noWeiboSpace': { 'zh-cn': '移除微博与微博间的空隙', 'zh-hk': '移除微博與微博間的空隙', 'zh-tw': '移除微博與微博間的空隙', 'en': 'Remove space between Weibo' },
   'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
@@ -4716,6 +4717,53 @@ filter.items.tool.stylish.avatar_shape = filter.item({
   },
 }).addto(filter.groups.tool);
 
+// 深色导栏航
+filter.items.tool.stylish.dark_nav_bar = filter.item({
+  'group': 'stylish',
+  'version': 147,
+  'type': 'boolean',
+  'key': 'weibo.tool.dark_nav_bar',
+  'text': '{{darkNavBar}}',
+  'ainit': function () {
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_global_nav { background: #333; }
+      .WB_global_nav_alpha { background: rgba(51, 51, 51, 0.94); }
+      .gn_logo .logo:empty { background: none !important; }
+      .gn_logo .logo:empty::before, .gn_logo .logo:empty::after { content: " "; display: block; background: url("http://img.t.sinajs.cn/t6/style/images/global_nav/WB_logo.png?id=1404211047727") no-repeat 0 40%; height: 48px; }
+      .gn_logo .logo:empty::before { width: 36px; float: left; }
+      .gn_logo .logo:empty::after { width: 104px; float: right; background-position: -36px 40%; }
+      .gn_logo .logo:empty::after { filter: url("data:image/svg+xml,%3Csvg%20viewBox=%220%200%20183%20276%22%20id=%22img3%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter%20id=%22invert%22%3E%3CfeComponentTransfer%3E%3CfeFuncR%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncG%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncB%20tableValues=%221%200%22%20type=%22table%22/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3C/svg%3E#invert"); -webkit-filter: invert(100%); filter: invert(100%); }
+      .FRAME_main .WB_global_nav .gn_nav_list li .home em { color: #fa7d3c; }
+      .WB_global_nav .S_ficon, .WB_global_nav .S_ficon_dis, .WB_global_nav a.S_ficon_dis:hover, .WB_global_nav a:hover .S_ficon_dis { color: #a6afbf; }
+      .WB_global_nav .S_txt1, .WB_global_nav .SW_fun .S_func1 { color: #eee; }
+    */ }));
+  },
+}).addto(filter.groups.tool);
+
+// 交换导航链接和搜索框位置
+filter.items.tool.stylish.reorder_nav_bar = filter.item({
+  'group': 'stylish',
+  'version': 165,
+  'type': 'boolean',
+  'key': 'weibo.tool.reorder_nav_bar',
+  'text': '{{reorderNavBar}}',
+  'ainit': function () {
+    var moveNavList = function () {
+      var search = document.querySelector('.WB_global_nav .gn_header .gn_search');
+      var list = document.querySelector('.WB_global_nav .gn_header .gn_position .gn_nav .gn_nav_list');
+      if (!search || !list) return;
+      var items = Array.from(list.querySelectorAll('li')).slice(0, -1);
+      var gnlist = util.dom.create('<div class="gn_nav"><ul class="gn_nav_list"></ul></div>');
+      var nlist = gnlist.querySelector('ul');
+      items.forEach(function (l) { nlist.appendChild(l); });
+      search.parentNode.insertBefore(gnlist, search);
+      GM_addStyle('.WB_global_nav .gn_search { float: none; display: inline-block; } .WB_global_nav .gn_header { text-align: right; } .WB_global_nav .gn_header>* { text-align: left; }');
+      observer.dom.remove(moveNavList);
+    };
+    observer.dom.add(moveNavList);
+    moveNavList();
+  },
+}).addto(filter.groups.tool);
 
 // 折叠微博外观
 filter.items.tool.stylish.fold_text = filter.item({
@@ -4795,29 +4843,6 @@ filter.items.tool.stylish.weibo_large_font = filter.item({
       .WB_feed_expand .WB_text .W_btn_c, .WB_feed_expand .WB_text .W_btn_c * { line-height: {{h2}}px; font-size: {{fs3}}px !important; }
       .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
     */ }), this.pref[this.ref.ratio.conf]));
-  },
-}).addto(filter.groups.tool);
-
-// 深色导栏航
-filter.items.tool.stylish.dark_nav_bar = filter.item({
-  'group': 'stylish',
-  'version': 147,
-  'type': 'boolean',
-  'key': 'weibo.tool.dark_nav_bar',
-  'text': '{{darkNavBar}}',
-  'ainit': function () {
-    util.css.add(util.str.cmt(function () { /*!CSS
-      .WB_global_nav { background: #333; }
-      .WB_global_nav_alpha { background: rgba(51, 51, 51, 0.94); }
-      .gn_logo .logo:empty { background: none !important; }
-      .gn_logo .logo:empty::before, .gn_logo .logo:empty::after { content: " "; display: block; background: url("http://img.t.sinajs.cn/t6/style/images/global_nav/WB_logo.png?id=1404211047727") no-repeat 0 40%; height: 48px; }
-      .gn_logo .logo:empty::before { width: 36px; float: left; }
-      .gn_logo .logo:empty::after { width: 104px; float: right; background-position: -36px 40%; }
-      .gn_logo .logo:empty::after { filter: url("data:image/svg+xml,%3Csvg%20viewBox=%220%200%20183%20276%22%20id=%22img3%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter%20id=%22invert%22%3E%3CfeComponentTransfer%3E%3CfeFuncR%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncG%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncB%20tableValues=%221%200%22%20type=%22table%22/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3C/svg%3E#invert"); -webkit-filter: invert(100%); filter: invert(100%); }
-      .FRAME_main .WB_global_nav .gn_nav_list li .home em { color: #fa7d3c; }
-      .WB_global_nav .S_ficon, .WB_global_nav .S_ficon_dis, .WB_global_nav a.S_ficon_dis:hover, .WB_global_nav a:hover .S_ficon_dis { color: #a6afbf; }
-      .WB_global_nav .S_txt1, .WB_global_nav .SW_fun .S_func1 { color: #eee; }
-    */ }));
   },
 }).addto(filter.groups.tool);
 
@@ -5648,7 +5673,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
 if (util.page.search && util.page.searchenable) GM_addStyle(util.str.cmt(function () { /*!CSS
   .WB_global_nav .W_ficon, .WB_global_nav .W_ficon:hover { background: none !important; text-indent: 0 !important; } 
   .WB_global_nav .ficon_send { text-align: center !important; background: linear-gradient(to bottom, #fa7d3c, #f56010) !important; }
-  .WB_global_nav .ficon_send:hover { background: linear-gradient(to bottom, #f4712c, #f15909) !important; }
+  .wb_global_nav .ficon_send:hover { background: linear-gradient(to bottom, #f4712c, #f15909) !important; }
   .yawf-config-header { margin: -10px 0 0 !important; }
 
   body .feed_action ul {
