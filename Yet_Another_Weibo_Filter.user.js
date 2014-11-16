@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.170
+// @version           3.1.171
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -97,6 +97,9 @@ var text = {
   // 关键词
   'keywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword' },
   'keywordFilterDetails': { 'zh-cn': '包含以下关键词的微博', 'zh-hk': '包含以下關鍵字的微博', 'zh-tw': '包含以下關鍵字的微博', 'en': 'Weibo with these keywords' },
+  'keywordFilterDetailsDesc': {
+    'zh-cn': '关键词仅匹配微博正文，包括原微博和转发的描述。如果您希望某条微博同时出现某几个关键字时才过滤，请使用正则表达式的过滤方式。',
+  },
   'keywordFilterFast': { 'zh-cn': '包含关键词', 'zh-hk': '包含關鍵字', 'zh-tw': '包含關鍵字', 'en': 'Weibo contains keyword ' },
   'keywordFilterFastInput': { 'zh-cn': '“{{text}}”', 'zh-hk': '「{{text}}」', 'zh-tw': '「{{text}}」', 'en': '"{{text}}"' },
   'keywordFilterReason': { 'zh-cn': '因包含关键词“{{detail}}”', 'zh-hk': '因包含關鍵詞「{{detail}}」', 'zh-tw': '因包含關鍵詞「{{detail}}」', 'en': 'because it contains keyword "{{detail}}"' },
@@ -104,15 +107,12 @@ var text = {
   'regexpFilterGroupTitle': { 'zh-cn': '正则', 'zh-hk': '正則', 'zh-tw': '正規', 'en': 'Regexp' },
   'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'regexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的微博', 'zh-hk': '匹配以下正則表達式的微博', 'zh-tw': '匹配以下正規表示式的微博', 'en': 'Weibo matches these regular expressions' },
+  'regexpFilterDetailsDesc': {
+    'zh-cn': '正则表达式书写时不需要对“/”字符转义。正则表达式不同于“通配符”，您需要使用“<code>.*</code>”表示任意字符，如“<code>转发并.*好友</code>”。如果您希望匹配同时出现某些关键词的微博，您可以使用正则式的“零宽断言”；举例来说，“<code>(?=.*星座)(?=.*第一)</code>”匹配所有同时出现“星座”和“第一”的微博。',
+  },
   'regexpFilterFast': { 'zh-cn': '匹配正则式', 'zh-hk': '匹配正則式', 'zh-tw': '匹配正規式', 'en': 'Weibo matches regexp ' },
   'regexpFilterFastInput': { 'zh-cn': '/{{text}}/', 'zh-hk': '/{{text}}/', 'zh-tw': '/{{text}}/', 'en': '/{{text}}/' },
   'regexpFilterReason': { 'zh-cn': '因匹配正则式 {{detail}} ', 'zh-hk': '因匹配正則式 {{detail}} ', 'zh-tw': '因匹配正規式 {{detail}} ', 'en': 'because it matches regexp {{detail}} ' },
-  'regexpFilterRemark': {
-    'zh-cn': '正则表达式的过滤方式提供了基于微博内容的高级过滤方式，如果只是需要简单地关键词过滤请使用内容标签页的关键词以获得更好的效率。正则表达式书写时不需要对“/”字符转义。',
-    'zh-hk': '正則表達式的篩選方式提供了基於微博內容的高級篩選方式，如果只是需要簡單地關鍵字篩選請使用內容標籤頁的關鍵字以獲得更好的效率。正則表達式書寫時不需要對「/」字符轉義。',
-    'zh-tw': '正規表示式的篩選方式提供了基於微博內容的高級篩選方式，如果只是需要簡單地關鍵字篩選請使用內容標籤頁的關鍵字以獲得更好的效率。正規表示式書寫時不需要對「/」字符轉義。',
-    'en': 'Regular expression provide advanced filter settings based on content. You may set keywords in Content tab for better performance. You do not need to escape "/" in your regexp.'
-  },
   'regexpBadFormedTitle': { 'zh-cn': '非法的正则表达式', 'zh-hk': '不合法的正則表達式', 'zh-tw': '不合法的正規表示式', 'en': 'Illegal Regexp' },
   'regexpBadFormed': {
     'zh-cn': '您输入的/{{regexp}}/不能被正确地解析为正则表达式，请检查您的输入。如需关键词屏蔽请到内容标签页设置。',
@@ -130,14 +130,16 @@ var text = {
   'accountFilterGroupTitle': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDetails': { 'zh-cn': '来自以下帐号的微博', 'zh-hk': '來自以下帳號的微博', 'zh-tw': '來自以下帳號的微博', 'en': 'Weibo from these accounts' },
+  'accountFilterDetailsDesc': {
+    'zh-cn': '你关注的某个人撰写或转发的微博。对于转发的微博，仅匹配最后转发的那个人。您还可以到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隐私设置 - 屏蔽帐号</a>屏蔽您关注了但不想在首页看到的帐号。',
+    'zh-hk': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
+    'zh-tw': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
+    'en': 'You can block Weibo from accounts you followed in the page <a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">Privacy - Block account</a>.'
+  },
   'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的微博', 'zh-hk': '作者是「@{{name}}」的微博', 'zh-tw': '作者是「@{{name}}」的微博', 'en': 'Weibo by "@{{name}}"', },
   'accountFilterContextMenu': { 'zh-cn': '作者是 @{{name}}', 'zh-hk': '作者是 @{{name}}', 'zh-tw': '作者是 @{{name}}', 'en': 'by @{{name}}', },
   'accountFilterReason': { 'zh-cn': '因来自 @{{detail}} ', 'zh-hk': '因來自 @{{detail}} ', 'zh-tw': '因來自 @{{detail}} ', 'en': 'because it is posted by @{{detail}} ' },
   'accountFilterRemark': {
-    'zh-cn': '推荐您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隐私设置 - 屏蔽帐号</a>屏蔽您关注了但不想在首页看到的帐号。',
-    'zh-hk': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
-    'zh-tw': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
-    'en': 'You can block Weibo from accounts you followed in the page <a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">Privacy - Block account</a>.'
   },
   'accountNotExistErrorTitle': { 'zh-cn': '帐号不存在', 'zh-hk': '帳號不存在', 'zh-tw': '帳號不存在', 'en': 'Account does not exist' },
   'accountNotExistError': { 'zh-cn': '不存在名为{{name}}的帐号', 'zh-hk': '不存在名為{{name}}的帳號', 'zh-tw': '不存在名為{{name}}的帳號', 'en': 'Account named {{name}} does not exist' },
@@ -145,6 +147,9 @@ var text = {
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterDetails': { 'zh-cn': '原创是以下帐号的微博', 'zh-hk': '原創是以下帳號的微博', 'zh-tw': '原創是以下帳號的微博', 'en': 'Hide original Weibo from these accounts' },
+  'originalFilterDetailsDesc': {
+    'zh-cn': '如果一条微博是原创的（不是转发的）那么他的作者就是原创的作者，否则原创指这条微博最原始的作者。'
+  },
   'originalFilterFast': { 'zh-cn': '原创是“@{{name}}”的微博', 'zh-hk': '原創是「@{{name}}」的微博', 'zh-tw': '原創是「@{{name}}」的微博', 'en': 'Original Weibo from "@{{name}}"' },
   'originalFilterContextMenu': { 'zh-cn': '原创是 @{{name}}', 'zh-hk': '原創是 @{{name}}', 'zh-tw': '原創是 @{{name}}', 'en': 'from @{{name}}' },
   'originalFilterReason': { 'zh-cn': '因转发自 @{{detail}} ', 'zh-hk': '因轉發自 @{{detail}} ', 'zh-tw': '因轉發自 @{{detail}} ', 'en': 'because it is forwarded from @{{detail}} ' },
@@ -152,6 +157,9 @@ var text = {
   'mentionFilterGroupTitle': { 'zh-cn': '提到', 'zh-hk': '提到', 'zh-tw': '提到', 'en': 'Mention' },
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'mentionFilterDetails': { 'zh-cn': '提到以下帐号的微博', 'zh-hk': '提到以下帳號的微博', 'zh-tw': '提到以下帳號的微博', 'en': 'Weibo mentioned these accounts' },
+  'mentionFilterDetailsDesc': {
+    'zh-cn': '提到包括在微博中使用“@”提到的帐号，也包括转发路径中的那些账号。微博中提到的人的链接不会随修改昵称而变化，这里也无法处理修改昵称的情况，所以如果一个人修改了昵称，您需要重新添加。'
+  },
   'mentionFilterFast': { 'zh-cn': '提到了“@{{name}}”的微博', 'zh-hk': '提到了「@{{name}}」的微博', 'zh-tw': '提到了「@{{name}}」的微博', 'en': 'Weibo mentioned "@{{name}}"' },
   'mentionFilterContextMenuGroup': { 'zh-cn': '提到了', 'zh-hk': '提到了', 'zh-tw': '提到了', 'en': 'mentioned' },
   'mentionFilterContextMenu': { 'zh-cn': '@{{name}}', 'zh-hk': '@{{name}}', 'zh-tw': '@{{name}}', 'en': '@{{name}}' },
@@ -160,6 +168,9 @@ var text = {
   'topicFilterGroupTitle': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDesc': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'topicFilterDetails': { 'zh-cn': '包含以下话题的微博', 'zh-hk': '包含以下話題的微博', 'zh-tw': '包含以下話題的微博', 'en': 'Weibo with these topics' },
+  'topicFilterDetailsDesc': {
+    'zh-cn': '匹配提到了某个话题的微博，包括原文和转发的评论。话题使用全字匹配。'
+  },
   'topicFilterFast': { 'zh-cn': '包含话题　　', 'zh-hk': '包含話題　　', 'zh-tw': '包含話題　　', 'en': 'Weibo contains topic ' },
   'topicFilterContextMenuGroup': { 'zh-cn': '包含话题', 'zh-hk': '包含話題', 'zh-tw': '包含話題', 'en': 'contains topic' },
   'topicFilterContextMenu': { 'zh-cn': '#{{topic}}#', 'zh-hk': '#{{topic}}#', 'zh-tw': '#{{topic}}#', 'en': '#{{topic}}#' },
@@ -167,6 +178,9 @@ var text = {
   'topicFilterReason': { 'zh-cn': '因包含话题 #{{detail}}# ', 'zh-hk': '因包含話題 #{{detail}}# ', 'zh-tw': '因包含話題 #{{detail}}# ', 'en': 'because it contained topic #{{detail}}# ' },
   'rtopicFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'rtopicFilterDetails': { 'zh-cn': '包含匹配以下正则表达式的话题的微博', 'zh-hk': '包含匹配以下正則表達式的話題的微博', 'zh-tw': '包含匹配以下正規表示式的话题的微博', 'en': 'Weibo with topic matches these regular expressions' },
+  'rtopicFilterDetailsDesc': {
+    'zh-cn': '使用正则式匹配微博中的话题，正则匹配时不需要匹配两侧的“#”。'
+  },
   'rtopicFilterFast': { 'zh-cn': '包含话题匹配', 'zh-hk': '包含話題匹配', 'zh-tw': '包含話題匹配', 'en': 'Weibo contains topic matches ' },
   'rtopicFilterFastInput': { 'zh-cn': '“#{{topic}}#”', 'zh-hk': '「#{{topic}}#」', 'zh-tw': '「#{{topic}}#」', 'en': '"#{{topic}}#"' },
   'rtopicFilterReason': { 'zh-cn': '因包含话题匹配 {{detail}} ', 'zh-hk': '因包含話題匹配 {{detail}} ', 'zh-tw': '因包含話題匹配 {{detail}} ', 'en': 'because it contained topic match {{detail}} ' },
@@ -174,6 +188,9 @@ var text = {
   'sourceFilterGroupTitle': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'sourceFilterDesc': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Via' },
   'sourceFilterDetails': { 'zh-cn': '以下来源的微博', 'zh-hk': '以下來源的微博', 'zh-tw': '以下來源的微博', 'en': 'Weibo from these sources' },
+  'sourceFilterDetailsDesc': {
+    'zh-cn': '匹配微博下方“来自×××”的来源，不包括“自定义微博来源”中的文本。来源使用全字匹配。'
+  },
   'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「{{source}}」的微博', 'zh-tw': '來自「{{source}}」的微博', 'en': 'Weibo via "{{source}}"' },
   'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'via' },
   'sourceFilterContextMenu': { 'zh-cn': '{{source}}', 'zh-hk': '{{source}}', 'zh-tw': '{{source}}', 'en': '{{source}}' },
@@ -186,6 +203,9 @@ var text = {
   'hyperlinkFilterGroupTitle': { 'zh-cn': '链接', 'zh-hk': '連結', 'zh-tw': '連結', 'en': 'Link' },
   'hyperlinkFilterDesc': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
   'hyperlinkFilterDetails': { 'zh-cn': '包含指向以下网站的超链接的微博', 'zh-hk': '包含指向以下站點的超連結的微博', 'zh-tw': '包含指向以下站點的超連結的微博', 'en': 'Weibo with hyperlink to these website' },
+  'hyperlinkFilterDetailsDesc': {
+    'zh-cn': '将鼠标指向微博中的超链接时，会弹出来链接指向的实际地址的气球。此处按照气球中的内容进行匹配。子串匹配。'
+  },
   'hyperlinkFilterFast': { 'zh-cn': '包含链接到“{{host}}”地址链接的微博', 'zh-hk': '包含鏈接到「{{host}}」位址連結的微博', 'zh-tw': '包含鏈接到「{{host}}」位址連結的微博', 'en': 'Weibo contains hyperlink to "{{host}}"' },
   'hyperlinkFilterContextMenuGroup': { 'zh-cn': '链接到', 'zh-hk': '鏈接到', 'zh-tw': '鏈接到', 'en': 'hyperlink to' },
   'hyperlinkFilterContextMenu': { 'zh-cn': '{{host}}', 'zh-hk': '{{host}}', 'zh-tw': '{{host}}', 'en': '{{host}}' },
@@ -585,7 +605,7 @@ var html = {
   '~s~dialog': '<div id="{{id}}" class="W_layer" style="position: absolute; z-index: 10001;" node-type="outer"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div class="content" node-type="layoutContent"><div class="title" node-type="title" style="cursor: move;"><span node-type="title_content">{{title}}</span></div><a class="W_close" node-type="close" title="{{closeButtonTitle}}" href="javascript:void(0);"></a><div class="detail" node-type="inner" style=""></div></td></tr></tbody></table></div></div>',
   'alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
   'confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
-  'bubble': '<div class="W_layer yawf-Layer W_layer_pop yawf-bubble"><div class="content layer_mini_info"><div class="main_txt">{{{text}}}</div><div class="W_layer_arrow"><span class="W_arrow_bor W_arrow_bor_b" node-type="arrow"><i class="S_line3"></i><em class="S_bg2_br"></em></span><div></div></div></div></div>',
+  'bubble': '<div class="W_layer yawf-Layer W_layer_pop yawf-bubble"><div class="content layer_mini_info"><div class="main_txt">{{{text}}}</div><div class="W_layer_arrow"><span class="W_arrow_bor" node-type="arrow"><i class="S_line3"></i><em class="S_bg2_br"></em></span><div></div></div></div></div>',
   // 漏斗图标
   'icon': '<div class="gn_set_list yawf-gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">Y</em></a></div>',
   'menuitem': '<ul><li class="line S_line1 yawf-config-menuline"></li><li><a href="javascript:void(0);" class="yawf-config-menuitem">{{filterMenuItem}}</a></li></ul>',
@@ -1519,6 +1539,25 @@ util.ui.confirm = function (id, details) {
   return form;
 };
 
+util.ui.bubble = function (description, rect) {
+  var bubble = util.dom.create(util.str.fill(html.bubble, { 'text': description }));
+  var bor = bubble.querySelector('.W_arrow_bor')
+  document.body.appendChild(bubble);
+  util.func.call(function () {
+    var top1 = rect.top - bubble.clientHeight - 8;
+    var top2 = rect.bottom + 8;
+    bubble.style.left = rect.left - 32 + rect.width + 'px';
+    if (top1 > 0) {
+      bubble.style.top = top1 + 'px';
+      bor.className = 'W_arrow_bor W_arrow_bor_b';
+    } else {
+      bubble.style.top = top2 + 'px';
+      bor.className = 'W_arrow_bor W_arrow_bor_t';
+    }
+  });
+  return bubble;
+};
+
 // 网络访问相关
 var network = {};
 // 维护帐号信息，用于显示
@@ -2128,15 +2167,9 @@ filter.typed.dom = (function () {
     };
     dom.addEventListener('mouseenter', function () {
       enter(); if (bubble) return;
-      bubble = util.dom.create(util.str.fill(html.bubble, { 'text': item.description }));
+      bubble = util.ui.bubble(item.description, dom.getClientRects()[0]);
       bubble.addEventListener('mouseenter', enter);
       bubble.addEventListener('mouseleave', leave);
-      document.body.appendChild(bubble);
-      util.func.call(function () {
-        var position = dom.getClientRects()[0];
-        bubble.style.left = (position.left - 20) + 'px';
-        bubble.style.top = (position.top - bubble.clientHeight - 8) + 'px';
-      });
     });
     dom.addEventListener('mouseleave', leave);
     return dom;
@@ -2496,7 +2529,18 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
     typedFilterGroup = filter.predef.group(details.name);
     rules = filter.items[details.name] = {};
   }
-  rules.title = filter.item({ 'group': details.name, 'type': 'subtitle', 'text': '{{' + details.name + 'FilterDetails}}' }).addto(typedFilterGroup);
+  rules.title = filter.item({
+    'group': details.name,
+    'type': 'subtitle',
+    'text': '{{' + details.name + 'FilterDetails}}{{<i>}}',
+    'ref': {
+      'i': {
+        'type': 'sicon',
+        'icon': 'warn',
+        'description': '{{' + details.name + 'FilterDetailsDesc}}'
+      }
+    }
+  }).addto(typedFilterGroup);
   items.forEach(function (item) {
     // 过滤器
     var rule = {
@@ -2886,13 +2930,6 @@ filter.predef.wbfc({
     'description': filter.fast.description.radioed('content', 'regexp', 'text', false),
   }
 }, filter.groups.content);
-
-// 关于正则式的说明
-filter.items.content.regexp.remark = filter.item({
-  'group': 'regexp',
-  'type': 'remark',
-  'text': '{{regexpFilterRemark}}',
-}).addto(filter.groups.content);
 
 // 其他被视为内容的元素
 filter.items.content.elements = {};
@@ -4217,7 +4254,7 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   'text': '{{showAllMsgNavDesc}}',
   'ainit': function () {
     observer.dom.add(function () {
-      var msg = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child .lev+.lev');
+      var msg = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child .lev+.lev'); if (!msg) return;
       var l1 = msg.parentNode, ref = l1.nextSibling; l1.removeChild(msg);
       var mn = util.dom.create('div', util.str.fill(html.leftMsg));
       while (mn.firstChild) ref.parentNode.insertBefore(mn.firstChild, ref);
