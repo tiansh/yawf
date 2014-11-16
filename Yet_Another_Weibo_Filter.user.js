@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.168
+// @version           3.1.169
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -199,19 +199,45 @@ var text = {
   'showMentionMeDesc': { 'zh-cn': '提到自己的微博', 'zh-hk': '提到自己的微博', 'zh-tw': '提到自己的微博', 'en': 'Weibo mentioned myself' },
   // 隐藏
   'otherBlacklistTitle': { 'zh-cn': '隐藏以下内容', 'zh-hk': '隱藏以下內容', 'zh-tw': '隱藏以下內容', 'en': 'Hide following content' },
-  'adfeedFilterDesc': { 'zh-cn': '推广微博', 'zh-hk': '推廣微博', 'zh-tw': '推廣微博', 'en': 'Ad Weibo' },
-  'fansTopFilterDesc': { 'zh-cn': '粉丝头条', 'zh-hk': '粉丝头条', 'zh-tw': '粉丝头条'/* as is */, 'en': 'Fans top / Headline Weibo' },
-  'recommandFeedDesc': { 'zh-cn': '推荐微博', 'zh-hk': '建議微博', 'zh-tw': '建議微博', 'en': 'Recommended Weibo' },
-  'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容', 'zh-hk': '混入微博列表的其它內容', 'zh-tw': '混入微博列表的其它內容', 'en': 'Other contents in Weibo list' },
-  'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发', 'zh-hk': '已刪除微博的轉發', 'zh-tw': '已刪除微博的轉發', 'en': 'Forward of deleted Weibo' },
-  'voteWeiboFilterDesc': { 'zh-cn': '投票微博', 'zh-hk': '投票微博', 'zh-tw': '投票微博', 'en': 'Voting weibo' },
-  'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity' },
-  'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博', 'zh-hk': '來自微話題的微博', 'zh-tw': '來自微話題的微博', 'en': 'Weibo via 微话题 (micro Topic)' },
-  'customizeSourceWeibo': { 'zh-cn': '自定义来源微博|{{<action>}}', 'zh-hk': '自訂來源微博|{{<action>}}', 'zh-tw': '自訂來源微博|{{<action>}}', 'en': 'Weibo with customize source | {{<action>}}' },
+  'adfeedFilterDesc': { 'zh-cn': '推广微博{{<i>}}', 'zh-hk': '推廣微博{{<i>}}', 'zh-tw': '推廣微博{{<i>}}', 'en': 'Ad Weibo{{<i>}}' },
+  'adfeedFilterDescDesc': {
+    'zh-cn': '推广微博一般出现在首页微博列表靠前的位置，并标记“推荐”字样。通过付费和新浪的审核，可以推广某条微博。微博会根据您的喜好随机将一些被推广的微博推荐给您。虽然推广微博出现在您的微博列表中，但这些微博一般不是您关注的人发的微博。',
+  },
+  'fansTopFilterDesc': { 'zh-cn': '粉丝头条{{<i>}}', 'zh-hk': '粉丝头条{{<i>}}', 'zh-tw': '粉丝头条{{<i>}}'/* as is */, 'en': 'Fans top / Headline Weibo{{<i>}}' },
+  'fansTopFilterDescDesc': {
+    'zh-cn': '粉丝头条会显示在首页微博列表的顶端，一般标记“热门”等字样。粉丝头条是新浪微博官方的一项推广产品，使用粉丝头条的微博可在 24 小时内出现在所有微博粉丝首页的第一位。粉丝头条微博总是来自于您关注的人。',
+  },
+  'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容{{<i>}}', 'zh-hk': '混入微博列表的其它內容{{<i>}}', 'zh-tw': '混入微博列表的其它內容{{<i>}}', 'en': 'Other contents in Weibo list{{<i>}}' },
+  'fakeWeiboFilterDescDesc': {
+    'zh-cn': '所有在微博与微博间展示的非微博内容，包括“好友推荐”“热门话题”等，也包括“好友××赞过的微博”。',
+  },
+  'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发{{<i>}}', 'zh-hk': '已刪除微博的轉發{{<i>}}', 'zh-tw': '已刪除微博的轉發{{<i>}}', 'en': 'Forward of deleted Weibo{{<i>}}' },
+  'deletedForwardFilterDescDesc': {
+    'zh-cn': '包括因为删除或对微博设置了隐私权限而使您无法看到原文的微博。这些微博您只能看见转发者的评论，但是无法看到原微博的内容。',
+  },
+  'voteWeiboFilterDesc': { 'zh-cn': '投票微博{{<i>}}', 'zh-hk': '投票微博{{<i>}}', 'zh-tw': '投票微博{{<i>}}', 'en': 'Voting weibo{{<i>}}' },
+  'voteWeiboFilterDescDesc': {
+    'zh-cn': '包括在发布微博时选择投票的微博，也包括在投票时自动发出的微博。',
+  },
+  'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博{{<i>}}', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity{{<i>}}' },
+  'taobaoTianmaoWeiboDesc': {
+    'zh-cn': '带有<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_tb"></i><span class="W_autocut">淘宝商品</span></a></span>、<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_tmall"></i><span class="W_autocut">天猫商品</span></a></span>或<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_ju"></i><span class="W_autocut">聚划算商品</span></a></span>的微博',
+  },
+  'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo via 微话题 (micro Topic){{<i>}}' },
+  'huatiSourceWeiboDesc': {
+    'zh-cn': '一些热门话题页面发布微博时会显示以“微话题 -”开头的来源',
+  },
+  'customizeSourceWeibo': { 'zh-cn': '自定义来源微博|{{<action>}}{{<i>}}', 'zh-hk': '自訂來源微博|{{<action>}}{{<i>}}', 'zh-tw': '自訂來源微博|{{<action>}}{{<i>}}', 'en': 'Weibo with customize source | {{<action>}}{{<i>}}' },
   'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博', 'en': 'hide Weibo' },
   'customizeSourceReset': { 'zh-cn': '将来源改为“微博 weibo.com”', 'zh-hk': '將來源改為「微博 weibo.com」', 'zh-tw': '將來源改為「微博 weibo.com」', 'en': 'modify source to "微博 weibo.com"' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
-  'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博', 'en': 'Weibo mentioned | not less than {{<num>}} topics' },
+  'customizeSourceWeiboDesc': {
+    'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
+  },
+  'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博{{<i>}}', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'en': 'Weibo mentioned | not less than {{<num>}} topics{{<i>}}' },
+  'multiTopicDesc': {
+    'zh-cn': '由于新浪热门话题和话题主持人的相关政策，存在一些账号通过罗列若干热门话题以使自己的广告可以显示在热门话题页面。您可以隐藏一次性提到了太多话题的微博以避免看到他们。',
+  },
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
   'sameAccountFilterDesc': { 'zh-cn': '相同作者的微博：|超过{{<number>}}条|时{{<action>}}', 'zh-hk': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'zh-tw': '相同作者的微博：|超過{{<number>}}條|時{{<action>}}', 'en': 'Weibo from same account: |{{<action>}} the part | which exceeds {{<number>}} Weibo' },
@@ -224,31 +250,49 @@ var text = {
   'sameAccountByGroup': { 'zh-cn': '浏览分组时禁用相同作者数量限制', 'zh-hk': '流覽分組時禁用相同作者數量限制', 'zh-tw': '流覽分組時禁用相同作者數量限制', 'en': 'Disable hide too many Weibo from same account filter when browsing by group' },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
-  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器', 'zh-hk': '使用拖放快速創建篩選器', 'zh-tw': '使用拖放快速創建篩選器', 'en': 'Use drag and drop to create filters' },
-  'useContextMenuCreator': { 'zh-cn': '使用右键菜单快速创建过滤器', 'zh-hk': '使用右鍵功能表快速創建篩選器', 'zh-tw': '使用右鍵功能表快速創建篩選器', 'en': 'Use right-click menu to create filters' },
-  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入', 'en': 'Send blocked Weibo to server to avoid reloading' },
+  'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器{{<i>}}', 'zh-hk': '使用拖放快速創建篩選器{{<i>}}', 'zh-tw': '使用拖放快速創建篩選器{{<i>}}', 'en': 'Use drag and drop to create filters{{<i>}}' },
+  'useFastCreatorDesc': {
+    'zh-cn': '您可以使用鼠标拖拽微博中的文字、帐号、话题、来源等，网页右上角会显示一个黄色的区域，拖拽到其上释放可创建过滤器。',
+  },
+  'useContextMenuCreator': { 'zh-cn': '使用右键菜单快速创建过滤器{{<i>}}', 'zh-hk': '使用右鍵功能表快速創建篩選器{{<i>}}', 'zh-tw': '使用右鍵功能表快速創建篩選器{{<i>}}', 'en': 'Use right-click menu to create filters{{<i>}}' },
+  'useContextMenuCreatorDesc': {
+    'zh-cn': '在微博上点右键，您可以在浏览器原有的菜单中找到“创建过滤器”的菜单，点选即可快速创建过滤器。',
+  },
+  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载{{<i>}}', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入{{<i>}}', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入{{<i>}}', 'en': 'Send blocked Weibo to server to avoid reloading{{<i>}}' },
+  'blockHiddenWeiboDescDesc': {
+    'zh-cn': '开启该选项后，脚本会自动帮您点击被隐藏微博右上角下拉菜单中的“隐藏这条微博”。这样即便您刷新页面或使用移动设备登录微博，也不会再看到这些微博。由于该屏蔽操作是不可逆的，所以如果您在测试一些过滤规则时，请谨慎开启。',
+  },
   // 自动载入
   'autoLoadNewWeiboTitle': { 'zh-cn': '自动载入新微博', 'zh-hk': '自動載入新微博', 'zh-tw': '自動載入新微博', 'en': 'New Weibo Auto Load' },
   'autoLoadNewWeibo': { 'zh-cn': '自动载入新微博', 'zh-hk': '自動載入新微博', 'zh-tw': '自動載入新微博', 'en': 'New Weibo Auto Load' },
+  'autoLoadNewWeiboDesc': {
+    'zh-cn': '启用该选项可以在显示“有×条新微博”的提示横幅出现前过滤微博，避免提示不希望看到的新微博；但勾选此项会导致在其他移动设备上收不到有新微博的提示。',
+  },
   // 分隔条
   'timeTipHour': { 'zh-cn': '小时', 'zh-hk': '小時', 'zh-tw': '小時', 'en': ' hour' },
   'timeTipMin': { 'zh-cn': '分钟', 'zh-hk': '分鐘', 'zh-tw': '分鐘', 'en': ' min' },
   'timeTipText': { 'zh-cn': '你看到这里', 'zh-hk': '你看到這裡', 'zh-tw': '你看到這裡', 'en': ' 你看到这里' /* as is */ },
   // 自动展开
   'autoExpand': {
-    'zh-cn': '自动载入后直接展开显示||{{<etypes>}}仅对白名单的微博自动展开显示||{{<background>}}页面处于活动状态时暂停',
-    'zh-hk': '自動載入後直接展開顯示||{{<etypes>}}僅對白名單的微博自動展開顯示||{{<background>}}頁面處於活動狀態時暫停',
-    'zh-tw': '自動載入後直接展開顯示||{{<etypes>}}僅對白名單的微博自動展開顯示||{{<background>}}頁面處於活動狀態時暫停',
-    'en': 'Expand Weibo after auto load || {{<etypes>}} Only auto expand whitelist Weibo || {{<background>}} Pause when page actived',
+    'zh-cn': '自动载入后直接展开显示{{<i>}}||{{<etypes>}}仅对白名单的微博自动展开显示||{{<background>}}页面处于活动状态时暂停',
+    'zh-hk': '自動載入後直接展開顯示{{<i>}}||{{<etypes>}}僅對白名單的微博自動展開顯示||{{<background>}}頁面處於活動狀態時暫停',
+    'zh-tw': '自動載入後直接展開顯示{{<i>}}||{{<etypes>}}僅對白名單的微博自動展開顯示||{{<background>}}頁面處於活動狀態時暫停',
+    'en': 'Expand Weibo after auto load {{<i>}}|| {{<etypes>}} Only auto expand whitelist Weibo || {{<background>}} Pause when page actived',
+  },
+  'autoExpandDesc': {
+    'zh-cn': '需要启用“自动载入新微博”功能才会生效。在载入后可以直接将微博显示出来而不是在微博列表顶部显示有新微博的提示横幅。',
   },
   'autoExpandAll': { 'zh-cn': '所有新微博', 'zh-hk': '所有新微博', 'zh-tw': '所有新微博', 'en': 'all new Weibo' },
   'autoExpandWhite': { 'zh-cn': '白名单微博', 'zh-hk': '白名單微博', 'zh-tw': '白名單微博', 'en': 'whitelist Weibo' },
   // 桌面提示
   'desktopNotification': {
-    'zh-cn': '载入新微博后显示桌面提示||{{<types>}}仅对白名单的微博显示桌面提示||{{<shorten>}}桌面提示仅显示|前{{<shortlen>}}字符摘要信息||{{<autohide>}}桌面提醒延时自动关闭|显示{{<duration>}}毫秒|＋字数×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
-    'zh-hk': '载入新微博后顯示桌面提示||{{<types>}}僅對白名單的微博顯示桌面提示||{{<shorten>}}桌面提示僅顯示|前{{<shortlen>}}字元摘要資訊||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
-    'zh-tw': '载入新微博后顯示桌面提示||{{<types>}}僅對白名單的微博顯示桌面提示||{{<shorten>}}桌面提示僅顯示|前{{<shortlen>}}字元摘要資訊||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
-    'en': 'Show desktop notification after auto load | {{<types>}} Only show desktop notification for whitelist Weibo || {{<shorten>}} Desktop notification only show | first {{<shortlen>}} charactors Weibo content || {{<autohide>}} auto hide desktop notification after | {{<duration>}}ms | + {{<durationc>}}ms/char || {{<ntypes>}} Use webkitNotifications instead of Notification',
+    'zh-cn': '载入新微博后显示桌面提示{{<i>}}||{{<types>}}仅对白名单的微博显示桌面提示||{{<shorten>}}桌面提示仅显示|前{{<shortlen>}}字符摘要信息||{{<autohide>}}桌面提醒延时自动关闭|显示{{<duration>}}毫秒|＋字数×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
+    'zh-hk': '载入新微博后顯示桌面提示{{<i>}}||{{<types>}}僅對白名單的微博顯示桌面提示||{{<shorten>}}桌面提示僅顯示|前{{<shortlen>}}字元摘要資訊||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
+    'zh-tw': '载入新微博后顯示桌面提示{{<i>}}||{{<types>}}僅對白名單的微博顯示桌面提示||{{<shorten>}}桌面提示僅顯示|前{{<shortlen>}}字元摘要資訊||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
+    'en': 'Show desktop notification after auto load {{<i>}}|| {{<types>}} Only show desktop notification for whitelist Weibo || {{<shorten>}} Desktop notification only show | first {{<shortlen>}} charactors Weibo content || {{<autohide>}} auto hide desktop notification after | {{<duration>}}ms | + {{<durationc>}}ms/char || {{<ntypes>}} Use webkitNotifications instead of Notification',
+  },
+  'desktopNotificationDesc': {
+    'zh-cn': '需要启用“自动载入新微博”功能才会生效。在载入后，无论浏览器是否被最小化都可以在屏幕右下角弹出包含新微博内容的提示，方便您第一时间了解新收到的微博。',
   },
   'desktopNotificationDisallowedTitle': { 'zh-cn': '桌面提示被阻止', 'zh-hk': '桌面提示被阻止', 'zh-tw': '桌面提示被阻止', 'en': 'Desktop Notification Disallowed' },
   'desktopNotificationDisallowed': {
@@ -431,7 +475,7 @@ var text = {
     'zh-tw': '閱讀視圖|寬度{{<width>}}px||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
     'en': 'Reading View | width {{<width>}}px || shortcut {{<key>}} || {{<switch>}} show switch button at top of Weibo list'
   },
-  'weiboOnlyButton': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
+  'weiboOnlyButtonDesc': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'keyInputTip': { 'zh-cn': '按下键盘修改快捷键设置', 'zh-hk': '按下鍵盤修改快速鍵設置', 'zh-tw': '按下鍵盤修改快速鍵設置', 'en': 'Press key to modify shortcut key setting' },
   'userstyleTitle': {
     'zh-cn': '<span>自定义CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜索样式</a><a class="yawf-userstyles-tip" target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%85%B6%E4%BB%96%E5%8F%AF%E5%B1%8F%E8%94%BD%E5%85%83%E7%B4%A0">常用自定义CSS</a></span>{{}}',
@@ -444,7 +488,7 @@ var text = {
   // 脚本
   'scriptFilterGroupTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   // 全选该分组
-  'configSelectAll': { 'zh-cn': '全选本组', 'zh-hk': '全選本組', 'zh-tw': '全選本組', 'en': 'Select Group' },
+  'configSelectAllDesc': { 'zh-cn': '全选本组', 'zh-hk': '全選本組', 'zh-tw': '全選本組', 'en': 'Select Group' },
   // 导入导出
   'configImportAndExport': { 'zh-cn': '设置', 'zh-hk': '設定', 'zh-tw': '設定', 'en': 'Setting' },
   'configImportButton': { 'zh-cn': '导入', 'zh-hk': '匯入', 'zh-tw': '匯入', 'en': 'Import' },
@@ -534,6 +578,7 @@ var html = {
   '~s~dialog': '<div id="{{id}}" class="W_layer" style="position: absolute; z-index: 10001;" node-type="outer"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div class="content" node-type="layoutContent"><div class="title" node-type="title" style="cursor: move;"><span node-type="title_content">{{title}}</span></div><a class="W_close" node-type="close" title="{{closeButtonTitle}}" href="javascript:void(0);"></a><div class="detail" node-type="inner" style=""></div></td></tr></tbody></table></div></div>',
   'alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
   'confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
+  'bubble': '<div class="W_layer yawf-Layer W_layer_pop yawf-bubble"><div class="content layer_mini_info"><div class="main_txt">{{{text}}}</div><div class="W_layer_arrow"><span class="W_arrow_bor W_arrow_bor_b" node-type="arrow"><i class="S_line3"></i><em class="S_bg2_br"></em></span><div></div></div></div></div>',
   // 漏斗图标
   'icon': '<div class="gn_set_list yawf-gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">Y</em></a></div>',
   'menuitem': '<ul><li class="line S_line1 yawf-config-menuline"></li><li><a href="javascript:void(0);" class="yawf-config-menuitem">{{filterMenuItem}}</a></li></ul>',
@@ -550,6 +595,7 @@ var html = {
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
   'configFooter': '',
+  'sicon': '<i class="W_icon icon_{{icon}}S yawf-configSIcon"></i>',
   // 设置窗口内文字
   'configTitle': '<div class="yawf-groupTitle">{{{text}}}</div>',
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
@@ -578,7 +624,7 @@ var html = {
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
   'scriptIcon': '<div id="yawf-script-icon" style="background: url({{icon}}); width: 72px; height: 72px; float: right; margin: 0 2em"></div>',
   // 选中当前分组所有
-  'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAll}}</span></a></div>',
+  'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAllDesc}}</span></a></div>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-configRemark">{{configImportWbpWarning}}</div></div>',
@@ -599,7 +645,7 @@ var html = {
   'fastFilterString': '<label><span></span></label>',
   'fastFilterStringInput': '<input width="12" class="input_default" type="text" />',
   // 只看微博列表
-  'weiboOnlyButton': '<div id="yawf-weibo-only"><span><a class="S_txt1" href="javascript:void(0);">{{text}}</a></span></div>',
+  'weiboOnlyButton': '<div id="yawf-weibo-only"><span><a class="S_txt1" href="javascript:void(0);">{{weiboOnlyButtonDesc}}</a></span></div>',
   // 分组或特别关注的未读提示
   'noticeContainer': '<div class="WB_feed_type SW_fun S_line2" action-type="feed_list_item" yawf-display="notice"></div>',
   // 有新微博的替代提示
@@ -707,18 +753,23 @@ util.str.escape.regexp = function (s) {
 util.str.fill = function (base, func) {
   var argdatas = Array.from(arguments).slice(1);
   var datas = argdatas.concat([text]);
+  // 找合适的内容填上
+  var parser = function (datas) {
+    return function (text) {
+      var ret = null;
+      datas.some(function (data) {
+        if (typeof data === 'object' && text in data) ret = '' + data[text];
+        return ret !== null;
+      });
+      return ret;
+    };
+  };
   var parseFunction;
   if (typeof func === 'function') parseFunction = func;
-  else parseFunction = function (text) {
-    var ret = null;
-    datas.some(function (data) {
-      if (typeof data === 'object' && text in data) ret = '' + data[text];
-      return ret !== null;
-    });
-    return ret;
-  };
+  else parseFunction = parser(argdatas.concat([text]));
   return base.replace(/{{([\[{]?([a-zA-Z0-9_-]*)[\]}]?)}}/g, function (o, i, p) {
-    var ret = parseFunction(p);
+    var ps = p.split('|');
+    var ret = parseFunction(ps[0]);
     if (ret == null) return o;
     if (i[0] === '{') return (ret = util.str.fill(ret, parseFunction));
     if (i[0] === '[') return util.str.escape.xml(ret);
@@ -2052,6 +2103,35 @@ filter.typed.dom = (function () {
   var remark = base('Remark');
   // 一个空的 label
   var label = base('Label');
+  
+  // 一个提示图标
+  var sicon = function () {
+    var item = this;
+    var dom = util.dom.create(util.str.fill(html.sicon, item));
+    var bubble = null, remover = null;
+    var enter = function () { if (remover) clearTimeout(remover); };
+    var leave = function () {
+      if (!bubble) return;
+      remover = setTimeout(function () {
+        bubble.parentNode.removeChild(bubble);
+        bubble = null;
+      }, 200);
+    };
+    dom.addEventListener('mouseenter', function () {
+      enter(); if (bubble) return;
+      bubble = util.dom.create(util.str.fill(html.bubble, { 'text': item.description }));
+      bubble.addEventListener('mouseenter', enter);
+      bubble.addEventListener('mouseleave', leave);
+      document.body.appendChild(bubble);
+      util.func.call(function () {
+        var position = dom.getClientRects()[0];
+        bubble.style.left = (position.left - 20) + 'px';
+        bubble.style.top = (position.top - bubble.clientHeight - 8) + 'px';
+      });
+    });
+    dom.addEventListener('mouseleave', leave);
+    return dom;
+  };
 
   // 真假值的设置项
   var boolean = base('Boolean', function (dom, item) {
@@ -2231,6 +2311,7 @@ filter.typed.dom = (function () {
     'text': text,
     'remark': remark,
     'label': label,
+    'sicon': sicon,
     'string': string,
     'color': color,
     'number': number,
@@ -3136,6 +3217,7 @@ filter.items.other.hidethese.ad_feed = filter.item({
   'key': 'weibo.other.ad_feed',
   'text': '{{adfeedFilterDesc}}',
   'priority': 1e5 + 1e3, // 优先于白名单
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{adfeedFilterDescDesc}}' } },
   'rule': function adFeedFilterRule(feed) {
     if (!this.conf) return null;
     return feed.getAttribute('feedtype') === 'ad' ? 'hidden' : null;
@@ -3150,6 +3232,7 @@ filter.items.other.hidethese.fans_top = filter.item({
   'key': 'weibo.other.fans_top',
   'text': '{{fansTopFilterDesc}}',
   'priority': 1e5 + 1e3, // 优先于白名单
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{fansTopFilterDescDesc}}' } },
   'rule': function fansTopFilterRule(feed) {
     if (!this.conf) return null;
     return feed.querySelector('[adcard="fanstop"]') ? 'hidden' : null;
@@ -3163,6 +3246,7 @@ filter.items.other.hidethese.fake_weibo = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.fake_weibo',
   'text': '{{fakeWeiboFilterDesc}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{fakeWeiboFilterDescDesc}}' } },
   'rule': function fakeWeiboFilterRule(feed) {
     if (!this.conf) return null;
     if (!feed.getAttribute('mid')) return 'hidden';
@@ -3177,6 +3261,7 @@ filter.items.other.hidethese.deleted_forward = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.deleted_forward',
   'text': '{{deletedForwardFilterDesc}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{deletedForwardFilterDescDesc}}' } },
   'rule': function deletedForwardFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.getAttribute('isforward') === '1' &&
@@ -3192,6 +3277,7 @@ filter.items.other.hidethese.vote_weibo = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.vote_weibo',
   'text': '{{voteWeiboFilterDesc}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{voteWeiboFilterDescDesc}}' } },
   'rule': function voteWeiboFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('.WB_from a[href^="http://vote.weibo.com/"]'))
@@ -3211,6 +3297,7 @@ filter.items.other.hidethese.tb_tm_wb = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.tb_tm_wb',
   'text': '{{taobaoTianmaoWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{taobaoTianmaoWeiboDesc}}' } },
   'rule': function taobaoTianmaoFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('a .icon_fl_tb, a .icon_fl_tmall, a .icon_fl_ju'))
@@ -3226,6 +3313,7 @@ filter.items.other.hidethese.wei_huati = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.wei_huati',
   'text': '{{huatiSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{huatiSourceWeiboDesc}}' } },
   'rule': function huatiSourceWeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
@@ -3244,6 +3332,7 @@ filter.items.other.hidethese.customize_source = filter.item({
   'key': 'weibo.other.customize_source',
   'text': '{{customizeSourceWeibo}}',
   'ref': {
+    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{customizeSourceWeiboDesc}}' },
     'action': {
       'type': 'select',
       'default': 'hidden',
@@ -3275,6 +3364,7 @@ filter.items.other.hidethese.multi_topic = filter.item({
   'key': 'weibo.other.multi_topic',
   'text': '{{multiTopic}}',
   'ref': {
+    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{multiTopicDesc}}' },
     'num': {
       'type': 'range',
       'min': 3,
@@ -3407,6 +3497,7 @@ filter.items.other.scripttool.use_fast_creator = filter.item({
   'key': 'weibo.tool.use_fast_creator',
   'default': true,
   'text': '{{useFastCreator}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{useFastCreatorDesc}}' } },
   'ainit': function () {
     filter.fast.active();
   },
@@ -3419,6 +3510,7 @@ if ('contextMenu' in document.createElement('div')) filter.items.other.scripttoo
   'key': 'weibo.tool.use_context_menu_creator',
   'default': true,
   'text': '{{useContextMenuCreator}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{useContextMenuCreatorDesc}}' } },
   'ainit': function () {
     filter.fast.right.active();
   },
@@ -3431,6 +3523,7 @@ filter.items.other.scripttool.block_hidden = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.block_hidden',
   'text': '{{blockHiddenWeiboDesc}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{blockHiddenWeiboDescDesc}}' } },
   'ainit': function () {
     observer.weibo.after(function (feed) {
       var display = feed.getAttribute('yawf-display');
@@ -3457,7 +3550,8 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
   'version': 44,
   'type': 'boolean',
   'key': 'weibo.other.auto_load_new_weibo',
-  'text': '{{autoLoadNewWeibo}}',
+  'text': '{{autoLoadNewWeibo}}{{<i>}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{autoLoadNewWeiboDesc}}' } },
   // 展开新微博后添加和旧微博的分割线
   'timetip': (function () {
     var time0 = new Date(), tip = null;
@@ -3605,6 +3699,7 @@ filter.items.other.autoload.auto_expand = filter.item({
   'key': 'weibo.other.auto_expand',
   'text': '{{autoExpand}}',
   'ref': {
+    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{autoExpandDesc}}' },
     'etypes': {
       'type': 'boolean',
     },
@@ -3642,6 +3737,7 @@ if (util.notify.avaliableNotification().length) filter.items.other.autoload.desk
   'key': 'weibo.other.desktop_notification',
   'text': '{{desktopNotification}}',
   'ref': {
+    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{desktopNotificationDesc}}' },
     'types': {
       'type': 'boolean',
       'default': true,
@@ -4753,7 +4849,7 @@ filter.items.tool.stylish.reorder_nav_bar = filter.item({
       var nlist = gnlist.querySelector('ul');
       items.forEach(function (l) { nlist.appendChild(l); });
       search.parentNode.insertBefore(gnlist, search);
-      GM_addStyle(util.str.cmt(function () { /*!CSS
+      util.css.add(util.str.cmt(function () { /*!CSS
         .WB_global_nav .gn_search { float: none; display: inline-block; }
         .WB_global_nav .gn_header { text-align: right; }
         .WB_global_nav .gn_header > * { text-align: left; }
@@ -5008,7 +5104,6 @@ filter.items.tool.stylish.weibo_only = filter.item({
         var search = document.querySelector('#v6_pl_content_homefeed .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added]), div[id^="Pl_Official_ProfileFeedNav__"] .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added])');
         if (!search) return; search.setAttribute('yawf-weibo-only-added', 'added');
         var weiboOnly = util.dom.create('div', util.str.fill(html.weiboOnlyButton, {
-          'text': text.weiboOnlyButton,
           'shortcut': key.conf === 0 ? '' : ' (' + util.keyboard.name(key.conf) + ')',
         })).firstChild;
         weiboOnly.addEventListener('click', updateMode.bind(that, null));
@@ -5609,6 +5704,8 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-config .btn .W_btn_b_disable:hover span { border-color: #ffffff; }
   .layoutFilterGroupLayer .yawf-configBoolean { display: inline-block; margin-right: 0; }
   .yawf-userstyles-tip { float: right; margin: 0 0 0 1em; }
+  .yawf-configSIcon { margin: 0 0 0 0.5em; position: relative; top: 4px; }
+  .yawf-bubble { max-width: 280px; }
   // 新功能提示
   #yawf-whats-new [node-type="inner"] { padding: 10px 0; width: 760px; }
   .yawf-whats-new-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
