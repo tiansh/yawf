@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.171
+// @version           3.1.172
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -331,7 +331,7 @@ var text = {
   'layoutFilterGroupTitle': { 'zh-cn': '模块', 'zh-hk': '模組', 'zh-tw': '模組', 'en': 'Module' },
   // 标识图标
   'layoutHideIcon': { 'zh-cn': '隐藏模块 - 标识/图标', 'zh-hk': '隱藏模組 - 標誌/圖示', 'zh-tw': '隱藏模組 - 標誌/圖示', 'en': 'Hide modules - Logo / Icon' },
-  'layoutHideIconLevel': { 'zh-cn': '等级', 'zh-hk': 'Level', 'zh-tw': '等級', 'en': 'Level' },
+  'layoutHideIconLevel': { 'zh-cn': '等级', 'zh-hk': 'Level<span class="W_icon_level icon_level_c2"><span>Lv.1</span></span>', 'zh-tw': '等級<span class="W_icon_level icon_level_c2"><span>Lv.1</span></span>', 'en': 'Level<span class="W_icon_level icon_level_c2"><span>Lv.1</span></span>' },
   'layoutHideIconMember': { 'zh-cn': '微博会员', 'zh-hk': '微博會員', 'zh-tw': '微博會員', 'en': 'Weibo VIP / Member' },
   'layoutHideIconApprove': { 'zh-cn': '个人认证', 'zh-hk': '個人認證', 'zh-tw': '個人認證', 'en': 'Personal Authentication / 個人認證' },
   'layoutHideIconApproveCo': { 'zh-cn': '机构认证', 'zh-hk': '企業認證', 'zh-tw': '企業認證', 'en': 'Weibo Verification / 企業認證' },
@@ -366,6 +366,9 @@ var text = {
   'layoutHideMiddleMemberTip': { 'zh-cn': '开通会员提示（底部）', 'zh-hk': '開通會員提示（底部）', 'zh-tw': '開通會員提示（底部）', 'en': 'Tip of Joining Weibo VIP, bottom' },
   // 右栏
   'layoutHideRight': { 'zh-cn': '隐藏模块 - 右栏', 'zh-hk': '隱藏模組 - 右欄', 'zh-tw': '隱藏模組 - 右欄', 'en': 'Hide modules - Right Column' },
+  'layoutHideRightDesc': {
+    'zh-cn': '微博 v6 的右栏可能还在调整中，所以此处保留了一些旧的右栏模块。可能其中的某些模块以后不再会出现。'
+  },
   'layoutHideRightTemplate': { 'zh-cn': '设置模板', 'zh-hk': '背景設定', 'zh-tw': '背景設定', 'en': 'Template Settings' },
   'layoutHideRightInfo': { 'zh-cn': '头像', 'zh-hk': '頭像', 'zh-tw': '頭像', 'en': 'Avatar' },
   'layoutHideRightV6UpdateV6': { 'zh-cn': '新版微博介绍', 'zh-hk': '新版微博介绍', 'zh-tw': '新版微博介绍'/* as is */, 'en': '新版微博介绍 (Introduce to Weibo v6)' },
@@ -427,7 +430,7 @@ var text = {
   'layoutHidePersonUserList': { 'zh-cn': '与他/她相似的人', 'zh-hk': '與他/她相似的人', 'zh-tw': '與他/她相似的人', 'en': 'with He/She相似的人 (Persons similar to him/her)' },
   // 个人主页边栏模块
   'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏', 'zh-hk': '隱藏模組 - 個人主頁邊欄', 'zh-tw': '隱藏模組 - 個人主頁邊欄', 'en': 'Hide modules - Side column of personal homepage' },
-  'layoutHidePLeftDesc': { 'zh-cn': '隐藏个人主页边栏中以下标题的模块<br />模块', 'zh-hk': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'zh-tw': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'en': 'Hide modules on personal homepage with these titles<br />Modules' },
+  'layoutHidePLeftDetails': { 'zh-cn': '隐藏个人主页边栏中以下标题的模块<br />模块', 'zh-hk': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'zh-tw': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'en': 'Hide modules on personal homepage with these titles<br />Modules' },
   // 消息页面
   'layoutHideMessages': { 'zh-cn': '隐藏模块 - 消息页面', 'zh-hk': '隱藏模組 - 消息網頁', 'zh-tw': '隱藏模組 - 消息網頁', 'en': 'Hide modules - News page' },
   'layoutHideMessagesHelp': { 'zh-cn': '使用小帮助', 'zh-hk': '使用小幫助', 'zh-tw': '使用小幫助', 'en': 'Tips' },
@@ -436,9 +439,17 @@ var text = {
   'layoutHideOther': { 'zh-cn': '隐藏模块 - 杂项', 'zh-hk': '隱藏模組 - 雜項', 'zh-tw': '隱藏模組 - 雜項', 'en': 'Hide modules - Others' },
   'layoutHideOtherAds': { 'zh-cn': '广告', 'zh-hk': '廣告', 'zh-tw': '廣告', 'en': 'Advertisement' },
   'layoutHideOtherHomeTip': { 'zh-cn': '顶部提示横幅', 'zh-hk': '頂部提示橫幅', 'zh-tw': '頂部提示橫幅', 'en': 'Top tips banner' },
-  'layoutHideOtherFeedRecom': { 'zh-cn': '相关微博推荐', 'zh-hk': '相关推荐', 'zh-tw': '相关推荐', 'en': '相关推荐 (Related Weibo Suggestion)' },
+  'layoutHideOtherHomeTipDesc': {
+    'zh-cn': '出现在导航栏下方其他所有内容的上方的横幅。一般用来推荐微博重要的新功能。',
+  },
   'layoutHideOtherFooter': { 'zh-cn': '页面底部', 'zh-hk': '頁面底部', 'zh-tw': '頁面底部', 'en': 'Footer' },
+  'layoutHideOtherFooterDesc': {
+    'zh-cn': '页面底部的导航链接。',
+  },
   'layoutHideOtherWbIm': { 'zh-cn': '微博桌面推荐（右下）', 'zh-hk': '微博桌面推薦（右下）', 'zh-tw': '微博桌面推薦（右下）', 'en': '微博桌面2014 (Desktop Weibo), bottom right' },
+  'layoutHideOtherWbImDesc': {
+    'zh-cn': '偶尔出现在右下角的推荐安装微博桌面的提示框。',
+  },
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
   'layoutHideOtherMusic': { 'zh-cn': '微音乐', 'zh-hk': '微音乐', 'zh-tw': '微音乐'/* as is */, 'en': '微音乐 (Weibo Music)' },
   'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
@@ -448,7 +459,10 @@ var text = {
   // 边栏
   'sideColumnToolsTitle': { 'zh-cn': '边栏', 'zh-hk': '邊欄', 'zh-tw': '邊欄', 'en': 'Side Column' },
   'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
-  'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息', 'zh-hk': '展開左欄消息', 'zh-tw': '展開左欄消息', 'en': 'Unfold news in left column' },
+  'showAllMsgNavDesc': { 'zh-cn': '展开左栏消息{{<i>}}', 'zh-hk': '展開左欄消息{{<i>}}', 'zh-tw': '展開左欄消息{{<i>}}', 'en': 'Unfold news in left column{{<i>}}' },
+  'showAllMsgNavDescDesc': {
+    'zh-cn': '屏幕分辨率过小时请勿选择该项，否则可能会显示不完全。'
+  },
   'leftNavMsg': { 'zh-cn': '消息', 'zh-hk': '消息', 'zh-tw': '消息', 'en': 'News' },
   'leftNavAtMe': { 'zh-cn': '@我的', 'zh-hk': '@我的', 'zh-tw': '@我的', 'en': '@My'/* as is */ },
   'leftNavCmt': { 'zh-cn': '评论', 'zh-hk': '評論', 'zh-tw': '評論', 'en': 'Comment' },
@@ -466,7 +480,10 @@ var text = {
   // 浮动元素
   'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
   'fixedLeft': { 'zh-cn': '允许首页左边栏随页面滚动始终显示', 'zh-hk': '允許首頁左邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁左邊欄隨頁面滾動始終顯示', 'en': 'Floating left column' },
-  'fixedRight': { 'zh-cn': '允许首页右边栏随页面滚动始终显示', 'zh-hk': '允許首頁右邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁右邊欄隨頁面滾動始終顯示', 'en': 'Floating right column' },
+  'fixedRight': { 'zh-cn': '允许首页右边栏随页面滚动始终显示{{<i>}}', 'zh-hk': '允許首頁右邊欄隨頁面滾動始終顯示{{<i>}}', 'zh-tw': '允許首頁右邊欄隨頁面滾動始終顯示{{<i>}}', 'en': 'Floating right column{{<i>}}' },
+  'fixedRightDesc': {
+    'zh-cn': '如果同时启用了“合并左右边栏”和“允许首页左边栏随页面滚动始终显示”，则该选项将不生效。',
+  },
   'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
@@ -486,7 +503,10 @@ var text = {
   'avatarShapeCircle': { 'zh-cn': '圆形', 'zh-hk': '圓形', 'zh-tw': '圓形', 'en': 'Circle' },
   'avatarShapeSquare': { 'zh-cn': '方形', 'zh-hk': '方形', 'zh-tw': '方形', 'en': 'Square' },
   'darkNavBar': { 'zh-cn': '使用深色的导航栏', 'zh-hk': '使用深色的導覽列', 'zh-tw': '使用深色的導覽列', 'en': 'Dark nav bar' },
-  'reorderNavBar': { 'zh-cn': '交换导航栏中导航链接与搜索框的位置', 'zh-hk': '交換導覽列中導覽連結與搜索框的位置', 'zh-tw': '交換導覽列中導覽連結與搜索框的位置', 'en': 'Exchange position of search box and navigator links' },
+  'reorderNavBar': { 'zh-cn': '交换导航栏中导航链接与搜索框的位置{{<i>}}', 'zh-hk': '交換導覽列中導覽連結與搜索框的位置{{<i>}}', 'zh-tw': '交換導覽列中導覽連結與搜索框的位置{{<i>}}', 'en': 'Exchange position of search box and navigator links{{<i>}}' },
+  'reorderNavBarDesc': {
+    'zh-cn': '使导航栏中“首页”“热门”“游戏”的链接出现在搜索框的左侧。'
+  },
   'weiboLargeFont': { 'zh-cn': '增大微博正文字号为|原大小的{{<ratio>}}', 'zh-hk': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'zh-tw': '增大微博正文字型大小為|原大小的{{<ratio>}}', 'en': 'Increase font size of Weibo content to | {{<ratio>}}' },
   'weiboLargeFont120': { 'zh-cn': '120%', 'zh-hk': '120%', 'zh-tw': '120%', 'en': '120%' },
   'weiboLargeFont150': { 'zh-cn': '150%', 'zh-hk': '150%', 'zh-tw': '150%', 'en': '150%' },
@@ -1544,9 +1564,9 @@ util.ui.bubble = function (description, rect) {
   var bor = bubble.querySelector('.W_arrow_bor')
   document.body.appendChild(bubble);
   util.func.call(function () {
-    var top1 = rect.top - bubble.clientHeight - 8;
-    var top2 = rect.bottom + 8;
-    bubble.style.left = rect.left - 32 + rect.width + 'px';
+    var top1 = rect.top - bubble.clientHeight - 8 + window.pageYOffset;
+    var top2 = rect.bottom + 8 + window.pageYOffset;
+    bubble.style.left = rect.left - 32 + rect.width + window.pageXOffset + 'px';
     if (top1 > 0) {
       bubble.style.top = top1 + 'px';
       bor.className = 'W_arrow_bor W_arrow_bor_b';
@@ -1749,7 +1769,7 @@ filter.fast.dialog = function (candidate) {
     var checkboxs = candidate.map(function (c) {
       var item = util.dom.create('ul', html.fastFilterItem).firstChild;
       var inner = item.querySelector('.yawf-fastFilterItemInner');
-      var checked = c.filter.description(inner, c.value) !== false;
+      var checked = c.filter.text(inner, c.value) !== false;
       var checkbox = item.querySelector('input[type="checkbox"], input[type="radio"]');
       checkbox.checked = checked;
       items.appendChild(item);
@@ -2167,7 +2187,7 @@ filter.typed.dom = (function () {
     };
     dom.addEventListener('mouseenter', function () {
       enter(); if (bubble) return;
-      bubble = util.ui.bubble(item.description, dom.getClientRects()[0]);
+      bubble = util.ui.bubble(item.text, dom.getClientRects()[0]);
       bubble.addEventListener('mouseenter', enter);
       bubble.addEventListener('mouseleave', leave);
     });
@@ -2537,7 +2557,7 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
       'i': {
         'type': 'sicon',
         'icon': 'warn',
-        'description': '{{' + details.name + 'FilterDetailsDesc}}'
+        'text': '{{' + details.name + 'FilterDetailsDesc}}'
       }
     }
   }).addto(typedFilterGroup);
@@ -2997,12 +3017,6 @@ filter.groups.account = filter.predef.wbfc({
   }
 });
 
-filter.items.account.remark = filter.item({
-  'group': 'account',
-  'type': 'remark',
-  'text': '{{accountFilterRemark}}',
-}).addto(filter.groups.account);
-
 // 原创用户过滤
 filter.groups.original = filter.predef.wbfc({
   'name': 'original',
@@ -3263,7 +3277,7 @@ filter.items.other.hidethese.ad_feed = filter.item({
   'key': 'weibo.other.ad_feed',
   'text': '{{adfeedFilterDesc}}',
   'priority': 1e5 + 1e3, // 优先于白名单
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{adfeedFilterDescDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{adfeedFilterDescDesc}}' } },
   'rule': function adFeedFilterRule(feed) {
     if (!this.conf) return null;
     return feed.getAttribute('feedtype') === 'ad' ? 'hidden' : null;
@@ -3278,7 +3292,7 @@ filter.items.other.hidethese.fans_top = filter.item({
   'key': 'weibo.other.fans_top',
   'text': '{{fansTopFilterDesc}}',
   'priority': 1e5 + 1e3, // 优先于白名单
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{fansTopFilterDescDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{fansTopFilterDescDesc}}' } },
   'rule': function fansTopFilterRule(feed) {
     if (!this.conf) return null;
     return feed.querySelector('[adcard="fanstop"]') ? 'hidden' : null;
@@ -3292,7 +3306,7 @@ filter.items.other.hidethese.fake_weibo = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.fake_weibo',
   'text': '{{fakeWeiboFilterDesc}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{fakeWeiboFilterDescDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{fakeWeiboFilterDescDesc}}' } },
   'rule': function fakeWeiboFilterRule(feed) {
     if (!this.conf) return null;
     if (!feed.getAttribute('mid')) return 'hidden';
@@ -3307,7 +3321,7 @@ filter.items.other.hidethese.deleted_forward = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.deleted_forward',
   'text': '{{deletedForwardFilterDesc}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{deletedForwardFilterDescDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{deletedForwardFilterDescDesc}}' } },
   'rule': function deletedForwardFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.getAttribute('isforward') === '1' &&
@@ -3323,7 +3337,7 @@ filter.items.other.hidethese.vote_weibo = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.vote_weibo',
   'text': '{{voteWeiboFilterDesc}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{voteWeiboFilterDescDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{voteWeiboFilterDescDesc}}' } },
   'rule': function voteWeiboFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('.WB_from a[href^="http://vote.weibo.com/"]'))
@@ -3343,7 +3357,7 @@ filter.items.other.hidethese.tb_tm_wb = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.tb_tm_wb',
   'text': '{{taobaoTianmaoWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{taobaoTianmaoWeiboDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{taobaoTianmaoWeiboDesc}}' } },
   'rule': function taobaoTianmaoFilterRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('a .icon_fl_tb, a .icon_fl_tmall, a .icon_fl_ju'))
@@ -3359,7 +3373,7 @@ filter.items.other.hidethese.wei_huati = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.wei_huati',
   'text': '{{huatiSourceWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{huatiSourceWeiboDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{huatiSourceWeiboDesc}}' } },
   'rule': function huatiSourceWeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
@@ -3378,7 +3392,7 @@ filter.items.other.hidethese.customize_source = filter.item({
   'key': 'weibo.other.customize_source',
   'text': '{{customizeSourceWeibo}}',
   'ref': {
-    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{customizeSourceWeiboDesc}}' },
+    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{customizeSourceWeiboDesc}}' },
     'action': {
       'type': 'select',
       'default': 'hidden',
@@ -3410,7 +3424,7 @@ filter.items.other.hidethese.multi_topic = filter.item({
   'key': 'weibo.other.multi_topic',
   'text': '{{multiTopic}}',
   'ref': {
-    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{multiTopicDesc}}' },
+    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{multiTopicDesc}}' },
     'num': {
       'type': 'range',
       'min': 3,
@@ -3543,7 +3557,7 @@ filter.items.other.scripttool.use_fast_creator = filter.item({
   'key': 'weibo.tool.use_fast_creator',
   'default': true,
   'text': '{{useFastCreator}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{useFastCreatorDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{useFastCreatorDesc}}' } },
   'ainit': function () {
     filter.fast.active();
   },
@@ -3556,7 +3570,7 @@ if ('contextMenu' in document.createElement('div')) filter.items.other.scripttoo
   'key': 'weibo.tool.use_context_menu_creator',
   'default': true,
   'text': '{{useContextMenuCreator}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{useContextMenuCreatorDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{useContextMenuCreatorDesc}}' } },
   'ainit': function () {
     filter.fast.right.active();
   },
@@ -3569,7 +3583,7 @@ filter.items.other.scripttool.block_hidden = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.block_hidden',
   'text': '{{blockHiddenWeiboDesc}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{blockHiddenWeiboDescDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{blockHiddenWeiboDescDesc}}' } },
   'ainit': function () {
     observer.weibo.after(function (feed) {
       var display = feed.getAttribute('yawf-display');
@@ -3597,7 +3611,7 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.auto_load_new_weibo',
   'text': '{{autoLoadNewWeibo}}{{<i>}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{autoLoadNewWeiboDesc}}' } },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{autoLoadNewWeiboDesc}}' } },
   // 展开新微博后添加和旧微博的分割线
   'timetip': (function () {
     var time0 = new Date(), tip = null;
@@ -3745,7 +3759,7 @@ filter.items.other.autoload.auto_expand = filter.item({
   'key': 'weibo.other.auto_expand',
   'text': '{{autoExpand}}',
   'ref': {
-    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{autoExpandDesc}}' },
+    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{autoExpandDesc}}' },
     'etypes': {
       'type': 'boolean',
     },
@@ -3783,7 +3797,7 @@ if (util.notify.avaliableNotification().length) filter.items.other.autoload.desk
   'key': 'weibo.other.desktop_notification',
   'text': '{{desktopNotification}}',
   'ref': {
-    'i': { 'type': 'sicon', 'icon': 'warn', 'description': '{{desktopNotificationDesc}}' },
+    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{desktopNotificationDesc}}' },
     'types': {
       'type': 'boolean',
       'default': true,
@@ -3890,17 +3904,28 @@ if (util.notify.avaliableNotification().length && util.browser.fx.avaliable) {
 
 filter.predef.group('layout');
 
-// 大部分选择器参考了 眼不见心不烦 脚本
 (function () {
   var current = null, group;
   var subtitle = function (name, allButton) {
     group = (current = name).toLocaleLowerCase();
     filter.items.layout[group] = {};
+    // 分组标题
+    var tid = 'layoutHide' + name;
+    var wr = !!text[tid + 'Desc'], ref = {};
+    if (wr) ref = {
+      'i': {
+        'type': 'sicon',
+        'icon': 'warn',
+        'text': '{{' + tid + 'Desc}}',
+      }
+    };
     filter.items.layout[group].title = filter.item({
       'group': group,
       'type': 'subtitle',
-      'text': '{{layoutHide' + name + '}}',
+      'text': '{{' + tid + '}}' + (wr ? '{{<i>}}' : ''),
+      'ref': ref
     }).addto(filter.groups.layout);
+    // 下面是全选本组按钮
     if (!allButton) return;
     filter.items.layout[group].all = filter.item({
       'group': group,
@@ -3923,33 +3948,43 @@ filter.predef.group('layout');
 
   };
 
-  var item = function (name, version, content, defaultValue) {
+  var item = function (name, version, content, config) {
     if (typeof content !== 'function') content = util.css(content);
+    config = config || {};
+    var tid = 'layoutHide' + current + name, ref = {}, wr = !!text[tid + 'Desc'];
+    if (wr) ref = {
+      'i': {
+        'type': 'sicon',
+        'icon': 'warn',
+        'text': '{{' + tid + 'Desc}}',
+      },
+    };
     filter.items.layout[group][name.toLowerCase()] = filter.item({
       'group': group,
       'version': version,
       'type': 'boolean',
       'key': 'weibo.layoutHide' + current + name,
-      'default': defaultValue || false,
-      'text': '{{layoutHide' + current + name + '}}',
-      'ainit': content
+      'default': config['default'] || false,
+      'text': '{{' + tid + '}}' + (wr ? '{{<i>}}' : '') + (config.extt || ''),
+      'ainit': content,
+      'ref': ref,
     }).addto(filter.groups.layout);
   };
 
   subtitle('Icon', true);
-  item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
-  item('Member', 5, '.W_icon[class*="icon_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }');
-  item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve { display: none !important; }');
-  item('ApproveCo', 5, '.approve_co, .icon_approve_co, .icon_pf_approve_co { display: none !important; }');
-  item('ApproveDead', 107, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }');
-  item('Club', 5, '.ico_club, .icon_pf_club, .icon_club { display: none !important; }');
-  item('VGirl', 5, '.ico_vlady, .icon_pf_vlady, .icon_vlady { display: none !important; }');
-  item('Taobao', 5, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }');
-  item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
-  item('Suishoupai', 146, '.suishoupai2014, .icon_suishoupai2014 { display: none !important; }');
-  item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }');
-  item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }');
-  item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }');
+  item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }', { 'extt': '<span class="W_icon_level icon_level_c2" style="display:inline-block!important;margin-bottom:-2px;"><span>Lv.1</span></span>' });
+  item('Member', 5, '.W_icon[class*="icon_member"], .ico_member_dis, [class^="ico_vip"], .W_icon[class*="ico_member"] { display: none !important; }', { 'extt': '<i class="W_icon icon_member1" style="display:inline-block!important"></i>' });
+  item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve { display: none !important; }', { 'extt': '<i class="W_icon icon_approve" style="display:inline-block!important"></i>' });
+  item('ApproveCo', 5, '.approve_co, .icon_approve_co, .icon_pf_approve_co { display: none !important; }', { 'extt': '<i class="W_icon icon_approve_co" style="display:inline-block!important"></i>' });
+  item('ApproveDead', 107, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }', {'extt': '<i class="W_icon icon_approve_dead" style="display:inline-block!important"></i>'});
+  item('Club', 5, '.ico_club, .icon_pf_club, .icon_club { display: none !important; }', { 'extt': '<i class="W_icon icon_club" style="display:inline-block!important"></i>' });
+  item('VGirl', 5, '.ico_vlady, .icon_pf_vlady, .icon_vlady { display: none !important; }', { 'extt': '<i class="W_icon icon_vlady" style="display:inline-block!important"></i>' });
+  item('Taobao', 5, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }', { 'extt': '<i class="W_icon icon_taobao" style="display:inline-block!important"></i><i class="W_icon icon_tmall" style="display:inline-block!important"></i>' });
+  item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }', { 'extt': '<i class="W_icon icon_gongyi" style="display:inline-block!important"></i>' });
+  item('Suishoupai', 146, '.suishoupai2014, .icon_suishoupai2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_suishoupai2014" style="display:inline-block!important"></i>' });
+  item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_zongyika2014" style="display:inline-block!important"></i>' });
+  item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }', { 'extt': '<i class="W_icon icon_airball" style="display:inline-block!important"></i>' });
+  item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }', { 'extt': '<i class="W_icon icon_double11" style="display:inline-block!important"></i>' });
 
   subtitle('Nav', true);
   item('LogoImg', 94, function replaceLogo() {
@@ -4162,7 +4197,7 @@ filter.predef.group('layout');
     'group': 'pleft',
     'version': 134,
     'key': 'weibo.layout.pleft',
-    'text': '{{layoutHidePLeftDesc}}',
+    'text': '{{layoutHidePLeftDetails}}',
     'type': 'strings',
     'add': function (s) { return s.trim(); },
     'init': function () {
@@ -4180,7 +4215,6 @@ filter.predef.group('layout');
   subtitle('Other', true);
   item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('HomeTip', 124, '#pl_content_hometip, #v6_pl_content_hometip { display: none !important }');
-  item('FeedRecom', 5, '.W_main_2r [id^="Pl_Third_Inline__"] { display: none !important; }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
   item('Tip', 8, '.layer_tips { display: none !important; }');
@@ -4252,6 +4286,13 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.showAllMsgNav',
   'text': '{{showAllMsgNavDesc}}',
+  'ref': {
+    'i': {
+      'type': 'sicon',
+      'icon': 'rederror',
+      'text': '{{showAllMsgNavDescDesc}}',
+    },
+  },
   'ainit': function () {
     observer.dom.add(function () {
       var msg = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child .lev+.lev'); if (!msg) return;
@@ -4628,6 +4669,13 @@ filter.items.tool.sidebar.fixed_right = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.fixedRight',
   'text': '{{fixedRight}}',
+  'ref': {
+    'i': {
+      'type': 'sicon',
+      'icon': 'warn',
+      'text': '{{fixedRightDesc}}',
+    },
+  },
   'default': true,
   'init': function () {
     var sidebar = filter.items.tool.sidebar;
@@ -4904,6 +4952,13 @@ filter.items.tool.stylish.reorder_nav_bar = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.reorder_nav_bar',
   'text': '{{reorderNavBar}}',
+  'ref': {
+    'i': {
+      'type': 'sicon',
+      'icon': 'warn',
+      'text': '{{reorderNavBarDesc}}',
+    },
+  },
   'ainit': function () {
     var moveNavList = function () {
       var search = document.querySelector('.WB_global_nav .gn_header .gn_search');
@@ -5442,7 +5497,7 @@ util.init(function () {
       ['weibo.layoutHidePersonAlbum', 'Album'],
       ['weibo.layoutHidePersonHotTopic', 'ProfHotTopic'],
       ['weibo.layoutHidePersonHotWeibo', 'ProfHotWeibo'],
-      ['weibo.layoutHideOtherFeedRecom', 'FeedRecom'],
+      ['weibo.layoutHideOtherFeedRecom', 'RelatedWB'],
       ['weibo.layoutHideOtherMusic', 'MusicPlayer'],
     ].forEach(function (l) {
       if (w.hideMods.indexOf(l[1]) !== -1) r[l[0]] = true;
