@@ -15,7 +15,7 @@
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/test
-// @version           3.1.175
+// @version           3.1.176
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -454,6 +454,9 @@ var text = {
     'zh-cn': '偶尔出现在右下角的推荐安装微博桌面的提示框。',
   },
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
+  'layoutHideOtherTipDesc': {
+    'zh-cn': '偶尔会出现的新功能推荐的弹框，如果隐藏了对应功能的界面可能弹框会显示到奇怪的地方。',
+  },
   'layoutHideOtherMusic': { 'zh-cn': '微音乐', 'zh-hk': '微音乐', 'zh-tw': '微音乐'/* as is */, 'en': '微音乐 (Weibo Music)' },
   'layoutHideOtherIM': { 'zh-cn': '聊天联系人列表', 'zh-hk': '聊天連絡人列表', 'zh-tw': '聊天連絡人列表', 'en': 'IM Side bar' },
   'layoutHideOtherRelatedWB': { 'zh-cn': '相关微博推荐', 'zh-hk': '相关微博推荐', 'zh-tw': '相关微博推荐', 'en': '相关微博推荐 (v6, Suggested related weibo)' },
@@ -625,7 +628,6 @@ var html = {
   // 对话框
   'cover': '<div node-type="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999;"></div>',
   'dialog': '<div id="{{id}}" class="W_layer yawf-Layer" style="top: 193px; left: 376px;"><div tabindex="0"></div><div class="content" node-type="autoHeight"><div class="W_layer_title" node-type="title" style="">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);" node-type="close">X</a></div><div node-type="inner"></div></div></div>',
-  '~s~dialog': '<div id="{{id}}" class="W_layer" style="position: absolute; z-index: 10001;" node-type="outer"><div class="bg"><table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><div class="content" node-type="layoutContent"><div class="title" node-type="title" style="cursor: move;"><span node-type="title_content">{{title}}</span></div><a class="W_close" node-type="close" title="{{closeButtonTitle}}" href="javascript:void(0);"></a><div class="detail" node-type="inner" style=""></div></td></tr></tbody></table></div></div>',
   'alert': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a></div></div></div>',
   'confirm': '<div class="W_layer yawf-Layer" id="{{id}}"><div tabindex="0"></div><div class="content"><div class="W_layer_title" node-type="title">{{title}}</div><div class="W_layer_close"><a class="W_ficon ficon_close S_ficon" node-type="close" href="javascript:void(0);">X</a></div><div node-type="inner"><div class="layer_point"><dl class="point clearfix"><dt node-type="icon"><span class="W_icon icon_{{icon}}B"></span></dt><dd node-type="text"><p class="S_txt1">{{text}}</p></dd></dl></div></div><div class="W_layer_btn S_bg1"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div></div>',
   'bubble': '<div class="W_layer yawf-Layer W_layer_pop yawf-bubble"><div class="content layer_mini_info"><div class="main_txt">{{{text}}}</div><div class="W_layer_arrow"><span class="W_arrow_bor" node-type="arrow"><i class="S_line3"></i><em class="S_bg2_br"></em></span><div></div></div></div></div>',
@@ -637,10 +639,6 @@ var html = {
   'configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="cur_block"></span></li>',
   'configHeaderBottom': '</ul></div>',
   'configHeaderSplit': '',
-  '~s~configHeaderTop': '<div class="tab tab_bottom tab_forward W_texta yawf-config-header">',
-  '~s~configHeaderItem': '<a class="{{aclass}}" onclick="return false;" href="#">{{name}}</a>',
-  '~s~configHeaderBottom': '</div>',
-  '~s~configHeaderSplit': '<em class="W_vline">|</em>',
   'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
@@ -963,17 +961,6 @@ util.page.searchenable = (function () {
   return !!GM_getValue('search_enable', false);
 }());
 
-// 对不同页面使用不同常量设置
-util.page.fix = function (obj) {
-  var prefix = null;
-  if (util.page.search) prefix = '~s~';
-  if (!prefix) return;
-  Object.keys(obj).forEach(function (key) {
-    if (key.indexOf(prefix) !== 0) return;
-    obj[key.slice(prefix.length)] = obj[key];
-  });
-};
-
 // 初始化
 util.init = (function () {
   var callbacks = [], index = 0;
@@ -1281,9 +1268,6 @@ util.init(function () {
   util.i18n.chose = util._languages(unsafeWindow.$CONFIG.lang);
   Object.keys(text).map(function (key) { util.i18n.chose(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = util.str.fill(html[key]); });
-  // 初始化搜索页面
-  util.page.fix(text);
-  util.page.fix(html);
   // 初始化设置集
   util.config = util._storage();
 }, util.priority.FIRST);
@@ -1439,6 +1423,7 @@ util.ui = {};
 // 显示设置按钮
 // 包括右上角过滤器图标和设置菜单中的菜单项
 util.ui.icon = util.init(function () {
+  if (util.page.search) return; // 搜索页面不提供设置窗口
   var onClick = util.func.catched(function (e) { filter.dialog(); e.preventDefault(); });
   var icon = function () {
     var p = document.querySelector('.WB_global_nav .gn_set_list');
@@ -1711,14 +1696,6 @@ filter.dialog = (function () {
       lastTab = i;
       util.func.call(function () { body.scrollTop = 0; });
     };
-    if (util.page.search) choseLList = function (i) {
-      llist.forEach(function (l) { l.style.display = 'none'; l.innerHTML = ''; });
-      alist.forEach(function (a) { a.classList.remove('current'); a.classList.remove('W_texta'); });
-      llist[i].innerHTML = ''; list[i].show(llist[i]); llist[i].style.display = 'block';
-      alist[i].classList.add('current'); alist[i].classList.add('W_texta');
-      lastTab = i;
-      util.func.call(function () { body.scrollTop = 0; });
-    };
     list.map(function (item, i) {
       var a = alist[i];
       a.addEventListener('mousedown', function () { choseLList(i); });
@@ -1731,10 +1708,7 @@ filter.dialog = (function () {
       var list = filter.collection.group.list;
       inner.innerHTML = [html.configHeaderTop,
         list.map(function (item, index) {
-          return util.str.fill(html.configHeaderItem, util.page.search ? {
-            'name': text[item.name + 'FilterGroupTitle'],
-            'aclass': index === 0 ? 'current W_texta' : '',
-          } : {
+          return util.str.fill(html.configHeaderItem, {
             'name': text[item.name + 'FilterGroupTitle'],
             'aclass': index === 0 ? 'S_bg5' : 'S_bg1',
             'liclass': index === 0 ? 'current' : ' ',
@@ -4229,7 +4203,7 @@ filter.predef.group('layout');
   item('HomeTip', 124, '#pl_content_hometip, #v6_pl_content_hometip { display: none !important }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
-  item('Tip', 8, '.layer_tips { display: none !important; }');
+  item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('IM', 46, '#WB_webim .wbim_min_friend, #WB_webim .webim_list { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="55u45YWz5o6o6I2Q"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
@@ -5899,22 +5873,3 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
 }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
-
-if (util.page.search && util.page.searchenable) GM_addStyle(util.str.cmt(function () { /*!CSS
-  .WB_global_nav .W_ficon, .WB_global_nav .W_ficon:hover { background: none !important; text-indent: 0 !important; } 
-  .WB_global_nav .ficon_send { text-align: center !important; background: linear-gradient(to bottom, #fa7d3c, #f56010) !important; }
-  .wb_global_nav .ficon_send:hover { background: linear-gradient(to bottom, #f4712c, #f15909) !important; }
-  .yawf-config-header { margin: -10px 0 0 !important; }
-
-  body .feed_action ul {
-    display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
-    display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
-    display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch;
-    margin-left: -4px;
-  }
-  body .feed_action ul li {
-    -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
-    float: none; width: auto;
-  }
-
-*/ }));
