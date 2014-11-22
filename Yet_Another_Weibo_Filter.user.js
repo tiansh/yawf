@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.177
+// @version           3.1.178
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -371,6 +371,7 @@ var text = {
   'layoutHideRightInterest': { 'zh-cn': '可能感兴趣的人', 'zh-hk': '可能感興趣的人', 'zh-tw': '可能感興趣的人', 'en': 'You may know' },
   'layoutHideRightMember': { 'zh-cn': '会员专区', 'zh-hk': '會員專區', 'zh-tw': '會員專區', 'en': 'Weibo VIP' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
+  'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
   'layoutHideRightNotice': { 'zh-cn': '公告栏', 'zh-hk': '公告欄', 'zh-tw': '公告欄', 'en': 'Bulletin Board' },
   // 微博内
@@ -381,7 +382,7 @@ var text = {
     'zh-cn': '经常出现在评论框上方的横幅，通常包含如“微博社区管理中心举报处理大厅，欢迎查阅！”等内容。'
     // 英语界面横幅内容无翻译
   },
-  'layoutHideWeiboGroupTip': { 'zh-cn': '分组未读提示', 'zh-hk': '分組未讀提示', 'zh-tw': '分組未讀提示', 'en': 'Group unread tip' },
+  'layoutHideWeiboGroupTip': { 'zh-cn': '顶部分组或好友圈提醒', 'zh-hk': '頂部分組或好友圈提醒', 'zh-tw': '頂部分組或好友圈提醒', 'en': 'Tips for Weibo for groups or friends' },
   'layoutHideWeiboLastPic': { 'zh-cn': '图片列表封底', 'zh-hk': '圖片清單封底', 'zh-tw': '圖片清單封底', 'en': 'Back cover of picture list' },
   'layoutHideWeiboTopComment': { 'zh-cn': '热门评论', 'zh-hk': '热门评论', 'zh-tw': '热门评论'/* as is */, 'en': 'Top comments' },
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
@@ -517,6 +518,7 @@ var text = {
   'weiboLargeFont120': { 'zh-cn': '120%', 'zh-hk': '120%', 'zh-tw': '120%', 'en': '120%' },
   'weiboLargeFont150': { 'zh-cn': '150%', 'zh-hk': '150%', 'zh-tw': '150%', 'en': '150%' },
   'weiboLargeFont200': { 'zh-cn': '200%', 'zh-hk': '200%', 'zh-tw': '200%', 'en': '200%' },
+  'customFontFamily': { 'zh-cn': '替换默认字体为|西文{{<wf>}}|中文{{<cf>}}', 'zh-hk': '替換預設字形為|西文{{<wf>}}|中文{{<cf>}}', 'zh-tw': '替換預設字形為|西文{{<wf>}}|中文{{<cf>}}', 'en': 'Replace the default font as | Western {{<wf>}} | Chinese {{<cf>}}' },
   'noWeiboSpace': { 'zh-cn': '移除微博与微博间的空隙', 'zh-hk': '移除微博與微博間的空隙', 'zh-tw': '移除微博與微博間的空隙', 'en': 'Remove space between Weibo' },
   'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
@@ -531,10 +533,10 @@ var text = {
   'weiboOnlyButtonDesc': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'keyInputTip': { 'zh-cn': '按下键盘修改快捷键设置', 'zh-hk': '按下鍵盤修改快速鍵設置', 'zh-tw': '按下鍵盤修改快速鍵設置', 'en': 'Press key to modify shortcut key setting' },
   'userstyleTitle': {
-    'zh-cn': '<span>自定义CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜索样式</a><a class="yawf-userstyles-tip" target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%85%B6%E4%BB%96%E5%8F%AF%E5%B1%8F%E8%94%BD%E5%85%83%E7%B4%A0">常用自定义CSS</a></span>{{}}',
-    'zh-hk': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a><a class="yawf-userstyles-tip" target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%85%B6%E4%BB%96%E5%8F%AF%E5%B1%8F%E8%94%BD%E5%85%83%E7%B4%A0">常用自訂CSS</a></span>{{}}',
-    'zh-tw': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a><a class="yawf-userstyles-tip" target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%85%B6%E4%BB%96%E5%8F%AF%E5%B1%8F%E8%94%BD%E5%85%83%E7%B4%A0">常用自訂CSS</a></span>{{}}',
-    'en': '<span>Customize CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">Search styles on userstyles.org</a><a class="yawf-userstyles-tip" target="_blank" href="https://github.com/tiansh/yawf/wiki/%E5%85%B6%E4%BB%96%E5%8F%AF%E5%B1%8F%E8%94%BD%E5%85%83%E7%B4%A0">Common Customize CSS</a></span>{{}}'
+    'zh-cn': '<span>自定义CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜索样式</a><a class="yawf-userstyles-tip" target="_blank" href="https://tiansh.github.io/yawf/stylish.html">常用自定义CSS</a></span>{{}}',
+    'zh-hk': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a><a class="yawf-userstyles-tip" target="_blank" href="https://tiansh.github.io/yawf/stylish.html">常用自訂CSS</a></span>{{}}',
+    'zh-tw': '<span>自訂CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">在 userstyles.org 上搜尋樣式</a><a class="yawf-userstyles-tip" target="_blank" href="https://tiansh.github.io/yawf/stylish.html">常用自訂CSS</a></span>{{}}',
+    'en': '<span>Customize CSS<a class="yawf-userstyles-tip" href="https://userstyles.org/styles/browse/weibo" target="_blank">Search styles on userstyles.org</a><a class="yawf-userstyles-tip" target="_blank" href="https://tiansh.github.io/yawf/stylish.html">Common Customize CSS</a></span>{{}}'
   },
   'userstyleEditDesc': { 'zh-cn': '编辑 YAWF 自定义 CSS', 'zh-hk': '編輯 YAWF 自訂 CSS', 'zh-tw': '編輯 YAWF 自訂 CSS', 'en': 'Edit YAWF Customize CSS' },
   'userstyleEditDetails': { 'zh-cn': 'YAWF 自定义 CSS：', 'zh-hk': 'YAWF 自訂 CSS：', 'zh-tw': 'YAWF 自訂 CSS：', 'en': 'YAWF Customize CSS：' },
@@ -712,6 +714,35 @@ var url = {
   'newcard': 'http://www.weibo.com/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
   'view_ori': 'http://photo.weibo.com/{{uid}}/wbphotos/large/mid/{{mid}}/pid/{{pid}}',
   'block_wb': 'http://www.weibo.com/aj/user/block?_wv=5&__rnd={{rnd}}',
+};
+
+var font = {
+  'west': [
+    ['Times', 'Times'],
+    ['"Times New Roman"', 'Times New Roman'],
+    ['Georgia', 'Georgia'],
+    ['Arial', 'Arial'],
+    ['Helvetica', 'Helvetica'],
+    ['Verdana', 'Verdana'],
+  ],
+  'chinese': [
+    ['"SimSun", "宋体"', '中易宋体'],
+    ['"Heiti SC", "黑体-简"', '黑体-简'],
+    ['"STHeiti", "华文黑体"', '华文黑体'],
+    ['"Hiragino Sans GB", "冬青黑体简体中文"', '冬青黑体'],
+    ['"Microsoft YaHei", "微软雅黑"', '微软雅黑'],
+    ['"WenQuanYi Zen Hei", "文泉驿正黑"', '文泉驿正黑'],
+    ['"WenQuanYi Micro Hei", "文泉驿微米黑"', '文泉驿微米黑'],
+    ['"Noto Sans CJK SC", "思源黑体 SC"', '思源黑体'],
+    ['"SimKai", "楷体"', '中易楷体'],
+    ['"PMingLiU", "新細明體"', '新細明體'],
+    ['"MingLiU", "細明體"', '細明體'],
+    ['"Heiti TC", "黑體-繁"', '黑體-繁'],
+    ['"LiHei Pro Medium", "儷黑 Pro"', '儷黑 Pro'],
+    ['"Microsoft JhengHei", "微軟正黑體"', '微軟正黑體'],
+    ['"Noto Sans CJK TC", "思源黑體 TC"', '思源黑體'],
+    ['"DFKai-SB", "BiauKai", "標楷體"', '標楷體'],
+  ]
 };
 
 var util = {};
@@ -929,6 +960,49 @@ util.dom.bind = (function () {
     'text': bind.bind(null, 'value'),
     'checkbox': bind.bind(null, 'checked'),
     'select': bind.bind(null, 'value'),
+  };
+}());
+
+
+util.font = {};
+
+// 计算文字宽度
+util.font.width = (function () {
+  // 使用微博的默认字号作为度量值
+  var fontsize = 14;
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+
+  // 使用Canvas计算
+  // https://bugzil.la/561361
+  return function (fontname, text) {
+    context.font = 'bold ' + fontsize + 'px ' + fontname;
+    return context.measureText(text).width;
+  };
+}());
+
+// 选择合适的字体
+util.font.valid = (function (fontlist) {
+  // 检查这个字串的宽度来检查字体是否存在
+  var sampleText =
+    'The quick brown fox jumps over the lazy dog7531902468,.!-天地玄黄則近道矣，。：！';
+  // 和这些字体进行比较
+  var sampleFont = [
+    'monospace', 'sans-serif', 'sans', 'Symbol', 'Arial', 'Fixed',
+    'Times', 'Times New Roman', '宋体', '黑体', 'Microsoft YaHei'
+  ];
+  // 如果被检查的字体和基准字体可以渲染出不同的宽度
+  // 那么说明被检查的字体总是存在的
+  var diffFont = function (base, test) {
+    var baseSize = util.font.width(base, sampleText, 72);
+    var testSize = util.font.width(test + ',' + base, sampleText, 72);
+    return baseSize !== testSize;
+  };
+  return function (test) {
+    var valid = sampleFont.some(function (base) {
+      return diffFont(base, test);
+    });
+    return valid;
   };
 }());
 
@@ -1549,7 +1623,7 @@ util.ui.confirm = function (id, details) {
 
 util.ui.bubble = function (description, rect) {
   var bubble = util.dom.create(util.str.fill(html.bubble, { 'text': description }));
-  var bor = bubble.querySelector('.W_arrow_bor')
+  var bor = bubble.querySelector('.W_arrow_bor');
   document.body.appendChild(bubble);
   util.func.call(function () {
     var top1 = rect.top - bubble.clientHeight - 8 + window.pageYOffset;
@@ -2649,16 +2723,13 @@ filter.fast.account.validator = function (element) {
   // 用户卡片里面的头像和链接
   if (c.querySelector('[uid][title]')) return true;
   // 可以处理用户页面的头像和链接
-  var name = document.querySelector('.pf_name .name');
-  if (name && name.textContent && name[0] !== '#' && unsafeWindow.$CONFIG.oid &&
-    util.dom.matches(element, '.B_profile .pf_head_pic img, .B_profile .pf_lin')) return true;
+  if (c.querySelector('.photo[alt]')) return true;
   return false;
 };
 filter.fast.account.recognizer = function (element, callback) {
   if (element.nodeType === Node.TEXT_NODE) { callback(); return; }
   var c = util.dom.create('body', element.outerHTML);
   var info = { 'name': null, 'id': null };
-  var oid = unsafeWindow.$CONFIG.oid;
   // 如果是用户链接的话
   var usercard = c.querySelector('[usercard*="name="], [usercard*="id="]');
   if (usercard) (function () {
@@ -2666,20 +2737,17 @@ filter.fast.account.recognizer = function (element, callback) {
     if (ucinfo.name) info.name = ucinfo.name;
     if (ucinfo.id) info.id = ucinfo.id;
   }());
+  // 如果是个人主页的头像的话
+  var photo = c.querySelector('.photo[alt]');
+  if (photo) (function () {
+    info.name = photo.getAttribute('alt');
+  }());
   // 用户卡片
   var uid = c.querySelector('[uid][title]');
   if (uid) {
     info.id = uid.getAttribute('uid');
     info.name = uid.getAttribute('title');
   }
-  // 如果是头像或者链接的话
-  if (oid) (function () {
-    var link = c.querySelector('a.pf_lin');
-    if (link) info.id = oid;
-    var img = c.querySelector('img');
-    var ref = document.querySelector('.B_profile .pf_head_pic img');
-    if (img && ref && img.src === ref.src) info.id = oid;
-  }());
   // 看我们是否有 id 或者 name，如果有的话，那么就说明是个用户
   if (info.id && info.name) callback(info);
   else if (info.id) network.account.id(info.id, callback, callback);
@@ -4002,6 +4070,7 @@ filter.predef.group('layout');
   item('Info', 5, '#pl_rightmod_myinfo { display: none !important; }');
   item('V6UpdateV6', 110, '#v6_pl_rightmod_updatev6 { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
+  item('HotTopicExpand', 178, '.hot_topic .WB_right_expand { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
   item('Groups', 102, '#pl_rightmod_groups { display: none; }');
@@ -4010,7 +4079,7 @@ filter.predef.group('layout');
   subtitle('Weibo', true);
   item('RecomFeed', 2, '[node-type="feed_list_recommend"] { display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
-  item('GroupTip', 97, '.type_spe_pos { display: none; }');
+  item('GroupTip', 97, '.WB_feed_type .WB_cardtitle_b { display: none !important; }');
   item('LastPic', 72, function () {
     observer.dom.add(function () {
       var last;
@@ -5019,6 +5088,53 @@ filter.items.tool.stylish.weibo_large_font = filter.item({
       .WB_feed_expand .WB_text .W_btn_c, .WB_feed_expand .WB_text .W_btn_c * { line-height: {{h2}}px; font-size: {{fs3}}px !important; }
       .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
     */ }), this.pref[this.ref.ratio.conf]));
+  },
+}).addto(filter.groups.tool);
+
+// 修改字体
+filter.items.tool.stylish.custom_font_family = filter.item({
+  'group': 'stylish',
+  'version': 178,
+  'type': 'boolean',
+  'key': 'weibo.tool.custom_font_family',
+  'text': '{{customFontFamily}}',
+  'west': font.west,
+  'chinese': font.chinese,
+  'ntm': {},
+  'ref': {
+    'wf': {
+      'type': 'select',
+      'select': font.west.map(function (i) { return { 'text': i[1], 'value': i[1] } }),
+      'default': font.west[0][0],
+    },
+    'cf': {
+      'type': 'select',
+      'select': font.chinese.map(function (i) { return { 'text': i[1], 'value': i[1] } }),
+      'default': font.chinese[0][0],
+    },
+  },
+  'init': function () {
+    var that = this;
+    that.west = that.west.filter(function (f) { return util.font.valid(f[0]); });
+    that.chinese = that.chinese.filter(function (f) { return util.font.valid(f[0]); });
+    that.west.concat(that.chinese).forEach(function (f) { that.ntm[f[1]] = f[0]; });
+    if (that.ntm[that.ref.wf.conf] && that.ntm[that.ref.cf.conf]) return;
+    if (!that.ntm[that.ref.wf.conf]) that.ref.wf.putconf(that.west[0][1]);
+    if (!that.ntm[that.ref.cf.conf]) that.ref.cf.putconf(that.chinese[0][1]);
+    that.putconf(false);
+  },
+  'shown': function (dom) {
+    var o = Array.from(dom.querySelectorAll('option'));
+    var that = this;
+    o.forEach(function (o) {
+      if (that.ntm[o.value]) o.style.fontFamily = that.ntm[o.value];
+      else o.style.display = 'none';
+    });
+  },
+  'ainit': function () {
+    var wf = this.ntm[this.ref.wf.conf], cf = this.ntm[this.ref.cf.conf];
+    if (!wf || !cf) return;
+    util.css.add('body, body.WB_macT, body.WB_xpT, .WB_webim { font-family: ' + wf + ', ' + cf + '; }');
   },
 }).addto(filter.groups.tool);
 
