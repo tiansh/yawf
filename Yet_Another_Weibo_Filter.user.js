@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.179
+// @version           3.1.180
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -786,7 +786,8 @@ util.func = {};
 // 在页面执行一个函数
 util.func.page = function (f) {
   var args = JSON.stringify(Array.from(arguments).slice(1)).slice(1, -1);
-  location.href = 'javascript: void(' + encodeURIComponent(f + '') + '(' + args + '))';
+  var js = 'void(' + encodeURIComponent(f + '') + '(' + args + '))';
+  location.href = 'javascript: ' + js;
 };
 
 // 延迟调用函数
@@ -2118,7 +2119,7 @@ filter.active = function (feed) {
     var isSon = !!index;
     var action = filter.rules.parse(feed, isSon) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
-    if (isSon && !action.match(/-hidden$/)) sson.push(son);
+    if (isSon && !action.match(/-hidden$/)) sson.push(feed);
     filter.fix.fold(feed);
     filter.fix.hidden(feed);
   });
@@ -3723,50 +3724,49 @@ filter.items.other.autoload.auto_load_new_weibo = filter.item({
     var fakeKey = false;
     // 自动点开有新微博的提示
     // 我知道我在干什么
-    util.func.page(function () {
-      /* STK.lib.feed.inter */
-      var action = function (b, e) {
-        var a = window.STK;
-        var c = a.core.json.merge,
-          j = e[2] || {},
-          k = a.queryToJson(window.FM.getURL().query),
-          g = a.conf.trans.feed.feed,
-          h = a.core.obj.parseParam({
-            loadFeedTransKey: "getfeed",
-            plNode: null
-          }, e);
-        var l = c(k, { since_id: b.getEndId() });
-        g.request(h.loadFeedTransKey, {
-          onSuccess: function (a) { b.updateFeed(a.data, "top", "newFeed"); },
-          onFail: function () { b.showError("top", "newFeed"); },
-          onError: function () { b.showError("top", "newFeed"); }
-        }, c(l, j));
-      };
-      /* STK.lib.feed.base */
-      var base = function (b, c) {
-        var a = window.STK;
-        var d = {}, e = a.lib.feed.API(b, c);
-        for (var f in e) !d[f] && (d[f] = e[f]); /* as is */
-        action(d, c);
-      };
-      /* STK.pl.content.homefeed.source.homefeed.feedList */
-      var feedList = function (b) {
-        base(b, { plNode: b });
-      };
-      /* check for home_new_feed_tip and auto load new feeds... */
-      var pending = false;
-      (new MutationObserver(function (mutations) {
-        if (!window.STK) return; /* we need stk to work */
-        var tip = window.STK.sizzle('#home_new_feed_tip');
-        if (!tip.length) return;
-        window.STK.removeNode(tip[0]);
-        if (pending) return; pending = true;
-        setTimeout(function () {
-          pending = false;
-          feedList(window.STK.sizzle('#v6_pl_content_homefeed')[0]);
-        }, 100);
-      })).observe(document.body, { 'childList': true, 'subtree': true });
-    });
+    util.func.page(function $YAWF$_autoLoadNewFeed() {
+      if (!window.STK) setTimeout($YAWF$_autoLoadNewFeed, 100);
+      else STK.namespace("v6home", function (a) {
+        /* STK.lib.feed.inter */
+        var action = function (b, e) {
+          var c = a.core.json.merge,
+            j = e[2] || {},
+            k = a.queryToJson(window.FM.getURL().query),
+            g = a.conf.trans.feed.feed,
+            h = a.core.obj.parseParam({
+              loadFeedTransKey: "getfeed",
+              plNode: null
+            }, e);
+          var l = c(k, { since_id: b.getEndId() });
+          g.request(h.loadFeedTransKey, {
+            onSuccess: function (a) { b.updateFeed(a.data, "top", "newFeed"); },
+            onFail: function () { b.showError("top", "newFeed"); },
+            onError: function () { b.showError("top", "newFeed"); }
+          }, c(l, j));
+        };
+        /* STK.lib.feed.base */
+        var base = function (b, c) {
+          var d = {}, e = a.lib.feed.API(b, c);
+          for (var f in e) !d[f] && (d[f] = e[f]); /* as is */
+          action(d, c);
+        };
+        /* STK.pl.content.homefeed.source.homefeed.feedList */
+        var feedList = function (b) {
+          base(b, { plNode: b });
+        };
+        /* check for home_new_feed_tip and auto load new feeds... */
+        var pending = false;
+        (new MutationObserver(function (mutations) {
+          var tip = a.sizzle('#home_new_feed_tip');
+          if (!tip.length) return;
+          a.removeNode(tip[0]);
+          if (pending) return; pending = true;
+          setTimeout(function () {
+            pending = false;
+            feedList(a.sizzle('#v6_pl_content_homefeed')[0]);
+          }, 100);
+        })).observe(document.body, { 'childList': true, 'subtree': true });
+      });
 
     // 看见有新微博了，看看是不是新加载出来的
     observer.weibo.before(function (feed) {
@@ -3899,6 +3899,8 @@ if (util.notify.avaliableNotification().length) filter.items.other.autoload.desk
       that.ref.ntypes.putconf(ntypes.checked);
       that.update();
     });
+    // 如果没有权限的话，总是要显示关闭的状态
+    if (!util.notify.hasPermission()) that.onopt.checked = false;
   },
   'init': function () {
     util.notify.choseNotification(this.ref.ntypes.conf ? 'webkit' : 'standard');
@@ -4319,15 +4321,12 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   },
   'ainit': function () {
     observer.dom.add(function () {
-      try {
-        console.log('add msg...');
-        var home = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child:not([yawf-message]) > .lev:first-child'); if (!home) return;
-        var msg = home.parentNode.querySelector('.lev + .lev');
-        var l1 = home.parentNode, ref = l1.nextSibling;
-        l1.setAttribute('yawf-message', 'yawf-message'); if (msg) l1.removeChild(msg);
-        var mn = util.dom.create('div', util.str.fill(html.leftMsg));
-        while (mn.firstChild) ref.parentNode.insertBefore(mn.firstChild, ref);
-      } catch (e) { console.log(e); }
+      var home = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child:not([yawf-message]) > .lev:first-child'); if (!home) return;
+      var msg = home.parentNode.querySelector('.lev + .lev');
+      var l1 = home.parentNode, ref = l1.nextSibling;
+      l1.setAttribute('yawf-message', 'yawf-message'); if (msg) l1.removeChild(msg);
+      var mn = util.dom.create('div', util.str.fill(html.leftMsg));
+      while (mn.firstChild) ref.parentNode.insertBefore(mn.firstChild, ref);
     });
     util.css.add('.lev_Box .levmore { display: none !important; } .lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }');
   },
