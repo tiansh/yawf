@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.182
+// @version           3.1.183
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -493,6 +493,7 @@ var text = {
   'fixedRightDesc': {
     'zh-cn': '如果同时启用了“合并左右边栏”和“允许首页左边栏随页面滚动始终显示”，则该选项将不生效。',
   },
+  'fixedNewFeedTip': { 'zh-cn': '允许新微博提示随页面滚动始终显示', 'zh-hk': '允許新微博提示隨頁面滾動始終顯示', 'zh-tw': '允許新微博提示隨頁面滾動始終顯示', 'en': 'Floating new feeds tip' },
   'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
@@ -4751,6 +4752,35 @@ filter.items.tool.sidebar.fixed_right = filter.item({
   },
 }).addto(filter.groups.tool);
 
+// 新微博提示浮动
+filter.items.tool.sidebar.fixed_new_feed_tip = filter.item({
+  'group': 'fixed',
+  'version': 183,
+  'type': 'boolean',
+  'key': 'weibo.tool.fixedNewFeedTip',
+  'text': '{{fixedNewFeedTip}}',
+  'ainit': function () {
+    var updatePosition = function () {
+      var tip = document.querySelector('#home_new_feed_tip, [yawf-id="home_new_feed_tip"]'); if (!tip) return;
+      var feeds = document.querySelector('.WB_feed');
+      var pos = null, fixed = false;
+      try { pos = feeds.getClientRects()[0].top; } catch (e) { return; }
+      var reading = document.body.hasAttribute('yawf-weibo-only');
+      fixed = pos < (reading ? 35 : 90);
+      if (tip.hasAttribute('yawf-fixed') == fixed) return;
+      if (fixed) tip.setAttribute('yawf-fixed', '');
+      else tip.removeAttribute('yawf-fixed');
+    };
+    updatePosition();
+    document.addEventListener('scroll', updatePosition);
+    observer.dom.add(updatePosition);
+    util.css.add(util.str.cmt(function () { /*!CSS
+      [yawf-id="home_new_feed_tip"][yawf-fixed], #home_new_feed_tip[yawf-fixed] { display: block; position: fixed; top: 66px; width: 600px; padding-top: 0; z-index: 9998; }
+      [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; } 
+    */}))
+  }
+}).addto(filter.groups.tool);
+
 filter.items.tool.sidebar.fixed_others = filter.item({
   'group': 'fixed',
   'version': 160,
@@ -5359,6 +5389,7 @@ filter.items.tool.stylish.weibo_only = filter.item({
       body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
+      body[{{attr}}] #home_new_feed_tip[yawf-fixed], body[{{attr}}] [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px; }
     */ }), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
