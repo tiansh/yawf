@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.183
+// @version           3.1.184
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -247,6 +247,10 @@ var text = {
   'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo via 微话题 (micro Topic){{<i>}}' },
   'huatiSourceWeiboDesc': {
     'zh-cn': '一些热门话题页面发布微博时会显示以“微话题 -”开头的来源',
+  },
+  'fangtanSourceWeibo': { 'zh-cn': '来自微访谈的微博{{<i>}}', 'zh-hk': '來自微訪談的微博{{<i>}}', 'zh-tw': '來自微訪談的微博{{<i>}}', 'en': 'Weibo via 微访谈 (micro Talk){{<i>}}' },
+  'fangtanSourceWeiboDesc': {
+    'zh-cn': '使用微访谈发布的微博，来源以“微访谈 -”开头',
   },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博|{{<action>}}{{<i>}}', 'zh-hk': '自訂來源微博|{{<action>}}{{<i>}}', 'zh-tw': '自訂來源微博|{{<action>}}{{<i>}}', 'en': 'Weibo with customize source | {{<action>}}{{<i>}}' },
   'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博', 'en': 'hide Weibo' },
@@ -2795,8 +2799,12 @@ filter.fast.source.validator = function (element) {
 filter.fast.source.recognizer = function (element, callback) {
   if (element.nodeType === Node.TEXT_NODE) return callback();
   var c = util.dom.create('body', element.outerHTML);
-  var source = c.querySelector('[action-type="app_source"], ' +
-  '[suda-data="key=tblog_home_new&value=feed_come_from"], a[href$="&from=feed_card"]');
+  var source = c.querySelector([
+    '[action-type="app_source"]',
+    '[suda-data="key=tblog_home_new&value=feed_come_from"]',
+    '[suda-uatrack*="key=profile_feed"]',
+    'a[href$="&from=feed_card"]'
+  ].join(','));
   source = source && (source.getAttribute('title') || source.textContent || text.sourceUnkown);
   if (source && source !== text.defaultSource) return callback({ 'source': source });
   else return callback();
@@ -2941,6 +2949,7 @@ weibo.sources = {};
 weibo.sources.dom = function (feed) {
   return Array.from(feed.querySelectorAll([
     '.WB_from [suda-data="key=tblog_home_new&value=feed_come_from"]',
+    '.WB_from [suda-uatrack*="key=profile_feed"]',
     '.WB_from [action-type="app_source"]',
     '.WB_from a[href$="&from=feed_card"]',
   ].join(',')));
@@ -3441,6 +3450,22 @@ filter.items.other.hidethese.wei_huati = filter.item({
     if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
       return 'hidden';
     if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="&from=feed_card"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 微话题微博
+filter.items.other.hidethese.wei_fangtan = filter.item({
+  'group': 'hidethese',
+  'version': 184,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_fangtan',
+  'text': '{{fangtanSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fangtanSourceWeiboDesc}}' } },
+  'rule': function huatiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[suda-uatrack*="key=profile_feed"][href*="talk.weibo.com"]'))
       return 'hidden';
     return null;
   },
@@ -4114,7 +4139,7 @@ filter.predef.group('layout');
     });
   });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
-  item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"] { display: none !important; }', {
+  item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"], .WB_pic_app { display: none !important; }', {
     'bubbled': function (dom) {
       // 在气球中引用“使用卡片按钮替代链接”的功能
       var c = filter.items.tool.weibotool.card_button.show().firstChild, i = c.querySelector('input');
