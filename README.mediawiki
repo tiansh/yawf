@@ -27,7 +27,7 @@ Google Chrome 浏览器用户，请使用 Tampermonkey 扩展安装本脚本。
 
 == 关于 ==
 
-YAWF (Yet Another Weibo Filter) [https://github.com/tiansh/yawf/blob/master/LICENSE.wikimedia 使用 MIT 协议授权]。<br />
+YAWF (Yet Another Weibo Filter) [https://github.com/tiansh/yawf/blob/master/LICENSE.mediawiki 使用 MIT 协议授权]。<br />
 您可以访问脚本主页获取详细信息。
 
 本脚本参考并使用了“[https://bitbucket.org/salviati/weibo-cleaner 眼不见心不烦]”脚本的部分代码。

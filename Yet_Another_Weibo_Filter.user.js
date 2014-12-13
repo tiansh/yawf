@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.184
+// @version           3.1.185
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -305,7 +305,7 @@ var text = {
     'en': 'Expand Weibo after auto load {{<i>}}|| {{<etypes>}} Only auto expand whitelist Weibo || {{<background>}} Pause when page actived',
   },
   'autoExpandDesc': {
-    'zh-cn': '需要启用“自动载入新微博”功能才会生效。在载入后可以直接将微博显示出来而不是在微博列表顶部显示有新微博的提示横幅。',
+    'zh-cn': '需要启用“[[other.autoload.auto_load_new_weibo]]”功能才会生效。在载入后可以直接将微博显示出来而不是在微博列表顶部显示有新微博的提示横幅。',
   },
   'autoExpandAll': { 'zh-cn': '所有新微博', 'zh-hk': '所有新微博', 'zh-tw': '所有新微博', 'en': 'all new Weibo' },
   'autoExpandWhite': { 'zh-cn': '白名单微博', 'zh-hk': '白名單微博', 'zh-tw': '白名單微博', 'en': 'whitelist Weibo' },
@@ -317,7 +317,7 @@ var text = {
     'en': 'Show desktop notification after auto load {{<i>}}|| {{<types>}} Only show desktop notification for whitelist Weibo || {{<shorten>}} Desktop notification only show | first {{<shortlen>}} charactors Weibo content || {{<autohide>}} auto hide desktop notification after | {{<duration>}}ms | + {{<durationc>}}ms/char || {{<ntypes>}} Use webkitNotifications instead of Notification',
   },
   'desktopNotificationDesc': {
-    'zh-cn': '需要启用“自动载入新微博”功能才会生效。在载入后，无论浏览器是否被最小化都可以在屏幕右下角弹出包含新微博内容的提示，方便您第一时间了解新收到的微博。',
+    'zh-cn': '需要启用“[[other.autoload.auto_load_new_weibo]]”功能才会生效。在载入后，无论浏览器是否被最小化都可以在屏幕右下角弹出包含新微博内容的提示，方便您第一时间了解新收到的微博。',
   },
   'desktopNotificationDisallowedTitle': { 'zh-cn': '桌面提示被阻止', 'zh-hk': '桌面提示被阻止', 'zh-tw': '桌面提示被阻止', 'en': 'Desktop Notification Disallowed' },
   'desktopNotificationDisallowed': {
@@ -349,6 +349,7 @@ var text = {
   'layoutHideIconSuishoupai': { 'zh-cn': '随手拍', 'zh-hk': '随手拍'/* as is */, 'zh-tw': '随手拍', 'en': '随手拍' },
   'layoutHideIconYouji': { 'zh-cn': '邂逅有机', 'zh-hk': '邂逅有机'/* as is */, 'zh-tw': '邂逅有机', 'en': '邂逅有机 (Travel Notes)' },
   'layoutHideIconDouble11': { 'zh-cn': '我的双11', 'zh-hk': '我的双11'/* as is */, 'zh-tw': '我的双11', 'en': '我的双11 (My Nov. 11<sup>th</sup>)' },
+  'layoutHideIconNight': { 'zh-cn': '2014微博之夜', 'zh-hk': '2014微博之夜', 'zh-tw': '2014微博之夜', 'en': 'Weibo Night 2014' }, // ? 尚未见到实例
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -393,7 +394,7 @@ var text = {
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merge forwards from same origin)' },
   'layoutHideWeiboCard': { 'zh-cn': '微博卡片', 'zh-hk': '微博卡片', 'zh-tw': '微博卡片', 'en': 'Weibo Cards' },
   'layoutHideWeiboCardDesc': {
-    'zh-cn': '微博内对分享内容的摘要描述，如话题卡片、长微博卡片、分享内容卡片等。隐藏后您可以开启工具选项卡中的“<span class="yawf-refCard"></span>”功能，点击链接在当前页面直接显示长微博或被分享的视频等。',
+    'zh-cn': '微博内对分享内容的摘要描述，如话题卡片、长微博卡片、分享内容卡片等。隐藏后您可以开启工具选项卡中的“[[tool.weibotool.card_button]]”功能，点击链接在当前页面直接显示长微博或被分享的视频等。',
   },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '檢舉', 'zh-tw': '檢舉', 'en': 'Report' },
@@ -482,9 +483,12 @@ var text = {
   'leftNavLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
   'leftNavDM': { 'zh-cn': '私信', 'zh-hk': '私信', 'zh-tw': '私信', 'en': 'Message' },
   'leftNavMsgBox': { 'zh-cn': '未关注人私信', 'zh-hk': '未關注人私信', 'zh-tw': '未關注人私信', 'en': 'Messages from those you don\'t follow' },
-  'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}', 'en': 'Merge left &amp; right column | to {{<side>}}' },
+  'mergeLeftRight': { 'zh-cn': '合并左右边栏|到{{<side>}}{{<i>}}', 'zh-hk': '合併左右邊欄|到{{<side>}}{{<i>}}', 'zh-tw': '合併左右邊欄|到{{<side>}}{{<i>}}', 'en': 'Merge left &amp; right column | to {{<side>}}{{<i>}}' },
   'mergeLeftRightLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'mergeLeftRightRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
+  'mergeLeftRightDesc': {
+    'zh-cn': '开启此选项后，左栏切换页面可能会导致微音乐播放中断。'
+  },
   'choseSide': { 'zh-cn': '统一个人主页、话题、单条微博等页面侧栏|到{{<side>}}', 'zh-hk': '統一個人主頁、話題、單條微博等頁面側欄|到{{<side>}}', 'zh-tw': '統一個人主頁、話題、單條微博等頁面側欄|到{{<side>}}', 'en': 'Relocate side bar for pages of user, topic, and, single Weibo | to {{<side>}}' },
   'choseSideLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'choseSideRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
@@ -495,7 +499,7 @@ var text = {
   'fixedLeft': { 'zh-cn': '允许首页左边栏随页面滚动始终显示', 'zh-hk': '允許首頁左邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁左邊欄隨頁面滾動始終顯示', 'en': 'Floating left column' },
   'fixedRight': { 'zh-cn': '允许首页右边栏随页面滚动始终显示{{<i>}}', 'zh-hk': '允許首頁右邊欄隨頁面滾動始終顯示{{<i>}}', 'zh-tw': '允許首頁右邊欄隨頁面滾動始終顯示{{<i>}}', 'en': 'Floating right column{{<i>}}' },
   'fixedRightDesc': {
-    'zh-cn': '如果同时启用了“合并左右边栏”和“允许首页左边栏随页面滚动始终显示”，则该选项将不生效。',
+    'zh-cn': '如果同时启用了“[[tool.sidebar.merge_left_right]]”和“[[tool.sidebar.fixed_left]]”，则该选项将不生效。',
   },
   'fixedNewFeedTip': { 'zh-cn': '允许新微博提示随页面滚动始终显示', 'zh-hk': '允許新微博提示隨頁面滾動始終顯示', 'zh-tw': '允許新微博提示隨頁面滾動始終顯示', 'en': 'Floating new feeds tip' },
   'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
@@ -508,7 +512,7 @@ var text = {
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
   'cardButton': { 'zh-cn': '使用微博卡片的按钮替换对应链接{{<i>}}', 'zh-hk': '使用微博卡片的按鈕替換對應連結{{<i>}}', 'zh-tw': '使用微博卡片的按鈕替換對應連結{{<i>}}', 'en': 'Replace the corresponding links by buttons in Weibo cards' },
   'cardButtonDesc': {
-    'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“<span class="yawf-refCard"></span>”隐藏掉整个卡片。',
+    'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
   },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
@@ -664,25 +668,26 @@ var html = {
   'configLabel': '<div class="yawf-groupLabel"><label>{{{text}}}</label></div>',
   // 设置项
   'configBoolean': '<div class="yawf-configBoolean yawf-configItem"><label>{{text}}</label></div>',
-  'configBooleanInput': '<div class="yawf-configInput yawf-configBooleanInput"><input id="yawf-{{key}}" class="W_checkbox yawf-configBooleanInput" type="checkbox" name="yawf-{{key}}"></div>',
+  'configBooleanInput': '<div class="yawf-configInput yawf-configBooleanInput"><input yawf-ci="{{key}}" class="W_checkbox yawf-configBooleanInput" type="checkbox" name="yawf-{{key}}"></div>',
   'configSelect': '<div class="yawf-configSelect yawf-configItem"><label>{{text}}</label></div>',
-  'configSelectInput': '<div class="yawf-configInput yawf-configSelectInput"><select class="yawf-configSelectSelect" name="yawf-{{key}}"></select></div>',
+  'configSelectInput': '<div class="yawf-configInput yawf-configSelectInput"><select yawf-ci="{{key}}" class="yawf-configSelectSelect" name="yawf-{{key}}"></select></div>',
   'configString': '<div class="yawf-configString yawf-configItem"><label>{{text}}</label></div>',
-  'configStringInput': '<div class="yawf-configInput yawf-configStringInput"><textarea id="yawf-{{key}}" class="W_input yawf-configStringInput" name="yawf-{{key}}"></textarea></div>',
+  'configStringInput': '<div class="yawf-configInput yawf-configStringInput"><textarea yawf-ci="{{key}}" class="W_input yawf-configStringInput" name="yawf-{{key}}"></textarea></div>',
   'configColor': '<div class="yawf-configColor yawf-configItem"><label>{{text}}</label></div>',
-  'configColorInput': '<div class="yawf-configInput yawf-configColorInput"><input type="color" class="W_f14" style="width: 40px;" /></div>',
+  'configColorInput': '<div class="yawf-configInput yawf-configColorInput"><input yawf-ci="{{key}}" class="W_f14 yawf-configColorInput" name="yawf-{{key}}" type="color" style="width: 40px;" /></div>',
   'configNumber': '<div class="yawf-configNumber yawf-configItem"><label>{{text}}</label></div>',
-  'configNumberInput': '<div class="yawf-configInput yawf-configNumberInput"><input type="number" class="W_f14" style="width: 60px;" /></div>',
+  'configNumberInput': '<div class="yawf-configInput yawf-configNumberInput"><input yawf-ci="{{key}}" type="number" class="W_f14 yawf-configNumberInput" name="yawf-{{key}}" style="width: 60px;" /></div>',
   'configRange': '<div class="yawf-configRange yawf-configItem"><label>{{text}}</label></div>',
-  'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" class="W_f14" style="text-align: right;" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
+  'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" yawf-ci="{{key}}" class="W_f14 yawf-configRangeInput" style="text-align: right;" name="yawf-{{id}}" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
   'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
-  'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
+  'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" yawf-ci="{{key}}" name="yawf-{{key}}" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item">{{[item]}}<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a></li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
   'scriptIcon': '<div id="yawf-script-icon" style="background: url({{icon}}); width: 72px; height: 72px; float: right; margin: 0 2em"></div>',
+  'refConfigItem': '<span yawf-ref="{{ref}}"></span>',
   // 选中当前分组所有
   'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAllDesc}}</span></a></div>',
   // 导入导出
@@ -717,6 +722,8 @@ var html = {
   'navLogo': '<span class="logo"></span>',
   // 来自 微博 weibo.com
   'weiboViaWeiboCom': '<a rel="nofollow" href="http://weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
+  // 在卡片链接中显示按钮上的文本
+  'cardLinkButton': '<span class="yawf-cardLinkButton W_btn_icon"><em class="W_autocut S_link1">{{text}}</em><i class="W_vline S_line1_c">|</i></span>',
 };
 
 // 超链接
@@ -813,6 +820,16 @@ util.func.catched = function (f, fc) {
       if (fc) fc(e);
     }
   };
+};
+
+// 对象相关工具
+util.obj = {};
+
+// 使用点分隔的字串索引对象
+util.obj.dotted = function (o, p) {
+  p = p.split('.');
+  while (typeof o !== 'undefined' && p.length) o = o[p.shift()];
+  return o;
 };
 
 // 字符串工具
@@ -953,6 +970,15 @@ util.dom.matches = (function () {
   };
 }());
 
+// 同一个元素多个输入框同步
+util.dom.cascade = function (fitem, key) {
+  var ci = fitem.getAttribute('yawf-ci') || ''; if (!ci) return;
+  var confs = Array.from(document.querySelectorAll('[yawf-ci="' + ci + '"]'));
+  confs.forEach(function (c) {
+    if (c !== fitem) c[key] = fitem[key];
+  });
+};
+
 // 将输入框和某个设置项绑定
 util.dom.bind = (function () {
   var bind = function (key, input, obj, standlize) {
@@ -962,6 +988,7 @@ util.dom.bind = (function () {
       valid = fine(val);
       if (String(valid) !== val) input[key] = valid;
       obj.putconf(valid);
+      util.dom.cascade(input, key);
     };
     input[key] = fine(obj.getconf());
     input.addEventListener('change', onchange);
@@ -2256,10 +2283,36 @@ filter.typed.dom = (function () {
         bubble = null;
       }, 200);
     };
+    // 允许从气泡中引用其他的设置项
+    var gen = function (sim) {
+      var text = util.str.fill(item.text).replace(/\[\[([^\]]*)\]\]/g, function (_, i) {
+        return util.str.fill(html.refConfigItem, { 'ref': i });
+      });
+      var bubble = sim(text);
+      Array.from(bubble.querySelectorAll('[yawf-ref]')).forEach(function (ref) {
+        var id = ref.getAttribute('yawf-ref');
+        var item = util.obj.dotted(filter.items, id);
+        var dom = item.show();
+        dom.classList.add('yawf-refConfigItem');
+        dom.classList.remove('yawf-configItem');
+        ref.parentNode.replaceChild(dom, ref);
+      });
+      return bubble;
+    };
+    // 生成气泡
+    var create = function () {
+      var bubble = null;
+      var sim = function (text) {
+        return util.ui.bubble(text, dom.getClientRects()[0]);
+      };
+      util.func.catched(function () {
+        bubble = gen(sim);
+        if (item.bubbled) item.bubbled(bubble);
+      }, function () { bubble = sim(item.text); })();
+      return bubble;
+    };
     dom.addEventListener('mouseenter', function () {
-      enter(); if (bubble) return;
-      bubble = util.ui.bubble(item.text, dom.getClientRects()[0]);
-      if (item.bubbled) item.bubbled(bubble);
+      enter(); if (bubble) return; bubble = create();
       bubble.addEventListener('mouseenter', enter);
       bubble.addEventListener('mouseleave', leave);
     });
@@ -4040,13 +4093,11 @@ filter.predef.group('layout');
   var item = function (name, version, content, config) {
     if (typeof content !== 'function') content = util.css(content);
     config = config || {};
-    var tid = 'layoutHide' + current + name, ref = {}, wr = !!text[tid + 'Desc'];
-    if (wr) ref = {
-      'i': {
-        'type': 'sicon',
-        'icon': 'ask',
-        'text': '{{' + tid + 'Desc}}',
-      },
+    var tid = 'layoutHide' + current + name, ref = config.ref || {}, wr = !!text[tid + 'Desc'];
+    if (wr && !ref.i) ref.i = {
+      'type': 'sicon',
+      'icon': 'ask',
+      'text': '{{' + tid + 'Desc}}',
     };
     if (config.bubbled) ref.i.bubbled = config.bubbled;
     filter.items.layout[group][name.toLowerCase()] = filter.item({
@@ -4075,6 +4126,7 @@ filter.predef.group('layout');
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_zongyika2014" style="display:inline-block!important"></i>' });
   item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }', { 'extt': '<i class="W_icon icon_airball" style="display:inline-block!important"></i>' });
   item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }', { 'extt': '<i class="W_icon icon_double11" style="display:inline-block!important"></i>' });
+  item('Night', 185, '.icon_wbnight2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_wbnight2014" style="display:inline-block!important"></i>' });
 
   subtitle('Nav', true);
   item('LogoImg', 94, function replaceLogo() {
@@ -4139,17 +4191,7 @@ filter.predef.group('layout');
     });
   });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
-  item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"], .WB_pic_app { display: none !important; }', {
-    'bubbled': function (dom) {
-      // 在气球中引用“使用卡片按钮替代链接”的功能
-      var c = filter.items.tool.weibotool.card_button.show().firstChild, i = c.querySelector('input');
-      i.addEventListener('change', function () {
-        var r = document.querySelector('.yawf-configItem [id="yawf-weibo.tool.cardButton"]');
-        if (r) r.checked = i.checked;
-      });
-      dom.querySelector('.yawf-refCard').appendChild(c);
-    }
-  });
+  item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"], .WB_pic_app, .WB_feed_spec { display: none !important; }');
   item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }' +
     '.WB_feed_detail .WB_from a[date]::after { content: " "; display: block; } .WB_feed_detail .WB_from { height: 16px; overflow: hidden; }');
   item('Report', 34, '.WB_time~.hover, div.layer_menu_list[action-type="feed_list_layer"] a[onclick*="service.account.weibo.com/reportspam"] { display: none !important; }');
@@ -4402,7 +4444,12 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         { 'value': 'right', 'text': '{{mergeLeftRightRight}}' },
       ],
       'default': 'right',
-    }
+    },
+    'i': {
+      'type': 'sicon',
+      'icon': 'warn',
+      'text': '{{mergeLeftRightDesc}}',
+    },
   },
   'ainit': function mergeLeftRight() {
     var main = document.body, side = this.ref.side.conf;
@@ -4576,7 +4623,7 @@ filter.items.tool.sidebar.chose_side = filter.item({
       } else if (side === 'right') {
         c = document.querySelector('#plc_main>.WB_frame_b:first-child+.WB_frame_c:last-child'); if (!c) return;
         p = c.parentNode;
-        b; for (b = p.firstChild; b.nodeType === Node.TEXT_NODE; b = b.nextSibling);
+        for (b = p.firstChild; b.nodeType === Node.TEXT_NODE; b = b.nextSibling);
         p.appendChild(b);
       }
     });
@@ -4802,7 +4849,7 @@ filter.items.tool.sidebar.fixed_new_feed_tip = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       [yawf-id="home_new_feed_tip"][yawf-fixed], #home_new_feed_tip[yawf-fixed] { display: block; position: fixed; top: 66px; width: 600px; padding-top: 0; z-index: 9998; }
       [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; } 
-    */}))
+    */}));
   }
 }).addto(filter.groups.tool);
 
@@ -4909,15 +4956,6 @@ filter.items.tool.weibotool.card_button = filter.item({
       'type': 'sicon',
       'icon': 'ask',
       'text': '{{cardButtonDesc}}',
-      'bubbled': function (dom) {
-        // 在气球中引用“隐藏微博卡片”的功能
-        var c = filter.items.layout.weibo.card.show().firstChild, i = c.querySelector('input');
-        i.addEventListener('change', function () {
-          var r = document.querySelector('.yawf-configItem [id="yawf-weibo.layoutHideWeiboCard"]');
-          if (r) r.checked = i.checked;
-        });
-        dom.querySelector('.yawf-refCard').appendChild(c);
-      },
     },
   },
   'ainit': function () {
@@ -4925,12 +4963,18 @@ filter.items.tool.weibotool.card_button = filter.item({
       var links = Array.from(feed.querySelectorAll('.W_btn_c[action-type="feed_list_url"]'));
       var buttons = Array.from(feed.querySelectorAll('.WB_feed_spec[exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
       links.forEach(function (link) {
-        var info = link.getAttribute('suda-uatrack').replace('click_title', 'click_button');
-        var button = buttons.filter(function (button) { return button.getAttribute('suda-uatrack').indexOf(info) === 0; })[0] || null;
-        if (button) link.addEventListener('click', function (e) {
+        var attr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
+        var info = attr(link).replace('click_title', 'click_button'); if (!info) return;
+        var button = buttons.filter(function (button) { return attr(button).indexOf(info) === 0; })[0] || null;
+        if (!button) return;
+        link.addEventListener('click', function (e) {
           e.stopPropagation(); e.preventDefault();
           button.click();
         });
+        var text = button.textContent;
+        var linktext = util.dom.create(util.str.fill(html.cardLinkButton, { 'text': text }));
+        var span = link.querySelector('span');
+        span.insertBefore(linktext, span.firstChild);
       });
     };
     observer.weibo.after(fixButton);
@@ -5200,12 +5244,12 @@ filter.items.tool.stylish.custom_font_family = filter.item({
   'ref': {
     'wf': {
       'type': 'select',
-      'select': font.west.map(function (i) { return { 'text': i[1], 'value': i[1] } }),
+      'select': font.west.map(function (i) { return { 'text': i[1], 'value': i[1] }; }),
       'default': font.west[0][0],
     },
     'cf': {
       'type': 'select',
-      'select': font.chinese.map(function (i) { return { 'text': i[1], 'value': i[1] } }),
+      'select': font.chinese.map(function (i) { return { 'text': i[1], 'value': i[1] }; }),
       'default': font.chinese[0][0],
     },
   },
@@ -5961,7 +6005,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configKeyInput button { padding: 0 1em; }
   .yawf-configKeyInput span { display: none; }
   .yawf-configKeyInput button:focus~span { display: inline; }
-  .yawf-configItem label+label { margin-left: 0.5em; }
+  .yawf-configItem label+label, .yawf-refConfigItem label+label { margin-left: 0.5em; }
   .yawf-configItem br+label { margin-left: 4em; }
   .yawf-whitelistFilterTitle::before, .yawf-blacklistFilterTitle::before, .yawf-foldlistFilterTitle::before { content: " "; display: inline-block; width: 0.8em; height: 0.8em; border-radius: 1em; margin-right: 0.5em; border: 1px solid white; vertical-align: middle; }
   .yawf-whitelistFilterTitle::before { background: #37c837; box-shadow: 0 0 2px #37c837; }
@@ -5993,6 +6037,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configSIcon { margin: 0 0 0 0.5em; position: relative; top: 4px; }
   .yawf-bubble { max-width: 280px; }
   .yawf-bubble .yawf-configSIcon { display: none !important; }
+  .yawf-refConfigItem { display: inline; }
   // 新功能提示
   #yawf-whats-new [node-type="inner"] { padding: 10px 0; width: 760px; }
   .yawf-whats-new-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
