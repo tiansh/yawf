@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.185
+// @version           3.1.186
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -378,6 +378,7 @@ var text = {
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
+  'layoutHideRightMovie': { 'zh-cn': '电影热评榜', 'zh-hk': '电影热评榜', 'zh-tw': '电影热评榜', 'en': '电影热评榜 (Hot Movie)' },
   'layoutHideRightNotice': { 'zh-cn': '公告栏', 'zh-hk': '公告欄', 'zh-tw': '公告欄', 'en': 'Bulletin Board' },
   // 微博内
   'layoutHideWeibo': { 'zh-cn': '隐藏模块 - 微博内', 'zh-hk': '隱藏模組 - 微博內', 'zh-tw': '隱藏模組 - 微博內', 'en': 'Hide modules - Weibo' },
@@ -396,6 +397,7 @@ var text = {
   'layoutHideWeiboCardDesc': {
     'zh-cn': '微博内对分享内容的摘要描述，如话题卡片、长微博卡片、分享内容卡片等。隐藏后您可以开启工具选项卡中的“[[tool.weibotool.card_button]]”功能，点击链接在当前页面直接显示长微博或被分享的视频等。',
   },
+  'layoutHideWeiboTag': { 'zh-cn': '微博标签', 'zh-hk': '微博標籤', 'zh-tw': '微博標籤', 'en': 'Tags for Weibo' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '檢舉', 'zh-tw': '檢舉', 'en': 'Report' },
   'layoutHideWeiboPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
@@ -4163,6 +4165,7 @@ filter.predef.group('layout');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
   item('Groups', 102, '#pl_rightmod_groups { display: none; }');
+  item('Movie', 186, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('Notice', 5, '#v6_pl_rightmod_noticeboard { display: none !important; }');
 
   subtitle('Weibo', true);
@@ -4192,6 +4195,7 @@ filter.predef.group('layout');
   });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
   item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"], .WB_pic_app, .WB_feed_spec { display: none !important; }');
+  item('Tag', 186, '.WB_tag_s[node-type="feed_list_tagList"] { display: none !important; }');
   item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }' +
     '.WB_feed_detail .WB_from a[date]::after { content: " "; display: block; } .WB_feed_detail .WB_from { height: 16px; overflow: hidden; }');
   item('Report', 34, '.WB_time~.hover, div.layer_menu_list[action-type="feed_list_layer"] a[onclick*="service.account.weibo.com/reportspam"] { display: none !important; }');
@@ -4350,6 +4354,7 @@ filter.predef.group('layout');
     var identifiers = {
       '[change-data*="key=hottopic_r2"]': 'rightmod_zt_hottopic',
       '[change-data*="key=interest_r2"]': 'rightmod_recom_interest',
+      'h4.obj_name a[href*="movie.weibo.com"]': 'rightmod_recom_movie',
     };
     mods.forEach(function (mod) {
       mod.setAttribute('yawf-id', '');
