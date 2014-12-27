@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.190
+// @version           3.1.191
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -349,7 +349,7 @@ var text = {
   'layoutHideIconSuishoupai': { 'zh-cn': '随手拍', 'zh-hk': '随手拍'/* as is */, 'zh-tw': '随手拍', 'en': '随手拍' },
   'layoutHideIconYouji': { 'zh-cn': '邂逅有机', 'zh-hk': '邂逅有机'/* as is */, 'zh-tw': '邂逅有机', 'en': '邂逅有机 (Travel Notes)' },
   'layoutHideIconDouble11': { 'zh-cn': '我的双11', 'zh-hk': '我的双11'/* as is */, 'zh-tw': '我的双11', 'en': '我的双11 (My Nov. 11<sup>th</sup>)' },
-  'layoutHideIconNight': { 'zh-cn': '2014微博之夜', 'zh-hk': '2014微博之夜', 'zh-tw': '2014微博之夜', 'en': 'Weibo Night 2014' }, // ? 尚未见到实例
+  'layoutHideIconNight': { 'zh-cn': '微博之夜', 'zh-hk': '微博之夜', 'zh-tw': '微博之夜', 'en': '微博之夜 (Weibo Night)' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -378,6 +378,7 @@ var text = {
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
+  'layoutHideRightRecomGroupUser': { 'zh-cn': '建议加入该分组', 'zh-hk': '建議加入該分組', 'zh-tw': '建議加入該分組', 'en': 'Suggest to add to this group' },
   'layoutHideRightMovie': { 'zh-cn': '电影热评榜', 'zh-hk': '电影热评榜', 'zh-tw': '电影热评榜', 'en': '电影热评榜 (Hot Movie)' },
   'layoutHideRightNotice': { 'zh-cn': '公告栏', 'zh-hk': '公告欄', 'zh-tw': '公告欄', 'en': 'Bulletin Board' },
   // 微博内
@@ -4162,13 +4163,14 @@ filter.predef.group('layout');
 
   subtitle('Right', true);
   item('Template', 5, '#v6_pl_content_setskin { display: none !important; }');
-  item('Info', 5, '#pl_rightmod_myinfo { display: none !important; }');
+  item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
   item('V6UpdateV6', 110, '#v6_pl_rightmod_updatev6 { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
   item('HotTopicExpand', 178, '.hot_topic .WB_right_expand { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
   item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
-  item('Groups', 102, '#pl_rightmod_groups { display: none; }');
+  item('Groups', 102, '#v6_pl_rightmod_groups { display: none; }');
+  item('RecomGroupUser', 191, '#v6_pl_rightmod_recomgroupuser { display: none; }');
   item('Movie', 186, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('Notice', 5, '#v6_pl_rightmod_noticeboard { display: none !important; }');
 
@@ -4311,7 +4313,7 @@ filter.predef.group('layout');
     var config = unsafeWindow.$CONFIG;
     if (config.oid && config.oid === config.uid) util.css.add('[id^="Pl_Core_UserInfo__"] { display: none !important; }');
   });
-  item('Stats', 5, '.PCD_counter { display: none !important; }');
+  item('Stats', 5, '[id^="Pl_Core_T8CustomTriColumn__"] { display: none !important; }');
   item('MyData', 5, '[id^="Pl_Official_MyMicroworld__"], .WB_frame_b [id^="Pl_Official_MyPopularity__"] { display: none !important; }');
   item('SuggestUser', 10, '[id^="Pl_Core_RightUserList__"], .WB_frame_b [id^="Pl_Core_RightUserList__"] { display: none !important; }');
   item('Group', 12, '[id^="Pl_Core_UserGrid__"] { display: none !important; }');
