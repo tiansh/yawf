@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.1.191
+// @version           3.1.192
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -188,16 +188,16 @@ var text = {
   // 来源
   'sourceFilterGroupTitle': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'sourceFilterDesc': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Via' },
-  'sourceFilterDetails': { 'zh-cn': '以下来源的微博', 'zh-hk': '以下來源的微博', 'zh-tw': '以下來源的微博', 'en': 'Weibo from these sources' },
+  'sourceFilterDetails': { 'zh-cn': '以下来源的微博', 'zh-hk': '以下來源的微博', 'zh-tw': '以下來源的微博', 'en': 'Weibo comes from these sources' },
   'sourceFilterDetailsDesc': {
     'zh-cn': '匹配微博下方“来自×××”的来源，不包括“自定义微博来源”中的文本。来源使用全字匹配。'
   },
-  'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「{{source}}」的微博', 'zh-tw': '來自「{{source}}」的微博', 'en': 'Weibo via "{{source}}"' },
-  'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'via' },
+  'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「{{source}}」的微博', 'zh-tw': '來自「{{source}}」的微博', 'en': 'Weibo comes from "{{source}}"' },
+  'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'ComeFrom' },
   'sourceFilterContextMenu': { 'zh-cn': '{{source}}', 'zh-hk': '{{source}}', 'zh-tw': '{{source}}', 'en': '{{source}}' },
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能添加默认来源', 'zh-hk': '不能新增預設來源', 'zh-tw': '不能新增預設來源', 'en': 'You cannot add default source' },
-  'sourceFilterReason': { 'zh-cn': '因来自“{{detail}}”', 'zh-hk': '因來自「{{detail}}」', 'zh-tw': '因來自「{{detail}}」', 'en': 'because it is posted via "{{detail}}" ' },
+  'sourceFilterReason': { 'zh-cn': '因来自“{{detail}}”', 'zh-hk': '因來自「{{detail}}」', 'zh-tw': '因來自「{{detail}}」', 'en': 'because it comes from "{{detail}}" ' },
   'sourceUnkown': { 'zh-cn': '未通过审核应用', 'zh-hk': '未通过审核应用', 'zh-tw': '未通过审核应用', 'en': '未通过审核应用' },
   'defaultSource': { 'zh-cn': '微博 weibo.com', 'zh-hk': '微博 weibo.com', 'zh-tw': '微博 weibo.com', 'en': '微博 weibo.com' },
   // 超链接
@@ -244,11 +244,15 @@ var text = {
   'taobaoTianmaoWeiboDesc': {
     'zh-cn': '带有<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_tb"></i><span class="W_autocut">淘宝商品</span></a></span>、<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_tmall"></i><span class="W_autocut">天猫商品</span></a></span>或<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_ju"></i><span class="W_autocut">聚划算商品</span></a></span>的微博',
   },
-  'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo via 微话题 (micro Topic){{<i>}}' },
+  'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo comes from 微话题 (micro Topic){{<i>}}' },
   'huatiSourceWeiboDesc': {
     'zh-cn': '一些热门话题页面发布微博时会显示以“微话题 -”开头的来源',
   },
-  'fangtanSourceWeibo': { 'zh-cn': '来自微访谈的微博{{<i>}}', 'zh-hk': '來自微訪談的微博{{<i>}}', 'zh-tw': '來自微訪談的微博{{<i>}}', 'en': 'Weibo via 微访谈 (micro Talk){{<i>}}' },
+  'weiqunSourceWeibo': { 'zh-cn': '来自新浪微群的微博{{<i>}}', 'zh-hk': '來自新浪微群的微博{{<i>}}', 'zh-tw': '來自新浪微群的微博{{<i>}}', 'en': 'Weibo comes from 新浪微群 (micro Group) {{i}}' },
+  'weiqunSourceWeiboDesc': {
+    'zh-cn': '从新浪微群页面发布的微博，来源以“新浪微群 -”开头',
+  },
+  'fangtanSourceWeibo': { 'zh-cn': '来自微访谈的微博{{<i>}}', 'zh-hk': '來自微訪談的微博{{<i>}}', 'zh-tw': '來自微訪談的微博{{<i>}}', 'en': 'Weibo comes from 微访谈 (micro Talk){{<i>}}' },
   'fangtanSourceWeiboDesc': {
     'zh-cn': '使用微访谈发布的微博，来源以“微访谈 -”开头',
   },
@@ -1238,11 +1242,11 @@ util.i18n.stylish = function (lang) {
     .layoutFilterGroupLayer .yawf-configBoolean.yawf-layoutConfig-line { width: 100%; }
   */ }), { 'layoutOptionWidth': isEn ? '320px' : '160px', }));
   if (isEn) util.css.add(util.str.cmt(function () { /*!CSS
-    #yawf-config .profile_tab .current.pftb_lk { padding-left: 8px !important; padding-right: 8px !important; }
-    #yawf-config .profile_tab .pftb_lk { padding-left: 10px !important; padding-right: 10px !important; }
+    #yawf-config .profile_tab .current.pftb_lk { padding-left: 4px !important; padding-right: 4px !important; }
+    #yawf-config .profile_tab .pftb_lk { padding-left: 6px !important; padding-right: 6px !important; }
     #yawf-config .WB_minitab .minitb_lk:hover,
     #yawf-config .WB_minitab .current .minitb_lk { font-weight: normal; }
-    #yawf-config .WB_minitab .minitb_lk { padding-left: 8px !important; padding-right: 8px !important; }
+    #yawf-config .WB_minitab .minitb_lk { padding-left: 4px !important; padding-right: 4px !important; }
     #yawf-config .WB_minitab .minitb_lk { width: auto; }
   */ })); else util.css.add(util.str.cmt(function () { /*!CSS
     #yawf-config .WB_minitab .minitb_lk:hover,
@@ -2863,7 +2867,8 @@ filter.fast.source.recognizer = function (element, callback) {
     '[action-type="app_source"]',
     '[suda-data="key=tblog_home_new&value=feed_come_from"]',
     '[suda-uatrack*="key=profile_feed"]',
-    'a[href$="&from=feed_card"]'
+    'a[href$="from=feed_card"]',
+    'a[href$="source=weibosource"]',
   ].join(','));
   source = source && (source.getAttribute('title') || source.textContent || text.sourceUnkown);
   if (source && source !== text.defaultSource) return callback({ 'source': source });
@@ -3011,7 +3016,8 @@ weibo.sources.dom = function (feed) {
     '.WB_from [suda-data="key=tblog_home_new&value=feed_come_from"]',
     '.WB_from [suda-uatrack*="key=profile_feed"]',
     '.WB_from [action-type="app_source"]',
-    '.WB_from a[href$="&from=feed_card"]',
+    '.WB_from a[href$="from=feed_card"]',
+    '.WB_from a[href$="source=weibosource"]',
   ].join(',')));
 };
 weibo.sources.text = function (feed) {
@@ -3509,7 +3515,23 @@ filter.items.other.hidethese.wei_huati = filter.item({
     if (!this.conf) return null;
     if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
       return 'hidden';
-    if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="&from=feed_card"]'))
+    if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="from=feed_card"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 新浪微群微博
+filter.items.other.hidethese.wei_huati = filter.item({
+  'group': 'hidethese',
+  'version': 192,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_qun',
+  'text': '{{weiqunSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{weiqunSourceWeiboDesc}}' } },
+  'rule': function huatiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[href*="http://q.weibo.com/"][href$="source=weibosource"]'))
       return 'hidden';
     return null;
   },
@@ -4341,14 +4363,14 @@ filter.predef.group('layout');
   }).addto(filter.groups.layout);
 
   subtitle('Messages', true);
-  item('Help', 97, '#Pl_Rightmod_Helpbox, #pl_rightmod_helpat, #pl_rightmod_helpcomment, #pl_rightmod_helplike, #Pl_Rightmod_Littlehelp, #Pl_Rightmod_Helpnotebox, #pl_rightmod_helpfav, #v6_pl_rightmod_helpat, #v6_pl_rightmod_helpcomment, #v6_pl_rightmod_helplike, #v6_pl_rightmod_helpnotebox, #v6_pl_rightmod_helpfav { display: none !important; }');
-  item('Feedback', 97, '#pl_rightmod_feedback, #v6_pl_rightmod_feedback { display: none !important; }');
-  item('Youdao', 174, '#pl_rightmod_favyoudao { display: none !important; }');
+  item('Help', 97, '#v6_pl_rightmod_helpat, #v6_pl_rightmod_helpcomment, #v6_pl_rightmod_helplike, #v6_pl_rightmod_helpnotebox, #v6_pl_rightmod_helpfav { display: none !important; }');
+  item('Feedback', 97, '#v6_pl_rightmod_feedback { display: none !important; }');
+  item('Youdao', 174, '#v6_pl_rightmod_favyoudao { display: none !important; }');
 
   subtitle('Other', true);
   item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"] { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
-  item('HomeTip', 124, '#pl_content_hometip, #v6_pl_content_hometip { display: none !important }');
+  item('HomeTip', 124, '#v6_pl_content_hometip { display: none !important }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
   item('IM', 189, '#WB_webim { display: none !important; }');
@@ -4471,7 +4493,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     left.parentNode.insertBefore(left0, left);
     left.parentNode.removeChild(left);
     var positionLeft = function () {
-      var ref = document.querySelector('#pl_rightmod_myinfo, #v6_pl_rightmod_myinfo');
+      var ref = document.querySelector('#v6_pl_rightmod_myinfo');
       var right = document.querySelector('.W_main_r, .WB_main_r');
       var leftn = document.querySelector('.W_main_l, .WB_main_l');
       if (leftn && left !== leftn) { left = leftn; }
@@ -4891,7 +4913,7 @@ filter.items.tool.weibotool.clear_def_topic = filter.item({
   'text': '{{clearDefTopicDesc}}',
   'ainit': function () {
     var clearDefTopic = function () {
-      var inputBox = document.querySelector('#pl_content_publisherTop .send_weibo .input textarea, #v6_pl_content_publishertop .send_weibo .input textarea');
+      var inputBox = document.querySelector('#v6_pl_content_publishertop .send_weibo .input textarea');
       if (inputBox && inputBox.hasAttribute('hottopic')) {
         inputBox.removeAttribute('hottopic'); inputBox.removeAttribute('hottopicid');
         inputBox.value = 'DUMMY'; inputBox.focus();
@@ -5459,7 +5481,7 @@ filter.items.tool.stylish.weibo_only = filter.item({
       body[{{attr}}] .WB_frame>*:not(#plc_main),
       body[{{attr}}] #plc_main>*:not(.WB_main_c):not(.WB_frame_c):not(.WB_main_r):not(.WB_frame_b),
       body[{{attr}}] .WB_main_c>*:not(#v6_pl_content_homefeed),
-      body[{{attr}}] #plc_bot .WB_footer, body[{{attr}}] #plc_bot .W_fold, body[{{attr}}] #pl_common_footer { display: none !important; }
+      body[{{attr}}] #plc_bot .WB_footer, body[{{attr}}] #plc_bot .W_fold, body[{{attr}}] .WB_footer { display: none !important; }
       body[{{attr}}] .WB_main .WB_main_c { float: right !important; }
       body[{{attr}}] #plc_main>.WB_main_r { visibility: hidden; margin-right: -230px; }
       body[{{attr}}] #plc_main>.WB_frame_b { visibility: hidden; margin-right: -300px; }
@@ -6094,7 +6116,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-fast-filter-text { font-weight: bold; }
   #yawf-drop-area ul { list-style: disc; margin-left: 2em; }
   // 其他页面优化设置
-  #pl_rightmod_myinfo:empty { hegiht: 156px; }
+  #v6_pl_rightmod_myinfo:empty { hegiht: 156px; }
   // 切换视图
   body #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
   // v6 微博按钮的平均分布 -webkit-flex 是 Safari 兼容
@@ -6108,7 +6130,6 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
     float: none; width: auto;
   }
-*/
-}) + '\n').replace(/\/\/.*\n/g, '\n'), {
+*/ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
