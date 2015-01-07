@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.195
+// @version           3.2.196
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -299,6 +299,10 @@ var text = {
   'fangtanSourceWeibo': { 'zh-cn': '来自微访谈的微博{{<i>}}', 'zh-hk': '來自微訪談的微博{{<i>}}', 'zh-tw': '來自微訪談的微博{{<i>}}', 'en': 'Weibo comes from 微访谈 (micro Talk){{<i>}}' },
   'fangtanSourceWeiboDesc': {
     'zh-cn': '使用微访谈发布的微博，来源以“微访谈 -”开头',
+  },
+  'unauthappWeibo': { 'zh-cn': '来自未通过审核应用{{<i>}}', 'zh-hk': '來自未通过审核应用{{<i>}}', 'zh-tw': '來自未通过审核应用{{<i>}}', 'en': 'Weibo comes from 未通过审核应用 (unauthorized application){{<i>}}' },
+  'unauthappWeiboDesc': {
+    'zh-cn': '未通过审核的应用有发布频率和可最多可授权15名用户的限制，除非您的好友中有人做相关的开发工作，否则您应当很难看到此来源的微博。来自未审核应用的微博往往是但开发微博应用过程中的测试微博。您可以通过微博开放平台文档中的<a target="_blank" href="http://open.weibo.com/wiki/%E5%BA%94%E7%94%A8%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98">应用相关问题</a>页面了解更多关于应用的信息。',
   },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博|{{<action>}}{{<i>}}', 'zh-hk': '自訂來源微博|{{<action>}}{{<i>}}', 'zh-tw': '自訂來源微博|{{<action>}}{{<i>}}', 'en': 'Weibo with customize source | {{<action>}}{{<i>}}' },
   'customizeSourceHidden': { 'zh-cn': '隐藏微博', 'zh-hk': '隱藏微博', 'zh-tw': '隱藏微博', 'en': 'hide Weibo' },
@@ -4114,6 +4118,27 @@ filter.items.other.hidethese.wei_fangtan = filter.item({
     if (feed.querySelector('a[suda-uatrack*="key=profile_feed"][href*="talk.weibo.com"]'))
       return 'hidden';
     return null;
+  },
+}).addto(filter.groups.other);
+
+// 来自 未通过审核应用 微博
+filter.items.other.hidethese.unauth_source = filter.item({
+  'group': 'hidethese',
+  'version': 196,
+  'type': 'boolean',
+  'key': 'weibo.other.unauth_source',
+  'text': '{{unauthappWeibo}}',
+  'ref': {
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{unauthappWeiboDesc}}' },
+  },
+  'rule': function unauthSourceRule(feed) {
+    var from = Array.from(feed.querySelectorAll('.WB_from'));
+    from = from.map(function (f) { return f.lastChild; })
+      .filter(function (x) { return x && x.nodeType === Node.TEXT_NODE })
+      .map(function (x) { return x.textContent; })
+      .filter(function (x) { return x.indexOf(text.sourceUnkown) !== -1; });
+    if (!from.length) return;
+    return 'hidden';
   },
 }).addto(filter.groups.other);
 
