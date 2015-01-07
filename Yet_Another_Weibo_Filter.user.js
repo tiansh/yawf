@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.196
+// @version           3.2.197
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4160,17 +4160,28 @@ filter.items.other.hidethese.customize_source = filter.item({
       ],
     }
   },
-  'rule': function customizeSourceRule(feed) {
-    if (!this.conf) return null;
+  'isCs': function (feed) {
     var from = Array.from(feed.querySelectorAll('.WB_from'));
     from = from.map(function (f) { return f.querySelector('a[href*="vip.weibo.com"]'); }).filter(Boolean);
-    if (!from.length) return;
-    if (this.ref.action.conf === 'hidden') return 'hidden';
-    from.forEach(function (f) {
-      var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
-      f.parentNode.replaceChild(wb, f);
+    if (!from.length) return false;
+    return from;
+  },
+  'rule': function customizeSourceRule(feed) {
+    if (!this.conf) return null;
+    if (this.ref.action.conf !== 'hidden') return null;
+    if (this.isCs(feed)) return 'hidden'; else return null;
+  },
+  'ainit': function () {
+    if (this.ref.action.conf !== 'reset') return null;
+    var that = this;
+    observer.weibo.after(function (feed) {
+      var from = that.isCs(feed);
+      if (!from) return;
+      from.forEach(function (f) {
+        var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
+        f.parentNode.replaceChild(wb, f);
+      });
     });
-    return null;
   },
 }).addto(filter.groups.other);
 
@@ -4931,6 +4942,7 @@ filter.items.tool.sidebar.fixed_left = filter.item({
         var text = none ? 'none' : maxHeight + 'px';
         var srl = left.querySelector('[node-type="leftnav_scroll"]');
         var mod;
+        if (!srl) return;
         if (left.style.maxHeight !== text) {
           mod = (left.style.maxHeight || 'none') !== text;
           if (mod) left.style.maxHeight = text;
