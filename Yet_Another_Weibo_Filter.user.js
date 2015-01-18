@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.197
+// @version           3.2.198
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -3466,6 +3466,7 @@ filter.items.base.autoload.auto_expand = filter.item({
       filter.items.base.autoload.auto_load_new_weibo.counter();
     };
     if (force) return act();
+    if (weibo.author.id(feed) === util.info.uid) return act(); // 总是不折叠自己的微博
     if (!that.conf) return;
     if (that.ref.etypes.conf && display !== 'show') return;
     if (feed.getAttribute('yawf-unread') !== 'hidden') return;
@@ -4132,6 +4133,7 @@ filter.items.other.hidethese.unauth_source = filter.item({
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{unauthappWeiboDesc}}' },
   },
   'rule': function unauthSourceRule(feed) {
+    if (!this.conf) return null;
     var from = Array.from(feed.querySelectorAll('.WB_from'));
     from = from.map(function (f) { return f.lastChild; })
       .filter(function (x) { return x && x.nodeType === Node.TEXT_NODE })
@@ -4177,10 +4179,10 @@ filter.items.other.hidethese.customize_source = filter.item({
     observer.weibo.after(function (feed) {
       var from = that.isCs(feed);
       if (!from) return;
-      from.forEach(function (f) {
-        var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
-        f.parentNode.replaceChild(wb, f);
-      });
+    from.forEach(function (f) {
+      var wb = util.dom.create(util.str.fill(html.weiboViaWeiboCom));
+      f.parentNode.replaceChild(wb, f);
+    });
     });
   },
 }).addto(filter.groups.other);
@@ -4463,6 +4465,7 @@ filter.predef.group('layout');
     var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
     li.forEach(function (li) {
       var type = li.querySelector('a').getAttribute('action-type');
+      if (!type && li.querySelector('a[suda-uatrack="key=profile_feed&value=popularize_host"]')) type = 'fl_pop';
       li.setAttribute('yawf-handle-type', type);
     });
     var fwli = Array.from(feed.querySelectorAll('.WB_feed_expand .WB_func .WB_handle li'));
@@ -4699,7 +4702,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
       body[yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
       body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
-      body[yawf-merge-left] .webim_contacts_mod { height: calc(100% - 280px) !important; }
+      body[yawf-merge-left] .webim_contacts_mod { height: calc(100% - 320px) !important; }
       body[yawf-merge-left] .webim_contacts_bd { height: calc(100% - 60px) !important; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
@@ -5656,7 +5659,7 @@ filter.items.style.sweibo.reorder = (function () {
         });
       });
     },
-    'init': function () {
+    'ainit': function () {
       var ref = this.ref;
       util.css.add('.WB_handle ul li[yawf-handle-type="fl_read"] { order: 0; }' + '\n' +
       ['1', '2', '3', '4', '5'].map(function (key) {
