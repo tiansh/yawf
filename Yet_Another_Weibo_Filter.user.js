@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.200
+// @version           3.2.201
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -233,7 +233,7 @@ var text = {
     'zh-cn': '匹配微博下方“来自×××”的来源，不包括“自定义微博来源”中的文本。来源使用全字匹配。'
   },
   'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「{{source}}」的微博', 'zh-tw': '來自「{{source}}」的微博', 'en': 'Weibo comes from "{{source}}"' },
-  'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'ComeFrom' },
+  'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'come from' },
   'sourceFilterContextMenu': { 'zh-cn': '{{source}}', 'zh-hk': '{{source}}', 'zh-tw': '{{source}}', 'en': '{{source}}' },
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能添加默认来源', 'zh-hk': '不能新增預設來源', 'zh-tw': '不能新增預設來源', 'en': 'You cannot add default source' },
@@ -275,6 +275,10 @@ var text = {
   'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发{{<i>}}', 'zh-hk': '已刪除微博的轉發{{<i>}}', 'zh-tw': '已刪除微博的轉發{{<i>}}', 'en': 'Forward of deleted Weibo{{<i>}}' },
   'deletedForwardFilterDescDesc': {
     'zh-cn': '包括因为删除或对微博设置了隐私权限而使您无法看到原文的微博。这些微博您只能看见转发者的评论，但是无法看到原微博的内容。',
+  },
+  'commentAndForwardFilterDesc': { 'zh-cn': '回复并转发的微博{{<i>}}', 'zh-hk': '回覆並轉發的微博{{<i>}}', 'zh-tw': '回覆並轉發的微博{{<i>}}', 'en': 'Weibo forwarded as reply{{<i>}}' },
+  'commentAndForwardFilterDescDesc': {
+    'zh-cn': '在回复他人微博时选择“同时转发到我的微博”会将回复和被回复的内容转发为一条微博，勾选后会隐藏回复时转发的微博。',
   },
   'voteWeiboFilterDesc': { 'zh-cn': '投票微博{{<i>}}', 'zh-hk': '投票微博{{<i>}}', 'zh-tw': '投票微博{{<i>}}', 'en': 'Voting weibo{{<i>}}' },
   'voteWeiboFilterDescDesc': {
@@ -4020,6 +4024,26 @@ filter.items.other.hidethese.deleted_forward = filter.item({
     if (feed.getAttribute('isforward') === '1' &&
       !weibo.original.dom(feed)) return 'hidden';
     return null;
+  },
+}).addto(filter.groups.other);
+
+// 回复并转发的微博
+// 要求微博以“回复”开头，后面紧跟一个提到
+filter.items.other.hidethese.comment_and_reply = filter.item({
+  'group': 'hidethese',
+  'version': 201,
+  'type': 'boolean',
+  'key': 'weibo.other.comment_and_reply',
+  'text': '{{commentAndForwardFilterDesc}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{commentAndForwardFilterDescDesc}}' } },
+  'rule': function commentAndForwardFilterRule(feed) {
+    if (!this.conf) return null;
+    var replyText = ['回复', '回復', '回覆', 'Reply', 'reply'];
+    if (feed.getAttribute('isforward') !== '1' && feed.getAttribute('feedtype') !== 'subfeed') return null;
+    var content = feed.querySelector('[node-type="feed_list_content"]'); if (!content) return null;
+    if (!content.firstChild || replyText.indexOf(content.firstChild.textContent.trim()) === -1) return null;
+    if (!content.childNodes[1] || !content.childNodes[1].getAttribute('usercard')) return null;
+    return 'hidden';
   },
 }).addto(filter.groups.other);
 
