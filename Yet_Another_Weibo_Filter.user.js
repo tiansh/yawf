@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.202
+// @version           3.2.203
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -514,7 +514,9 @@ var text = {
   },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
-  'expandShortenedLink': { 'zh-cn': '自动展开新浪 t.cn 短网址', 'zh-hk': '自動展開新浪 t.cn 短網址', 'zh-tw': '自動展開新浪 t.cn 短網址', 'en': 'Auto expand Sina shortened URL (t.cn)' },
+  'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为|{{<url>}}', 'zh-hk': '將微博中的网页链接替換為|{{<url>}}', 'zh-tw': '將微博中的网页链接替換為|{{<url>}}', 'en': 'Replace 网页链接 in Weibo by | {{<url>}}' },
+  'replaceLinkByShortUrl': { 'zh-cn': '短网址', 'zh-hk': '短網址', 'zh-tw': '短網址', 'en': 'shortened URL' },
+  'replaceLinkByFullUrl': { 'zh-cn': '完整网址（如果可用）', 'zh-hk': '完整網址（如果可用）', 'zh-tw': '完整網址（如果可用）', 'en': 'full URL (if available)' },
   'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view', },
   // 样式
   'styleFilterGroupTitle': { 'zh-cn': '外观样式', 'zh-hk': '外觀樣式', 'zh-tw': '外觀樣式', 'en': 'Appearance' },
@@ -4548,7 +4550,7 @@ filter.predef.group('layout');
     'init': function () {
       if (!this.conf.length) return;
       util.css.add(this.conf.map(function (s) {
-        return '[yawf-obj-name="' + util.str.base64(s) + '"]';
+        return '[yawf-obj-name="' + s + '"]';
       }).join(', ') + ' { display: none !important; }');
     }
   }).addto(filter.groups.layout);
@@ -4566,8 +4568,9 @@ filter.predef.group('layout');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
   item('IM', 189, '#WB_webim { display: none !important; }');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
-  item('RelatedWB', 134, '[yawf-obj-name="55u45YWz5o6o6I2Q"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
+  item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
 
+  // 标记首页右栏的模块
   var tagRightbarMods = function () {
     var mods = Array.from(document.querySelectorAll('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])'));
     if (!mods.length) return;
@@ -4587,6 +4590,7 @@ filter.predef.group('layout');
   observer.dom.add(tagRightbarMods);
   tagRightbarMods();
 
+  // 标记个人主页的模块
   var tagPLeftMods = function () {
     var names = Array.from(document.querySelectorAll('.WB_frame_b>div:not([yawf-obj-name]) .WB_cardtitle_b h4.obj_name'));
     if (!names.length) return;
@@ -4594,7 +4598,7 @@ filter.predef.group('layout');
       var name = title && title.textContent.trim() || '';
       var p = title, d;
       for (; !p.classList.contains('WB_frame_b') ; p = p.parentNode) d = p;
-      d.setAttribute('yawf-obj-name', util.str.base64(name));
+      d.setAttribute('yawf-obj-name', name);
     });
   };
   observer.dom.add(tagPLeftMods);
@@ -5253,24 +5257,37 @@ filter.items.tool.weibotool.view_original = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 展开 t.cn 短网址
-filter.items.tool.weibotool.expand_t_cn = filter.item({
+// 用 URL 替换微博内的网页链接
+filter.items.tool.weibotool.replace_link = filter.item({
   'group': 'weibotool',
-  'version': 43,
+  'version': 203,
   'type': 'boolean',
-  'key': 'weibo.tool.expandTCn',
-  'text': '{{expandShortenedLink}}',
+  'key': 'weibo.tool.replace_link',
+  'text': '{{replaceLinkByUrl}}',
+  'ref': {
+    'url': {
+      'type': 'select',
+      'select': [
+        { 'value': 'short', 'text': '{{replaceLinkByShortUrl}}' },
+        { 'value': 'full', 'text': '{{replaceLinkByFullUrl}}' },
+      ],
+      'default': 'short'
+    },
+  },
   'ainit': function () {
-    var expandLink = function (feed) {
-      var links = Array.from(feed.querySelectorAll('.WB_text a[mt="url"][title^="http"]:not([yawf-expand])'));
+    var full = this.ref.url.conf === 'full';
+    var expandLink = function () {
+      var links = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink[mt="url"][href^="http://t.cn/"]'));
       links.forEach(function (link) {
-        link.setAttribute('yawf-expand', 'expand');
-        if (link.textContent.indexOf('http://t.cn/') !== 0) return;
-        link.textContent = link.title;
+        link.className = 'yawf-link';
+        var url = null;
+        if (full) url = link.title;
+        if (!full || !url.match(/^https?:\/\//)) url = link.href;
+        if (url) link.textContent = url;
       });
     };
-    observer.weibo.before(expandLink);
-    expandLink(document);
+    expandLink();
+    observer.dom.add(expandLink);
   },
 }).addto(filter.groups.tool);
 
@@ -5392,10 +5409,10 @@ filter.items.style.text.weibo_large_font = filter.item({
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       .WB_info, .WB_text, .WB_info *, .WB_text * { font-size: {{fs}}px !important; line-height: {{lh}}px !important; }
       .WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: {{fs2}}px !important; line-height: {{lh2}}px !important; }
-      .WB_text .W_btn_c { height: {{h}}px !important; }
-      .WB_text .W_btn_c, .WB_text .W_btn_c * { line-height: {{h}}px !important; font-size: {{fs2}}px !important; }
-      .WB_feed_expand .WB_text .W_btn_c { height: {{h2}}px !important; }
-      .WB_feed_expand .WB_text .W_btn_c, .WB_feed_expand .WB_text .W_btn_c * { line-height: {{h2}}px; font-size: {{fs3}}px !important; }
+      .WB_text .W_btn_b { height: {{h}}px !important; }
+      .WB_text .W_btn_b, .WB_text .W_btn_b * { line-height: {{h}}px !important; font-size: {{fs2}}px !important; }
+      .WB_feed_expand .WB_text .W_btn_b { height: {{h2}}px !important; }
+      .WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b * { line-height: {{h2}}px; font-size: {{fs3}}px !important; }
       .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
     */ }), this.pref[this.ref.ratio.conf]));
   },
@@ -6399,6 +6416,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
   .W_miniblog, .WB_miniblog { visibility: hidden; }
   .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
+  .yawf-link { word-wrap: break-word; }
   // 拖拽
   #yawf-drop-area { background: rgba(251, 251, 216, 1); opacity: 0.8; display: none; height: 230px; left: calc(50% + 260px); position: fixed; width: 230px; z-index: 9999; top: 50px; }
   #yawf-drop-area.valid { opacity: 1; }
