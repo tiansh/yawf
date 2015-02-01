@@ -48,31 +48,40 @@
     </dl>
   </nav>
   <p itemprop="description">新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。</p>
+  <h2>安裝說明</h2>
   <div class="in">
-    <div class="browser odd ie safari nosupport"><p>對不起，腳本當前不支援您使用的瀏覽器。請考慮選擇以下幾個支持的流覽器之一。</p></div>
-    <div class="browser firefox support all odd ie safari unknow noscript">
+    <div class="browser odd ie nosupport"><p>對不起，腳本當前不支援您使用的瀏覽器。請考慮選擇以下幾個支持的流覽器之一。</p></div>
+    <div class="browser firefox support all odd ie unknow noscript">
       <a href="http://www.mozilla.org/en-US/firefox/all/#zh-TW" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
       <div>
-        Mozilla Firefox瀏覽器的使用者，需要安裝<a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/">GreaseMonkey擴充套件</a>以運行本腳本。<br />
-        如果您已經安裝了這個擴充套件，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在彈出的對話方塊中確認腳本安裝即可。
+        Mozilla Firefox瀏覽器的使用者，需要 <a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/">GreaseMonkey擴充套件</a>以運行本腳本。<br />
+        如果您已經安裝了這個擴充套件，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在彈出的對話方塊中確認腳本安裝。
       </div>
     </div>
-    <div class="browser opera support all odd ie safari unknow noscript">
+    <div class="browser opera support all odd ie unknow noscript">
       <a href="http://www.opera.com/zh-cn" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
       <div>
-        Opera的使用者，需要安裝<a href="https://addons.opera.com/zh-tw/extensions/details/tampermonkey-beta/">Tampermonkey Beta 外掛程式</a>或<a href="https://addons.opera.com/zh-tw/extensions/details/violent-monkey/?display=zh">Violent monkey 外掛程式</a>以運行本腳本。<br />
-        如果您已經安裝了以上任一外掛程式，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝即可。<br />
-        注意：不支援 Opera 12。
+        Opera的使用者，需要 <a href="https://addons.opera.com/zh-tw/extensions/details/tampermonkey-beta/">Tampermonkey Beta 外掛程式</a>或<a href="https://addons.opera.com/zh-tw/extensions/details/violent-monkey/?display=zh">Violent monkey 外掛程式</a>以運行本腳本。<br />
+        如果您已經安裝了以上任一外掛程式，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝。<br />
+        注：不支援 Opera 12。
       </div>
     </div>
-    <div class="browser chrome chromium support all odd ie safari unknow noscript">
+    <div class="browser chrome chromium support all odd ie unknow noscript">
       <a href="https://www.google.com/intl/zh-TW/chrome/browser/" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
       <div>
-        Google Chrome的使用者，需要安裝<a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-TW">Tampermonkey 擴充功能</a>以運行本腳本。<br />
-        如果您已經安裝了這個擴充功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝即可。
+        Google Chrome的使用者，需要 <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-TW">Tampermonkey 擴充功能</a>以運行本腳本。<br />
+        如果您已經安裝了這個擴充功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝。
       </div>
     </div>
-    <div id="show_all" class="browser firefox opera chrome chromium">點擊以查看所有支持的瀏覽器</div>
+    <div class="browser safari support all odd ie unknow noscript">
+      <a href="http://www.apple.com/hk/safari/" class="browser-icon"><img src="img/logo/safari.png" alt="Google Chrome" width="64" height="64" /></a>
+      <div>
+        Safari 的使用者，需要 <a href="http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4">JavaScript Blocker 延伸功能</a>或 <a href="http://tampermonkey.net/index.php?ext=dhdg&browser=safari">TamperMonkey 延伸功能</a>以運行本腳本。<br />
+        如果您已經安裝了以上任一延伸功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝，並根據擴展提示啟用腳本。<br />
+        注： Safari 僅有用戶報告可以正常安裝使用，本人未做過測試。
+      </div>
+    </div>
+    <div id="show_all" class="browser firefox opera chrome chromium safari">點擊以查看所有支持的瀏覽器</div>
   </div>
   <h2>設定腳本</h2>
   <div class="in">
