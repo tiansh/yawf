@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.204
+// @version           3.2.205
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -367,20 +367,25 @@ var text = {
   'layoutHideRightTemplate': { 'zh-cn': '设置模板', 'zh-hk': '背景設定', 'zh-tw': '背景設定', 'en': 'Template Settings' },
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
   'layoutHideRightV6UpdateV6': { 'zh-cn': '新版微博使用指南', 'zh-hk': '新版微博使用指南', 'zh-tw': '新版微博使用指南'/* as is */, 'en': '新版微博使用指南 (User guide for v6)' },
-  'layoutHideRightInterest': { 'zh-cn': '可能感兴趣的人', 'zh-hk': '可能感興趣的人', 'zh-tw': '可能感興趣的人', 'en': 'You may know' },
-  'layoutHideRightMember': { 'zh-cn': '会员专区', 'zh-hk': '會員專區', 'zh-tw': '會員專區', 'en': 'Weibo VIP' },
   'layoutHideRightHongBaoEntrance': { 'zh-cn': '红包入口', 'zh-hk': '紅包入口', 'zh-tw': '紅包入口', 'en': 'Red Envelope Entrance' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
   'layoutHideRightRecomGroupUser': { 'zh-cn': '建议加入该分组', 'zh-hk': '建議加入該分組', 'zh-tw': '建議加入該分組', 'en': 'Suggest to add to this group' },
+  'layoutHideRightHongbaoRank': { 'zh-cn': '红包排行榜', 'zh-hk': '紅包排行榜', 'zh-tw': '紅包排行榜', 'en': 'Red Envelope Rank' },
+  'layoutHideRightInterest': { 'zh-cn': '可能感兴趣的人', 'zh-hk': '可能感興趣的人', 'zh-tw': '可能感興趣的人', 'en': 'You may know' },
   'layoutHideRightMovie': { 'zh-cn': '电影热评榜', 'zh-hk': '电影热评榜', 'zh-tw': '电影热评榜', 'en': '电影热评榜 (Hot Movie)' },
+  'layoutHideRightMember': { 'zh-cn': '会员专区', 'zh-hk': '會員專區', 'zh-tw': '會員專區', 'en': 'Weibo VIP' },
   'layoutHideRightTaobaoMovie': { 'zh-cn': '淘宝&amp;微博 电影预售榜', 'zh-hk': '淘宝&amp;微博 电影预售榜', 'zh-tw': '淘宝&amp;微博 电影预售榜'/* as is */, 'en': '淘宝&amp;微博 电影预售榜 (Taobao Movie)' },
   'layoutHideRightNotice': { 'zh-cn': '公告栏', 'zh-hk': '公告欄', 'zh-tw': '公告欄', 'en': 'Bulletin Board' },
   // 微博内
   'layoutHideWeibo': { 'zh-cn': '隐藏模块 - 微博内', 'zh-hk': '隱藏模組 - 微博內', 'zh-tw': '隱藏模組 - 微博內', 'en': 'Hide modules - Weibo' },
   'layoutHideWeiboRecomFeed': { 'zh-cn': '精彩微博推荐', 'zh-hk': '精彩微博推薦', 'zh-tw': '精彩微博推薦', 'en': 'Weibo you may interested in' },
-  'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for Comment' },
+  'layoutHideWeiboYY2015': { 'zh-cn': '羊年大吉背景', 'zh-hk': '羊年大吉背景', 'zh-tw': '羊年大吉背景', 'en': '羊年大吉 background' },
+  'layoutHideWeiboYY2015Desc': {
+    'zh-cn': '隐藏微博的羊年大吉背景，不会隐藏微博本身。（该微博背景的效果如本提示框）'
+  },
+  'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for comment' },
   'layoutHideWeiboFeedTipDesc': {
     'zh-cn': '经常出现在评论框上方的横幅，通常包含如“微博社区管理中心举报处理大厅，欢迎查阅！”等内容。'
     // 英语界面横幅内容无翻译
@@ -780,6 +785,8 @@ var html = {
   'feedTimeTip': '<div class="WB_cardwrap S_bg2 yawf-timeTip"><div class="WB_cardtitle_a W_tc">{{{time}}}</div></div>',
   // 顶栏徽标
   'navLogo': '<span class="logo"></span>',
+  // 羊年大吉背景示例
+  'yy2015Demo': '<div class="WB_feed_yy2015" style="width: 280px; height: 60px; margin: -6px -13px -30px -16px;"></div>',
   // 来自 微博 weibo.com
   'weiboViaWeiboCom': '<a rel="nofollow" href="http://weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
   // 在卡片链接中显示按钮上的文本
@@ -4438,12 +4445,20 @@ filter.predef.group('layout');
   item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
   item('Groups', 102, '#v6_pl_rightmod_groups { display: none; }');
   item('RecomGroupUser', 191, '#v6_pl_rightmod_recomgroupuser { display: none; }');
+  item('HongbaoRank', 205, '#v6_pl_rightmod_recominfo .WB_cardwrap[node-type="hongbao_rank"] { display: none !important; }');
   item('Movie', 186, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('TaobaoMovie', 200, '[yawf-id="rightmod_taobao_movie"] { display: none !important; }');
   item('Notice', 5, '#v6_pl_rightmod_noticeboard { display: none !important; }');
 
   subtitle('Weibo', true);
   item('RecomFeed', 2, '[node-type="recommfeed"] { display: none !important; }');
+  item('YY2015', 205, '.WB_feed_type.WB_feed_yy2015 { background-image: none; } @media not all, not all, not all, not all { .WB_feed_type.WB_feed_yy2015 { background-image: none; } }', {
+    'bubbled': function (dom) {
+      var bg = util.dom.create(html.yy2015Demo);
+      var content = dom.querySelector('.content');
+      content.insertBefore(bg, content.firstChild);
+    }
+  });
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.WB_feed_type .WB_cardtitle_b { display: none !important; }');
   item('LastPic', 72, function () {
