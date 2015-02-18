@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.206
+// @version           3.2.207
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1619,7 +1619,7 @@ util.ui.icon = util.init(function () {
 
 // 对话框
 util.ui.form = function (dom, display, details) {
-  var ok = dom.querySelector('[node-type="OK"], [node-type="ok"]');
+  var ok = dom.querySelector('[node-type="ok"]');
   var cancel = dom.querySelector('[node-type="cancel"]');
   var close = dom.querySelector('[node-type="close"]');
   var title = dom.querySelector('.title, .W_layer_title');
@@ -1677,8 +1677,8 @@ util.ui.form = function (dom, display, details) {
   var cover = util.dom.create(html.cover);
   // 响应按键
   var keys = function (e) {
-    if (e.keyCode === 13 && ok) ok.click(); // Enter
-    else if (e.keyCode === 27 && close) close.click(); // Esc
+    if (e.keyCode === util.keyboard.code.ENTER && ok) ok.click(); // Enter
+    else if (e.keyCode === util.keyboard.code.ESC && close) close.click(); // Esc
     else return;
     e.stopPropagation(); e.preventDefault();
   };
@@ -1712,8 +1712,8 @@ util.ui.form = function (dom, display, details) {
 // 显示一个对话框
 util.ui.dialog = function (id, title, fillFun) {
   var dom = util.dom.create(util.str.fill(html.dialog, { 'id': id, 'title': util.str.fill(title) }));
-  var form = util.ui.form(dom, false, {});
   fillFun(dom.querySelector('[node-type="inner"]'));
+  var form = util.ui.form(dom, false, {});
   return form;
 };
 
@@ -2567,7 +2567,7 @@ filter.typed.dom = (function () {
     var i = dom.querySelector('input'), s = dom.querySelector('button');
     var copyName = function () { s.textContent = util.keyboard.name(Number(i.value)); };
     var eventClear = function (e) { e.stopPropagation(); e.preventDefault(); };
-    var valid = function (key) { if (key === 27) return 0; return key; };
+    var valid = function (key) { if (key === util.keyboard.code.ESC) return 0; return key; };
     var onchange = util.dom.bind.text(i, item, function (val) {
       util.func.call(copyName); return Number(val);
     });
@@ -2898,8 +2898,12 @@ filter.fast.description.input = function (name, type, attr, chosen) {
 
 // 快速创建关键词过滤器相关函数
 filter.fast.content = {};
-filter.fast.content.validator = function (element) {
-  if (element.nodeType !== Node.TEXT_NODE) return false;
+filter.fast.content.validator = function contentValidator(element) {
+  if (element.nodeType !== Node.TEXT_NODE) {
+    if (element.firstChild && element.firstChild === element.lastChild)
+      return contentValidator(element.firstChild);
+    else return false;
+  }
   return util.dom.matches(element.parentNode, '.WB_text, .WB_text *');
 };
 filter.fast.content.recognizer = {};
@@ -6515,7 +6519,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen):not(.WB_feed_detail) { display: none !important; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { top: 10px; min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding-top: 0; padding-bottom: 0; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { padding: 20px 15px 0; }
