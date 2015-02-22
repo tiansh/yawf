@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.207
+// @version           3.2.208
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -78,9 +78,9 @@ var text = {
   'useContextMenuCreatorDesc': {
     'zh-cn': '在微博上点右键，您可以在浏览器原有的菜单中找到“创建过滤器”的菜单，点选即可快速创建过滤器。',
   },
-  'blockHiddenWeiboDesc': { 'zh-cn': '告知服务器被隐藏的微博以避免再次加载{{<i>}}', 'zh-hk': '告知伺服器被隱藏的微博以避免再次載入{{<i>}}', 'zh-tw': '告知伺服器被隱藏的微博以避免再次載入{{<i>}}', 'en': 'Send blocked Weibo to server to avoid reloading{{<i>}}' },
+  'blockHiddenWeiboDesc': { 'zh-cn': '屏蔽被隐藏的微博{{<i>}}', 'zh-hk': '屏蔽被隱藏的微博{{<i>}}', 'zh-tw': '屏蔽被隱藏的微博{{<i>}}', 'en': 'Block hidded Weibo {{<i>}}' },
   'blockHiddenWeiboDescDesc': {
-    'zh-cn': '开启该选项后，脚本会自动帮您点击被隐藏微博右上角下拉菜单中的“隐藏这条微博”。这样即便您刷新页面或使用移动设备登录微博，也不会再看到这些微博。由于该屏蔽操作是不可逆的，所以如果您在测试一些过滤规则时，请谨慎开启。',
+    'zh-cn': '开启该选项后，脚本会自动帮您点击被隐藏微博右上角下拉菜单中的“屏蔽这条微博”。这样即便您刷新页面或使用移动设备登录微博，也不会再看到这些微博。由于该屏蔽操作是不可逆的，所以如果您在测试一些过滤规则时，请谨慎开启。',
   },
   // 自动载入
   'autoLoadNewWeiboTitle': { 'zh-cn': '自动载入新微博', 'zh-hk': '自動載入新微博', 'zh-tw': '自動載入新微博', 'en': 'New Weibo Auto Load' },
@@ -2267,7 +2267,7 @@ filter.typed.config = (function () {
   // 字符串
   var baseConfig = function (type) {
     return function (item) {
-      var skey = item.key;
+      var skey = item.key; if (!skey) return;
       if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
       if (!item.getconf) item.getconf = function () {
         return (item.conf = util.config.get(skey, item['default'] || type(), type));
@@ -5324,10 +5324,23 @@ filter.items.tool.weibotool.card_button = filter.item({
     var fixButton = function (feed) {
       var links = Array.from(feed.querySelectorAll('.W_btn_cardlink[action-type="feed_list_url"]'));
       var buttons = Array.from(feed.querySelectorAll('.media_box [exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
+      // 每个链接，检查是否有对应的按钮
       links.forEach(function (link) {
         var attr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
         var info = attr(link).replace('click_title', 'click_button'); if (!info) return;
-        var button = buttons.filter(function (button) { return attr(button).indexOf(info) === 0; })[0] || null;
+        info = util.str.parsearg(info);
+        // 检查每个按钮是否与他对应
+        var button = buttons.filter(function (button) {
+          var arg = util.str.parsearg(attr(button));
+          var values = arg.value.split(':');
+          // 要求 key 一样
+          if (arg.key !== info.key) return false;
+          // 而且所有 value 也对应
+          if (info.value.split(':').some(function (i) {
+            return values.indexOf(i) === -1;
+          })) return false;
+          return true;
+        })[0] || null;
         if (!button) return;
         link.addEventListener('click', function (e) {
           e.stopPropagation(); e.preventDefault();
