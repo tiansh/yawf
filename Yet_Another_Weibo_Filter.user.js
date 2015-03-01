@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.208
+// @version           3.2.209
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -5326,17 +5326,19 @@ filter.items.tool.weibotool.card_button = filter.item({
       var buttons = Array.from(feed.querySelectorAll('.media_box [exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
       // 每个链接，检查是否有对应的按钮
       links.forEach(function (link) {
-        var attr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
-        var info = attr(link).replace('click_title', 'click_button'); if (!info) return;
+        var lattr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
+        var battr = function (o) { return o.getAttribute('action-data') || ''; };
+        var info = lattr(link); if (!info) return;
         info = util.str.parsearg(info);
         // 检查每个按钮是否与他对应
         var button = buttons.filter(function (button) {
-          var arg = util.str.parsearg(attr(button));
+          var arg = util.str.parsearg(battr(button));
           var values = arg.value.split(':');
           // 要求 key 一样
           if (arg.key !== info.key) return false;
           // 而且所有 value 也对应
           if (info.value.split(':').some(function (i) {
+            if (['click_title', 'click_button', 'click_card'].indexOf(i) !== -1) return false;
             return values.indexOf(i) === -1;
           })) return false;
           return true;
@@ -5413,9 +5415,14 @@ filter.items.tool.weibotool.replace_link = filter.item({
       links.forEach(function (link) {
         link.className = 'yawf-link';
         var url = null;
+        var button = link.querySelector('yawf-cardLinkButton');
         if (full) url = link.title;
         if (!full || !url.match(/^https?:\/\//)) url = link.href;
-        if (url) link.textContent = url;
+        if (url) {
+          if (!button) link.textContent = url;
+          // 特殊处理替换卡片按钮的标题
+          else link.textContent = button.textContent + url;
+        }
       });
     };
     expandLink();
