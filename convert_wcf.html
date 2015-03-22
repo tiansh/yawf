@@ -7,11 +7,19 @@
   <link rel="canonical" href="https://tiansh.github.io/yawf/convert_wcf.html">
   <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 微博, 眼不见心不烦" />
   <meta name="description" content="将 Yet Another Weibo Filter 的配置文件转换为眼不见心不烦（Weibo Content Filter）的配置" />
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="pages/main.css" />
+  <script src="http://ace.c9.io/build/src/ace.js"></script>
+  <script src="http://ace.c9.io/build/src/mode-json.js"></script>
   <script>
     window.addEventListener('load', function () {
       var yawf_s = document.querySelector('#yawff');
-      var wcf_s = document.querySelector('#settingsString');
+      var wcf_s = ace.edit("settingsString");
+      var wcf_s_s = wcf_s.getSession();
+      wcf_s_s.setMode("ace/mode/json");
+      wcf_s_s.setTabSize(2);
+      wcf_s_s.setUseWrapMode(true);
+      wcf_s.setReadOnly(true);
+      wcf_s.renderer.setShowGutter(false);
       var message = document.querySelector('#message');
       var update = function (w) {
         try {
@@ -115,7 +123,7 @@
             if (w[l[0]]) r.hideMods.push(l[1]);
           });
           r.floatSetting = w['weibo.tool.fixedLeft'] ? { whole: 'Nav', 'default': 'Group' }[w['weibo.tool.fixedLeft.items']] : 'None';
-          wcf_s.value = JSON.stringify(r);
+          wcf_s.setValue(JSON.stringify(r));
           message.style.visibility = 'hidden';
         } catch (e) {
           alert(e);
@@ -134,11 +142,10 @@
     });
   </script>
   <style>
-    textarea { width: 100%; height: 200px; }
+    #settingsString { width: 100%; height: 200px; }
     #yawf { height: 40px; }
     #import { float: left; padding: 0; }
-    #import span { color: #fff; text-decoration: none; padding: 10px 2em; }
-    #import span { background: #ffa00a; }
+    #import span { color: #fff; text-decoration: none; padding: 10px 2em; background: #ffa00a; }
     #yawff { margin-right: -1px; width: 1px; }
     #message { color: #710; font-weight: bold; }
     body { padding-bottom: 120px; }
@@ -153,7 +160,7 @@
     <div id="yawf"><label id="import"><input type="file" name="yawff" id="yawff" /><span>打开 YAWF 配置文件</span></label></div>
     <p>生成的眼不见心不烦脚本设置（请复制该文本粘贴到插件设置中的导入文本框中导入）：</p>
     <div id="wcf">
-      <textarea id="settingsString"></textarea>
+      <div id="settingsString"></div>
     </div>
     <div id="message" style="visibility: hidden;">转换时发生错误，您输入的设置信息可能不正确或不完整。</div>
   </div>

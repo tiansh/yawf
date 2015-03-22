@@ -7,22 +7,27 @@
   <link rel="canonical" href="https://tiansh.github.io/yawf/wcf_convert.html">
   <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 微博, 眼不见心不烦0" />
   <meta name="description" content="将眼不见心不烦（Weibo Content Filter）的配置文件转换为Yet Another Weibo Filter的配置文件" />
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="pages/main.css" />
+  <script src="http://ace.c9.io/build/src/ace.js"></script>
+  <script src="http://ace.c9.io/build/src/mode-json.js"></script>
   <script>
-
     window.addEventListener('load', function () {
-      var wcf_s = document.querySelector('#settingsString');
+      var wcf_s = ace.edit("settingsString");
+      var wcf_s_s = wcf_s.getSession();
+      wcf_s_s.setMode("ace/mode/json");
+      wcf_s_s.setTabSize(2);
+      wcf_s_s.setUseWrapMode(true);
       var yawf_s = document.querySelector('#export');
       var message = document.querySelector('#message');
       var update = function () {
-        if (wcf_s.value === '') {
+        if (wcf_s.getValue() === '') {
           message.style.visibility = 'hidden';
           yawf_s.removeAttribute('href');
           return;
         }
         try {
           yawf_s.removeAttribute('href');
-          var w = JSON.parse(wcf_s.value);
+          var w = JSON.parse(wcf_s.getValue());
           if (typeof w === 'string') w = JSON.parse(w);
           var v = {
             'ua': navigator.userAgent,
@@ -152,16 +157,14 @@
           message.style.visibility = 'visible';
         }
       };
-      wcf_s.addEventListener('change', update);
-      wcf_s.addEventListener('keyup', update);
-      wcf_s.addEventListener('keydown', update);
+      wcf_s.on('change', update);
+      wcf_s.on('paste', update);
       update();
     });
   </script>
   <style>
-    textarea { width: 100%; height: 200px; }
-    #export { float: right; padding: 10px 2em; color: #fff; text-decoration: none; }
-    #export { background: #aaa; }
+    #settingsString { width: 100%; height: 200px; }
+    #export { float: right; padding: 10px 2em; color: #fff; text-decoration: none; background: #aaa; }
     #export[href] { background: #ffa00a; }
     #export:hover { background: #ffb137; }
     #message { color: #710; font-weight: bold; }
@@ -177,7 +180,7 @@
   <div class="in">
     <p>请将眼不见心不烦脚本，设置选项卡文本框中的内容复制粘贴到下面的文本框内。</p>
     <div id="wcf">
-      <textarea id="settingsString"></textarea>
+      <div id="settingsString"></div>
     </div>
     <div id="message" style="visibility: hidden;">转换时发生错误，您输入的设置信息可能不正确或不完整。</div>
     <div id="wrap"><div id="yawf"><a id="export" download="wcf_convert.yawf">保存 YAWF 配置文件</a></div></div>

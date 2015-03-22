@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.211
+// @version           3.2.212
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -717,7 +717,7 @@ var html = {
   // 设置窗口
   'configHeaderTop': '<div class="WB_minitab yawf-config-header" node-type="yawf-config-header"><ul class="minitb_ul S_line1 S_bg1 clearfix">',
   'configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="yawf-cur_block"></span></li>',
-  'configHeaderSearch': '<li class="minitb_item S_line1"><label class="minitb_lk S_txt1"><input id="yawf-config-search" class="yawf-config-search" type="search"><span class="yawf-config-search-logo W_ficon S_txt2">f</span><span class="yawf-cur_block"></span></label></li>',
+  'configHeaderSearch': '<li class="minitb_item S_line1"><label class="minitb_lk S_txt1"><input id="yawf-config-search" class="yawf-config-search" type="search" /><span class="yawf-config-search-logo W_ficon S_txt2">f</span><span class="yawf-cur_block"></span></label></li>',
   'configHeaderBottom': '</ul></div>',
   'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
@@ -2594,6 +2594,7 @@ filter.typed.dom = (function () {
     dom.addEventListener('keyup', eventClear, false);
     dom.addEventListener('keypress', eventClear, false);
     i.addEventListener('change', copyName);
+    s.addEventListener('click', function () { s.focus(); }); // 兼容 Safari
     util.func.call(copyName);
   });
 
@@ -4826,16 +4827,16 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .webim_contacts_bd { height: calc(100% - 60px) !important; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
-      body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; transform: scaleX(-1); }
+      body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; -webkit-transform: scaleX(-1); transform: scaleX(-1); }
 
       @media screen and (max-width: 1006px) {
         body[yawf-merge-left]:not([yawf-weibo-only]) .W_main { width: 600px !important; }
         body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 600px !important; }
         body[yawf-merge-left] a.W_gotop { margin-left: 310px; }
         body[yawf-merge-left="left"] .WB_main .WB_main_c { float: none; }
-        body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; transform: scaleX(-1); }
+        body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; -webkit-transform: scaleX(-1); transform: scaleX(-1); }
         body[yawf-merge-left="left"] .W_fold.W_fold_out { left: 269px; }
-        body[yawf-merge-left="left"] .WB_main_r { right: auto; left: 0px; transform: translateX(-100%) translateZ(0px); }
+        body[yawf-merge-left="left"] .WB_main_r { right: auto; left: 0px; -webkit-transform: translateX(-100%) translateZ(0px); transform: translateX(-100%) translateZ(0px); }
         body[yawf-merge-left="left"] .WB_main_r.W_fold_layer { left: 269px; }
         body[yawf-merge-left="left"] .WB_main_r { direction: rtl; }
         body[yawf-merge-left="left"] .WB_main_r .WB_cardwrap { direction: ltr; }
@@ -5806,7 +5807,10 @@ filter.items.style.sweibo.hover_show_fold = filter.item({
   },
 }).addto(filter.groups.style);
 
-filter.items.style.sweibo.reorder = (function () {
+if (function () {
+  var d = document.createElement('div').style;
+  return 'order' in d || 'MozOrder' in d || 'WebkitOrder' in d;
+}()) filter.items.style.sweibo.reorder = (function () {
   var reorderItem = function (def) {
     return {
       'type': 'select',
@@ -5853,9 +5857,9 @@ filter.items.style.sweibo.reorder = (function () {
     },
     'ainit': function () {
       var ref = this.ref;
-      util.css.add('.WB_handle ul li[yawf-handle-type="fl_read"] { order: 0; }' + '\n' +
+      util.css.add('.WB_handle ul li[yawf-handle-type="fl_read"] { -moz-order: 0; -webkit-order: 0; order: 0; }' + '\n' +
       ['1', '2', '3', '4', '5'].map(function (key) {
-        return '.WB_handle ul li[yawf-handle-type="fl_' + ref[key].conf + '"] { order: ' + key + '; }';
+        return '.WB_handle ul li[yawf-handle-type="fl_' + ref[key].conf + '"] { -moz-order: ' + key + '; -webkit-order: ' + key + '; order: ' + key + '; }';
       }).join('\n'));
     },
   });
@@ -6473,7 +6477,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-config .yawf-config-header .minitb_item { display: block; width: 120px; height: 25px; border-style: solid none; }
   #yawf-config .yawf-config-header .minitb_lk { width: 100px; padding: 0 10px; position: relative; z-index: 1; }
   #yawf-config .yawf-config-header .minitb_item:not(.current) .minitb_lk { background: none transparent; }
-  #yawf-config .yawf-config-header .yawf-config-search { background: none transparent; border: medium none; height: 25px; padding: 0 0 0 30px; text-align: right; width: 70px; box-sizing: content-box; position: relative; z-index: 2; }
+  #yawf-config .yawf-config-header .yawf-config-search { -webkit-appearance: none; background: none transparent; border: medium none; height: 25px; padding: 0 0 0 30px; text-align: right; width: 70px; box-sizing: content-box; position: relative; z-index: 2; }
   #yawf-config .current .yawf-cur_block { display: block; position: relative; index: 0; }
   .yawf-config-search-logo { clear: both; display: block; float: left; left: 45px; position: relative; top: -27px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
   .yawf-config-header .current .yawf-config-search-logo, .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
   <title>Yet Another Weibo Filter - YAWF</title>
   <meta name="keywords" content="YAWF, Yet Another Weibo Filter, Weibo, Sina Weibo, Filter" />
   <meta name="description" content="filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions" />
@@ -13,10 +13,15 @@
   <link rel="alternate" hreflang="x-default" href="https://tiansh.github.io/yawf/" />
   <link rel="canonical" href="https://tiansh.github.io/yawf/en.html">
   <link rel="icon" href="https://tiansh.github.io/yawf/yawf.ico" />
-  <link rel="stylesheet" href="main.css" />
-  <script src="main.js"></script>
+  <link rel="stylesheet" href="pages/main.css" />
+  <script src="pages/main.js"></script>
   <script>document.write(browserCss());</script>
-  <noscript><style>.noscript { display: block; }</style></noscript>
+  <noscript>
+  <style>
+    .noscript {
+      display: block;
+    }
+  </style></noscript>
 </head>
 <body itemscope itemtype="http://schema.org/SoftwareApplication">
   <header>
@@ -36,7 +41,7 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->3.2.211<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.2.212<!-- /VER --></div>
   </header>
   <nav>
     <dl>
@@ -48,109 +53,107 @@
     </dl>
   </nav>
   <p itemprop="description">Filter Sina Weibo by keywords, original, topic, source, etc.; modify layout; and other relative functions</p>
-  <h2>Installation Guide</h2>
-  <div class="in">
-  <div class="browser odd ie nosupport"><p>Sorry, your current web browser is not supported. Please choose one of the following supported browsers.</p></div>
-    <div class="browser firefox support all odd ie unknown noscript">
-      <a href="https://www.mozilla.org/en-US/firefox/all/#en-GB" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
-      <div>
-        Mozilla Firefox users need <a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">GreaseMonkey extension</a> to run this script.<br />
-        If you have already installed this extension, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.
+  <article>
+    <h2>Installation Guide</h2>
+    <div class="in">
+      <div class="browser odd ie nosupport"><p>Sorry, your current web browser is not supported. Please choose one of the following supported browsers.</p></div>
+      <div class="browser firefox support all odd ie unknown noscript">
+        <a href="https://www.mozilla.org/en-US/firefox/all/#en-GB" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
+        <div>
+          Mozilla Firefox users need <a href="https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/">GreaseMonkey extension</a> to run this script.<br />
+          If you have already installed this extension, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.
+        </div>
       </div>
-    </div>
-    <div class="browser opera support all odd ie unknown noscript">
-      <a href="http://www.opera.com/" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
-      <div>
-        Opera users need <a href="https://addons.opera.com/en/extensions/details/tampermonkey-beta/">Tampermonkey Beta add-on</a>, or, <a href="https://addons.opera.com/en/extensions/details/violent-monkey/">Violent Monkey add-on</a> to run this script.<br />
-        If you have already installed one of these add-ons, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.<br />
-        Note: Opera 12 is not supported.
+      <div class="browser opera support all odd ie unknown noscript">
+        <a href="http://www.opera.com/" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
+        <div>
+          Opera users need <a href="https://addons.opera.com/en/extensions/details/tampermonkey-beta/">Tampermonkey Beta add-on</a>, or, <a href="https://addons.opera.com/en/extensions/details/violent-monkey/">Violent Monkey add-on</a> to run this script.<br />
+          If you have already installed one of these add-ons, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.<br />
+          Note: Opera 12 is not supported.
+        </div>
       </div>
-    </div>
-    <div class="browser chrome chromium support all odd ie unknown noscript">
-      <a href="https://www.google.com/chrome/browser/" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
-      <div>
-        Google Chrome users need <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey extension</a> to run this script.<br />
-        If you have already installed this extension, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.
+      <div class="browser chrome chromium support all odd ie unknown noscript">
+        <a href="https://www.google.com/chrome/browser/" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
+        <div>
+          Google Chrome users need <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo">Tampermonkey extension</a> to run this script.<br />
+          If you have already installed this extension, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, and confirm the script installation.
+        </div>
       </div>
-    </div>
-    <div class="browser safari support all odd ie unknow noscript">
-      <a href="http://www.apple.com/en/safari/" class="browser-icon"><img src="img/logo/safari.png" alt="Safari" width="64" height="64" /></a>
-      <div>
-        Safari users need <a href="http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4">JavaScript Blocker Extension</a>, or, <a href="http://tampermonkey.net/index.php?ext=dhdg&browser=safari">TamperMonkey Extension</a> to run this script.<br />
-        If you have already installed one of these extensions, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, then comfirm the installation and enable it.。<br />
-        Note: Supporting for Safari is untested. It only reported by some users.
+      <div class="browser safari support all odd ie unknow noscript">
+        <a href="http://www.apple.com/en/safari/" class="browser-icon"><img src="img/logo/safari.png" alt="Safari" width="64" height="64" /></a>
+        <div>
+          Safari users need <a href="http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4">JavaScript Blocker Extension</a>, or, <a href="http://tampermonkey.net/index.php?ext=dhdg&amp;browser=safari">TamperMonkey Extension</a> to run this script.<br />
+          If you have already installed one of these extensions, <a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">click here to install script</a>, then comfirm the installation and enable it.
+        </div>
       </div>
+      <div onclick ="this.innerHTML='&lt;style&gt;.all{display:block}&lt;style&gt;'" id="show_all" class="browser firefox opera chrome chromium safari">Click to view all supported web browsers</div>
     </div>
-    <div id="show_all" class="browser firefox opera chrome chromium safari">Click to view all supported web browsers</div>
-  </div>
-  <h2>Script Setting</h2>
-  <div class="in">
-    <p>After installation, click the funnel icon <span class="yawf-iconfont">Y</span> on the right top of page to config this script.</p>
-    <img itemprop="screenshot" width="238" height="60" alt="Click the funnel icon on right top of page to show script setting" src="./img/useage.png" />
-    <p>For who want to set up this script without check each configuration items, you can checkout <a href="sample-config.yawf">the sample config file</a> and import it by click the Import button on Script tab.</p>
-  </div>
-  <h2>Useage Detail</h2>
-  <div class="in">
-    <p>Instead of adding filters of keywords, accounts, sources and links from the setting panel, you may drag and drop or use right-click menu to create filters.</p>
-    <p>Drag the contents you wish to hide, fold or highlight with your cursor, you can see there is a dropping area with yellow background at the top right corner, release your cursor in the dropping area and you may quickly create a filter by choosing the corresponding option from the pop-up dialogue box.</p>
-    <img itemprop="screenshot" width="287" height="338" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
-    <p>Right click on Weibo, and chose filter in the right-click menu.(Only supported in Firefox)</p>
-    <img itemprop="screenshot" width="750" height="381" alt="Context menu shown after right-click on Weibo" src="./img/contextmenu_en.png" />
-    <img itemprop="screenshot" width="485" height="311" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
-    <p>For users who used Weibo Content Filter, you may convert and import script setting from that script by using this <a href="https://tiansh.github.io/yawf/wcf_convert.html">Setting Convert Tool (Chinese)</a>.</p>
-    <p>For more details about the script using, please checkout <a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">FQA (Chinese)</a>.</p>
-  </div>
-  <h2>Major Functions</h2>
-  <div class="in">
-    <ul itemprop="featureList">
-      <li>Hide, fold or highlight weibo by keyword, regexp, author, and source etc.;</li>
-      <li>Filter out recommended Weibo, fans top Weibo, voting weibo, and other contents in Weibo list; Anti-spamming and chatting;</li>
-      <li>Completely block hidden weibo so that it won't be shown on mobile phone;</li>
-      <li>Filter new Weibo before show tips; Show desktop notification for new Weibo;</li>
-      <li>Clear webpage layout, remove unnecessary modules and block advertisement; Customize order of Weibo action buttons</li>
-      <li>Add "View Original" link, expand t.cn shortened url, and clear the default topic in weibo publishing box;</li>
-      <li>Customized webpage stylish: Merge side columns; Remove space between Weibo; Increase font size of Weibo content;</li>
-      <li>Reading mode that display only the weibo list;</li>
-    </ul>
-    <p>Most functions of the script are disabled by default, you may need to enable them in the script settings.</p>
-  </div>
-  <h2>Privacy Policy</h2>
-  <h3>Data Collection</h3>
-  <div class="in">
-    <p>The script do not collect any of your personal information, but during the using this script, your network activities may be recorded by your ISP or related websites.</p>
-  </div>
-  <h3>Network Access</h3>
-  <div class="in">
-    <p>The network access of this script is limited in related interface of Sina Weibo. This script use network for access or transport the following datas:</p>
-    <ul>
-      <li>Accounts information if you hide, show, or fold someone</li>
-      <li>Report hidden Weibo to the server of Weibo if you enabled the function of blocking hidden Weibo</li>
-    </ul>
-  </div>
-  <h3>Local Storage</h3>
-  <div class="in">
-    <p>
-      Your settings and related data are stored in <a href="https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data#w_finding-your-profile-without-opening-firefox" target="_blank">browser profile</a> without any encryption, which may include:
+    <h2>Script Setting</h2>
+    <div class="in">
+      <p>After installation, click the funnel icon <span class="yawf-iconfont">Y</span> on the right top of page to config this script.</p>
+      <img itemprop="screenshot" width="238" height="60" alt="Click the funnel icon on right top of page to show script setting" src="./img/useage.png" />
+      <p>For who want to set up this script without check each configuration items, you can checkout <a href="sample-config.yawf">the sample config file</a> and import it by click the Import button on Script tab.</p>
+    </div>
+    <h2>Useage Detail</h2>
+    <div class="in">
+      <p>Instead of adding filters of keywords, accounts, sources and links from the setting panel, you may drag and drop or use right-click menu to create filters.</p>
+      <p>Drag the contents you wish to hide, fold or highlight with your cursor, you can see there is a dropping area with yellow background at the top right corner, release your cursor in the dropping area and you may quickly create a filter by choosing the corresponding option from the pop-up dialogue box.</p>
+      <img itemprop="screenshot" width="287" height="338" alt="Drag texts or links to the box at right top" src="./img/drop_en.png" />
+      <p>Right click on Weibo, and chose filter in the right-click menu.(Only supported in Firefox)</p>
+      <img itemprop="screenshot" width="750" height="381" alt="Context menu shown after right-click on Weibo" src="./img/contextmenu_en.png" />
+      <img itemprop="screenshot" width="485" height="311" alt="Drop them to show Create Filter dialog" src="./img/fastcreate_en.png" /><br />
+      <p>For users who used Weibo Content Filter, you may convert and import script setting from that script by using this <a href="https://tiansh.github.io/yawf/wcf_convert.html">Setting Convert Tool (Chinese)</a>.</p>
+      <p>For more details about the script using, please checkout <a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">FQA (Chinese)</a>.</p>
+    </div>
+    <h2>Major Functions</h2>
+    <div class="in">
+      <ul itemprop="featureList">
+        <li>Hide, fold or highlight weibo by keyword, regexp, author, and source etc.;</li>
+        <li>Filter out recommended Weibo, fans top Weibo, voting weibo, and other contents in Weibo list; Anti-spamming and chatting;</li>
+        <li>Completely block hidden weibo so that it won't be shown on mobile phone;</li>
+        <li>Filter new Weibo before show tips; Show desktop notification for new Weibo;</li>
+        <li>Clear webpage layout, remove unnecessary modules and block advertisement; Customize order of Weibo action buttons</li>
+        <li>Add "View Original" link, expand t.cn shortened url, and clear the default topic in weibo publishing box;</li>
+        <li>Customized webpage stylish: Merge side columns; Remove space between Weibo; Increase font size of Weibo content;</li>
+        <li>Reading mode that display only the weibo list;</li>
+      </ul>
+      <p>Most functions of the script are disabled by default, you may need to enable them in the script settings.</p>
+    </div>
+    <h2>Privacy Policy</h2>
+    <h3>Data Collection</h3>
+    <div class="in">
+      <p>The script do not collect any of your personal information, but during the using this script, your network activities may be recorded by your ISP or related websites.</p>
+    </div>
+    <h3>Network Access</h3>
+    <div class="in">
+      <p>The network access of this script is limited in related interface of Sina Weibo. This script use network for access or transport the following datas:</p>
+      <ul>
+        <li>Accounts information if you hide, show, or fold someone</li>
+        <li>Report hidden Weibo to the server of Weibo if you enabled the function of blocking hidden Weibo</li>
+      </ul>
+    </div>
+    <h3>Local Storage</h3>
+    <div class="in">
+      <p>Your settings and related data are stored in <a href="https://support.mozilla.org/en-US/kb/profiles-where-firefox-stores-user-data#w_finding-your-profile-without-opening-firefox" target="_blank">browser profile</a> without any encryption, which may include:</p>
       <ul>
         <li>The account ID and name of hidden/folded/highlighted accounts, your account ID and other settings of the script</li>
         <li>If you enabled the function of desktop notification, this script will also stored the ID of the 20 weibo recently shown.</li>
       </ul>
-    </p>
-    <p>Anyone who use the same computer may access these data. So do not use this script with public computer.</p>
-  </div>
-  <h3>Others</h3>
-  <div class="in">
-    <p>The script do not publish any Weibo or information by using your account.</p>
-    <p>If you export settings, the exported file contains all your settings which may include some personal information. Please avoid to spread it to others.</p>
-  </div>
-  <h2>About</h2>
-  <div class="in">
-    <p>
-      Yet Another Weibo Filter (YAWF) is under the <a rel="license" href="http://opensource.org/licenses/MIT">MIT License</a>.<br />
-      You may want to visit <a href="https://github.com/tiansh/yawf">project homepage</a> for more information.<br />
-    </p>
-    <p>Some codes of this script come from <a href="https://bitbucket.org/salviati/weibo-cleaner"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> script.</p>
-  </div>
+      <p>Anyone who use the same computer may access these data. So do not use this script with public computer.</p>
+    </div>
+    <h3>Others</h3>
+    <div class="in">
+      <p>The script do not publish any Weibo or information by using your account.</p>
+      <p>If you export settings, the exported file contains all your settings which may include some personal information. Please avoid to spread it to others.</p>
+    </div>
+    <h2>About</h2>
+    <div class="in">
+      <p>
+        Yet Another Weibo Filter (YAWF) is under the <a rel="license" href="http://opensource.org/licenses/MIT">MIT License</a>.<br />
+        You may want to visit <a href="https://github.com/tiansh/yawf">project homepage</a> for more information.<br />
+      </p>
+      <p>Some codes of this script come from <a href="https://bitbucket.org/salviati/weibo-cleaner"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> script.</p>
+    </div>
+  </article>
 </body>
 </html>
-

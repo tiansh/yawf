@@ -1,13 +1,25 @@
 ﻿@charset "utf-8";
 
-html, body { background: #f1f2f3; }
+html, body { background: #fff; color: #000; font-family: sans-serif; }
+a { text-decoration: none; color: #eb7350; }
 body { width: 800px; margin: 0 auto; font-size: 18px; font-family: sans-serif; }
 header { height: 5em; }
 #icon { width: 64px; height: 64px; float: left; margin: 10px 0.5em 0 0; }
-h1 { float: left; line-height: 1.5em; margin: 0.5em 0; font-size: 200%; }
 #version { float: left; margin: 1.5em 0 0 1em; }
 #lang { float: right; color: gray; font-size: 83%; margin: 1.8em 0 0; }
-h2 { border-bottom: 2px solid #ccc; margin-top: 1em; }
+h1 { float: left; line-height: 1.5em; margin: 0.5em 0; font-size: 200%; }
+h2 { border-bottom: 2px solid #ccc; margin-top: 1em; font-size: 150%; }
+h3 { font-size: 125%; margin: 1em 0 0 0; }
+h4 { font-size: 100%; margin: 1em 0 0 0; }
+.anchor { display: block; float: left; text-align: center; text-decoration: none; width: 1em; vertical-align: top; transform: rotate(90deg); left: -1em; position: relative; margin-right: -1em; opacity: 0; color: #999; }
+h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor { opacity: 1; }
+.anchor:hover { color: #666; }
+nav.index { margin: 0 40px; padding: 10px 20px; border: 1px solid #aaa; background: #fafafa; display: table; }
+nav.index .tol { display: block; font-weight: bold; text-align: center; }
+nav.index ul { list-style: none; margin: 0; padding: 0; }
+nav.index ul ul { margin-left: 2em; }
+.in { margin: 2px 12px 4px; }
+.in .in { margin: 2px 0 4px; }
 dl { height: 4.8em; margin: 0 10px 0 20px; }
 dl a { text-decoration: none; display: block; height: 100%; }
 dl dt { clear: left; float: left; font-size: 200%; display: block; width: 400px; height: 2.2em; line-height: 2.2em; background: #ffa00a; margin-left: 40px; text-align: center; margin: 0.1em; }
@@ -16,7 +28,6 @@ dl dt a:hover { background: #ffb137; }
 dl dd { line-height: 2em; height: 2em; float: left; background: #dedede; width: 150px; text-align: center; margin: 0.2em 10px; }
 dl dd a { color: #000; }
 dl dd a:hover { background: #ffb137; color: #fff; }
-.in { margin-left: 40px; }
 pre { background: #eee; padding: 1em 2em; }
 .browser { display: none; margin-bottom: 1em; }
 .support { min-height: 80px; padding-left: 80px; }

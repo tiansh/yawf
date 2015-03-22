@@ -2,7 +2,7 @@
 <html lang="zh-hk">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
   <title>Yet Another Weibo Filter - 看真正想看的微博</title>
   <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 看真正想看的微博, Weibo, Sina Weibo, 微博, 新浪微博, 篩選, Filter" />
   <meta name="description" content="Yet Another Weibo Filter - 看真正想看的微博 - 新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。" />
@@ -13,10 +13,15 @@
   <link rel="alternate" hreflang="x-default" href="https://tiansh.github.io/yawf/" />
   <link rel="canonical" href="https://tiansh.github.io/yawf/zh-hk.html">
   <link rel="icon" href="https://tiansh.github.io/yawf/yawf.ico" />
-  <link rel="stylesheet" href="main.css" />
-  <script src="main.js"></script>
+  <link rel="stylesheet" href="pages/main.css" />
+  <script src="pages/main.js"></script>
   <script>document.write(browserCss());</script>
-  <noscript><style>.noscript { display: block; }</style></noscript>
+  <noscript>
+  <style>
+    .noscript {
+      display: block;
+    }
+  </style></noscript>
 </head>
 <body itemscope itemtype="http://schema.org/SoftwareApplication">
   <header>
@@ -36,7 +41,7 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->3.2.211<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.2.212<!-- /VER --></div>
   </header>
   <nav>
     <dl>
@@ -48,106 +53,107 @@
     </dl>
   </nav>
   <p itemprop="description">新浪微博根據關鍵字、作者、話題、來源等篩選微博，修改版面，以及其他相關功能。</p>
-  <h2>安裝說明</h2>
-  <div class="in">
-    <div class="browser odd ie nosupport"><p>對不起，腳本當前不支援您使用的瀏覽器。請考慮選擇以下幾個支持的流覽器之一。</p></div>
-    <div class="browser firefox support all odd ie unknow noscript">
-      <a href="http://www.mozilla.org/en-US/firefox/all/#zh-TW" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
-      <div>
-        Mozilla Firefox瀏覽器的使用者，需要 <a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/">GreaseMonkey擴充套件</a>以運行本腳本。<br />
-        如果您已經安裝了這個擴充套件，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在彈出的對話方塊中確認腳本安裝。
+  <article>
+    <h2>安裝說明</h2>
+    <div class="in">
+      <div class="browser odd ie nosupport"><p>對不起，腳本當前不支援您使用的瀏覽器。請考慮選擇以下幾個支持的流覽器之一。</p></div>
+      <div class="browser firefox support all odd ie unknow noscript">
+        <a href="http://www.mozilla.org/en-US/firefox/all/#zh-TW" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
+        <div>
+          Mozilla Firefox瀏覽器的使用者，需要 <a href="https://addons.mozilla.org/zh-TW/firefox/addon/greasemonkey/">GreaseMonkey擴充套件</a>以運行本腳本。<br />
+          如果您已經安裝了這個擴充套件，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在彈出的對話方塊中確認腳本安裝。
+        </div>
       </div>
-    </div>
-    <div class="browser opera support all odd ie unknow noscript">
-      <a href="http://www.opera.com/zh-cn" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
-      <div>
-        Opera的使用者，需要 <a href="https://addons.opera.com/zh-tw/extensions/details/tampermonkey-beta/">Tampermonkey Beta 外掛程式</a>或<a href="https://addons.opera.com/zh-tw/extensions/details/violent-monkey/?display=zh">Violent monkey 外掛程式</a>以運行本腳本。<br />
-        如果您已經安裝了以上任一外掛程式，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝。<br />
-        注：不支援 Opera 12。
+      <div class="browser opera support all odd ie unknow noscript">
+        <a href="http://www.opera.com/zh-cn" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
+        <div>
+          Opera的使用者，需要 <a href="https://addons.opera.com/zh-tw/extensions/details/tampermonkey-beta/">Tampermonkey Beta 外掛程式</a>或<a href="https://addons.opera.com/zh-tw/extensions/details/violent-monkey/?display=zh">Violent monkey 外掛程式</a>以運行本腳本。<br />
+          如果您已經安裝了以上任一外掛程式，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝。<br />
+          注：不支援 Opera 12。
+        </div>
       </div>
-    </div>
-    <div class="browser chrome chromium support all odd ie unknow noscript">
-      <a href="https://www.google.com/intl/zh-TW/chrome/browser/" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
-      <div>
-        Google Chrome的使用者，需要 <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-TW">Tampermonkey 擴充功能</a>以運行本腳本。<br />
-        如果您已經安裝了這個擴充功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝。
+      <div class="browser chrome chromium support all odd ie unknow noscript">
+        <a href="https://www.google.com/intl/zh-TW/chrome/browser/" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
+        <div>
+          Google Chrome的使用者，需要 <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-TW">Tampermonkey 擴充功能</a>以運行本腳本。<br />
+          如果您已經安裝了這個擴充功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝。
+        </div>
       </div>
-    </div>
-    <div class="browser safari support all odd ie unknow noscript">
-      <a href="http://www.apple.com/hk/safari/" class="browser-icon"><img src="img/logo/safari.png" alt="Safari" width="64" height="64" /></a>
-      <div>
-        Safari 的使用者，需要 <a href="http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4">JavaScript Blocker 延伸功能</a>或 <a href="http://tampermonkey.net/index.php?ext=dhdg&browser=safari">TamperMonkey 延伸功能</a>以運行本腳本。<br />
-        如果您已經安裝了以上任一延伸功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝，並根據擴展提示啟用腳本。<br />
-        注： Safari 僅有用戶報告可以正常安裝使用，本人未做過測試。
+      <div class="browser safari support all odd ie unknow noscript">
+        <a href="http://www.apple.com/hk/safari/" class="browser-icon"><img src="img/logo/safari.png" alt="Safari" width="64" height="64" /></a>
+        <div>
+          Safari 的使用者，需要 <a href="http://extensions.apple.com/details/?id=com.toggleable.JavaScriptBlocker-6S8J5HV3H4">JavaScript Blocker 延伸功能</a>或 <a href="http://tampermonkey.net/index.php?ext=dhdg&amp;browser=safari">TamperMonkey 延伸功能</a>以運行本腳本。<br />
+          如果您已經安裝了以上任一延伸功能，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">點此安裝本腳本</a>，在打開的頁面中確認腳本安裝，並根據擴展提示啟用腳本。
+        </div>
       </div>
+      <div onclick="this.innerHTML='&lt;style&gt;.all{display:block}&lt;style&gt;'" id="show_all" class="browser firefox opera chrome chromium safari">點擊以查看所有支持的瀏覽器</div>
     </div>
-    <div id="show_all" class="browser firefox opera chrome chromium safari">點擊以查看所有支持的瀏覽器</div>
-  </div>
-  <h2>設定腳本</h2>
-  <div class="in">
-    <p>安裝成功後，到新浪微博的頁面點擊右上角的漏斗圖示<span class="yawf-iconfont">Y</span>即可進入腳本設定。</p>
-    <img itemprop="screenshot" width="238" height="60" alt="點擊右上角漏斗圖示顯示腳本設定" src="./img/useage.png" /><br />
-    <p>想要簡化介面又不想仔細研究腳本設置？試試導入這個<a href="sample-config.yawf">示例腳本設置</a>吧。下載這個檔案，在設置視窗中點選腳本選項卡，點擊導入打開該檔即可快速設置篩選器。</p>
-  </div>
-  <h2>詳細說明</h2>
-  <div class="in">
-    <p>除了在設置介面添加關鍵字、帳號、來源、連結的篩選器外，您還可以使用拖拽或右鍵功能表快速創建篩選器。</p>
-    <p>將您要隱藏、折疊或高亮的內容使用滑鼠拖動，即可在右上角看到一個黃底的拖放區域，將對應內容拖放到該區域內鬆開滑鼠，根據彈出的對話方塊選擇即可快速創建篩選器。</p>
-    <img itemprop="screenshot" width="287" height="339" alt="拖動想要設置篩選器的內容顯示的釋放區域" src="./img/drop_cht.png" />
-    <p>在微博上點擊右鍵，可以在功能表中找到快速創建過濾器的相關選項。（右鍵菜單功能僅支持Mozilla Firefox 瀏覽器）</p>
-    <img itemprop="screenshot" width="750" height="381" alt="在微博上點擊右鍵顯示功能表" src="./img/contextmenu_cht.png" />
-    <img itemprop="screenshot" width="454" height="314" alt="釋放滑鼠後顯示“創建篩選器”的對話方塊" src="./img/fastcreate_cht.png" /><br />
-    <p>如果您之前使用眼不見心不煩腳本，您可以使用<a href="https://tiansh.github.io/yawf/wcf_convert.html">設置轉換工具</a>將該腳本的設置導入到本腳本中。</p>
-    <p>關於詳細的使用指引，請參見<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">常見問題（簡體）</a>。</p>
-  </div>
-  <h2>主要功能</h2>
-  <div class="in">
-    <ul itemprop="featureList">
-      <li>根據關鍵字、作者、來源等隱藏、折疊或高亮微博；</li>
-      <li>屏蔽推廣、粉絲頭條、投票等各種微博；防刷屏、版聊；</li>
-      <li>徹底屏蔽被隱藏的微博以免在手機上再看到他們；</li>
-      <li>提示查看前自動過濾新微博，新微博桌面提示；</li>
-      <li>清理版面上的各種部件，去廣告；定制微博下按鈕順序；</li>
-      <li>查看原圖，展開 t.cn 短網址，清除發佈框預設話題；</li>
-      <li>自訂網頁外觀，合併邊欄，移除微博空隙，增大正文字型大小；</li>
-      <li>僅顯示微博等基本功能的閱讀模式；</li>
-    </ul>
-    <p>腳本安裝後大部分功能不會預設啟用，您需要到腳本設置中啟用對應功能。</p>
-  </div>
-  <h2>私隱權政策</h2>
-  <h3>資訊收集</h3>
-  <div class="in">
-    <p>腳本不會以任何方式收集您的任何個人資訊。但您使用腳本過程中產生的網路訪問可能會被您的網路提供商以及對應網站所記錄。</p>
-  </div>
-  <h3>網路訪問</h3>
-  <div class="in">
-    <p>腳本的網路訪問限於訪問新浪網的相關介面，限於獲取或傳輸以下資料：</p>
-    <ul>
-      <li>您在設置中選擇隱藏、折疊、顯示的帳號的資訊</li>
-      <li>如果您選擇告知伺服器被隱藏的微博，腳本會向微博的伺服器發送被隱藏的微博資訊</li>
-    </ul>
-  </div>
-  <h3>本機存放區</h3>
-  <div class="in">
-    <p>腳本會存儲您的設置等相關資訊到<a href="https://support.mozilla.org/zh-TW/kb/Profiles#w_finding-your-profile-without-opening-firefox" target="_blank">瀏覽器設定檔中</a>，具體包括：</p>
-    <ul>
-      <li>腳本設置的隱藏、折疊或顯示的使用者編號、昵稱，您的帳號編號，及其他設置項；</li>
-      <li>如果您開啟了桌面提示功能，腳本還會記錄最近20條顯示桌面提示的微博的編號；</li>
-    </ul>
-    <p>任何該電腦的使用者都可以讀寫該設定檔，所以建議不要在公共電腦上使用。</p>
-  </div>
-  <h3>其他</h3>
-  <div class="in">
-    <p>腳本不會以您的身份發佈任何微博或消息。</p>
-    <p>如果您使用腳本的匯出設置的功能，匯出的檔以未加密的方式保存了您對腳本的所有設定，其中可能包括您的相關個人資訊，請勿隨意傳播給他人。</p>
-  </div>
-  <h2>關於</h2>
-  <div class="in">
-    <p>
-      Yet Another Weibo Filter - 看真正想看的微博 使用 <a rel="license" href="http://opensource.org/licenses/MIT">MIT 協議</a>授權。<br />
-      您可以訪問<a href="https://github.com/tiansh/yawf">腳本主頁</a>獲取詳細資訊。 <br />
-    </p>
-    <p>本腳本參考並使用了<a href="https://bitbucket.org/salviati/weibo-cleaner">眼不見心不煩</a>腳本的部分代碼。</p>
-  </div>
-  </body>
+    <h2>設定腳本</h2>
+    <div class="in">
+      <p>安裝成功後，到新浪微博的頁面點擊右上角的漏斗圖示<span class="yawf-iconfont">Y</span>即可進入腳本設定。</p>
+      <img itemprop="screenshot" width="238" height="60" alt="點擊右上角漏斗圖示顯示腳本設定" src="./img/useage.png" /><br />
+      <p>想要簡化介面又不想仔細研究腳本設置？試試導入這個<a href="sample-config.yawf">示例腳本設置</a>吧。下載這個檔案，在設置視窗中點選腳本選項卡，點擊導入打開該檔即可快速設置篩選器。</p>
+    </div>
+    <h2>詳細說明</h2>
+    <div class="in">
+      <p>除了在設置介面添加關鍵字、帳號、來源、連結的篩選器外，您還可以使用拖拽或右鍵功能表快速創建篩選器。</p>
+      <p>將您要隱藏、折疊或高亮的內容使用滑鼠拖動，即可在右上角看到一個黃底的拖放區域，將對應內容拖放到該區域內鬆開滑鼠，根據彈出的對話方塊選擇即可快速創建篩選器。</p>
+      <img itemprop="screenshot" width="287" height="339" alt="拖動想要設置篩選器的內容顯示的釋放區域" src="./img/drop_cht.png" />
+      <p>在微博上點擊右鍵，可以在功能表中找到快速創建過濾器的相關選項。（右鍵菜單功能僅支持Mozilla Firefox 瀏覽器）</p>
+      <img itemprop="screenshot" width="750" height="381" alt="在微博上點擊右鍵顯示功能表" src="./img/contextmenu_cht.png" />
+      <img itemprop="screenshot" width="454" height="314" alt="釋放滑鼠後顯示“創建篩選器”的對話方塊" src="./img/fastcreate_cht.png" /><br />
+      <p>如果您之前使用眼不見心不煩腳本，您可以使用<a href="https://tiansh.github.io/yawf/wcf_convert.html">設置轉換工具</a>將該腳本的設置導入到本腳本中。</p>
+      <p>關於詳細的使用指引，請參見<a href="https://github.com/tiansh/yawf/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98" target="_blank">常見問題（簡體）</a>。</p>
+    </div>
+    <h2>主要功能</h2>
+    <div class="in">
+      <ul itemprop="featureList">
+        <li>根據關鍵字、作者、來源等隱藏、折疊或高亮微博；</li>
+        <li>屏蔽推廣、粉絲頭條、投票等各種微博；防刷屏、版聊；</li>
+        <li>徹底屏蔽被隱藏的微博以免在手機上再看到他們；</li>
+        <li>提示查看前自動過濾新微博，新微博桌面提示；</li>
+        <li>清理版面上的各種部件，去廣告；定制微博下按鈕順序；</li>
+        <li>查看原圖，展開 t.cn 短網址，清除發佈框預設話題；</li>
+        <li>自訂網頁外觀，合併邊欄，移除微博空隙，增大正文字型大小；</li>
+        <li>僅顯示微博等基本功能的閱讀模式；</li>
+      </ul>
+      <p>腳本安裝後大部分功能不會預設啟用，您需要到腳本設置中啟用對應功能。</p>
+    </div>
+    <h2>私隱權政策</h2>
+    <h3>資訊收集</h3>
+    <div class="in">
+      <p>腳本不會以任何方式收集您的任何個人資訊。但您使用腳本過程中產生的網路訪問可能會被您的網路提供商以及對應網站所記錄。</p>
+    </div>
+    <h3>網路訪問</h3>
+    <div class="in">
+      <p>腳本的網路訪問限於訪問新浪網的相關介面，限於獲取或傳輸以下資料：</p>
+      <ul>
+        <li>您在設置中選擇隱藏、折疊、顯示的帳號的資訊</li>
+        <li>如果您選擇告知伺服器被隱藏的微博，腳本會向微博的伺服器發送被隱藏的微博資訊</li>
+      </ul>
+    </div>
+    <h3>本機存放區</h3>
+    <div class="in">
+      <p>腳本會存儲您的設置等相關資訊到<a href="https://support.mozilla.org/zh-TW/kb/Profiles#w_finding-your-profile-without-opening-firefox" target="_blank">瀏覽器設定檔中</a>，具體包括：</p>
+      <ul>
+        <li>腳本設置的隱藏、折疊或顯示的使用者編號、昵稱，您的帳號編號，及其他設置項；</li>
+        <li>如果您開啟了桌面提示功能，腳本還會記錄最近20條顯示桌面提示的微博的編號；</li>
+      </ul>
+      <p>任何該電腦的使用者都可以讀寫該設定檔，所以建議不要在公共電腦上使用。</p>
+    </div>
+    <h3>其他</h3>
+    <div class="in">
+      <p>腳本不會以您的身份發佈任何微博或消息。</p>
+      <p>如果您使用腳本的匯出設置的功能，匯出的檔以未加密的方式保存了您對腳本的所有設定，其中可能包括您的相關個人資訊，請勿隨意傳播給他人。</p>
+    </div>
+    <h2>關於</h2>
+    <div class="in">
+      <p>
+        Yet Another Weibo Filter - 看真正想看的微博 使用 <a rel="license" href="http://opensource.org/licenses/MIT">MIT 協議</a>授權。<br />
+        您可以訪問<a href="https://github.com/tiansh/yawf">腳本主頁</a>獲取詳細資訊。 <br />
+      </p>
+      <p>本腳本參考並使用了<a href="https://bitbucket.org/salviati/weibo-cleaner">眼不見心不煩</a>腳本的部分代碼。</p>
+    </div>
+  </article>
+</body>
 </html>
