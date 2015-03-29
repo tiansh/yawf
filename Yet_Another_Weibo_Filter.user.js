@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.212
+// @version           3.2.213
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -350,6 +350,7 @@ var text = {
   'layoutHideIconDouble11': { 'zh-cn': '我的双11', 'zh-hk': '我的双11'/* as is */, 'zh-tw': '我的双11', 'en': '我的双11 (My Nov. 11<sup>th</sup>)' },
   'layoutHideIconNight': { 'zh-cn': '微博之夜', 'zh-hk': '微博之夜', 'zh-tw': '微博之夜', 'en': '微博之夜 (Weibo Night)' },
   'layoutHideIconRedPack': { 'zh-cn': '让红包飞', 'zh-hk': '让红包飞', 'zh-tw': '让红包飞', 'en': '让红包飞 (Red Pack)' },
+  'layoutHideIconHero': { 'zh-cn': '.icon_hero', 'zh-hk': '.icon_hero', 'zh-tw': '.icon_hero', 'en': '.icon_hero' }, // FIXME 真正的名称是什么
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
@@ -895,6 +896,36 @@ util.func.catched = function (f, fc) {
   };
 };
 
+// 度量函数性能
+util.func.performance = GM_getValue('debug', false) ? (function (ignore) {
+  var status = {}, p = false;
+  var show = function () {
+    if (p) return; p = true;
+    setTimeout(function () {
+      p = false;
+      console.log('performance meansure: %o', status);
+    }, 5000);
+  };
+  var mfunc = function (f) {
+    status[f.name] = { 'total': 0, 'data': [] };
+    console.log('%o time meansure', f);
+    return function () {
+      var t = performance.now();
+      f.apply(this, arguments);
+      var d = performance.now() - t;
+      status[f.name].total += d;
+      if (d > ignore)
+        status[f.name].data.push({ 'duration': d, 'time': t });
+      show();
+    };
+  }, mfuncs = {};
+  return function (f) {
+    if (!f.name) { console.log('function name needed: %o', f); return f; }
+    if (!mfuncs[f.name]) mfuncs[f.name] = mfunc(f);
+    return mfuncs[f.name];
+  };
+}(10)) : function (f) { return f; };
+
 // 对象相关工具
 util.obj = {};
 
@@ -1173,13 +1204,16 @@ var observer = {};
 observer.dom = (function () {
   var callbacks = [];
   var add = function (callback) {
-    callbacks.push(callback);
+    callbacks.push({
+      'ori': callback,
+      'wrap': util.func.catched(util.func.performance(callback))
+    });
     return callback;
   };
   var remove = function (callback) {
     var found = false;
     callbacks = callbacks.filter(function (x) {
-      var same = x === callback;
+      var same = x.ori === callback;
       if (same) found = true;
       return !same;
     });
@@ -1187,7 +1221,7 @@ observer.dom = (function () {
   };
   var actived = null;
   var act = function () {
-    callbacks.forEach(function (c) { util.func.catched(c)(); });
+    callbacks.forEach(function (c) { c.wrap(); });
   };
   var active = util.func.catched(function (mutation) {
     if (actived === false) actived = true;
@@ -1214,7 +1248,7 @@ observer.dom = (function () {
 // 对每条微博应用过滤和其他相关回调
 observer.weibo = (function () {
   var befores = [], afters = [];
-  observer.dom.add(function () {
+  observer.dom.add(function weiboObserver() {
     var feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
     if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]'));
     [befores, [filter.active], afters].forEach(function (callbacks) {
@@ -2272,16 +2306,18 @@ filter.typed.config = (function () {
   // 字符串
   var baseConfig = function (type) {
     return function (item) {
-      var skey = item.key; if (!skey) return;
-      if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
-      if (!item.getconf) item.getconf = function () {
-        return (item.conf = util.config.get(skey, item['default'] || type(), type));
-      };
-      if (!item.putconf) item.putconf = function (conf) {
-        return util.config.put(skey, item.conf = conf);
-      };
-      util.config.reg(skey);
-      return item.putconf(item.getconf());
+      var skey = item.key;
+      if (skey) {
+        if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
+        if (!item.getconf) item.getconf = function () {
+          return (item.conf = util.config.get(skey, item['default'] || type(), type));
+        };
+        if (!item.putconf) item.putconf = function (conf) {
+          return util.config.put(skey, item.conf = conf);
+        };
+        util.config.reg(skey);
+      }
+      if (item.getconf && item.putconf) return item.putconf(item.getconf());
     };
   };
   // 集合类型的add/del操作
@@ -4476,6 +4512,7 @@ filter.predef.group('layout');
   item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }', { 'extt': '<i class="W_icon icon_double11" style="display:inline-block!important"></i>' });
   item('Night', 185, '.icon_wbnight2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_wbnight2014" style="display:inline-block!important"></i>' });
   item('RedPack', 202, '.icon_redpack { display: none !important; }', { 'extt': '<i class="W_icon icon_redpack" style="display:inline-block!important"></i>' });
+  item('Hero', 213, '.icon_hero { display: none !important; }', { 'extt': '<i class="W_icon icon_hero" style="display:inline-block!important"></i>' });
 
   subtitle('Nav', true);
   item('Main', 5, '.gn_nav_list>li:nth-child(1) { display: none !important; }');
@@ -4521,7 +4558,7 @@ filter.predef.group('layout');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.WB_feed_type .WB_cardtitle_b { display: none !important; }');
   item('LastPic', 72, function () {
-    observer.dom.add(function () {
+    observer.dom.add(function hideLastPic() {
       var last;
       last = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view:not([yawf-piclast]) .pic_choose_box li:last-child a.current');
       while (last && !last.classList.contains('WB_media_view')) last = last.parentNode;
@@ -4536,7 +4573,7 @@ filter.predef.group('layout');
   });
   item('PicTag', 179, '.WB_media_view .media_show_box .artwork_box .tag_showpicL, .WB_media_view .media_show_box .artwork_box .tag_showpicR, .icon_taged_pic { display: none !important; }');
   item('TopComment', 54, function () {
-    observer.dom.add(function () {
+    observer.dom.add(function hideTopComment() {
       var split = document.querySelector('.WB_feed_repeat .repeat_list .between_line, .WB_feed_repeat .repeat_list .between_line_t'), parent;
       if (split) while ((parent = split.parentNode)) parent.removeChild(parent.firstChild);
     });
@@ -4645,7 +4682,7 @@ filter.predef.group('layout');
 
   // 根据元素内容标记元素
   var tagMods = function (qs, identifiers) {
-    return function () {
+    return function tagModsInner() {
       var mods = Array.from(document.querySelectorAll(qs));
       if (!mods.length) return;
       mods.forEach(function (mod) {
@@ -4685,7 +4722,7 @@ filter.predef.group('layout');
     '.WB_cardwrap[action-data*="sina.com.cn%2Fhongbao"]': 'yawf-pr-hongbao',
     'a[href*="weibo.com/hongbao"]': 'yawf-pr-hongbao',
   });
-  var tagPLeftMods = function () {
+  var tagPLeftMods = function tagPLeftMods() {
     tagPLeftModsName();
     tagPLeftModsQs();
   };
@@ -4727,7 +4764,7 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   },
   'ainit': function () {
     var confs = this.ref;
-    observer.dom.add(function () {
+    observer.dom.add(function showAllMsgNav() {
       var home = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child:not([yawf-message]) > .lev:first-child'); if (!home) return;
       var msg = home.parentNode.querySelector('.lev + .lev');
       var l1 = home.parentNode, ref = l1.nextSibling;
@@ -4914,7 +4951,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       };
     }());
 
-    var fleft = function () {
+    var fleft = function fixMergeLeft() {
       positionLeft();
       fixStylish();
       forceReflush();
@@ -4944,7 +4981,7 @@ filter.items.tool.sidebar.chose_side = filter.item({
   },
   'ainit': function () {
     var side = this.ref.side.conf;
-    observer.dom.add(function () {
+    observer.dom.add(function choseSideRunner() {
       var b, c, p;
       if (side === 'left') {
         b = document.querySelector('#plc_main>.WB_frame_c:first-child+.WB_frame_b:last-child'); if (!b) return;
@@ -4969,7 +5006,7 @@ filter.items.tool.sidebar.filte_right_topic = filter.item({
   'text': '{{filteRightTopic}}',
   'ainit': function () {
     util.css.add('.hot_topic li[yawf-rtopic="hidden"] { display: none !important; }');
-    observer.dom.add(function () {
+    observer.dom.add(function filteRightTopic() {
       var topics = Array.from(document.querySelectorAll('.hot_topic li:not([yawf-rtopic]) a[suda-uatrack*="hottopic_r"]'));
       topics.forEach(function (topic) {
         var text = topic.title.replace(/#/g, '');
@@ -5000,7 +5037,7 @@ filter.items.tool.sidebar.filte_right_topic_count = filter.item({
   'ainit': function () {
     util.css.add('.hot_topic li[yawf-rtopic-count="hidden"], #topicAD { display: none !important; }');
     var that = this;
-    observer.dom.add(function () {
+    observer.dom.add(function filteRightTopicCount() {
       var counts = Array.from(document.querySelectorAll('.hot_topic li:not([yawf-rtopic-count]) .total'));
       counts.forEach(function (count) {
         // 网站中数字由 xxx万 ， xx.x亿 的方式表示；且没有繁体或英文版本
@@ -5038,11 +5075,49 @@ filter.items.tool.sidebar.fixed_left = filter.item({
     // 这里的程序是为了让左栏再动起来的
     if (!filter.items.tool.sidebar.merge_left_right.conf) return;
     util.css.add(util.str.cmt(function () { /*!CSS 
+      .WB_main_r .WB_main_l { will-change: scroll-position; }
       .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
       body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
     */ }));
+
+    // 当左侧不够长时，需要滚动条，更新滚动条的状态
+    var updateScroll = function () {
+      util.func.page(function () {
+        window.$YAWF$ = window.$YAWF$ || {};
+        if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
+          var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
+          var g = STK.ui.scrollView(y);
+          return function () { g.reset(); };
+        }());
+        $YAWF$.updateLeftScroll();
+      });
+    };
+
+    // 限制左栏最大高度，避免超出中间区域
+    var updateMaxHeight = function (left, maxHeight) {
+      var none = maxHeight == null;
+      var text = none ? 'none' : maxHeight + 'px';
+      var srl = left.querySelector('[node-type="leftnav_scroll"]');
+      if (!srl) return;
+      if ((left.style.maxHeight || 'none') !== text) {
+        left.style.maxHeight = text;
+        if (none) srl.setAttribute('style', '');
+        else {
+          var lev = Array.from(srl.querySelectorAll('.lev_Box'));
+          var ch = lev.map(function (lb) { return lb.clientHeight; }).reduce(function (x, y) { return x + y; });
+          var height = Math.min(maxHeight - srl.offsetTop, ch) + 'px';
+          if (srl.style.height !== height) {
+            srl.style.height = height;
+            srl.style.position = 'relative';
+            if (srl) updateScroll();
+          }
+        }
+      }
+    };
+
+    // 每当滚动滚动条或调整窗口大小时，更新左栏状态
     var floating = false;
-    var updatePosition = function () {
+    var updatePosition = function updateLeftPosition() {
       var left = document.querySelector('.WB_left_nav, .yawf-WB_left_nav');
       var reference = document.querySelector('.WB_main_r');
       var container = document.querySelector('#plc_main');
@@ -5061,47 +5136,12 @@ filter.items.tool.sidebar.fixed_left = filter.item({
           reference.removeAttribute('yawf-fixed');
         }
       }
-      var updateMaxHeight = function (maxHeight) {
-        var none = maxHeight === 'none';
-        var text = none ? 'none' : maxHeight + 'px';
-        var srl = left.querySelector('[node-type="leftnav_scroll"]');
-        var mod;
-        if (!srl) return;
-        if (left.style.maxHeight !== text) {
-          mod = (left.style.maxHeight || 'none') !== text;
-          if (mod) left.style.maxHeight = text;
-          if (none) srl.setAttribute('style', '');
-          else {
-            var lev = Array.from(srl.querySelectorAll('.lev_Box'));
-            var ch = lev.map(function (lb) { return lb.clientHeight; }).reduce(function (x, y) { return x + y; });
-            var height = Math.min(maxHeight - srl.offsetTop, ch) + 'px';
-            mod = mod || srl.style.height !== height;
-            if (mod) {
-              srl.style.height = height;
-              srl.style.position = 'relative';
-            }
-          }
-          if (mod && srl) updateScroll();
-        }
-      };
       if (floating) {
         var cip = container.getClientRects()[0];
         var fip = left.getClientRects()[0];
         var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
-        if (cip && fip) updateMaxHeight(maxHeight);
-      } else { updateMaxHeight('none'); }
-    };
-
-    var updateScroll = function () {
-      util.func.page(function () {
-        window.$YAWF$ = window.$YAWF$ || {};
-        if (!$YAWF$.updateLeftScroll) $YAWF$.updateLeftScroll = (function () {
-          var y = STK.sizzle('[node-type="leftnav_scroll"]')[0];
-          var g = STK.ui.scrollView(y);
-          return function () { g.reset(); };
-        }());
-        $YAWF$.updateLeftScroll();
-      });
+        if (cip && fip) updateMaxHeight(left, maxHeight);
+      } else { updateMaxHeight(left); }
     };
 
     document.addEventListener('scroll', updatePosition);
@@ -5140,7 +5180,7 @@ filter.items.tool.sidebar.fixed_right = filter.item({
     if (!fleft) subs('.WB_main_l');
     if (!fother) subs('.WB_frame_b'), subs('.WB_frame_c');
     if (query.length === 0) return; else query = query.join(',');
-    var removeFixed = function () {
+    var removeFixed = function removeRightFixed() {
       var items = Array.from(document.querySelectorAll(query));
       if (!items.length) return;
       items.forEach(function (fixed) {
@@ -5163,7 +5203,7 @@ filter.items.tool.sidebar.fixed_new_feed_tip = filter.item({
   'key': 'weibo.tool.fixedNewFeedTip',
   'text': '{{fixedNewFeedTip}}',
   'ainit': function () {
-    var updatePosition = function () {
+    var updatePosition = function updateNewFeedTipPosition() {
       var tip = document.querySelector('#home_new_feed_tip, [yawf-id="home_new_feed_tip"]'); if (!tip) return;
       var feeds = document.querySelector('.WB_feed');
       var pos = null, fixed = false;
@@ -5209,7 +5249,7 @@ filter.items.tool.weibotool.clear_def_topic = filter.item({
   'key': 'weibo.tool.clear_def_topic',
   'text': '{{clearDefTopicDesc}}',
   'ainit': function () {
-    var clearDefTopic = function () {
+    var clearDefTopic = function clearDefaultTopic() {
       var inputBox = document.querySelector('#v6_pl_content_publishertop .send_weibo .input textarea');
       if (inputBox && inputBox.hasAttribute('hottopic')) {
         inputBox.removeAttribute('hottopic'); inputBox.removeAttribute('hottopicid');
@@ -5229,7 +5269,7 @@ filter.items.tool.weibotool.uncheck_follow_presenter = filter.item({
   'key': 'weibo.tool.uncheck_follow_presenter',
   'text': '{{uncheckFollowPresenter}}',
   'ainit': function () {
-    var uncheckFollowPresenter = function () {
+    var uncheckFollowPresenter = function uncheckFollowPresenter() {
       var checkbox = document.querySelector('input[node-type="followpresenter"]:not([yawf-uncheck])');
       if (!checkbox) return;
       checkbox.setAttribute('yawf-uncheck', '');
@@ -5247,7 +5287,7 @@ filter.items.tool.weibotool.public_by_default = filter.item({
   'key': 'weibo.tool.public_by_default',
   'text': '{{publishToPublicDefault}}',
   'ainit': function () {
-    observer.dom.add(function () {
+    observer.dom.add(function publishToPublicDefault() {
       var publish = document.querySelector('a[action-type="showPublishTo"]:not([yawf-publish])');
       if (!publish) return; publish.setAttribute('yawf-publish', 'yawf-publish');
       var text = publish.querySelector('[node-type="publishTotext"]');
@@ -5336,7 +5376,7 @@ filter.items.tool.weibotool.view_original = filter.item({
   'key': 'weibo.tool.viewOriginal',
   'text': '{{viewOriginalDesc}}',
   'ainit': function () {
-    var addOriLink = function () {
+    var addOriLink = function addOriLinkViewImage() {
       var a = document.querySelector('a.show_big[action-data]:not([yawf-viewori]), [action-type="widget_photoview"]:not([yawf-viewori])'), l;
       if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
       var ref;
@@ -5377,7 +5417,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
   },
   'ainit': function () {
     var full = this.ref.url.conf === 'full';
-    var expandLink = function () {
+    var expandLink = function expandWeiboLink() {
       var icon = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink:not([yawf-link-type])>.W_ficon'));
       icon.forEach(function (i) { i.parentNode.setAttribute('yawf-link-type', i.textContent.trim()); });
       var links = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink[yawf-link-type="O"][href^="http://t.cn/"]'));
@@ -5635,7 +5675,7 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
     },
   },
   'ainit': function () {
-    var moveNavList = function () {
+    var moveNavList = function moveNavList() {
       var search = document.querySelector('.WB_global_nav .gn_header .gn_search');
       var list = document.querySelector('.WB_global_nav .gn_header .gn_position .gn_nav .gn_nav_list');
       if (!search || !list) return;
@@ -5711,7 +5751,7 @@ filter.items.style.layout.weibo_only = filter.item({
     });
     // 显示切换按钮
     if (that.ref['switch'].conf) {
-      var showSwitch = function () {
+      var showSwitch = function showReaderSwitch() {
         var search = document.querySelector('#v6_pl_content_homefeed .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added]), div[id^="Pl_Official_ProfileFeedNav__"] .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added])');
         if (!search) return; search.setAttribute('yawf-weibo-only-added', 'added');
         var weiboOnly = util.dom.create('div', util.str.fill(html.weiboOnlyButton, {
@@ -5751,7 +5791,7 @@ filter.items.style.layout.weibo_only = filter.item({
     window.addEventListener('focus', function () {
       updateMode.call(that, that.ref.enabled.getconf());
     });
-    observer.dom.add(function () {
+    observer.dom.add(function updateReaderMode() {
       updateMode.call(that, that.ref.enabled.conf);
     });
   }
@@ -6303,8 +6343,9 @@ util.init(function () {
     'group': 'update',
     'version': 90,
     'type': 'boolean',
-    'default': true,
     'text': '{{updateInfoDescription}}',
+    'getconf': function () { return !!GM_getValue('whatsnew', true); },
+    'putconf': function (value) { GM_setValue('whatsnew', !!value); return !!value; },
     'init': function () { util.config.reg('weibo._yawf_version'); },
     'ainit': function () {
       if (util.page.search) return;
