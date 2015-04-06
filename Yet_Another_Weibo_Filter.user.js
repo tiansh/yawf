@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.213
+// @version           3.2.214
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -298,7 +298,7 @@ var text = {
   },
   'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博{{<i>}}', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity{{<i>}}' },
   'taobaoTianmaoWeiboDesc': {
-    'zh-cn': '带有<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_tb"></i><span class="W_autocut">淘宝商品</span></a></span>、<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_tmall"></i><span class="W_autocut">天猫商品</span></a></span>或<span class="WB_text"><a class="W_btn_c"><i class="W_ico20 icon_fl_ju"></i><span class="W_autocut">聚划算商品</span></a></span>的微博',
+    'zh-cn': '带有<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tb"></i></span><span class="W_autocut">淘宝商品</span></span>、<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tmall"></i></span><span class="W_autocut">天猫商品</span></span>或<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_ju"></i></span><span class="W_autocut">聚划算商品</span></span>的微博',
   },
   'red2014Weibo': { 'zh-cn': '抢红包微博{{<i>}}', 'zh-hk': '搶紅包微博', 'zh-tw': '搶紅包微博', 'en': 'Weibo with Red Envelopes Rush' },
   'red2014WeiboDesc': {
@@ -757,7 +757,7 @@ var html = {
   'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAllDesc}}</span></a></div>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
-  'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-configRemark">{{configImportWbpWarning}}</div></div>',
+  'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-groupRemark">{{configImportWbpWarning}}</div></div>',
   // 新功能提示对话框
   'whatsNewHeader': '<div class="yawf-whats-new-header">{{updateSuccessHeader}}</div>',
   'whatsNewBody': '<div class="yawf-whats-new-body"><div class="yawf-whats-new-desc">{{updateSuccessDesc}}</div></div>',
@@ -1075,26 +1075,18 @@ util.dom.matches = (function () {
 }());
 
 // 同一个元素多个输入框同步
-util.dom.cascade = function (fitem, key) {
-  var ci = fitem.getAttribute('yawf-ci') || ''; if (!ci) return;
-  var confs = Array.from(document.querySelectorAll('[yawf-ci="' + ci + '"]'));
-  confs.forEach(function (c) {
-    if (c !== fitem) c[key] = fitem[key];
-  });
-};
-
 // 将输入框和某个设置项绑定
 util.dom.bind = (function () {
-  var bind = function (key, input, obj, standlize) {
+  var bind = function (param, input, obj, standlize) {
     var fine = standlize || function (x) { return x; };
     var onchange = function () {
-      var val = input[key], valid;
+      var val = input[param], valid;
       valid = fine(val);
-      if (String(valid) !== val) input[key] = valid;
+      if (String(valid) !== val) input[param] = valid;
       obj.putconf(valid);
-      util.dom.cascade(input, key);
     };
-    input[key] = fine(obj.getconf());
+    if (obj.key) util.config.onput(obj.key, function (value) { input[param] = value; });
+    input[param] = fine(obj.getconf());
     input.addEventListener('change', onchange);
     return onchange;
   };
@@ -1247,25 +1239,53 @@ observer.dom = (function () {
 
 // 对每条微博应用过滤和其他相关回调
 observer.weibo = (function () {
-  var befores = [], afters = [];
-  observer.dom.add(function weiboObserver() {
-    var feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-display])'));
-    if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]'));
-    [befores, [filter.active], afters].forEach(function (callbacks) {
-      feeds.forEach(function (feed) {
-        callbacks.forEach(function (f) { f(feed); });
-      });
-    });
-  });
+  var befores = [], afters = [], weiboObserver, busy = false, rerun = false;
+  var checkFeeds = function (feeds) {
+    busy = true;
+    (function checkFeed() {
+      util.debug('checking %d feed(s)', feeds.length);
+      if (feeds.length === 0) { busy = false; weiboObserver(); return; }
+      var feed = feeds.shift();
+      util.func.catched(function () {
+        [befores, [filter.active], afters].forEach(function (callbacks) {
+          callbacks.forEach(function (f) { f(feed); });
+        });
+      })();
+      util.func.call(checkFeed);
+    }());
+  };
+  weiboObserver = function weiboObserver() {
+    if (busy) return;
+    var feeds;
+    if (!rerun) {
+      feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-weibo])'));
+      if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]:not([yawf-weibo])'));
+    } else {
+      feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type'));
+      if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]'));
+    }
+    feeds.forEach(function (feed) { feed.setAttribute('yawf-weibo', ''); });
+    if (feeds.length) checkFeeds(feeds);
+    rerun = false;
+  }
+  observer.dom.add(weiboObserver);
   var add = function (callbacks) {
     return function (callback) {
       callbacks.push(util.func.catched(callback));
       return callback;
     };
   };
+  // 如果过滤设置改变了，那么已经过滤的微博要重新过滤一遍
+  var rerunWeiboObserver = function () { rerun = true; util.func.call(weiboObserver); };
+  var keys = [];
+  var watch = function (key) { keys.push(key); };
+  util.init(function () {
+    keys.forEach(function (key) { util.config.onput(key, rerunWeiboObserver); });
+  }, util.priority.DEFAULT);
   return {
     'before': add(befores),
     'after': add(afters),
+    'watch': watch,
   };
 }());
 
@@ -1338,9 +1358,6 @@ util.i18n.stylish = function (lang) {
     .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
     .layoutFilterGroupLayer .yawf-configBoolean.yawf-layoutConfig-line { width: 100%; }
   */ }), { 'layoutOptionWidth': isEn ? '240px' : '160px', }));
-  if (isEn) util.css.add(util.str.cmt(function () { /*!CSS
-  */ })); else util.css.add(util.str.cmt(function () { /*!CSS
-  */ }));
 };
 
 // 根据用户界面上的语言做不同调整
@@ -1365,10 +1382,10 @@ util._languages = (function () {
 util.config = null;
 util._storage = function () {
   var config = {}, config_bak = null;
-  var keys = [], onputs = [];
+  var keys = [], onputs = {};
   var storageKey = 'user' + util.info.uid + 'config';
   var tonputs = function (key, value, oldValue) {
-    onputs.map(function (f) { f(key, value, oldValue); });
+    (onputs[key] || []).map(function (f) { f(value, oldValue); });
   };
   var updateBak = function () {
     config_bak = JSON.parse(JSON.stringify(config));
@@ -1391,15 +1408,17 @@ util._storage = function () {
   };
   // 写入到内存
   var put = function (key, value) {
+    if (keys.indexOf(key) === -1) util.log('put key %s not in keys.', key);
     if (JSON.stringify(config_bak[key]) === JSON.stringify(value)) return value;
     tonputs(key, value, config[key]);
-    config[key] = value;
+    if (value == null) delete config[key]; else config[key] = value;
     updateBak();
     write();
     return value;
   };
   // 从内存读取
   var get = function (key, value, type) {
+    if (keys.indexOf(key) === -1) util.log('gut key %s not in keys.', key);
     read();
     if (!(key in config)) return value;
     var val = config[key];
@@ -1408,31 +1427,28 @@ util._storage = function () {
     return val;
   };
   // 当内存配置被修改时调用
-  var onput = function (f) {
-    onputs.push(f);
+  var onput = function (key, f) {
+    onputs[key] = (onputs[key] || []).concat([f]);
   };
   // 从字串导入
-  var import_ = function (s) {
-    var internal = {}, success = false, backup;
+  var import_ = function (s, cmp) {
+    if (cmp == null) cmp = function (o, n) { return n; };
+    var success = false, backup;
+    // 备份当前设置
     try {
-      // 备份当前设置
       backup = JSON.stringify(config);
-      Object.keys(config)
-        .filter(function (x) { return x.indexOf('._') !== -1; })
-        .forEach(function (x) { internal[x] = config[x]; });
-      // 清空设置并添加新的设置
-      clear();
-      s = JSON.parse(s).conf;
-      Object.keys(s).forEach(function (key) { put(key, s[key]); });
-      // 恢复内部变量值
-      Object.keys(internal).forEach(function (x) { put(x, internal[x]); });
-      // 确认写回
-      write();
-      success = true;
-    } catch (e) {
-      config = JSON.parse(backup);
-      success = false;
-    }
+      try {
+        s = JSON.parse(s).conf;
+        var keys = Object.keys(config).concat(Object.keys(s));
+        keys = keys.filter(function (x, i) { return keys.indexOf(x) === i; });
+        keys.forEach(function (key) {
+          if (key.indexOf('._') !== -1) return;
+          put(key, cmp(s[key], get(key)));
+        });
+        write();
+        success = true;
+      } catch (e) { config = JSON.parse(backup); }
+    } catch (e) { }
     return success;
   };
   // 导出成为字串
@@ -1462,7 +1478,8 @@ util._storage = function () {
   var reg = function (key) { keys.push(key); };
   // 初始化
   return {
-    'put': put, 'get': get, 'onput': onput,
+    'put': put, 'get': get,
+    'onput': onput,
     'read': read, 'write': write,
     'import': import_, 'export': export_,
     'clear': clear,
@@ -2091,6 +2108,7 @@ filter.fast.recognize = (function () {
 filter.fast.right = (function () {
   var counter = 0, filters = [];
   var addmenu = function (feed, isChild) {
+    if (feed.querySelector('menu')) return;
     var menu = document.createElement('menu');
     menu.setAttribute('type', 'context');
     var submenu = menu.appendChild(document.createElement('menu'));
@@ -2887,6 +2905,7 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
       });
     }
     rules[item.type] = filter.item(rule).addto(typedFilterGroup);
+    observer.weibo.watch(rule.key);
   });
   // 快速创建过滤器的拖动
   if (details.fast) {
@@ -4236,7 +4255,7 @@ filter.items.other.hidethese.tb_tm_wb = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{taobaoTianmaoWeiboDesc}}' } },
   'rule': function taobaoTianmaoFilterRule(feed) {
     if (!this.conf) return null;
-    if (feed.querySelector('.icon_fl_tb, .icon_fl_tmall, .icon_fl_ju, .icon_cd_tmall, .icon_cd_tb, .icon_cd_ju'))
+    if (feed.querySelector('.icon_cd_tmall, .icon_cd_tb, .icon_cd_ju'))
       return 'hidden';
     return null;
   },
@@ -5330,7 +5349,9 @@ filter.items.tool.weibotool.card_button = filter.item({
     },
   },
   'ainit': function () {
+    var fixed = [];
     var fixButton = function (feed) {
+      if (fixed.indexOf(feed) !== -1) return; fixed.push(feed);
       var links = Array.from(feed.querySelectorAll('.W_btn_cardlink[action-type="feed_list_url"]'));
       var buttons = Array.from(feed.querySelectorAll('.media_box [exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
       // 每个链接，检查是否有对应的按钮
@@ -6527,7 +6548,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-Layer.yawf-drag { opacity: 0.67; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
   .yawf-config-layer { padding-bottom: 20px; min-height: 400px; }
-  .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; }
+  .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; line-height: 20px; }
   .yawf-groupLabel { margin: 5px 10px; padding: 10px 0 0 2em; }
   .yawf-groupSubtitle { font-weight: bold; }
   .yawf-configInput { display: inline; }
