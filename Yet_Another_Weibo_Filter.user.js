@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.215
+// @version           3.2.216
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -77,6 +77,10 @@ var text = {
   'useContextMenuCreator': { 'zh-cn': '使用右键菜单快速创建过滤器{{<i>}}', 'zh-hk': '使用右鍵功能表快速創建篩選器{{<i>}}', 'zh-tw': '使用右鍵功能表快速創建篩選器{{<i>}}', 'en': 'Use right-click menu to create filters{{<i>}}' },
   'useContextMenuCreatorDesc': {
     'zh-cn': '在微博上点右键，您可以在浏览器原有的菜单中找到“创建过滤器”的菜单，点选即可快速创建过滤器。',
+  },
+  'refilterAfterRuleEdited': { 'zh-cn': '修改规则后自动重新过滤微博{{<i>}}', 'zh-hk': '修改規則後自動重新過濾微博{{<i>}}', 'zh-tw': '修改規則後自動重新過濾微博{{<i>}}', 'en': 'Refilter Weibo after rule changed {{<i>}}' },
+  'refilterAfterRuleEditedDesc': {
+    'zh-cn': '开启该选项后，当您修改过滤规则时，脚本会重新对现有的微博过滤。但已被隐藏的微博，因为已经被移除，在刷新前不会再被显示出来。'
   },
   'blockHiddenWeiboDesc': { 'zh-cn': '屏蔽被隐藏的微博{{<i>}}', 'zh-hk': '屏蔽被隱藏的微博{{<i>}}', 'zh-tw': '屏蔽被隱藏的微博{{<i>}}', 'en': 'Block hidded Weibo {{<i>}}' },
   'blockHiddenWeiboDescDesc': {
@@ -1275,17 +1279,15 @@ observer.weibo = (function () {
       return callback;
     };
   };
-  // 如果过滤设置改变了，那么已经过滤的微博要重新过滤一遍
-  var rerunWeiboObserver = function () { rerun = true; util.func.call(weiboObserver); };
-  var keys = [];
-  var watch = function (key) { keys.push(key); };
-  util.init(function () {
-    keys.forEach(function (key) { util.config.onput(key, rerunWeiboObserver); });
-  }, util.priority.DEFAULT);
+  // 强制重新过滤所有微博
+  var refilter = function () {
+    rerun = true;
+    util.func.call(weiboObserver);
+  };
   return {
     'before': add(befores),
     'after': add(afters),
-    'watch': watch,
+    'refilter': refilter,
   };
 }());
 
@@ -1428,7 +1430,8 @@ util._storage = function () {
   };
   // 当内存配置被修改时调用
   var onput = function (key, f) {
-    onputs[key] = (onputs[key] || []).concat([f]);
+    if (!onputs[key]) onputs[key] = [];
+    if (onputs[key].indexOf(f) === -1) onputs[key].push(f);
   };
   // 从字串导入
   var import_ = function (s, cmp) {
@@ -2267,12 +2270,12 @@ filter.fix = {};
 // 添加点击后展开折叠消息的事件
 filter.fix.fold = (function () {
   var fixOne = util.func.catched(function (feed) {
-    var display = feed.getAttribute('yawf-display').replace(/-fold$/g, '-unfold');
-    var showFeed = function () {
-      feed.setAttribute('yawf-display', display);
+    feed.addEventListener('click', function showFeed() {
       feed.removeEventListener('click', showFeed);
-    };
-    feed.addEventListener('click', showFeed);
+      if (feed.getAttribute('yawf-display').lastIndexOf('-fold') === -1) return;
+      var display = feed.getAttribute('yawf-display').replace(/-fold$/g, '-unfold');
+      feed.setAttribute('yawf-display', display);
+    });
     // 添加作者信息
     try {
       var author = weibo.author.name(feed);
@@ -2283,7 +2286,6 @@ filter.fix.fold = (function () {
     var feeds = [feed].concat(Array.from(feed.querySelectorAll('.WB_feed_type')));
     feeds.forEach(function (feed) {
       if (feed.getAttribute('yawf-display').lastIndexOf('-fold') === -1) return;
-      if (feed.getAttribute('yawf-author')) return;
       fixOne(feed);
     });
   };
@@ -2761,19 +2763,15 @@ filter.collection.item = (function () {
       });
     };
     return {
+      'items': found,
       'count': count,
       'show': show,
     };
-  };
-  // 将一组过滤器显示到对应的位置
-  var show = function () {
-
   };
   return {
     'list': list,
     'order': order,
     'add': add,
-    'show': show,
   };
 }());
 
@@ -2905,7 +2903,6 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
       });
     }
     rules[item.type] = filter.item(rule).addto(typedFilterGroup);
-    observer.weibo.watch(rule.key);
   });
   // 快速创建过滤器的拖动
   if (details.fast) {
@@ -3386,6 +3383,27 @@ if ('contextMenu' in document.createElement('div')) filter.items.base.scripttool
   },
 }).addto(filter.groups.base);
 
+// 修改规则后重新过滤规则
+filter.items.base.scripttool.refilter = filter.item({
+  'group': 'scripttool',
+  'version': 216,
+  'type': 'boolean',
+  'default': true,
+  'key': 'weibo.tool.refilter',
+  'text': '{{refilterAfterRuleEdited}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{refilterAfterRuleEditedDesc}}' } },
+  'ainit': function () {
+    util.func.call(function () {
+      var rules = filter.collection.item.list(function (item) {
+        return !!(item.key && item.rule);
+      }).items;
+      rules.forEach(function (rule) {
+        util.config.onput(rule.key, observer.weibo.refilter);
+      });
+    });
+  },
+}).addto(filter.groups.base);
+
 // 屏蔽隐藏微博
 filter.items.base.scripttool.block_hidden = filter.item({
   'group': 'scripttool',
@@ -3493,7 +3511,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     // 更新未读提示中的数字
     // 隐藏掉微博原来的新消息提示框
     util.css.add(util.str.cmt(function () { /*!CSS
-      .WB_feed .WB_feed_type[yawf-unread="hidden"] { display: none !important; }
+      [yawf-unread="hidden"] { display: none !important; }
       .WB_feed [node-type="feed_list_timeTip"] { display: none !important; }
       .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none; }
       .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
