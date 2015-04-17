@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.216
+// @version           3.2.217
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1243,7 +1243,8 @@ observer.dom = (function () {
 
 // 对每条微博应用过滤和其他相关回调
 observer.weibo = (function () {
-  var befores = [], afters = [], weiboObserver, busy = false, rerun = false;
+  var befores = [], afters = [], onloads = [];
+  var weiboObserver, busy = false, rerun = false;
   var checkFeeds = function (feeds) {
     busy = true;
     (function checkFeed() {
@@ -1268,7 +1269,10 @@ observer.weibo = (function () {
       feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type'));
       if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]'));
     }
-    feeds.forEach(function (feed) { feed.setAttribute('yawf-weibo', ''); });
+    feeds.forEach(function (feed) {
+      feed.setAttribute('yawf-weibo', '');
+      onloads.forEach(function (f) { f(feed); });
+    });
     if (feeds.length) checkFeeds(feeds);
     rerun = false;
   }
@@ -1285,6 +1289,7 @@ observer.weibo = (function () {
     util.func.call(weiboObserver);
   };
   return {
+    'onload': add(onloads),
     'before': add(befores),
     'after': add(afters),
     'refilter': refilter,
@@ -3569,7 +3574,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     });
 
     // 看见有新微博了，看看是不是新加载出来的
-    observer.weibo.before(function (feed) {
+    observer.weibo.onload(function (feed) {
       var feeds = Array.from(document.querySelectorAll('.WB_feed .WB_feed_type'));
       var shown = Array.from(document.querySelectorAll('.WB_feed_type[yawf-unread="show"], .WB_feed_type[yawf-unread="show"]~.WB_feed_type, .WB_feed_type[yawf-unread="show"]~* .WB_feed_type'));
       if (feeds.indexOf(feed) === -1) feed.setAttribute('yawf-unread', 'show');
@@ -5368,9 +5373,15 @@ filter.items.tool.weibotool.card_button = filter.item({
   },
   'ainit': function () {
     var fixed = [];
+    var keyvals = function (s) {
+      return s.filter(function (x) { return !x.match(/^click_/); });
+    };
+    var subset = function (x, y) {
+      return x.every(function (i) { return y.indexOf(i) !== -1; });
+    };
     var fixButton = function (feed) {
       if (fixed.indexOf(feed) !== -1) return; fixed.push(feed);
-      var links = Array.from(feed.querySelectorAll('.W_btn_cardlink[action-type="feed_list_url"]'));
+      var links = Array.from(feed.querySelectorAll('.W_btn_cardlink[action-type="feed_list_url"], .yawf-link[action-type="feed_list_url"]'));
       var buttons = Array.from(feed.querySelectorAll('.media_box [exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
       // 每个链接，检查是否有对应的按钮
       links.forEach(function (link) {
@@ -5378,18 +5389,15 @@ filter.items.tool.weibotool.card_button = filter.item({
         var battr = function (o) { return o.getAttribute('action-data') || ''; };
         var info = lattr(link); if (!info) return;
         info = util.str.parsearg(info);
+        var infoval = keyvals(info.value.split(':'));
         // 检查每个按钮是否与他对应
         var button = buttons.filter(function (button) {
           var arg = util.str.parsearg(battr(button));
-          var values = arg.value.split(':');
+          var values = keyvals(arg.value.split(':'));
           // 要求 key 一样
           if (arg.key !== info.key) return false;
           // 而且所有 value 也对应
-          if (info.value.split(':').some(function (i) {
-            if (['click_title', 'click_button', 'click_card'].indexOf(i) !== -1) return false;
-            return values.indexOf(i) === -1;
-          })) return false;
-          return true;
+          return subset(infoval, values) || subset(values, infoval);
         })[0] || null;
         if (!button) return;
         link.addEventListener('click', function (e) {
@@ -5399,7 +5407,7 @@ filter.items.tool.weibotool.card_button = filter.item({
         var text = button.textContent;
         var linktext = util.dom.create(util.str.fill(html.cardLinkButton, { 'text': text }));
         var span = link.querySelector('.W_autocut');
-        span.insertBefore(linktext, span.firstChild);
+        if (span) span.insertBefore(linktext, span.firstChild);
       });
     };
     observer.weibo.after(fixButton);
