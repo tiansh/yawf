@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.217
+// @version           3.2.218
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -81,6 +81,10 @@ var text = {
   'refilterAfterRuleEdited': { 'zh-cn': '修改规则后自动重新过滤微博{{<i>}}', 'zh-hk': '修改規則後自動重新過濾微博{{<i>}}', 'zh-tw': '修改規則後自動重新過濾微博{{<i>}}', 'en': 'Refilter Weibo after rule changed {{<i>}}' },
   'refilterAfterRuleEditedDesc': {
     'zh-cn': '开启该选项后，当您修改过滤规则时，脚本会重新对现有的微博过滤。但已被隐藏的微博，因为已经被移除，在刷新前不会再被显示出来。'
+  },
+  'fastBlockButton': { 'zh-cn': '在每条微博右上角添加屏蔽按钮{{<i>}}', 'zh-hk': '在每條微博右上角添加遮罩按鈕{{<i>}}', 'zh-tw': '在每條微博右上角添加遮罩按鈕{{<i>}}', 'en': 'Add blocking buttons on right top of each Weibo {{<i>}}' },
+  'fastBlockButtonDesc': {
+    'zh-cn': '在每条微博右上角添加一个屏蔽按钮，点击即可立即屏蔽该条微博'
   },
   'blockHiddenWeiboDesc': { 'zh-cn': '屏蔽被隐藏的微博{{<i>}}', 'zh-hk': '屏蔽被隱藏的微博{{<i>}}', 'zh-tw': '屏蔽被隱藏的微博{{<i>}}', 'en': 'Block hidded Weibo {{<i>}}' },
   'blockHiddenWeiboDescDesc': {
@@ -409,6 +413,7 @@ var text = {
     'zh-cn': '微博内对分享内容的摘要描述，如话题卡片、长微博卡片、分享内容卡片等。隐藏后您可以开启工具选项卡中的“[[tool.weibotool.card_button]]”功能，点击链接在当前页面直接显示长微博或被分享的视频等。',
   },
   'layoutHideWeiboTag': { 'zh-cn': '微博标签', 'zh-hk': '微博標籤', 'zh-tw': '微博標籤', 'en': 'Tags for Weibo' },
+  'layoutHideWeiboMovieTag': { 'zh-cn': '微博电影', 'zh-hk': '微博電影', 'zh-tw': '微博電影', 'en': 'Weibo Movie' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
   'layoutHideWeiboLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
@@ -778,6 +783,8 @@ var html = {
   'leftMsgBox': '<div class="lev"><a class="S_txt1" nm="msgbox_c" bpfilter="message" node-type="item" href="/notesboard?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavMsgBox}}</span></a></div>',
   'leftMsgGroup': '<div class="lev"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
   'leftMsgFooter': '</div>',
+  // 屏蔽微博
+  'blockBox': '<div class="yawf-block_box"><a href="javascript:void(0);"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   // 查看原图
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   // 拖拽
@@ -808,7 +815,7 @@ var html = {
 var url = {
   'newcard': 'http://www.weibo.com/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
   'view_ori': 'http://photo.weibo.com/{{uid}}/wbphotos/large/mid/{{mid}}/pid/{{pid}}',
-  'block_wb': 'http://www.weibo.com/aj/user/block?_wv=5&__rnd={{rnd}}',
+  'block_wb': 'http://www.weibo.com/aj/user/block?ajwvr=6',
 };
 
 var font = {
@@ -1864,7 +1871,7 @@ network.weibo.block = (function () {
     util.debug('blocking weibo %s', mid);
     GM_xmlhttpRequest({
       'method': 'POST',
-      'url': util.str.fill(url.block_wb, { 'rnd': util.str.fcb() }),
+      'url': url.block_wb,
       'headers': {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Cache-Control': 'no-cache',
@@ -1873,7 +1880,7 @@ network.weibo.block = (function () {
         'Referer': location.href,
         'X-Requested-With': 'XMLHttpRequest',
       },
-      'data': 'filter_type=0&mid=' + mid + '&justhide=0&location=home&_t=0',
+      'data': 'filter_type=0&mid=' + mid + '&justhide=0',
       'onload': function (resp) {
         try { util.debug('block %s response: %o', mid, JSON.parse(resp.responseText)); }
         catch (e) { util.debug('block %s response: %s', mid, resp.responseText); }
@@ -3409,6 +3416,43 @@ filter.items.base.scripttool.refilter = filter.item({
   },
 }).addto(filter.groups.base);
 
+// 快速屏蔽按钮
+filter.items.base.scripttool.fast_block_button = filter.item({
+  'group': 'scripttool',
+  'version': 218,
+  'type': 'boolean',
+  'key': 'weibo.tool.fast_block_button',
+  'text': '{{fastBlockButton}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fastBlockButtonDesc}}' } },
+  'ainit': function () {
+    observer.weibo.after(function (feed) {
+      var authorId = weibo.author.id(feed);
+      if (!authorId || authorId === util.info.uid) return;
+      if (feed.hasAttribute('yawf-block_box')) return;
+      feed.setAttribute('yawf-block_box', 'yawf-block_box');
+      var block_box = util.dom.create(html.blockBox);
+      var screen_box = feed.querySelector('.screen_box');
+      screen_box.parentNode.insertBefore(block_box, screen_box);
+      block_box.querySelector('a').addEventListener('click', function () {
+        feed.setAttribute('style', 'transition: max-height opacity 0.2s; max-height: ' + feed.clientHeight + 'px; overflow: hidden; position: relative;');
+        setTimeout(function () { feed.style.maxHeight = '20px'; }, 0);
+        setTimeout(function () {
+          feed.setAttribute('yawf-display', 'display-hidden');
+          filter.items.base.scripttool.block_hidden.block(feed);
+          filter.fix.hidden(feed);
+        }, 100);
+      });
+    });
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_screen .yawf-block_box { margin: -10px 0 0 -17px; position: absolute; }
+      .WB_screen .yawf-block_box .W_ficon { font-size: 18px; height: 16px; padding: 4px 0 6px; text-align: center; }
+      .WB_screen .yawf-block_box ~ .screen_box { margin: -10px 0 0 -37px; position: absolute; }
+      .WB_screen .yawf-block_box ~ .screen_box .W_ficon, .WB_screen .yawf-block_box .W_ficon { width: 20px; }
+      .WB_screen .yawf-block_box ~ .screen_box .layer_menu_list { right: -4px; }
+    */ }));
+  }
+}).addto(filter.groups.base);
+
 // 屏蔽隐藏微博
 filter.items.base.scripttool.block_hidden = filter.item({
   'group': 'scripttool',
@@ -3417,15 +3461,16 @@ filter.items.base.scripttool.block_hidden = filter.item({
   'key': 'weibo.tool.block_hidden',
   'text': '{{blockHiddenWeiboDesc}}',
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{blockHiddenWeiboDescDesc}}' } },
+  'block': function (feed) {
+    var display = feed.getAttribute('yawf-display');
+    if (display !== 'display-hidden') return;
+    var mid = feed.getAttribute('mid');
+    if (!mid) return;
+    network.weibo.block(mid);
+    feed.setAttribute('yawf-block', 'block');
+  },
   'ainit': function () {
-    observer.weibo.after(function (feed) {
-      var display = feed.getAttribute('yawf-display');
-      if (display !== 'display-hidden') return;
-      var mid = feed.getAttribute('mid');
-      if (!mid) return;
-      network.weibo.block(mid);
-      feed.setAttribute('yawf-block', 'block');
-    });
+    observer.weibo.after(this.block);
   }
 }).addto(filter.groups.base);
 
@@ -4623,6 +4668,7 @@ filter.predef.group('layout');
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
   item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"], .WB_pic_app, .WB_feed_spec { display: none !important; }');
   item('Tag', 186, '.WB_tag_s[node-type="feed_list_tagList"] { display: none !important; }');
+  item('MovieTag', 218, '.WB_feed_type .WB_tag_rec { display: none !important; }');
   item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }' +
     '.WB_feed_detail .WB_from a[date]::after { content: " "; display: block; } .WB_feed_detail .WB_from { height: 16px; overflow: hidden; }');
   item('Pop', 118, '.WB_feed_datail a[action-type="fl_pop"], .WB_feed_datail a[action-type="fl_pop"]+.S_txt3, ' +
@@ -5348,11 +5394,12 @@ filter.items.tool.weibotool.unwrap_text = filter.item({
   'text': '{{unwrapTextDesc}}',
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*!CSS
-      .WB_detail { overflow: hidden; }
-      .WB_detail>.WB_info, .WB_detail>.WB_info+.WB_text, .WB_expand>.WB_info, .WB_expand>.WB_info+.WB_text { display: inline; word-wrap: break-word; }
-      .WB_detail>.WB_info::after, .WB_expand>.WB_info::after { content: "："; }
-      .WB_detail>.WB_info+.WB_text::before { display: block; float: right; content: " "; width: 1.5em; height: 1px; }
-      .WB_detail>.WB_info+.WB_text+.WB_from { margin-top: 1em; }
+      .WB_feed_type .WB_detail { overflow: hidden; }
+      .WB_feed_type .WB_detail>.WB_info, .WB_detail>.WB_info+.WB_text, .WB_expand>.WB_info, .WB_expand>.WB_info+.WB_text { display: inline; word-wrap: break-word; }
+      .WB_feed_type .WB_detail>.WB_info::after, .WB_expand>.WB_info::after { content: "："; }
+      .WB_feed_type .WB_detail>.WB_info+.WB_text::before { display: block; float: right; content: " "; width: 14px; height: 1px; }
+      .WB_feed_type[yawf-block_box] .WB_detail>.WB_info+.WB_text::before { width: 37px; }
+      .WB_feed_type .WB_detail>.WB_info+.WB_text+.WB_from { margin-top: 1em; }
     */ }));
   },
 }).addto(filter.groups.tool);
