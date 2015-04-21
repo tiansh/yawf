@@ -53,10 +53,13 @@
     </div>
     <h2>调整合并两侧栏后导航栏宽度</h2>
     <div class="in">
+      <p>本样式需要开启“恢复经典导航栏样式”功能。</p>
       <p>如果导航栏屏蔽掉了“应用”和“游戏”的链接，或者隐藏了搜索框，可以使用下面这段 CSS 使顶栏变窄：</p>
       <div class="css_code">
-        .WB_global_nav .gn_search .W_input { max-width: 200px; }
-        body[yawf-merge-left] .gn_header { width: 840px !important; }
+        .WB_global_nav .gn_header { width: 850px; }
+        @media screen and (max-width: 1006px) {
+          .WB_global_nav .gn_header { width: 610px; }
+        }
         body[yawf-merge-left="left"] .gn_logo { margin-right: 95px !important; }
       </div>
     </div>
@@ -111,8 +114,9 @@
   <script>
     var css_codes = document.getElementsByClassName('css_code');
     [].slice.call(css_codes, 0).forEach(function (code) {
-      var text = code.textContent;
-      text = text.split(/\r\n|\r|\n/).map(function (l) { return l.trim(); }).filter(Boolean).join('\n');
+      var text = code.textContent.split(/\r\n|\r|\n/).filter(function (x) { return !x.match(/^\s*$/); });
+      var space = Math.min.apply(Math, text.map(function (l) { return l.match(/^\s*/)[0].length; }));
+      text = text.map(function (l) { return l.slice(space); }).join('\n').replace(/^\n*/, '').replace(/\n$/, '');
       code.textContent = text;
       var editor = ace.edit(code);
       editor.getSession().setMode('ace/mode/css');

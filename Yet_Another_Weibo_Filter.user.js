@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.2.220
+// @version           3.2.221
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -565,9 +565,9 @@ var text = {
   'avatarShapeCircle': { 'zh-cn': '圆形', 'zh-hk': '圓形', 'zh-tw': '圓形', 'en': 'Circle' },
   'avatarShapeSquare': { 'zh-cn': '方形', 'zh-hk': '方形', 'zh-tw': '方形', 'en': 'Square' },
   'darkNavBar': { 'zh-cn': '使用深色的导航栏', 'zh-hk': '使用深色的導覽列', 'zh-tw': '使用深色的導覽列', 'en': 'Dark nav bar' },
-  'reorderNavBar': { 'zh-cn': '交换导航栏中导航链接与搜索框的位置{{<i>}}', 'zh-hk': '交換導覽列中導覽連結與搜索框的位置{{<i>}}', 'zh-tw': '交換導覽列中導覽連結與搜索框的位置{{<i>}}', 'en': 'Exchange position of search box and navigator links{{<i>}}' },
+  'reorderNavBar': { 'zh-cn': '恢复经典导航栏样式{{<i>}}', 'zh-hk': '恢復經典導覽列樣式{{<i>}}', 'zh-tw': '恢復經典導覽列樣式{{<i>}}', 'en': 'Restore classical style navigator {{<i>}}' },
   'reorderNavBarDesc': {
-    'zh-cn': '使导航栏中“首页”“热门”“游戏”的链接出现在搜索框的左侧。'
+    'zh-cn': '微博字样紧贴在标识右侧显示，“首页”“热门”“游戏”的链接出现在搜索框的左侧。'
   },
   'weiboOnly': {
     'zh-cn': '阅读视图|宽度{{<width>}}px||快捷键{{<key>}}||{{<switch>}}在微博列表顶部显示快捷开关按钮',
@@ -4758,7 +4758,7 @@ filter.predef.group('layout');
   });
 
   // 标记微博评论按钮
-  observer.dom.add(function () {
+  observer.dom.add(function markCommentButton() {
     var cli = Array.from(document.querySelectorAll('.list_ul[node-type="feed_list_commentList"] .WB_handle ul li:not([yawf-comment-handle-type])'));
     cli.forEach(function (li) {
       var a = li.querySelector('a'), type = null;
@@ -5824,7 +5824,7 @@ filter.items.style.layout.dark_nav_bar = filter.item({
 // 交换导航链接和搜索框位置
 filter.items.style.layout.reorder_nav_bar = filter.item({
   'group': 'layout',
-  'version': 165,
+  'version': 221,
   'type': 'boolean',
   'key': 'weibo.tool.reorder_nav_bar',
   'text': '{{reorderNavBar}}',
@@ -5851,6 +5851,12 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
         .WB_global_nav .gn_header { text-align: right; }
         .WB_global_nav .gn_header > * { text-align: left; }
         .WB_global_nav .gn_header > .gn_nav { margin-right: 0; }
+        .WB_global_nav_us .gn_header { background-image: none; }
+        .WB_global_nav_us .gn_logo, .WB_global_nav_us .gn_logo .box, 
+        .WB_global_nav .gn_logo { width: 140px !important; }
+        .WB_global_nav_us .gn_logo .box .logo, .WB_global_nav_us .gn_logo .box img { display: block; }
+        .WB_global_nav .gn_logo .box .logo { margin-left: 0; }
+        .WB_global_nav_us .gn_position { margin-right: 0; }
       */ }));
       observer.dom.remove(moveNavList);
     };
