@@ -57,8 +57,10 @@
       <p>如果导航栏屏蔽掉了“应用”和“游戏”的链接，或者隐藏了搜索框，可以使用下面这段 CSS 使顶栏变窄：</p>
       <div class="css_code">
         .WB_global_nav .gn_header { width: 850px; }
+        .WB_global_nav .gn_search .W_input { max-width: 240px; }
         @media screen and (max-width: 1006px) {
           .WB_global_nav .gn_header { width: 610px; }
+          .WB_global_nav .gn_search { display: none; }
         }
         body[yawf-merge-left="left"] .gn_logo { margin-right: 95px !important; }
       </div>
