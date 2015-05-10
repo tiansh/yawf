@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.223
+// @version           3.3.224
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -984,7 +984,7 @@ util.func.performance = GM_getValue('debug', false) ? (function (ignore) {
     setTimeout(function () {
       p = false;
       console.log('performance meansure: %o', status);
-    }, 5000);
+    }, 60e3);
   };
   var mfunc = function (f) {
     status[f.name] = { 'total': 0, 'data': [] };
@@ -3641,12 +3641,17 @@ filter.items.base.scripttool.block_hidden = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{blockHiddenWeiboDescDesc}}' } },
   'block': function (feed) {
     var display = feed.getAttribute('yawf-display');
+    console.log('display: %o', display);
     if (display !== 'display-hidden') return;
     var mid = feed.getAttribute('mid');
+    console.log('mid: %o', mid);
     if (!mid) return;
     network.weibo.block(mid);
     feed.setAttribute('yawf-block', 'block');
   },
+  'ainit': function () {
+    observer.weibo.after(this.block);
+  }
 }).addto(filter.groups.base);
 
 // 分组浏览
@@ -3795,6 +3800,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     // 走完过滤器之后，如果某条微博还没被隐藏掉，那么就提示用户有新微博要看了
     observer.weibo.after(function (feed) {
       if (feed.getAttribute('yawf-unread') !== 'hidden') return;
+      console.log('unread display: %o', feed.getAttribute('yawf-display'));
       var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
       if (display === 'hidden') return;
       that.counter();
