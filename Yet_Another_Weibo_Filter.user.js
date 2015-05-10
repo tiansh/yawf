@@ -3641,10 +3641,8 @@ filter.items.base.scripttool.block_hidden = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{blockHiddenWeiboDescDesc}}' } },
   'block': function (feed) {
     var display = feed.getAttribute('yawf-display');
-    console.log('display: %o', display);
     if (display !== 'display-hidden') return;
     var mid = feed.getAttribute('mid');
-    console.log('mid: %o', mid);
     if (!mid) return;
     network.weibo.block(mid);
     feed.setAttribute('yawf-block', 'block');
@@ -3800,7 +3798,6 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     // 走完过滤器之后，如果某条微博还没被隐藏掉，那么就提示用户有新微博要看了
     observer.weibo.after(function (feed) {
       if (feed.getAttribute('yawf-unread') !== 'hidden') return;
-      console.log('unread display: %o', feed.getAttribute('yawf-display'));
       var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
       if (display === 'hidden') return;
       that.counter();
