@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.224
+// @version           3.3.225
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -186,20 +186,30 @@ var text = {
   // 帐号
   'accountFilterGroupTitle': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
-  'accountFilterDetails': { 'zh-cn': '来自以下帐号的微博', 'zh-hk': '來自以下帳號的微博', 'zh-tw': '來自以下帳號的微博', 'en': 'Weibo from these accounts' },
+  'accountFilterDetails': { 'zh-cn': '来自以下帐号的所有微博', 'zh-hk': '來自以下帳號的所有微博', 'zh-tw': '來自以下帳號的所有微博', 'en': 'All Weibo from these accounts' },
   'accountFilterDetailsDesc': {
     'zh-cn': '你关注的某个人撰写或转发的微博。对于转发的微博，仅匹配最后转发的那个人。您还可以到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隐私设置 - 屏蔽帐号</a>屏蔽您关注了但不想在首页看到的帐号。',
     'zh-hk': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
     'zh-tw': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
     'en': 'You can block Weibo from accounts you followed in the page <a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">Privacy - Block account</a>.'
   },
-  'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的微博', 'zh-hk': '作者是「@{{name}}」的微博', 'zh-tw': '作者是「@{{name}}」的微博', 'en': 'Weibo by "@{{name}}"', },
+  'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的所有微博', 'zh-hk': '作者是「@{{name}}」的所有微博', 'zh-tw': '作者是「@{{name}}」的所有微博', 'en': 'All Weibo by "@{{name}}"', },
   'accountFilterContextMenu': { 'zh-cn': '作者是 @{{name}}', 'zh-hk': '作者是 @{{name}}', 'zh-tw': '作者是 @{{name}}', 'en': 'by @{{name}}', },
   'accountFilterReason': { 'zh-cn': '因来自 @{{detail}} ', 'zh-hk': '因來自 @{{detail}} ', 'zh-tw': '因來自 @{{detail}} ', 'en': 'because it is posted by @{{detail}} ' },
-  'accountFilterRemark': {
-  },
   'accountNotExistErrorTitle': { 'zh-cn': '帐号不存在', 'zh-hk': '帳號不存在', 'zh-tw': '帳號不存在', 'en': 'Account does not exist' },
   'accountNotExistError': { 'zh-cn': '不存在名为“{{name}}”的帐号', 'zh-hk': '不存在名為「{{name}}」的帳號', 'zh-tw': '不存在名為「{{name}}」的帳號', 'en': 'Account named "{{name}}" does not exist' },
+  // 某人的转发
+  'accountfFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
+  'accountfFilterDetails': { 'zh-cn': '来自以下帐号的转发微博', 'zh-hk': '來自以下帳號的转发微博', 'zh-tw': '來自以下帳號的转发微博', 'en': 'Forwarded Weibo from these accounts' },
+  'accountfFilterDetailsDesc': {
+    'zh-cn': '与“来自以下帐号的所有微博”功能类似，但不对此人的原创微博生效。',
+    'zh-hk': '與“來自以下帳號的所有微博”功能類似，但不對此人的原創微博生效。',
+    'zh-tw': '與“來自以下帳號的所有微博”功能類似，但不對此人的原創微博生效。',
+    'en': 'Similar to "All Weibo from these accounts", but only works on forwarded Weibo.'
+  },
+  'accountfFilterFast': { 'zh-cn': '作者是“@{{name}}”的转发微博', 'zh-hk': '作者是「@{{name}}」的转发微博', 'zh-tw': '作者是「@{{name}}」的转发微博', 'en': 'Weibo by "@{{name}}"', },
+  'accountfFilterContextMenu': { 'zh-cn': '由 @{{name}} 转发', 'zh-hk': '由 @{{name}} 轉發', 'zh-tw': '由 @{{name}} 轉發', 'en': 'forwarded by @{{name}}', },
+  'accountfFilterReason': { 'zh-cn': '因来自 @{{detail}} ', 'zh-hk': '因來自 @{{detail}} ', 'zh-tw': '因來自 @{{detail}} ', 'en': 'because it is posted by @{{detail}} ' },
   // 原创
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
@@ -2095,16 +2105,22 @@ filter.dialog = (function () {
 filter.fast = {};
 
 // 快速创建过滤器的对话框
-filter.fast.dialog = function (candidate) {
+filter.fast.dialog = function (candidate, selected) {
   var dialogInner = function (inner) {
     inner.innerHTML = html.fastFilterHeader + html.fastFilterFooter;
     var items = inner.querySelector('#yawf-fast-filter-list');
-    var selects = [];
+    var selects = [], group_shown = [];
     var checkboxs = candidate.map(function (c) {
       var item = util.dom.create('ul', html.fastFilterItem).firstChild;
       var inner = item.querySelector('.yawf-fastFilterItemInner');
       var checked = c.filter.description(inner, c.value) !== false;
       var checkbox = item.querySelector('input[type="checkbox"], input[type="radio"]');
+      var group = checkbox.getAttribute('yawf-checkbox-group');
+      if (group_shown.indexOf(group) === -1) {
+        group_shown.push(group);
+        if (selected === true) checked = true;
+      }
+      if (selected === false) checked = false;
       var select = item.querySelector('select');
       checkbox.checked = checked; select.value = 'blacklist';
       selects.push(select);
@@ -2241,7 +2257,7 @@ filter.fast.right = (function () {
         menuitem.setAttribute('label', text);
         menuitem.addEventListener('click', function () {
           details.recognizer(item, function (value) {
-            filter.fast.dialog([{ 'filter': details, 'value': value }]);
+            filter.fast.dialog([{ 'filter': details, 'value': value }], true);
           });
         });
         container.appendChild(menuitem);
@@ -3073,32 +3089,49 @@ filter.predef.subtitle = function (group, subgroup, text) {
 
 // 快速创建过滤器的描述
 filter.fast.description = {};
+// 生成一个有输入框的描述
+filter.fast.description.input = function (inner, val, name, attr) {
+  // 创建一个带编辑框的选项
+  inner.innerHTML = util.str.fill('{{{' + name + 'FilterFast}}}');
+  var labelc = util.dom.create(html.fastFilterString);
+  var fillArg = {}; fillArg[attr] = html.fastFilterStringInput;
+  labelc.querySelector('span').innerHTML = util.str.fill('{{{' + name + 'FilterFastInput}}}', fillArg);
+  // 处理编辑框的相关事件
+  var input = labelc.querySelector('input'); input.value = val[attr];
+  var ref = inner.parentNode; ref.parentNode.insertBefore(labelc, ref.nextSibling);
+  input.addEventListener('change', function () {
+    val[attr] = input.value; if (!val[attr]) return;
+  });
+};
+// 生成一个没有输入框的描述
+filter.fast.description.noinput = function (inner, val, name, attr) {
+  var fillobj = {};
+  fillobj[attr] = util.str.escape.xml(val[attr]);
+  inner.innerHTML = util.str.fill('{{{' + name + 'FilterFast}}}', fillobj);
+};
+// 生成一个分组的描述
+filter.fast.description.group = function (inner, group, name) {
+  // 设置选择框的编号和分组信息
+  var container = inner.parentNode.parentNode;
+  var checkbox = container.querySelector('input[type=checkbox]');
+  checkbox.name = 'yawf-fast-' + group + '-' + name;
+  checkbox.setAttribute('yawf-checkbox-group', group);
+  // 同组的选项只应该打开至多一个
+  checkbox.addEventListener('change', util.func.catched(function () {
+    if (!checkbox.checked) return;
+    var all = Array.from(container.parentNode.querySelectorAll('input[yawf-checkbox-group="' + group + '"]'));
+    var evt = document.createEvent('HTMLEvents'); evt.initEvent("change", false, true);
+    all.forEach(function (i) { if (i === checkbox || !i.checked) return; i.checked = false; i.dispatchEvent(evt); });
+  }));
+};
 // 快速创建一个关键词或正则式的过滤器时包含编辑框
-filter.fast.description.input = function (name, type, attr, chosen) {
+filter.fast.description.gen = function (details) {
   return function (inner, val) {
-    // 创建一个带编辑框的选项
-    inner.innerHTML = util.str.fill('{{{' + type + 'FilterFast}}}');
-    var labelc = util.dom.create(html.fastFilterString);
-    var fillArg = {}; fillArg[attr] = html.fastFilterStringInput;
-    labelc.querySelector('span').innerHTML = util.str.fill('{{{' + type + 'FilterFastInput}}}', fillArg);
-    // 处理编辑框的相关事件
-    var input = labelc.querySelector('input'); input.value = val[attr];
-    var ref = inner.parentNode; ref.parentNode.insertBefore(labelc, ref.nextSibling);
-    input.addEventListener('change', function () {
-      val[attr] = input.value; if (!val[attr]) return;
-    });
-    // 设置选择框的编号和分组信息
-    var checkbox = ref.parentNode.querySelector('input[type=checkbox]');
-    checkbox.name = 'yawf-fast-' + name + '-' + type;
-    checkbox.setAttribute('yawf-checkbox-group', name);
-    // 同组的选项只应该打开至多一个
-    checkbox.addEventListener('change', function () {
-      if (!checkbox.checked) return;
-      var all = Array.from(labelc.parentNode.parentNode.querySelectorAll('input[yawf-checkbox-group="' + name + '"]'));
-      var evt = document.createEvent('HTMLEvents'); evt.initEvent("change", false, true);
-      all.forEach(function (i) { if (i === checkbox || !i.checked) return; i.checked = false; i.dispatchEvent(evt); });
-    });
-    return chosen;
+    var desc = filter.fast.description;
+    if (details.input) desc.input(inner, val, details.name, details.attr);
+    else desc.noinput(inner, val, details.name, details.attr);
+    desc.group(inner, details.group, details.name);
+    return details.chosen || false;
   };
 };
 
@@ -4000,7 +4033,10 @@ filter.predef.wbfc({
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.keyword,
     'add': filter.fast.content.add,
-    'description': filter.fast.description.input('content', 'keyword', 'text', true),
+    'description': filter.fast.description.gen({
+      'group': 'content', 'name': 'keyword',
+      'attr': 'text', 'input': true, 'chosen': true
+    }),
   }
 }, filter.groups.content);
 
@@ -4024,7 +4060,10 @@ filter.predef.wbfc({
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.regexp,
     'add': filter.fast.content.add,
-    'description': filter.fast.description.input('content', 'regexp', 'text', false),
+    'description': filter.fast.description.gen({
+      'group': 'content', 'name': 'regexp',
+      'attr': 'text', 'input': true, 'chosen': false
+    }),
   }
 }, filter.groups.content);
 
@@ -4055,39 +4094,69 @@ filter.predef.subtitle('content', 'elements', '{{contentTypesTitle}}');
   'emotion': false,
 }));
 
+filter.predef.account = function (details) {
+  var item = {
+    'name': details.name,
+    'version': details.version,
+    'type': 'users',
+    'rule': function accountMatch(action, feed) {
+      if (details.matchf && !details.matchf(feed)) return;
+      var accounts = this.conf.concat(this.extent), id = weibo.feed.author.id(feed);
+      if (!id) return null;
+      var match = accounts.some(function (x) { return x === id; });
+      if (match) feed.setAttribute('yawf-reason',
+        util.str.fill('{{{' + details.name + 'FilterReason}}}',
+        { 'detail': weibo.feed.author.name(feed) }));
+      if (match) return action; else return null;
+    },
+    'blacklist': {
+      'rule': function accountMatchBlacklistOverride(_super) {
+        return function accountMatchBlacklist(feed) {
+          if (!filter.items.base.grouping.group_account.conf || !util.page.group()) return _super(feed);
+          return null;
+        };
+      },
+    },
+    'fast': {
+      'validator': filter.fast.account.validator,
+      'recognizer': filter.fast.account.recognizer,
+      'add': filter.fast.account.addid,
+      'description': filter.fast.description.gen({
+        'group': 'account', 'name': details.name,
+        'attr': 'name', 'chosen': details.chosen
+      }),
+      'contextmenu': weibo.feed.author.dom,
+      'menudesc': function (author) {
+        return util.str.fill('{{{' + details.name + 'FilterContextMenu}}}', { 'name': author.textContent.trim() });
+      },
+    }
+  };
+  if (details.listtype) item.listtype = details.listtype;
+  if (details.contextmenu) item.fast.contextmenu = details.contextmenu;
+  return filter.predef.wbfc(item, filter.groups.account);
+};
+
+filter.predef.group('account').addto(filter.groups.base);
+
 // 作者用户过滤
-filter.groups.account = filter.predef.wbfc({
+filter.predef.account({
   'name': 'account',
   'version': 4,
-  'type': 'users',
-  'rule': function accountMatch(action, feed) {
-    var accounts = this.conf.concat(this.extent), id = weibo.feed.author.id(feed);
-    if (!id) return null;
-    var match = accounts.some(function (x) { return x === id; });
-    if (match) feed.setAttribute('yawf-reason', util.str.fill(text.accountFilterReason, { 'detail': weibo.feed.author.name(feed) }));
-    if (match) return action; else return null;
+  'chosen': true,
+});
+
+// 转发用户过滤
+filter.predef.account({
+  'name': 'accountf',
+  'version': 225,
+  'matchf': function (feed) {
+    return !!weibo.feed.original.dom(feed);
   },
-  'blacklist': {
-    'rule': function accountMatchBlacklistOverride(_super) {
-      return function accountMatchBlacklist(feed) {
-        if (!filter.items.base.grouping.group_account.conf || !util.page.group()) return _super(feed);
-        return null;
-      };
-    },
+  'chosen': false,
+  'listtype': ['blacklist', 'foldlist'],
+  'contextmenu': function (feed) {
+    return weibo.feed.original.dom(feed) ? weibo.feed.author.dom(feed) : null;
   },
-  'fast': {
-    'validator': filter.fast.account.validator,
-    'recognizer': filter.fast.account.recognizer,
-    'add': filter.fast.account.addid,
-    'description': function (dom, val) {
-      dom.innerHTML = util.str.fill('{{{accountFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
-      return true;
-    },
-    'contextmenu': weibo.feed.author.dom,
-    'menudesc': function (author) {
-      return util.str.fill(text.accountFilterContextMenu, { 'name': author.textContent.trim() });
-    },
-  }
 });
 
 // 原创用户过滤
@@ -4106,10 +4175,10 @@ filter.groups.original = filter.predef.wbfc({
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
     'add': filter.fast.account.addid,
-    'description': function (dom, val) {
-      dom.innerHTML = util.str.fill('{{{originalFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
-      return true;
-    },
+    'description': filter.fast.description.gen({
+      'group': 'original', 'name': 'original',
+      'attr': 'name', 'chosen': true
+    }),
     'contextmenu': function (feed) { return weibo.feed.original.dom(feed) || []; },
     'menudesc': function (original) {
       return util.str.fill(text.originalFilterContextMenu, { 'name': original.textContent.trim().replace(/^@/, '') });
@@ -4138,10 +4207,10 @@ filter.groups.mention = filter.predef.wbfc({
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
     'add': filter.fast.account.addname,
-    'description': function (dom, val) {
-      dom.innerHTML = util.str.fill('{{{mentionFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
-      return true;
-    },
+    'description': filter.fast.description.gen({
+      'group': 'mention', 'name': 'mention',
+      'attr': 'name', 'chosen': true
+    }),
     'contextmenu': weibo.feed.mentions.dom,
     'menugrouped': '{{mentionFilterContextMenuGroup}}',
     'menudesc': function (mention) {
@@ -4172,7 +4241,10 @@ filter.predef.wbfc({
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.topic,
     'add': filter.fast.topic.add,
-    'description': filter.fast.description.input('topic', 'topic', 'topic', true),
+    'description': filter.fast.description.gen({
+      'group': 'topic', 'name': 'topic',
+      'attr': 'topic', 'input': true, 'chosen': true
+    }),
     'contextmenu': weibo.feed.topics.dom,
     'menugrouped': '{{topicFilterContextMenuGroup}}',
     'menudesc': function (topic) {
@@ -4203,7 +4275,10 @@ filter.predef.wbfc({
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.rtopic,
     'add': filter.fast.topic.add,
-    'description': filter.fast.description.input('topic', 'rtopic', 'topic', false),
+    'description': filter.fast.description.gen({
+      'group': 'topic', 'name': 'rtopic',
+      'attr': 'topic', 'input': true, 'chosen': false
+    }),
   }
 }, filter.groups.topic);
 
@@ -4236,10 +4311,10 @@ filter.groups.source = filter.predef.wbfc({
     'validator': filter.fast.source.validator,
     'recognizer': filter.fast.source.recognizer,
     'add': filter.fast.source.add,
-    'description': function (dom, val) {
-      dom.innerHTML = util.str.fill('{{{sourceFilterFast}}}', { 'source': util.str.escape.xml(val.source) });
-      return true;
-    },
+    'description': filter.fast.description.gen({
+      'group': 'source', 'name': 'source',
+      'attr': 'source', 'chosen': true
+    }),
     'contextmenu': weibo.feed.sources.dom,
     'menugrouped': '{{sourceFilterContextMenuGroup}}',
     'menudesc': function (source) {
@@ -4275,10 +4350,10 @@ filter.predef.wbfc({
     'validator': filter.fast.hyperlink.validator,
     'recognizer': filter.fast.hyperlink.recognizer,
     'add': filter.fast.hyperlink.add,
-    'description': function (dom, val) {
-      dom.innerHTML = util.str.fill('{{{hyperlinkFilterFast}}}', { 'host': util.str.escape.xml(val.host) });
-      return true;
-    },
+    'description': filter.fast.description.gen({
+      'group': 'hyperlink', 'name': 'hyperlink',
+      'attr': 'host', 'chosen': true
+    }),
     'contextmenu': weibo.feed.hyperlinks.dom,
     'menugrouped': '{{hyperlinkFilterContextMenuGroup}}',
     'menudesc': function (hyperlink) {
@@ -4307,7 +4382,10 @@ filter.predef.wbfc({
     'validator': filter.fast.linktitle.validator,
     'recognizer': filter.fast.linktitle.recognizer,
     'add': filter.fast.linktitle.add,
-    'description': filter.fast.description.input('linktitle', 'linktitle', 'title', true),
+    'description': filter.fast.description.gen({
+      'group': 'linktitle', 'name': 'linktitle',
+      'attr': 'title', 'input': true, 'chosen': true
+    }),
     'contextmenu': weibo.feed.linktitle.dom,
     'menugrouped': '{{linktitleFilterContextMenuGroup}}',
     'menudesc': function (link) {
@@ -4688,7 +4766,10 @@ filter.predef.wbfc({
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.keyword,
     'add': filter.fast.content.add,
-    'description': filter.fast.description.input('comment', 'ckeyword', 'text', true),
+    'description': filter.fast.description.gen({
+      'group': 'comment', 'name': 'ckeyword',
+      'attr': 'text', 'input': true, 'chosen': true
+    }),
   }
 }, filter.groups.comment);
 
@@ -4708,10 +4789,10 @@ filter.predef.wbfc({
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
     'add': filter.fast.account.addname,
-    'description': function (dom, val) {
-      dom.innerHTML = util.str.fill('{{{cuserFilterFast}}}', { 'name': util.str.escape.xml(val.name) });
-      return true;
-    },
+    'description': filter.fast.description.gen({
+      'group': 'cuser', 'name': 'cuser',
+      'attr': 'name', 'chosen': true
+    }),
   }
 }, filter.groups.comment);
 
@@ -4731,7 +4812,10 @@ filter.predef.wbfc({
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.topic,
     'add': filter.fast.topic.add,
-    'description': filter.fast.description.input('ctopic', 'ctopic', 'topic', true),
+    'description': filter.fast.description.gen({
+      'group': 'ctopic', 'name': 'ctopic',
+      'attr': 'topic', 'input': true, 'chosen': true
+    }),
   }
 }, filter.groups.comment);
 
