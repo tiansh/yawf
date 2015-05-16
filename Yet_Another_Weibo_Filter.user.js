@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.225
+// @version           3.3.226
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -579,6 +579,11 @@ var text = {
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
+  'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
+  'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
+  'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
+  'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
+  'fastEmojiClear': { 'zh-cn': '清空列表', 'zh-hk': '清除清單', 'zh-tw': '清除清單', 'en': 'Clear List' },
   'uncheckFollowPresenter': { 'zh-cn': '话题页面发布框取消默认勾选关注主持人', 'zh-hk': '話題頁面發佈框取消預設勾選關注主持人', 'zh-tw': '話題頁面發佈框取消預設勾選關注主持人', 'en': 'Uncheck follow presenter in topic page' },
   'publishToPublicDefault': { 'zh-cn': '分组浏览时默认发布公开微博', 'zh-hk': '分組流覽時默認發佈公開微博', 'zh-tw': '分組流覽時默認發佈公開微博', 'en': 'Publish to public by default when browsing by group' },
   'publishToPublicText': { 'zh-cn': '公开', 'zh-hk': '公開', 'zh-tw': '公開', 'en': 'Public' },
@@ -869,6 +874,10 @@ var html = {
   'fastFilterFooter': '</ul></div><div class="W_layer_btn S_bg2"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div>',
   'fastFilterString': '<label><span></span></label>',
   'fastFilterStringInput': '<input width="12" class="input_default" type="text" />',
+  // 表情输入
+  'fastEmojiInput': '<div class="faces_list yawf-faces_list" node-type="scrollView"><div yawf-face="top" node-type="list"><span>{{fastEmojiInputTop}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><span id="yawf-face-drop-area">{{fastEmojiInputTopNotice}}</span></div><div yawf-face="recent" node-type="list"><span>{{fastEmojiInputRecent}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>',
+  'fastEmojiListItem': '<li title="{{title}}" action-data="insert={{text}}" action-type="select"><img src="{{img}}"></li>',
+  'fastEmojiClearButton': '<a class="W_btn_b yawf-clear-emoji" href="javascript:;"><span class="W_f14">{{fastEmojiClear}}</span></a>',
   // 只看微博列表
   'weiboOnlyButton': '<div id="yawf-weibo-only"><span><a class="S_txt1" href="javascript:void(0);">{{weiboOnlyButtonDesc}}</a></span></div>',
   // 分组或特别关注的未读提示
@@ -1383,7 +1392,7 @@ observer.weibo = (function () {
 }());
 
 observer.comment = (function () {
-  observer.dom.add(function () {
+  observer.dom.add(function commentObserver() {
     var comments = Array.from(document.querySelectorAll(
       '.list_ul[node-type="feed_list_commentList"] .list_li:not([yawf-comment]), ' +
       '.list_ul[node-type="comment_list"] .list_li:not([yawf-comment]) '
@@ -1524,7 +1533,7 @@ util._storage = function () {
   };
   // 从内存读取
   var get = function (key, value, type) {
-    if (keys.indexOf(key) === -1) util.debug('gut key %s not in keys.', key);
+    if (keys.indexOf(key) === -1) util.debug('get key %s not in keys.', key);
     read();
     if (!(key in config)) return value;
     var val = config[key];
@@ -2466,7 +2475,8 @@ filter.typed.config = (function () {
       if (skey) {
         if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
         if (!item.getconf) item.getconf = function () {
-          return (item.conf = util.config.get(skey, item.default || type(), type));
+          var def = 'default' in item ? item.default : (type ? type() : undefined);
+          return (item.conf = util.config.get(skey, def, type));
         };
         if (!item.putconf) item.putconf = function (conf) {
           return util.config.put(skey, item.conf = conf);
@@ -2512,6 +2522,7 @@ filter.typed.config = (function () {
     'select': baseConfig(String),
     'color': baseConfig(String),
     'key': baseConfig(Number),
+    'noui': baseConfig(),
   };
 }());
 
@@ -2790,6 +2801,8 @@ filter.typed.dom = (function () {
     util.func.call(copyName);
   });
 
+  var noui = function () { };
+
   return {
     'subtitle': subtitle,
     'text': text,
@@ -2805,6 +2818,7 @@ filter.typed.dom = (function () {
     'users': users,
     'range': range,
     'key': key,
+    'noui': noui,
   };
 }());
 
@@ -5787,6 +5801,168 @@ filter.items.tool.weibotool.clear_def_topic = filter.item({
   },
 }).addto(filter.groups.tool);
 
+// 表情方便输入
+filter.items.tool.weibotool.fast_emoji = filter.item({
+  'group': 'weibotool',
+  'version': 226,
+  'type': 'boolean',
+  'key': 'weibo.tool.fast_emoji',
+  'text': '{{fastEmojiInput}}',
+  'ref': {
+    'top': { 'type': 'noui', 'default': [null, null, null, null, null, null, null, null, null, null] },
+    'recent': { 'type': 'noui', 'default': [null, null, null, null, null, null, null, null, null, null] },
+  },
+  'shown': function (dom) {
+    var that = this;
+    var clear = dom.appendChild(util.dom.create(util.str.fill(html.fastEmojiClearButton)));
+    clear.addEventListener('click', function () {
+      var nil = [null, null, null, null, null, null, null, null, null, null];
+      that.ref.top.putconf(nil); that.ref.recent.putconf(nil);
+    });
+  },
+  'ainit': function () {
+    var that = this;
+    var onputs = { 'top': null, 'recent': null };
+    var createLi = function (item) {
+      if (!item) return util.dom.create('li', '');
+      return util.dom.create('ul', util.str.fill(html.fastEmojiListItem, item)).firstChild;
+    };
+    // 将列表显示出来
+    var show = function (ul, list, keep) {
+      /// <param name="ul" type="HTMLUListElement">Description</param>
+      var lis = Array.from(ul.querySelectorAll('li'));
+      var replace = function (i, item) {
+        var n = createLi(item);
+        ul.replaceChild(n, lis[i]);
+        lis[i] = n; };
+      var prev = [null, null, null, null, null, null, null, null, null, null];
+      var name = function (li) { return li.title || null; };
+      var update = keep ?function (list) {
+        // 更新列表，比较差异并尽量少修改已有的排列顺序
+        var ntitle = [], emoji = {}, emptys = [];
+        // 统计有哪些表情还要
+        list.forEach(function (i) {
+          if (!i || !i.title) return;
+          ntitle.push(i.title); emoji[i.title] = i;
+        });
+        // 把不在列表中的删除
+        lis.forEach(function (li, i) {
+          var title = name(li), pos = title ? ntitle.indexOf(title) : -1;
+          if (pos !== -1) ntitle.splice(pos, 1);
+          else if (title) replace(i);
+          if (pos === -1) emptys.push(i);
+        });
+        // 往空位里面塞新的表情
+        ntitle.forEach(function (title) { replace(emptys.shift(), emoji[title]); });
+      } : function (list) {
+        // 更新列表，保证位置的对应关系
+        list.forEach(function (item, i) {
+          if (lis[i].title === (item && item.title || '')) return;
+          replace(i, item);
+        });
+      };
+      update(list);
+      return { 'update': update }
+    };
+    // 从被点击的对象（图片或者列表项）得到表情的相关信息
+    var getEmoji = function (target) {
+      if (util.dom.matches(target, 'li>img')) target = target.parentNode;
+      try {
+        var emoji = {
+          'title': target.title,
+          'text': util.str.parsearg(target.getAttribute('action-data')).insert,
+          'img': target.querySelector('img').src
+        };
+        if (!emoji.title || !emoji.text || !emoji.img) return null;
+        return emoji;
+      } catch (e) { return null; }
+    };
+    // 将某个设置项和显示的界面结合
+    var bindconf = function (list, type, keep) {
+      ((onputs[type] = function (conf) { show(list, conf, keep); })
+        (that.ref[type].getconf()));
+    };
+    // 从列表中移除重复的项，并保留 10 个
+    var removeDuplicate = function (list) {
+      var rec = {}, ret = [];
+      list.forEach(function (i) {
+        if (!i || i.title in rec) return;
+        ret.push(rec[i.title] = i);
+      });
+      while (ret.length < 10) ret.push(null);
+      return ret.slice(0, 10);
+    };
+    // 在用户点击表情后更新最近使用的表情
+    var updateRecent = function (e) {
+      var emoji = getEmoji(e.target); if (!emoji) return;
+      var recent = [emoji].concat(that.ref.recent.getconf());
+      that.ref.recent.putconf(removeDuplicate(recent).slice(0, 10));
+    };
+    // 在设置修改之后同步到显示上去
+    ['top', 'recent'].forEach(function (type) {
+      util.config.onput(that.ref[type].key, function () {
+        if (onputs[type]) onputs[type].apply(this, arguments);
+      });
+    });
+    // 使用拖拽置顶表情
+    var dragEmoji = function (container, ul) {
+      // 显示和隐藏提示拖拽的标语
+      var notice = container.querySelector('#yawf-face-drop-area');
+      var showNotice = function () { notice.style.display = 'block'; };
+      var hideNotice = function () {
+        notice.style.display = 'none';
+      };
+      // 拖拽
+      var dragging = null, lis;
+      container.addEventListener('dragstart', function (e) {
+        dragging = getEmoji(e.target) || null;
+        // 开始拖拽的时候，标记所有目的地为可编辑的
+        lis = Array.from(ul.childNodes);
+        lis.forEach(function (li) { li.setAttribute('contenteditable', 'true'); });
+        showNotice();
+      });
+      container.addEventListener('mouseleave', function () { dragging = null; });
+      notice.addEventListener('dragenter', function () { hideNotice(); });
+      ul.addEventListener('dragenter', function () { hideNotice(); });
+      container.addEventListener('dragend', function (e) { hideNotice(); });
+      container.addEventListener('drop', function (e) {
+        // 结束拖拽的时候恢复原样
+        if (lis) lis.forEach(function (li) { li.removeAttribute('contenteditable'); }); lis = null;
+        var img_upload = document.querySelector('.send_weibo .img_upload');
+        if (img_upload) img_upload.style.display = 'none';
+        // 然后看看起止都在哪里
+        var current = e.target;
+        if (dragging === null) return;
+        e.preventDefault(); e.stopPropagation();
+        while (current.parentNode !== ul) current = current.parentNode;
+        var index = Array.from(ul.childNodes).indexOf(current);
+        // 把拽到的东西加到置顶里面去
+        var list = that.ref.top.getconf(), old = list[index];
+        list = list.map(function (e) {
+          if (!e) return null;
+          if (e.title === dragging.title) return old;
+          return e;
+        });
+        list[index] = dragging;
+        that.ref.top.putconf(list);
+      });
+      if (that.ref.top.getconf().some(Boolean)) hideNotice();
+    };
+    // 监视新的表情框
+    observer.dom.add(function emojiFastObserver() {
+      var tab = document.querySelector('.layer_faces .WB_minitab:first-child'); if (!tab) return;
+      var container = tab.parentNode;
+      var area = container.insertBefore(util.dom.create(util.str.fill(html.fastEmojiInput)), tab);
+      var all = container.querySelector('.WB_minitab ~ .faces_list_box');
+      var lists = area.querySelectorAll('[yawf-face] ul');
+      bindconf(lists[0], 'top', false);
+      bindconf(lists[1], 'recent', true);
+      container.addEventListener('click', updateRecent);
+      dragEmoji(container, lists[0]);
+    });
+  },
+}).addto(filter.groups.tool);
+
 // 取消勾选话题页面发布框“自动关注话题主持人”
 filter.items.tool.weibotool.uncheck_follow_presenter = filter.item({
   'group': 'weibotool',
@@ -7169,6 +7345,16 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-fast-filter-chose, #yawf-fast-filter-list { padding: 20px 40px; }
   #yawf-fast-filter-text { font-weight: bold; }
   #yawf-drop-area ul { list-style: disc; margin-left: 2em; }
+  // 表情输入
+  .layer_faces .faces_list.yawf-faces_list { height: 79px; }
+  .layer_faces .faces_list.yawf-faces_list div { display: block; height: 32px; margin: 0 0 5px; }
+  .layer_faces .faces_list.yawf-faces_list span { float: left; font-weight: bold; line-height: 32px; padding: 0; text-align: center; width: 52px; margin: 0 -8px 0 0; }
+  .layer_faces .faces_list.yawf-faces_list ul { float: right; margin: 0 8px; }
+  .layer_faces .faces_list.yawf-faces_list li { color: transparent; }
+  .layer_faces .faces_list { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+  .layer_faces .faces_list li { overflow: hidden; }
+  .layer_faces .faces_list img { border: 10px transparent solid; margin: -10px; }
+  #yawf-face-drop-area { background: rgba(255, 255, 127, 0.5); clear: both; float: right; font-weight: bold; height: 32px; line-height: 32px; margin: -32px 8px 0; opacity: 1; padding: 0; width: 306px; }
   // 其他页面优化设置
   #v6_pl_rightmod_myinfo:empty { hegiht: 156px; }
   // 切换视图
