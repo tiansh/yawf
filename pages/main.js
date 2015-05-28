@@ -1,16 +1,33 @@
 var browser = function () {
   var ua = navigator.userAgent;
+  // Internet Explorer
   if (ua.match(/^Mozilla\/[\d.]+ \(compatible; MSIE [\d.]+; Windows NT[^)]*\)$/)) return 'ie';
   if (ua.match(/^Mozilla\/5.0 \(Windows NT [\d.]+;( [^)]+;)? Trident\/[\d.]+;( [^)]+;)? rv:[\d.]+\) like Gecko$/)) return 'ie';
+  if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+ Edge\/[\d.]+$/)) return 'ie';
+
+  // Mozilla Firefox
   if (ua.match(/^Mozilla\/5.0 \([^)]+; rv:[\d.]+\) Gecko\/[\d]{8} Firefox\/[\d.]+$/)) return 'firefox';
-  // if (ua.match(/^Opera\/[\d.]+ \([^)]+\) Presto\/[\d.]+ Version\/[\d.]+$/)) return 'opera';
+
+  // Safari
   if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Version\/[\d.]+ Safari\/[\d.]+$/)) return 'safari';
+
+  // Chromium; Chromium on Windows, other version may have different UA
   if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chromium\/[\d.]+ Chrome\/[\d.]+ Safari\/[\d.]+$/)) return 'chromium';
+
+  // Google Chrome
   if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+$/)) return 'chrome';
+
+  // Opera; Opera 12 is not supported
+  // if (ua.match(/^Opera\/[\d.]+ \([^)]+\) Presto\/[\d.]+ Version\/[\d.]+$/)) return 'opera';
   if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+ OPR\/[\d.]+$/)) return 'opera';
   if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ Safari\/[\d.]+ OPR\/[\d.]+ \(Edition beta\)$/)) return 'opera';
-  if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ YaBrowser\/[\d.]+ Safari\/[\d.]+$/)) return 'opera';
+
+  // Yandex.Browser; same as Opera since it use add-ons from Opera
+  if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ YaBrowser\/[\d.]+ (\(.*\) )?Safari\/[\d.]+$/)) return 'opera';
+  if (ua.match(/^Mozilla\/5.0 \([^)]+\) AppleWebKit\/[\d.+]+ \(KHTML, like Gecko\) Chrome\/[\d.]+ YaBrowser\/[\d.]+ (\(.*\) )?Yowser\/[\d.]+ Safari\/[\d.]+$/)) return 'opera';
+
   if (ua.match(/AppleWebKit/)) return 'odd';
+
   return 'unknow';
 };
 

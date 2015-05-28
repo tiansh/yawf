@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.226
+// @version           3.3.227
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -477,6 +477,7 @@ var text = {
   'layoutHidePerson': { 'zh-cn': '隐藏模块 - 个人主页', 'zh-hk': '隱藏模組 - 個人主頁', 'zh-tw': '隱藏模組 - 個人主頁', 'en': 'Hide modules - Personal home page' },
   'layoutHidePersonMoveThings': { 'zh-cn': '移动部件（会员模板）', 'zh-hk': '移動部件（會員模板）', 'zh-tw': '移動部件（會員模板）', 'en': 'Moving Things (VIP Template)' },
   'layoutHidePersonCover': { 'zh-cn': '封面图', 'zh-hk': '封面圖', 'zh-tw': '封面圖', 'en': 'Cover Picture' },
+  'layoutHidePersonBGImg': { 'zh-cn': '背景图', 'zh-hk': '背景圖', 'zh-tw': '背景圖', 'en': 'Background Picture' },
   'layoutHidePersonTemplate': { 'zh-cn': '模板设置', 'zh-hk': '模板設置', 'zh-tw': '模板設置', 'en': 'Template Settings' },
   'layoutHidePersonBadgeIcon': { 'zh-cn': '勋章', 'zh-hk': '勳章', 'zh-tw': '勳章', 'en': 'Badges' },
   'layoutHidePersonVerify': { 'zh-cn': '个人资料认证', 'zh-hk': '個人資料認證', 'zh-tw': '個人資料認證', 'en': 'Person Info Verification' },
@@ -866,7 +867,7 @@ var html = {
   'blockBoxDialog': '<div class="yawf-block_box"><a action-type="feed_list_shield_by_rootmid" href="javascript:void(0)" suda-data="key=smart_feed&amp;value=hidden_feed" action-data="filter_type=0&amp;mid={{mid}}&amp;justhide=0&amp;is_retweet=1" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   // 查看原图
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
-  'viewOriginalFCLink': '<a class="W_btn_c" target="_blank"><span><em class="W_btn_icon"><i class="W_ico12 icon_cd_img"></i><i class="W_vline S_line1_c">|</i></em><em class="W_autocut S_link1">{{viewOriginalFCText}}</em></span></a>',
+  'viewOriginalFCLink': '<a class="W_btn_b btn_22px W_btn_cardlink" href="javascript:;"><i class="W_ficon ficon_cd_img S_ficon WBficon">¡</i><i class="W_vline S_line1"></i><em class="W_autocut S_link1">{{viewOriginalFCText}}</em></a>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" class="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -3903,7 +3904,11 @@ filter.items.base.autoload.auto_expand = filter.item({
     if (that.ref.etypes.conf && display !== 'show') return;
     if (feed.getAttribute('yawf-unread') !== 'hidden') return;
     if (that.ref.background.conf && document.hasFocus()) {
-      document.addEventListener('blur', function () { filter.items.base.autoload.auto_expand.expand(feed); });
+      var onblur = function () {
+        filter.items.base.autoload.auto_expand.expand(feed);
+        document.removeEventListener('blur', onblur);
+      };
+      document.addEventListener('blur', onblur);
     } else act();
   },
 }).addto(filter.groups.base);
@@ -4892,7 +4897,7 @@ filter.items.comment.other.no_content = filter.item({
   'text': '{{commentWithOutContentDesc}}',
   'comment': function mentionOnlyCommentRule(comment) {
     if (!this.conf) return null;
-    if (comment.querySelector('.WB_media_wrap .list_ul[node-type="comment_list"]')) return null; // 有图片的不算没内容
+    if (comment.querySelector('.media_box .WB_pic')) return null; // 有图片的不算没内容
     var texts = Array.from(comment.querySelector('.WB_text').childNodes);
     texts = texts.filter(function (n) { return !util.dom.matches(n, 'a[usercard]'); }); // 提到人不算内容
     texts = texts.map(function (n) { return n.textContent; }).join('');
@@ -5185,6 +5190,7 @@ filter.predef.group('layout');
     .PCD_header .pf_intro { height: 36px; line-height: 18px; }
     .PCD_header .pf_opt { margin-top: 8px; }
   */ }));
+  item('BGImg', 227, 'body, .S_page { background-image: url("\'\'") !important; }');
   item('Template', 110, '.WB_frame_a .icon_setskin { display: none !important; }');
   item('BadgeIcon', 10, '.pf_badge_icon { display: none !important; }');
   item('Verify', 174, '[yawf-id="yawf-pr-pcd-person-info"] .verify_area { display: none !important; }');
@@ -6121,7 +6127,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       var a = document.querySelector('.WB_detail [action-type="widget_commentPhotoView"]'); if (!a) return;
       var arg = a.getAttribute('action-data').match(/pid=(\w+)&cid=(\d+)/); if (!arg) return;
       var l = util.dom.create(util.str.fill(html.viewOriginalFCLink));
-      l.href = util.str.fill(url.view_cmt_ori, { 'pid': arg[1] });
+      l.href = util.str.fill(url.view_cmt_ori, { 'pid': arg[1] }); l.target = '_blank';
       a.parentNode.replaceChild(l, a);
     };
     observer.dom.add(addOriLinkViewImage);
