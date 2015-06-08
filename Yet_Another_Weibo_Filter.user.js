@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.229
+// @version           3.3.230
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -438,6 +438,7 @@ var text = {
   'layoutHideRightTemplate': { 'zh-cn': '设置模板', 'zh-hk': '背景設定', 'zh-tw': '背景設定', 'en': 'Template Settings' },
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
   'layoutHideRightHongBaoEntrance': { 'zh-cn': '红包入口', 'zh-hk': '紅包入口', 'zh-tw': '紅包入口', 'en': 'Red Envelope Entrance' },
+  'layoutHideRightRecomMusicRank': { 'zh-cn': '亚洲新歌榜', 'zh-hk': '亚洲新歌榜', 'zh-tw': '亚洲新歌榜', 'en': '亚洲新歌榜 (Asian New Song List)' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
@@ -5177,6 +5178,7 @@ filter.predef.group('layout');
   item('Template', 5, '#v6_pl_content_setskin { display: none !important; }');
   item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
   item('HongBaoEntrance', 204, '#v6_pl_rightmod_hongbaoentrance { display: none !important; }');
+  item('RecomMusicRank', 230, '#v6_TrustPagelet_Recom_MusicRank { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
   item('HotTopicExpand', 178, '.hot_topic .WB_right_expand { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
@@ -5866,7 +5868,7 @@ filter.items.tool.fixed.fixed_new_feed_tip = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       [yawf-id="home_new_feed_tip"][yawf-fixed], #home_new_feed_tip[yawf-fixed] { display: block; position: fixed; top: 66px; width: 600px; padding-top: 0; z-index: 9998; }
       [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; } 
-    */}));
+    */ }));
   }
 }).addto(filter.groups.tool);
 
@@ -6356,16 +6358,29 @@ filter.items.style.text.custom_font_family = filter.item({
     },
   },
   'init': function () {
-    util.func.call(function () { // 这里延迟调用是考虑性能因素
-      var that = this;
-      that.west = that.west.filter(function (f) { return util.font.valid(f[0]); });
-      that.chinese = that.chinese.filter(function (f) { return util.font.valid(f[0]); });
+    var that = this;
+    var updateConfig = function () {
+      util.debug('valid fonts: %o, %o', that.west, that.chinese);
       that.west.concat(that.chinese).forEach(function (f) { that.ntm[f[1]] = f[0]; });
       if (that.ntm[that.ref.wf.conf] && that.ntm[that.ref.cf.conf]) return;
       if (!that.ntm[that.ref.wf.conf]) that.ref.wf.putconf(that.west[0][1]);
       if (!that.ntm[that.ref.cf.conf]) that.ref.cf.putconf(that.chinese[0][1]);
       that.putconf(false);
-    });
+    };
+    var validFonts = function (callback) {
+      var fonts = that.west.concat(that.chinese);
+      (function validFont() {
+        if (fonts.length === 0) return callback();
+        var font = fonts.shift(), valid = util.font.valid(font[0]);
+        util.debug('%s: %o', font[1], valid);
+        if (!valid) {
+          that.west = that.west.filter(function (f) { return f[0] !== font[0]; });
+          that.chinese = that.chinese.filter(function (f) { return f[0] !== font[0]; });
+        }
+        util.func.call(validFont);
+      }());
+    }
+    setTimeout(function () { validFonts(updateConfig); }, 5e3);
   },
   'shown': function (dom) {
     var o = Array.from(dom.querySelectorAll('option'));
@@ -6450,9 +6465,9 @@ filter.items.style.layout.avatar_shape = filter.item({
     },
   },
   'ainit': function () {
-    util.css.add(util.str.cmt(this.ref.shape.conf === 'square' ? function () { /*!CSS
+    util.css.add(this.ref.shape.conf === 'square' ? util.str.cmt(function () { /*!CSS
       .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box { border-radius: 0 !important; }
-    */ } : function () { /*!CSS
+    */ }) : util.str.cmt(function () { /*!CSS
       img[usercard], .WB_face img { border-radius: 50% !important; } 
     */ }));
   },
@@ -6805,7 +6820,7 @@ filter.items.style.color.whitelist_highlight = filter.item({
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; }
-    */}), { 'color': '' + this.ref.rgba }));
+    */ }), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.style);
 
