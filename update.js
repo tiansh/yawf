@@ -1,6 +1,7 @@
 ﻿// NodeJS
 const fs = require('fs');
 const updateMeta = require('./userscript-meta-update.js');
+const genminify = require('./genminify.js');
 
 const updateHTMLVersion = function (html, version) {
   fs.readFile(html, function (error, content) {
@@ -14,6 +15,8 @@ const updateHTMLVersion = function (html, version) {
     }
   });
 };
+
+genminify.genminify();
 
 updateMeta.update(function (filename, content, meta) {
   const version = function (meta) {

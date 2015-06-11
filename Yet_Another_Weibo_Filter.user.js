@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.232
+// @version           3.3.233
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -961,6 +961,17 @@ util.script.icon = (function () {
     return GM_info.scriptMetaStr.match(new RegExp('// @(icon)(?:\\s+(.*))'))[2];
   } catch (e) { return 'https://tiansh.github.io/yawf/img/yawf.png'; }
 }());
+// 检查是否是压缩版本
+util.script.ismin = (function () {
+  try {
+    return !!GM_info.scriptMetaStr.match(new RegExp('// @downloadURL(?:\\s+.*\\.min\\.user\\.js)'));
+  } catch (e) { return false; }
+}());
+// 检查是否开启了调试
+util.script.isdebug = (function () {
+  if (util.script.ismin) return false;
+  return !!GM_getValue('debug', false);
+}());
 
 // 优先级设置
 util.priority = {
@@ -1002,7 +1013,7 @@ util.func.catched = function (f, fc) {
 };
 
 // 度量函数性能
-util.func.performance = GM_getValue('debug', false) ? (function (ignore) {
+util.func.performance = util.script.isdebug ? (function (ignore) {
   var status = {}, p = false;
   var show = function () {
     if (p) return; p = true;
@@ -1023,9 +1034,10 @@ util.func.performance = GM_getValue('debug', false) ? (function (ignore) {
         status[f.name].data.push({ 'duration': d, 'time': t });
       show();
     };
-  }, mfuncs = {};
+  }, mfuncs = {}, recorded = {};
   return function (f) {
     if (!f.name) { console.log('function name needed: %o', f); return f; }
+    if (recorded[f.name] && recorded[f.name] !== f) { console.log('duplicate function name: %o, %o', recorded[f.name], f); return f; } else recorded[f.name] = f;
     if (!mfuncs[f.name]) mfuncs[f.name] = mfunc(f);
     return mfuncs[f.name];
   };
@@ -1085,12 +1097,13 @@ util.str.fill = function (base, func) {
   var parseFunction;
   if (typeof func === 'function') parseFunction = func;
   else parseFunction = parser(datas);
-  return base.replace(/{{([\[{]?([a-zA-Z0-9_-]*)[\]}]?)}}/g, function (o, i, p) {
-    var ps = p.split('|');
+  return base.replace(/{{([\[{])?([a-zA-Z0-9_-]*)([\]}])?}}/g, function (o, i, p, c) {
+    var ps = p.split('|'), m = { '{': '}', '[': ']', '': '' }[i || ''] === (c || '');
     var ret = parseFunction(ps[0]);
     if (ret == null) return o;
-    if (i[0] === '{') return (ret = util.str.fill(ret, parseFunction));
-    if (i[0] === '[') return util.str.escape.xml(ret);
+    if (m && i === '{') ret = util.str.fill(ret, parseFunction);
+    else if (m && i === '[') ret = util.str.escape.xml(ret);
+    else if (!m) ret = (i || '') + ret + (c || '');
     return ret;
   });
 };
@@ -1632,7 +1645,7 @@ util.info.uid = null;
 util.info.nick = null;
 
 // 打印调试信息
-util.debug = GM_getValue('debug', false) &&
+util.debug = util.script.isdebug &&
   console && console.log && console.log.bind(console) ||
   function () { };
 
@@ -2525,7 +2538,7 @@ filter.typed.config = (function () {
       if (skey) {
         if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
         if (!item.getconf) item.getconf = function () {
-          var def = 'default' in item ? item.default : (type ? type() : undefined);
+          var def = 'default' in item ? item['default'] : (type ? type() : undefined);
           return (item.conf = util.config.get(skey, def, type));
         };
         if (!item.putconf) item.putconf = function (conf) {
@@ -2670,14 +2683,14 @@ filter.typed.dom = (function () {
   };
 
   // 真假值的设置项
-  var boolean = base('Boolean', function (dom, item) {
+  var bool = base('Boolean', function (dom, item) {
     util.dom.bind.checkbox(dom.querySelector('input'), item);
   });
 
   // 选择框设置项
   var select = base('Select', function (dom, item) {
     var select = dom.querySelector('select');
-    var defaultValue = item.default || item.select.key;
+    var defaultValue = item['default'] || item.select.key;
     var keys = item.select.map(function (option) {
       select.appendChild(util.dom.create('select', util.str.fill(html.option, option)).firstChild);
       return option.value;
@@ -2809,7 +2822,7 @@ filter.typed.dom = (function () {
     n.step = step; r.step = step;
     n.style.width = 10 * String(item.max).length + 15 + 'px';
     var onchange = util.dom.bind.text(n, item, function (val) {
-      if (isNaN(parseInt(val))) return item.default || item.min;
+      if (isNaN(parseInt(val))) return item['default'] || item.min;
       var ret = Math.min(Math.max(parseInt(val), item.min), item.max);
       return Math.round((ret - item.min) / step) * step + item.min;
     });
@@ -2864,7 +2877,7 @@ filter.typed.dom = (function () {
     'number': number,
     'select': select,
     'strings': strings,
-    'boolean': boolean,
+    'boolean': bool,
     'users': users,
     'range': range,
     'key': key,
@@ -5132,7 +5145,7 @@ filter.predef.group('layout');
       'version': version,
       'type': 'boolean',
       'key': 'weibo.layoutHide' + current + name,
-      'default': config.default || false,
+      'default': config['default'] || false,
       'text': '{{' + tid + '}}' + (wr ? '{{<i>}}' : '') + (config.extt || ''),
       'ainit': content,
       'ref': ref,
@@ -5839,7 +5852,7 @@ filter.items.tool.fixed.fixed_right = filter.item({
       });
     };
     removeFixed();
-    observer.dom.add(removeFixed, 100);
+    observer.dom.add(removeFixed);
   },
 }).addto(filter.groups.tool);
 
@@ -6929,19 +6942,19 @@ filter.items.script.importexport.importexport = filter.item({
       'title': util.str.fill('{{configImportWarningTitle}}'),
       'text': util.str.fill('{{configImportWarning}}'),
       'onOk': function () {
-        if (util.config.import(text)) {
-          that.export();
+        if (util.config['import'](text)) {
+          that['export']();
           success();
         } else error();
       },
     });
   },
   'export': function (be) {
-    var conf = util.config.export();
+    var conf = util.config['export']();
     be = be || document.querySelector('a.yawf-export');
     if (be) {
       be.href = 'data:application/octet-stream;base64,' +
-        util.str.base64(util.config.export());
+        util.str.base64(util.config['export']());
       be.setAttribute('download', 'yawf-config.yawf');
     }
     return conf;
@@ -6954,7 +6967,7 @@ filter.items.script.importexport.importexport = filter.item({
       'onOk': function () {
         util.config.clear();
         GM_deleteValue('notification');
-        that.export();
+        that['export']();
 
       },
     });
@@ -6969,15 +6982,15 @@ filter.items.script.importexport.importexport = filter.item({
     bii.addEventListener('change', function () {
       var file = bii.files[0];
       var reader = new FileReader();
-      if (file.size > (1 << 24)) that.import();
+      if (file.size > (1 << 24)) that['import']();
       else reader.addEventListener('load', function () {
-        that.import(reader.result);
+        that['import'](reader.result);
       });
       reader.readAsText(file);
       bii.value = '';
     });
     // 导出按钮
-    that.export(be);
+    that['export'](be);
     // 重置按钮
     br.addEventListener('click', that.reset.bind(that));
     return dom;
@@ -7141,7 +7154,7 @@ util.init(function () {
         var a = dom.querySelector('a');
         a.addEventListener('click', function () {
           readWbpConfig(function (config) {
-            filter.items.script.importexport.importexport.import(convert(config));
+            filter.items.script.importexport.importexport['import'](convert(config));
           });
         });
         return dom;
@@ -7214,7 +7227,7 @@ util.init(function () {
 // 调试
 filter.predef.subtitle('script', 'debug', '{{scriptDebugTitle}}');
 
-filter.items.script.debug.debug = filter.item({
+if (!util.script.ismin) filter.items.script.debug.debug = filter.item({
   'group': 'debug',
   'version': 0,
   'type': 'boolean',
@@ -7245,7 +7258,8 @@ filter.items.script.about.remark = filter.item({
   'shown': function (dom) {
     dom.innerHTML = util.str.fill(html.scriptIcon + text.scriptAbout, {
       'icon': util.script.icon,
-      'version': ((GM_info || {}).script || {}).version || '?',
+      'version': (((GM_info || {}).script || {}).version || '?') +
+        (util.script.ismin ? 'M' : ''),
     });
     dom.style.minHeight = '72px';
   },
@@ -7489,4 +7503,4 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   'yawf-icon-font': fonts.iconfont,
 }));
 
-util.init(function () { util.css.add('.WB_miniblog { visibility: visible !important; }'); }, util.priority.LAST + util.priority.AFTER);
+util.init(function () { GM_addStyle('.WB_miniblog { visibility: visible !important; }'); }, util.priority.LAST + util.priority.AFTER);
