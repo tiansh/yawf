@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.236
+// @version           3.3.237
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -394,7 +394,7 @@ var text = {
   'commentWithPictureFold': { 'zh-cn': '使用查看图片按钮替换缩略图', 'zh-hk': '使用查看圖片按鈕替換縮圖', 'zh-tw': '使用查看圖片按鈕替換縮圖', 'en': 'Replace thumbnail with "View Pictrue" button' },
   'deleteCommentHidden': { 'zh-cn': '如果权限允许自动删除被隐藏的评论{{<i>}}', 'zh-hk': '如果權限允許自動刪除被隱藏的評論{{<i>}}', 'zh-tw': '如果權限允許自動刪除被隱藏的評論{{<i>}}', 'en': 'Automatically delete hidden comments if permission allowed {{<i>}}' },
   'deleteCommentHiddenDesc': {
-    'zh-cn': '请注意，打开该选项后，被您隐藏的且您有权限删除的评论都将被删除。这意味着其他人，包括发表这条评论的作者在内都不能再看到这条评论。而且如果您没有开启[[comment.other.my_comment]]，那么可能会自动删除您发出的评论。'
+    'zh-cn': '请注意，打开该选项后，被您隐藏的且您有权限删除的评论都将被删除。这意味着其他人，包括发表这条评论的作者在内都不能再看到这条评论。而且如果您没有开启[[comment.otherc.my_comment]]，那么可能会自动删除您发出的评论。'
   },
   // 模块
   'layoutFilterGroupTitle': { 'zh-cn': '版面清理', 'zh-hk': '版面清理', 'zh-tw': '版面清理', 'en': 'Layout Cleanup' },
@@ -4936,11 +4936,11 @@ filter.predef.wbfc({
 }, filter.groups.comment);
 
 // 高级选项
-filter.predef.subtitle('comment', 'other', '{{commentOtherFilters}}');
+filter.predef.subtitle('comment', 'otherc', '{{commentOtherFilters}}');
 
 // 我的评论
-filter.items.comment.other.my_comment = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.my_comment = filter.item({
+  'group': 'otherc',
   'version': 229,
   'type': 'boolean',
   'default': true,
@@ -4956,8 +4956,8 @@ filter.items.comment.other.my_comment = filter.item({
 }).addto(filter.groups.comment);
 
 // 表情的数量
-filter.items.comment.other.emoji_count = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.emoji_count = filter.item({
+  'group': 'otherc',
   'version': 223,
   'type': 'boolean',
   'key': 'weibo.comment.emoji_count',
@@ -4979,8 +4979,8 @@ filter.items.comment.other.emoji_count = filter.item({
 }).addto(filter.groups.comment);
 
 // 表情的种类
-filter.items.comment.other.emoji_types = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.emoji_types = filter.item({
+  'group': 'otherc',
   'version': 223,
   'type': 'boolean',
   'key': 'weibo.comment.emoji_types',
@@ -5003,8 +5003,8 @@ filter.items.comment.other.emoji_types = filter.item({
 }).addto(filter.groups.comment);
 
 // 没有内容的评论
-filter.items.comment.other.no_content = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.no_content = filter.item({
+  'group': 'otherc',
   'version': 223,
   'type': 'boolean',
   'key': 'weibo.comment.no_content',
@@ -5021,8 +5021,8 @@ filter.items.comment.other.no_content = filter.item({
 }).addto(filter.groups.comment);
 
 // 含有转发的评论
-filter.items.comment.other.with_forward = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.with_forward = filter.item({
+  'group': 'otherc',
   'version': 223,
   'type': 'boolean',
   'key': 'weibo.comment.with_forward',
@@ -5038,8 +5038,8 @@ filter.items.comment.other.with_forward = filter.item({
 }).addto(filter.groups.comment);
 
 // 含有图片的评论
-filter.items.comment.other.with_picture = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.with_picture = filter.item({
+  'group': 'otherc',
   'version': 223,
   'type': 'boolean',
   'key': 'weibo.comment.with_picture',
@@ -5068,8 +5068,8 @@ filter.items.comment.other.with_picture = filter.item({
 }).addto(filter.groups.comment);
 
 // 自动删除评论
-filter.items.comment.other.delete_comment = filter.item({
-  'group': 'other',
+filter.items.comment.otherc.delete_comment = filter.item({
+  'group': 'otherc',
   'version': 229,
   'type': 'boolean',
   'key': 'weibo.comment.delete_comment',
