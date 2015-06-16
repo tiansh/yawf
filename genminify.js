@@ -4,7 +4,7 @@ const compressor = require('yuicompressor');
 
 const gAllMetaRegexp = new RegExp('^(\u00EF\u00BB\u00BF)?// ==UserScript==([\\s\\S]*?)^// ==/UserScript==', 'm');
 
-const genminify = function () {
+const genminify = function (callback) {
   const content = String(fs.readFileSync('Yet_Another_Weibo_Filter.user.js'));
   const header = content.match(gAllMetaRegexp)[0];
   const cmt2str = content.replace(/util\.str\.cmt\(function \(\) { \/\*!(CSS)?((\r|\n|.)*?)\*\/ }\)/mg, function (x, y, z) {
@@ -19,6 +19,7 @@ const genminify = function () {
     else if (data) {
       var min = minheader + '\n' + data;
       fs.writeFileSync('Yet_Another_Weibo_Filter.min.user.js', min);
+      if (callback) callback();
     }
   });
 };

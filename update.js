@@ -16,17 +16,20 @@ const updateHTMLVersion = function (html, version) {
   });
 };
 
-genminify.genminify();
-
-updateMeta.update(function (filename, content, meta) {
-  const version = function (meta) {
-    var ver = null;
-    meta.forEach(function (item) {
-      if (item.header === 'version' && !item.locale) ver = item.value;
+var metaFiles = function () {
+  updateMeta.update(function (filename, content, meta) {
+    const version = function (meta) {
+      var ver = null;
+      meta.forEach(function (item) {
+        if (item.header === 'version' && !item.locale) ver = item.value;
+      });
+      return ver;
+    };
+    ['zh-cn.html', 'zh-hk.html', 'zh-tw.html', 'en.html'].forEach(function (html) {
+      updateHTMLVersion(html, version(meta));
     });
-    return ver;
-  };
-  ['zh-cn.html', 'zh-hk.html', 'zh-tw.html', 'en.html'].forEach(function (html) {
-    updateHTMLVersion(html, version(meta));
   });
-});
+};
+
+genminify.genminify(function () { metaFiles(); });
+
