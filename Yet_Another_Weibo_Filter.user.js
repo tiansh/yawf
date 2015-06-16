@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.235
+// @version           3.3.236
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -538,9 +538,6 @@ var text = {
   'layoutHideOtherSendWeibo': { 'zh-cn': '首页外的微博发布框', 'zh-hk': '首頁外的微博發佈框', 'zh-tw': '首頁外的微博發佈框', 'en': 'All other Weibo publishers' },
   'layoutHideOtherSendWeiboDesc': {
     'zh-cn': '除了首页的微博发布框，右上角按钮弹出的快速发布框外；其他的各种发布框。如微博文章下方转发用的发布框等。',
-  },
-  'layoutHideOtherTMTheme': {
-    'zh-cn': '如果需要去除首页背景的大幅广告，请<a href="javascript:void(0);">点此重设您的模板</a>！'
   },
   // 工具
   'toolFilterGroupTitle': { 'zh-cn': '功能改造', 'zh-hk': '功能改造', 'zh-tw': '功能改造', 'en': 'Functions' },
@@ -5359,7 +5356,16 @@ filter.predef.group('layout');
   item('Youdao', 174, '#v6_pl_rightmod_favyoudao { display: none !important; }');
 
   subtitle('Other', true);
-  item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"], .feed_app_ads, .WB_ad_tm2015 { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
+  item('Ads', 2, function () {
+    util.css.add('#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"], .feed_app_ads, .WB_ad_tm2015 { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
+    var updateSkin = function () {
+      var skin355 = document.querySelector('link[href*="/skin355/"]');
+      if (skin355) skin355.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=34440b5fb8f50c52');
+      var skin355cover = document.querySelector('#skin_cover_s[style*="/skin355/"]');
+      if (skin355cover) skin355cover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/skin058/images/profile_cover_s.jpg?version=01d43aa81fed91cc")';
+    };
+    observer.dom.add(updateSkin);
+  });
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('HomeTip', 124, '#v6_pl_content_hometip { display: none !important }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
@@ -5368,29 +5374,6 @@ filter.predef.group('layout');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
   item('SendWeibo', 220, '.send_weibo_simple { display: none !important; }');
-  // 天猫的模板
-  filter.items.layout.other.tm_template = filter.item({
-    'group': 'other',
-    'type': 'remark',
-    'text': '{{layoutHideOtherTMTheme}}',
-    'shown': function (dom) {
-      dom.querySelector('a').addEventListener('click', function () {
-        document.querySelector('.icon_setskin').click();
-      });
-    },
-    'init': function (dom) {
-      if (document.querySelector('link[href*="/skin355/"]')) {
-        var form = util.ui.alert('tm-template-notice', {
-          'title': '重设模板',
-          'text': '重设模板即可去除首页背景图广告！<br /><a class="yawf-reset-template" href="javascript:void(0);">点此重设您的模板</a>！',
-          'icon': 'info'
-        });
-        form.dom.querySelector('.yawf-reset-template').addEventListener('click', function () {
-          document.querySelector('.icon_setskin').click();
-        });
-      }
-    },
-  }).addto(filter.groups.layout);
 
   // 根据元素内容标记元素
   var tagMods = function (qs, identifiers) {
