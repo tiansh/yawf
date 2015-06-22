@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.3.239
+// @version           3.4.240
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1263,13 +1263,17 @@ util.page = {};
 
 // 检查是否要在本页上运行
 util.page.valid = function () {
+  // 不在内嵌的框架内运行
   if (window.self !== window.top) return false;
+  // 必须的参数
   if (!unsafeWindow.$CONFIG) return false;
   if (!unsafeWindow.$CONFIG.uid) return false;
   if (!unsafeWindow.$CONFIG.nick) return false;
   if (!unsafeWindow.$CONFIG.lang) return false;
   // 如果是搜索页，而且未于搜索页面启用，则不工作
   if (util.page.search && !util.page.searchenable) return false;
+  // 如果有登录按钮，则说明没有登录，此时不工作
+  if (document.querySelector('.gn_login')) return false;
   return true;
 };
 
@@ -1643,6 +1647,15 @@ util.init(function () {
 util.info = {};
 util.info.uid = null;
 util.info.nick = null;
+util.info.oid = function () {
+  return unsafeWindow.$CONFIG.oid || null;
+};
+util.info.onick = function () {
+  return unsafeWindow.$CONFIG.onick || null;
+};
+util.info.ismy = function () {
+  return !!util.info.uid && util.info.oid() === util.info.uid;
+}
 
 // 打印调试信息
 util.debug = util.script.isdebug &&
@@ -4195,14 +4208,17 @@ filter.predef.account = function (details) {
     'name': details.name,
     'version': details.version,
     'type': 'users',
-    'rule': function accountMatch(action, feed) {
+    'rule': function accountMatch(action, feed, oid) {
       if (details.matchf && !details.matchf(feed)) return;
-      var accounts = this.conf.concat(this.extent), id = weibo.feed.author.id(feed);
+      var accounts = this.conf.concat(this.extent), id = weibo.feed.author.id(feed) || oid;
       if (!id) return null;
       var match = accounts.some(function (x) { return x === id; });
       if (match) feed.setAttribute('yawf-reason',
         util.str.fill('{{{' + details.name + 'FilterReason}}}',
-        { 'detail': weibo.feed.author.name(feed) }));
+        {
+          'detail': weibo.feed.author.name(feed) ||
+            (id === oid && util.info.onick() || null)
+        }));
       if (match) return action; else return null;
     },
     'blacklist': {
@@ -4211,6 +4227,15 @@ filter.predef.account = function (details) {
           return function accountMatchBlacklist(feed) {
             if (!filter.items.base.grouping.group_account.conf || !util.page.group()) return _super(feed);
             return null;
+          };
+        },
+      },
+    },
+    'whitelist': {
+      'override': {
+        'rule': function accountMatchWhitelistOverride(_super) {
+          return function accountMatchWhitelist(feed) {
+            return _super(feed, util.info.oid());
           };
         },
       },
@@ -4527,7 +4552,9 @@ filter.items.other.showthese.my_weibo = filter.item({
   'priority': 1e5 - 1e3, // 略低于白名单，但高于其他
   'rule': function showMyWeiboRule(feed) {
     if (!this.conf) return;
-    if (weibo.feed.author.id(feed) === util.info.uid) return 'showme'; else return null;
+    if (weibo.feed.author.id(feed) === util.info.uid) return 'showme';
+    if (util.info.ismy()) return 'showme';
+    return null;
   },
 }).addto(filter.groups.other);
 
@@ -5319,8 +5346,8 @@ filter.predef.group('layout');
   item('BadgeIcon', 10, '.pf_badge_icon { display: none !important; }');
   item('Verify', 174, '[yawf-id="yawf-pr-pcd-person-info"] .verify_area { display: none !important; }');
   item('EditPersonInfo', 174, function () {
-    var config = unsafeWindow.$CONFIG;
-    if (config.oid && config.oid === config.uid) util.css.add('[yawf-id="yawf-pr-pcd-person-info"] { display: none !important; }');
+    if (util.info.ismy())
+      util.css.add('[yawf-id="yawf-pr-pcd-person-info"] { display: none !important; }');
   });
   item('Stats', 5, '[yawf-id="yawf-pr-pcd-counter"] { display: none !important; }');
   item('MyData', 5, '[id^="Pl_Official_MyMicroworld__"], .WB_frame_b [id^="Pl_Official_MyPopularity__"] { display: none !important; }');
