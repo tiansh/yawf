@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.4.244
+// @version           3.4.245
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -876,7 +876,7 @@ var html = {
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   'viewOriginalFCLink': '<a class="W_btn_b btn_22px W_btn_cardlink" href="javascript:;"><i class="W_ficon ficon_cd_img S_ficon WBficon">¡</i><i class="W_vline S_line1"></i><em class="W_autocut S_link1">{{viewOriginalFCText}}</em></a>',
   // 拖拽
-  'dropArea': '<div id="yawf-drop-area" class="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
+  'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
   'fastFilterItem': '<li class="yawf-fast-filter-item"><label><input class="W_checkbox yawf-configBooleanInput" type="checkbox"><span class="yawf-fastFilterItemInner"></span></label><select value="blacklist"><option value="whitelist">{{whitelistActionDesc}}</option><option value="blacklist">{{blacklistActionDesc}}</option><option value="foldlist">{{foldlistActionDesc}}</option></select></li>',
   'fastFilterFooter': '</ul></div><div class="W_layer_btn S_bg2"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div>',
@@ -5597,7 +5597,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       @media screen and (max-width:1006px) {
         body[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 70px); }
       }
-      body[yawf-merge-left][yawf-weibo-only] #yawf-drop-area { left: calc(50% + 70px); }
 
       .yawf-WB_left_nav { width:150px; overflow: hidden; }
       .yawf-WB_left_nav .lev_Box_noborder{ border-bottom:none;}
@@ -6596,9 +6595,12 @@ filter.items.style.layout.width_weibo = filter.item({
       body.FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       body.FRAME_main:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
       body.FRAME_main:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+      body.FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
 
-      body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
-      body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      body.FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      body.FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
+      body.FRAME_main[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
 
       body.FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
       body.FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
@@ -6608,9 +6610,12 @@ filter.items.style.layout.width_weibo = filter.item({
       body.FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       body.FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
       body.FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+      body.FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
 
-      body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
-      body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      body.FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      body.FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
+      body.FRAME_message[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
 
       body.FRAME_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 240px) !important; }
       body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
@@ -6620,35 +6625,43 @@ filter.items.style.layout.width_weibo = filter.item({
       body.FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
       body.FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
       body.FRAME_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 220px); }
+      body.FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 100px); }
 
       body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
       body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
       body.FRAME_page.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
+      body.FRAME_page.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
 
       @media screen and (max-width: 1006px) {
         body.FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
         body.FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
         body.FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
+        body.FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
 
         body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
         body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
+        body.FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
 
         body.FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
         body.FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
         body.FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
+        body.FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
 
         body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
         body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
+        body.FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
 
         body.FRAME_page:not([yawf-weibo-only]) .WB_frame { width: {{width}} !important; }
         body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
         body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
         body.FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
         body.FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 10px) !important; }
+        body.FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
 
         body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
         body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
         body.FRAME_page.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
+        body.FRAME_page.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       }
 
     */ }), {
@@ -6740,6 +6753,7 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
       body[{{attr}}] #home_new_feed_tip[yawf-fixed], body[{{attr}}] [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px; }
+      body[{{attr}}] #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
     */ }), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
