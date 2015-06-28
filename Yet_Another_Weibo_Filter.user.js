@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.4.245
+// @version           3.4.246
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -626,11 +626,14 @@ var text = {
   'reorderNavBarDesc': {
     'zh-cn': '微博字样紧贴在标识右侧显示，“首页”“热门”“游戏”的链接出现在搜索框的左侧。'
   },
-  'widthWeibo': { 'zh-cn': '设置微博宽度为|{{<width>}}px', 'zh-hk': '設置微博寬度為|{{<width>}}px', 'zh-tw': '設置微博寬度為|{{<width>}}px', 'en': 'Set width of Weibo to | {{<width>}}px' },
+  'widthWeibo': { 'zh-cn': '设置微博宽度为|{{<width>}}像素 {{<i>}}', 'zh-hk': '設置微博寬度為|{{<width>}}圖元 {{<i>}}', 'zh-tw': '設置微博寬度為|{{<width>}}圖元 {{<i>}}', 'en': 'Set width of Weibo to | {{<width>}}px {{<i>}}' },
+  'widthWeiboDesc': {
+    'zh-cn': '如果您开启了[[tool.sidebar.merge_left_right]]，调整该宽度为 750px 可以恢复原有的页面宽度。'
+  },
   'weiboOnly': {
-    'zh-cn': '阅读视图|宽度{{<width>}}px||快捷键{{<key>}}||{{<switch>}}在微博列表顶部显示快捷开关按钮',
-    'zh-hk': '閱讀視圖|寬度{{<width>}}px||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'zh-tw': '閱讀視圖|寬度{{<width>}}px||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-cn': '阅读视图|宽度{{<width>}}像素||快捷键{{<key>}}||{{<switch>}}在微博列表顶部显示快捷开关按钮',
+    'zh-hk': '閱讀視圖|寬度{{<width>}}圖元||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-tw': '閱讀視圖|寬度{{<width>}}圖元||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
     'en': 'Reading View | width {{<width>}}px || shortcut {{<key>}} || {{<switch>}} show switch button at top of Weibo list'
   },
   'weiboOnlyButtonDesc': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
@@ -5349,11 +5352,8 @@ filter.predef.group('layout');
   item('BGImg', 227, '.S_page, .S_page .WB_miniblog { background-image: url("\'\'") !important; }');
   item('Template', 110, '.WB_frame_a .icon_setskin { display: none !important; }');
   item('BadgeIcon', 10, '.pf_badge_icon { display: none !important; }');
-  item('Verify', 174, '[yawf-id="yawf-pr-pcd-person-info"] .verify_area { display: none !important; }');
-  item('EditPersonInfo', 174, function () {
-    if (util.page.myhome())
-      util.css.add('[yawf-id="yawf-pr-pcd-person-info"] { display: none !important; }');
-  });
+  item('Verify', 174, '[yawf-id="yawf-pr-pcd-person-info-my"] .verify_area, [yawf-id="yawf-pr-pcd-person-info"] .verify_area { display: none !important; }');
+  item('EditPersonInfo', 174, '[yawf-id="yawf-pr-pcd-person-info-my"] { display: none !important; }');
   item('Stats', 5, '[yawf-id="yawf-pr-pcd-counter"] { display: none !important; }');
   item('MyData', 5, '[id^="Pl_Official_MyMicroworld__"], .WB_frame_b [id^="Pl_Official_MyPopularity__"] { display: none !important; }');
   item('SuggestUser', 10, '[id^="Pl_Core_RightUserList__"], .WB_frame_b [id^="Pl_Core_RightUserList__"] { display: none !important; }');
@@ -5448,6 +5448,7 @@ filter.predef.group('layout');
     '.WB_cardwrap[action-data*="weibo.com%2Fhongbao"]': 'yawf-pr-hongbao',
     '.WB_cardwrap[action-data*="sina.com.cn%2Fhongbao"]': 'yawf-pr-hongbao',
     'a[href*="weibo.com/hongbao"]': 'yawf-pr-hongbao',
+    '.PCD_person_info a.WB_cardmore[href^="/p/"][href$="info?mod=pedit"]': 'yawf-pr-pcd-person-info-my',
   });
   var tagPLeftMods = function tagPLeftMods() {
     tagPLeftModsName();
@@ -6583,7 +6584,8 @@ filter.items.style.layout.width_weibo = filter.item({
       'max': 1280,
       'default': 750,
       'step': 10,
-    }
+    },
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{widthWeiboDesc}}' }
   },
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
