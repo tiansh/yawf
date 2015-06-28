@@ -83,26 +83,6 @@
         { color: #fff; background: #351; border-color: #777; }
       </div>
     </div>
-    <h2>加宽首页微博</h2>
-    <div class="in">
-      <p>以下样式可以加宽首页微博列表（阅读模式除外），您需要做一些修改：</p>
-      <ul>
-        <li>Firefox 31 及更新版本的用户，您只需要修改第一行的 750 为你喜欢的宽度即可，不加宽时的宽度为 600 。</li>
-        <li>Firefox 30 以下，或其他浏览器的用户， 您需要查找替换下文中所有的 var(--yawf-main-width) 为您想要的宽度（如750px）。</li>
-      </ul>
-      <div class="css_code">
-        :root { --yawf-main-width: 750px; }
-        .WB_frame { width: calc(var(--yawf-main-width) + 400px); }
-        body[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc(var(--yawf-main-width) + 240px) !important; }
-        .WB_frame { width: calc(var(--yawf-main-width) + 400px); }
-        body[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc(var(--yawf-main-width) + 240px) !important; }
-        #plc_main { width: calc(var(--yawf-main-width) + 20px + 230px) !important; }
-        .WB_frame .WB_main_c { width: var(--yawf-main-width); }
-        .WB_frame .WB_main_c .WB_tab_a .tab_box_a .fr_box { width: calc(var(--yawf-main-width) - 300px); }
-        a.W_gotop { margin-left: calc(var(--yawf-main-width) / 2 + 200px); }
-        body[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc(var(--yawf-main-width) / 2 + 130px) }
-      </div>
-    </div>
     <h2>隐藏漏斗图标</h2>
     <div class="in">
       <div class="css_code">

@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.4.242
+// @version           3.4.243
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -626,6 +626,7 @@ var text = {
   'reorderNavBarDesc': {
     'zh-cn': '微博字样紧贴在标识右侧显示，“首页”“热门”“游戏”的链接出现在搜索框的左侧。'
   },
+  'widthWeibo': { 'zh-cn': '设置微博宽度为|{{<width>}}px', 'zh-hk': '設置微博寬度為|{{<width>}}px', 'zh-tw': '設置微博寬度為|{{<width>}}px', 'en': 'Set width of Weibo to | {{<width>}}px' },
   'weiboOnly': {
     'zh-cn': '阅读视图|宽度{{<width>}}px||快捷键{{<key>}}||{{<switch>}}在微博列表顶部显示快捷开关按钮',
     'zh-hk': '閱讀視圖|寬度{{<width>}}px||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
@@ -5573,8 +5574,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
       body[yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
       body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
-      body[yawf-merge-left] .webim_contacts_mod { height: calc(100% - 320px) !important; }
-      body[yawf-merge-left] .webim_contacts_bd { height: calc(100% - 60px) !important; }
+      body[yawf-merge-left] .WB_webim_page .webim_contacts_mod { position: static !important; max-height: calc(100vh - 330px); }
       body[yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
       body[yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
       body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; -webkit-transform: scaleX(-1); transform: scaleX(-1); }
@@ -6557,8 +6557,8 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
         .WB_global_nav .gn_header > * { text-align: left; }
         .WB_global_nav .gn_header > .gn_nav { margin-right: 0; }
         .WB_global_nav_us .gn_header { background-image: none; }
-        .WB_global_nav_us .gn_logo, .WB_global_nav_us .gn_logo .box, 
-        .WB_global_nav .gn_logo { width: 140px !important; }
+        .WB_global_nav_us .gn_logo, .WB_global_nav_us .gn_logo .box, .WB_global_nav .gn_logo, .WB_global_nav .gn_logo a { width: 140px !important; }
+        .WB_global_nav .gn_logo a { left: 0 !important; }
         .WB_global_nav_us .gn_logo .box .logo, .WB_global_nav_us .gn_logo .box img { display: block; }
         .WB_global_nav .gn_logo .box .logo { margin-left: 0; }
         .WB_global_nav_us .gn_position { margin-right: 0; }
@@ -6568,6 +6568,64 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
     observer.dom.add(moveNavList);
     moveNavList();
   },
+}).addto(filter.groups.style);
+
+// 加宽微博
+filter.items.style.layout.width_weibo = filter.item({
+  'group': 'layout',
+  'version': 243,
+  'type': 'boolean',
+  'text': '{{widthWeibo}}',
+  'key': 'weibo.tool.width_weibo',
+  'ref': {
+    'width': {
+      'type': 'range',
+      'min': 480,
+      'max': 1280,
+      'default': 750,
+      'step': 10,
+    }
+  },
+  'ainit': function () {
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
+      body.FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
+      body.FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
+      body.FRAME_main:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
+      body.FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      body.FRAME_main:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+      body.FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
+      body.FRAME_main:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
+      body.FRAME_main:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+
+      body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+
+      body.FRAME_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 240px) !important; }
+      body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
+      body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
+      body.FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 250px) !important; }
+      body.FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
+      body.FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+
+      body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
+      body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
+      body.FRAME_page.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
+
+      body.FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
+      body.FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
+      body.FRAME_message:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
+      body.FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      body.FRAME_message:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+      body.FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
+      body.FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
+      body.FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+
+      body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+    */ }), {
+      'width': this.ref.width.conf + 'px',
+    }));
+  }
 }).addto(filter.groups.style);
 
 // 阅读模式
