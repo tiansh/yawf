@@ -15,7 +15,7 @@ h4 { font-size: 100%; margin: 1em 0 0 0; }
 h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor { opacity: 1; }
 .anchor:hover { color: #666; }
 nav.index { margin: 0 40px; padding: 10px 20px; border: 1px solid #aaa; background: #fafafa; display: table; }
-nav.index .tol { display: block; font-weight: bold; text-align: center; }
+nav.index .tol { display: block; font-weight: bold; }
 nav.index ul { list-style: none; margin: 0; padding: 0; }
 nav.index ul ul { margin-left: 2em; }
 .in { margin: 2px 12px 4px; }
