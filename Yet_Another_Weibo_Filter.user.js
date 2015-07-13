@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.4.248
+// @version           3.4.249
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -416,7 +416,7 @@ var text = {
   'layoutHideIconNight': { 'zh-cn': '微博之夜', 'zh-hk': '微博之夜', 'zh-tw': '微博之夜', 'en': '微博之夜 (Weibo Night)' },
   'layoutHideIconRedPack': { 'zh-cn': '让红包飞', 'zh-hk': '让红包飞', 'zh-tw': '让红包飞', 'en': '让红包飞 (Red Pack)' },
   'layoutHideIconHero': { 'zh-cn': '.icon_hero', 'zh-hk': '.icon_hero', 'zh-tw': '.icon_hero', 'en': '.icon_hero' }, // FIXME 真正的名称是什么
-  'layoutHideIconRun': { 'zh-cn': '.icon_run2015', 'zh-hk': '.icon_run2015', 'zh-tw': '.icon_run2015', 'en': '.icon_run2015' }, // FIXME 真正的名称是什么
+  'layoutHideIconRun': { 'zh-cn': '益起跑', 'zh-hk': '益起跑', 'zh-tw': '益起跑', 'en': '益起跑 (Love Run)' }, // FIXME 真正的名称是什么
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
@@ -448,6 +448,9 @@ var text = {
   'layoutHideRightInterest': { 'zh-cn': '可能感兴趣的人', 'zh-hk': '可能感興趣的人', 'zh-tw': '可能感興趣的人', 'en': 'You may know' },
   'layoutHideRightMovie': { 'zh-cn': '电影热评榜', 'zh-hk': '电影热评榜', 'zh-tw': '电影热评榜', 'en': '电影热评榜 (Hot Movie)' },
   'layoutHideRightAttFeed': { 'zh-cn': '好友关注动态', 'zh-hk': '好友关注动态', 'zh-tw': '好友关注动态', 'en': '好友关注动态 (Friends\' Attention)' },
+  'layoutHideRightAttFeedDesc': {
+    'zh-cn': '开启该隐藏选项只能让您自己不再看到“好友关注动态”模块，并不能阻止您出现在别人的“好友关注动态”中。'
+  },
   'layoutHideRightMember': { 'zh-cn': '会员专区', 'zh-hk': '會員專區', 'zh-tw': '會員專區', 'en': 'Weibo VIP' },
   'layoutHideRightTaobaoMovie': { 'zh-cn': '淘宝&amp;微博 电影预售榜', 'zh-hk': '淘宝&amp;微博 电影预售榜', 'zh-tw': '淘宝&amp;微博 电影预售榜'/* as is */, 'en': '淘宝&amp;微博 电影预售榜 (Taobao Movie)' },
   'layoutHideRightNotice': { 'zh-cn': '公告栏', 'zh-hk': '公告欄', 'zh-tw': '公告欄', 'en': 'Bulletin Board' },
@@ -5173,7 +5176,7 @@ filter.predef.group('layout');
     var tid = 'layoutHide' + current + name, ref = config.ref || {}, wr = !!text[tid + 'Desc'];
     if (wr && !ref.i) ref.i = {
       'type': 'sicon',
-      'icon': 'ask',
+      'icon': config.icon || 'ask',
       'text': '{{' + tid + 'Desc}}',
     };
     if (config.bubbled) ref.i.bubbled = config.bubbled;
@@ -5238,7 +5241,7 @@ filter.predef.group('layout');
   item('RecomGroupUser', 191, '#v6_pl_rightmod_recomgroupuser { display: none; }');
   item('HongbaoRank', 205, '#v6_pl_rightmod_recominfo .WB_cardwrap[node-type="hongbao_rank"] { display: none !important; }');
   item('Movie', 186, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
-  item('AttFeed', 248, '#v6_pl_rightmod_attfeed { display: none !important; }');
+  item('AttFeed', 248, '#v6_pl_rightmod_attfeed { display: none !important; }', { 'icon': 'warn' });
   item('TaobaoMovie', 200, '[yawf-id="rightmod_taobao_movie"] { display: none !important; }');
   item('Notice', 5, '#v6_pl_rightmod_noticeboard { display: none !important; }');
 
