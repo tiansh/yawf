@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.5.251
+// @version           3.5.252
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -341,6 +341,10 @@ var text = {
   'fangtanSourceWeibo': { 'zh-cn': '来自微访谈的微博{{<i>}}', 'zh-hk': '來自微訪談的微博{{<i>}}', 'zh-tw': '來自微訪談的微博{{<i>}}', 'en': 'Weibo comes from 微访谈 (micro Talk){{<i>}}' },
   'fangtanSourceWeiboDesc': {
     'zh-cn': '使用微访谈发布的微博，来源以“微访谈 -”开头',
+  },
+  'gongyiSourceWeibo': { 'zh-cn': '来自微公益的微博{{<i>}}', 'zh-hk': '來自微公益的微博{{<i>}}', 'zh-tw': '來自微公益的微博{{<i>}}', 'en': 'Weibo comes from 微公益 (micro Welfare){{<i>}}' },
+  'gongyiSourceWeiboDesc': {
+    'zh-cn': '使用微公益发布的微博，来源以“微公益”开头',
   },
   'unauthappWeibo': { 'zh-cn': '来自未通过审核应用{{<i>}}', 'zh-hk': '來自未通过审核应用{{<i>}}', 'zh-tw': '來自未通过审核应用{{<i>}}', 'en': 'Weibo comes from 未通过审核应用 (unauthorized application){{<i>}}' },
   'unauthappWeiboDesc': {
@@ -3398,6 +3402,7 @@ filter.fast.source.recognizer = function (element, callback) {
     '[suda-uatrack*="key=profile_feed"][suda-uatrack*="value=pubfrom_host"]',
     'a[href$="from=feed_card"]',
     'a[href$="source=weibosource"]',
+    'a[href*="weibo.com/p/100127p"]',
   ].join(','));
   source = source && (source.getAttribute('title') || source.textContent || text.sourceUnkown);
   if (source && source !== text.defaultSource) return callback({ 'source': source });
@@ -4826,6 +4831,24 @@ filter.items.other.hidethese.wei_fangtan = filter.item({
   'rule': function huatiSourceWeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('a[suda-uatrack*="key=profile_feed"][href*="talk.weibo.com"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 微公益微博
+filter.items.other.hidethese.wei_gongyi = filter.item({
+  'group': 'hidethese',
+  'version': 252,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_gongyi',
+  'text': '{{gongyiSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{gongyiSourceWeiboDesc}}' } },
+  'rule': function gongyiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[href*="app.weibo.com/t/feed/2u8sMw"]'))
+      return 'hidden';
+    if (feed.querySelector('a[href*="weibo.com/p/100127p"]'))
       return 'hidden';
     return null;
   },
