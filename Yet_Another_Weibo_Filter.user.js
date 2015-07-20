@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.4.249
+// @version           3.5.250
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -473,7 +473,7 @@ var text = {
   },
   'layoutHideWeiboArticalPay': { 'zh-cn': '微博打赏', 'zh-hk': '微博打赏', 'zh-tw': '微博打赏', 'en': '微博打赏 (Weibo Actical Pay)' },
   'layoutHideWeiboTag': { 'zh-cn': '微博标签', 'zh-hk': '微博標籤', 'zh-tw': '微博標籤', 'en': 'Tags for Weibo' },
-  'layoutHideWeiboMovieTag': { 'zh-cn': '微博电影', 'zh-hk': '微博電影', 'zh-tw': '微博電影', 'en': 'Weibo Movie' },
+  'layoutHideWeiboMovieTag': { 'zh-cn': '微博电影/话题', 'zh-hk': '微博電影/話題', 'zh-tw': '微博電影/話題', 'en': 'Weibo Movie / Topic' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
   'layoutHideWeiboLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
@@ -800,6 +800,11 @@ var text = {
     'zh-tw': '注意，擴充以用戶腳本的形式安裝，您只應當從您信任的來源安裝用戶腳本，惡意的腳本可能會危害您的隱私，並在您不知情的情況下以您的名義執行。如果您希望撰寫 YAWF 的擴展，請參考常見問題（簡體）。',
     'en': 'Notice: Extension was installed as userscript. You should only install scripts trusted. Malicious scripts can violate your privacy and act on your behalf without your knowledge. Please refer to the FQA Page, if you want to write your extension for YAWF.',
   },
+  'subscribeFilterGroupTitle': { 'zh-cn': '规则订阅', 'zh-hk': '規則訂閱', 'zh-tw': '規則訂閱', 'en': 'Subscribe' },
+  'subscribeListTitle': { 'zh-cn': '订阅的规则', 'zh-hk': '訂閱的規則', 'zh-tw': '訂閱的規則', 'en': 'Rules Subscribed' },
+  'subscribeDisableButton': { 'zh-cn': '禁用' },
+  'subscribeEnableButton': { 'zh-cn': '启用' },
+  'subscribeDetailButton': { 'zh-cn': '详细' },
   'extensionFilterGroupTitle': { 'zh-cn': '扩展功能', 'zh-hk': '擴充功能', 'zh-tw': '擴充功能', 'en': 'Extension' },
 };
 
@@ -849,6 +854,7 @@ var html = {
   'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" yawf-ci="{{key}}" class="W_f14 yawf-configRangeInput" style="text-align: right;" name="yawf-{{id}}" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
   'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" yawf-ci="{{key}}" name="yawf-{{key}}" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
+  'configSubscribe': '<div class="yawf-configSubscribe yawf-configItem "><div class="yawf-configSubscribeIcon"><img width="64" height="64" src="{{icon}}"></div><div class="yawf-configSubscribeTitle"><div class="yawf-configSubscribeName">{{name}}</div><div class="yawf-configSubscribeDate">{{date}}</div></div><div class="yawf-configSubscribeAuthor">{{author}}</div><div class="yawf-configSubscribeInfo">{{description}}</div><div class="yawf-configSubscribeButton"><a href="javascript:;" class="W_btn_b yawf-subscribeDisable"><span class="W_f14">{{subscribeDisableButton}}</span></a><a href="javascript:;" class="W_btn_b yawf-subscribeEnable"><span class="W_f14">{{subscribeEnableButton}}</span></a><a href="" target="_blank" rel="noreferrer" class="W_btn_b yawf-subscribeDetail"><span class="W_f14">{{subscribeDetailButton}}</span></a></div></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a>{{[item]}}</li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
@@ -875,7 +881,7 @@ var html = {
   'leftMsgLike': '<div class="lev"><a class="S_txt1" nm="attitude" bpfilter="message" node-type="item" href="/like/inbox?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavLike}}</span></a></div></div>',
   'leftMsgDM': '<div class="lev_Box"><div class="lev"><a class="S_txt1" nm="dm" bpfilter="message" hrefextra="/messages|/message/history" node-type="item" href="/messages?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavDM}}</span></a></div>',
   'leftMsgBox': '<div class="lev"><a class="S_txt1" nm="msgbox_c" bpfilter="message" node-type="item" href="/notesboard?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavMsgBox}}</span></a></div>',
-  'leftMsgGroup': '<div class="lev"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
+  'leftMsgGroup': '<div class="lev"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6&amp;is_notice=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
   'leftMsgFooter': '</div>',
   // 屏蔽微博
   'blockBoxSimple': '<div class="yawf-block_box"><a href="javascript:void(0);" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
@@ -1051,6 +1057,25 @@ util.func.performance = util.script.isdebug ? (function (ignore) {
     return mfuncs[f.name];
   };
 }(10)) : function (f) { return f; };
+
+// 向 unsafeWindow 暴露接口
+util.func.export = function (name, handler) {
+  var push = util.func.catched(function (args) {
+    args = args.wrappedJSObject || args;
+    util.debug('%s.(%o)', name, args);
+    handler(args);
+  }.bind(window));
+  if (unsafeWindow[name]) {
+    util.debug('before loaded %s: %o', name, unsafeWindow[name]);
+    Array.from(unsafeWindow[name]).forEach(push);
+  }
+  try {
+    unsafeWindow[name] = new Proxy({ 'push': push }, {
+      'get': function (obj, name) { if (name === 'push') return obj.push; },
+      'set': function () { }
+    });
+  } catch (e) { unsafeWindow[name] = { 'push': push }; }
+};
 
 // 对象相关工具
 util.obj = {};
@@ -2533,15 +2558,16 @@ filter.active = function (feed) {
     var isSon = !!index;
     var action = filter.rules.parse(feed, isSon) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
-    if (isSon && !action.match(/-hidden$/)) sson.push(feed);
+    if (isSon && !action.match(/^(.*-)?hidden$/)) sson.push(feed);
     filter.fix.fold(feed);
     filter.fix.hidden(feed);
   });
   var hd = feed.querySelector('.WB_feed_together .wft_hd');
   if (hd) {
     util.debug('son count: %o, not hidden: %o - %o', son.length, sson.length, sson);
-    if (sson.length === 0) hd.parentNode.parentNode.removeChild(hd.parentNode);
-    else hd.querySelector('[node-type="followNum"]').textContent = sson.length;
+    if (sson.length === 0) {
+      hd.parentNode.parentNode.removeChild(hd.parentNode);
+    } else hd.querySelector('[node-type="followNum"]').textContent = sson.length;
   }
 };
 
@@ -2601,6 +2627,7 @@ filter.typed.config = (function () {
     }
     return value;
   };
+
   return {
     'string': baseConfig(String),
     'strings': itemsConfig,
@@ -2612,6 +2639,7 @@ filter.typed.config = (function () {
     'color': baseConfig(String),
     'key': baseConfig(Number),
     'noui': baseConfig(),
+    'subscribe': baseConfig(Boolean),
   };
 }());
 
@@ -2625,7 +2653,8 @@ filter.typed.dom = (function () {
       // 显示的文字
       var inp = '{{}}', outer = inp, inner = '', text, etext;
       var hasInput = !!html['config' + base + 'Input'];
-      if (item.i18n && item.i18n.local) etext = item.i18n.local; else etext = {};
+      if (item.i18n && item.i18n.local) etext = item.i18n.local;
+      else if (item.texts) etext = item.texts; else etext = {};
       if (!item.nogui) {
         text = util.str.fill(item.text || '', etext).replace(/\|\|/g, html['||']).replace(/\|/g, html['|']);
         if (hasInput && text.indexOf(inp) === -1) text = inp + text;
@@ -2892,6 +2921,19 @@ filter.typed.dom = (function () {
 
   var noui = function () { };
 
+  // 订阅
+  var subscribe = base('Subscribe', function (dom, item) {
+    var attr = ['yawf-configSubscribeDisabled', 'yawf-configSubscribeEnabled'];
+    var update = function () {
+      dom.classList.remove(attr[0]); dom.classList.remove(attr[1]);
+      if (item.conf) dom.classList.add(attr[1]); else dom.classList.add(attr[0]);
+    };
+    update();
+    var button = function (s) { return function () { item.putconf(s); update(); }; };
+    dom.querySelector('.yawf-subscribeDisable').addEventListener('click', button(false));
+    dom.querySelector('.yawf-subscribeEnable').addEventListener('click', button(true));
+  });
+
   return {
     'subtitle': subtitle,
     'text': text,
@@ -2908,6 +2950,7 @@ filter.typed.dom = (function () {
     'range': range,
     'key': key,
     'noui': noui,
+    'subscribe': subscribe,
   };
 }());
 
@@ -2934,7 +2977,7 @@ filter.collection.group = (function () {
 
 // 过滤器集合
 filter.collection.item = (function () {
-  var items = [], grouped = {};
+  var items = [], grouped = {}, loaded = false;
   // 注册一个过滤器，通过 filter.item 调用
   var add = function (item) {
     items.push(item);
@@ -2942,14 +2985,16 @@ filter.collection.item = (function () {
       { 'title': null, 'items': [] };
     if (item.type === 'subtitle') group.title = group.title || item;
     else group.items.push(item);
+    if (loaded && item._init) util.func.catched(item._init)();
     return item;
   };
   // 初始化所有过滤器
   util.init(function () {
     var times = [];
     items.forEach(function (item) {
-      util.func.catched(item._init)();
+      if (item._init) util.func.catched(item._init)();
     });
+    loaded = true;
   }, util.priority.DEFAULT);
   // 根据分组重新排列设置界面的若干设置项
   var order = function (items) {
@@ -5395,16 +5440,7 @@ filter.predef.group('layout');
   item('Youdao', 174, '#v6_pl_rightmod_favyoudao { display: none !important; }');
 
   subtitle('Other', true);
-  item('Ads', 2, function () {
-    util.css.add('#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"], .feed_app_ads, .WB_ad_tm2015, .W_bigDay { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
-    var updateSkin = function () {
-      var skin355 = document.querySelector('link[href*="/skin355/"]');
-      if (skin355) skin355.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=34440b5fb8f50c52');
-      var skin355cover = document.querySelector('#skin_cover_s[style*="/skin355/"]');
-      if (skin355cover) skin355cover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/skin058/images/profile_cover_s.jpg?version=01d43aa81fed91cc")';
-    };
-    observer.dom.add(updateSkin);
-  });
+  item('Ads', 2, '#plc_main [id*="pl_rightmod_ads"], #plc_main [id^="v6_pl_rightmod_ads"], [id^="ads_"], [id^="ad_"], #trustPagelet_zt_hottopicv5 [class*="hot_topicad"], div[ad-data], .WB_feed .popular_buss, [id^="sinaadToolkitBox"], .feed_app_ads, .WB_ad_tm2015, .W_bigDay { display: none !important; } #wrapAD, .news_logo { visibility: hidden !important; }');
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('HomeTip', 124, '#v6_pl_content_hometip { display: none !important }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
@@ -5573,19 +5609,19 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       }
     };
     util.css.add(util.str.cmt(function () { /*!CSS
-      body[yawf-merge-left] .WB_frame .WB_main_l,
-      body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .yawf-WB_left_nav, body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
-      body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
-      body[yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
-      body[yawf-merge-left] .WB_frame .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_frame .WB_left_nav .lev_line fieldset { padding-left: 190px; }
-      body[yawf-merge-left] .WB_left_nav .lev a:hover, .WB_left_nav .lev_curr, .WB_left_nav .lev_curr:hover, .WB_left_nav .levmore .more { background: rgba(128, 128, 128, 0.1) !important; }
-      body[yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
-      body[yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
-      body[yawf-merge-left] a.W_gotop { margin-left: 430px; }
-      body[yawf-merge-left] .WB_webim_page .webim_contacts_mod { position: static !important; max-height: calc(100vh - 330px); }
-      body[yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
-      body[yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
-      body[yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; -webkit-transform: scaleX(-1); transform: scaleX(-1); }
+      [yawf-merge-left] .WB_frame .WB_main_l,
+      [yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .yawf-WB_left_nav, body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
+      [yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
+      [yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
+      [yawf-merge-left] .WB_frame .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_frame .WB_left_nav .lev_line fieldset { padding-left: 190px; }
+      [yawf-merge-left] .WB_left_nav .lev a:hover, .WB_left_nav .lev_curr, .WB_left_nav .lev_curr:hover, .WB_left_nav .levmore .more { background: rgba(128, 128, 128, 0.1) !important; }
+      [yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
+      [yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
+      [yawf-merge-left] a.W_gotop { margin-left: 430px; }
+      [yawf-merge-left] .WB_webim_page .webim_contacts_mod { position: static !important; max-height: calc(100vh - 330px); }
+      [yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
+      [yawf-merge-left="left"] .WB_frame .WB_main_c { float: right; }
+      [yawf-merge-left="left"] .WB_frame .templete_enter a { right: auto; left: 0; -webkit-transform: scaleX(-1); transform: scaleX(-1); }
 
       @media screen and (max-width: 1006px) {
         body[yawf-merge-left]:not([yawf-weibo-only]) .W_main { width: 600px !important; }
@@ -6596,81 +6632,87 @@ filter.items.style.layout.width_weibo = filter.item({
   },
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-      body.FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
-      body.FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
-      body.FRAME_main:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
-      body.FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      body.FRAME_main:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
-      body.FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
-      body.FRAME_main:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
-      body.FRAME_main:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
-      body.FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
-
-      body.FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
-      body.FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
-      body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
-      body.FRAME_main[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
-
-      body.FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
-      body.FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
-      body.FRAME_message:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
-      body.FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      body.FRAME_message:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
-      body.FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
-      body.FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
-      body.FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
-      body.FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
-
-      body.FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
-      body.FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
-      body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
-      body.FRAME_message[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
-
-      body.FRAME_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 240px) !important; }
-      body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
-      body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
-      body.FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 250px) !important; }
-      body.FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 260px); }
-      body.FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
-      body.FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      body.FRAME_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 220px); }
-      body.FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 100px); }
-
-      body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
-      body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
-      body.FRAME_page.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
-      body.FRAME_page.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
-
+      .FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
+      .FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
+      .FRAME_main:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
+      .FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_main:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+      .FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
+      .FRAME_main:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
+      .FRAME_main:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+      .FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
       @media screen and (max-width: 1006px) {
-        body.FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
-        body.FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
-        body.FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
-        body.FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+        .FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
+        .FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
+        .FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
+        .FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      }
 
-        body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
-        body.FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
-        body.FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      .FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      .FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      .FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
+      .FRAME_main[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
+      @media screen and (max-width: 1006px) {
+        .FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
+        .FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
+        .FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      }
 
-        body.FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
-        body.FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
-        body.FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
-        body.FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      .FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
+      .FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
+      .FRAME_message:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
+      .FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_message:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+      .FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
+      .FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
+      .FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+      .FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
+      @media screen and (max-width: 1006px) {
+        .FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
+        .FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
+        .FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
+        .FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      }
 
-        body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
-        body.FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
-        body.FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      .FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      .FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      .FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
+      .FRAME_message[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
+      @media screen and (max-width: 1006px) {
+        .FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
+        .FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
+        .FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      }
 
-        body.FRAME_page:not([yawf-weibo-only]) .WB_frame { width: {{width}} !important; }
-        body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
-        body.FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
-        body.FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
-        body.FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 10px) !important; }
-        body.FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      .FRAME_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 240px) !important; }
+      .FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
+      .FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
+      .FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 250px) !important; }
+      .FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 260px); }
+      .FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
+      .FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 220px); }
+      .FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 100px); }
+      @media screen and (max-width: 939px) {
+        .FRAME_page:not([yawf-weibo-only]) .WB_frame { width: {{width}} !important; }
+        .FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
+        .FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
+        .FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
+        .FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 10px) !important; }
+        .FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      }
 
-        body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
-        body.FRAME_page.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
-        body.FRAME_page.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
-        body.FRAME_page.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      .B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
+      .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
+      .B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
+      .B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 170px); }
+      .B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
+      .B_page:not([yawf-weibo-only]) .send_weibo_simple .input_simple_wrap .inputfunc_simple_wrap { width: calc({{width}} - 96px); }
+      @media screen and (max-width: 939px) {
+        .B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
+        .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
+        .B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
+        .B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       }
 
     */ }), {
@@ -7434,10 +7476,51 @@ filter.items.script.extension.remark = filter.item({
   'text': '{{scriptExtensionWarning}}',
 }).addto(filter.groups.script);
 
+// 订阅
+var subscribe = (function () {
+  var subscribe = null;
+
+  var addTitle = function () {
+    if (subscribe) return;
+    subscribe = filter.predef.group('subscribe');
+    filter.predef.subtitle('subscribe', 'slist', '{{subscribeListTitle}}');
+  };
+
+  var addSubscribe = function (rules) {
+    addTitle();
+    filter.items.subscribe[rules.name] = filter.item({
+      'group': 'slist',
+      'version': 0,
+      'type': 'subscribe',
+      'key': 'subscribe.' + rules.id,
+      'texts': rules,
+      'ref': { 'rules': { 'type': 'string', 'default': 'null' } },
+      'default': true,
+      'shown': function (dom) {
+        dom.querySelector('.yawf-subscribeDetail').href = rules.homepage;
+      },
+      'init': function () {
+        if (!this.conf) return;
+        var list = rules.rules;
+        Object.keys(list).forEach(function (k) {
+          filter.extent.act('weibo.filters.' + k, list[k]);
+        });
+      },
+    }).addto(filter.groups.subscribe);
+
+
+  };
+
+  util.func.export('__YAWF_WeiboSubscribeRuleList__', function (args) {
+    addSubscribe(args);
+  });
+
+  return subscribe;
+}());
+
 // 可扩展区域
 var extension = (function () {
   if (!GM_getValue('extent')) return null;
-  var loaded = false;
 
   // 扩展分组
   var extensionFilterGroup = function () {
@@ -7450,9 +7533,9 @@ var extension = (function () {
     // 暴露给外部的函数
     var yawf = {};
     var defineFunction = function (name, params, func) {
-      yawf[name] = function (arg) {
+      yawf[name] = util.func.catched(function (arg) {
         func.apply(window, params.map(function (key) { return arg[key]; }));
-      };
+      });
     };
     // 检查 YAWF 加载成功
     defineFunction('ping', ['callback'], function (callback) {
@@ -7464,7 +7547,6 @@ var extension = (function () {
       if (details.group) details.group = 'extent.' + details.group;
       details.extern = true;
       var item = filter.item(details).addto(extensionFilterGroup());
-      if (loaded && item._init) item._init();
     });
     // 向已有的内容、帐号等等过滤器中添加规则
     defineFunction('extent', ['name', 'type', 'words'], function (name, type, words) {
@@ -7485,28 +7567,12 @@ var extension = (function () {
     return yawf;
   }());
 
-  // 向 unsafeWindow 暴露接口
-  var push = util.func.catched(function (args) {
-    args = args.wrappedJSObject || args;
-    var method = args.method, params = args.params;
-    util.debug('$_YAWF_$.%s(%o)', method, params);
-    if (yawf[method]) util.func.call(function () {
-      util.func.catched(yawf[method])(params);
-    });
-  }.bind(window));
-  if (unsafeWindow.$_YAWF_$) {
-    util.debug('before loaded: %o', unsafeWindow.$_YAWF_$);
-    Array.from(unsafeWindow.$_YAWF_$).forEach(push);
-  }
-  try {
-    unsafeWindow.$_YAWF_$ = new Proxy({ 'push': push }, {
-      'get': function (obj, name) { if (name === 'push') return obj.push; },
-      'set': function () { }
-    });
-  } catch (e) { unsafeWindow.$_YAWF_$ = { 'push': push }; }
-  util.init(function () {
-    loaded = true; util.debug('YWAF loaded');
-  }, util.priority.DEFAULT + util.priority.AFTER);
+  util.func.export('$_YAWF_$', function (args) {
+    if (yawf[args.method]) util.func.call(function () { yawf[args.method](args.params); });
+  });
+
+  return yawf;
+
 }());
 
 GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
@@ -7576,6 +7642,17 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-bubble .yawf-configSIcon { display: none !important; }
   .yawf-refConfigItem { display: inline; }
   .yawf-config-body .WB_empty { padding-top: 100px; }
+  .yawf-configSubscribe { border: 1px rgba(127, 127, 127, 0.5) solid; padding: 5px 85px 5px 85px; border-radius: 4px; position: relative; }
+  .yawf-configSubscribeTitle, .yawf-configSubscribeInfo, .yawf-configSubscribeAuthor { line-height: 20px; }
+  .yawf-configSubscribeIcon { display: block; position: absolute; top: 3px; left: 10px; width: 64px; height: 64px; }
+  .yawf-configSubscribeButton { display: block; position: absolute; bottom: 6px; right: 10px; }
+  .yawf-configSubscribeName { display: inline; font-weight: bold; }
+  .yawf-configSubscribeDate { display: inline; margin-left: 1em; opacity: 0.8; }
+  .yawf-configSubscribeDescription { line-height: 20px; }
+  .yawf-configSubscribeButton a { display: block; margin-top: 5px; }
+  .yawf-configSubscribeDisabled { opacity: 0.5; }
+  .yawf-configSubscribeEnabled .yawf-subscribeEnable,
+  .yawf-configSubscribeDisabled .yawf-subscribeDisable { display: none; }
   // 新功能提示
   #yawf-whats-new [node-type="inner"] { padding: 10px 0; width: 600px; }
   .yawf-whats-new-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
