@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.5.254
+// @version           3.5.255
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -468,7 +468,7 @@ var text = {
     // 英语界面横幅内容无翻译
   },
   'layoutHideWeiboGroupTip': { 'zh-cn': '顶部分组或好友圈提醒', 'zh-hk': '頂部分組或好友圈提醒', 'zh-tw': '頂部分組或好友圈提醒', 'en': 'Tips for Weibo for groups or friends' },
-  'layoutHideWeiboVIPBackground': { 'zh-cn': '会员自定义卡片', 'zh-hk': '會員自訂卡片', 'zh-tw': '會員自訂卡片', 'en': 'Customized Card for VIP' },
+  'layoutHideWeiboVIPBackground': { 'zh-cn': '自定义卡片背景', 'zh-hk': '自訂卡片背景', 'zh-tw': '自訂卡片背景', 'en': 'Customized Card Background' },
   'layoutHideWeiboLastPic': { 'zh-cn': '图片列表封底', 'zh-hk': '圖片清單封底', 'zh-tw': '圖片清單封底', 'en': 'Back cover of picture list' },
   'layoutHideWeiboPicTag': { 'zh-cn': '图片标签', 'zh-hk': '圖片標籤', 'zh-tw': '圖片標籤', 'en': 'Tags for picture' },
   'layoutHideWeiboTopComment': { 'zh-cn': '热门评论', 'zh-hk': '热门评论', 'zh-tw': '热门评论'/* as is */, 'en': 'Top comments' },
@@ -611,7 +611,8 @@ var text = {
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为|{{<url>}}', 'zh-hk': '將微博中的网页链接替換為|{{<url>}}', 'zh-tw': '將微博中的网页链接替換為|{{<url>}}', 'en': 'Replace 网页链接 in Weibo by | {{<url>}}' },
   'replaceLinkByShortUrl': { 'zh-cn': '短网址', 'zh-hk': '短網址', 'zh-tw': '短網址', 'en': 'shortened URL' },
-  'replaceLinkByFullUrl': { 'zh-cn': '完整网址（如果可用）', 'zh-hk': '完整網址（如果可用）', 'zh-tw': '完整網址（如果可用）', 'en': 'full URL (if available)' },
+  'replaceLinkByFullUrl': { 'zh-cn': '完整网址或短网址', 'zh-hk': '完整網址或短網址', 'zh-tw': '完整網址或短網址', 'en': 'full URL or shortened URL' },
+  'replaceLinkByTitleUrl': { 'zh-cn': '完整网址或标题文本', 'zh-hk': '完整網址或標題文本', 'zh-tw': '完整網址或標題文本', 'en': 'full URL or description' },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博仅显示“来自微博 weibo.com”', 'zh-hk': '自訂來源微博僅顯示“來自微博 weibo.com”', 'zh-tw': '自訂來源微博僅顯示“來自微博 weibo.com”', 'en': 'Weibo with customize source show "via 微博 weibo.com" only' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
   'customizeSourceWeiboDesc': {
@@ -1416,13 +1417,19 @@ observer.dom = (function () {
 
 // 对每条微博应用过滤和其他相关回调
 observer.weibo = (function () {
-  var befores = [], afters = [], onloads = [];
+  var befores = [], afters = [], onloads = [], dones = [];
   var weiboObserver, busy = false, rerun = false;
+  var checkFeedDone = function () {
+    busy = false;
+    weiboObserver();
+    dones.forEach(function (x) { x(); });
+    return;
+  };
   var checkFeeds = function (feeds) {
     busy = true;
     (function checkFeed() {
       util.debug('checking %d feed(s)', feeds.length);
-      if (feeds.length === 0) { busy = false; weiboObserver(); return; }
+      if (feeds.length === 0) return checkFeedDone();
       var feed = feeds.shift();
       util.func.catched(function () {
         [befores, [filter.active], afters].forEach(function (callbacks) {
@@ -1465,6 +1472,7 @@ observer.weibo = (function () {
     'onload': add(onloads),
     'before': add(befores),
     'after': add(afters),
+    'done': add(dones),
     'refilter': refilter,
   };
 }());
@@ -3921,6 +3929,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     ).length;
     var feedList = document.querySelector('.WB_feed');
     var newFeed = document.querySelector('a.notes[yawf-id="feed_list_newBar"], div.WB_notes[yawf-id="home_new_feed_tip"]');
+    util.debug('counter: %d feeds click to show', count);
     // 先移除旧的，再放上新的
     if (newFeed) newFeed.parentNode.removeChild(newFeed);
     if (count) {
@@ -3929,6 +3938,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
       newFeed.addEventListener('click', this.showNew.bind(this));
       newFeed.firstChild.textContent = util.str.fill(text.newWeiboNotify, { 'count': count });
     }
+    return count;
   },
   'ainit': function () {
     var that = this;
@@ -4012,11 +4022,13 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
       if (feed.getAttribute('yawf-unread') !== 'hidden') return;
       var display = feed.getAttribute('yawf-display').replace(/^.*-([^-]*)$/, '$1');
       if (display === 'hidden') return;
-      that.counter();
       util.func.call(function () { filter.items.base.autoload.auto_expand.expand(feed); });
       if (filter.items.base.autoload.desktop_notification)
         filter.items.base.autoload.desktop_notification.notify(feed);
     });
+
+    // 全都过滤完成后要更新计数
+    observer.weibo.done(function () { that.counter(); });
 
     // 允许按 R 显示新微博
     util.keyboard.reg('keyup', loadKey, function () {
@@ -5329,7 +5341,7 @@ filter.predef.group('layout');
   item('RecomFeed', 2, '[node-type="recommfeed"] { display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.WB_feed_type .WB_cardtitle_b { display: none !important; }');
-  item('VIPBackground', 253, '.WB_feed_detail[style*="feed_cover/vip"] { background: none !important; } .WB_vipcover { display: none !important; }');
+  item('VIPBackground', 253, '.WB_feed_detail[style*="feed_cover/star_"], .WB_feed_detail[style*="feed_cover/vip_"] { background: none !important; } .WB_vipcover { display: none !important; }');
   item('LastPic', 72, function () {
     observer.dom.add(function hideLastPic() {
       var last;
@@ -6351,29 +6363,37 @@ filter.items.tool.weibotool.replace_link = filter.item({
     'url': {
       'type': 'select',
       'select': [
-        { 'value': 'short', 'text': '{{replaceLinkByShortUrl}}' },
+        { 'value': 'title', 'text': '{{replaceLinkByTitleUrl}}' },
         { 'value': 'full', 'text': '{{replaceLinkByFullUrl}}' },
+        { 'value': 'short', 'text': '{{replaceLinkByShortUrl}}' },
       ],
-      'default': 'short'
+      'default': 'title'
     },
   },
   'ainit': function () {
-    var full = this.ref.url.conf === 'full';
+    var conf = this.ref.url.conf;
+    var full = conf === 'full';
+    var title = conf === 'title';
     var expandLink = function expandWeiboLink() {
       var icon = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink:not([yawf-link-type])>.W_ficon'));
       icon.forEach(function (i) { i.parentNode.setAttribute('yawf-link-type', i.textContent.trim()); });
-      var links = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink[yawf-link-type="O"][href^="http://t.cn/"]'));
+      var links = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink[yawf-link-type="O"]:not([yawf-link-expand])'));
       links.forEach(function (link) {
+        link.setAttribute('yawf-link-expand', '');
+        // 用原本的链接做默认值，原本的链接可能是完整的，也可能不是
+        var url = link.href;
+        // 如果我们想要完整的链接，而且能够获取到完整的链接，那么就用完整的链接
+        if ((full || title) && link.title.match(/^https?:\/\//i)) url = link.title;
+        // 我们根据域名是否是 t.cn 来判断是不是短链接
+        var short = util.str.host(url) === 't.cn';
+        // 如果我们不要短链接，但是又拿不到原地址，就放弃
+        if (title && short) return;
+        // 处理按钮什么的
+        var button = link.querySelector('.yawf-cardLinkButton');
+        if (!button) link.textContent = url;
+          // 特殊处理替换卡片按钮的标题
+        else link.textContent = button.textContent + url;
         link.className = 'yawf-link';
-        var url = null;
-        var button = link.querySelector('yawf-cardLinkButton');
-        if (full) url = link.title;
-        if (!full || !url.match(/^https?:\/\//)) url = link.href;
-        if (url) {
-          if (!button) link.textContent = url;
-            // 特殊处理替换卡片按钮的标题
-          else link.textContent = button.textContent + url;
-        }
       });
     };
     expandLink();
