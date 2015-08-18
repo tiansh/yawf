@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.5.255
+// @version           3.5.256
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -424,6 +424,7 @@ var text = {
   'layoutHideIconDiDi': { 'zh-cn': '.icon_didi', 'zh-hk': '.icon_didi', 'zh-tw': '.icon_didi', 'en': '.icon_didi' }, // FIXME 真正的名称是什么
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
+  'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
   'layoutHideNavHot': { 'zh-cn': '发现', 'zh-hk': '发现', 'zh-tw': '发现', 'en': 'Discover' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
@@ -580,7 +581,7 @@ var text = {
   'choseSide': { 'zh-cn': '统一个人主页、话题、单条微博等页面侧栏|到{{<side>}}', 'zh-hk': '統一個人主頁、話題、單條微博等頁面側欄|到{{<side>}}', 'zh-tw': '統一個人主頁、話題、單條微博等頁面側欄|到{{<side>}}', 'en': 'Relocate side bar for pages of user, topic, and, single Weibo | to {{<side>}}' },
   'choseSideLeft': { 'zh-cn': '左侧', 'zh-hk': '左側', 'zh-tw': '左側', 'en': 'left side' },
   'choseSideRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
-  'filteRightTopic': { 'zh-cn': '应用话题黑名单到右栏热门话题', 'zh-hk': '應用話題黑名單到右欄熱門話題', 'zh-tw': '應用話題黑名單到右欄熱門話題', 'en': 'Apply topic blacklist to Hot Topic in right column' },
+  'filteRightTopic': { 'zh-cn': '应用微博过滤黑名单到右栏热门话题', 'zh-hk': '應用微博篩選黑名單到右欄熱門話題', 'zh-tw': '應用微博篩選黑名單到右欄熱門話題', 'en': 'Apply blacklist filters to Hot Topic in right column' },
   'filteRightTopicCount': { 'zh-cn': '热门话题列表隐藏|阅读数少于{{<number>}}万的话题', 'zh-hk': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'zh-tw': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'en': 'Hide hot topics with | less than {{<number>}}万 readings' },
   // 浮动元素
   'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
@@ -5304,6 +5305,15 @@ filter.predef.group('layout');
   item('DiDi', 251, '.icon_didi { display: none !important; }', { 'extt': '<i class="W_icon icon_didi" style="display:inline-block!important"></i>' });
 
   subtitle('Nav', true);
+  item('LogoImg', 256, function replaceLogo() {
+    // 94～205 版本针对 v5 的功能，206 版本因 v6 未出现节日徽标而移除；256 版本恢复
+    var box = document.querySelector('.WB_global_nav .gn_logo_v2 .box');
+    if (!box) return setTimeout(replaceLogo, 100);
+    var img = document.querySelector('.WB_global_nav .gn_logo_v2 .box img');
+    if (!img) return;
+    var logo = util.dom.create(html.navLogo);
+    img.parentNode.replaceChild(logo, img);
+  });
   item('Main', 5, '.gn_nav_list>li:nth-child(1) { display: none !important; }');
   item('Hot', 5, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
   item('Game', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
@@ -5766,7 +5776,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 将话题黑名单应用到右侧热门话题栏目
+// 统一个人主页、话题、单条微博页面的侧边栏在左侧或右侧
 filter.items.tool.sidebar.chose_side = filter.item({
   'group': 'sidebar',
   'version': 147,
@@ -5808,14 +5818,37 @@ filter.items.tool.sidebar.filte_right_topic = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.filte_right_topic',
   'text': '{{filteRightTopic}}',
+  'check': function (text) {
+    // 按话题过滤
+    var topicRule = filter.items.topic.topic.blacklist;
+    var topics = topicRule.conf.concat(topicRule.extent);
+    if (topics.indexOf(text) !== -1) return true;
+    // 按话题正则式过滤
+    var rtopicRule = filter.items.topic.rtopic.blacklist;
+    var rtopics = rtopicRule.conf.concat(rtopicRule.extent);
+    if (rtopics.some(function (r) { return !!text.match(r); })) return true;
+    // 如果将话题视为微博内容，那么也要按照内容过滤
+    if (filter.items.content.elements.topic.conf) {
+      // 按关键词过滤
+      var keywordRule = filter.items.content.keyword.blacklist;
+      var keywords = keywordRule.conf.concat(keywordRule.extent);
+      if (keywords.some(function (w) { return text.indexOf(w) !== -1; })) return true;
+      // 按正则式过滤
+      var regexpRule = filter.items.content.regexp.blacklist;
+      var regexp = regexpRule.conf.concat(regexpRule.extent);
+      if (regexp.some(function (r) { return !!text.match(r); })) return true;
+    }
+    return false;
+  },
   'ainit': function () {
     util.css.add('.hot_topic li[yawf-rtopic="hidden"] { display: none !important; }');
+    var check = this.check;
     observer.dom.add(function filteRightTopic() {
       var topics = Array.from(document.querySelectorAll('.hot_topic li:not([yawf-rtopic]) a[suda-uatrack*="hottopic_r"]'));
       topics.forEach(function (topic) {
         var text = topic.title.replace(/#/g, '');
         var li; for (li = topic; li.tagName.toLowerCase() !== 'li'; li = li.parentNode);
-        if (filter.items.topic.topic.blacklist.conf.indexOf(text) !== -1) li.setAttribute('yawf-rtopic', 'hidden');
+        if (check(text)) li.setAttribute('yawf-rtopic', 'hidden');
         else li.setAttribute('yawf-rtopic', 'show');
       });
     });
@@ -6721,7 +6754,7 @@ filter.items.style.layout.width_weibo = filter.item({
       .FRAME_message:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
       .FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       .FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
-      .FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+      .FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; }
       .FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
       @media screen and (max-width: 1006px) {
         .FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
@@ -6747,6 +6780,8 @@ filter.items.style.layout.width_weibo = filter.item({
       .FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 260px); }
       .FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
       .FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_page:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
+      .FRAME_page:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; }
       .FRAME_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 220px); }
       .FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 100px); }
       @media screen and (max-width: 939px) {
