@@ -16,7 +16,7 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.5.257
+// @version           3.5.258
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -5308,9 +5308,9 @@ filter.predef.group('layout');
   subtitle('Nav', true);
   item('LogoImg', 256, function replaceLogo() {
     // 94～205 版本针对 v5 的功能，206 版本因 v6 未出现节日徽标而移除；256 版本恢复
-    var box = document.querySelector('.WB_global_nav .gn_logo_v2 .box');
+    var box = document.querySelector('.WB_global_nav .gn_logo .box');
     if (!box) return setTimeout(replaceLogo, 100);
-    var img = document.querySelector('.WB_global_nav .gn_logo_v2 .box img');
+    var img = document.querySelector('.WB_global_nav .gn_logo .box img');
     if (!img) return;
     var logo = util.dom.create(html.navLogo);
     img.parentNode.replaceChild(logo, img);
@@ -5353,7 +5353,12 @@ filter.predef.group('layout');
   item('RecomFeed', 2, '[node-type="recommfeed"] { display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.WB_feed_type .WB_cardtitle_b { display: none !important; }');
-  item('VIPBackground', 253, '.WB_feed_detail[style*="feed_cover/star_"], .WB_feed_detail[style*="feed_cover/vip_"] { background: none !important; } .WB_vipcover { display: none !important; }');
+  item('VIPBackground', 253, util.str.cmt(function () { /*!CSS
+    .WB_feed_detail[style*="feed_cover/star_"],
+    .WB_feed_detail[style*="feed_cover/vip_"] { background: none !important; }
+    .WB_vipcover, .WB_starcover { display: none !important; }
+    .WB_feed_vipcover .WB_feed_detail { padding-top: 10px; }
+  */ }));
   item('LastPic', 72, function () {
     observer.dom.add(function hideLastPic() {
       var last;
