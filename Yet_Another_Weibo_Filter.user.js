@@ -16,7 +16,8 @@
 // @include           http://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
-// @version           3.5.259
+// @exclude           http://weibo.com/
+// @version           3.5.260
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1354,16 +1355,18 @@ util.init = (function () {
   var callbacks = [], index = 0;
   // 完成加载时调用
   var dcl = function () {
-    if (!util.page.valid()) return;
+    var valid = util.page.valid();
     callbacks.sort(function (x, y) {
       return y[0] - x[0] || y[1] - x[1];
-    }).forEach(function (i) { util.func.catched(i[2])(); });
+    }).forEach(function (i) {
+      if (valid || i[3]) util.func.catched(i[2])();
+    });
   };
   if (document.body) setTimeout(dcl, 0);
   else document.addEventListener('DOMContentLoaded', dcl);
   // 添加回调
-  var add = function (func, priority) {
-    callbacks.push([priority, ++index, func]);
+  var add = function (func, priority, always) {
+    callbacks.push([priority, ++index, func, always]);
     return func;
   };
   return add;
@@ -7825,10 +7828,19 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
     float: none; width: auto;
   }
-  // 在加载好之前隐藏内容
-  .WB_miniblog { visibility: hidden; }
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
 
-util.init(function () { GM_addStyle('.WB_miniblog { visibility: visible !important; }'); }, util.priority.LAST + util.priority.AFTER);
+// 在加载好之前隐藏内容
+(function () {
+  var style = GM_addStyle('.WB_miniblog { visibility: hidden; }');
+  util.init(function () {
+    try {
+      style.parentNode.removeChild(style);
+    } catch (e) {
+      GM_addStyle('.WB_miniblog { visibility: visible !important; }');
+    }
+    util.debug('yawf initial done');
+  }, util.priority.LAST + util.priority.AFTER + util.priority.AFTER, true);
+}());
