@@ -906,7 +906,7 @@ var html = {
   'viewOriginalFCLink': '<a class="W_btn_b btn_22px W_btn_cardlink" href="javascript:;"><i class="W_ficon ficon_cd_img S_ficon WBficon">¡</i><i class="W_vline S_line1"></i><em class="W_autocut S_link1">{{viewOriginalFCText}}</em></a>',
   // 视频播放
   'videoMediaDisplay': '<div class="WB_expand_media_box" node-type="feed_list_media_disp" style=""><div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div></div>',
-  'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; mai-height: 482px;"></video>',
+  'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -6439,7 +6439,7 @@ filter.items.tool.weibotool.html5_video = filter.item({
   },
   'support': function () {
     var v = util.dom.create('video', '');
-    return v.canPlayType && v.canPlayType('video/mp4').replace(/no/, '');
+    return !!(v.canPlayType && v.canPlayType('video/mp4').replace(/no/, ''));
   },
   'shown': function (dom) { if (!this.support()) dom.style.display = 'none'; },
   'ainit': function () {
@@ -6462,7 +6462,7 @@ filter.items.tool.weibotool.html5_video = filter.item({
       e.preventDefault(); e.stopPropagation();
     }, true);
   }
-});
+}).addto(filter.groups.tool);
 
 // 用 URL 替换微博内的网页链接
 filter.items.tool.weibotool.replace_link = filter.item({
