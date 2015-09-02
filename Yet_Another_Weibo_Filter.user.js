@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.260
+// @version           3.5.261
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -610,6 +610,11 @@ var text = {
     'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
   },
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
+  'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
+  'html5VdieoDesc': {
+    'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
+  },
+  'foldDetails': { 'zh-cn': '收起', 'zh-hk': '收起', 'zh-tw': '收起', 'en': '收起'/* as is */ },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为|{{<url>}}', 'zh-hk': '將微博中的网页链接替換為|{{<url>}}', 'zh-tw': '將微博中的网页链接替換為|{{<url>}}', 'en': 'Replace 网页链接 in Weibo by | {{<url>}}' },
@@ -899,6 +904,9 @@ var html = {
   // 查看原图
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   'viewOriginalFCLink': '<a class="W_btn_b btn_22px W_btn_cardlink" href="javascript:;"><i class="W_ficon ficon_cd_img S_ficon WBficon">¡</i><i class="W_vline S_line1"></i><em class="W_autocut S_link1">{{viewOriginalFCText}}</em></a>',
+  // 视频播放
+  'videoMediaDisplay': '<div class="WB_expand_media_box" node-type="feed_list_media_disp" style=""><div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div></div>',
+  'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; mai-height: 482px;"></video>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -932,6 +940,7 @@ var url = {
   'view_cmt_ori': 'http://ww1.sinaimg.cn/large/{{pid}}.jpg',
   'block_wb': 'http://www.weibo.com/aj/user/block?ajwvr=6',
   'del_cmt': 'http://www.weibo.com/aj/comment/del?ajwvr=6',
+  'video_show': 'http://video.weibo.com/show?fid={{id}}',
 };
 
 var font = {
@@ -2130,6 +2139,26 @@ network.comment.del = (function () {
   };
   return function (info) {
     network.buffered(function (callback) { del(info, callback); });
+  };
+}());
+
+network.video = {};
+// 通过秒拍视频的 objectid 获取 mp4 文件地址
+// 获取方法是模拟安卓用户访问秒拍视频的网页
+network.video.get = (function () {
+  return function (id, callback) {
+    GM_xmlhttpRequest({
+      'method': 'GET',
+      'url': util.str.fill(url.video_show, { 'id': id }),
+      'headers': {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 4.0.4; zh-cn; YAWF) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/535.19'
+      },
+      'onload': function (resp) {
+        var d = util.dom.create('div', resp.responseText);
+        var video = d.querySelector('video');
+        callback(video.getAttribute('src'));
+      },
+    });
   };
 }());
 
@@ -6396,6 +6425,44 @@ filter.items.tool.weibotool.view_original = filter.item({
     observer.dom.add(addOriLinkViewForwardCommentImage);
   },
 }).addto(filter.groups.tool);
+
+// 使用 HTML5 播放器播放秒拍视频
+filter.items.tool.weibotool.html5_video = filter.item({
+  'group': 'weibotool',
+  'version': 261,
+  'type': 'boolean',
+  'default': false,
+  'key': 'weibo.tool.html5Video',
+  'text': '{{html5Vdieo}}',
+  'ref': {
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{html5VdieoDesc}}' },
+  },
+  'support': function () {
+    var v = util.dom.create('video', '');
+    return v.canPlayType && v.canPlayType('video/mp4').replace(/no/, '');
+  },
+  'shown': function (dom) { if (!this.support()) dom.style.display = 'none'; },
+  'ainit': function () {
+    if (!this.support()) return;
+    document.body.addEventListener('click', function (e) {
+      var target = e.target;
+      var selector = '.WB_media_wrap .WB_video[action-type="feed_list_third_rend"][action-data^="type=feedvideo&objectid=1034:"]';
+      if (!util.dom.matches(target, selector + ', ' + selector + ' *')) return;
+      while (!util.dom.matches(target, '.WB_video')) target = target.parentNode;
+      var id = util.str.parsearg(target.getAttribute('action-data')).objectid;
+      var prev = target; while (!util.dom.matches(prev, '[node-type="feed_list_media_prev"]')) prev = prev.parentNode;
+      var disp = prev.parentNode.querySelector('[node-type="feed_list_media_disp"]');
+      network.video.get(id, function (url) {
+        var view = disp.querySelector('.WB_app_view');
+        view.innerHTML = util.str.fill(html.videoMediaPlayer, { 'url': url });
+      });
+      disp.innerHTML = util.str.fill(html.videoMediaDisplay);
+      prev.style.display = 'none';
+      disp.style.display = '';
+      e.preventDefault(); e.stopPropagation();
+    }, true);
+  }
+});
 
 // 用 URL 替换微博内的网页链接
 filter.items.tool.weibotool.replace_link = filter.item({
