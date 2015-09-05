@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.261
+// @version           3.5.262
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -2142,25 +2142,42 @@ network.comment.del = (function () {
   };
 }());
 
+network.ua = {};
+network.ua.android = 'Mozilla/5.0 (Linux; Android 4.0.4; zh-cn; YAWF) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/535.19';
+
 network.video = {};
 // 通过秒拍视频的 objectid 获取 mp4 文件地址
 // 获取方法是模拟安卓用户访问秒拍视频的网页
-network.video.get = (function () {
-  return function (id, callback) {
-    GM_xmlhttpRequest({
-      'method': 'GET',
-      'url': util.str.fill(url.video_show, { 'id': id }),
-      'headers': {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 4.0.4; zh-cn; YAWF) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/535.19'
-      },
-      'onload': function (resp) {
-        var d = util.dom.create('div', resp.responseText);
-        var video = d.querySelector('video');
-        callback(video.getAttribute('src'));
-      },
-    });
-  };
-}());
+network.video.get = {};
+network.video.get['1034'] = function (id, callback) {
+  GM_xmlhttpRequest({
+    'method': 'GET',
+    'url': util.str.fill(url.video_show, { 'id': id }),
+    'headers': {
+      'User-Agent': network.ua.android
+    },
+    'onload': function (resp) {
+      var d = util.dom.create('div', resp.responseText);
+      var video = d.querySelector('video');
+      callback(video.getAttribute('src'));
+    },
+  });
+};
+network.video.get['2017607'] = function (url, callback) {
+  GM_xmlhttpRequest({
+    'method': 'GET',
+    'url': url,
+    'headers': {
+      'User-Agent': network.ua.android
+    },
+    'onload': function (resp) {
+      var d = util.dom.create('div', resp.responseText);
+      var video = d.querySelector('.vid_img');
+      callback(video.getAttribute('data-url'));
+    },
+  });
+
+};
 
 // 过滤器
 var filter = {};
@@ -6427,7 +6444,10 @@ filter.items.tool.weibotool.view_original = filter.item({
 }).addto(filter.groups.tool);
 
 // 使用 HTML5 播放器播放秒拍视频
-filter.items.tool.weibotool.html5_video = filter.item({
+if (function supportMp4Video() {
+    var v = util.dom.create('video', '');
+    return !!(v.canPlayType && v.canPlayType('video/mp4').replace(/no/, ''));
+}()) filter.items.tool.weibotool.html5_video = filter.item({
   'group': 'weibotool',
   'version': 261,
   'type': 'boolean',
@@ -6437,29 +6457,59 @@ filter.items.tool.weibotool.html5_video = filter.item({
   'ref': {
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{html5VdieoDesc}}' },
   },
-  'support': function () {
-    var v = util.dom.create('video', '');
-    return !!(v.canPlayType && v.canPlayType('video/mp4').replace(/no/, ''));
+  'replace': {
+    '1034': function (id, got) { network.video.get['1034'](id, got); return true; },
+    '2017607': function (id, got) {
+      var a = document.querySelector('a[suda-uatrack*="2017607-video:2017607%3A' + id.split(':')[1] + '"]');
+      if (!a) return false;
+      network.video.get['2017607'](a.href, got);
+      return true;
+    },
   },
-  'shown': function (dom) { if (!this.support()) dom.style.display = 'none'; },
   'ainit': function () {
-    if (!this.support()) return;
+    var that = this;
     document.body.addEventListener('click', function (e) {
+      // 首先我们先找到所有有用的节点
+      // 确定是不是点在了视频上，视频是什么类型
       var target = e.target;
-      var selector = '.WB_media_wrap .WB_video[action-type="feed_list_third_rend"][action-data^="type=feedvideo&objectid=1034:"]';
-      if (!util.dom.matches(target, selector + ', ' + selector + ' *')) return;
-      while (!util.dom.matches(target, '.WB_video')) target = target.parentNode;
-      var id = util.str.parsearg(target.getAttribute('action-data')).objectid;
-      var prev = target; while (!util.dom.matches(prev, '[node-type="feed_list_media_prev"]')) prev = prev.parentNode;
+      if (!util.dom.matches(target, '.WB_video, .WB_video *')) return;
+      var matches = [
+        '[action-type="feed_list_third_rend"]',
+        '[node-type="feed_list_media_prev"]'
+      ];
+      var results = [];
+      while (results.length !== matches.length && target) {
+        while (results.length !== matches.length &&
+          util.dom.matches(target, matches[results.length])) results.push(target);
+        target = target.parentNode;
+      }
+      if (!target) return;
+      util.debug('click match video: %o', results);
+      var button = results[0], prev = results[1];
       var disp = prev.parentNode.querySelector('[node-type="feed_list_media_disp"]');
-      network.video.get(id, function (url) {
+
+      // 然后我们根据 id 判断是哪种视频，并按种类分开处理
+      var attr = util.str.parsearg(button.getAttribute('action-data'));
+      // 这个属性有时候是 objectid 有时候是 object_id
+      // 就像我头一次听说某视频站获取视频地址成功时的状态一会儿是 succ 一会儿是 suee 一样神奇
+      var id = attr.objectid || attr.object_id;
+      util.debug('media objectid: %o', id);
+      var group = id.split(':')[0];
+      if (!that.replace[group]) return;
+      util.debug('clicked on a video, with id = %o', id);
+
+      // 替换成功之后生成网页
+      var gotURL = function (url) {
         var view = disp.querySelector('.WB_app_view');
         view.innerHTML = util.str.fill(html.videoMediaPlayer, { 'url': url });
-      });
+      };
+      if (!that.replace[group](id, gotURL)) return;
+
+      // 如果可以成功处理，禁用原本的替换，并处理界面
+      e.preventDefault(); e.stopPropagation();
       disp.innerHTML = util.str.fill(html.videoMediaDisplay);
       prev.style.display = 'none';
       disp.style.display = '';
-      e.preventDefault(); e.stopPropagation();
     }, true);
   }
 }).addto(filter.groups.tool);
