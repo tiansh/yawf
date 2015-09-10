@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.263
+// @version           3.5.264
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -448,6 +448,7 @@ var text = {
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
   'layoutHideRightHongBaoEntrance': { 'zh-cn': '红包入口', 'zh-hk': '紅包入口', 'zh-tw': '紅包入口', 'en': 'Red Envelope Entrance' },
   'layoutHideRightRecomMusicRank': { 'zh-cn': '亚洲新歌榜', 'zh-hk': '亚洲新歌榜', 'zh-tw': '亚洲新歌榜', 'en': '亚洲新歌榜 (Asian New Song List)' },
+  'layoutHideRightBookRank': { 'zh-cn': '亚洲好书榜', 'zh-hk': '亚洲好书榜', 'zh-tw': '亚洲好书榜', 'en': '亚洲好书榜 (Asian Top Book List)' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
@@ -5387,7 +5388,8 @@ filter.predef.group('layout');
   item('Template', 5, '#v6_pl_content_setskin { display: none !important; }');
   item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
   item('HongBaoEntrance', 204, '#v6_pl_rightmod_hongbaoentrance { display: none !important; }');
-  item('RecomMusicRank', 230, '#v6_TrustPagelet_Recom_MusicRank, #v6_pl_rightmod_rank { display: none !important; }');
+  item('RecomMusicRank', 264, '#v6_TrustPagelet_Recom_MusicRank, [yawf-id="v6_pl_rightmod_rank_pop"] { display: none !important; }');
+  item('BookRank', 264, '[yawf-id="v6_pl_rightmod_rank_book"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
   item('HotTopicExpand', 178, '.hot_topic .WB_right_expand { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
@@ -5581,11 +5583,17 @@ filter.predef.group('layout');
   };
 
   // 标记首页右栏元素
-  var tagRightbarMods = tagMods('#trustPagelet_indexright_recom .WB_right_module:not([yawf-id]), #v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])', {
+  var tagRightbarMods = tagMods([
+    '#trustPagelet_indexright_recom .WB_right_module:not([yawf-id])',
+    '#v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])',
+    '#v6_pl_rightmod_rank .WB_cardwrap:not([yawf-id])',
+  ].join(','), {
     '[change-data*="key=hottopic_r2"]': 'rightmod_zt_hottopic',
     '[change-data*="key=interest_r2"]': 'rightmod_recom_interest',
     'h4.obj_name a[href*="movie.weibo.com"]': 'rightmod_recom_movie',
     'h4.obj_name a[href*="taobao.com"][href*="dianying"]': 'rightmod_taobao_movie',
+    'h2.main_title a[href*="book.weibo.com/top"]': 'v6_pl_rightmod_rank_book',
+    'h4.obj_name a[href*="pop.weibo.com"]': 'v6_pl_rightmod_rank_pop',
   });
   observer.dom.add(tagRightbarMods);
   tagRightbarMods();
