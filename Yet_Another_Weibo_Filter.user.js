@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.264
+// @version           3.5.265
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -62,7 +62,7 @@ var text = {
   // 设置框
   'filter': { 'zh-cn': '过滤器', 'zh-hk': '篩選器', 'zh-tw': '篩選器', 'en': 'Filter' },
   'filterMenuItem': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設定', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
-  'configDialogTitle': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設定', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
+  'configDialogTitle': { 'zh-cn': '过滤器设置 - Yet Another Weibo Filter', 'zh-hk': '篩選器設定 - Yet Another Weibo Filter', 'zh-tw': '篩選器設定 - Yet Another Weibo Filter', 'en': 'Filter Settings - Yet Another Weibo Filter' },
   'whitelistFilterDesc': { 'zh-cn': '总是显示{{{typed}}}', 'zh-hk': '總是顯示{{{typed}}}', 'zh-tw': '總是顯示{{{typed}}}', 'en': 'Always show {{{typed}}}' },
   'blacklistFilterDesc': { 'zh-cn': '隐藏{{{typed}}}', 'zh-hk': '隱藏{{{typed}}}', 'zh-tw': '隱藏{{{typed}}}', 'en': 'Hide {{{typed}}}' },
   'foldlistFilterDesc': { 'zh-cn': '折叠{{{typed}}}', 'zh-hk': '折疊{{{typed}}}', 'zh-tw': '折疊{{{typed}}}', 'en': 'Fold {{{typed}}}' },
@@ -298,19 +298,28 @@ var text = {
   'showMyOriginalDesc': { 'zh-cn': '自己微博的转发', 'zh-hk': '自己微博的轉發', 'zh-tw': '自己微博的轉發', 'en': 'Forward of my Weibo' },
   'showMentionMeDesc': { 'zh-cn': '提到自己的微博', 'zh-hk': '提到自己的微博', 'zh-tw': '提到自己的微博', 'en': 'Weibo mentioned myself' },
   // 隐藏
-  'otherBlacklistTitle': { 'zh-cn': '隐藏以下内容', 'zh-hk': '隱藏以下內容', 'zh-tw': '隱藏以下內容', 'en': 'Hide following content' },
-  'adfeedFilterDesc': { 'zh-cn': '推广微博{{<i>}}', 'zh-hk': '推廣微博{{<i>}}', 'zh-tw': '推廣微博{{<i>}}', 'en': 'Ad Weibo{{<i>}}' },
+  'otherBlacklistTitleAd': { 'zh-cn': '隐藏以下微博 - 广告/商品', 'zh-hk': '隱藏以下內容 - 廣告/商品', 'zh-tw': '隱藏以下內容 - 廣告/商品', 'en': 'Hide following content - Ad / Promotion' },
+  'adfeedFilterDesc': { 'zh-cn': '推广微博/粉丝通微博/品牌速递{{<i>}}', 'zh-hk': '推廣微博/粉絲通微博/品牌速遞{{<i>}}', 'zh-tw': '推廣微博/粉絲通微博/品牌速遞{{<i>}}', 'en': 'Ad Weibo{{<i>}}' },
   'adfeedFilterDescDesc': {
-    'zh-cn': '推广微博一般出现在首页微博列表靠前的位置，并标记“推荐”字样。通过付费和新浪的审核，可以推广某条微博。微博会根据您的喜好随机将一些被推广的微博推荐给您。虽然推广微博出现在您的微博列表中，但这些微博一般不是您关注的人发的微博。',
+    'zh-cn': '推广微博一般出现在首页微博列表靠前的位置，并标记“推荐”字样。通过付费和新浪的审核，可以推广某条微博。微博会根据您的喜好随机将一些被推广的微博推荐给您。虽然推广微博出现在您的微博列表中，但这些微博不一定您关注的人发的微博。',
   },
   'fansTopFilterDesc': { 'zh-cn': '粉丝头条{{<i>}}', 'zh-hk': '粉丝头条{{<i>}}', 'zh-tw': '粉丝头条{{<i>}}'/* as is */, 'en': 'Fans top / Headline Weibo{{<i>}}' },
   'fansTopFilterDescDesc': {
     'zh-cn': '粉丝头条会显示在首页微博列表的顶端，一般标记“热门”等字样。粉丝头条是新浪微博官方的一项推广产品，使用粉丝头条的微博可在 24 小时内出现在所有微博粉丝首页的第一位。粉丝头条微博总是来自于您关注的人。',
   },
-  'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的其它内容{{<i>}}', 'zh-hk': '混入微博列表的其它內容{{<i>}}', 'zh-tw': '混入微博列表的其它內容{{<i>}}', 'en': 'Other contents in Weibo list{{<i>}}' },
+  'productCardWeibo': { 'zh-cn': '带有商品卡片的微博{{<i>}}', 'zh-hk': '帶有商品卡片的微博{{<i>}}', 'zh-tw': '帶有商品卡片的微博{{<i>}}', 'en': 'Weibo with product weibo card{{<i>}}' },
+  'productCardWeiboDesc': {
+    'zh-cn': '带有商品卡片的微博，卡片中一般有一个“去购买”按钮链接到商品页面，可在微博内购买对应商品。此类微博一般是对应商品的宣传，勾选以隐藏此类微博。',
+  },
+  'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博{{<i>}}', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity{{<i>}}' },
+  'taobaoTianmaoWeiboDesc': {
+    'zh-cn': '带有<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tb"></i></span><span class="W_autocut">淘宝商品</span></span>、<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tmall"></i></span><span class="W_autocut">天猫商品</span></span>或<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_ju"></i></span><span class="W_autocut">聚划算商品</span></span>的微博',
+  },
+  'fakeWeiboFilterDesc': { 'zh-cn': '混入微博列表的推荐内容（好友推荐、热门话题、某人赞过的微博等）{{<i>}}', 'zh-hk': '混入微博列表的推薦內容（好友推薦、熱門話題、某人贊過的微博等）{{<i>}}', 'zh-tw': '混入微博列表的推薦內容（好友推薦、熱門話題、某人贊過的微博等）{{<i>}}', 'en': 'Other contents in Weibo list{{<i>}}' },
   'fakeWeiboFilterDescDesc': {
     'zh-cn': '所有在微博与微博间展示的非微博内容，包括“好友推荐”“热门话题”等，也包括“好友××赞过的微博”。',
   },
+  'otherBlacklistTitleContent': { 'zh-cn': '隐藏以下微博 - 特定内容', 'zh-hk': '隱藏以下內容 - 特定內容', 'zh-tw': '隱藏以下內容 - 特定內容', 'en': 'Hide following content - Content ' },
   'deletedForwardFilterDesc': { 'zh-cn': '已删除微博的转发{{<i>}}', 'zh-hk': '已刪除微博的轉發{{<i>}}', 'zh-tw': '已刪除微博的轉發{{<i>}}', 'en': 'Forward of deleted Weibo{{<i>}}' },
   'deletedForwardFilterDescDesc': {
     'zh-cn': '包括因为删除或对微博设置了隐私权限而使您无法看到原文的微博。这些微博您只能看见转发者的评论，但是无法看到原微博的内容。',
@@ -323,14 +332,15 @@ var text = {
   'voteWeiboFilterDescDesc': {
     'zh-cn': '包括在发布微博时选择投票的微博，也包括在投票时自动发出的微博。',
   },
-  'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博{{<i>}}', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity{{<i>}}' },
-  'taobaoTianmaoWeiboDesc': {
-    'zh-cn': '带有<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tb"></i></span><span class="W_autocut">淘宝商品</span></span>、<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tmall"></i></span><span class="W_autocut">天猫商品</span></span>或<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_ju"></i></span><span class="W_autocut">聚划算商品</span></span>的微博',
-  },
   'red2014Weibo': { 'zh-cn': '抢红包微博{{<i>}}', 'zh-hk': '搶紅包微博', 'zh-tw': '搶紅包微博', 'en': 'Weibo with Red Envelopes Rush' },
   'red2014WeiboDesc': {
     'zh-cn': '抢红包活动自动发布的微博'
   },
+  'appItemWeibo': { 'zh-cn': '介绍微博应用的微博{{<i>}}', 'zh-hk': '介紹微博應用的微博{{<i>}}', 'zh-tw': '介紹微博應用的微博{{<i>}}', 'en': 'Weibo with app item {{<i>}}' },
+  'appItemWeiboDesc': {
+    'zh-cn': '介绍微博应用的微博，包括含有微博应用的链接或含有微博应用的卡片的情况。微博应用的链接会以应用图标标记。勾选此项以隐藏此类微博。',
+  },
+  'otherBlacklistTitleSource': { 'zh-cn': '隐藏以下微博 - 特定来源', 'zh-hk': '隱藏以下內容 - 特定來源', 'zh-tw': '隱藏以下內容 - 特定來源', 'en': 'Hide following content - Source ' },
   'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo comes from 微话题 (micro Topic){{<i>}}' },
   'huatiSourceWeiboDesc': {
     'zh-cn': '一些热门话题页面发布微博时会显示以“微话题 -”开头的来源',
@@ -4726,12 +4736,12 @@ filter.items.other.showthese.mention_me = filter.item({
   },
 }).addto(filter.groups.other);
 
-// 其他被隐藏的内容
-filter.predef.subtitle('other', 'hidethese', '{{otherBlacklistTitle}}');
+// 推广、广告类微博
+filter.predef.subtitle('other', 'hidethese_ad', '{{otherBlacklistTitleAd}}');
 
 // 推广微博
-filter.items.other.hidethese.ad_feed = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_ad.ad_feed = filter.item({
+  'group': 'hidethese_ad',
   'version': 2,
   'type': 'boolean',
   'key': 'weibo.other.ad_feed',
@@ -4740,13 +4750,15 @@ filter.items.other.hidethese.ad_feed = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{adfeedFilterDescDesc}}' } },
   'rule': function adFeedFilterRule(feed) {
     if (!this.conf) return null;
-    return feed.getAttribute('feedtype') === 'ad' ? 'hidden' : null;
+    if (feed.getAttribute('feedtype') === 'ad') return 'hidden';
+    if (feed.querySelector('[action-type="feed_list_ad"]')) return 'hidden';
+    return null;
   },
 }).addto(filter.groups.other);
 
 // 粉丝头条
-filter.items.other.hidethese.fans_top = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_ad.fans_top = filter.item({
+  'group': 'hidethese_ad',
   'version': 56,
   'type': 'boolean',
   'key': 'weibo.other.fans_top',
@@ -4759,9 +4771,41 @@ filter.items.other.hidethese.fans_top = filter.item({
   },
 }).addto(filter.groups.other);
 
+// 有商品卡片的微博
+filter.items.other.hidethese_ad.product_card = filter.item({
+  'group': 'hidethese_ad',
+  'version': 265,
+  'type': 'boolean',
+  'key': 'weibo.other.product_card',
+  'text': '{{productCardWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{productCardWeiboDesc}}' } },
+  'rule': function productCardFilterRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="1022-product"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 淘宝/天猫商品
+filter.items.other.hidethese_ad.tb_tm_wb = filter.item({
+  'group': 'hidethese_ad',
+  'version': 29,
+  'type': 'boolean',
+  'key': 'weibo.other.tb_tm_wb',
+  'text': '{{taobaoTianmaoWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{taobaoTianmaoWeiboDesc}}' } },
+  'rule': function taobaoTianmaoFilterRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('.icon_cd_tmall, .icon_cd_tb, .icon_cd_ju'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
 // 混入新鲜事流的其他东西
-filter.items.other.hidethese.fake_weibo = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_ad.fake_weibo = filter.item({
+  'group': 'hidethese_ad',
   'version': 13,
   'type': 'boolean',
   'key': 'weibo.other.fake_weibo',
@@ -4775,9 +4819,12 @@ filter.items.other.hidethese.fake_weibo = filter.item({
   },
 }).addto(filter.groups.other);
 
+// 含有特定内容的微博
+filter.predef.subtitle('other', 'hidethese_content', '{{otherBlacklistTitleContent}}');
+
 // 已删除或没有权限查看的微博的转发
-filter.items.other.hidethese.deleted_forward = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_content.deleted_forward = filter.item({
+  'group': 'hidethese_content',
   'version': 11,
   'type': 'boolean',
   'key': 'weibo.other.deleted_forward',
@@ -4793,8 +4840,8 @@ filter.items.other.hidethese.deleted_forward = filter.item({
 
 // 回复并转发的微博
 // 要求微博以“回复”开头，后面紧跟一个提到
-filter.items.other.hidethese.comment_and_reply = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_content.comment_and_reply = filter.item({
+  'group': 'hidethese_content',
   'version': 201,
   'type': 'boolean',
   'key': 'weibo.other.comment_and_reply',
@@ -4812,8 +4859,8 @@ filter.items.other.hidethese.comment_and_reply = filter.item({
 }).addto(filter.groups.other);
 
 // 投票微博
-filter.items.other.hidethese.vote_weibo = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_content.vote_weibo = filter.item({
+  'group': 'hidethese_content',
   'version': 11,
   'type': 'boolean',
   'key': 'weibo.other.vote_weibo',
@@ -4831,25 +4878,9 @@ filter.items.other.hidethese.vote_weibo = filter.item({
   },
 }).addto(filter.groups.other);
 
-// 淘宝/天猫商品
-filter.items.other.hidethese.tb_tm_wb = filter.item({
-  'group': 'hidethese',
-  'version': 29,
-  'type': 'boolean',
-  'key': 'weibo.other.tb_tm_wb',
-  'text': '{{taobaoTianmaoWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{taobaoTianmaoWeiboDesc}}' } },
-  'rule': function taobaoTianmaoFilterRule(feed) {
-    if (!this.conf) return null;
-    if (feed.querySelector('.icon_cd_tmall, .icon_cd_tb, .icon_cd_ju'))
-      return 'hidden';
-    return null;
-  },
-}).addto(filter.groups.other);
-
 // 抢红包微博
-filter.items.other.hidethese.tb_tm_wb = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_content.tb_tm_wb = filter.item({
+  'group': 'hidethese_content',
   'version': 194,
   'type': 'boolean',
   'key': 'weibo.other.red2014',
@@ -4862,97 +4893,27 @@ filter.items.other.hidethese.tb_tm_wb = filter.item({
   },
 }).addto(filter.groups.other);
 
-// 微话题微博
-filter.items.other.hidethese.wei_huati = filter.item({
-  'group': 'hidethese',
-  'version': 104,
+// 微博应用介绍
+filter.items.other.hidethese_content.appitem= filter.item({
+  'group': 'hidethese_content',
+  'version': 265,
   'type': 'boolean',
-  'key': 'weibo.other.wei_huati',
-  'text': '{{huatiSourceWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{huatiSourceWeiboDesc}}' } },
-  'rule': function huatiSourceWeiboRule(feed) {
+  'key': 'weibo.other.appitem',
+  'text': '{{appItemWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{appItemWeiboDesc}}' } },
+  'rule': function appItemFilterRule(feed) {
     if (!this.conf) return null;
-    if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
+    if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="1042005-appItem"]'))
       return 'hidden';
-    if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="from=feed_card"]'))
+    if (feed.querySelector('a.W_btn_cardlink[yawf-link-type="S"]'))
       return 'hidden';
     return null;
-  },
-}).addto(filter.groups.other);
-
-// 新浪微群微博
-filter.items.other.hidethese.wei_huati = filter.item({
-  'group': 'hidethese',
-  'version': 192,
-  'type': 'boolean',
-  'key': 'weibo.other.wei_qun',
-  'text': '{{weiqunSourceWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{weiqunSourceWeiboDesc}}' } },
-  'rule': function huatiSourceWeiboRule(feed) {
-    if (!this.conf) return null;
-    if (feed.querySelector('a[href*="http://q.weibo.com/"][href$="source=weibosource"]'))
-      return 'hidden';
-    return null;
-  },
-}).addto(filter.groups.other);
-
-// 微话题微博
-filter.items.other.hidethese.wei_fangtan = filter.item({
-  'group': 'hidethese',
-  'version': 184,
-  'type': 'boolean',
-  'key': 'weibo.other.wei_fangtan',
-  'text': '{{fangtanSourceWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fangtanSourceWeiboDesc}}' } },
-  'rule': function huatiSourceWeiboRule(feed) {
-    if (!this.conf) return null;
-    if (feed.querySelector('a[suda-uatrack*="key=profile_feed"][href*="talk.weibo.com"]'))
-      return 'hidden';
-    return null;
-  },
-}).addto(filter.groups.other);
-
-// 微公益微博
-filter.items.other.hidethese.wei_gongyi = filter.item({
-  'group': 'hidethese',
-  'version': 252,
-  'type': 'boolean',
-  'key': 'weibo.other.wei_gongyi',
-  'text': '{{gongyiSourceWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{gongyiSourceWeiboDesc}}' } },
-  'rule': function gongyiSourceWeiboRule(feed) {
-    if (!this.conf) return null;
-    if (feed.querySelector('a[href*="app.weibo.com/t/feed/2u8sMw"]'))
-      return 'hidden';
-    if (feed.querySelector('a[href*="weibo.com/p/100127p"]'))
-      return 'hidden';
-    return null;
-  },
-}).addto(filter.groups.other);
-
-// 来自 未通过审核应用 微博
-filter.items.other.hidethese.unauth_source = filter.item({
-  'group': 'hidethese',
-  'version': 196,
-  'type': 'boolean',
-  'key': 'weibo.other.unauth_source',
-  'text': '{{unauthappWeibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{unauthappWeiboDesc}}' } },
-  'rule': function unauthSourceRule(feed) {
-    if (!this.conf) return null;
-    var from = Array.from(feed.querySelectorAll('.WB_from'));
-    from = from.map(function (f) { return f.lastChild; })
-      .filter(function (x) { return x && x.nodeType === Node.TEXT_NODE; })
-      .map(function (x) { return x.textContent; })
-      .filter(function (x) { return x.indexOf(text.sourceUnkown) !== -1; });
-    if (!from.length) return;
-    return 'hidden';
   },
 }).addto(filter.groups.other);
 
 // 含有过多话题的微博
-filter.items.other.hidethese.multi_topic = filter.item({
-  'group': 'hidethese',
+filter.items.other.hidethese_content.multi_topic = filter.item({
+  'group': 'hidethese_content',
   'version': 149,
   'type': 'boolean',
   'key': 'weibo.other.multi_topic',
@@ -4971,6 +4932,97 @@ filter.items.other.hidethese.multi_topic = filter.item({
     var topics = weibo.feed.topics.dom(feed);
     if (topics.length >= this.ref.num.conf) return 'hidden';
     return null;
+  },
+}).addto(filter.groups.other);
+
+// 特定来源的微博
+filter.predef.subtitle('other', 'hidethese_source', '{{otherBlacklistTitleSource}}');
+
+// 微话题微博
+filter.items.other.hidethese_source.wei_huati = filter.item({
+  'group': 'hidethese_source',
+  'version': 104,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_huati',
+  'text': '{{huatiSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{huatiSourceWeiboDesc}}' } },
+  'rule': function huatiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
+      return 'hidden';
+    if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="from=feed_card"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 新浪微群微博
+filter.items.other.hidethese_source.wei_qun = filter.item({
+  'group': 'hidethese_source',
+  'version': 192,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_qun',
+  'text': '{{weiqunSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{weiqunSourceWeiboDesc}}' } },
+  'rule': function huatiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[href*="http://q.weibo.com/"][href$="source=weibosource"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 微话题微博
+filter.items.other.hidethese_source.wei_fangtan = filter.item({
+  'group': 'hidethese_source',
+  'version': 184,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_fangtan',
+  'text': '{{fangtanSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fangtanSourceWeiboDesc}}' } },
+  'rule': function huatiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[suda-uatrack*="key=profile_feed"][href*="talk.weibo.com"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 微公益微博
+filter.items.other.hidethese_source.wei_gongyi = filter.item({
+  'group': 'hidethese_source',
+  'version': 252,
+  'type': 'boolean',
+  'key': 'weibo.other.wei_gongyi',
+  'text': '{{gongyiSourceWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{gongyiSourceWeiboDesc}}' } },
+  'rule': function gongyiSourceWeiboRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[href*="app.weibo.com/t/feed/2u8sMw"]'))
+      return 'hidden';
+    if (feed.querySelector('a[href*="weibo.com/p/100127p"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 来自 未通过审核应用 微博
+filter.items.other.hidethese_source.unauth_source = filter.item({
+  'group': 'hidethese_source',
+  'version': 196,
+  'type': 'boolean',
+  'key': 'weibo.other.unauth_source',
+  'text': '{{unauthappWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{unauthappWeiboDesc}}' } },
+  'rule': function unauthSourceRule(feed) {
+    if (!this.conf) return null;
+    var from = Array.from(feed.querySelectorAll('.WB_from'));
+    from = from.map(function (f) { return f.lastChild; })
+      .filter(function (x) { return x && x.nodeType === Node.TEXT_NODE; })
+      .map(function (x) { return x.textContent; })
+      .filter(function (x) { return x.indexOf(text.sourceUnkown) !== -1; });
+    if (!from.length) return;
+    return 'hidden';
   },
 }).addto(filter.groups.other);
 
@@ -6540,13 +6592,23 @@ filter.items.tool.weibotool.replace_link = filter.item({
       'default': 'title'
     },
   },
+  'mark': function markLinkType() {
+    // 标记每个链接都是什么类型的，方便过滤和处理
+    var icon = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink:not([yawf-link-type])>.W_ficon'));
+    icon.forEach(function (i) { i.parentNode.setAttribute('yawf-link-type', i.textContent.trim()); });
+  },
+  'init': function () {
+    if (this.conf) return;
+    this.mark();
+    observer.dom.add(this.mark);
+  },
   'ainit': function () {
+    var that = this;
     var conf = this.ref.url.conf;
     var full = conf === 'full';
     var title = conf === 'title';
     var expandLink = function expandWeiboLink() {
-      var icon = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink:not([yawf-link-type])>.W_ficon'));
-      icon.forEach(function (i) { i.parentNode.setAttribute('yawf-link-type', i.textContent.trim()); });
+      that.mark();
       var links = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink[yawf-link-type="O"]:not([yawf-link-expand])'));
       links.forEach(function (link) {
         link.setAttribute('yawf-link-expand', '');
@@ -6572,7 +6634,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
 }).addto(filter.groups.tool);
 
 // 自定义来微源博
-filter.items.other.hidethese.customize_source = filter.item({
+filter.items.other.hidethese_source.customize_source = filter.item({
   'group': 'weibotool',
   'version': 104,
   'type': 'boolean',
@@ -7892,7 +7954,11 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus) { display: none; }
   // 隐藏微博
   [yawf-display$="-hidden"] { display: none !important; }
-  [node-type="feed_list"] .WB_feed_type:not([yawf-display]), [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) { visibility: hidden !important; }
+  // 未过滤时默认隐藏（但占位）
+  [node-type="feed_list"] .WB_feed_type:not([yawf-display]),
+  [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]),
+  [node-type="feed_list"] .WB_feed_type:not([yawf-display]) *,
+  [node-type="feed_list"] .WB_feed_type .WB_feed_type:not([yawf-display]) * { visibility: hidden !important; }
   // 折叠微博
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_screen { margin-top: -40px !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
