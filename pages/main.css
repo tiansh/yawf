@@ -20,9 +20,9 @@ nav.index ul { list-style: none; margin: 0; padding: 0; text-align: left; }
 nav.index ul ul { margin-left: 2em; }
 .in { margin: 2px 12px 4px; }
 .in .in { margin: 2px 0 4px; }
-dl { height: 4.8em; margin: 0 10px 0 20px; }
+dl { height: 7em; margin: 0 10px 0 20px; }
 dl a { text-decoration: none; display: block; height: 100%; }
-dl dt { clear: left; float: left; font-size: 200%; display: block; width: 400px; height: 2.2em; line-height: 2.2em; background: #ffa00a; margin-left: 40px; text-align: center; margin: 0.1em; }
+dl dt { clear: left; float: left; font-size: 340%; display: block; width: 400px; height: 2em; line-height: 2em; background: #ffa00a; margin-left: 40px; text-align: center; margin: 0.059em; }
 dl dt a { color: #fff; }
 dl dt a:hover { background: #ffb137; }
 dl dd { line-height: 2em; height: 2em; float: left; background: #dedede; width: 150px; text-align: center; margin: 0.2em 10px; }
