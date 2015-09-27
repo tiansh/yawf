@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.265
+// @version           3.5.266
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -227,7 +227,7 @@ var text = {
   'mentionFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'mentionFilterDetails': { 'zh-cn': '提到以下帐号的微博', 'zh-hk': '提到以下帳號的微博', 'zh-tw': '提到以下帳號的微博', 'en': 'Weibo mentioned these accounts' },
   'mentionFilterDetailsDesc': {
-    'zh-cn': '提到包括在微博中使用“@”提到的帐号，也包括转发路径中的那些账号。微博中提到的人的链接不会随修改昵称而变化，这里也无法处理修改昵称的情况，所以如果一个人修改了昵称，您需要重新添加。'
+    'zh-cn': '提到包括在微博中使用“@”提到的帐号，也包括转发路径中的那些帐号。微博中提到的人的链接不会随修改昵称而变化，这里也无法处理修改昵称的情况，所以如果一个人修改了昵称，您需要重新添加。'
   },
   'mentionFilterFast': { 'zh-cn': '提到了“@{{name}}”的微博', 'zh-hk': '提到了「@{{name}}」的微博', 'zh-tw': '提到了「@{{name}}」的微博', 'en': 'Weibo mentioned "@{{name}}"' },
   'mentionFilterContextMenuGroup': { 'zh-cn': '提到了', 'zh-hk': '提到了', 'zh-tw': '提到了', 'en': 'mentioned' },
@@ -364,7 +364,7 @@ var text = {
 
   'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博{{<i>}}', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'en': 'Weibo mentioned | not less than {{<num>}} topics{{<i>}}' },
   'multiTopicDesc': {
-    'zh-cn': '由于新浪热门话题和话题主持人的相关政策，存在一些账号通过罗列若干热门话题以使自己的广告可以显示在热门话题页面。您可以隐藏一次性提到了太多话题的微博以避免看到他们。',
+    'zh-cn': '由于新浪热门话题和话题主持人的相关政策，存在一些帐号通过罗列若干热门话题以使自己的广告可以显示在热门话题页面。您可以隐藏一次性提到了太多话题的微博以避免看到他们。',
   },
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
@@ -596,6 +596,11 @@ var text = {
   'choseSideRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
   'filteRightTopic': { 'zh-cn': '应用微博过滤黑名单到右栏热门话题', 'zh-hk': '應用微博篩選黑名單到右欄熱門話題', 'zh-tw': '應用微博篩選黑名單到右欄熱門話題', 'en': 'Apply blacklist filters to Hot Topic in right column' },
   'filteRightTopicCount': { 'zh-cn': '热门话题列表隐藏|阅读数少于{{<number>}}万的话题', 'zh-hk': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'zh-tw': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'en': 'Hide hot topics with | less than {{<number>}}万 readings' },
+  'addRightUserList': { 'zh-cn': '在首页右边栏添加以下帐号链接', 'zh-hk': '在首頁右邊欄添加以下帳號連結', 'zh-tw': '在首頁右邊欄添加以下帳號連結', 'en': 'Add links of accounts to right column' },
+  'addRightUserListDesc': {
+    'zh-cn': '在首页右边栏添加一个“收藏用户”的列表，方便您快速打开对应用户的个人主页，查看他最近的微博。'
+  },
+  'rightUserListTitle': { 'zh-cn': '收藏用户', 'en': 'Fave People' },
   // 浮动元素
   'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
   'fixedLeft': { 'zh-cn': '允许首页左边栏随页面滚动始终显示', 'zh-hk': '允許首頁左邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁左邊欄隨頁面滾動始終顯示', 'en': 'Floating left column' },
@@ -909,6 +914,9 @@ var html = {
   'leftMsgBox': '<div class="lev"><a class="S_txt1" nm="msgbox_c" bpfilter="message" node-type="item" href="/notesboard?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavMsgBox}}</span></a></div>',
   'leftMsgGroup': '<div class="lev"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6&amp;is_notice=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
   'leftMsgFooter': '</div>',
+  // 右侧栏收藏用户列表
+  'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
+  'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb">{{name}}</a></p></div></li>',
   // 屏蔽微博
   'blockBoxSimple': '<div class="yawf-block_box"><a href="javascript:void(0);" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   'blockBoxDialog': '<div class="yawf-block_box"><a action-type="feed_list_shield_by_rootmid" href="javascript:void(0)" suda-data="key=smart_feed&amp;value=hidden_feed" action-data="filter_type=0&amp;mid={{mid}}&amp;justhide=0&amp;is_retweet=1" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
@@ -5754,15 +5762,15 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
   },
   'ainit': function mergeLeftRight() {
     var main = document.body, side = this.ref.side.conf;
-    var left = document.querySelector('.W_main_l, .WB_main_l');
+    var left = document.querySelector('.WB_main_l');
     if (!left) return setTimeout(mergeLeftRight.bind(this), 100);
     var left0 = util.dom.create(html.leftFake);
     left.parentNode.insertBefore(left0, left);
     left.parentNode.removeChild(left);
     var positionLeft = function () {
       var ref = document.querySelector('#v6_pl_rightmod_myinfo');
-      var right = document.querySelector('.W_main_r, .WB_main_r');
-      var leftn = document.querySelector('.W_main_l, .WB_main_l');
+      var right = document.querySelector('.WB_main_r');
+      var leftn = document.querySelector('.WB_main_l');
       if (leftn && left !== leftn) { left = leftn; }
       if (ref) {
         if (ref.nextSibling !== left) {
@@ -6003,6 +6011,55 @@ filter.items.tool.sidebar.filte_right_topic_count = filter.item({
         else li.setAttribute('yawf-rtopic-count', 'show');
       });
     });
+  },
+}).addto(filter.groups.tool);
+
+// 隐藏阅读量太少的热门话题
+filter.items.tool.sidebar.right_user_list = filter.item({
+  'group': 'sidebar',
+  'version': 266,
+  'type': 'users',
+  'key': 'weibo.tool.right_user_list',
+  'text': '{{addRightUserList}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{addRightUserListDesc}}' } },
+  'shown': function (dom) {
+    // FIXME 这里是 users 类型不支持 ref 的 hack ，有时间应该重构一下 filter.typed.dom.* 
+    dom.querySelector('form').appendChild(filter.typed.dom.sicon.call(this.ref.i));
+  },
+  'init': function () {
+    var users = Array.from(this.conf);
+    if (!users.length) return;
+    // 首先我们构造出这个用户列表
+    var userlist = util.dom.create('div', util.str.fill(html.rightUserList)).firstChild;
+    var userlist_ul = userlist.querySelector('ul');
+    var genli = function (data) {
+      return li = util.dom.create('ul', util.str.fill(html.rightUserListItem, data)).firstChild;
+    };
+    users.forEach(function (user) {
+      var li = genli({ 'id': user });
+      userlist_ul.appendChild(li);
+      network.account.id(user, function (info) {
+        userlist_ul.replaceChild(genli(info), li);
+      }, function () {
+        userlist_ul.removeChild(li);
+      })
+    });
+    // 然后我们把用户列表塞到右栏去
+    // 位置在用户信息框下面其他东西上面，如果合并边栏，那么还在左栏下面
+    var addRightUserList = function addRightUserList() {
+      var ref = document.querySelector('.WB_main_r .WB_main_l') || document.querySelector('#v6_pl_rightmod_myinfo');
+      var right = document.querySelector('.WB_main_r');
+      if (util.page.discovery || util.page.search) ref = right = null;
+      if (ref) {
+        if (ref.nextSibling !== userlist) ref.parentElement.insertBefore(userlist, ref.nextSibling);
+      } else if (right) {
+        if (right.firstChild !== userlist) right.insertBefore(userlist, right.firstChild);
+      } else {
+        if (userlist.parentNode) userlist.parentNode.removeChild(userlist);
+      }
+    };
+    addRightUserList();
+    observer.dom.add(addRightUserList);
   },
 }).addto(filter.groups.tool);
 
