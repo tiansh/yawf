@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.266
+// @version           3.5.267
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -596,11 +596,22 @@ var text = {
   'choseSideRight': { 'zh-cn': '右侧', 'zh-hk': '右側', 'zh-tw': '右側', 'en': 'right side' },
   'filteRightTopic': { 'zh-cn': '应用微博过滤黑名单到右栏热门话题', 'zh-hk': '應用微博篩選黑名單到右欄熱門話題', 'zh-tw': '應用微博篩選黑名單到右欄熱門話題', 'en': 'Apply blacklist filters to Hot Topic in right column' },
   'filteRightTopicCount': { 'zh-cn': '热门话题列表隐藏|阅读数少于{{<number>}}万的话题', 'zh-hk': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'zh-tw': '熱門話題清單隱藏|閱讀數少於{{<number>}}萬的話題', 'en': 'Hide hot topics with | less than {{<number>}}万 readings' },
-  'addRightUserList': { 'zh-cn': '在首页右边栏添加以下帐号链接', 'zh-hk': '在首頁右邊欄添加以下帳號連結', 'zh-tw': '在首頁右邊欄添加以下帳號連結', 'en': 'Add links of accounts to right column' },
+  'addRightUserList': { 'zh-cn': '在首页右边栏显示收藏帐号列表{{<i>}}', 'zh-hk': '在首頁右邊欄顯示收藏帳號清單{{<i>}}', 'zh-tw': '在首頁右邊欄顯示收藏帳號清單{{<i>}}', 'en': 'Add links of accounts to right column{{<i>}}' },
   'addRightUserListDesc': {
-    'zh-cn': '在首页右边栏添加一个“收藏用户”的列表，方便您快速打开对应用户的个人主页，查看他最近的微博。'
+    'zh-cn': '在首页右边栏添加一个“收藏帐号”的列表，里面列出指向这些用户的个人主页的链接，方便您快速打开对应用户的个人主页，查看他最近的微博。'
   },
-  'rightUserListTitle': { 'zh-cn': '收藏用户', 'en': 'Fave People' },
+  'addRightUserListTooManyTitle': { 'zh-cn': '收藏帐号过多', 'zh-hk': '收藏帳號過多', 'zh-tw': '收藏帳號過多', 'en': 'Too Many Fave People' },
+  'addRightUserListTooMany': {
+    'zh-cn': '您添加了过多的收藏帐号，为了避免给服务器造成过大的压力，自动检查首页是否有遗漏的微博的功能将仅对该列表中的前 50 位帐号生效。',
+    'zh-hk': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該列表中的前 50 位帳號生效。',
+    'zh-tw': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該列表中的前 50 位帳號生效。',
+    'en': 'Too many fave people: The function for checking if there are any Weibo not shown on home page will only apply to first 50 accounts to avoid too many network access.'
+  },
+  'addRightUserListNotice': { 'zh-cn': '自动检查收藏用户的微博是否显示在了首页上{{<i>}}', 'zh-hk': '自動檢查收藏使用者的微博是否顯示在了首頁上{{<i>}}', 'zh-tw': '自動檢查收藏使用者的微博是否顯示在了首頁上{{<i>}}', 'en': 'Check if all Weibo from fave people shown on home page {{<i>}}' },
+  'addRightUserListNoticeDesc': {
+    'zh-cn': '如果您不想错过某个人的微博，那么就将他加到收藏帐号的列表中。脚本会在您打开首页时自动打开这些人的个人主页，检查他们的微博是否都在首页上显示了。一旦发现了漏掉的微博，脚本会在帐号旁边用小红点标记。如果您启用该功能，脚本将不会隐藏任何所有收藏帐号发布的微博。<hr />该功能尚在试验中，可能会有各种问题。'
+  },
+  'rightUserListTitle': { 'zh-cn': '收藏帐号', 'zh-hk': '收藏帳號', 'zh-tw': '收藏帳號', 'en': 'Fave People' },
   // 浮动元素
   'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
   'fixedLeft': { 'zh-cn': '允许首页左边栏随页面滚动始终显示', 'zh-hk': '允許首頁左邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁左邊欄隨頁面滾動始終顯示', 'en': 'Floating left column' },
@@ -866,6 +877,7 @@ var html = {
   'searchNotFound': '<div class="WB_empty"><div class="WB_innerwrap"><div class="empty_con clearfix"><p class="icon_bed"><i class="W_icon icon_warnB"></i></p><p class="text">{{searchNotFound}}</p></div></div></div>',
   'sicon': '<i class="W_icon icon_{{icon}}S yawf-configSIcon"></i>',
   // 设置窗口内文字
+  'configDefault': '<div class="yawf-text">{{{text}}}</div>',
   'configSubtitle': '<div class="yawf-groupSubtitle">{{{text}}}</div>',
   'configText': '<div class="yawf-groupText">{{{text}}}</div>',
   'configRemark': '<div class="yawf-groupRemark">{{{text}}}</div>',
@@ -916,7 +928,7 @@ var html = {
   'leftMsgFooter': '</div>',
   // 右侧栏收藏用户列表
   'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
-  'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb">{{name}}</a></p></div></li>',
+  'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb">{{name}}</a><span class="W_new" style="display:none"></span></p></div></li>',
   // 屏蔽微博
   'blockBoxSimple': '<div class="yawf-block_box"><a href="javascript:void(0);" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   'blockBoxDialog': '<div class="yawf-block_box"><a action-type="feed_list_shield_by_rootmid" href="javascript:void(0)" suda-data="key=smart_feed&amp;value=hidden_feed" action-data="filter_type=0&amp;mid={{mid}}&amp;justhide=0&amp;is_retweet=1" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
@@ -960,6 +972,7 @@ var url = {
   'block_wb': 'http://www.weibo.com/aj/user/block?ajwvr=6',
   'del_cmt': 'http://www.weibo.com/aj/comment/del?ajwvr=6',
   'video_show': 'http://video.weibo.com/show?fid={{id}}',
+  'user': 'http://weibo.com/u/{{uid}}',
 };
 
 var font = {
@@ -2025,7 +2038,9 @@ util.ui.confirm = function (id, details) {
 };
 
 util.ui.bubble = function (description, rect) {
-  var bubble = util.dom.create(util.str.fill(html.bubble, { 'text': description }));
+  var bubble;
+  if (description instanceof Element) bubble = description;
+  else bubble = util.dom.create(util.str.fill(html.bubble, { 'text': description }));
   var bor = bubble.querySelector('.W_arrow_bor');
   document.body.appendChild(bubble);
   util.func.call(function () {
@@ -2195,8 +2210,78 @@ network.video.get['2017607'] = function (url, callback) {
       callback(video.getAttribute('data-url'));
     },
   });
-
 };
+
+// 看看某个人最近都有哪些微博
+// 输入是 uid， 返回的是 mid 数组，或空数组（失败）
+network.recent = (function () {
+  // 减少访问个人主页的次数
+  // 限制一刻钟内最多访问一次某人的主页
+  // 重复的访问用缓存解决
+  var cache = (function () {
+    var data;
+    var rm = function () {
+      var time = Number(Date());
+      Object.keys(data).forEach(function (user) { if (data.user.exp < time) delete data.user; });
+    };
+    var read = function () { data = JSON.parse(GM_getValue('recentmid', '{}')) || {}; };
+    var write = function () { GM_setValue('recentmid', JSON.stringify(data)); };
+    return function (uid, mids) {
+      read(); if (mids) data[uid] = { 'exp': Number(Date()) + 1e6, 'mid': mids }; write();
+      return (data[uid] || {}).mid;
+    };
+  }());
+  // 访问个人主页
+  var get = function (uid, callback) {
+    util.debug('request user page: %o', uid);
+    GM_xmlhttpRequest({
+      'method': 'GET',
+      'url': util.str.fill(url.user, { 'uid': uid }),
+      'onload': function (resp) {
+        try {
+          var d = String(resp.responseText);
+          var re = /<script>FM\.view\({"ns":"pl\.content\.homeFeed\.index".*"html":(?=.*WB_feed_type)(".*")}\)<\/script>\n/;
+          var html = JSON.parse(d.match(re)[1]);
+          var dom = util.dom.create('div', html);
+          var feeds = Array.from(dom.querySelectorAll('.WB_feed_type[mid]'));
+          var mids = feeds.map(function (f) { return f.getAttribute('mid'); });
+          util.debug('user page %o found %o messages: %o', uid, mids.length, mids);
+          if (mids.length) cache(uid, mids);
+          callback(mids);
+        } catch (e) {
+          util.debug('user page read error: %o', e);
+          callback([]);
+        }
+      },
+    });
+  };
+  // 控制访问频率
+  // 每次访问后间隔 2～4 秒再进行下次访问
+  var busy = false, queue = [];
+  var active = function active() {
+    if (!queue.length) return;
+    if (busy) return;
+    var req = queue.shift();
+    get(req[0], function (mids) {
+      util.func.call(req[1], mids);
+      setTimeout(function () {
+        busy = false;
+        active();
+      }, Math.round(2000 * (1 + Math.random())));
+    });
+    busy = true;
+  };
+  return function (uid, callback) {
+    var mids = cache(uid);
+    if (mids) {
+      util.func.call(callback, mids);
+      util.debug('read user page %o from cache: %o', uid, mids);
+      return;
+    };
+    queue.push([uid, callback]);
+    active();
+  };
+}());
 
 // 过滤器
 var filter = {};
@@ -2732,47 +2817,82 @@ filter.typed.config = (function () {
 
 // 根据不同类型生成带有事件的文档结点
 filter.typed.dom = (function () {
-  var base = function (base, binder) {
-    return function () {
-      var item = this;
-      // 引用的设置项
-      var ref = item.ref;
-      // 显示的文字
-      var inp = '{{}}', outer = inp, inner = '', text, etext;
-      var hasInput = !!html['config' + base + 'Input'];
-      if (item.i18n && item.i18n.local) etext = item.i18n.local;
-      else if (item.texts) etext = item.texts; else etext = {};
-      if (!item.nogui) {
-        text = util.str.fill(item.text || '', etext).replace(/\|\|/g, html['||']).replace(/\|/g, html['|']);
-        if (hasInput && text.indexOf(inp) === -1) text = inp + text;
-        outer = util.str.fill(html['config' + base], { 'text': text }, item, etext);
-      }
-      if (hasInput) inner = util.str.fill(html['config' + base + 'Input'], item, etext, { 'key': '' });
-      var line = outer.replace(inp, inner);
+  // 各种不同类型的显示都基于此段逻辑
+  var base = function (configs) {
+    // 将文本内容补全
+    var textBinder = function (item) {
+      return function (text, values) {
+        return util.str.fill(text,
+          values || {},
+          item,
+          item.i18n && item.i18n.local || {},
+          item.texts || {},
+          { 'key': '' });
+      };
+    };
+    // 生成 DOM
+    var genDom = function (line, ref) {
       // 在需要引用其他控件的地方留空
-      if (!item.nogui) line = line.replace(/{{<([a-zA-Z0-9_-]*)>}}/g, function (m, p) {
-        return ref[p] ? util.str.fill(html.configPrefill, { 'id': p }) : m;
+      line = line.replace(/{{<([a-zA-Z0-9_-]*)>}}/g, function (m, p) {
+        return ref(p) ? util.str.fill(html.configPrefill, { 'id': p }) : m;
+      });
+      // 引用其他设置项
+      line = line.replace(/\[\[([^\]]*)\]\]/g, function (_, i) {
+        return util.str.fill(html.refConfigItem, { 'ref': i });
       });
       // 构造基本的文档
-      var dom = util.dom.create(line);
+      var dom = util.dom.create('div', line).firstChild;
       // 将引用的设置控件填回
       var pf = Array.from(dom.querySelectorAll('span.yawf-configPrefill'));
       pf.forEach(function (pfi) {
-        pfi.parentNode.replaceChild(ref[pfi.id].show(), pfi);
+        pfi.parentNode.replaceChild(ref(pfi.id).show(true), pfi);
       });
-      if (binder) binder(dom, item);
+      // 将引用的其他设置项填回
+      var rf = Array.from(dom.querySelectorAll('[yawf-ref]'));
+      rf.forEach(function (ref) {
+        var dom = util.obj.dotted(filter.items, ref.getAttribute('yawf-ref')).show();
+        dom.classList.remove('yawf-configItem'); dom.classList.add('yawf-refConfigItem');
+        ref.parentNode.replaceChild(dom, ref);
+      });
+      return dom;
+    };
+    // 如果 innerOnly 则只生成输入框
+    return function (innerOnly) {
+      var item = this;
+      var textbind = textBinder(item);
+      var outer, inner, placeholder = '{{}}';
+      if (innerOnly) outer = placeholder;
+      else {
+        var text = textbind(item.text || '').replace(/\|\|/g, html['||']).replace(/\|/g, html['|']);
+        if (text.indexOf(placeholder) === -1) text = placeholder + text;
+        outer = textbind(configs.outer || html.configDefault, { 'text': text });
+      }
+      inner = textbind(configs.inner || '');
+      // 得到包括输入框的的 HTML
+      var line = outer.replace(placeholder, function () { return inner; });
+      var dom = genDom(line, function (id) { return item.ref[id]; });
+      if (configs.binder) configs.binder(dom, item);
       return dom;
     };
   };
 
+  // 对大部分情况适用的简单包装
+  var simple = function (name, binder) {
+    return base({
+      'outer': html['config' + name],
+      'inner': html['config' + name + 'Input'],
+      'binder': binder,
+    })
+  };
+
   // 副标题
-  var subtitle = base('Subtitle');
+  var subtitle = simple('Subtitle');
   // 文本
-  var text = base('Text');
+  var text = simple('Text');
   // 不缩进的文本
-  var remark = base('Remark');
+  var remark = simple('Remark');
   // 一个空的 label
-  var label = base('Label');
+  var label = simple('Label');
 
   // 一个提示图标
   var sicon = function () {
@@ -2787,32 +2907,15 @@ filter.typed.dom = (function () {
         bubble = null;
       }, 200);
     };
-    // 允许从气泡中引用其他的设置项
-    var gen = function (sim) {
-      var text = util.str.fill(item.text).replace(/\[\[([^\]]*)\]\]/g, function (_, i) {
-        return util.str.fill(html.refConfigItem, { 'ref': i });
-      });
-      var bubble = sim(text);
-      Array.from(bubble.querySelectorAll('[yawf-ref]')).forEach(function (ref) {
-        var id = ref.getAttribute('yawf-ref');
-        var item = util.obj.dotted(filter.items, id);
-        var dom = item.show();
-        dom.classList.add('yawf-refConfigItem');
-        dom.classList.remove('yawf-configItem');
-        ref.parentNode.replaceChild(dom, ref);
-      });
-      return bubble;
-    };
     // 生成气泡
     var create = function () {
       var bubble = null;
-      var sim = function (text) {
-        return util.ui.bubble(text, dom.getClientRects()[0]);
+      var sim = function (item) {
+        var bubble = base({ 'outer': html.bubble }).call(item);
+        return util.ui.bubble(bubble, dom.getClientRects()[0]);
       };
-      util.func.catched(function () {
-        bubble = gen(sim);
-        if (item.bubbled) item.bubbled(bubble);
-      }, function () { bubble = sim(item.text); })();
+      bubble = sim(item);
+      if (item.bubbled) item.bubbled(bubble);
       return bubble;
     };
     dom.addEventListener('mouseenter', function () {
@@ -2825,12 +2928,12 @@ filter.typed.dom = (function () {
   };
 
   // 真假值的设置项
-  var bool = base('Boolean', function (dom, item) {
+  var bool = simple('Boolean', function (dom, item) {
     util.dom.bind.checkbox(dom.querySelector('input'), item);
   });
 
   // 选择框设置项
-  var select = base('Select', function (dom, item) {
+  var select = simple('Select', function (dom, item) {
     var select = dom.querySelector('select');
     var defaultValue = item['default'] || item.select.key;
     var keys = item.select.map(function (option) {
@@ -2843,7 +2946,7 @@ filter.typed.dom = (function () {
   });
 
   // 字符串的设置项
-  var string = base('String', function (dom, item) {
+  var string = simple('String', function (dom, item) {
     var textarea = dom.querySelector('textarea');
     var onchange = util.dom.bind.text(textarea, item);
     textarea.addEventListener('keyup', function () {
@@ -2852,12 +2955,12 @@ filter.typed.dom = (function () {
   });
 
   // 颜色的设置项
-  var color = base('Color', function (dom, item) {
+  var color = simple('Color', function (dom, item) {
     util.dom.bind.text(dom.querySelector('input'), item);
   });
 
   // 数字的设置项
-  var number = base('Number', function (dom, item) {
+  var number = simple('Number', function (dom, item) {
     var number = dom.querySelector('input');
     var max = Infinity, min = -Infinity;
     if ('max' in item) max = item.max;
@@ -2871,91 +2974,90 @@ filter.typed.dom = (function () {
   });
 
   // 字符串数组设置项模板
-  var items = function (base, genli) {
-    var item = this, etext = {};
-    if (item.i18n && item.i18n.local) etext = item.i18n.local;
-    var dom = util.dom.create(util.str.fill(base, item, etext));
-    var form = dom.querySelector('form'), input = dom.querySelector('input'), ul = dom.querySelector('ul');
-    var shown = {};
-    // 将某个已经有的字符串显示到末尾
-    var moveToEnd = function (x) {
-      var p = x.parentNode; p.appendChild(p.removeChild(x));
-    };
-    // 显示一个新的字符串
-    var showStrings = function (userinput, str, onsucc, ondone) {
-      genli(item, userinput, str, function (str, li) {
-        if (ondone) ondone();
-        if (!str || !li) return;
-        if (shown[str]) return moveToEnd(shown[str]);
-        var del = li.querySelector('a.icon_close, a.ficon_close');
-        del.addEventListener('click', function () {
-          delete shown[str];
-          if (item.del) item.del(str);
-          li.parentNode.removeChild(li);
-          item.delconf(str);
-        });
-        ul.appendChild(shown[str] = li);
-        if (onsucc) onsucc(str);
-      });
-    };
-    item.getconf().forEach(function (str) { showStrings(false, str); });
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var str = input.value;
-      input.disabled = true;
-      showStrings(true, str, function (str) {
-        if (item.add) item.add(str);
-        item.addconf(str);
-      }, function () {
-        input.value = '';
-        input.disabled = false;
-      });
-    });
-    return dom;
-  };
-
-  // 字符串设置项
-  var strings = function () {
-    return items.call(this, html.configStrings, function (item, userinput, str, callback) {
-      if (userinput && item.add && !(str = item.add(str))) callback();
-      else callback(str, util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': item.display ? item.display(str) : str })).firstChild);
-    });
-  };
-
-  // 用户列表的设置项
-  var users = function () {
-    return items.call(this, html.configUsers, function (item, userinput, str, callback) {
-      var showUserNotExistError = function () {
-        util.ui.alert('yawf-user-not-exist', {
-          'title': util.str.fill('{{accountNotExistErrorTitle}}'),
-          'text': util.str.fill('{{{accountNotExistError}}}', { 'name': util.str.escape.xml(str) }),
-          'icon': 'error'
-        });
-        callback();
-      };
-      if (userinput) {
-        if (!(str = str.trim().replace(/^@/, ''))) return callback();
-        network.account.name(str, function (info) {
-          if (!info) showUserNotExistError();
-          else if (item.add && !item.add(info)) callback();
-          else callback(info.id, util.dom.create('ul', util.str.fill(html.configUsersItem, info)).firstChild);
-        }, showUserNotExistError);
-      } else {
-        var emptyInfo = { 'id': str, 'name': ' ', 'avatar': ' ' };
-        var li = util.dom.create('ul', util.str.fill(html.configUsersItem, emptyInfo)).firstChild;
-        callback(str, li);
-        network.account.id(str, function (info) {
-          var u = li.querySelector('[uid]');
-          u.setAttribute('uid', info.id); u.setAttribute('title', info.name); u.textContent = info.name;
-          var p = li.querySelector('.pic img');
-          p.src = info.avatar;
+  var items = function (outer, genli) {
+    return base({
+      'outer': outer,
+      'binder': function (dom, item) {
+        var form = dom.querySelector('form')
+        var input = dom.querySelector('input')
+        var ul = dom.querySelector('ul');
+        var shown = {};
+        // 将某个已经有的字符串显示到末尾
+        var moveToEnd = function (x) {
+          var p = x.parentNode; p.appendChild(p.removeChild(x));
+        };
+        // 显示一个新的字符串
+        var showStrings = function (userinput, str, onsucc, ondone) {
+          genli(item, userinput, str, function (str, li) {
+            if (ondone) ondone();
+            if (!str || !li) return;
+            if (shown[str]) return moveToEnd(shown[str]);
+            var del = li.querySelector('a.icon_close, a.ficon_close');
+            del.addEventListener('click', function () {
+              delete shown[str];
+              if (item.del) item.del(str);
+              li.parentNode.removeChild(li);
+              item.delconf(str);
+            });
+            ul.appendChild(shown[str] = li);
+            if (onsucc) onsucc(str);
+          });
+        };
+        item.getconf().forEach(function (str) { showStrings(false, str); });
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var str = input.value;
+          input.disabled = true;
+          showStrings(true, str, function (str) {
+            if (item.add) item.add(str);
+            item.addconf(str);
+          }, function () {
+            input.value = '';
+            input.disabled = false;
+          });
         });
       }
     });
   };
 
+  // 字符串设置项
+  var strings = items(html.configStrings, function (item, userinput, str, callback) {
+    if (userinput && item.add && !(str = item.add(str))) callback();
+    else callback(str, util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': item.display ? item.display(str) : str })).firstChild);
+  });
+
+  // 用户列表的设置项
+  var users = items(html.configUsers, function (item, userinput, str, callback) {
+    var showUserNotExistError = function () {
+      util.ui.alert('yawf-user-not-exist', {
+        'title': util.str.fill('{{accountNotExistErrorTitle}}'),
+        'text': util.str.fill('{{{accountNotExistError}}}', { 'name': util.str.escape.xml(str) }),
+        'icon': 'error'
+      });
+      callback();
+    };
+    if (userinput) {
+      if (!(str = str.trim().replace(/^@/, ''))) return callback();
+      network.account.name(str, function (info) {
+        if (!info) showUserNotExistError();
+        else if (item.add && !item.add(info)) callback();
+        else callback(info.id, util.dom.create('ul', util.str.fill(html.configUsersItem, info)).firstChild);
+      }, showUserNotExistError);
+    } else {
+      var emptyInfo = { 'id': str, 'name': ' ', 'avatar': ' ' };
+      var li = util.dom.create('ul', util.str.fill(html.configUsersItem, emptyInfo)).firstChild;
+      callback(str, li);
+      network.account.id(str, function (info) {
+        var u = li.querySelector('[uid]');
+        u.setAttribute('uid', info.id); u.setAttribute('title', info.name); u.textContent = info.name;
+        var p = li.querySelector('.pic img');
+        p.src = info.avatar;
+      });
+    }
+  });
+
   // 一个有数字和垂直范围条的输入框
-  var range = base('Range', function (dom, item) {
+  var range = simple('Range', function (dom, item) {
     var n = dom.querySelector('input[type="number"]');
     var r = dom.querySelector('input[type="range"]');
     var step = item.step || 1;
@@ -2976,7 +3078,7 @@ filter.typed.dom = (function () {
   });
 
   // 一个输入按键的输入框
-  var key = base('Key', function (dom, item) {
+  var key = simple('Key', function (dom, item) {
     var kb = util.keyboard;
     var i = dom.querySelector('input'), s = dom.querySelector('button');
     var copyName = function () { s.textContent = kb.name(Number(i.value)); };
@@ -3009,7 +3111,7 @@ filter.typed.dom = (function () {
   var noui = function () { };
 
   // 订阅
-  var subscribe = base('Subscribe', function (dom, item) {
+  var subscribe = simple('Subscribe', function (dom, item) {
     var attr = ['yawf-configSubscribeDisabled', 'yawf-configSubscribeEnabled'];
     var update = function () {
       dom.classList.remove(attr[0]); dom.classList.remove(attr[1]);
@@ -3188,7 +3290,6 @@ filter.item = function (item) {
   // 先加入所有被引用的对象
   if (item.ref) Object.keys(item.ref).forEach(function (key) {
     item.ref[key].key = item.key + '.' + key;
-    item.ref[key].nogui = true;
     filter.item(item.ref[key]);
   });
   // 初始化函数
@@ -3210,7 +3311,6 @@ filter.item = function (item) {
     if (item.comment) filter.comment.add(item.priority || 0, item.comment.bind(item));
   };
   item._show = util.func.catched(function (inner) {
-    if (item.nogui) return;
     var dom = item.show && item.show(dom) || null;
     if (dom && item.shown) item.shown(dom);
     if (dom) inner.appendChild(dom);
@@ -4026,7 +4126,6 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
 
     var loadKey = util.keyboard.code.PERIOD;
 
-    var fakeKey = false;
     // 自动点开有新微博的提示
     // 我知道我在干什么
     util.func.page(function $YAWF$_autoLoadNewFeed() {
@@ -4103,10 +4202,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     observer.weibo.done(function () { that.counter(); });
 
     // 允许按 R 显示新微博
-    util.keyboard.reg('keyup', loadKey, function () {
-      if (fakeKey) { fakeKey = false; return; }
-      that.showNew();
-    }, true);
+    util.keyboard.reg('keyup', loadKey, function () { that.showNew(); }, true);
 
   },
   // 隐藏重复微博
@@ -6014,42 +6110,62 @@ filter.items.tool.sidebar.filte_right_topic_count = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 隐藏阅读量太少的热门话题
+// 在右边栏显示白名单帐号的链接
 filter.items.tool.sidebar.right_user_list = filter.item({
   'group': 'sidebar',
-  'version': 266,
+  'version': 267,
   'type': 'users',
   'key': 'weibo.tool.right_user_list',
   'text': '{{addRightUserList}}',
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{addRightUserListDesc}}' } },
+  'add': (function () {
+    var last = null;
+    return function (s) {
+      if (s === last) return;
+      var notice = filter.items.tool.sidebar.right_user_list_notice;
+      if (notice.conf && this.conf.length >= 50) util.ui.alert('yawf-too-many-notice', {
+        'title': util.str.fill('{{addRightUserListTooManyTitle}}'),
+        'text': util.str.fill('{{addRightUserListTooMany}}'),
+        'icon': 'warn'
+      })
+      return s;
+    };
+  }()),
   'shown': function (dom) {
-    // FIXME 这里是 users 类型不支持 ref 的 hack ，有时间应该重构一下 filter.typed.dom.* 
-    dom.querySelector('form').appendChild(filter.typed.dom.sicon.call(this.ref.i));
+    var icon = dom.querySelector('.yawf-configSIcon');
+    var form = dom.querySelector('form');
+    form.appendChild(icon);
   },
   'init': function () {
-    var users = Array.from(this.conf);
+    var that = this;
+    var users = that.conf;
+    var notice = filter.items.tool.sidebar.right_user_list_notice;
     if (!users.length) return;
+
     // 首先我们构造出这个用户列表
     var userlist = util.dom.create('div', util.str.fill(html.rightUserList)).firstChild;
     var userlist_ul = userlist.querySelector('ul');
     var genli = function (data) {
-      return li = util.dom.create('ul', util.str.fill(html.rightUserListItem, data)).firstChild;
+      return util.dom.create('ul', util.str.fill(html.rightUserListItem, data)).firstChild;
     };
     users.forEach(function (user) {
       var li = genli({ 'id': user });
       userlist_ul.appendChild(li);
       network.account.id(user, function (info) {
-        userlist_ul.replaceChild(genli(info), li);
+        var new_li = genli(info);
+        userlist_ul.replaceChild(new_li, li);
       }, function () {
         userlist_ul.removeChild(li);
       })
     });
+    util.css.add('#yawf-rightmod_userlist .W_fb { display: inline-block; margin-right: -10px; width: 100%; }');
     // 然后我们把用户列表塞到右栏去
     // 位置在用户信息框下面其他东西上面，如果合并边栏，那么还在左栏下面
     var addRightUserList = function addRightUserList() {
       var ref = document.querySelector('.WB_main_r .WB_main_l') || document.querySelector('#v6_pl_rightmod_myinfo');
       var right = document.querySelector('.WB_main_r');
-      if (util.page.discovery || util.page.search) ref = right = null;
+      if (util.page.discovery || util.page.search || util.page.group() ||
+        !document.body.classList.contains('FRAME_main')) ref = right = null;
       if (ref) {
         if (ref.nextSibling !== userlist) ref.parentElement.insertBefore(userlist, ref.nextSibling);
       } else if (right) {
@@ -6060,6 +6176,123 @@ filter.items.tool.sidebar.right_user_list = filter.item({
     };
     addRightUserList();
     observer.dom.add(addRightUserList);
+  }
+}).addto(filter.groups.tool);
+
+// 检查这些帐号发的微博是不是看得到的功能
+filter.items.tool.sidebar.right_user_list_notice = filter.item({
+  'group': 'sidebar',
+  'version': 267,
+  'type': 'boolean',
+  'key': 'weibo.tool.right_user_list_notice',
+  'text': '{{addRightUserListNotice}}',
+  'ref': {
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{addRightUserListNoticeDesc}}' },
+    'records': { 'type': 'noui', 'default': [] },
+    'last': { 'type': 'noui', 'default': {} },
+  },
+  'ainit': function () {
+    var that = this;
+    var list = filter.items.tool.sidebar.right_user_list;
+    var users = list.conf.slice(0, 50);
+
+    // 这些帐号直接进白名单
+    [].push.apply(filter.items.account.account.whitelist.extent, list.conf);
+
+    // 每个人个人主页上最新的微博是哪几条
+    var recents = {};
+    var checkrec = function checkrec(uid) {
+      network.recent(uid, function (mids) {
+        recents[uid] = mids;
+        updateDot(uid);
+      });
+      setTimeout(checkrec, 2e6);
+    };
+    // 找到对应每个用户的项目
+    var lis = {};
+    observer.dom.add(function () {
+      var users = Array.from(document.querySelectorAll('#yawf-rightmod_userlist li:not([yawf-noticeuser])'));
+      users.forEach(function (li) {
+        li.setAttribute('yawf-noticeuser', '');
+        var uid = li.querySelector('a[usercard^="id="]').getAttribute('usercard').slice('id='.length);
+        if (!lis[uid]) checkrec(uid); lis[uid] = li;
+        if (users.indexOf(uid) === -1) return;
+        util.debug('check user %o', uid);
+      });
+    });
+    // 比较两个 mid 谁更大
+    var idCmp = function (a, b) {
+      if (a.length !== b.length) return a.length - b.length;
+      return a > b ? 1 : a === b ? 0 : -1;
+    };
+    // 检查特定的 mid 是否“应当”出现在给定的 mid 数组中，但未出现
+    var midNotice = function (mid, uid) {
+      if (range.length < 8) return false;
+      if (range.indexOf(mid) !== -1) return false;
+      if (idCmp(range[0], mid) > 0) return false;
+      if (idCmp(range[range.length - 1], mid) < 0) return false;
+      if (idCmp(last[uid] || "", mid) >= 0) return false;
+      return true;
+    };
+    // 检查是不是有人有微博应当出现没出现
+    var updateDot = function (uid) {
+      var notices = (recents[uid] || []).filter(function (mid) { return midNotice(mid, uid); });
+      if (notices.length === 0) return;
+      var dot = lis[uid].querySelector('.W_new');
+      if (notices.length) {
+        if (dot.style.display === 'inline-block') return;
+        dot.style.display = 'inline-block';
+        util.debug("weibo %o by %o not shown (last = %o)", notices, uid, last[uid]);
+      } else {
+        if (dot.style.display === 'none') return;
+        dot.style.display = 'none';
+      }
+    };
+    var updateAll = (function () {
+      var busy = false;
+      return function updateRightUserListDot() {
+        if (busy) return; busy = true;
+        util.func.call(function () {
+          busy = false;
+          users.forEach(updateDot);
+        });
+      };
+    }());
+
+    // 记录首页上我都看过哪些微博
+    var range = (function () {
+      var range = Array.from(that.ref.records.getconf() || []);
+      observer.weibo.onload(function (feed) {
+        // 这个规则只在首页上适用
+        if (util.page.discovery || util.page.search || !document.body.classList.contains('FRAME_main')) return [];
+        if (feed.getAttribute('feedtype') === 'ad') return;
+        var mid = feed.getAttribute('mid'); if (!mid) return;
+        if (range.indexOf(mid) !== -1) return;
+        range.push(mid); range = range.sort(idCmp);
+        that.ref.records.putconf(range.slice(Math.max(range.length - 1000, 0)));
+        updateAll();
+      });
+      return range;
+    }());
+    
+    // 我们在一个人的个人主页上看到了哪条微博
+    // 如果已经在个人主页上看过了那么一样不应该有小红点
+    var last = (function () {
+      var last = that.ref.last.getconf() || {};
+      observer.weibo.onload(function (feed) {
+        // 这个规则之在个人主页适用
+        if (util.page.discovery || util.page.search || !document.querySelector('.PCD_header')) return [];
+        if (feed.getAttribute('feedtype') === 'ad') return;
+        var mid = feed.getAttribute('mid'); if (!mid) return;
+        var uid = util.info.oid();
+        if (users.indexOf(uid) === -1) return;
+        if (!last[uid] || idCmp(last[uid], mid) < 0) {
+          last[uid] = mid;
+          that.ref.last.putconf(last);
+        }
+      });
+      return last;
+    }());
   },
 }).addto(filter.groups.tool);
 
