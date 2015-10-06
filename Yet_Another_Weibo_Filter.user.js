@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.267
+// @version           3.5.268
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -607,10 +607,11 @@ var text = {
     'zh-tw': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該列表中的前 50 位帳號生效。',
     'en': 'Too many fave people: The function for checking if there are any Weibo not shown on home page will only apply to first 50 accounts to avoid too many network access.'
   },
-  'addRightUserListNotice': { 'zh-cn': '自动检查收藏用户的微博是否显示在了首页上{{<i>}}', 'zh-hk': '自動檢查收藏使用者的微博是否顯示在了首頁上{{<i>}}', 'zh-tw': '自動檢查收藏使用者的微博是否顯示在了首頁上{{<i>}}', 'en': 'Check if all Weibo from fave people shown on home page {{<i>}}' },
+  'addRightUserListNotice': { 'zh-cn': '自动检查您是否遗漏了收藏用户的微博{{<i>}}', 'zh-hk': '自動檢查您是否遺漏了收藏用戶的微博{{<i>}}', 'zh-tw': '自動檢查您是否遺漏了收藏用戶的微博{{<i>}}', 'en': 'Check if all Weibo from fave people you have read {{<i>}}' },
   'addRightUserListNoticeDesc': {
-    'zh-cn': '如果您不想错过某个人的微博，那么就将他加到收藏帐号的列表中。脚本会在您打开首页时自动打开这些人的个人主页，检查他们的微博是否都在首页上显示了。一旦发现了漏掉的微博，脚本会在帐号旁边用小红点标记。如果您启用该功能，脚本将不会隐藏任何所有收藏帐号发布的微博。<hr />该功能尚在试验中，可能会有各种问题。'
+    'zh-cn': '如果您不想错过某个人的微博，那么就将他加到收藏帐号的列表中。脚本会在您打开首页时自动打开这些人的个人主页，检查他们的微博是否您都看到过。一旦发现了漏掉的微博，脚本会在帐号旁边用小红点标记。'
   },
+  'addRightUserListConfigTitle': { 'zh-cn': '收藏帐号设置 - Yet Another Weibo Filter', 'zh-hk': '收藏帳號設定 - Yet Another Weibo Filter', 'zh-tw': '收藏帳號設定 - Yet Another Weibo Filter', 'en': 'Fave People Setting - Yet Another Weibo Filter' },
   'rightUserListTitle': { 'zh-cn': '收藏帐号', 'zh-hk': '收藏帳號', 'zh-tw': '收藏帳號', 'en': 'Fave People' },
   // 浮动元素
   'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
@@ -927,8 +928,9 @@ var html = {
   'leftMsgGroup': '<div class="lev"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6&amp;is_notice=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
   'leftMsgFooter': '</div>',
   // 右侧栏收藏用户列表
-  'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
+  'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4><div class="opt_box"><a class="W_ficon ficon_setup S_ficon">J</a></div></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
   'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb">{{name}}</a><span class="W_new" style="display:none"></span></p></div></li>',
+  'rightUserListConfig': '<div class="yawf-fave-people-config-body"></div>',
   // 屏蔽微博
   'blockBoxSimple': '<div class="yawf-block_box"><a href="javascript:void(0);" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   'blockBoxDialog': '<div class="yawf-block_box"><a action-type="feed_list_shield_by_rootmid" href="javascript:void(0)" suda-data="key=smart_feed&amp;value=hidden_feed" action-data="filter_type=0&amp;mid={{mid}}&amp;justhide=0&amp;is_retweet=1" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
@@ -2221,13 +2223,13 @@ network.recent = (function () {
   var cache = (function () {
     var data;
     var rm = function () {
-      var time = Number(Date());
-      Object.keys(data).forEach(function (user) { if (data.user.exp < time) delete data.user; });
+      var time = Number(new Date());
+      Object.keys(data).forEach(function (user) { if (data[user].exp < time) delete data[user]; });
     };
-    var read = function () { data = JSON.parse(GM_getValue('recentmid', '{}')) || {}; };
+    var read = function () { data = JSON.parse(GM_getValue('recentmid', '{}')) || {}; rm(); };
     var write = function () { GM_setValue('recentmid', JSON.stringify(data)); };
     return function (uid, mids) {
-      read(); if (mids) data[uid] = { 'exp': Number(Date()) + 1e6, 'mid': mids }; write();
+      read(); if (mids) data[uid] = { 'exp': Number(new Date()) + 1e6, 'mid': mids }; write();
       return (data[uid] || {}).mid;
     };
   }());
@@ -6149,7 +6151,7 @@ filter.items.tool.sidebar.right_user_list = filter.item({
       return util.dom.create('ul', util.str.fill(html.rightUserListItem, data)).firstChild;
     };
     users.forEach(function (user) {
-      var li = genli({ 'id': user });
+      var li = genli({ 'id': user, 'name': '', 'id': '', 'avatar': '' });
       userlist_ul.appendChild(li);
       network.account.id(user, function (info) {
         var new_li = genli(info);
@@ -6159,6 +6161,19 @@ filter.items.tool.sidebar.right_user_list = filter.item({
       })
     });
     util.css.add('#yawf-rightmod_userlist .W_fb { display: inline-block; margin-right: -10px; width: 100%; }');
+
+    // 设置按钮
+    var setting = userlist.querySelector('.opt_box a');
+    setting.addEventListener('click', function () {
+      try {
+        util.ui.dialog('yawf-fave-people-config', util.str.fill('{{addRightUserListConfigTitle}}'), function (inner) {
+          var body = util.dom.create(html.rightUserListConfig);
+          inner.appendChild(body);
+          filter.collection.item.list(function (item) { return item === that || item === notice; }).show(body);
+        }).show();
+      } catch (e) { alert(e); }
+    });
+
     // 然后我们把用户列表塞到右栏去
     // 位置在用户信息框下面其他东西上面，如果合并边栏，那么还在左栏下面
     var addRightUserList = function addRightUserList() {
@@ -6195,9 +6210,6 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     var that = this;
     var list = filter.items.tool.sidebar.right_user_list;
     var users = list.conf.slice(0, 50);
-
-    // 这些帐号直接进白名单
-    [].push.apply(filter.items.account.account.whitelist.extent, list.conf);
 
     // 每个人个人主页上最新的微博是哪几条
     var recents = {};
@@ -6260,19 +6272,20 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     }());
 
     // 记录首页上我都看过哪些微博
-    var range = (function () {
-      var range = Array.from(that.ref.records.getconf() || []);
+    var range = [];
+    (function () {
+      range = Array.from(that.ref.records.getconf() || []);
       observer.weibo.onload(function (feed) {
         // 这个规则只在首页上适用
         if (util.page.discovery || util.page.search || !document.body.classList.contains('FRAME_main')) return [];
         if (feed.getAttribute('feedtype') === 'ad') return;
         var mid = feed.getAttribute('mid'); if (!mid) return;
+        range = Array.from(that.ref.records.getconf() || []);
         if (range.indexOf(mid) !== -1) return;
         range.push(mid); range = range.sort(idCmp);
         that.ref.records.putconf(range.slice(Math.max(range.length - 1000, 0)));
         updateAll();
       });
-      return range;
     }());
     
     // 我们在一个人的个人主页上看到了哪条微博
@@ -6293,6 +6306,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
       });
       return last;
     }());
+
   },
 }).addto(filter.groups.tool);
 
@@ -8242,6 +8256,9 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-whats-new-footer { margin: 0 0 20px; color: #555; line-height: 20px; padding: 0 20px; }
   .yawf-whats-new-footer .yawf-configItem, .yawf-groupText { margin: 0; }
   .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus) { display: none; }
+  // 右栏用户列表设置
+  #yawf-fave-people-config [node-type="inner"] { padding: 10px 0 30px; width: 600px; }
+  .yawf-fave-people-config-body { max-height: 300px; overflow: auto; padding: 0 20px; }
   // 隐藏微博
   [yawf-display$="-hidden"] { display: none !important; }
   // 未过滤时默认隐藏（但占位）
