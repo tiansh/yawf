@@ -6391,7 +6391,9 @@ filter.items.tool.fixed.fixed_left = filter.item({
       if (floating) {
         var cip = container.getClientRects()[0];
         var fip = left.getClientRects()[0];
-        var maxHeight = Math.max(Math.min(cip.bottom - fip.top, window.innerHeight - 80), 0);
+        var no_space = filter.items.style.sweibo.no_weibo_space.conf;
+        var maxHeightBottom = cip.bottom - fip.top + (no_space ? 0 : -10);
+        var maxHeight = Math.max(Math.min(maxHeightBottom, window.innerHeight - 80), 0);
         if (cip && fip) updateMaxHeight(left, maxHeight);
       } else { updateMaxHeight(left); }
     };
