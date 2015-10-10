@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.269
+// @version           3.5.270
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1059,10 +1059,7 @@ util.func = {};
 util.func.page = function (f) {
   var args = JSON.stringify(Array.from(arguments).slice(1)).slice(1, -1);
   var js = '(' + f + '(' + args + '))';
-  var script = util.dom.create('script', '');
-  script.appendChild(document.createTextNode(js));
-  (document.body || document.head || document.documentElement).appendChild(script);
-  script.parentNode.removeChild(script);
+  window.eval(f); // YES! eval! windoww.eval!
 };
 
 // 延迟调用函数
@@ -2279,7 +2276,7 @@ network.recent = (function () {
       util.func.call(callback, mids);
       util.debug('read user page %o from cache: %o', uid, mids);
       return;
-    };
+    }
     queue.push([uid, callback]);
     active();
   };
@@ -2884,7 +2881,7 @@ filter.typed.dom = (function () {
       'outer': html['config' + name],
       'inner': html['config' + name + 'Input'],
       'binder': binder,
-    })
+    });
   };
 
   // 副标题
@@ -2980,8 +2977,8 @@ filter.typed.dom = (function () {
     return base({
       'outer': outer,
       'binder': function (dom, item) {
-        var form = dom.querySelector('form')
-        var input = dom.querySelector('input')
+        var form = dom.querySelector('form');
+        var input = dom.querySelector('input');
         var ul = dom.querySelector('ul');
         var shown = {};
         // 将某个已经有的字符串显示到末尾
@@ -4147,7 +4144,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
             var c = a.C("div");
             c.innerHTML = b;
             window.WBEXP && window.WBEXP.start(c);
-            c = null
+            c = null;
           };
           var l = c(k, { since_id: b.getEndId() });
           g.request(h.loadFeedTransKey, {
@@ -6129,7 +6126,7 @@ filter.items.tool.sidebar.right_user_list = filter.item({
         'title': util.str.fill('{{addRightUserListTooManyTitle}}'),
         'text': util.str.fill('{{addRightUserListTooMany}}'),
         'icon': 'warn'
-      })
+      });
       return s;
     };
   }()),
@@ -6151,14 +6148,14 @@ filter.items.tool.sidebar.right_user_list = filter.item({
       return util.dom.create('ul', util.str.fill(html.rightUserListItem, data)).firstChild;
     };
     users.forEach(function (user) {
-      var li = genli({ 'id': user, 'name': '', 'id': '', 'avatar': '' });
+      var li = genli({ 'id': user, 'name': '', 'avatar': '' });
       userlist_ul.appendChild(li);
       network.account.id(user, function (info) {
         var new_li = genli(info);
         userlist_ul.replaceChild(new_li, li);
       }, function () {
         userlist_ul.removeChild(li);
-      })
+      });
     });
     util.css.add('#yawf-rightmod_userlist .W_fb { display: inline-block; margin-right: -10px; width: 100%; }');
 
@@ -6394,7 +6391,7 @@ filter.items.tool.fixed.fixed_left = filter.item({
       if (floating) {
         var cip = container.getClientRects()[0];
         var fip = left.getClientRects()[0];
-        var maxHeight = Math.max(Math.min(cip.bottom - fip.top - 10, window.innerHeight - 80), 0);
+        var maxHeight = Math.max(Math.min(cip.bottom - fip.top, window.innerHeight - 80), 0);
         if (cip && fip) updateMaxHeight(left, maxHeight);
       } else { updateMaxHeight(left); }
     };
@@ -6790,7 +6787,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       var arg = a.getAttribute('action-data').match(/pid=(\w+)&cid=(\d+)/); if (!arg) return;
       var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
       var l = vol.querySelector('a');
-      ref = a.parentNode.parentNode;
+      var ref = a.parentNode.parentNode;
       while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       l.href = util.str.fill(url.view_cmt_ori, { 'pid': arg[1] });
     };
@@ -7040,7 +7037,7 @@ filter.items.style.text.custom_font_family = filter.item({
     };
     var validFonts = function (callback) {
       var fonts = that.west.concat(that.chinese);
-      (function validFont() {
+      setTimeout(function validFont() {
         if (fonts.length === 0) return callback();
         var font = fonts.shift(), valid = util.font.valid(font[0]);
         util.debug('%s: %o', font[1], valid);
@@ -7049,8 +7046,8 @@ filter.items.style.text.custom_font_family = filter.item({
           that.chinese = that.chinese.filter(function (f) { return f[0] !== font[0]; });
         }
         util.func.call(validFont);
-      }());
-    }
+      }, 5000);
+    };
     setTimeout(function () { validFonts(updateConfig); }, 5e3);
     updateConfig();
   },
