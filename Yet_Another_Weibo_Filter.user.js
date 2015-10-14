@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.271
+// @version           3.5.272
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -809,13 +809,19 @@ var text = {
   'updateSuccessTitle': { 'zh-cn': 'Yet Another Weibo Filter 新功能提示', 'zh-hk': 'Yet Another Weibo Filter 新功能提示', 'zh-tw': 'Yet Another Weibo Filter 新功能提示', 'en': 'Yet Another Weibo Filter new features notification' },
   'updateSuccessHeader': { 'zh-cn': '您的 YAWF 脚本已更新', 'zh-hk': '您的 YAWF 腳本已更新', 'zh-tw': '您的 YAWF 腳本已更新', 'en': 'Your YAWF script has been updated' },
   'updateSuccessDesc': { 'zh-cn': '当前版本添加或更新了以下{{count}}项功能', 'zh-hk': '當前版本添加或更新了以下{{count}}項功能', 'zh-tw': '當前版本添加或更新了以下{{count}}項功能', 'en': 'The current version has added or updated the following {{count}} feature(s)' },
+  // 杂项
+  'scriptOtherTitle': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
+  'autoCompleteConfig': { 'zh-cn': '设置窗口中使用自动补全{{<i>}}', 'zh-hk': '設定方塊內使用自動完成{{<i>}}', 'zh-tw': '設定方塊內使用自動完成{{<i>}}', 'en': 'Use auto complete in setting dialog {{<i>}}' },
+  'autoCompleteConfigDesc': {
+    'zh-cn': '启用该功能后，脚本会在您输入用户名或话题的时候提供候选项方便您输入。您输入的内容将会实时发送到微博的服务器上以便获取推荐列表。',
+  },
+  'searchEnable': { 'zh-cn': '在搜索页面启用脚本（试验性）', 'zh-hk': '在搜尋網頁啟用腳本（試驗性）', 'zh-tw': '在搜尋網頁啟用腳本（試驗性）', 'en': 'Enable on search page (Experimental)' },
   // 调试
   'scriptDebugTitle': { 'zh-cn': '调试', 'zh-hk': '偵錯', 'zh-tw': '偵錯', 'en': 'Debug' },
   'scriptDebug': { 'zh-cn': '在控制台打印调试信息{{<i>}}', 'zh-hk': '將偵錯訊息列印到主控台{{<i>}}', 'zh-tw': '將偵錯訊息列印到主控台{{<i>}}', 'en': 'Print debug info to console {{<i>}}' },
   'scriptDebugDesc': {
     'zh-cn': '如果您的脚本出现问题，您可以打开调试功能后向作者提供控制台的输出以方便解决问题。但请注意，<strong>打开调试功能可能会增加内存占用、降低网页的反应速度甚至导致浏览卡顿</strong>。调试功能供脚本开发和维护使用，<strong>不建议一般用户打开调试功能</strong>。'
   },
-  'searchEnable': { 'zh-cn': '在搜索页面启用脚本（试验性）', 'zh-hk': '在搜尋網頁啟用腳本（試驗性）', 'zh-tw': '在搜尋網頁啟用腳本（試驗性）', 'en': 'Enable on search page (Experimental)' },
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
@@ -871,7 +877,7 @@ var html = {
   'configHeaderItem': '<li class="minitb_item S_line1 {{liclass}}"><a class="minitb_lk S_txt1 {{aclass}}" action-type="tab_item" onclick="return false;" href="javascript:void(0);">{{name}}</a><span class="yawf-cur_block"></span></li>',
   'configHeaderSearch': '<li class="minitb_item S_line1"><label class="minitb_lk S_txt1"><input id="yawf-config-search" class="yawf-config-search" type="search" /><span class="yawf-config-search-logo W_ficon S_txt2">f</span><span class="yawf-cur_block"></span></label></li>',
   'configHeaderBottom': '</ul></div>',
-  'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body">',
+  'configLayerTop': '<div node-type="yawf-config-body" class="yawf-config-body yawf-window-body">',
   'configLayerItem': '<div class="{{name}} yawf-config-layer" node-type="{{name}}" style="display: none;"></div>',
   'configLayerBottom': '</div>',
   'configFooter': '',
@@ -899,13 +905,16 @@ var html = {
   'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" yawf-ci="{{key}}" name="yawf-{{key}}" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
   'configSubscribe': '<div class="yawf-configSubscribe yawf-configItem "><div class="yawf-configSubscribeIcon"><img width="64" height="64" src="{{icon}}"></div><div class="yawf-configSubscribeTitle"><div class="yawf-configSubscribeName">{{name}}</div><div class="yawf-configSubscribeDate">{{date}}</div></div><div class="yawf-configSubscribeAuthor">{{author}}</div><div class="yawf-configSubscribeInfo">{{description}}</div><div class="yawf-configSubscribeButton"><a href="javascript:;" class="W_btn_b yawf-subscribeDisable"><span class="W_f14">{{subscribeDisableButton}}</span></a><a href="javascript:;" class="W_btn_b yawf-subscribeEnable"><span class="W_f14">{{subscribeEnableButton}}</span></a><a href="" target="_blank" rel="noreferrer" class="W_btn_b yawf-subscribeDetail"><span class="W_f14">{{subscribeDetailButton}}</span></a></div></div>',
-  'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems"></ul></div>',
+  'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems yawf-configItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a>{{[item]}}</li>',
-  'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems"></ul></div>',
+  'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems yawf-configItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
   'scriptIcon': '<div id="yawf-script-icon" style="background: url({{icon}}); width: 72px; height: 72px; float: right; margin: 0 2em"></div>',
   'refConfigItem': '<span yawf-ref="{{ref}}"></span>',
+  // 自动补全功能
+  'suggestionContainer': '<div class="layer_menu_list yawf-autoCompleteList" yawf-complete-items="0"><ul></ul></div>',
+  'suggestionItem': '<li yawf-suggestion="{{text}}"><a>{{text}}</a></li>',
   // 选中当前分组所有
   'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAllDesc}}</span></a></div>',
   // 导入导出
@@ -913,7 +922,7 @@ var html = {
   'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-groupRemark">{{configImportWbpWarning}}</div></div>',
   // 新功能提示对话框
   'whatsNewHeader': '<div class="yawf-whats-new-header">{{updateSuccessHeader}}</div>',
-  'whatsNewBody': '<div class="yawf-whats-new-body"><div class="yawf-whats-new-desc">{{updateSuccessDesc}}</div></div>',
+  'whatsNewBody': '<div class="yawf-whats-new-body yawf-window-body"><div class="yawf-whats-new-desc">{{updateSuccessDesc}}</div></div>',
   'whatsNewFooter': '<div class="yawf-whats-new-footer"><hr /></div>',
   'whatsNewBottom': '<div class="yawf-whats-new-bottom"></div>',
   // 合并左边栏占位符
@@ -930,7 +939,7 @@ var html = {
   // 右侧栏收藏用户列表
   'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4><div class="opt_box"><a class="W_ficon ficon_setup S_ficon">J</a></div></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
   'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb">{{name}}</a><span class="W_new" style="display:none"></span></p></div></li>',
-  'rightUserListConfig': '<div class="yawf-fave-people-config-body"></div>',
+  'rightUserListConfig': '<div class="yawf-fave-people-config-body yawf-window-body"></div>',
   // 屏蔽微博
   'blockBoxSimple': '<div class="yawf-block_box"><a href="javascript:void(0);" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   'blockBoxDialog': '<div class="yawf-block_box"><a action-type="feed_list_shield_by_rootmid" href="javascript:void(0)" suda-data="key=smart_feed&amp;value=hidden_feed" action-data="filter_type=0&amp;mid={{mid}}&amp;justhide=0&amp;is_retweet=1" title="{{blockThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
@@ -975,6 +984,9 @@ var url = {
   'del_cmt': 'http://www.weibo.com/aj/comment/del?ajwvr=6',
   'video_show': 'http://video.weibo.com/show?fid={{id}}',
   'user': 'http://weibo.com/u/{{uid}}',
+  'topsuggest': 'http://s.weibo.com/ajax/topsuggest.php?key={{query}}&_v={{callback}}',
+  'topicsuggest': 'http://weibo.com/aj/mblog/topic?ajwvr=6&q={{query}}',
+  'attention': 'http://weibo.com/aj/mblog/attention?ajwvr=6&q={{query}}',
 };
 
 var font = {
@@ -1054,6 +1066,9 @@ util.priority = {
 
 // 函数相关操作
 util.func = {};
+
+// 空
+util.func.noop = function () { };
 
 // 在页面执行一个函数
 util.func.page = function (f) {
@@ -1199,9 +1214,15 @@ util.str.fill = function (base, func) {
 util.str.fcb = (function () {
   var last = 0;
   return function () {
-    return '' + (last = Math.max(last + 1, Number(new Date())));
+    return 'STK_' + (last = Math.max(last + 1, Number(new Date())));
   };
 }());
+
+// 从 JSONP 的返回结果中截取有用的东西
+util.str.parsejsonp = function (resp) {
+  return JSON.parse(resp.replace(/^try{[^{]*\({/, '{').replace(/}\)\s*;?\s*}catch\(e\){};?$/, '}'));
+
+};
 
 // 检查一个字串是否是正则式，如果出错报告用户
 // 返回为正则式或 null
@@ -1543,6 +1564,7 @@ util.keyboard = (function () {
   var alter = { CTRL: ctrl, SHIFT: shift, ALT: alt, META: meta, KEY: key };
   // 对一个按键事件做编号
   var get = function (e) {
+    if (!e || !e.keyCode) return null;
     var code = e.keyCode & key;
     if (e.ctrlKey) code |= ctrl;
     if (e.shiftKey) code |= shift;
@@ -2036,8 +2058,9 @@ util.ui.confirm = function (id, details) {
   return form;
 };
 
-util.ui.bubble = function (description, rect) {
+util.ui.bubble = function (description, ref) {
   var bubble;
+  var rect = ref.getClientRects()[0];
   if (description instanceof Element) bubble = description;
   else bubble = util.dom.create(util.str.fill(html.bubble, { 'text': description }));
   var bor = bubble.querySelector('.W_arrow_bor');
@@ -2074,10 +2097,10 @@ network.account = (function () {
     // 请求获取
     GM_xmlhttpRequest({
       'method': 'GET',
-      'url': util.str.fill(url.newcard, { 'query': queryStr, 'callback': 'STK_' + util.str.fcb() }),
+      'url': util.str.fill(url.newcard, { 'query': queryStr, 'callback': util.str.fcb() }),
       'onload': util.func.catched(function (resp) {
         // 永远不要试图理解一个用 JSON 包裹 HTML 的 API
-        var respJson = JSON.parse(resp.responseText.replace(/^try{[^{]*\(/, '').replace(/\)}catch\(e\){};$/, ''));
+        var respJson = util.str.parsejsonp(resp.responseText);
         var namecard = util.dom.create('div', respJson.data);
         var avatar = namecard.querySelector('.name dt img').getAttribute('src');
         var name = namecard.querySelector('.name dd a[uid]').getAttribute('title');
@@ -2098,7 +2121,10 @@ network.account = (function () {
     if (nameCache[name]) onsucc(nameCache[name]);
     else request('name=' + encodeURIComponent(name), onsucc, onerror);
   };
-  return { 'id': byId, 'name': byName };
+  var put = function (data) {
+    nameCache[data.name] = idCache[data.id] = data;
+  };
+  return { 'id': byId, 'name': byName, 'put': put };
 }());
 
 network.buffered = (function () {
@@ -2281,6 +2307,96 @@ network.recent = (function () {
     active();
   };
 }());
+
+network.suggest = {};
+
+// 推荐用户或话题等
+network.suggest.base = function (func, empty) {
+  var suggestCache = {};
+  var current = null, xhr = null;
+  if (empty != null) suggestCache[''] = empty;
+  return function (query, callback) {
+    if (current === query) return;
+    if (current && xhr) xhr.abort();
+    if (suggestCache[query]) {
+      current = xhr = null;
+      callback(suggestCache[query]);
+    } else {
+      current = query;
+      xhr = func(query, function (data) {
+        suggestCache[query] = data;
+        current = xhr = null;
+        callback(data);
+      });
+    }
+  };
+};
+
+network.suggest.topsuggest = function (query, callback) {
+  return GM_xmlhttpRequest({
+    'method': 'GET',
+    'url': util.str.fill(url.topsuggest, { 'query': encodeURIComponent(query), 'callback': util.str.fcb() }),
+    'onload': function (resp) {
+      var data = util.str.parsejsonp(resp.responseText).data;
+      data.user.forEach(function (user) {
+        var data = { 'id': user.u_id, 'avatar': user.u_pic, 'name': user.u_name };
+        network.account.put(data);
+      });
+      callback(data);
+    },
+  });
+};
+
+// 推荐用户
+network.suggest.user = network.suggest.base(function (query, callback) {
+  var result1 = null, result2 = null;
+  // 把两个结果合并，自己关注的帐号优先
+  var done = function () {
+    if (!result1 || !result2) return;
+    var results = result2.concat(result1);
+    results = results.filter(function (x, i) { return results.indexOf(x) === i; });
+    callback(results);
+  };
+  // 推荐搜索框提供的候选用户
+  // 这些一般是微博中关注量较多的帐号
+  var network1 = network.suggest.topsuggest(query, function (data) {
+    result1 = data.user.map(function (user) { return user.u_name; });
+    done();
+  });
+  // 推荐提到工具提供的候选用户
+  // 这些是自己关注的帐号
+  var network2 = GM_xmlhttpRequest({
+    'method': 'GET',
+    'url': util.str.fill(url.attention, { 'query': encodeURIComponent(query) }),
+    'onload': function (resp) {
+      var data = JSON.parse(resp.responseText).data;
+      result2 = data.map(function (item) { return item.screen_name; });
+      done();
+    },
+  });
+  return {
+    'abort': function () {
+      network1.abort();
+      network2.abort();
+    }
+  };
+}, []);
+
+// 推荐话题
+network.suggest.topic = network.suggest.base(function (query, callback) {
+  return GM_xmlhttpRequest({
+    'method': 'GET',
+    'url': util.str.fill(url.topicsuggest, { 'query': encodeURIComponent(query) }),
+    'onload': function (resp) {
+      var data = JSON.parse(resp.responseText).data;
+      var formatted = data.map(function (item) { return item.topic; });
+      // 有一些地点会混在里面，最后用 “[地点]” 标识
+      // 这里将所有有方括号的都删掉
+      formatted = formatted.filter(function (topic) { return topic.indexOf(']') === -1; });
+      callback(formatted);
+    },
+  });
+}, []);
 
 // 过滤器
 var filter = {};
@@ -2814,6 +2930,141 @@ filter.typed.config = (function () {
   };
 }());
 
+// 给输入框添加自动补全功能
+util.complete = (function () {
+  var enabled = false;
+  var enable = function () { enabled = true; };
+  var types = {
+    'user': network.suggest.user,
+    'topic': network.suggest.topic,
+  };
+  var timeout = null, shown = '';
+  // 更新推荐词
+  var updateSuggest = function (type, container, input) {
+    var ul = container.querySelector('ul');
+    return function (text) {
+      shown = text;
+      ul.innerHTML = '';
+      types[type](text, function (items) {
+        items.forEach(function (item) {
+          var h = util.str.fill(html.suggestionItem, { 'text': util.str.escape.xml(item) });
+          var li = util.dom.create('ul', h).firstChild;
+          ul.appendChild(li);
+          li.addEventListener('mouseenter', function () { focus(container, li); });
+          li.addEventListener('mousedown', function (e) { done(input, li); e.preventDefault() });
+        });
+        container.setAttribute('yawf-complete-items', items.length);
+      });
+    };
+  };
+  // 检查文本录入，等用户输入间隙的时候再联网推荐候选词
+  var checkText = function (input, suggest) {
+    var currentCheck = '';
+    return function () {
+      if (input.value === currentCheck) return; currentCheck = input.value;
+      if (timeout !== null) clearTimeout(timeout);
+      if (shown !== input.value) suggest('');
+      timeout = setTimeout(function () {
+        timeout = null;
+        suggest(input.value);
+      }, 50);
+    };
+  };
+  // 给每个输入框添加对应的候选框
+  var addSelectList = function (input) {
+    var container = util.dom.create('div', util.str.fill(html.suggestionContainer)).firstChild;
+    document.body.appendChild(container);
+    util.func.call(function () { updatePosition(input, container); });
+    return container;
+  };
+  // 自动更新候选框的位置
+  var updatePosition = function (input, container) {
+    var bak = [];
+    (function position() {
+      if (!util.dom.matches(input, 'body *')) {
+        container.parentNode.removeChild(container);
+        return;
+      }
+      var rect = input.getClientRects()[0];
+      var top = (rect.bottom + window.pageYOffset).toFixed(0);
+      var left = (rect.left + window.pageXOffset).toFixed(0);
+      if (!bak || left !== bak[0] || top !== bak[1]) {
+        bak = [left, top];
+        container.style.top = top + 'px';
+        container.style.left = left + 'px';
+      }
+      setTimeout(position, 500);
+    }());
+  };
+  // 更新当前选中的候选项是哪个
+  var current = function (container, offset) {
+    var li = Array.from(container.querySelectorAll('li')), count = li.length;
+    if (count === 0) return null;
+    var cur = container.querySelector('.cur');
+    var index = li.indexOf(cur);
+    if (index === -1 && offset === 0) return null;
+    else if (index === -1 && offset === -1) index = count - 1;
+    else if (index === -1 && offset === 1) index = 0;
+    else index = (index + offset + count) % count;
+    if (cur) cur.classList.remove('cur');
+    li[index].classList.add('cur');
+    return li[index];
+  };
+  var focus = function (container, li) {
+    if (li.classList.contains('cur')) return;
+    var cur = container.querySelector('.cur');
+    if (cur) cur.classList.remove('cur');
+    li.classList.add('cur');
+  };
+  // 选中候选项时提交该选项
+  var done = function (input, li) {
+    if (li === null) return;
+    input.value = li.getAttribute('yawf-suggestion');
+    input.form.querySelector('.yawf-configAdd').click();
+  };
+  // 给某个输入框注册候选菜单
+  var reg = function (input, type) {
+    if (!enabled) return;
+    var container = addSelectList(input);
+    var suggest = updateSuggest(type, container, input);
+    var checker = checkText(input, suggest);
+    var update = function (event) {
+      if (event && event.type === 'keypress') {
+        var key = util.keyboard.get(event);
+        switch (key) {
+          case util.keyboard.code.ENTER:
+            done(input, current(container, 0));
+            event.preventDefault();
+            break;
+          case util.keyboard.code.UP: current(container, -1); break;
+          case util.keyboard.code.DOWN: current(container, 1); break;
+        }
+      }
+      checker(input, suggest);
+    };
+    var hideTimeout = null;
+    var blur = function () {
+      container.style.display = 'none';
+    };
+    var focus = function (e) {
+      container.style.display = ''; update(e);
+    };
+    input.addEventListener('change', update);
+    input.addEventListener('keyup', update);
+    input.addEventListener('keypress', update);
+    input.addEventListener('input', update);
+    input.addEventListener('focus', focus);
+    input.addEventListener('blur', blur);
+
+    input.setAttribute('autocomplete', 'off');
+    return update;
+  };
+  return {
+    'enable': enable,
+    'reg': reg,
+  };
+}());
+
 // 根据不同类型生成带有事件的文档结点
 filter.typed.dom = (function () {
   // 各种不同类型的显示都基于此段逻辑
@@ -2911,7 +3162,7 @@ filter.typed.dom = (function () {
       var bubble = null;
       var sim = function (item) {
         var bubble = base({ 'outer': html.bubble }).call(item);
-        return util.ui.bubble(bubble, dom.getClientRects()[0]);
+        return util.ui.bubble(bubble, dom);
       };
       bubble = sim(item);
       if (item.bubbled) item.bubbled(bubble);
@@ -2979,7 +3230,7 @@ filter.typed.dom = (function () {
       'binder': function (dom, item) {
         var form = dom.querySelector('form');
         var input = dom.querySelector('input');
-        var ul = dom.querySelector('ul');
+        var ul = dom.querySelector('ul.yawf-configItems');
         var shown = {};
         // 将某个已经有的字符串显示到末尾
         var moveToEnd = function (x) {
@@ -3013,8 +3264,12 @@ filter.typed.dom = (function () {
           }, function () {
             input.value = '';
             input.disabled = false;
+            if (reloadComplete) reloadComplete();
           });
         });
+        if (item.complete) {
+          var reloadComplete = util.complete.reg(input, item.complete);
+        }
       }
     });
   };
@@ -3371,6 +3626,7 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
     if (details.display) rule.display = details.display.bind(rule);
     if (details.rule) rule.rule = details.rule.bind(rule, item.action);
     if (details.comment) rule.comment = details.comment.bind(rule, item.action);
+    if (details.complete) rule.complete = details.complete;
     if (details[item.type] && details[item.type].override) {
       Object.keys(details[item.type].override).forEach(function (attr) {
         rule[attr] = details[item.type].override[attr](rule[attr]);
@@ -4493,6 +4749,7 @@ filter.predef.account = function (details) {
         },
       },
     },
+    'complete': 'user',
     'fast': {
       'validator': filter.fast.account.validator,
       'recognizer': filter.fast.account.recognizer,
@@ -4561,6 +4818,7 @@ filter.groups.original = filter.predef.wbfc({
       }).addto(filter.groups.original);
     },
   },
+  'complete': 'user',
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
@@ -4598,6 +4856,7 @@ filter.groups.mention = filter.predef.wbfc({
     });
     if (match) return action; else return null;
   },
+  'complete': 'user',
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
@@ -4632,6 +4891,7 @@ filter.predef.wbfc({
     });
     if (match) return action; else return null;
   },
+  'complete': 'topic',
   'fast': {
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.topic,
@@ -6114,6 +6374,7 @@ filter.items.tool.sidebar.right_user_list = filter.item({
   'group': 'sidebar',
   'version': 267,
   'type': 'users',
+  'complete': 'user',
   'key': 'weibo.tool.right_user_list',
   'text': '{{addRightUserList}}',
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{addRightUserListDesc}}' } },
@@ -6162,13 +6423,11 @@ filter.items.tool.sidebar.right_user_list = filter.item({
     // 设置按钮
     var setting = userlist.querySelector('.opt_box a');
     setting.addEventListener('click', function () {
-      try {
-        util.ui.dialog('yawf-fave-people-config', util.str.fill('{{addRightUserListConfigTitle}}'), function (inner) {
-          var body = util.dom.create(html.rightUserListConfig);
-          inner.appendChild(body);
-          filter.collection.item.list(function (item) { return item === that || item === notice; }).show(body);
-        }).show();
-      } catch (e) { alert(e); }
+      util.ui.dialog('yawf-fave-people-config', util.str.fill('{{addRightUserListConfigTitle}}'), function (inner) {
+        var body = util.dom.create(html.rightUserListConfig);
+        inner.appendChild(body);
+        filter.collection.item.list(function (item) { return item === that || item === notice; }).show(body);
+      }).show();
     });
 
     // 然后我们把用户列表塞到右栏去
@@ -8012,6 +8271,33 @@ util.init(function () {
 }()));
 
 // 调试
+filter.predef.subtitle('script', 'script', '{{scriptOtherTitle}}');
+
+// 在搜索页面启用
+filter.items.script.script.search_enable = filter.item({
+  'group': 'script',
+  'version': 0,
+  'type': 'boolean',
+  'text': '{{searchEnable}}',
+  'getconf': function () { return !!GM_getValue('search_enable', false); },
+  'putconf': function (value) { GM_setValue('search_enable', !!value); return !!value; },
+}).addto(filter.groups.script);
+
+// 自动补全功能
+filter.items.script.script.search_enable = filter.item({
+  'group': 'script',
+  'version': 272,
+  'type': 'boolean',
+  'default': true,
+  'text': '{{autoCompleteConfig}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{autoCompleteConfigDesc}}' } },
+  'key': 'script.other.auto_complete',
+  'ainit': function () {
+    util.complete.enable();
+  },
+}).addto(filter.groups.script);
+
+// 调试
 filter.predef.subtitle('script', 'debug', '{{scriptDebugTitle}}');
 
 if (!util.script.ismin) filter.items.script.debug.debug = filter.item({
@@ -8019,20 +8305,9 @@ if (!util.script.ismin) filter.items.script.debug.debug = filter.item({
   'version': 0,
   'type': 'boolean',
   'text': '{{scriptDebug}}',
-  'ref': {
-    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{scriptDebugDesc}}' },
-  },
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{scriptDebugDesc}}' } },
   'getconf': function () { return !!GM_getValue('debug', false); },
   'putconf': function (value) { GM_setValue('debug', !!value); return !!value; },
-}).addto(filter.groups.script);
-
-filter.items.script.debug.search_enable = filter.item({
-  'group': 'debug',
-  'version': 0,
-  'type': 'boolean',
-  'text': '{{searchEnable}}',
-  'getconf': function () { return !!GM_getValue('search_enable', false); },
-  'putconf': function (value) { GM_setValue('search_enable', !!value); return !!value; },
 }).addto(filter.groups.script);
 
 // 关于
@@ -8185,6 +8460,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-config-search-logo { clear: both; display: block; float: left; left: 45px; position: relative; top: -27px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
   .yawf-config-header .current .yawf-config-search-logo, .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }
   #yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; box-shadow: 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; }
+  .yawf-window-body { position: relative; }
   #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   .yawf-Layer.yawf-drag { opacity: 0.67; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
@@ -8247,6 +8523,8 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configSubscribeDisabled { opacity: 0.5; }
   .yawf-configSubscribeEnabled .yawf-subscribeEnable,
   .yawf-configSubscribeDisabled .yawf-subscribeDisable { display: none; }
+  .yawf-autoCompleteList { z-index: 10001; position: absolute; min-width: 120px; }
+  .yawf-autoCompleteList[yawf-complete-items="0"] { display: none; }
   // 新功能提示
   #yawf-whats-new [node-type="inner"] { padding: 10px 0; width: 600px; }
   .yawf-whats-new-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
