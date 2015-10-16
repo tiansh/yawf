@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.272
+// @version           3.5.273
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -904,7 +904,7 @@ var html = {
   'configRangeInput': '<div class="yawf-configInput yawf-configRangeInput"><input type="number" min="0" max="100" maxlength="3" yawf-ci="{{key}}" class="W_f14 yawf-configRangeInput" style="text-align: right;" name="yawf-{{id}}" /><div class="yawf-range-container"><input type="range" style="height: 1em; width: 66px; margin-left: 7px; margin-right: 7px; " tabindex="-1" /></div></div>',
   'configKey': '<div class="yawf-configKey yawf-configItem"><label>{{text}}</label></div>',
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" yawf-ci="{{key}}" name="yawf-{{key}}" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
-  'configSubscribe': '<div class="yawf-configSubscribe yawf-configItem "><div class="yawf-configSubscribeIcon"><img width="64" height="64" src="{{icon}}"></div><div class="yawf-configSubscribeTitle"><div class="yawf-configSubscribeName">{{name}}</div><div class="yawf-configSubscribeDate">{{date}}</div></div><div class="yawf-configSubscribeAuthor">{{author}}</div><div class="yawf-configSubscribeInfo">{{description}}</div><div class="yawf-configSubscribeButton"><a href="javascript:;" class="W_btn_b yawf-subscribeDisable"><span class="W_f14">{{subscribeDisableButton}}</span></a><a href="javascript:;" class="W_btn_b yawf-subscribeEnable"><span class="W_f14">{{subscribeEnableButton}}</span></a><a href="" target="_blank" rel="noreferrer" class="W_btn_b yawf-subscribeDetail"><span class="W_f14">{{subscribeDetailButton}}</span></a></div></div>',
+  'configSubscribe': '<div class="yawf-configSubscribe yawf-configItem "><div class="yawf-configSubscribeIcon"><img width="64" height="64" src="{{icon}}"></div><div class="yawf-configSubscribeTitle"><div class="yawf-configSubscribeName">{{name}}</div><div class="yawf-configSubscribeDate">{{date}}</div></div><div class="yawf-configSubscribeInfo">{{description}}</div><div class="yawf-configSubscribeButton"><a href="javascript:;" class="W_btn_b yawf-subscribeDisable"><span class="W_f14">{{subscribeDisableButton}}</span></a><a href="javascript:;" class="W_btn_b yawf-subscribeEnable"><span class="W_f14">{{subscribeEnableButton}}</span></a><a href="" target="_blank" rel="noreferrer" class="W_btn_b yawf-subscribeDetail"><span class="W_f14">{{subscribeDetailButton}}</span></a></div></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems yawf-configItems"></ul></div>',
   'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a>{{[item]}}</li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems yawf-configItems"></ul></div>',
@@ -1069,6 +1069,7 @@ util.func = {};
 
 // 空
 util.func.noop = function () { };
+util.func.identity = function (x) { return x; };
 
 // 在页面执行一个函数
 util.func.page = function (f) {
@@ -1304,7 +1305,7 @@ util.dom.matches = (function () {
 // 将输入框和某个设置项绑定
 util.dom.bind = (function () {
   var bind = function (param, input, obj, standlize) {
-    var fine = standlize || function (x) { return x; };
+    var fine = standlize || util.func.identity;
     var onchange = function () {
       var val = input[param], valid;
       valid = fine(val);
@@ -2339,7 +2340,7 @@ network.suggest.topsuggest = function (query, callback) {
     'onload': function (resp) {
       var data = util.str.parsejsonp(resp.responseText).data;
       data.user.forEach(function (user) {
-        var data = { 'id': user.u_id, 'avatar': user.u_pic, 'name': user.u_name };
+        var data = { 'id': String(user.u_id), 'avatar': user.u_pic, 'name': user.u_name };
         network.account.put(data);
       });
       callback(data);
@@ -2871,17 +2872,18 @@ filter.typed = {};
 // 根据选择类型不同生成一些存取设置的函数
 filter.typed.config = (function () {
   // 字符串
-  var baseConfig = function (type) {
+  var baseConfig = function (type, standlize) {
+    if (!standlize) standlize = util.func.identity;
     return function (item) {
       var skey = item.key;
       if (skey) {
         if (item.internal) skey = skey.replace(/\.([^\.]*)$/, '._$1');
         if (!item.getconf) item.getconf = function () {
           var def = 'default' in item ? item['default'] : (type ? type() : undefined);
-          return (item.conf = util.config.get(skey, def, type));
+          return standlize(item.conf = util.config.get(skey, def, type));
         };
         if (!item.putconf) item.putconf = function (conf) {
-          return util.config.put(skey, item.conf = conf);
+          return util.config.put(skey, standlize(item.conf = conf));
         };
         util.config.reg(skey);
       }
@@ -2890,7 +2892,7 @@ filter.typed.config = (function () {
   };
   // 集合类型的add/del操作
   var itemsConfig = function (item) {
-    var value = baseConfig(Array)(item);
+    var value = baseConfig(Array, function (x) { return x.map(String); })(item);
     // 除了基本的get/put外，提供高级的add/del
     if (!item.delconf) item.delconf = function (str) {
       var val = item.getconf();
@@ -4721,7 +4723,7 @@ filter.predef.account = function (details) {
       if (details.matchf && !details.matchf(feed)) return;
       var accounts = this.conf.concat(this.extent), id = weibo.feed.author.id(feed) || oid;
       if (!id) return null;
-      var match = accounts.some(function (x) { return x === id; });
+      var match = accounts.indexOf(id) !== -1;
       if (match) feed.setAttribute('yawf-reason',
         util.str.fill('{{{' + details.name + 'FilterReason}}}',
         {
@@ -6459,8 +6461,13 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
   'text': '{{addRightUserListNotice}}',
   'ref': {
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{addRightUserListNoticeDesc}}' },
-    'records': { 'type': 'noui', 'default': [] },
-    'last': { 'type': 'noui', 'default': {} },
+    '_records': { 'type': 'noui', 'default': [] },
+    '_last': { 'type': 'noui', 'default': {} },
+  },
+  'init': function () {
+    // 删掉之前错误被导出的数据
+    util.config.put('weibo.tool.right_user_list_notice.records');
+    util.config.put('weibo.tool.right_user_list_notice.lasts');
   },
   'ainit': function () {
     var that = this;
@@ -6531,16 +6538,16 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     // 记录首页上我都看过哪些微博
     var range = [];
     (function () {
-      range = Array.from(that.ref.records.getconf() || []);
+      range = Array.from(that.ref._records.getconf() || []);
       observer.weibo.onload(function (feed) {
         // 这个规则只在首页上适用
         if (util.page.discovery || util.page.search || !document.body.classList.contains('FRAME_main')) return [];
         if (feed.getAttribute('feedtype') === 'ad') return;
         var mid = feed.getAttribute('mid'); if (!mid) return;
-        range = Array.from(that.ref.records.getconf() || []);
+        range = Array.from(that.ref._records.getconf() || []);
         if (range.indexOf(mid) !== -1) return;
         range.push(mid); range = range.sort(idCmp);
-        that.ref.records.putconf(range.slice(Math.max(range.length - 1000, 0)));
+        that.ref._records.putconf(range.slice(Math.max(range.length - 1000, 0)));
         updateAll();
       });
     }());
@@ -6548,7 +6555,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     // 我们在一个人的个人主页上看到了哪条微博
     // 如果已经在个人主页上看过了那么一样不应该有小红点
     var last = (function () {
-      var last = that.ref.last.getconf() || {};
+      var last = that.ref._last.getconf() || {};
       observer.weibo.onload(function (feed) {
         // 这个规则之在个人主页适用
         if (util.page.discovery || util.page.search || !document.querySelector('.PCD_header')) return [];
@@ -6558,7 +6565,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
         if (users.indexOf(uid) === -1) return;
         if (!last[uid] || idCmp(last[uid], mid) < 0) {
           last[uid] = mid;
-          that.ref.last.putconf(last);
+          that.ref._last.putconf(last);
         }
       });
       return last;
@@ -8357,7 +8364,7 @@ var subscribe = (function () {
 
   var addSubscribe = function (rules) {
     addTitle();
-    filter.items.subscribe[rules.name] = filter.item({
+    filter.items.subscribe[rules.id] = filter.item({
       'group': 'slist',
       'version': 0,
       'type': 'subscribe',
@@ -8371,9 +8378,9 @@ var subscribe = (function () {
       'init': function () {
         if (!this.conf) return;
         var list = rules.rules;
-        Object.keys(list).forEach(function (k) {
-          filter.extent.act('weibo.filters.' + k, list[k]);
-        });
+          Object.keys(list).forEach(function (k) {
+            filter.extent.act('weibo.filters.' + k, list[k]);
+          });
       },
     }).addto(filter.groups.subscribe);
 
@@ -8513,7 +8520,9 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-refConfigItem { display: inline; }
   .yawf-config-body .WB_empty { padding-top: 100px; }
   .yawf-configSubscribe { border: 1px rgba(127, 127, 127, 0.5) solid; padding: 5px 85px 5px 85px; border-radius: 4px; position: relative; }
-  .yawf-configSubscribeTitle, .yawf-configSubscribeInfo, .yawf-configSubscribeAuthor { line-height: 20px; }
+  .yawf-configSubscribeTitle, .yawf-configSubscribeInfo { line-height: 20px; }
+  .yawf-configSubscribeTitle { height: 20px; }
+  .yawf-configSubscribeInfo { height: 40px; }
   .yawf-configSubscribeIcon { display: block; position: absolute; top: 3px; left: 10px; width: 64px; height: 64px; }
   .yawf-configSubscribeButton { display: block; position: absolute; bottom: 6px; right: 10px; }
   .yawf-configSubscribeName { display: inline; font-weight: bold; }
