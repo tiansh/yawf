@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.273
+// @version           3.5.274
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -59,6 +59,12 @@ var text = {
   'configUsersAdd': { 'zh-cn': '添加', 'zh-hk': '新增', 'zh-tw': '新增', 'en': 'Add' },
   'disabledKey': { 'zh-cn': '(已禁用)', 'zh-hk': '(已停用)', 'zh-tw': '(已停用)', 'en': '(Disabled)' },
   'indent': { 'zh-cn': '　　', 'zh-hk': '　　', 'zh-tw': '　　', 'en': '　　' },
+  // 时间日期
+  'timeToday': { 'zh-cn': '今天', 'zh-hk': '今天', 'zh-tw': '今天', 'en': 'Today' /* as is */ },
+  'timeSecondBefore': { 'zh-cn': '秒前', 'zh-hk': '秒前', 'zh-tw': '秒前', 'en': ' secs ago' /* as is */ },
+  'timeMinuteBefore': { 'zh-cn': '分钟前', 'zh-hk': '分鐘前', 'zh-tw': '分鐘前', 'en': ' mins ago' /* as is */ },
+  'timeMonthDay': { 'zh-cn': '%s月%s日 %s:%s', 'zh-hk': '%s月%s日 %s:%s', 'zh-tw': '%s月%s日 %s:%s', 'en': '%s-%s %s:%s' /* as is */ },
+  'timeReadHere': { 'zh-cn': '你看到这里', 'zh-hk': '你看到這裡', 'zh-tw': '你看到這裡', 'en': ' you see here' /* as is */ },
   // 设置框
   'filter': { 'zh-cn': '过滤器', 'zh-hk': '篩選器', 'zh-tw': '篩選器', 'en': 'Filter' },
   'filterMenuItem': { 'zh-cn': '过滤器设置', 'zh-hk': '篩選器設定', 'zh-tw': '篩選器設定', 'en': 'Filter Settings' },
@@ -104,10 +110,6 @@ var text = {
   'autoLoadNewWeiboDesc': {
     'zh-cn': '启用该选项可以在显示“有×条新微博”的提示横幅出现前过滤微博，避免提示不希望看到的新微博；但勾选此项会导致在其他移动设备上收不到有新微博的提示。',
   },
-  // 分隔条
-  'timeTipHour': { 'zh-cn': '小时', 'zh-hk': '小時', 'zh-tw': '小時', 'en': ' hour' },
-  'timeTipMin': { 'zh-cn': '分钟', 'zh-hk': '分鐘', 'zh-tw': '分鐘', 'en': ' min' },
-  'timeTipText': { 'zh-cn': '你看到这里', 'zh-hk': '你看到這裡', 'zh-tw': '你看到這裡', 'en': ' 你看到这里' /* as is */ },
   // 分组浏览
   'otherGroupTitle': { 'zh-cn': '分组浏览', 'zh-hk': '分組流覽', 'zh-tw': '分組流覽', 'en': 'Browse by Group' },
   'accountByGroup': { 'zh-cn': '分组浏览时禁用按帐号隐藏', 'zh-hk': '分組流覽時禁用按帳號隱藏', 'zh-tw': '分組流覽時禁用按帳號隱藏', 'en': 'Disable hide by account filter when browsing by group' },
@@ -255,13 +257,13 @@ var text = {
   'rtopicFilterReason': { 'zh-cn': '因包含话题匹配 {{detail}} ', 'zh-hk': '因包含話題匹配 {{detail}} ', 'zh-tw': '因包含話題匹配 {{detail}} ', 'en': 'because it contained topic match {{detail}} ' },
   // 来源
   'sourceFilterGroupTitle': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
-  'sourceFilterDesc': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Via' },
+  'sourceFilterDesc': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Come from' },
   'sourceFilterDetails': { 'zh-cn': '以下来源的微博', 'zh-hk': '以下來源的微博', 'zh-tw': '以下來源的微博', 'en': 'Weibo comes from these sources' },
   'sourceFilterDetailsDesc': {
     'zh-cn': '匹配微博下方“来自×××”的来源，不包括“自定义微博来源”中的文本。来源使用全字匹配。'
   },
   'sourceFilterFast': { 'zh-cn': '来自“{{source}}”的微博', 'zh-hk': '來自「{{source}}」的微博', 'zh-tw': '來自「{{source}}」的微博', 'en': 'Weibo comes from "{{source}}"' },
-  'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'come from' },
+  'sourceFilterContextMenuGroup': { 'zh-cn': '来自', 'zh-hk': '來自', 'zh-tw': '來自', 'en': 'Come from' },
   'sourceFilterContextMenu': { 'zh-cn': '{{source}}', 'zh-hk': '{{source}}', 'zh-tw': '{{source}}', 'en': '{{source}}' },
   'sourceFilterWarningTitle': { 'zh-cn': '默认来源', 'zh-hk': '預設來源', 'zh-tw': '預設來源', 'en': 'Default Source' },
   'sourceFilterWarning': { 'zh-cn': '不能添加默认来源', 'zh-hk': '不能新增預設來源', 'zh-tw': '不能新增預設來源', 'en': 'You cannot add default source' },
@@ -649,12 +651,13 @@ var text = {
   'replaceLinkByShortUrl': { 'zh-cn': '短网址', 'zh-hk': '短網址', 'zh-tw': '短網址', 'en': 'shortened URL' },
   'replaceLinkByFullUrl': { 'zh-cn': '完整网址或短网址', 'zh-hk': '完整網址或短網址', 'zh-tw': '完整網址或短網址', 'en': 'full URL or shortened URL' },
   'replaceLinkByTitleUrl': { 'zh-cn': '完整网址或标题文本', 'zh-hk': '完整網址或標題文本', 'zh-tw': '完整網址或標題文本', 'en': 'full URL or description' },
-  'customizeSourceWeibo': { 'zh-cn': '自定义来源微博仅显示“来自微博 weibo.com”', 'zh-hk': '自訂來源微博僅顯示“來自微博 weibo.com”', 'zh-tw': '自訂來源微博僅顯示“來自微博 weibo.com”', 'en': 'Weibo with customize source show "via 微博 weibo.com" only' },
+  'customizeSourceWeibo': { 'zh-cn': '自定义来源微博仅显示“来自微博 weibo.com”', 'zh-hk': '自訂來源微博僅顯示“來自微博 weibo.com”', 'zh-tw': '自訂來源微博僅顯示“來自微博 weibo.com”', 'en': 'Weibo with customize source show "come from 微博 weibo.com" only' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
   'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view' },
+  'showLocalTime': { 'zh-cn': '显示时间时使用本机时区', 'zh-hk': '顯示時間時使用本機時區', 'zh-tw': '顯示時間時使用本機時區', 'en': 'Show timestamp with local time zone' },
   // 样式
   'styleFilterGroupTitle': { 'zh-cn': '外观样式', 'zh-hk': '外觀樣式', 'zh-tw': '外觀樣式', 'en': 'Appearance' },
   // 文字
@@ -966,7 +969,7 @@ var html = {
   'noticeContainer': '<div class="WB_feed_type SW_fun S_line2" action-type="feed_list_item" yawf-display="notice"></div>',
   // 有新微博的替代提示
   'feedListNewBar': '<div class="WB_cardwrap WB_notes" yawf-id="home_new_feed_tip"><a href="javascript:void(0);"></a></div>',
-  'feedTimeTip': '<div class="WB_cardwrap S_bg2 yawf-timeTip"><div class="WB_cardtitle_a W_tc">{{{time}}}</div></div>',
+  'feedTimeTip': '<div class="WB_cardwrap S_bg2 yawf-timeTip"><div class="WB_cardtitle_a W_tc"><a node-type="feed_list_item_date" date="{{date}}" style="color:inherit"></a> {{{time}}}</div></div>',
   // 顶栏徽标
   'navLogo': '<span class="logo"></span>',
   // 来自 微博 weibo.com
@@ -4332,10 +4335,9 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     var time0 = new Date(), tip = null;
     return function (feed) {
       var time = time0; time0 = new Date();
-      var text = '{{timeTipText}}';
+      var text = '{{timeReadHere}}';
       if (tip && tip.parentNode) tip.parentNode.removeChild(tip);
-      tip = util.dom.create(util.str.fill(html.feedTimeTip, { 'time': text }));
-      tip.setAttribute('date', String(Number(time)));
+      tip = util.dom.create(util.str.fill(html.feedTimeTip, { 'time': text, 'date': String(Number(time)) }));
       feed.parentNode.insertBefore(tip, feed.nextSibling);
     };
   }()),
@@ -6467,7 +6469,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
   'init': function () {
     // 删掉之前错误被导出的数据
     util.config.put('weibo.tool.right_user_list_notice.records');
-    util.config.put('weibo.tool.right_user_list_notice.lasts');
+    util.config.put('weibo.tool.right_user_list_notice.last');
   },
   'ainit': function () {
     var that = this;
@@ -7204,7 +7206,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
 }).addto(filter.groups.tool);
 
 // 自定义来微源博
-filter.items.other.hidethese_source.customize_source = filter.item({
+filter.items.tool.weibotool.replace_link = filter.item({
   'group': 'weibotool',
   'version': 104,
   'type': 'boolean',
@@ -7239,6 +7241,137 @@ filter.items.other.hidethese_source.customize_source = filter.item({
   },
 }).addto(filter.groups.tool);
 
+if (!function isBJT() {
+  // 如果用户使用的是已经是和北京时间一致的时区，那么我们就不提供这个功能了
+  // 但是需要注意的是是否在东八区一点需要额外判断是否受到夏令时影响
+  var cur = new Date();
+  var jan = new Date(cur.getFullYear(), 0, 1);
+  var jul = new Date(cur.getFullYear(), 6, 1);
+  return cur.getTimezoneOffset() === -480 &&
+    jan.getTimezoneOffset() === -480 &&
+    jul.getTimezoneOffset() === -480;
+}()) {
+  // 使用本地时区
+  filter.items.tool.weibotool.show_local_time = filter.item({
+    'group': 'weibotool',
+    'version': 274,
+    'type': 'boolean',
+    'key': 'weibo.tool.show_local_time',
+    'text': '{{showLocalTime}}',
+    'ainit': function () {
+      var z = function (x) { return ('0' + x).slice(-2); };
+      // 参考 lib.feed.plugins.updateTime
+      var e = text.timeToday, f = text.timeSecondBefore, g = text.timeMinuteBefore;
+      var convert = function (a, c) {
+        var d = a.getFullYear(), i = a.getMonth() + 1, k = a.getDate(), m = a.getHours();
+        var h = c.getFullYear(), j = c.getMonth() + 1, l = c.getDate(), n = c.getHours(), o = c.getMinutes();
+        // 修改这里，我们用本地时间，而不是东八区时间
+        var q = h, r = j, s = l, t = z(n), u = z(o);
+        var v = a - c;
+        v = v > 0 ? v : 0;
+        v = v / 1e3;
+        if (d != h) return q + "-" + r + "-" + s + " " + t + ":" + u;
+        if (i != j || k != l) return text.timeMonthDay.split('%s').map(function (x, i) { return x + [r, s, t, u, ''][i]; }).join('');
+        if (m != n && v > 3600) return e + " " + t + ":" + u;
+        if (v < 51) {
+          v = v < 1 ? 1 : v;
+          return Math.floor((v - 1) / 10) + 1 + "0" + f;
+        }
+        return Math.floor(v / 60 + 1) + g;
+      };
+      // 把匹配到的数字转换成整数数组的很方便的函数
+      var match = function (str, reg) {
+        var m = str.match(reg); if (!m) return null;
+        return Array.from(m).slice(1).map(function (x) { return parseInt(x, 10); });
+      };
+      // 盯着网页看有没有带 date 属性的元素
+      // 这些元素通过 date 属性给定其时间，需要实时更新（如xx秒前）
+      var modify = function changeDateElement() {
+        var timeText = document.querySelector('[node-type="feed_list_timeTip"][date] [node-type="feed_list_timeText"]');
+        if (timeText) timeText.parentNode.replaceChild(
+          util.dom.create(util.str.fill(
+          html.feedTimeTip, { 'date': timeText.parentNode.getAttribute('date'), 'time': '{{timeReadHere}}' })
+          ).firstChild, timeText);
+        var f = Array.from(document.querySelectorAll('a[node-type="feed_list_item_date"][date]'));
+        f.forEach(function (i) {
+          ['node-type', 'date'].forEach(function (attr) {
+            i.setAttribute('yawf-' + attr, i.getAttribute(attr));
+            i.removeAttribute(attr);
+          });
+          var title = i.getAttribute('title');
+          if (title) {
+            var k = i.getAttribute("yawf-date");
+            if (!/^\s*\d+\s*$/.test(k)) return;
+            var l = new Date();
+            l.setTime(parseInt(k, 10));
+            i.title = (function (c) {
+              var h = c.getFullYear(), j = c.getMonth() + 1, l = c.getDate(), n = c.getHours(), o = c.getMinutes();
+              return h + '-' + z(j) + '-' + z(l) + ' ' + z(n) + ':' + z(o);
+            }(l));
+            util.debug('timezone UTC+8 to Local: %o -> %o', title, i.title);
+          }
+        });
+        update(f);
+      };
+      // 处理那些没有 date 属性的时间的文本
+      // 这些事件不需要更新
+      // 文本的生成规则和需要更新的其实略有不同，因为这些文本大多是在服务器端生成的
+      var convertText = function (input) {
+        var nums, c = null, a = new Date();
+        var b = a; b.setTime(b.getTime() + 288e5);
+        var q = b.getUTCFullYear(), rr = b.getUTCMonth(), s = b.getUTCDate(), t = b.getUTCHours(), u = b.getUTCMinutes();
+        if (nums = match(input, /^(\d+)-(\d+)-(\d+) (\d+):(\d+)$/)) c = new Date(Date.UTC(nums[0], nums[1] - 1, nums[2], nums[3], nums[4], 0));
+        else if (nums = match(input, new RegExp('^' + text.timeMonthDay.replace(/%s/g, '(\\d+)') + '$'))) c = new Date(Date.UTC(q, nums[0] - 1, nums[1], nums[2], nums[3], 0));
+        else if (nums = match(input, new RegExp('^' + e + '\\s*(\\d+):(\\d+)$'))) c = new Date(Date.UTC(q, rr, s, nums[0], nums[1], 0));
+        if (c === null) return input;
+        c.setTime(c.getTime() - 288e5);
+        if (c.getTime() > a.getTime()) c.setTime(c.getTime() - 864e5 * Math.ceil((c.getTime() - a.getTime()) / 864e5));
+        return convert(a, c);
+      };
+      // 更新需要更新的时间
+      var update = function (f) {
+        var g = new Date();
+        if (!f) f = Array.from(document.querySelectorAll('[yawf-date]'));
+        g.setTime(g.getTime() - ((unsafeWindow.$CONFIG || {}).timeDiff || 0));
+        f.forEach(function (j) {
+          var k = j.getAttribute("yawf-date");
+          if (!/^\s*\d+\s*$/.test(k)) return;
+          var l = new Date();
+          l.setTime(parseInt(k, 10));
+          var text = convert(g, l);
+          if (text !== j.textContent) j.textContent = text;
+        });
+      };
+      // 处理文本显示的时间
+      var texttime = function () {
+        var selectors = [
+          '.WB_from:not([yawf-localtime])',
+          '.cont_top .data:not([yawf-localtime])',
+          'legend:not([yawf-localtime])',
+        ].join(',');
+        var nodes = Array.from(document.querySelectorAll(selectors));
+        nodes.forEach(function (x) {
+          x.setAttribute('yawf-localtime', '');
+          if (util.dom.matches(x, '.WB_webim *')) return; // 聊天窗口中的时间是本地的时间
+          var t = x.firstChild;
+          if (t.nodeType !== Node.TEXT_NODE) return;
+          var v = t.textContent.trim();
+          if (v === '') return;
+          var r = v.replace(/^(.*?)\s*(来自|來自|come from|)$/, function (x, t, s) {
+            return convertText(t) + (s ? ' ' + s + ' ' : '');
+          });
+          t.textContent = r;
+          util.debug('timezone UTC+8 to Local: %o -> %o', v, r);
+        });
+      };
+      modify();
+      update();
+      observer.dom.add(modify);
+      observer.dom.add(texttime);
+      setInterval(update, 1e4);
+    }
+  }).addto(filter.groups.tool);
+}
 
 // 样式
 // 由于历史原因，样式下键值归属 tool
@@ -7525,6 +7658,7 @@ filter.items.style.layout.width_weibo = filter.item({
       .FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
       .FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; }
       .FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
+      .FRAME_message:not([yawf-weibo-only]) .private_dialogue_box .private_dialogue_body { width: {{width}}; }
       @media screen and (max-width: 1006px) {
         .FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
         .FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
@@ -7702,7 +7836,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed_type .WB_detail>.WB_info+.WB_text+.WB_from { margin-top: 1em; }
     */ }));
   },
-}).addto(filter.groups.tool);
+}).addto(filter.groups.style);
 
 // 去除微博间的缝隙
 filter.items.style.sweibo.no_weibo_space = filter.item({
