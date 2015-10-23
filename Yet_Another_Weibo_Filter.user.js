@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/interests
 // @exclude           http://weibo.com/
-// @version           3.5.274
+// @version           3.5.275
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -182,6 +182,7 @@ var text = {
   // 其他元素
   'contentTypesTitle': { 'zh-cn': '将以下元素同样作为内容处理', 'zh-hk': '將以下元素同樣作為內容處理', 'zh-tw': '將以下元素同樣作為內容處理', 'en': 'Handle these elements as content' },
   'contentTypesMention': { 'zh-cn': '提到某人', 'zh-hk': '提到某人', 'zh-tw': '提到某人', 'en': 'Mention' },
+  'contentTypesStock': { 'zh-cn': '股票链接', 'zh-hk': '股票連結', 'zh-tw': '股票連結', 'en': 'Stock link' },
   'contentTypesTopic': { 'zh-cn': '话题标题', 'zh-hk': '話題標題', 'zh-tw': '話題標題', 'en': 'Topic' },
   'contentTypesLinkt': { 'zh-cn': '链接标题', 'zh-hk': '連結標題', 'zh-tw': '連結標題', 'en': 'Link Title' },
   'contentTypesLinku': { 'zh-cn': '链接地址', 'zh-hk': '連結位址', 'zh-tw': '連結位址', 'en': 'Link target URL' },
@@ -341,6 +342,10 @@ var text = {
   'appItemWeibo': { 'zh-cn': '介绍微博应用的微博{{<i>}}', 'zh-hk': '介紹微博應用的微博{{<i>}}', 'zh-tw': '介紹微博應用的微博{{<i>}}', 'en': 'Weibo with app item {{<i>}}' },
   'appItemWeiboDesc': {
     'zh-cn': '介绍微博应用的微博，包括含有微博应用的链接或含有微博应用的卡片的情况。微博应用的链接会以应用图标标记。勾选此项以隐藏此类微博。',
+  },
+  'stockWeibo': { 'zh-cn': '含有股票链接的微博{{<i>}}', 'zh-hk': '含有股票連結的微博{{<i>}}', 'zh-tw': '含有股票連結的微博{{<i>}}', 'en': 'Weibo with stock link {{<i>}}' },
+  'stockWeiboDesc': {
+    'zh-cn': '股票链接和话题相似，在发布框输入“$”即可添加股票链接。勾选以隐藏所有包含此类链接的微博。',
   },
   'otherBlacklistTitleSource': { 'zh-cn': '隐藏以下微博 - 特定来源', 'zh-hk': '隱藏以下內容 - 特定來源', 'zh-tw': '隱藏以下內容 - 特定來源', 'en': 'Hide following content - Source ' },
   'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo comes from 微话题 (micro Topic){{<i>}}' },
@@ -3919,6 +3924,9 @@ weibo.common.text = function (content, preclt) {
   types.topic = function (node) {
     if (util.dom.matches(node, 'a.a_topic')) return node.textContent.trim();
   };
+  types.stock = function (node) {
+    if (util.dom.matches(node, 'a[suda-uatrack*="1022-stock"]')) return node.textContent;
+  };
   types.linkt = function (node) {
     if (util.dom.matches(node, 'a[action-type="feed_list_url"][title]')) return node.getAttribute('title');
   };
@@ -4711,6 +4719,7 @@ filter.predef.subtitle('content', 'elements', '{{contentTypesTitle}}');
 }({
   'mention': true,
   'topic': true,
+  'stock': true,
   'linkt': true,
   'linku': false,
   'emotion': false,
@@ -5273,6 +5282,22 @@ filter.items.other.hidethese_content.appitem= filter.item({
     if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="1042005-appItem"]'))
       return 'hidden';
     if (feed.querySelector('a.W_btn_cardlink[yawf-link-type="S"]'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 股票链接
+filter.items.other.hidethese_content.stock = filter.item({
+  'group': 'hidethese_content',
+  'version': 275,
+  'type': 'boolean',
+  'key': 'weibo.other.stock',
+  'text': '{{stockWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{stockWeiboDesc}}' } },
+  'rule': function stockFilterRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[suda-uatrack*="1022-stock"]'))
       return 'hidden';
     return null;
   },
@@ -6481,6 +6506,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     var checkrec = function checkrec(uid) {
       network.recent(uid, function (mids) {
         if (!mids || !mids.length) return;
+        if (mids[0] < mids[1]) mids.shift();
         recents[uid] = mids;
         updateDot(uid);
       });
@@ -6488,7 +6514,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     };
     // 找到对应每个用户的项目
     var lis = {};
-    observer.dom.add(function () {
+    observer.dom.add(function noticeUserChecker() {
       var users = Array.from(document.querySelectorAll('#yawf-rightmod_userlist li:not([yawf-noticeuser])'));
       users.forEach(function (li) {
         li.setAttribute('yawf-noticeuser', '');
@@ -6559,7 +6585,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
     var last = (function () {
       var last = that.ref._last.getconf() || {};
       observer.weibo.onload(function (feed) {
-        // 这个规则之在个人主页适用
+        // 这个规则只在个人主页适用
         if (util.page.discovery || util.page.search || !document.querySelector('.PCD_header')) return [];
         if (feed.getAttribute('feedtype') === 'ad') return;
         var mid = feed.getAttribute('mid'); if (!mid) return;
@@ -6999,6 +7025,7 @@ filter.items.tool.weibotool.card_button = filter.item({
         // 检查每个按钮是否与他对应
         var button = buttons.filter(function (button) {
           var arg = util.str.parsearg(battr(button));
+          if (!arg || !arg.value) return false;
           var values = keyvals(arg.value.split(':'));
           // 要求 key 一样
           if (arg.key !== info.key) return false;
@@ -7343,7 +7370,7 @@ if (!function isBJT() {
         });
       };
       // 处理文本显示的时间
-      var texttime = function () {
+      var texttime = function changeDateText() {
         var selectors = [
           '.WB_from:not([yawf-localtime])',
           '.cont_top .data:not([yawf-localtime])',
