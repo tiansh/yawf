@@ -34,7 +34,7 @@
     <h2>隐藏搜索框</h2>
     <div class="in">
       <p>请参阅：<a href="https://tiansh.github.io/yawf/weibo_search.html">添加新浪微博的搜索到您的浏览器搜索框中</a></p>
-      <div class="css_code">.WB_global_nav .gn_search { display: none !important; }</div>
+      <div class="css_code">.WB_global_nav .gn_search_v2 { display: none !important; }</div>
     </div>
     <h2>隐藏左上角微博图标</h2>
     <div class="in">
@@ -55,12 +55,14 @@
       <p>如果导航栏屏蔽掉了“应用”和“游戏”的链接，或者隐藏了搜索框，可以使用下面这段 CSS 使顶栏变窄：</p>
       <div class="css_code">
         .WB_global_nav .gn_header { width: 850px; }
-        .WB_global_nav .gn_search .W_input { max-width: 240px; }
+        .WB_global_nav .gn_search_v2 { max-width: 220px !important; }
+        .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 178px !important; }
+        .gn_topmenulist_search { width: 222px !important; }
         @media screen and (max-width: 1006px) {
-          .WB_global_nav .gn_header { width: 610px; }
-          .WB_global_nav .gn_search { display: none; }
+            .WB_global_nav .gn_header { width: 610px; }
+            .WB_global_nav .gn_search_v2 { display: none; }
         }
-        body[yawf-merge-left="left"] .gn_logo { margin-right: 95px !important; }
+        body[yawf-merge-left="left"] .gn_logo { margin-right: 105px !important; }
       </div>
     </div>
     <h2>调整滚动条宽度</h2>
