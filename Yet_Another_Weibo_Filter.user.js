@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.279
+// @version           3.6.280
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1482,6 +1482,10 @@ observer.dom = (function () {
     callbacks.forEach(function (c) { c.wrap(); });
   };
   var active = util.func.catched(function (mutation) {
+    if (Array.from(mutation).every(function isDate(x) {
+      var target = x.target;
+      return target.hasAttribute('date') || target.hasAttribute('yawf-date');
+    })) return;
     if (actived === false) actived = true;
     if (actived !== null) return;
     act(); actived = false;
@@ -2266,7 +2270,7 @@ network.recent = (function () {
           var re = /<script>FM\.view\({"ns":"pl\.content\.homeFeed\.index".*"html":(?=.*WB_feed_type)(".*")}\)<\/script>\n/;
           var html = JSON.parse(d.match(re)[1]);
           var dom = util.dom.create('div', html);
-          var feeds = Array.from(dom.querySelectorAll('.WB_feed_type[mid]'));
+          var feeds = Array.from(dom.querySelectorAll('.WB_feed_type[mid]:not([feedtype="ad"])'));
           var mids = feeds.map(function (f) { return f.getAttribute('mid'); });
           util.debug('user page %o found %o messages: %o', uid, mids.length, mids);
           if (mids.length) cache(uid, mids);
@@ -4252,6 +4256,7 @@ filter.items.base.scripttool.fast_hide_button = filter.item({
   'getmids': function () { return JSON.parse(GM_getValue(this.midkey, '[]')); },
   'putmids': function (value) { GM_setValue(this.midkey, JSON.stringify(value)); },
   'rule': function hiddenByMid(feed) {
+    if (!weibo.feed.author.id(feed)) return null;
     var mids = this.getmids(), mid = feed.getAttribute('mid');
     if (mids.indexOf(mid) !== -1) return 'hidden';
     return null;
@@ -5978,17 +5983,23 @@ filter.predef.group('layout');
 
   subtitle('Person', true);
   item('MoveThings', 51, '.profile_move_things { display: none !important; }');
-  item('Cover', 5, util.str.cmt(function () { /*!CSS
-    .PCD_header, .PCD_header .pf_wrap, .PCD_header .shadow { height: 130px; }
-    .PCD_header .pf_photo { margin: 10px 20px 10px calc(50% - 280px); float: left; }
-    .PCD_header .pf_username, .PCD_header .pf_intro { text-shadow: 0 0 4px #000; }
-    .PCD_header .pf_username, .PCD_header .pf_intro, .PCD_header .pf_opt { text-align: left; margin-left: 140px; }
-    .PCD_header .pf_wrap .pf_use_num, .PCD_header .pf_wrap .pf_copy_icon, .PCD_header .upcover { display: none; }
-    .PCD_header .S_shadow, .PCD_header .cover_wrap { background: none !important; }
-    .PCD_header .shadow { margin: 0 calc(50% - 300px); width: 600px; }
-    .PCD_header .pf_intro { height: 36px; line-height: 18px; }
-    .PCD_header .pf_opt { margin-top: 8px; }
-  */ }));
+  item('Cover', 5, function () {
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .PCD_header, .PCD_header .pf_wrap, .PCD_header .shadow { height: 130px; }
+      .PCD_header .pf_photo { margin: 10px 20px 10px calc(50% - 280px); float: left; }
+      .PCD_header .pf_username, .PCD_header .pf_intro { text-shadow: 0 0 4px #000; }
+      .PCD_header .pf_username, .PCD_header .pf_intro, .PCD_header .pf_opt { text-align: left; margin-left: 140px; }
+      .PCD_header .pf_wrap .pf_use_num, .PCD_header .pf_wrap .pf_copy_icon, .PCD_header .upcover { display: none; }
+      .PCD_header .S_shadow, .PCD_header .cover_wrap, .PCD_header .pf_wrap { background: none !important; }
+      .PCD_header .shadow { margin: 0 calc(50% - 300px); width: 600px; }
+      .PCD_header .pf_intro { height: 36px; line-height: 18px; }
+      .PCD_header .pf_opt { margin-top: 8px; }
+    */ }));
+    observer.dom.add(function fullProfileIntroduction() {
+      var intro = document.querySelector('.PCD_header .pf_intro:not([yawf-full-intro])'); if (!intro) return;
+      intro.setAttribute('yawf-full-intro', (intro.textContent = intro.getAttribute('title')));
+    });
+  });
   item('BGImg', 227, '.S_page, .S_page .WB_miniblog { background-image: url("\'\'") !important; }');
   item('BadgeIcon', 10, '.pf_badge_icon { display: none !important; }');
   item('Verify', 174, '[yawf-id="yawf-pr-pcd-person-info-my"] .verify_area, [yawf-id="yawf-pr-pcd-person-info"] .verify_area { display: none !important; }');
@@ -6615,10 +6626,11 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
       var last = that.ref._last.getconf() || {};
       observer.weibo.onload(function (feed) {
         // 这个规则只在个人主页适用
-        if (util.page.discovery || util.page.search || !document.querySelector('.PCD_header')) return [];
+        if (util.page.discovery || util.page.search) return;
         if (feed.getAttribute('feedtype') === 'ad') return;
         var mid = feed.getAttribute('mid'); if (!mid) return;
-        var uid = util.info.oid();
+        var uid = weibo.feed.author.id(feed); if (uid) return;
+        uid = util.info.oid(); if (!uid) return;
         if (users.indexOf(uid) === -1) return;
         if (!last[uid] || idCmp(last[uid], mid) < 0) {
           last[uid] = mid;
@@ -7628,7 +7640,7 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{reorderNavBarDesc}}' } },
   'ainit': function () {
     var moveNavList = function moveNavList() {
-      var search = document.querySelector('.WB_global_nav .gn_header .gn_search');
+      var search = document.querySelector('.WB_global_nav .gn_search, .WB_global_nav .gn_search_v2');
       var list = document.querySelector('.WB_global_nav .gn_header .gn_position .gn_nav .gn_nav_list');
       if (!search || !list) return;
       var items = Array.from(list.querySelectorAll('li')).slice(0, -1);
@@ -7638,7 +7650,7 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
       search.parentNode.insertBefore(gnlist, search);
       search.parentNode.appendChild(search);
       util.css.add(util.str.cmt(function () { /*!CSS
-        .WB_global_nav .gn_search { float: right; }
+        .WB_global_nav .gn_search, .WB_global_nav .gn_search_v2 { float: right; }
         .WB_global_nav .gn_header { text-align: right; }
         .WB_global_nav .gn_header > * { text-align: left; }
         .WB_global_nav .gn_header > .gn_nav { margin-right: 0; }
@@ -8639,9 +8651,22 @@ var extension = (function () {
 }());
 
 GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
-  .gn_search .W_input { -moz-box-sizing: border-box; box-sizing: border-box !important; height: 32px !important; }
   .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   {{yawf-icon-font}}
+  // 缩小搜索框为漏斗提供空间
+  .WB_global_nav .gn_search_v2 { width: 245px !important; }
+  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 202px !important; }
+  .gn_topmenulist_search { width: 247px !important; }
+  @media screen and (min-width:1295px) {
+    .WB_global_nav .gn_search_v2 { width: 505px !important; }
+    .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 462px !important; }
+    .gn_topmenulist_search { width: 507px !important; }
+  }
+  @media screen and (max-width:1006px) {
+    .WB_global_nav .gn_search_v2 { width: 115px !important; } 
+    .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 72px !important; } 
+    .gn_topmenulist_search { width: 117px !important; }
+  }
   // 设置框相关样式
   #yawf-config [node-type="inner"] { padding: 0; width: 800px; height: 480px; }
   #yawf-config .yawf-config-header { float: left; width: 160px; height: 480px; }
