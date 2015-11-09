@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.280
+// @version           3.6.281
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -190,10 +190,7 @@ var text = {
   'accountFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'accountFilterDetails': { 'zh-cn': '来自以下帐号的所有微博', 'zh-hk': '來自以下帳號的所有微博', 'zh-tw': '來自以下帳號的所有微博', 'en': 'All Weibo from these accounts' },
   'accountFilterDetailsDesc': {
-    'zh-cn': '你关注的某个人撰写或转发的微博。对于转发的微博，仅匹配最后转发的那个人。您还可以到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隐私设置 - 屏蔽帐号</a>屏蔽您关注了但不想在首页看到的帐号。',
-    'zh-hk': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
-    'zh-tw': '推薦您到<a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">隱私設置 - 屏蔽帐号</a>封鎖您關注了但不想在首頁看到的帳號。',
-    'en': 'You can block Weibo from accounts you followed in the page <a target="_blank" href="http://account.weibo.com/set/privacy#open=privacy_feeduser">Privacy - Block account</a>.'
+    'zh-cn': '你关注的某个人撰写或转发的微博。对于转发的微博，仅匹配最后转发的那个人。',
   },
   'accountFilterFast': { 'zh-cn': '作者是“@{{name}}”的所有微博', 'zh-hk': '作者是「@{{name}}」的所有微博', 'zh-tw': '作者是「@{{name}}」的所有微博', 'en': 'All Weibo by "@{{name}}"' },
   'accountFilterContextMenu': { 'zh-cn': '作者是 @{{name}}', 'zh-hk': '作者是 @{{name}}', 'zh-tw': '作者是 @{{name}}', 'en': 'by @{{name}}' },
@@ -348,7 +345,7 @@ var text = {
   'otherBlacklistTitleSource': { 'zh-cn': '隐藏以下微博 - 特定来源', 'zh-hk': '隱藏以下內容 - 特定來源', 'zh-tw': '隱藏以下內容 - 特定來源', 'en': 'Hide following content - Source ' },
   'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo comes from 微话题 (micro Topic){{<i>}}' },
   'huatiSourceWeiboDesc': {
-    'zh-cn': '一些热门话题页面发布微博时会显示以“微话题 -”开头的来源',
+    'zh-cn': '一些热门话题页面发布微博时会显示以“微话题”开头的来源',
   },
   'weiqunSourceWeibo': { 'zh-cn': '来自新浪微群的微博{{<i>}}', 'zh-hk': '來自新浪微群的微博{{<i>}}', 'zh-tw': '來自新浪微群的微博{{<i>}}', 'en': 'Weibo comes from 新浪微群 (micro Group) {{<i>}}' },
   'weiqunSourceWeiboDesc': {
@@ -1082,7 +1079,7 @@ util.priority = {
 // 函数相关操作
 util.func = {};
 
-// 空
+// 基本函数
 util.func.noop = function () { };
 util.func.identity = function (x) { return x; };
 util.func.constant = function (x) { return function () { return x; }; };
@@ -1104,7 +1101,7 @@ util.func.catched = function (f, fc) {
   var ret = function () {
     try { return f.apply(this, arguments); }
     catch (e) {
-      util.debug('Exception while run %o: %o', f, e);
+      util.debug('Exception while run %o: %o \n %o', f, e, e.stack);
       if (fc) fc(e);
     }
   };
@@ -1191,7 +1188,7 @@ util.str.host = function (link) {
 util.str.escape = {};
 // 将字符串用&#dd的形式转义，以便将内容至于 XML 中
 util.str.escape.xml = function (s) {
-  return s.replace(/./g, function (c) { return '&#' + c.charCodeAt(0); });
+  return s.replace(/[\u0000-\u00ff]/g, function (c) { return '&#' + c.charCodeAt(0); });
 };
 // 将正则式相关字符以斜杠转义，以便创建正则匹配
 util.str.escape.regexp = function (s) {
@@ -1482,10 +1479,11 @@ observer.dom = (function () {
     callbacks.forEach(function (c) { c.wrap(); });
   };
   var active = util.func.catched(function (mutation) {
-    if (Array.from(mutation).every(function isDate(x) {
+    if (mutation && Array.from(mutation).every(function isDate(x) {
       var target = x.target;
       return target.hasAttribute('date') || target.hasAttribute('yawf-date');
     })) return;
+
     if (actived === false) actived = true;
     if (actived !== null) return;
     act(); actived = false;
@@ -3323,8 +3321,8 @@ filter.typed.dom = (function () {
     n.step = step; r.step = step;
     n.style.width = 10 * String(item.max).length + 15 + 'px';
     var onchange = util.dom.bind.text(n, item, function (val) {
-      if (isNaN(parseInt(val))) return item['default'] || item.min;
-      var ret = Math.min(Math.max(parseInt(val), item.min), item.max);
+      if (isNaN(parseInt(val, 10))) return item['default'] || item.min;
+      var ret = Math.min(Math.max(parseInt(val, 10), item.min), item.max);
       return Math.round((ret - item.min) / step) * step + item.min;
     });
     r.value = n.value;
@@ -4151,6 +4149,34 @@ filter.collection.group.add(function () {
     actived = false; text = ''; layer = null;
     return dom;
   };
+  // 不等号们
+  var operator = function (op, x, y) {
+    if (op === '=') return x === y;
+    if (op === '>') return x > y;
+    if (op === '<') return x < y;
+    if (op === '>=') return x >= y;
+    if (op === '<=') return x <= y;
+    return false;
+  };
+  // 将搜索词分析成搜索条件
+  var parse = function (text) {
+    var token = text.toLowerCase().trim().replace(/:\s+/g, ':').split(/\s+/);
+    var texts = [], version = util.func.constant(true);
+    var getVersion = function (ver) {
+      if (!util.info.version) return;
+      var match = ver.match(/.*:([><]?=?)(-?\d+)/), op = match[1] || '=', ver = parseInt(match[2], 10);
+      if (ver < 0) ver = util.info.version + ver + 1;
+      version = function (v) { return operator(op, v, ver); };
+    };
+    token.forEach(function (t) {
+      if (t.match(/ver(sion)?:[><]?=?-?\d+/)) getVersion(t);
+      else texts.push(t);
+    });
+    return {
+      'version': version,
+      'texts': texts,
+    };
+  };
   // 显示该选项卡
   var show = util.func.catched(function (clayer) {
     actived = true;
@@ -4161,14 +4187,16 @@ filter.collection.group.add(function () {
           return allText(item.ref[key]);
         }) : []).join(' ');
     };
-    var search = text.trim().toLowerCase();
+    var search = parse(text);
+    var notContain = function (x, y) { return x.indexOf(y) === -1; };
     var confs = filter.collection.item.list(function (item) {
-      if (!item.version || !search) return;
+      if (typeof item.version !== 'number' || !text) return false;
+      if (!search.version(item.version)) return false;
       var div = util.dom.create('<div></div>');
       div.innerHTML = util.str.fill(allText(item), item);
       var info = div.textContent.toLowerCase();
-      if (info.indexOf(search) !== -1) return true;
-      return false;
+      if (search.texts.some(notContain.bind(null, info))) return false;
+      return true;
     });
     if (confs.count()) confs.show(layer);
     else layer.innerHTML = util.str.fill(html.searchNotFound);
@@ -5361,6 +5389,8 @@ filter.items.other.hidethese_source.wei_huati = filter.item({
       return 'hidden';
     if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="from=feed_card"]'))
       return 'hidden';
+    if (feed.querySelector('.WB_from a[href="http://app.weibo.com/t/feed/4AbAFV"]'))
+      return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -6038,14 +6068,23 @@ filter.predef.group('layout');
   item('Youdao', 174, '#v6_pl_rightmod_favyoudao { display: none !important; }');
 
   subtitle('Other', true);
-  item('Ads', 2, [
-    '[ad-data]', '[feedtype="ad"]',
-    '[id^="ads_"]', '[id^="ad_"]',
-    '[id*="pl_rightmod_ads"]', '[id*="pl_content_biz"]', '[id*="pl_ad_"]', '[id^="sinaadToolkitBox"]', 
-    '[class*="WB_ad_"]',
-    '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay'
-  ].join(',') + ' { display: none !important; } ' +
-  '#wrapAD, .news_logo { visibility: hidden !important; }');
+  item('Ads', 2, function () {
+    util.css.add([
+      '[ad-data]', '[feedtype="ad"]',
+      '[id^="ads_"]', '[id^="ad_"]',
+      '[id*="pl_rightmod_ads"]', '[id*="pl_content_biz"]', '[id*="pl_ad_"]', '[id^="sinaadToolkitBox"]',
+      '[class*="WB_ad_"]',
+      '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay'
+    ].join(',') + ' { display: none !important; } ' +
+    '#wrapAD, .news_logo { visibility: hidden !important; }');
+    var updateSkin = function () {
+      var adskin = document.querySelector('link[href*="/skin355/"], link[href*="/skin356/"]');
+      if (adskin) adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=34440b5fb8f50c52');
+      var adskincover = document.querySelector('#skin_cover_s[style*="/skin355/"], #skin_cover_s[style*="/skin356/"]');
+      if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/skin058/images/profile_cover_s.jpg?version=01d43aa81fed91cc")';
+    };
+    observer.dom.add(updateSkin);
+  });
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('Template', 279, '.icon_setskin { display: none !important; }');
   item('HomeTip', 124, '#v6_pl_content_hometip { display: none !important }');
@@ -6615,7 +6654,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
         range = Array.from(that.ref._records.getconf() || []);
         if (range.indexOf(mid) !== -1) return;
         range.push(mid); range = range.sort(idCmp);
-        that.ref._records.putconf(range.slice(Math.max(range.length - 1000, 0)));
+        that.ref._records.putconf(range.slice(Math.max(range.length - 500, 0)));
         updateAll();
       });
     }());
@@ -6632,10 +6671,9 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
         var uid = weibo.feed.author.id(feed); if (uid) return;
         uid = util.info.oid(); if (!uid) return;
         if (users.indexOf(uid) === -1) return;
-        if (!last[uid] || idCmp(last[uid], mid) < 0) {
-          last[uid] = mid;
-          that.ref._last.putconf(last);
-        }
+        if (last[uid] && idCmp(last[uid], mid) >= 0) return;
+        last[uid] = mid;
+        that.ref._last.putconf(last);
       });
       return last;
     }());
@@ -8472,8 +8510,8 @@ util.init(function () {
 }(function () {
   var version = ((GM_info || {}).script || {}).version || '';
   var m = version.match(/^\d+\.\d+\.(\d+)$/);
-  if (!m || !m[1] || !Number(m[1])) return null;
-  return Number(m[1]);
+  if (!m || !m[1] || !parseInt(m[1], 10)) return null;
+  return (util.info.version = parseInt(m[1], 10));
 }()));
 
 // 调试
