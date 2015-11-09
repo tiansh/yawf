@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.281
+// @version           3.6.282
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -651,6 +651,10 @@ var text = {
   'replaceLinkByShortUrl': { 'zh-cn': '短网址', 'zh-hk': '短網址', 'zh-tw': '短網址', 'en': 'shortened URL' },
   'replaceLinkByFullUrl': { 'zh-cn': '完整网址或短网址', 'zh-hk': '完整網址或短網址', 'zh-tw': '完整網址或短網址', 'en': 'full URL or shortened URL' },
   'replaceLinkByTitleUrl': { 'zh-cn': '完整网址或标题文本', 'zh-hk': '完整網址或標題文本', 'zh-tw': '完整網址或標題文本', 'en': 'full URL or description' },
+  'replaceImageEmoji': { 'zh-cn': '将微博中图片表示的 Unicode 表情符号替换为文本{{<i>}}', 'zh-hk': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'zh-tw': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'en': 'Use text for unicode emoji instead of image {{<i>}}' },
+  'replaceImageEmojiDesc': {
+    'zh-cn': '使用文本替换对应图片。表情会随您使用的操作系统、浏览器、安装的字体的不同而显示成不的样子。Firefox 和 Safari 可以得到较好的效果。<hr />替换前 <span style="font-size: 20px"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8192.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8098.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84b2.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8cac.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8992.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee888b.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84ad.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee9493.png"></span><br />替换后 <span style="font-size: 20px">🐶⚽️🏁💛⚠️📶🀄️🇨🇳</span>'
+  },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博仅显示“来自微博 weibo.com”', 'zh-hk': '自訂來源微博僅顯示“來自微博 weibo.com”', 'zh-tw': '自訂來源微博僅顯示“來自微博 weibo.com”', 'en': 'Weibo with customize source show "come from 微博 weibo.com" only' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
   'customizeSourceWeiboDesc': {
@@ -1031,6 +1035,10 @@ var font = {
   ]
 };
 
+// 微博使用 softbank 的 emoji 编码，我们将它们转换到标准的 unicode
+// 键是 softbank 扩展 unicode 表情的码位点减去 0xe000 ；值是 unicode 码位点
+var emoji = { 1: 128102, 2: 128103, 3: 128139, 4: 128104, 5: 128105, 6: 128090, 7: 128095, 8: 128247, 9: 128222, 10: 128241, 11: 128224, 12: 128187, 13: 128074, 14: 128077, 15: 9757, 16: 9994, 17: 9996, 18: 9995, 19: 127935, 20: 9971, 21: 127934, 22: 9918, 23: 127940, 24: 9917, 25: 127907, 26: 128052, 27: 128663, 28: 9973, 29: 9992, 30: 128643, 31: 128645, 32: 10067, 33: 10071, 34: 10084, 35: 128148, 36: 128336, 37: 128337, 38: 128338, 39: 128339, 40: 128340, 41: 128341, 42: 128342, 43: 128343, 44: 128344, 45: 9200, 46: 128346, 47: 128347, 48: 127800, 49: 128305, 50: 127801, 51: 127876, 52: 128141, 53: 128142, 54: 127969, 55: 9962, 56: 127970, 57: 128649, 58: 9981, 59: 128507, 60: 127908, 61: 128249, 62: 127925, 63: 128273, 64: 127927, 65: 127928, 66: 127930, 67: 127860, 68: 127865, 69: 9749, 70: 127856, 71: 127866, 72: 9924, 73: 9729, 74: 9925, 75: 9748, 76: 127771, 77: 127748, 78: 128124, 79: 128049, 80: 128047, 81: 128059, 82: 128054, 83: 128045, 84: 128051, 85: 128039, 86: 128522, 87: 128570, 88: 128542, 89: 128544, 90: 128169, 1091: 127744, 1084: 127746, 1099: 127756, 1097: 127749, 326: 127750, 1098: 127751, 1100: 127752, 1086: 127754, 317: 9889, 821: 127775, 575: 9800, 576: 9801, 577: 9802, 578: 9803, 579: 9804, 580: 9805, 581: 9806, 582: 9807, 583: 9808, 584: 9809, 585: 9810, 586: 9811, 587: 9934, 272: 127807, 772: 127799, 280: 127809, 281: 127810, 1095: 127811, 771: 127802, 773: 127804, 775: 127796, 776: 127797, 1092: 127806, 837: 127823, 838: 127818, 839: 127827, 840: 127817, 841: 127813, 842: 127814, 1049: 128064, 1051: 128066, 1050: 128067, 1052: 128068, 1033: 128541, 796: 128132, 797: 128133, 798: 128134, 799: 128135, 800: 128136, 1064: 128107, 338: 128110, 1065: 128111, 1301: 128113, 1302: 128114, 1303: 128115, 1304: 128116, 1305: 128117, 1306: 128118, 1307: 128119, 1308: 128120, 283: 128123, 268: 128125, 299: 128126, 282: 128127, 284: 128128, 595: 128129, 1310: 128130, 1311: 128131, 1325: 128013, 308: 128014, 1326: 128020, 1327: 128023, 1328: 128043, 1318: 128024, 1319: 128040, 1320: 128018, 1321: 128017, 266: 128025, 1089: 128026, 1317: 128027, 1314: 128032, 1315: 128035, 1313: 128038, 1312: 128044, 265: 128053, 267: 128061, 1316: 128057, 1322: 128058, 1323: 128046, 1324: 128048, 1329: 128056, 1334: 128099, 1044: 9786, 1027: 128589, 1040: 128562, 1030: 128555, 1039: 128560, 1038: 128530, 262: 128571, 1028: 128572, 261: 128540, 1048: 128573, 1047: 128538, 1036: 128567, 1037: 128563, 1045: 128516, 1034: 128524, 1042: 128569, 1043: 128575, 1041: 128557, 1035: 128552, 1046: 128590, 1031: 128171, 263: 128561, 1032: 128554, 1026: 128527, 264: 128531, 1025: 128549, 1029: 128521, 1059: 128581, 1060: 128582, 1062: 128583, 1063: 128588, 1053: 128591, 339: 127971, 341: 127973, 333: 127974, 340: 127975, 344: 127976, 1281: 127977, 342: 127978, 343: 127979, 1284: 127980, 1285: 127983, 1286: 127984, 1288: 127981, 779: 127862, 514: 128674, 289: 9970, 1289: 128508, 1309: 128509, 318: 128096, 794: 128097, 795: 128098, 270: 128081, 770: 128084, 792: 128082, 793: 128087, 801: 128088, 802: 128089, 803: 128092, 303: 128181, 329: 128177, 330: 128200, 1299: [127464, 127475], 1294: [127465, 127466], 1297: [127466, 127480], 1293: [127467, 127479], 1296: [127468, 127463], 1295: [127470, 127481], 1291: [127471, 127477], 1300: [127472, 127479], 1298: [127479, 127482], 1292: [127482, 127480], 285: 128293, 278: 128296, 275: 128299, 574: 128303, 521: 128304, 315: 128137, 783: 128138, 1330: 127344, 1331: 127345, 1332: 127374, 1333: 127358, 335: 127359, 788: 127872, 274: 128230, 843: 127874, 1096: 127877, 323: 127884, 279: 127878, 784: 127880, 786: 127881, 1078: 127885, 1080: 127886, 1081: 127891, 1082: 127890, 1083: 127887, 1088: 127879, 1090: 127888, 1093: 127875, 1094: 127889, 260: 128242, 769: 128209, 259: 128140, 257: 128235, 258: 128238, 322: 128226, 791: 128227, 331: 128225, 787: 9986, 819: 10062, 287: 128186, 286: 128188, 790: 128190, 294: 128191, 295: 128192, 328: 128210, 290: 9978, 1066: 127936, 306: 127937, 277: 127939, 305: 127942, 1067: 127944, 1069: 127946, 1076: 128647, 1077: 128644, 1070: 128665, 345: 128652, 336: 128655, 269: 128640, 309: 128676, 346: 128661, 1071: 128666, 1072: 128658, 1073: 128657, 1074: 128680, 334: 128677, 311: 9940, 291: 9832, 292: 127905, 1075: 127906, 1287: 127910, 778: 127911, 1282: 127912, 1283: 127917, 293: 127915, 804: 127916, 301: 126980, 304: 127919, 307: 127920, 1068: 127921, 806: 127932, 300: 12349, 298: 128250, 296: 128251, 297: 128252, 273: 128143, 774: 128144, 1061: 128145, 1085: 128146, 590: 169, 591: 174, 1335: 8482, 519: 128286, 528: 35, 540: 49, 541: 50, 542: 51, 543: 52, 544: 53, 545: 54, 546: 55, 547: 56, 548: 57, 549: 48, 523: 128246, 592: 128243, 593: 128244, 288: 127828, 834: 127833, 832: 127836, 825: 127838, 327: 127859, 826: 127846, 827: 127839, 828: 127841, 829: 127832, 830: 127834, 831: 127837, 833: 127835, 835: 127842, 836: 127843, 844: 127857, 845: 127858, 1087: 127847, 824: 127861, 780: 127867, 566: 10548, 568: 10549, 567: 8598, 569: 8601, 562: 11014, 563: 11015, 565: 128281, 564: 10145, 570: 9654, 571: 9664, 572: 9193, 573: 9194, 818: 11093, 822: 10068, 823: 10069, 529: 10175, 807: 128158, 808: 128151, 809: 128152, 810: 128153, 811: 128154, 812: 128155, 813: 128156, 1079: 128157, 516: 128159, 524: 9829, 526: 9824, 525: 9830, 527: 9827, 522: 9855, 594: 9888, 782: 128684, 520: 128685, 310: 128690, 513: 128694, 312: 128697, 313: 128698, 319: 128704, 337: 128699, 320: 128701, 777: 128702, 314: 128700, 532: 127378, 553: 127380, 530: 127381, 589: 127383, 531: 127385, 302: 127386, 515: 127489, 552: 127490, 534: 127514, 556: 127535, 555: 127539, 554: 127541, 533: 127542, 535: 127543, 536: 127544, 551: 127545, 557: 127546, 789: 12953, 781: 12951, 550: 127568, 271: 128161, 820: 128162, 785: 128163, 316: 128164, 817: 128167, 816: 128168, 332: 128170, 814: 10055, 517: 10036, 518: 10035, 537: 128308, 815: 11088, 538: 11035, 539: 11036, 321: 128266, 276: 128270, 324: 128272, 325: 128275, 805: 128276, 588: 128285, 558: 128070, 559: 128071, 560: 128072, 561: 128073, 1054: 128075, 1055: 128079, 1056: 128076, 1057: 128078, 1058: 128080 };
+
 var util = {};
 
 // 浏览器识别
@@ -1193,6 +1201,23 @@ util.str.escape.xml = function (s) {
 // 将正则式相关字符以斜杠转义，以便创建正则匹配
 util.str.escape.regexp = function (s) {
   return s.replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1");
+};
+
+// 将 utf8 编码的 softbank 表情转换为 unicode ， 例如 "ee8192" -> "🐶"
+util.str.codePoint = function (codePoint) {
+  if (String.fromCodePoint) return String.fromCodePoint(codePoint);
+  if (codePoint < 0xFFFF) return String.fromCharCode(codePoint);
+  return (String.fromCharCode((codePoint >> 10) + 0xD7C0) +
+    String.fromCharCode((codePoint % 0x400) + 0xDC00));
+};
+util.str.emoji = function (code) {
+  // 我们将 utf8 编码转换成码位点，并减去 0xe000 后查表
+  var softbank = emoji[decodeURIComponent(code.replace(/(..)/g, '%$1')).charCodeAt(0) - 0xe000];
+  if (!softbank.length) softbank = [softbank];
+  // 最后将结果转换回字符
+  var unicode = softbank.map(util.str.codePoint).join('');
+  util.debug('emoji convert %o -> %o', code, unicode);
+  return unicode;
 };
 
 // 以参数填充字符串
@@ -1673,14 +1698,11 @@ util._languages = (function () {
 // 设置相关工具
 util.config = null;
 util._storage = function () {
-  var config = {}, config_bak = null;
+  var config = {};
   var keys = [], onputs = {};
   var storageKey = 'user' + util.info.uid + 'config';
   var tonputs = function (key, value, oldValue) {
     (onputs[key] || []).map(function (f) { f(value, oldValue); });
-  };
-  var updateBak = function () {
-    config_bak = JSON.parse(JSON.stringify(config));
   };
   // 读取到内存
   var readp = false;
@@ -1691,7 +1713,6 @@ util._storage = function () {
     util.debug('read GM value');
     try { config = JSON.parse(GM_getValue(storageKey, '{}')); }
     catch (e) { config = {}; }
-    updateBak();
   };
   // 从内存写出
   var write = function () {
@@ -1701,11 +1722,13 @@ util._storage = function () {
   // 写入到内存
   var put = function (key, value) {
     if (value != null && keys.indexOf(key) === -1) util.debug('put key %s not in keys.', key);
-    updateBak();
-    if (JSON.stringify(config_bak[key]) === JSON.stringify(value)) return value;
-    tonputs(key, value, config[key]);
+    read();
+    var ori = config[key];
+    var old = JSON.stringify(config);
     if (value == null) delete config[key]; else config[key] = value;
-    updateBak();
+    var cur = JSON.stringify(config);
+    if (cur === old) return value;
+    tonputs(key, value, ori);
     write();
     return value;
   };
@@ -1764,7 +1787,6 @@ util._storage = function () {
   // 清空设置
   var clear = function () {
     config = {};
-    updateBak();
     tonputs();
     write();
   };
@@ -3935,6 +3957,13 @@ weibo.common.text = function (content, preclt) {
   types.emotion = function (node) {
     if (util.dom.matches(node, 'img[type="face"][alt]')) return node.getAttribute('alt');
   };
+  types.emoji = function (node) {
+    if (!util.dom.matches(node, '[src^="http://img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]')) return void 0;
+    // 这些表情都在 0xe000+ 的区间，对应的 utf8 编码都是三位，所以一定是 e 开头
+    var code = node.getAttribute('src').match(/(e.....)\.png/)[1];
+    var unicode = util.str.emoji(code);
+    return unicode;
+  };
   var match = function (feed) {
     return content(feed, function (m) {
       return Array.from(m.childNodes).map(function (node) {
@@ -3956,8 +3985,8 @@ weibo.common.text = function (content, preclt) {
   return match;
 };
 
-weibo.feed.text = weibo.common.text(weibo.feed.content, []);
-weibo.comment.text = weibo.common.text(weibo.comment.content, ['topic', 'linkt', 'stock']);
+weibo.feed.text = weibo.common.text(weibo.feed.content, ['emoji']);
+weibo.comment.text = weibo.common.text(weibo.comment.content, ['topic', 'linkt', 'stock', 'emoji']);
 
 // 找到一条微博的表情符号
 weibo.common.emoji = function (feed) {
@@ -6077,7 +6106,7 @@ filter.predef.group('layout');
       '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay'
     ].join(',') + ' { display: none !important; } ' +
     '#wrapAD, .news_logo { visibility: hidden !important; }');
-    var updateSkin = function () {
+    var updateSkin = function updateSkin() {
       var adskin = document.querySelector('link[href*="/skin355/"], link[href*="/skin356/"]');
       if (adskin) adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=34440b5fb8f50c52');
       var adskincover = document.querySelector('#skin_cover_s[style*="/skin355/"], #skin_cover_s[style*="/skin356/"]');
@@ -6670,8 +6699,9 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
         var mid = feed.getAttribute('mid'); if (!mid) return;
         var uid = weibo.feed.author.id(feed); if (uid) return;
         uid = util.info.oid(); if (!uid) return;
-        if (users.indexOf(uid) === -1) return;
+        if (list.conf.indexOf(uid) === -1) return;
         if (last[uid] && idCmp(last[uid], mid) >= 0) return;
+        last = that.ref._last.getconf();
         last[uid] = mid;
         that.ref._last.putconf(last);
       });
@@ -7308,6 +7338,29 @@ filter.items.tool.weibotool.replace_link = filter.item({
     };
     expandLink();
     observer.dom.add(expandLink);
+  },
+}).addto(filter.groups.tool);
+
+// 使用文本替换图片表情
+filter.items.tool.weibotool.replace_image_emoji = filter.item({
+  'group': 'weibotool',
+  'version': 282,
+  'type': 'boolean',
+  'key': 'weibo.tool.replace_image_emoji',
+  'text': '{{replaceImageEmoji}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{replaceImageEmojiDesc}}' } },
+  'ainit': function () {
+    var replaceImageEmoji = function replaceImageEmoji() {
+      var emoji = Array.from(document.querySelectorAll('[src^="http://img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]'));
+      emoji.forEach(function (node) {
+        var code = node.getAttribute('src').match(/(e.....)\.png/)[1];
+        var text = document.createTextNode(util.str.emoji(code));
+        node.parentNode.replaceChild(text, node);
+        if (text.parentNode.normalize) text.parentNode.normalize();
+      });
+    };
+    replaceImageEmoji();
+    observer.dom.add(replaceImageEmoji);
   },
 }).addto(filter.groups.tool);
 
