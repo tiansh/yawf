@@ -14,8 +14,10 @@
   <link rel="canonical" href="https://tiansh.github.io/yawf/zh-cn.html">
   <link rel="icon" href="https://tiansh.github.io/yawf/yawf.ico" />
   <link rel="stylesheet" href="pages/main.css" />
+  <style id="addstyle"></style>
   <script src="pages/main.js"></script>
-  <script>document.write(browserCss());</script>
+  <script src="pages/allfunc.js"></script>
+  <script> document.write(browserCss()); $CONFIG.lang = 'zh-cn'; </script>
   <noscript><style> .noscript { display: block; } </style></noscript>
 </head>
 <body itemscope itemtype="http://schema.org/SoftwareApplication">
@@ -36,7 +38,7 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.282<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.283<!-- /VER --></div>
   </header>
   <nav>
     <dl>
@@ -117,6 +119,12 @@
         <li>检查首页是否遗漏了指定账号最近的某条微博；</li>
       </ul>
       <p>脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。</p>
+      <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">点击查看脚本的全部功能</a></p>
+    </div>
+    <h2 class="hidden allfunc">完整功能列表</h2>
+    <div class="in">
+      <p class="hidden allfunc">列表仅供参考，您安装脚本后，可能显示的功能和以下略有不同。列表可能会随您的操作系统和浏览器的设置和版本不同有细微差别。</p>
+      <div id="output" class="allfunc"></div>
     </div>
     <h2>隐私权政策</h2>
     <h3>信息收集</h3>

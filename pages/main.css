@@ -29,7 +29,7 @@ dl dd { line-height: 2em; height: 2em; float: left; background: #dedede; width: 
 dl dd a { color: #000; }
 dl dd a:hover { background: #ffb137; color: #fff; }
 pre { background: #eee; padding: 1em 2em; }
-.browser { display: none; margin-bottom: 1em; }
+.browser, .hidden { display: none; margin-bottom: 1em; }
 .support { min-height: 80px; padding-left: 80px; }
 .browser-icon { float: left; margin: 8px; margin-left: -80px; }
 #show_all { background: #dedede; color: #777; text-align: center; line-height: 1.6em; cursor: pointer; }

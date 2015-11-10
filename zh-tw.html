@@ -14,8 +14,10 @@
   <link rel="canonical" href="https://tiansh.github.io/yawf/zh-tw.html">
   <link rel="icon" href="https://tiansh.github.io/yawf/yawf.ico" />
   <link rel="stylesheet" href="pages/main.css" />
+  <style id="addstyle"></style>
   <script src="pages/main.js"></script>
-  <script>document.write(browserCss());</script>
+  <script src="pages/allfunc.js"></script>
+  <script> document.write(browserCss()); $CONFIG.lang = 'zh-tw'; </script>
   <noscript><style> .noscript { display: block; } </style></noscript>
 </head>
 <body itemscope itemtype="http://schema.org/SoftwareApplication">
@@ -36,11 +38,11 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.282<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.283<!-- /VER --></div>
   </header>
   <nav>
     <dl>
-      <dt><a itemprop="installUrl" class="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a></dt>
+      <dt><a itemprop="installUrl" id="install" href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">安裝腳本</a></dt>
       <dd><a target="_blank" href="https://tiansh.github.io/yawf/fqa.html">常見問題</a></dd>
       <dd><a target="_blank" href="https://tiansh.github.io/yawf/stylish.html">常用樣式</a></dd>
       <dd><a target="_blank" href="https://github.com/tiansh/yawf/issues">問題彙報</a></dd>
@@ -117,6 +119,12 @@
         <li>檢查首頁是否遺漏了指定帳號最近的某條微博；</li>
       </ul>
       <p>腳本安裝後大部分功能不會預設啟用，您需要到腳本設置中啟用對應功能。</p>
+      <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">點擊查看腳本的全部功能</a></p>
+    </div>
+    <h2 class="hidden allfunc">完整功能清單</h2>
+    <div class="in">
+      <p class="hidden allfunc">列表僅供參考，您安裝腳本後，可能顯示的功能和以下略有不同。清單可能會隨您的作業系統和瀏覽器的設置和版本不同有細微差別。</p>
+      <div id="output" class="allfunc"></div>
     </div>
     <h2>隱私權政策</h2>
     <h3>資訊收集</h3>

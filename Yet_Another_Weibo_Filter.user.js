@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.282
+// @version           3.6.283
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1149,7 +1149,7 @@ util.func.performance = util.script.isdebug ? (function (ignore) {
 }(10)) : function (f) { return f; };
 
 // 向 unsafeWindow 暴露接口
-util.func.export = function (name, handler) {
+util.func.output = function (name, handler) {
   var push = util.func.catched(function (args) {
     args = args.wrappedJSObject || args;
     util.debug('%s.(%o)', name, args);
@@ -3008,7 +3008,7 @@ util.complete = (function () {
         container.parentNode.removeChild(container);
         return;
       }
-      var rect = input.getClientRects()[0];
+      var rect = input.getClientRects()[0]; if (!rect) return;
       var top = (rect.bottom + window.pageYOffset).toFixed(0);
       var left = (rect.left + window.pageXOffset).toFixed(0);
       if (!bak || left !== bak[0] || top !== bak[1]) {
@@ -3891,8 +3891,8 @@ filter.fast.hyperlink.recognizer = function (element, callback) {
   do {
     var linkc = c.querySelector('a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"]'); if (!linkc) break;
     var url = util.str.parsearg(linkc.href.match(/\?(.*)$/)[1]).url; if (!url) break;
-    var host = util.str.host(url);
-    if (host) return callback({ 'host': host });
+    var paramhost = util.str.host(url);
+    if (paramhost) return callback({ 'host': paramhost });
   } while (false);
   return callback();
 };
@@ -4193,9 +4193,10 @@ filter.collection.group.add(function () {
     var texts = [], version = util.func.constant(true);
     var getVersion = function (ver) {
       if (!util.info.version) return;
-      var match = ver.match(/.*:([><]?=?)(-?\d+)/), op = match[1] || '=', ver = parseInt(match[2], 10);
-      if (ver < 0) ver = util.info.version + ver + 1;
-      version = function (v) { return operator(op, v, ver); };
+      var match = ver.match(/.*:([><]?=?)(-?\d+)/), op = match[1] || '=';
+      var num = parseInt(match[2], 10);
+      if (num < 0) num = util.info.version + num + 1;
+      version = function (v) { return operator(op, v, num); };
     };
     token.forEach(function (t) {
       if (t.match(/ver(sion)?:[><]?=?-?\d+/)) getVersion(t);
@@ -4371,7 +4372,7 @@ filter.items.base.scripttool.disable_lazyload = filter.item({
           if (!fire) setTimeout(disableLazyLoad, 0);
           else {
             var d = { scrollTop: 0, winHeight: document.body.clientHeight * 2 };
-            a.conf.channel.window.fire("scroll", d)
+            a.conf.channel.window.fire("scroll", d);
             setTimeout(disableLazyLoad, 300);
           }
         });
@@ -8677,7 +8678,7 @@ var subscribe = (function () {
 
   };
 
-  util.func.export('__YAWF_WeiboSubscribeRuleList__', function (args) {
+  util.func.output('__YAWF_WeiboSubscribeRuleList__', function (args) {
     addSubscribe(args);
   });
 
@@ -8733,7 +8734,7 @@ var extension = (function () {
     return yawf;
   }());
 
-  util.func.export('$_YAWF_$', function (args) {
+  util.func.output('$_YAWF_$', function (args) {
     if (yawf[args.method]) util.func.call(function () { yawf[args.method](args.params); });
   });
 

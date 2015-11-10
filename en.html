@@ -14,8 +14,10 @@
   <link rel="canonical" href="https://tiansh.github.io/yawf/en.html">
   <link rel="icon" href="https://tiansh.github.io/yawf/yawf.ico" />
   <link rel="stylesheet" href="pages/main.css" />
+  <style id="addstyle"></style>
   <script src="pages/main.js"></script>
-  <script>document.write(browserCss());</script>
+  <script src="pages/allfunc.js"></script>
+  <script> document.write(browserCss()); $CONFIG.lang = 'en'; </script>
   <noscript><style> .noscript { display: block; } </style></noscript>
 </head>
 <body itemscope itemtype="http://schema.org/SoftwareApplication">
@@ -36,7 +38,7 @@
       </svg>
     </div>
     <h1 itemprop="name">Yet Another Weibo Filter</h1>
-    <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.282<!-- /VER --></div>
+    <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.283<!-- /VER --></div>
   </header>
   <nav>
     <dl>
@@ -117,6 +119,12 @@
         <li>Check if there are any Weibo not shown on home page;</li>
       </ul>
       <p>Most functions of the script are disabled by default, you may need to enable them in the script settings.</p>
+      <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">Click to show all functions</a></p>
+    </div>
+    <h2 class="hidden allfunc">Complete List of Functions</h2>
+    <div class="in">
+      <p class="hidden allfunc">The given list is for reference only, and may vary from different operating system. and browsers.</p>
+      <div id="output" class="allfunc"></div>
     </div>
     <h2>Privacy Policy</h2>
     <h3>Data Collection</h3>
