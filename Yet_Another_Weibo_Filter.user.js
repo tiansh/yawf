@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.284
+// @version           3.6.285
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -377,13 +377,21 @@ var text = {
   // 评论过滤
   'commentFilterGroupTitle': { 'zh-cn': '评论过滤', 'zh-hk': '評論篩選', 'zh-tw': '評論篩選', 'en': 'Comment Filter' },
   // 评论关键词
-  'ckeywordFilterDetails': { 'zh-cn': '包含以下关键词的评论', 'zh-hk': '包含以下關鍵字的評論', 'zh-tw': '包含以下關鍵字的微博', 'en': 'Weibo with these comments' },
+  'ckeywordFilterDetails': { 'zh-cn': '包含以下关键词的评论', 'zh-hk': '包含以下關鍵字的評論', 'zh-tw': '包含以下關鍵字的評論', 'en': 'Comment with these comments' },
   'ckeywordFilterDetailsDesc': {
     'zh-cn': '关键词匹配包括话题，但不包括提到的用户。',
   },
   'ckeywordFilterDesc': { 'zh-cn': '关键词', 'zh-hk': '關鍵字', 'zh-tw': '關鍵字', 'en': 'Keyword ' },
   'ckeywordFilterFast': { 'zh-cn': '评论包含关键词', 'zh-hk': '評論包含關鍵字', 'zh-tw': '評論包含關鍵字', 'en': 'Comments contains keyword ' },
   'ckeywordFilterFastInput': { 'zh-cn': '“{{text}}”', 'zh-hk': '「{{text}}」', 'zh-tw': '「{{text}}」', 'en': '"{{text}}"' },
+  // 评论正则表达式
+  'cregexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的评论', 'zh-hk': '匹配以下正則表達式的評論', 'zh-tw': '匹配以下正規表示式的評論', 'en': 'Comment matches these regular expressions' },
+  'cregexpFilterDetailsDesc': {
+    'zh-cn': '正则表达式匹配评论内容，方便匹配一些故意绕过关键词识别的评论。',
+  },
+  'cregexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
+  'cregexpFilterFast': { 'zh-cn': '评论匹配正则式', 'zh-hk': '評論匹配正則式', 'zh-tw': '評論匹配正規式', 'en': 'Comment matches regexp ' },
+  'cregexpFilterFastInput': { 'zh-cn': '/{{text}}/', 'zh-hk': '/{{text}}/', 'zh-tw': '/{{text}}/', 'en': '/{{text}}/' },
   // 评论用户
   'cuserFilterDetails': { 'zh-cn': '以下帐号相关的评论', 'zh-hk': '以下帳號相關的評論', 'zh-tw': '以下帳號相關的評論', 'en': 'Comments mentioned these accounts' },
   'cuserFilterDetailsDesc': {
@@ -2059,11 +2067,12 @@ util.ui.form = function (dom, display, details) {
   };
   // 关闭对话框
   var hide = function () {
-    document.body.removeChild(dom);
-    document.body.removeChild(cover);
+    dom.className += ' UI_animated UI_speed_fast UI_ani_bounceOut';
     document.removeEventListener('keydown', keys);
     document.removeEventListener('scroll', hold);
     window.removeEventListener('resize', hold);
+    document.body.removeChild(cover);
+    setTimeout(function () { document.body.removeChild(dom); }, 200);
   };
   // 显示对话框
   var show = function (top, left) {
@@ -2076,6 +2085,10 @@ util.ui.form = function (dom, display, details) {
     document.addEventListener('scroll', hold);
     window.addEventListener('resize', hold);
     document.activeElement.blur();
+    dom.className += ' UI_animated UI_speed_fast UI_ani_bounceIn';
+    setTimeout(function () {
+      dom.className = dom.className.replace(/(?:\s|^)(UI_animated|UI_speed_fast|UI_ani_bounceIn)(?=\s|$)/g, '').trim();
+    }, 200);
   };
   if (display) show();
   if (ok) ok.addEventListener('click', hide);
@@ -5592,6 +5605,33 @@ filter.predef.wbfc({
     'description': filter.fast.description.gen({
       'group': 'comment', 'name': 'ckeyword',
       'attr': 'text', 'input': true, 'chosen': true
+    }),
+  }
+}, filter.groups.comment);
+
+// 评论正则式
+filter.predef.wbfc({
+  'name': 'cregexp',
+  'version': 285,
+  'add': util.str.addregex,
+  'display': function (s) { return '/' + s + '/'; },
+  'listtype': ['blacklist', 'whitelist'],
+  'comment': function regexpMatchCommentRule(action, comment) {
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
+    var texts = weibo.comment.text(comment);
+    var match = regexen.some(function (regexp) {
+      if (!regexp.exec(texts)) return false;
+      return true;
+    });
+    if (match) return action; else return null;
+  },
+  'fast': {
+    'validator': filter.fast.content.validator,
+    'recognizer': filter.fast.content.recognizer.regexp,
+    'add': filter.fast.content.add,
+    'description': filter.fast.description.gen({
+      'group': 'comment', 'name': 'cregexp',
+      'attr': 'text', 'input': true, 'chosen': false
     }),
   }
 }, filter.groups.comment);
