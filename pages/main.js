@@ -81,7 +81,7 @@ var gennav = function () {
   [].slice.call(h, 0).forEach(function (hi) {
     var text = hi.textContent;
     var anchor = document.createElement('a');
-    anchor.className = 'anchor'; anchor.textContent = '\u00a7';
+    anchor.className = 'anchor entry-unrelated'; anchor.textContent = '\u00a7';
     anchor.id = text; anchor.href = '#' + anchor.id;
     hi.insertBefore(anchor, hi.firstChild);
     if (!nav) return;

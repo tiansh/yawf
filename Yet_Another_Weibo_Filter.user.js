@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.285
+// @version           3.6.286
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -433,14 +433,14 @@ var text = {
   'layoutHideIconClub': { 'zh-cn': '微博达人', 'zh-hk': '微博達人', 'zh-tw': '微博達人', 'en': 'Pioneer' },
   'layoutHideIconVGirl': { 'zh-cn': '微博女郎', 'zh-hk': '微博女郎', 'zh-tw': '微博女郎', 'en': 'Weibo girl' },
   'layoutHideIconTaobao': { 'zh-cn': '淘宝/天猫商户', 'zh-hk': '淘寶/天貓商戶', 'zh-tw': '淘寶/天貓商戶', 'en': 'Taobao / Tmall Merchant' },
-  'layoutHideIconGongyi': { 'zh-cn': '益起来', 'zh-hk': '益起来', 'zh-tw': '益起来'/* as is */, 'en': '益起来 (Weibo public interest)' },
-  'layoutHideIconZongyika': { 'zh-cn': '我是综艺咖', 'zh-hk': '我是综艺咖', 'zh-tw': '我是综艺咖'/* as is */, 'en': '我是综艺咖 (Variety Wack)' },
-  'layoutHideIconSuishoupai': { 'zh-cn': '随手拍', 'zh-hk': '随手拍', 'zh-tw': '随手拍'/* as is */, 'en': '随手拍' },
-  'layoutHideIconYouji': { 'zh-cn': '带着微博去旅行', 'zh-hk': '帶著微博去旅行', 'zh-tw': '帶著微博去旅行', 'en': '带着微博去旅行 (Travel Notes)' },
-  'layoutHideIconDouble11': { 'zh-cn': '我的双11', 'zh-hk': '我的双11', 'zh-tw': '我的双11'/* as is */, 'en': '我的双11 (My Nov. 11<sup>th</sup>)' },
-  'layoutHideIconNight': { 'zh-cn': '微博之夜', 'zh-hk': '微博之夜', 'zh-tw': '微博之夜', 'en': '微博之夜 (Weibo Night)' },
-  'layoutHideIconRedPack': { 'zh-cn': '让红包飞', 'zh-hk': '让红包飞', 'zh-tw': '让红包飞', 'en': '让红包飞 (Red Pack)' },
-  'layoutHideIconRun': { 'zh-cn': '跑战盛典', 'zh-hk': '跑战盛典', 'zh-tw': '跑战盛典', 'en': '跑战盛典 (Weibo Run)' },
+  'layoutHideIconGongyi': { 'zh-cn': '公益', 'zh-hk': '公益', 'zh-tw': '公益', 'en': 'public Interest' },
+  'layoutHideIconZongyika': { 'zh-cn': '综艺', 'zh-hk': '综艺', 'zh-tw': '综艺', 'en': 'Variety' },
+  'layoutHideIconSuishoupai': { 'zh-cn': '随手拍', 'zh-hk': '随手拍', 'zh-tw': '随手拍', 'en': 'Photograph' },
+  'layoutHideIconYouji': { 'zh-cn': '旅行', 'zh-hk': '旅行', 'zh-tw': '旅行', 'en': 'Travel' },
+  'layoutHideIconDouble11': { 'zh-cn': '双11', 'zh-hk': '双11', 'zh-tw': '双11', 'en': 'Nov. 11<sup>th</sup>' },
+  'layoutHideIconNight': { 'zh-cn': '微博之夜', 'zh-hk': '微博之夜', 'zh-tw': '微博之夜', 'en': 'Weibo Night' },
+  'layoutHideIconRedPack': { 'zh-cn': '红包', 'zh-hk': '红包', 'zh-tw': '红包', 'en': 'Red Pack' },
+  'layoutHideIconRun': { 'zh-cn': '跑步', 'zh-hk': '跑步', 'zh-tw': '跑步', 'en': 'Run' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -840,10 +840,10 @@ var text = {
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
-    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 协议授权。您可以访问<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">脚本主页</a>获取详细信息。<br />如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>本脚本参考并使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer">眼不见心不烦</a>脚本的部分代码。</p>',
-    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF 使用 MIT 協定授權。您可以訪問<a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">腳本主頁</a>獲取詳細資訊。<br />如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接<a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">私信作者</a>；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>本腳本參考並使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer">眼不見心不煩</a>腳本的部分原始碼。</p>',
-    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>YAWF is under the MIT License. You may want to visit <a target="_blank" href="https://tiansh.github.io/yawf/" rel="noreferrer">project homepage</a> for more information.<br />If you find any bugs or have feature request, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">feedback page</a>, or <a target="_blank" href="http://weibo.com/tsh90" rel="noreferrer">send message to author</a>. Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>Some codes of this script come from <a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> script.</p>',
+    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以关注 <a href="http://weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF脚本</a> 了解脚本最新的更新。<br />如果您觉得脚本给您很大的帮助，帮助宣传脚本是对我们最大的帮助。</p><p>如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或直接私信作者；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>脚本使用 MIT 协议开放源代码，作者 <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查阅</a>，欢迎任何人贡献代码。<br />脚本中参考并使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不见心不烦</a>1.* 的部分代码。</p>',
+    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以關注 <a href="http://weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF腳本</a> 瞭解腳本最新的更新。<br />如果您覺得腳本給您很大的幫助，幫助宣傳腳本是對我們最大的幫助。</p><p>如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接私信作者；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>腳本使用 MIT 協定開放原始程式碼，作者 <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查閱</a>，歡迎任何人貢獻程式碼。<br />腳本中參考並使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不見心不煩</a>1.* 的部分程式碼。</p>',
+    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以關注 <a href="http://weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF腳本</a> 瞭解腳本最新的更新。<br />如果您覺得腳本給您很大的幫助，幫助宣傳腳本是對我們最大的幫助。</p><p>如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或直接私信作者；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>腳本使用 MIT 協定開放原始程式碼，作者 <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查閱</a>，歡迎任何人貢獻程式碼。<br />腳本中參考並使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不見心不煩</a>1.* 的部分程式碼。</p>',
+    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>Follow <a href="http://weibo.com/yawfscript" namecard="id=5601033111" target="_blank" rel="noreferrer">@YAWF脚本</a> for last update info.<br />Please help us spread the word if the script helps you.</p><p>If you find any bugs or have feature requests, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">issues page</a>, or send message to author. Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>The script is liscensed under the MIT License. Author is <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a>. You may <a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">view the project on GitHub</a>. Pull request is welcomed.<br />Some codes of this script come from <a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> 1.* script.</p>',
   },
   // 拖拽
   'dropAreaTitle': { 'zh-cn': '拖放至此<br />快速创建过滤器', 'zh-hk': '拖放至此<br />快速創建篩選器', 'zh-tw': '拖放至此<br />快速創建篩選器', 'en': 'Drop Here to Create Filter' },
@@ -1276,6 +1276,7 @@ util.str.parsejsonp = function (resp) {
 util.str.addregex = function (s) {
   s = s.trim();
   if (s.length >= 2 && s[0] === '/' && s[s.length - 1] === '/') s = s.slice(1, -1);
+  if (RegExp(s) + '' === '/(?:)/') return null;
   try { RegExp(s).exec(''); } catch (e) {
     util.ui.alert('yawf-regexp-bad-formed', {
       'title': util.str.fill('{{regexpBadFormedTitle}}'),
@@ -2238,7 +2239,7 @@ network.comment.del = (function () {
 }());
 
 network.ua = {};
-network.ua.android = 'Mozilla/5.0 (Linux; Android 4.0.4; zh-cn; YAWF) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/535.19';
+network.ua.android = 'Mozilla/5.0 (Linux; Android 4.4.2; zh-cn; YAWF) AppleWebKit/537.16 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.16';
 
 network.video = {};
 // 通过秒拍视频的 objectid 获取 mp4 文件地址
@@ -2347,11 +2348,12 @@ network.recent = (function () {
 network.suggest = {};
 
 // 推荐用户或话题等
-network.suggest.base = function (func, empty) {
+network.suggest.base = function (func, normalize, empty) {
   var suggestCache = {};
   var current = null, xhr = null;
   if (empty != null) suggestCache[''] = empty;
   return function (query, callback) {
+    query = normalize(query);
     if (current === query) return;
     if (current && xhr) xhr.abort();
     if (suggestCache[query]) {
@@ -2416,7 +2418,7 @@ network.suggest.user = network.suggest.base(function (query, callback) {
       network2.abort();
     }
   };
-}, []);
+}, function (x) { return x.replace(/^@/, ''); }, []);
 
 // 推荐话题
 network.suggest.topic = network.suggest.base(function (query, callback) {
@@ -2432,7 +2434,7 @@ network.suggest.topic = network.suggest.base(function (query, callback) {
       callback(formatted);
     },
   });
-}, []);
+}, function (x) { return x.replace(/#/g, ''); }, []);
 
 // 过滤器
 var filter = {};
@@ -3277,7 +3279,7 @@ filter.typed.dom = (function () {
         var showStrings = function (userinput, str, onsucc, ondone) {
           genli(item, userinput, str, function (str, li) {
             if (ondone) ondone();
-            if (!str || !li) return;
+            if (str == null || !li) return;
             if (shown[str]) return moveToEnd(shown[str]);
             var del = li.querySelector('a.icon_close, a.ficon_close');
             del.addEventListener('click', function () {
@@ -4736,7 +4738,7 @@ filter.predef.group('content').addto(filter.groups.base);
 filter.predef.wbfc({
   'name': 'keyword',
   'version': 1,
-  'add': function (s) { return s.trim(); },
+  'add': function (s) { return s.trim() || null; },
   'rule': function keywordMatch(action, feed) {
     var keywords = this.conf.concat(this.extent);
     var texts = weibo.feed.text(feed).toUpperCase();
@@ -4946,7 +4948,7 @@ filter.groups.mention = filter.predef.wbfc({
   'name': 'mention',
   'version': 4,
   'type': 'strings',
-  'add': function (s) { return s.trim().replace(/^@/, ''); },
+  'add': function (s) { return s.trim().replace(/^@/, '') || null; },
   'display': function (s) { return '@' + s; },
   'rule': function mentionMatch(action, feed) {
     var mentions = this.conf.concat(this.extent), users = weibo.feed.mentions.name(feed);
@@ -4981,7 +4983,7 @@ filter.predef.group('topic').addto(filter.groups.base);
 filter.predef.wbfc({
   'name': 'topic',
   'version': 2,
-  'add': function (s) { return s.trim().replace(/#/g, ''); },
+  'add': function (s) { return s.trim().replace(/#/g, '') || null; },
   'display': function (s) { return '#' + s + '#'; },
   'rule': function topicMatch(action, feed) {
     var topics = this.conf.concat(this.extent);
@@ -5091,7 +5093,7 @@ filter.predef.group('hyperlink').addto(filter.groups.base);
 filter.predef.wbfc({
   'name': 'hyperlink',
   'version': 7,
-  'add': function (s) { return s.trim(); },
+  'add': function (s) { return s.trim() || null; },
   'rule': function hyperlinkMatch(action, feed) {
     var links = this.conf.concat(this.extent), _links = weibo.feed.hyperlinks.text(feed);
     var match = _links.some(function (l) {
@@ -5123,7 +5125,7 @@ filter.predef.wbfc({
 filter.predef.wbfc({
   'name': 'linktitle',
   'version': 206,
-  'add': function (s) { return s.trim(); },
+  'add': function (s) { return s.trim() || null; },
   'rule': function linkTitleMatch(action, feed) {
     var texts = this.conf.concat(this.extent), titles = weibo.feed.linktitle.text(feed);
     var match = titles.some(function (title) {
@@ -5586,7 +5588,7 @@ filter.predef.group('comment');
 filter.predef.wbfc({
   'name': 'ckeyword',
   'version': 223,
-  'add': function (s) { return s.trim(); },
+  'add': function (s) { return s.trim() || null; },
   'listtype': ['blacklist', 'whitelist'],
   'comment': function keywordMatchCommentRule(action, comment) {
     var keywords = this.conf.concat(this.extent);
@@ -5640,7 +5642,7 @@ filter.predef.wbfc({
 filter.predef.wbfc({
   'name': 'cuser',
   'version': 223,
-  'add': function (s) { return s.trim().replace(/^@/, ''); },
+  'add': function (s) { return s.trim().replace(/^@/, '') || null; },
   'display': function (s) { return '@' + s; },
   'listtype': ['blacklist', 'whitelist'],
   'comment': function mentionMatchCommentRule(action, comment) {
@@ -5663,7 +5665,7 @@ filter.predef.wbfc({
 filter.predef.wbfc({
   'name': 'ctopic',
   'version': 223,
-  'add': function (s) { return s.trim().replace(/#/g, ''); },
+  'add': function (s) { return s.trim().replace(/#/g, '') || null; },
   'display': function (s) { return '#' + s + '#'; },
   'listtype': ['blacklist', 'whitelist'],
   'comment': function ctopicMatch(action, comment) {
@@ -6124,7 +6126,7 @@ filter.predef.group('layout');
     'key': 'weibo.layout.pleft',
     'text': '{{layoutHidePLeftDetails}}',
     'type': 'strings',
-    'add': function (s) { return s.trim(); },
+    'add': function (s) { return s.trim() || null; },
     'init': function () {
       if (!this.conf.length) return;
       util.css.add(this.conf.map(function (s) {
@@ -6150,9 +6152,9 @@ filter.predef.group('layout');
     '#wrapAD, .news_logo { visibility: hidden !important; }');
     var updateSkin = function updateSkin() {
       var adskin = document.querySelector('link[href*="/skin355/"], link[href*="/skin356/"]');
-      if (adskin) adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=34440b5fb8f50c52');
+      if (adskin) adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=0740890fd91c0411');
       var adskincover = document.querySelector('#skin_cover_s[style*="/skin355/"], #skin_cover_s[style*="/skin356/"]');
-      if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/skin058/images/profile_cover_s.jpg?version=01d43aa81fed91cc")';
+      if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/skin058/images/profile_cover_s.jpg?version=0740890fd91c0411")';
     };
     observer.dom.add(updateSkin);
   });
@@ -7422,6 +7424,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
       var from = Array.from(document.querySelectorAll('.WB_from:not([yawf-csource])')), items = [];
       from.forEach(function (f) {
         f.setAttribute('yawf-csource', 'yawf-csource');
+        if (util.dom.matches(f, '.list_li[mid] *')) return;
         // 自定义微博来源可以不显示来源
         if (f.querySelector('[node-type="feed_list_item_date"]:only-child'))
           return items.push(f.appendChild(util.dom.create('div', '')));
@@ -8819,6 +8822,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-config-layer { padding-bottom: 20px; min-height: 400px; }
   .yawf-groupSubtitle, .yawf-groupRemark { margin: 5px 10px; padding: 10px 0 0 0; line-height: 20px; }
   .yawf-groupLabel { margin: 5px 10px; padding: 10px 0 0 2em; }
+  .yawf-groupRemark p, .yawf-groupLabel p { padding-bottom: 5px; }
   .yawf-groupSubtitle { font-weight: bold; }
   .yawf-configInput { display: inline; }
   .yawf-configStringInput { display: block; }
