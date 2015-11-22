@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.286
+// @version           3.6.287
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -2563,9 +2563,23 @@ filter.fast.dialog = function (candidate, selected) {
         if (selected === true) checked = true;
       }
       if (selected === false) checked = false;
+      if (!c.selected) checked = false;
       var select = item.querySelector('select');
       checkbox.checked = checked; select.value = 'blacklist';
       selects.push(select);
+      var updateSelect = util.func.catched(function () {
+        selects.forEach(function (s) {
+          if (s === select) return;
+          var values = Array.from(s.querySelectorAll('option'))
+            .map(function (x) { return x.value; });
+          var fallback = ['whitelist', 'foldlist', 'blacklist'];
+          var i = fallback.indexOf(select.value);
+          while (values.indexOf(fallback[i]) === -1) i++;
+          s.value = fallback[i];
+        });
+      });
+      select.addEventListener('change', updateSelect);
+      select.addEventListener('keyup', updateSelect);
       // 处理有可能没有折叠列表的情况
       if (c.filter.listtype) {
         var options = Array.from(item.querySelectorAll('option'));
@@ -2652,7 +2666,10 @@ filter.fast.recognize = (function () {
       var callback = function callback(val) {
         if (!val) return callback([]);
         else if (!Array.isArray(val)) return callback([val]);
-        else candidate[i] = val.map(function (val) { return { 'filter': details, 'value': val }; });
+        else candidate[i] = val.map(function (val) {
+          var selected = details.selected && details.selected(element2 || element) || false;
+          return { 'filter': details, 'value': val, 'selected': selected };
+        });
         // 如果还有没填写的，那么等待所有的函数填写好
         if (candidate.length !== candidate.filter(Boolean).length) return;
         // 找到所有备选的情况给用户做选择
@@ -3679,6 +3696,7 @@ filter.predef.wbfc = function (details, typedFilterGroup) {
     var fast = {
       'validator': details.fast.validator,
       'recognizer': details.fast.recognizer,
+      'selected': details.fast.selected,
       'description': details.fast.description,
       'rawvalue': function (val) {
         var value = details.fast.add(val);
@@ -3929,6 +3947,33 @@ filter.fast.linktitle.recognizer = function (element, callback) {
   return callback({ 'title': title });
 };
 filter.fast.linktitle.add = function (val) { return val.title; };
+
+// 判断一个元素是否应当被选中
+filter.fast.selected = {};
+(function () {
+  var selectors = {
+    'feed': '.WB_feed_type .WB_detail, .WB_feed_type .WB_detail *',
+    'comment': '[node-type="feed_list_commentList"] *, .WB_feed_comment *',
+    'author': '.WB_face .face a, .WB_face .face img, .WB_detail > .WB_info .W_fb',
+    'mention': '.WB_detail .WB_text a[usercard^="name="]',
+    'original': '.WB_feed_expand .WB_info .W_fb',
+  };
+  var define = function (type, notin) {
+    filter.fast.selected[type] = function (target) {
+      if (target.nodeType === Node.TEXT_NODE) target = target.parentNode;
+      return !notin.some(function (other) {
+        return util.dom.matches(target, selectors[other]);
+      });
+    };
+  };
+  define('feed', ['comment']);
+  define('comment', ['feed', 'author']);
+  define('author', ['comment', 'mention', 'original']);
+  define('mention', ['comment', 'author', 'original']);
+  define('original', ['comment', 'author', 'mention']);
+  filter.fast.selected.never = util.func.constant(false);
+  filter.fast.selected.always = util.func.constant(true);
+}());
 
 // 获得一条微博的各方面信息
 var weibo = { 'feed': {}, 'comment': {}, 'common': {} };
@@ -4753,6 +4798,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.keyword,
+    'selected': filter.fast.selected.feed,
     'add': filter.fast.content.add,
     'description': filter.fast.description.gen({
       'group': 'content', 'name': 'keyword',
@@ -4780,6 +4826,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.regexp,
+    'selected': filter.fast.selected.never,
     'add': filter.fast.content.add,
     'description': filter.fast.description.gen({
       'group': 'content', 'name': 'regexp',
@@ -4857,6 +4904,7 @@ filter.predef.account = function (details) {
     'fast': {
       'validator': filter.fast.account.validator,
       'recognizer': filter.fast.account.recognizer,
+      'selected': filter.fast.selected.author,
       'add': filter.fast.account.addid,
       'description': filter.fast.description.gen({
         'group': 'account', 'name': details.name,
@@ -4926,6 +4974,7 @@ filter.groups.original = filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
+    'selected': filter.fast.selected.original,
     'add': filter.fast.account.addid,
     'description': filter.fast.description.gen({
       'group': 'original', 'name': 'original',
@@ -4964,6 +5013,7 @@ filter.groups.mention = filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
+    'selected': filter.fast.selected.mention,
     'add': filter.fast.account.addname,
     'description': filter.fast.description.gen({
       'group': 'mention', 'name': 'mention',
@@ -4999,6 +5049,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.topic,
+    'selected': filter.fast.selected.feed,
     'add': filter.fast.topic.add,
     'description': filter.fast.description.gen({
       'group': 'topic', 'name': 'topic',
@@ -5033,6 +5084,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.rtopic,
+    'selected': filter.fast.selected.never,
     'add': filter.fast.topic.add,
     'description': filter.fast.description.gen({
       'group': 'topic', 'name': 'rtopic',
@@ -5069,6 +5121,7 @@ filter.groups.source = filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.source.validator,
     'recognizer': filter.fast.source.recognizer,
+    'selected': filter.fast.selected.always,
     'add': filter.fast.source.add,
     'description': filter.fast.description.gen({
       'group': 'source', 'name': 'source',
@@ -5108,6 +5161,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.hyperlink.validator,
     'recognizer': filter.fast.hyperlink.recognizer,
+    'selected': filter.fast.selected.feed,
     'add': filter.fast.hyperlink.add,
     'description': filter.fast.description.gen({
       'group': 'hyperlink', 'name': 'hyperlink',
@@ -5140,6 +5194,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.linktitle.validator,
     'recognizer': filter.fast.linktitle.recognizer,
+    'selected': filter.fast.selected.feed,
     'add': filter.fast.linktitle.add,
     'description': filter.fast.description.gen({
       'group': 'linktitle', 'name': 'linktitle',
@@ -5339,7 +5394,11 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
       return 'hidden';
     if (feed.querySelector('.WB_feed_spec_cont a[action-data*="vote.weibo.com"]'))
       return 'hidden';
+    if (feed.querySelector('a[suda-uatrack*="1022-vote"]'))
+      return 'hidden';
     if (feed.querySelector('.icon_sw_vote'))
+      return 'hidden';
+    if (weibo.feed.sources.text(feed).indexOf('投票') !== -1)
       return 'hidden';
     return null;
   },
@@ -5603,6 +5662,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.keyword,
+    'selected': filter.fast.selected.comment,
     'add': filter.fast.content.add,
     'description': filter.fast.description.gen({
       'group': 'comment', 'name': 'ckeyword',
@@ -5630,6 +5690,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.content.validator,
     'recognizer': filter.fast.content.recognizer.regexp,
+    'selected': filter.fast.selected.never,
     'add': filter.fast.content.add,
     'description': filter.fast.description.gen({
       'group': 'comment', 'name': 'cregexp',
@@ -5653,6 +5714,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.account.validator,
     'recognizer': filter.fast.account.recognizer,
+    'selected': filter.fast.selected.comment,
     'add': filter.fast.account.addname,
     'description': filter.fast.description.gen({
       'group': 'cuser', 'name': 'cuser',
@@ -5676,6 +5738,7 @@ filter.predef.wbfc({
   'fast': {
     'validator': filter.fast.topic.validator,
     'recognizer': filter.fast.topic.recognizer.topic,
+    'selected': filter.fast.selected.comment,
     'add': filter.fast.topic.add,
     'description': filter.fast.description.gen({
       'group': 'ctopic', 'name': 'ctopic',
