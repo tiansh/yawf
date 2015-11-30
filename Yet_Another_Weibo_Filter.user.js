@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.291
+// @version           3.6.292
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -165,7 +165,7 @@ var text = {
   'regexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'regexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的微博', 'zh-hk': '匹配以下正則表達式的微博', 'zh-tw': '匹配以下正規表示式的微博', 'en': 'Weibo matches these regular expressions' },
   'regexpFilterDetailsDesc': {
-    'zh-cn': '正则表达式书写时不需要对“/”字符转义。正则表达式不同于“通配符”，您需要使用“<code>.*</code>”表示任意字符，如“<code>转发并.*好友</code>”。如果您希望匹配同时出现某些关键词的微博，您可以使用正则式的“零宽断言”；举例来说，“<code>(?=.*星座)(?=.*第一)</code>”匹配所有同时出现“星座”和“第一”的微博。',
+    'zh-cn': '正则表达式书写时不需要对“/”字符转义。正则表达式不同于“通配符”，您需要使用“<code>.*</code>”表示任意字符，如“<code>转发并.*好友</code>”。如果您希望匹配同时出现某些关键词的微博，您可以用<code>^(?=.*星座)(?=.*第一)</code>”匹配所有同时出现“星座”和“第一”的微博。您可以参考<a href="https://tiansh.github.io/yawf/regexp.html" target="_blank">用于过滤微博的正则表达式快速入门</a>查看更多示例写法。',
   },
   'regexpFilterFast': { 'zh-cn': '微博匹配正则式', 'zh-hk': '微博匹配正則式', 'zh-tw': '微博匹配正規式', 'en': 'Weibo matches regexp ' },
   'regexpFilterFastInput': { 'zh-cn': '/{{text}}/', 'zh-hk': '/{{text}}/', 'zh-tw': '/{{text}}/', 'en': '/{{text}}/' },
@@ -246,7 +246,7 @@ var text = {
   'rtopicFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'rtopicFilterDetails': { 'zh-cn': '包含匹配以下正则表达式的话题的微博', 'zh-hk': '包含匹配以下正則表達式的話題的微博', 'zh-tw': '包含匹配以下正規表示式的话题的微博', 'en': 'Weibo with topic matches these regular expressions' },
   'rtopicFilterDetailsDesc': {
-    'zh-cn': '使用正则式匹配微博中的话题，正则匹配时不需要匹配两侧的“#”。'
+    'zh-cn': '使用正则式匹配微博中的话题，正则匹配时不需要匹配两侧的“#”。{{regexpFilterDetailsDesc}}'
   },
   'rtopicFilterFast': { 'zh-cn': '微博包含话题匹配', 'zh-hk': '微博包含話題匹配', 'zh-tw': '微博包含話題匹配', 'en': 'Weibo contains topic matches ' },
   'rtopicFilterFastInput': { 'zh-cn': '“#{{topic}}#”', 'zh-hk': '「#{{topic}}#」', 'zh-tw': '「#{{topic}}#」', 'en': '"#{{topic}}#"' },
@@ -387,7 +387,7 @@ var text = {
   // 评论正则表达式
   'cregexpFilterDetails': { 'zh-cn': '匹配以下正则表达式的评论', 'zh-hk': '匹配以下正則表達式的評論', 'zh-tw': '匹配以下正規表示式的評論', 'en': 'Comment matches these regular expressions' },
   'cregexpFilterDetailsDesc': {
-    'zh-cn': '正则表达式匹配评论内容，方便匹配一些故意绕过关键词识别的评论。',
+    'zh-cn': '正则表达式匹配评论内容，方便匹配一些故意绕过关键词识别的评论。{{regexpFilterDetailsDesc}}',
   },
   'cregexpFilterDesc': { 'zh-cn': '正则式', 'zh-hk': '正則式', 'zh-tw': '正規式', 'en': 'Regexp' },
   'cregexpFilterFast': { 'zh-cn': '评论匹配正则式', 'zh-hk': '評論匹配正則式', 'zh-tw': '評論匹配正規式', 'en': 'Comment matches regexp ' },
@@ -3954,7 +3954,7 @@ filter.fast.selected = {};
   var selectors = {
     'feed': '.WB_feed_type:not([comment_id]) .WB_detail, .WB_feed_type:not([comment_id]) .WB_detail *',
     'comment': '[node-type="feed_list_commentList"] *, .WB_feed_comment *',
-    'author': '.WB_face .face a, .WB_face .face img, .WB_detail > .WB_info .W_fb',
+    'author': '.WB_feed_type:not([comment_id]) .WB_face .face a, .WB_feed_type:not([comment_id]) .WB_face .face img, .WB_feed_type:not([comment_id]) .WB_detail > .WB_info .W_fb',
     'mention': '.WB_detail .WB_text a[usercard^="name="]',
     'original': '.WB_feed_expand .WB_info .W_fb',
   };
