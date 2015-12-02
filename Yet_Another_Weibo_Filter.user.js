@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.293
+// @version           3.6.294
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -510,6 +510,8 @@ var text = {
   'layoutHideWeiboFavourite': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favourite' },
   'layoutHideWeiboPromoteOther': { 'zh-cn': '帮上头条', 'zh-hk': '帮上头条', 'zh-tw': '帮上头条', 'en': '帮上头条' },
   'layoutHideWeiboReport': { 'zh-cn': '举报', 'zh-hk': '舉報', 'zh-tw': '舉報/檢舉', 'en': 'Report' },
+  'layoutHideWeiboShield': { 'zh-cn': '屏蔽', 'zh-hk': '屏蔽', 'zh-tw': '屏蔽', 'en': '屏蔽' },
+  'layoutHideWeiboUseCardBackground': { 'zh-cn': '使用此卡片背景', 'zh-hk': '使用此卡片背景', 'zh-tw': '使用此卡片背景', 'en': '使用此卡片背景' },
   // 个人主页
   'layoutHidePerson': { 'zh-cn': '隐藏模块 - 个人主页', 'zh-hk': '隱藏模組 - 個人主頁', 'zh-tw': '隱藏模組 - 個人主頁', 'en': 'Hide modules - Personal home page' },
   'layoutHidePersonMoveThings': { 'zh-cn': '移动部件（会员模板）', 'zh-hk': '移動部件（會員模板）', 'zh-tw': '移動部件（會員模板）', 'en': 'Moving Things (VIP Template)' },
@@ -1528,7 +1530,7 @@ observer.dom = (function () {
   var observe = function () {
     active(); // 初始化
     (new MutationObserver(active))
-      .observe(document.documentElement, { 'childList': true, 'subtree': true });
+      .observe(document.body, { 'childList': true, 'subtree': true });
   };
   util.init(function () {
     observe();
@@ -6001,12 +6003,17 @@ filter.predef.group('layout');
   item('Hot', 5, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
   item('Game', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
   item('HotSearch', 277, function () {
-    observer.dom.add(function () {
-      var s = Array.from(document.querySelectorAll('script[src^="http://s.weibo.com/ajax/jsonp/gettopsug"]'));
-      s.forEach(function (i) {
-        var cb = i.src.match(/_cb=(STK_\d+)/)[1];
-        util.func.page('function () { ' + cb + ' = function () { delete ' + cb + '; }; }');
-        i.parentNode.removeChild(i);
+    // 用暴力拦截 JSONP 请求的方法解决
+    util.func.page(function jsonpWrap() {
+      var val;
+      try { val = STK && STK.jsonp && STK.namespace; } catch (e) { }
+      if (!val) return setTimeout(jsonpWrap, 0);
+      STK.namespace('v6home', function (a) {
+        var ori = a.jsonp;
+        STK.jsonp = a.jsonp = function (d) {
+          if (d.url.match(/^http:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug/)) return;
+          return ori.apply(this, arguments);
+        };
       });
     });
   });
@@ -6113,6 +6120,8 @@ filter.predef.group('layout');
     '.WB_handle .WB_row_line li[yawf-handle-type="fl_favorite"] { display: none !important; }');
   item('PromoteOther', 220, '.screen_box .layer_menu_list a[action-data*="promote.vip.weibo.com"] { display: none !important; }');
   item('Report', 220, '.screen_box .layer_menu_list a[onclick*="service.account.weibo.com/reportspam"], .WB_handle ul li[yawf-comment-handle-type="report"] { display: none !important; }');
+  item('Shield', 294, '.screen_box .layer_menu_list a[action-type="feed_list_shield_novip"] { display: none !important; }');
+  item('UseCardBackground', 294, '.screen_box .layer_menu_list a[action-type="fl_cardCover"] { display: none !important; }');
 
   // 处理微博按钮的平均分布
   observer.weibo.after(function (feed) {
@@ -8912,8 +8921,8 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-whitelistFilterTitle::before { background: #37c837; box-shadow: 0 0 2px #37c837; }
   .yawf-blacklistFilterTitle::before { background: #c83737; box-shadow: 0 0 2px #c83737; }
   .yawf-foldlistFilterTitle::before { background: #c8c837; box-shadow: 0 0 2px #c8c837; }
-  .yawf-configString span { line-height: 16px; width:calc(100% - 56px); margin: 1px 1px -21px; padding: 2px 10px; display: block; position: relative; }
-  .yawf-configString textarea.W_input { width: calc(100% - 20px); padding-top: 20px; min-height: 80px; resize: vertical; background: linear-gradient(to bottom, -moz-Dialog 0px, -moz-Dialog 20px, transparent 21px, transparent 100%); }
+  .yawf-configString span { line-height: 16px; width:calc(100% - 56px); margin: -20px 10px 0; padding: 2px 10px; display: block; position: relative; top: 20px; }
+  .yawf-configString textarea.W_input { width: calc(100% - 20px); padding-top: 20px; min-height: 80px; max-height: 400px; resize: vertical; background: linear-gradient(to bottom, #f0f0f0 0px, #f0f0f0 20px, transparent 21px, transparent 100%); background: linear-gradient(to bottom, -moz-dialog 0px, -moz-dialog 20px, transparent 21px, transparent 100%); }
   .yawf-configStringsInput, .yawf-configUsersInput { margin: 5px; }
   .yawf-configStringsItems, .yawf-configUsersItems { padding: 5px 10px; line-height: 1em; }
   .yawf-configStringsItem, .yawf-configUsersItem { display: inline-block; margin: 2px; }
