@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.296
+// @version           3.6.297
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -6231,11 +6231,24 @@ filter.predef.group('layout');
       '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay'
     ].join(',') + ' { display: none !important; } ' +
     '#wrapAD, .news_logo { visibility: hidden !important; }');
+    var blacklistSkins = [
+      'skin355', // 天猫618
+      'skin356', // 天猫1111
+      'skin357', // 反正还没用上，就先预留了；万一哪天这个编号有皮肤了再看情况
+    ];
+    var version = '', target = 'skin058';
     var updateSkin = function updateSkin() {
-      var adskin = document.querySelector('link[href*="/skin355/"], link[href*="/skin356/"]');
-      if (adskin) adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/skin058/skin.css?version=0740890fd91c0411');
-      var adskincover = document.querySelector('#skin_cover_s[style*="/skin355/"], #skin_cover_s[style*="/skin356/"]');
-      if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/skin058/images/profile_cover_s.jpg?version=0740890fd91c0411")';
+      var skinQuery = blacklistSkins.map(function (s) { return 'link[href*="/' + s + '/"]'; }).join(', ');
+      var adskin = document.querySelector(skinQuery);
+      if (adskin) {
+        var a = util.dom.create('a', ''), version = ''; a.href = adskin.href;
+        try { version = version || util.str.parsearg(a.search.slice(1)).version; } catch (e) { }
+        util.debug('ad skin %o(version %o) has been replaced', adskin.href, version);
+        adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/' + target + '/skin.css?version=' + version);
+      }
+      var coverQuery = blacklistSkins.map(function (s) { return '#skin_cover_s[style*="/' + s + '/"]'; }).join(', ');
+      var adskincover = document.querySelector(coverQuery);
+      if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/' + target + '/images/profile_cover_s.jpg?version=' + version + '")';
     };
     observer.dom.add(updateSkin);
   });
@@ -7286,7 +7299,6 @@ filter.items.tool.weibotool.view_original = filter.item({
   'group': 'weibotool',
   'version': 10,
   'type': 'boolean',
-  'default': true,
   'key': 'weibo.tool.viewOriginal',
   'text': '{{viewOriginalDesc}}',
   'ainit': function () {
@@ -7296,14 +7308,15 @@ filter.items.tool.weibotool.view_original = filter.item({
       if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
       var ref;
       var updateLink = function () {
-        var arg = a.getAttribute('action-data').match(/pid=(\w+)&mid=(\d+)&uid=(\d+)/); if (!arg) return;
+        var arg = util.str.parsearg(a.getAttribute('action-data'));
+        if (!arg || !arg.pid || !arg.mid || !arg.uid) return;
         if (!l) {
           var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
           l = vol.querySelector('a');
-          ref = a.parentNode.parentNode;
+          for (ref = a; ref.tagName.toLocaleLowerCase() !== 'li'; ref = ref.parentNode);
           while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
         }
-        l.href = util.str.fill(url.view_ori, { 'uid': arg[3], 'mid': arg[2], 'pid': arg[1] });
+        l.href = util.str.fill(url.view_ori, arg);
       };
       updateLink();
       (new MutationObserver(updateLink)).observe(a, { 'attributes': true });
@@ -7315,20 +7328,21 @@ filter.items.tool.weibotool.view_original = filter.item({
         '[node-type="comment_list"] [action-type="widget_commentPhotoView"]:not([yawf-viewori])'
       ); if (!a) return;
       a.setAttribute('yawf-viewori', '');
-      var arg = a.getAttribute('action-data').match(/pid=(\w+)&cid=(\d+)/); if (!arg) return;
+      var arg = util.str.parsearg(a.getAttribute('action-data'));
+      if (!arg || !arg.pid) return;
       var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
       var l = vol.querySelector('a');
       var ref = a.parentNode.parentNode;
       while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
-      l.href = util.str.fill(url.view_cmt_ori, { 'pid': arg[1] });
+      l.href = util.str.fill(url.view_cmt_ori, arg);
     };
     // 转发的评论的图片
     var addOriLinkViewForwardCommentImage = function addOriLinkViewForwardCommentImage() {
       var a = document.querySelector('.WB_detail [action-type="widget_commentPhotoView"]'); if (!a) return;
-      var arg = a.getAttribute('action-data').match(/pid=(\w+)&cid=(\d+)/); if (!arg) return;
-      var l = util.dom.create(util.str.fill(html.viewOriginalFCLink));
-      l.href = util.str.fill(url.view_cmt_ori, { 'pid': arg[1] }); l.target = '_blank';
-      a.parentNode.replaceChild(l, a);
+      var arg = util.str.parsearg(a.getAttribute('action-data'));
+      if (!arg || !arg.pid) return;
+      a.href = util.str.fill(url.view_cmt_ori, arg); a.target = '_blank';
+      a.setAttribute('action-type', '');
     };
     observer.dom.add(addOriLinkViewImage);
     observer.dom.add(addOriLinkViewCommentImage);
@@ -7588,7 +7602,9 @@ if (!function isBJT() {
             l.setTime(parseInt(k, 10));
             i.title = (function (c) {
               var h = c.getFullYear(), j = c.getMonth() + 1, l = c.getDate(), n = c.getHours(), o = c.getMinutes();
-              return h + '-' + z(j) + '-' + z(l) + ' ' + z(n) + ':' + z(o);
+              var tz = c.getTimezoneOffset(), tzm = Math.abs(tz) % 60, tzh = (Math.abs(tz) - tzm) / 60, tzt;
+              if (tz === 0) tzt = ''; else tzt = (tz < 0 ? '+' : '-') + z(tzh) + ':' + z(tzm);
+              return h + '-' + z(j) + '-' + z(l) + ' ' + z(n) + ':' + z(o) + ' UTC' + tzt
             }(l));
             util.debug('timezone UTC+8 to Local: %o -> %o', title, i.title);
           }
