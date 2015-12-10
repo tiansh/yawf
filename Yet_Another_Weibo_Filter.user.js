@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.298
+// @version           3.6.299
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -670,7 +670,7 @@ var text = {
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
-  'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有 {{count}} 條新微博，點擊查看', 'zh-tw': '有 {{count}} 條新微博，點擊查看', 'en': 'You have {{count}} new Weibo，click to view' },
+  'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有{{count}}條新微博，點擊查看', 'zh-tw': '有{{count}}條新微博，點擊查看', 'en': '{{count}} new Weibo' },
   'showLocalTime': { 'zh-cn': '显示时间时使用本机时区', 'zh-hk': '顯示時間時使用本機時區', 'zh-tw': '顯示時間時使用本機時區', 'en': 'Show timestamp with local time zone' },
   // 样式
   'styleFilterGroupTitle': { 'zh-cn': '外观样式', 'zh-hk': '外觀樣式', 'zh-tw': '外觀樣式', 'en': 'Appearance' },
@@ -976,6 +976,7 @@ var html = {
   // 表情输入
   'fastEmojiInput': '<div class="faces_list yawf-faces_list" node-type="scrollView"><div yawf-face="top" node-type="list"><span>{{fastEmojiInputTop}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><span id="yawf-face-drop-area">{{fastEmojiInputTopNotice}}</span></div><div yawf-face="recent" node-type="list"><span>{{fastEmojiInputRecent}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>',
   'fastEmojiListItem': '<li title="{{title}}" action-data="insert={{text}}" action-type="select"><img src="{{img}}"></li>',
+  'fastEmojiListItemIM': '<li title="{{text}}" action-data="text={{text}}" action-type="webim_phiz_face"><img src="{{img}}"></li>',
   'fastEmojiClearButton': '<a class="W_btn_b yawf-clear-emoji" href="javascript:;"><span class="W_f14">{{fastEmojiClear}}</span></a>',
   // 只看微博列表
   'weiboOnlyButton': '<div id="yawf-weibo-only"><span><a class="S_txt1" href="javascript:void(0);">{{weiboOnlyButtonDesc}}</a></span></div>',
@@ -7067,18 +7068,21 @@ filter.items.tool.weibotool.fast_emoji = filter.item({
   'ainit': function () {
     var that = this;
     var onputs = { 'top': null, 'recent': null };
-    var createLi = function (item) {
+    // 显示一个表情；聊天窗口里面表情输入的格式和别的地方不一样
+    var createLi = function (item, isIm) {
       if (!item) return util.dom.create('li', '');
-      return util.dom.create('ul', util.str.fill(html.fastEmojiListItem, item)).firstChild;
+      var base = isIm ? html.fastEmojiListItemIM : html.fastEmojiListItem;
+      return util.dom.create('ul', util.str.fill(base, item)).firstChild;
     };
     // 将列表显示出来
-    var show = function (ul, list, keep) {
+    var show = function (ul, list, keep, isIm) {
       /// <param name="ul" type="HTMLUListElement">Description</param>
       var lis = Array.from(ul.querySelectorAll('li'));
       var replace = function (i, item) {
-        var n = createLi(item);
+        var n = createLi(item, isIm);
         ul.replaceChild(n, lis[i]);
-        lis[i] = n; };
+        lis[i] = n;
+      };
       var prev = [null, null, null, null, null, null, null, null, null, null];
       var name = function (li) { return li.title || null; };
       var update = keep ?function (list) {
@@ -7122,8 +7126,8 @@ filter.items.tool.weibotool.fast_emoji = filter.item({
       } catch (e) { return null; }
     };
     // 将某个设置项和显示的界面结合
-    var bindconf = function (list, type, keep) {
-      onputs[type] = function (conf) { show(list, conf, keep); };
+    var bindconf = function (list, type, keep, isIm) {
+      onputs[type] = function (conf) { show(list, conf, keep, isIm); };
       onputs[type](that.ref[type].getconf());
     };
     // 从列表中移除重复的项，并保留 10 个
@@ -7198,12 +7202,32 @@ filter.items.tool.weibotool.fast_emoji = filter.item({
       var container = tab.parentNode;
       var area = container.insertBefore(util.dom.create(util.str.fill(html.fastEmojiInput)), tab);
       var all = container.querySelector('.WB_minitab ~ .faces_list_box');
-      var lists = area.querySelectorAll('[yawf-face] ul');
-      bindconf(lists[0], 'top', false);
-      bindconf(lists[1], 'recent', true);
+      var lists = Array.from(area.querySelectorAll('[yawf-face] ul'));
+      var chatListNode = container.querySelector('ul[node-type="_phizListNode"]'), isIm =!!chatListNode;
+      bindconf(lists[0], 'top', false, isIm);
+      bindconf(lists[1], 'recent', true, isIm);
       container.addEventListener('click', updateRecent);
       dragEmoji(container, lists[0]);
+      if (isIm) fixChat(lists, chatListNode);
     });
+    // 修理一下聊天窗口里面的情况
+    var fixChat = function (lists, chatListNode) {
+      var bindEvent = function (list) {
+        list.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var target = e.target;
+          if (util.dom.matches(target, 'li img')) target = target.parentNode;
+          if (!target.title) return;
+          // 弄一个假的按钮，放在原本的列表末尾，骗他说我点的是原本的列表里面的
+          var fake = target.cloneNode(true);
+          fake.style.display = 'none';
+          chatListNode.appendChild(fake);
+          fake.click();
+          fake.parentNode.removeChild(fake);
+        });
+      };
+      lists.forEach(bindEvent);
+    };
   },
 }).addto(filter.groups.tool);
 
