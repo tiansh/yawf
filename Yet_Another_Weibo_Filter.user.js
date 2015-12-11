@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.299
+// @version           3.6.300
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7950,6 +7950,7 @@ filter.items.style.layout.width_weibo = filter.item({
       .FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
       .FRAME_main:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
       .FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
       .FRAME_main:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
       .FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       .FRAME_main:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
@@ -7976,6 +7977,7 @@ filter.items.style.layout.width_weibo = filter.item({
       .FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
       .FRAME_message:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
       .FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
       .FRAME_message:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
       .FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       .FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
@@ -8007,6 +8009,7 @@ filter.items.style.layout.width_weibo = filter.item({
       .FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 260px); }
       .FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
       .FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      .FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
       .FRAME_page:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
       .FRAME_page:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; }
       .FRAME_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 220px); }
@@ -8118,6 +8121,7 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] .WB_global_nav { position: static; margin-top: -50px; }
       body[{{attr}}] .WB_main_c { width: {{width}}; max-width: calc(100% - 20px); }
       body[{{attr}}] .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); max-width: calc(100% - 300px); } 
+      body[{{attr}}] .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); max-width: calc(100% - 400px); } 
       body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
