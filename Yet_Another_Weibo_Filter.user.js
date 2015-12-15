@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.301
+// @version           3.6.302
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -627,6 +627,7 @@ var text = {
   'rightUserListTitle': { 'zh-cn': '收藏帐号', 'zh-hk': '收藏帳號', 'zh-tw': '收藏帳號', 'en': 'Fave People' },
   // 浮动元素
   'fixedItemsTitle': { 'zh-cn': '浮动元素', 'zh-hk': '浮動元素', 'zh-tw': '浮動元素', 'en': 'Floating Items' },
+  'floatNav': { 'zh-cn': '自动隐藏导航栏', 'zh-hk': '自動隱藏導覽列', 'zh-tw': '自動隱藏導覽列', 'en': 'Auto hide nav bar' },
   'fixedLeft': { 'zh-cn': '允许首页左边栏随页面滚动始终显示', 'zh-hk': '允許首頁左邊欄隨頁面滾動始終顯示', 'zh-tw': '允許首頁左邊欄隨頁面滾動始終顯示', 'en': 'Floating left column' },
   'fixedRight': { 'zh-cn': '允许首页右边栏随页面滚动始终显示{{<i>}}', 'zh-hk': '允許首頁右邊欄隨頁面滾動始終顯示{{<i>}}', 'zh-tw': '允許首頁右邊欄隨頁面滾動始終顯示{{<i>}}', 'en': 'Floating right column{{<i>}}' },
   'fixedRightDesc': {
@@ -6856,6 +6857,37 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
 // 浮动元素
 filter.predef.subtitle('tool', 'fixed', '{{fixedItemsTitle}}');
 
+// 导航栏自动隐藏
+filter.items.tool.fixed.hide_nav_bar = filter.item({
+  'group': 'fixed',
+  'version': 302,
+  'type': 'boolean',
+  'key': 'weibo.tool.hide_nav_bar',
+  'text': '{{floatNav}}',
+  'ainit': function () {
+    var attr = 'yawf-float';
+    var updateNavFloat = function () {
+      var nav = document.querySelector('.WB_global_nav'); if (!nav) return;
+      var y = window.scrollY, f = nav.hasAttribute(attr), r = 42;
+      if (y < r && f) nav.removeAttribute(attr);
+      if (y >= r && !f) nav.setAttribute(attr, '');
+    };
+    document.addEventListener('scroll', updateNavFloat);
+    updateNavFloat();
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
+      .WB_global_nav { margin-top: -50px; top: 50px; box-shadow: none; }
+      .WB_global_nav[{{attr}}] { top: 0; transition: top ease-in-out 0.1s 0.33s; }
+      .WB_global_nav[{{attr}}]:hover { top: 50px; transition: top ease-in-out 0.1s 0s; }
+      .WB_global_nav[{{attr}}]::after { content: " "; width: 100%; height: 8px; clear: both; float: left; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 75%, transparent 100%); }
+      // 固定小黄签位置
+      .WB_global_nav[{{attr}}] .gn_topmenulist_tips { padding-top: 52px; transition: padding-top ease-in-out 0.1s 0.33s; }
+      .WB_global_nav[{{attr}}]:hover .gn_topmenulist_tips { padding-top: 2px; transition: padding-top ease-in-out 0.1s 0s; }
+      .WB_global_nav[{{attr}}] .gn_topmenulist_tips .ficon_close { top: 56px; transition: top ease-in-out 0.1s 0.33s; }
+      .WB_global_nav[{{attr}}]:hover .gn_topmenulist_tips .ficon_close { top: 6px; transition: top ease-in-out 0.1s 0s; }
+    */ }).replace(/\/\/.*\n/g, '\n'), { 'attr': attr }));
+  },
+}).addto(filter.groups.tool);
+
 // 左边栏浮动
 filter.items.tool.fixed.fixed_left = filter.item({
   'group': 'fixed',
@@ -6875,6 +6907,7 @@ filter.items.tool.fixed.fixed_left = filter.item({
       .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
       body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
     */ }));
+    if (filter.items.tool.fixed.hide_nav_bar) util.css.add('.WB_main_r[yawf-fixed] .WB_main_l { top: 10px !important; }');
 
     // 当左侧不够长时，需要滚动条，更新滚动条的状态
     var updateScroll = function () {
