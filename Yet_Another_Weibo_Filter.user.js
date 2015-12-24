@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.303
+// @version           3.6.304
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -464,7 +464,7 @@ var text = {
   // 右栏
   'layoutHideRight': { 'zh-cn': '隐藏模块 - 右栏', 'zh-hk': '隱藏模組 - 右欄', 'zh-tw': '隱藏模組 - 右欄', 'en': 'Hide modules - Right Column' },
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
-  'layoutHideRightHongBaoEntrance': { 'zh-cn': '红包入口', 'zh-hk': '紅包入口', 'zh-tw': '紅包入口', 'en': 'Red Envelope Entrance' },
+  'layoutHideRightHongBaoEntrance': { 'zh-cn': '领红包咯/整点红包', 'zh-hk': '领红包咯/整点红包', 'zh-tw': '领红包咯/整点红包', 'en': '领红包咯/整点红包 (Redpacks)' },
   'layoutHideRightRecomMusicRank': { 'zh-cn': '亚洲新歌榜', 'zh-hk': '亚洲新歌榜', 'zh-tw': '亚洲新歌榜', 'en': '亚洲新歌榜 (Asian New Song List)' },
   'layoutHideRightBookRank': { 'zh-cn': '亚洲好书榜', 'zh-hk': '亚洲好书榜', 'zh-tw': '亚洲好书榜', 'en': '亚洲好书榜 (Asian Top Book List)' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
@@ -5417,7 +5417,7 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
 // 抢红包微博
 filter.items.other.hidethese_content.tb_tm_wb = filter.item({
   'group': 'hidethese_content',
-  'version': 303,
+  'version': 194,
   'type': 'boolean',
   'key': 'weibo.other.red2014',
   'text': '{{red2014Weibo}}',
@@ -5425,7 +5425,6 @@ filter.items.other.hidethese_content.tb_tm_wb = filter.item({
   'rule': function red2014WeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('.PCD_event_red2014')) return 'hidden';
-    if (feed.querySelector('.PCD_event_redpacks')) return 'hidden'; // 可能是新版的红包样式，尚未见到
     return null;
   },
 }).addto(filter.groups.other);
@@ -6038,7 +6037,7 @@ filter.predef.group('layout');
 
   subtitle('Right', true);
   item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
-  item('HongBaoEntrance', 204, '#v6_pl_rightmod_hongbaoentrance { display: none !important; }');
+  item('HongBaoEntrance', 304, '#v6_pl_rightmod_hongbaoentrance, .PCD_event_redpacks { display: none !important; }');
   item('RecomMusicRank', 264, '#v6_TrustPagelet_Recom_MusicRank, [yawf-id="v6_pl_rightmod_rank_pop"] { display: none !important; }');
   item('BookRank', 264, '[yawf-id="v6_pl_rightmod_rank_book"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
