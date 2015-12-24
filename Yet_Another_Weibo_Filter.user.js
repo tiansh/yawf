@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.302
+// @version           3.6.303
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -5417,7 +5417,7 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
 // 抢红包微博
 filter.items.other.hidethese_content.tb_tm_wb = filter.item({
   'group': 'hidethese_content',
-  'version': 194,
+  'version': 303,
   'type': 'boolean',
   'key': 'weibo.other.red2014',
   'text': '{{red2014Weibo}}',
@@ -5425,6 +5425,7 @@ filter.items.other.hidethese_content.tb_tm_wb = filter.item({
   'rule': function red2014WeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('.PCD_event_red2014')) return 'hidden';
+    if (feed.querySelector('.PCD_event_redpacks')) return 'hidden'; // 可能是新版的红包样式，尚未见到
     return null;
   },
 }).addto(filter.groups.other);
@@ -6046,7 +6047,7 @@ filter.predef.group('layout');
   item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
   item('Groups', 102, '#v6_pl_rightmod_groups { display: none; }');
   item('RecomGroupUser', 191, '#v6_pl_rightmod_recomgroupuser { display: none; }');
-  item('HongbaoRank', 205, '#v6_pl_rightmod_recominfo .WB_cardwrap[node-type="hongbao_rank"] { display: none !important; }');
+  item('HongbaoRank', 205, '[node-type="hongbao_rank"] { display: none !important; }');
   item('Movie', 186, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('AttFeed', 248, '#v6_pl_rightmod_attfeed { display: none !important; }', { 'icon': 'warn' });
   item('TaobaoMovie', 200, '[yawf-id="rightmod_taobao_movie"] { display: none !important; }');
