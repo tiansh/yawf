@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.305
+// @version           3.6.306
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1114,7 +1114,7 @@ util.func.page = function (f) {
 
 // 延迟调用函数
 util.func.call = function (f) {
-  setTimeout.bind(window, f, 0).apply(null, Array.from(arguments).slice(1));
+  setTimeout.apply(null, [f, 0].concat([].slice.call(arguments, 1)));
 };
 
 // 套上try-catch
@@ -1305,6 +1305,7 @@ util.str.compregex = function (regex) {
 // 将&连接的键值对变为对象
 util.str.parsequery = function (str) {
   var o = {};
+  if (str === '') return o;
   str.split('&').map(function (kv) {
     if (kv.indexOf('=') === -1) o[kv] = null;
     else {
@@ -1317,6 +1318,7 @@ util.str.parsequery = function (str) {
 // 将对象换成 & 连接的键值
 util.str.toquery = function (o) {
   return Object.keys(o).map(function (k) {
+    if (o[k] == null) return encodeURIComponent(k);
     return encodeURIComponent(k) + '=' + encodeURIComponent(o[k]);
   }).join('&');
 };
@@ -6245,7 +6247,8 @@ filter.predef.group('layout');
     var blacklistSkins = [
       'skin355', // 天猫618
       'skin356', // 天猫1111
-      'skin357', // 反正还没用上，就先预留了；万一哪天这个编号有皮肤了再看情况
+      'skin357', // 让红包飞
+      'skin358', // 预留
     ];
     var version = '', target = 'skin058';
     var updateSkin = function updateSkin() {
