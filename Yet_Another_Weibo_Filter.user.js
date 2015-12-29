@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.304
+// @version           3.6.305
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -330,8 +330,8 @@ var text = {
   'voteWeiboFilterDescDesc': {
     'zh-cn': '包括在发布微博时选择投票的微博，也包括在投票时自动发出的微博。',
   },
-  'red2014Weibo': { 'zh-cn': '抢红包微博{{<i>}}', 'zh-hk': '搶紅包微博', 'zh-tw': '搶紅包微博', 'en': 'Weibo with Red Envelopes Rush' },
-  'red2014WeiboDesc': {
+  'redPackWeibo': { 'zh-cn': '抢红包微博{{<i>}}', 'zh-hk': '搶紅包微博', 'zh-tw': '搶紅包微博', 'en': 'Weibo with Red Envelopes Rush' },
+  'redPackWeiboDesc': {
     'zh-cn': '抢红包活动自动发布的微博'
   },
   'appItemWeibo': { 'zh-cn': '介绍微博应用的微博{{<i>}}', 'zh-hk': '介紹微博應用的微博{{<i>}}', 'zh-tw': '介紹微博應用的微博{{<i>}}', 'en': 'Weibo with app item {{<i>}}' },
@@ -529,7 +529,7 @@ var text = {
   'layoutHidePersonHotTopic': { 'zh-cn': '话题', 'zh-hk': '話題', 'zh-tw': '話題', 'en': 'Topic' },
   'layoutHidePersonHotWeibo': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   'layoutHidePersonUserList': { 'zh-cn': '与他/她相似的人', 'zh-hk': '與他/她相似的人', 'zh-tw': '與他/她相似的人', 'en': 'with He/SheSimilar Person' /* as is */ },
-  'layoutHidePersonHongbao': { 'zh-cn': '抢红包', 'zh-hk': '抢红包', 'zh-tw': '抢红包', 'en': '抢红包' },
+  'layoutHidePersonHongbao': { 'zh-cn': '微博红包', 'zh-hk': '微博红包', 'zh-tw': '微博红包', 'en': '微博红包 (Red pack)' },
   'layoutHidePersonTimeline': { 'zh-cn': '时间轴', 'zh-hk': '時間軸', 'zh-tw': '時間軸', 'en': 'Timeline' },
   // 个人主页边栏模块
   'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏', 'zh-hk': '隱藏模組 - 個人主頁邊欄', 'zh-tw': '隱藏模組 - 個人主頁邊欄', 'en': 'Hide modules - Side column of personal homepage' },
@@ -1303,7 +1303,7 @@ util.str.compregex = function (regex) {
 };
 
 // 将&连接的键值对变为对象
-util.str.parsearg = function (str) {
+util.str.parsequery = function (str) {
   var o = {};
   str.split('&').map(function (kv) {
     if (kv.indexOf('=') === -1) o[kv] = null;
@@ -1313,6 +1313,12 @@ util.str.parsearg = function (str) {
     }
   });
   return o;
+};
+// 将对象换成 & 连接的键值
+util.str.toquery = function (o) {
+  return Object.keys(o).map(function (k) {
+    return encodeURIComponent(k) + '=' + encodeURIComponent(o[k]);
+  }).join('&');
 };
 
 // 将颜色和透明度转换为一个表示颜色的字符串
@@ -3842,7 +3848,7 @@ filter.fast.account.recognizer = function (element, callback) {
   // 如果是用户链接的话
   var usercard = c.querySelector('[usercard*="name="], [usercard*="id="]');
   if (usercard) (function () {
-    var ucinfo = util.str.parsearg(usercard.getAttribute('usercard'));
+    var ucinfo = util.str.parsequery(usercard.getAttribute('usercard'));
     if (ucinfo.name) info.name = ucinfo.name;
     if (ucinfo.id) info.id = ucinfo.id;
   }());
@@ -3929,7 +3935,7 @@ filter.fast.hyperlink.recognizer = function (element, callback) {
   } while (false);
   do {
     var linkc = c.querySelector('a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"]'); if (!linkc) break;
-    var url = util.str.parsearg(linkc.href.match(/\?(.*)$/)[1]).url; if (!url) break;
+    var url = util.str.parsequery(linkc.search.slice(1)).url; if (!url) break;
     var paramhost = util.str.host(url);
     if (paramhost) return callback({ 'host': paramhost });
   } while (false);
@@ -4110,7 +4116,7 @@ weibo.comment.mentions.dom = function (comment) {
 };
 weibo.comment.mentions.name = function (comment) {
   var mentions = weibo.comment.mentions.dom(comment);
-  return mentions.map(function (a) { return util.str.parsearg(a.getAttribute('usercard')).name; });
+  return mentions.map(function (a) { return util.str.parsequery(a.getAttribute('usercard')).name; });
 };
 weibo.comment.users = {};
 weibo.comment.users.name = function (comment) {
@@ -5417,14 +5423,15 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
 // 抢红包微博
 filter.items.other.hidethese_content.tb_tm_wb = filter.item({
   'group': 'hidethese_content',
-  'version': 194,
+  'version': 305,
   'type': 'boolean',
   'key': 'weibo.other.red2014',
-  'text': '{{red2014Weibo}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{red2014WeiboDesc}}' } },
+  'text': '{{redPackWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{redPackWeiboDesc}}' } },
   'rule': function red2014WeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('.PCD_event_red2014')) return 'hidden';
+    if (feed.querySelector('.WB_feed_spec_red2015')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -6246,7 +6253,7 @@ filter.predef.group('layout');
       var adskin = document.querySelector(skinQuery);
       if (adskin) {
         var a = util.dom.create('a', ''), version = ''; a.href = adskin.href;
-        try { version = version || util.str.parsearg(a.search.slice(1)).version; } catch (e) { }
+        try { version = version || util.str.parsequery(a.search.slice(1)).version; } catch (e) { }
         util.debug('ad skin %o(version %o) has been replaced', adskin.href, version);
         adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/' + target + '/skin.css?version=' + version);
       }
@@ -7152,7 +7159,7 @@ filter.items.tool.weibotool.fast_emoji = filter.item({
       try {
         var emoji = {
           'title': target.title,
-          'text': util.str.parsearg(target.getAttribute('action-data')).insert,
+          'text': util.str.parsequery(target.getAttribute('action-data')).insert,
           'img': target.querySelector('img').src
         };
         if (!emoji.title || !emoji.text || !emoji.img) return null;
@@ -7273,15 +7280,30 @@ filter.items.tool.weibotool.redirect_weibo = filter.item({
   'key': 'weibo.tool.redirectWeibo',
   'text': '{{personalRedirectWeibo}}',
   'ainit': function () {
+    // 遇见显示的是热门的，自动跳转到全部去
     var updateLocation = function redirectPersionalWeiboRedirect() {
       var profileNav = document.querySelector('[id^="Pl_Official_ProfileFeedNav"]');
       if (!profileNav) return;
       var hotButton = profileNav.querySelector('li[node-type="search_type"][action-data*="is_hot=1"]:not([action-data*="yawf_notall=1"])');
       if (hotButton) hotButton.setAttribute('action-data', hotButton.getAttribute('action-data') + '&yawf_notall=1');
-      if (location.search.indexOf('is_hot=1') !== -1 && location.search.indexOf('yawf_notall=1') === -1)
-        profileNav.querySelector('li[node-type="search_type"][action-data*="is_all=1"]').click();
+      if (location.search.indexOf('is_hot=1') !== -1 && location.search.indexOf('yawf_notall=1') === -1) {
+        var all = profileNav.querySelector('li[node-type="search_type"][action-data*="is_all=1"]');
+        var a = util.dom.create('a', ''); a.href = location.href; a.search = all.getAttribute('action-data'); a.hash = '#_0';
+        history.pushState('YAWF_' + new Date().getTime() + '_' + (Math.random() + '').slice(2), null, a.href);
+        all.click();
+      }
     };
     observer.dom.add(updateLocation);
+    // 把指向用户主页的链接都加一个 is_all 属性，点过去就可以省去一次跳转
+    var updateUserLinksWithIsAll = function updateUserLinksWithIsAll() {
+      var links = Array.from(document.querySelectorAll('a[usercard][href]:not([href*="is_all"]), .WB_face a[href]:not([href*="is_all"])'));
+      links.forEach(function (l) {
+        var s = util.str.parsequery(l.search.slice(1));
+        s.is_all = '1';
+        l.search = util.str.toquery(s);
+      });
+    };
+    observer.dom.add(updateUserLinksWithIsAll);
   },
 }).addto(filter.groups.tool);
 
@@ -7346,11 +7368,11 @@ filter.items.tool.weibotool.card_button = filter.item({
         var lattr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
         var battr = function (o) { return o.getAttribute('action-data') || ''; };
         var info = lattr(link); if (!info) return;
-        info = util.str.parsearg(info);
+        info = util.str.parsequery(info);
         var infoval = keyvals(info.value.split(':'));
         // 检查每个按钮是否与他对应
         var button = buttons.filter(function (button) {
-          var arg = util.str.parsearg(battr(button));
+          var arg = util.str.parsequery(battr(button));
           if (!arg || !arg.value) return false;
           var values = keyvals(arg.value.split(':'));
           // 要求 key 一样
@@ -7387,7 +7409,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
       var ref;
       var updateLink = function () {
-        var arg = util.str.parsearg(a.getAttribute('action-data'));
+        var arg = util.str.parsequery(a.getAttribute('action-data'));
         if (!arg || !arg.pid || !arg.mid || !arg.uid) return;
         if (!l) {
           var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
@@ -7407,7 +7429,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         '[node-type="comment_list"] [action-type="widget_commentPhotoView"]:not([yawf-viewori])'
       ); if (!a) return;
       a.setAttribute('yawf-viewori', '');
-      var arg = util.str.parsearg(a.getAttribute('action-data'));
+      var arg = util.str.parsequery(a.getAttribute('action-data'));
       if (!arg || !arg.pid) return;
       var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
       var l = vol.querySelector('a');
@@ -7418,7 +7440,7 @@ filter.items.tool.weibotool.view_original = filter.item({
     // 转发的评论的图片
     var addOriLinkViewForwardCommentImage = function addOriLinkViewForwardCommentImage() {
       var a = document.querySelector('.WB_detail [action-type="widget_commentPhotoView"]'); if (!a) return;
-      var arg = util.str.parsearg(a.getAttribute('action-data'));
+      var arg = util.str.parsequery(a.getAttribute('action-data'));
       if (!arg || !arg.pid) return;
       a.href = util.str.fill(url.view_cmt_ori, arg); a.target = '_blank';
       a.setAttribute('action-type', '');
@@ -7475,7 +7497,7 @@ if (function supportMp4Video() {
       var disp = prev.parentNode.querySelector('[node-type="feed_list_media_disp"]');
 
       // 然后我们根据 id 判断是哪种视频，并按种类分开处理
-      var attr = util.str.parsearg(button.getAttribute('action-data'));
+      var attr = util.str.parsequery(button.getAttribute('action-data'));
       // 这个属性有时候是 objectid 有时候是 object_id
       // 就像我头一次听说某视频站获取视频地址成功时的状态一会儿是 succ 一会儿是 suee 一样神奇
       var id = attr.objectid || attr.object_id;
