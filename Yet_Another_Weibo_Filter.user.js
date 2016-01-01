@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.308
+// @version           3.6.309
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -448,6 +448,7 @@ var text = {
   'layoutHideNavHot': { 'zh-cn': '发现', 'zh-hk': '发现', 'zh-tw': '发现', 'en': 'Discover' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
   'layoutHideNavHotSearch': { 'zh-cn': '大家正在热搜', 'zh-hk': '大家正在熱搜', 'zh-tw': '大家正在熱搜', 'en': 'Hot search' },
+  'searchBarPlaceholder': {'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Count for new notice' },
   'layoutHideNavSettingNew': { 'zh-cn': '新设置红点', 'zh-hk': '新設定紅點', 'zh-tw': '新設定紅點', 'en': 'Red dot for new settings' },
   // 左栏
@@ -1459,7 +1460,6 @@ util.page.valid = function () {
   if (!unsafeWindow.$CONFIG) return false;
   if (!unsafeWindow.$CONFIG.uid) return false;
   if (!unsafeWindow.$CONFIG.nick) return false;
-  if (!unsafeWindow.$CONFIG.lang) return false;
   // 如果是搜索页，而且未于搜索页面启用，则不工作
   if (util.page.search && !util.page.searchenable) return false;
   // 如果有登录按钮，则说明没有登录，此时不工作
@@ -1723,12 +1723,14 @@ util.i18n.stylish = function (lang) {
 // 根据用户界面上的语言做不同调整
 util._languages = (function () {
   var defaultLang = 'zh-cn';
+  var allLang = ['zh-cn', 'zh-hk', 'zh-tw', 'en'];
   var lang = null;
   var pending = [];
   var chose = function (langObj) {
     langObj.local = langObj[lang] || langObj[defaultLang];
   };
   return function (l) {
+    if (!l || allLang.indexOf(l) === -1) l = defaultLang;
     lang = l;
     pending.map(chose);
     pending = [];
@@ -4567,7 +4569,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     // 自动点开有新微博的提示
     // 我知道我在干什么
     util.func.page(function $YAWF$_autoLoadNewFeed() {
-      if (!window.STK) setTimeout($YAWF$_autoLoadNewFeed, 100);
+      if (!window.STK || !STK.namespace) setTimeout($YAWF$_autoLoadNewFeed, 100);
       else STK.namespace("v6home", function (a) {
         /* STK.lib.feed.inter */
         var action = function (b, e) {
@@ -6039,17 +6041,27 @@ filter.predef.group('layout');
   item('HotSearch', 277, function () {
     // 用暴力拦截 JSONP 请求的方法解决
     util.func.page(function jsonpWrap() {
-      var val;
-      try { val = STK && STK.jsonp && STK.namespace; } catch (e) { }
-      if (!val) return setTimeout(jsonpWrap, 0);
-      STK.namespace('v6home', function (a) {
-        var ori = a.jsonp;
-        STK.jsonp = a.jsonp = function (d) {
+      var getWrapResult = function (ori) {
+        return function (d) {
           if (d.url.match(/^http:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug/)) return;
           return ori.apply(this, arguments);
         };
-      });
+      };
+      (function wraper() {
+        if (window.STK && STK.namespace) {
+          STK.namespace('v6home', function (a) {
+            STK.jsonp = a.jsonp = getWrapResult(a.jsonp);
+          });
+        } else setTimeout(wraper, 0);
+      }());
     });
+    // 再用样式处理一下
+    // 如果暴力拦截的方法失败了，这个可以勉强隐藏掉显示的热搜词，但是不输入内容点搜索按钮会搜索热搜词
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
+        .gn_search_v2 .placeholder:empty::before { content: ""; }
+        .gn_search_v2 .placeholder::before { content: "{{searchBarPlaceholder}}"; display: block; }
+        .gn_search_v2 .gn_topmenulist div:first-child:empty ~ * { display: none; }
+    */ })));
   });
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
@@ -8359,6 +8371,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
   'key': 'weibo.tool.no_weibo_space',
   'text': '{{noWeiboSpace}}',
   'ainit': function () {
+    if (location.href.indexOf('/ttarticle/p/show') !== -1) return;
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed .WB_cardwrap { padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
       .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3) !important; padding: 10px 0 !important; margin: -1px 0 1px !important; box-shadow: none !important; border-radius: 0 !important; }
