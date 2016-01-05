@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.310
+// @version           3.6.311
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1457,8 +1457,6 @@ util.page = {};
 
 // 检查是否要在本页上运行
 util.page.valid = function () {
-  // 不在内嵌的框架内运行
-  if (window.self !== window.top) return false;
   // 必须的参数
   if (!unsafeWindow.$CONFIG) return false;
   if (!unsafeWindow.$CONFIG.uid) return false;
@@ -1467,6 +1465,7 @@ util.page.valid = function () {
   if (util.page.search && !util.page.searchenable) return false;
   // 如果有登录按钮，则说明没有登录，此时不工作
   if (document.querySelector('.gn_login')) return false;
+  util.debug('yawf started in page: %o (%s top)', location, self === top ? 'is' : 'is not');
   return true;
 };
 
@@ -1602,14 +1601,9 @@ observer.weibo = (function () {
   };
   weiboObserver = function weiboObserver() {
     if (busy) return;
-    var feeds;
-    if (!rerun) {
-      feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type:not([yawf-weibo])'));
-      if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]:not([yawf-weibo])'));
-    } else {
-      feeds = Array.from(document.querySelectorAll('[node-type="feed_list"] .WB_feed_type'));
-      if (util.page.search) feeds = Array.from(document.querySelectorAll('#pl_weibo_direct [action-type="feed_list_item"]'));
-    }
+    var feeds, selector = '[action-type="feed_list_item"]';
+    if (!rerun) selector += ':not([yawf-weibo])';
+    feeds = Array.from(document.querySelectorAll(selector));
     feeds.forEach(function (feed) {
       feed.setAttribute('yawf-weibo', '');
       onloads.forEach(function (f) { f(feed); });
@@ -2507,6 +2501,11 @@ filter.comment = filter.filters();
 // 单条微博页面永远不应当隐藏微博
 filter.rules.add(1e6, function singleWeiboPageUnsetRule(feed) {
   return document.querySelector('[id^="Pl_Official_WeiboDetail__"]') ? 'unset' : null;
+});
+
+// 头条文章是一条微博，类似于单条微博，不应当隐藏
+filter.rules.add(1e6, function singleWeiboPageUnsetRule(feed) {
+  return util.dom.matches(feed, '.WB_artical *') ? 'unset' : null;
 });
 
 // 过滤器的对话框
@@ -6173,7 +6172,7 @@ filter.predef.group('layout');
   item('UseCardBackground', 294, '.screen_box .layer_menu_list a[action-type="fl_cardCover"] { display: none !important; }');
 
   // 处理微博按钮的平均分布
-  observer.weibo.after(function (feed) {
+  observer.weibo.onload(function (feed) {
     var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
     li.forEach(function (li) {
       var type = li.querySelector('a').getAttribute('action-type');
@@ -7413,32 +7412,46 @@ filter.items.tool.weibotool.card_button = filter.item({
       if (fixed.indexOf(feed) !== -1) return; fixed.push(feed);
       var links = Array.from(feed.querySelectorAll('.W_btn_cardlink[action-type="feed_list_url"], .yawf-link[action-type="feed_list_url"]'));
       var buttons = Array.from(feed.querySelectorAll('.media_box [exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
+      var ttarticles = Array.from(feed.querySelectorAll('.media_box [action-type="widget_articleLayer"]'));
       // 每个链接，检查是否有对应的按钮
       links.forEach(function (link) {
         var lattr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
         var battr = function (o) { return o.getAttribute('action-data') || ''; };
+        var tattr = function (o) { return o.getAttribute('suda-uatrack') || ''; };
         var info = lattr(link); if (!info) return;
         info = util.str.parsequery(info);
         var infoval = keyvals(info.value.split(':'));
-        // 检查每个按钮是否与他对应
-        var button = buttons.filter(function (button) {
-          var arg = util.str.parsequery(battr(button));
+        // 检查一个能点击的东西是不是对应这个链接
+        var validTarget = function (arg) {
           if (!arg || !arg.value) return false;
           var values = keyvals(arg.value.split(':'));
           // 要求 key 一样
           if (arg.key !== info.key) return false;
           // 而且所有 value 也对应
           return subset(infoval, values) || subset(values, infoval);
-        })[0] || null;
-        if (!button) return;
+        };
+        // 检查每个按钮是否与他对应
+        var button = buttons.filter(function (button) {
+          var arg = util.str.parsequery(battr(button)) || {};
+          return validTarget(arg);
+        })[0];
+        var ttarticle = ttarticles.filter(function (ttarticle) {
+          var arg = util.str.parsequery(tattr(ttarticle)) || {};
+          return validTarget(arg);
+        })[0];
+        var target = button || ttarticle || null;
+        util.debug('link %o -> target %o', link, target);
+        if (!target) return;
         link.addEventListener('click', function (e) {
           e.stopPropagation(); e.preventDefault();
-          button.click();
+          target.click();
         });
-        var text = button.textContent;
-        var linktext = util.dom.create(util.str.fill(html.cardLinkButton, { 'text': text }));
-        var span = link.querySelector('.W_autocut');
-        if (span) span.insertBefore(linktext, span.firstChild);
+        var text = target === button ? button.textContent : '';
+        if (text) {
+          var linktext = util.dom.create(util.str.fill(html.cardLinkButton, { 'text': text }));
+          var span = link.querySelector('.W_autocut');
+          if (span) span.insertBefore(linktext, span.firstChild);
+        }
       });
     };
     observer.weibo.after(fixButton);
