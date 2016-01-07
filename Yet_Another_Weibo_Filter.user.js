@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.311
+// @version           3.6.312
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1319,12 +1319,14 @@ util.str.addregex = function (s) {
 };
 
 // 将字符串编译成正则式
-util.str.compregex = function (regex) {
-  try { return RegExp(regex); }
-  catch (e) {
-    util.debug('erorr while compile regexp %s : %o', regex, e);
-    return null;
-  }
+util.str.compregex = function (flags) {
+  return function (regex) {
+    try { return RegExp(regex, flags); }
+    catch (e) {
+      util.debug('erorr while compile regexp %s : %o', regex, e);
+      return null;
+    }
+  };
 };
 
 // 将&连接的键值对变为对象
@@ -1601,8 +1603,8 @@ observer.weibo = (function () {
   };
   weiboObserver = function weiboObserver() {
     if (busy) return;
-    var feeds, selector = '[action-type="feed_list_item"]';
-    if (!rerun) selector += ':not([yawf-weibo])';
+    var feeds, selector = '[action-type="feed_list_item"]:not([yawf-weibo]), [node-type="feed_list"] .WB_feed_type:not([yawf-weibo])';
+    if (rerun) selector = '[action-type="feed_list_item"], [node-type="feed_list"] .WB_feed_type';
     feeds = Array.from(document.querySelectorAll(selector));
     feeds.forEach(function (feed) {
       feed.setAttribute('yawf-weibo', '');
@@ -4035,6 +4037,8 @@ weibo.comment.content = function (comment, f) {
 weibo.common.text = function (content, preclt) {
   var active = [function (node) {
     if (node.nodeType === Node.TEXT_NODE) return node.textContent;
+  }, function (node) {
+    if (util.dom.matches(node, 'br')) return '\n';
   }];
   // 获取特定元素的文本
   var types = {};
@@ -4067,17 +4071,16 @@ weibo.common.text = function (content, preclt) {
     return content(feed, function (m) {
       return Array.from(m.childNodes).map(function (node) {
         var result = [];
-        for (var i = 0, l = active.length; i < l; i++) {
-          var val = null;
-          try { val = active[i](node); } catch (e) { util.debug(e); }
-          if (val != null) result.push(val);
-        }
+        active.forEach(function (f) {
+          var val = f(node);
+          if (val) result.push(val);
+        });
         return result.join(' ');
       });
     }).join('');
   };
   match.active = function (type) {
-    active.push(types[type]);
+    active.push(util.func.catched(types[type]));
     return type;
   };
   (preclt || []).forEach(match.active);
@@ -4857,7 +4860,7 @@ filter.predef.wbfc({
   'add': util.str.addregex,
   'display': function (s) { return '/' + s + '/'; },
   'rule': function regexpMatch(action, feed) {
-    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex('m')).filter(Boolean);
     var texts = weibo.feed.text(feed);
     var match = regexen.some(function (regexp) {
       if (!regexp.exec(texts)) return false;
@@ -5113,7 +5116,7 @@ filter.predef.wbfc({
   'add': util.str.addregex,
   'display': function (s) { return '/' + s + '/'; },
   'rule': function rtopicMatch(action, feed) {
-    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex()).filter(Boolean);
     var topics = weibo.feed.topics.text(feed);
     var match = regexen.some(function (regexp) {
       return topics.some(function (topic) {
@@ -5311,7 +5314,7 @@ filter.items.other.hidethese_ad.ad_feed = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.ad_feed',
   'text': '{{adfeedFilterDesc}}',
-  'priority': 1e5 + 1e3, // 优先于白名单
+  'priority': 1e6 - 1e3, // 次最高优先级
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{adfeedFilterDescDesc}}' } },
   'rule': function adFeedFilterRule(feed) {
     if (!this.conf) return null;
@@ -5328,7 +5331,7 @@ filter.items.other.hidethese_ad.fans_top = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.fans_top',
   'text': '{{fansTopFilterDesc}}',
-  'priority': 1e5 + 1e3, // 优先于白名单
+  'priority': 1e6, // 优先于白名单
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fansTopFilterDescDesc}}' } },
   'rule': function fansTopFilterRule(feed) {
     if (!this.conf) return null;
@@ -5375,12 +5378,12 @@ filter.items.other.hidethese_ad.fake_weibo = filter.item({
   'type': 'boolean',
   'key': 'weibo.other.fake_weibo',
   'text': '{{fakeWeiboFilterDesc}}',
-  'priority': 1e5 + 1e3, // 优先于白名单
+  'priority': 1e6, // 最高优先级
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fakeWeiboFilterDescDesc}}' } },
   'rule': function fakeWeiboFilterRule(feed) {
-    if (!this.conf) return null;
-    if (!feed.getAttribute('mid')) return 'hidden';
-    return null;
+    if (feed.hasAttribute('mid')) return null;
+    if (this.conf) return 'hidden';
+    return 'unset';
   },
 }).addto(filter.groups.other);
 
@@ -5723,7 +5726,7 @@ filter.predef.wbfc({
   'display': function (s) { return '/' + s + '/'; },
   'listtype': ['blacklist', 'whitelist'],
   'comment': function regexpMatchCommentRule(action, comment) {
-    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex()).filter(Boolean);
     var texts = weibo.comment.text(comment);
     var match = regexen.some(function (regexp) {
       if (!regexp.exec(texts)) return false;
@@ -8370,7 +8373,8 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed_type .WB_detail { overflow: hidden; }
-      .WB_feed_type .WB_detail>.WB_info, .WB_detail>.WB_info+.WB_text, .WB_expand>.WB_info, .WB_expand>.WB_info+.WB_text { display: inline; word-wrap: break-word; }
+      .WB_feed_type .WB_detail > .WB_info, .WB_detail > .WB_info + .WB_text, .WB_detail > .WB_info + .WB_text + .WB_text,
+      .WB_expand>.WB_info, .WB_expand > .WB_info + .WB_text, .WB_expand > .WB_info + .WB_text + .WB_text { display: inline; word-wrap: break-word; }
       .WB_feed_type .WB_detail>.WB_info::after, .WB_expand>.WB_info::after { content: "："; }
       .WB_feed_type .WB_detail>.WB_info+.WB_text::before { display: block; float: right; content: " "; width: 14px; height: 1px; }
       .WB_feed_type[yawf-hide_box] .WB_detail>.WB_info+.WB_text::before { width: 37px; }
