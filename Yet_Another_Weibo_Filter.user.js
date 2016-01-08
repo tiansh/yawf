@@ -4860,7 +4860,6 @@ filter.predef.wbfc({
   'rule': function regexpMatch(action, feed) {
     var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
     var texts = weibo.feed.text(feed);
-    console.log('texts: %o', texts);
     var match = regexen.some(function (regexp) {
       if (!regexp.exec(texts)) return false;
       var reason = ((regexp + '').match(/\(\?=\|(([^)]|\\\))*)\)/) || [])[1];
