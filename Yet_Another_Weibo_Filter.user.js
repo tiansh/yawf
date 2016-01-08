@@ -1306,7 +1306,6 @@ util.str.parsejsonp = function (resp) {
 util.str.addregex = function (s) {
   s = s.trim();
   if (s.length >= 2 && s[0] === '/' && s[s.length - 1] === '/') s = s.slice(1, -1);
-  if (RegExp(s) + '' === '/(?:)/') return null;
   try { RegExp(s).exec(''); } catch (e) {
     util.ui.alert('yawf-regexp-bad-formed', {
       'title': util.str.fill('{{regexpBadFormedTitle}}'),
@@ -1315,12 +1314,13 @@ util.str.addregex = function (s) {
     });
     s = null;
   }
+  if (RegExp(s) + '' === '/(?:)/') return null;
   return s;
 };
 
 // 将字符串编译成正则式
 util.str.compregex = function (regex) {
-  try { return RegExp(regex, flags); }
+  try { return RegExp(regex); }
   catch (e) {
     util.debug('compile regexp exception %s : %o', regex, e);
     return null;
@@ -4034,29 +4034,29 @@ weibo.comment.content = function (comment, f) {
 // 从一条微博中获取他的文本
 weibo.common.text = function (content, preclt) {
   var active = [function (node) {
-    if (node.nodeType === Node.TEXT_NODE) return node.textContent;
+    if (node.nodeType === Node.TEXT_NODE) return node.textContent.trim();
   }, function (node) {
     if (util.dom.matches(node, 'br')) return '\n';
   }];
   // 获取特定元素的文本
   var types = {};
   types.mention = function (node) {
-    if (util.dom.matches(node, 'a[usercard]')) return node.textContent;
+    if (util.dom.matches(node, 'a[usercard]')) return node.textContent.trim();
   };
   types.topic = function (node) {
     if (util.dom.matches(node, 'a.a_topic')) return node.textContent.trim();
   };
   types.stock = function (node) {
-    if (util.dom.matches(node, 'a[suda-uatrack*="1022-stock"]')) return node.textContent;
+    if (util.dom.matches(node, 'a[suda-uatrack*="1022-stock"]')) return node.textContent.trim();
   };
   types.linkt = function (node) {
-    if (util.dom.matches(node, 'a[action-type="feed_list_url"][title]')) return node.getAttribute('title');
+    if (util.dom.matches(node, 'a[action-type="feed_list_url"][title]')) return node.getAttribute('title').trim();
   };
   types.linku = function (node) {
-    if (util.dom.matches(node, 'a[action-type="feed_list_url"][target="_blank"]')) return node.getAttribute('href');
+    if (util.dom.matches(node, 'a[action-type="feed_list_url"][target="_blank"]')) return node.getAttribute('href').trim();
   };
   types.emotion = function (node) {
-    if (util.dom.matches(node, 'img[type="face"][alt]')) return node.getAttribute('alt');
+    if (util.dom.matches(node, 'img[type="face"][alt]')) return node.getAttribute('alt').trim();
   };
   types.emoji = function (node) {
     if (!util.dom.matches(node, '[src^="http://img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]')) return void 0;
@@ -4860,9 +4860,11 @@ filter.predef.wbfc({
   'rule': function regexpMatch(action, feed) {
     var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
     var texts = weibo.feed.text(feed);
+    console.log('texts: %o', texts);
     var match = regexen.some(function (regexp) {
       if (!regexp.exec(texts)) return false;
-      feed.setAttribute('yawf-reason', util.str.fill(text.regexpFilterReason, { 'detail': regexp + '' }));
+      var reason = ((regexp + '').match(/\(\?=\|(([^)]|\\\))*)\)/) || [])[1];
+      feed.setAttribute('yawf-reason', reason || util.str.fill(text.regexpFilterReason, { 'detail': regexp + '' }));
       return true;
     });
     if (match) return action; else return null;
