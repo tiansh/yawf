@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.312
+// @version           3.6.313
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1319,14 +1319,12 @@ util.str.addregex = function (s) {
 };
 
 // 将字符串编译成正则式
-util.str.compregex = function (flags) {
-  return function (regex) {
-    try { return RegExp(regex, flags); }
-    catch (e) {
-      util.debug('erorr while compile regexp %s : %o', regex, e);
-      return null;
-    }
-  };
+util.str.compregex = function (regex) {
+  try { return RegExp(regex, flags); }
+  catch (e) {
+    util.debug('compile regexp exception %s : %o', regex, e);
+    return null;
+  }
 };
 
 // 将&连接的键值对变为对象
@@ -4860,7 +4858,7 @@ filter.predef.wbfc({
   'add': util.str.addregex,
   'display': function (s) { return '/' + s + '/'; },
   'rule': function regexpMatch(action, feed) {
-    var regexen = this.conf.concat(this.extent).map(util.str.compregex('m')).filter(Boolean);
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
     var texts = weibo.feed.text(feed);
     var match = regexen.some(function (regexp) {
       if (!regexp.exec(texts)) return false;
@@ -5116,7 +5114,7 @@ filter.predef.wbfc({
   'add': util.str.addregex,
   'display': function (s) { return '/' + s + '/'; },
   'rule': function rtopicMatch(action, feed) {
-    var regexen = this.conf.concat(this.extent).map(util.str.compregex()).filter(Boolean);
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
     var topics = weibo.feed.topics.text(feed);
     var match = regexen.some(function (regexp) {
       return topics.some(function (topic) {
@@ -5726,7 +5724,7 @@ filter.predef.wbfc({
   'display': function (s) { return '/' + s + '/'; },
   'listtype': ['blacklist', 'whitelist'],
   'comment': function regexpMatchCommentRule(action, comment) {
-    var regexen = this.conf.concat(this.extent).map(util.str.compregex()).filter(Boolean);
+    var regexen = this.conf.concat(this.extent).map(util.str.compregex).filter(Boolean);
     var texts = weibo.comment.text(comment);
     var match = regexen.some(function (regexp) {
       if (!regexp.exec(texts)) return false;
