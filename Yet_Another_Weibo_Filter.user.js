@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.313
+// @version           3.6.314
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1147,7 +1147,7 @@ util.func.catched = function (f, fc) {
   var ret = function () {
     try { return f.apply(this, arguments); }
     catch (e) {
-      util.debug('Exception while run %o: %o \n %o', f, e, e.stack);
+      util.error('Exception while run %o: %o\n%o', f, e, e.stack);
       if (fc) fc(e);
     }
   };
@@ -1872,7 +1872,10 @@ util.info.onick = function () {
 // 打印调试信息
 util.debug = util.script.isdebug &&
   console && console.log && console.log.bind(console) ||
-  function () { };
+  util.func.noop;
+util.error = util.script.isdebug &&
+  console && console.error && console.error.bind(console) ||
+  util.func.noop;
 
 // 桌面提示工具
 util.notify = (function () {
@@ -2483,7 +2486,7 @@ filter.filters = function () {
     var result = null;
     list.some(function (item) {
       try { result = item.rule(obj, confs) || result; }
-      catch (e) { util.debug('error while parsing rule %o: %o', item.rule, e); }
+      catch (e) { util.error('Exception while parsing rule %o: %o\n%o', item.rule, e, e.stack); }
       if (result) util.debug('%o(%o) -> %s', item.rule, obj, result);
       return result !== null;
     });
@@ -7331,10 +7334,10 @@ filter.items.tool.weibotool.redirect_weibo = filter.item({
     var updateLocation = function redirectPersionalWeiboRedirect() {
       var profileNav = document.querySelector('[id^="Pl_Official_ProfileFeedNav"]');
       if (!profileNav) return;
-      var hotButton = profileNav.querySelector('li[node-type="search_type"][action-data*="is_hot=1"]:not([action-data*="yawf_notall=1"])');
+      var hotButton = profileNav.querySelector('li[action-type="search_type"][action-data*="is_hot=1"]:not([action-data*="yawf_notall=1"])');
       if (hotButton) hotButton.setAttribute('action-data', hotButton.getAttribute('action-data') + '&yawf_notall=1');
       if (location.search.indexOf('is_hot=1') !== -1 && location.search.indexOf('yawf_notall=1') === -1) {
-        var all = profileNav.querySelector('li[node-type="search_type"][action-data*="is_all=1"]');
+        var all = profileNav.querySelector('li[action-type="search_type"][action-data*="is_all=1"]');
         var a = util.dom.create('a', ''); a.href = location.href; a.search = all.getAttribute('action-data'); a.hash = '#_0';
         history.pushState('YAWF_' + new Date().getTime() + '_' + (Math.random() + '').slice(2), null, a.href);
         all.click();
@@ -7910,10 +7913,10 @@ filter.items.style.text.custom_font_family = filter.item({
           that.west = that.west.filter(function (f) { return f[0] !== font[0]; });
           that.chinese = that.chinese.filter(function (f) { return f[0] !== font[0]; });
         }
-        util.func.call(validFont);
-      }, 5000);
+        setTimeout(validFont, 1e3);
+      }, 2e4);
     };
-    setTimeout(function () { validFonts(updateConfig); }, 5e3);
+    validFonts(updateConfig);
     updateConfig();
   },
   'shown': function (dom) {
