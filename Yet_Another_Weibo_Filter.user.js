@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.314
+// @version           3.6.315
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -38,6 +38,13 @@
 // @grant             GM_registerMenuCommand
 // @grant             GM_info
 // @grant             unsafeWindow
+// @connect-src       weibo.com
+// @connect-src       www.weibo.com
+// @connect-src       s.weibo.com
+// @connect-src       video.weibo.com
+// @connect-src       t.cn
+// @connect-src       www.miaopai.com
+// @connect-src       ent.v.sina.cn
 // @run-at            document-start
 // ==/UserScript==
 
@@ -2181,6 +2188,12 @@ util.ui.bubble = function (description, ref) {
 
 // 网络访问相关
 var network = {};
+
+util.xhr = function (details) {
+  util.debug('XHRURL: %o', details.url);
+  return GM_xmlhttpRequest(details);
+};
+
 // 维护帐号信息，用于显示
 network.account = (function () {
   var idCache = {}, nameCache = {}, working = {};
@@ -2193,7 +2206,7 @@ network.account = (function () {
       delete working[queryStr];
     };
     // 请求获取
-    GM_xmlhttpRequest({
+    util.xhr({
       'method': 'GET',
       'url': util.str.fill(url.newcard, { 'query': queryStr, 'callback': util.str.fcb() }),
       'onload': util.func.catched(function (resp) {
@@ -2256,7 +2269,7 @@ network.comment = {};
 network.comment.del = (function () {
   var del = function (info, callback) {
     util.debug('deleting comment %s', info);
-    GM_xmlhttpRequest({
+    util.xhr({
       'method': 'POST',
       'url': util.str.fill(url.del_cmt),
       'headers': network.headers(),
@@ -2282,7 +2295,7 @@ network.video = {};
 // 获取方法是模拟安卓用户访问秒拍视频的网页
 network.video.get = {};
 network.video.get['1034'] = function (id, callback) {
-  GM_xmlhttpRequest({
+  util.xhr({
     'method': 'GET',
     'url': util.str.fill(url.video_show, { 'id': id }),
     'headers': {
@@ -2296,7 +2309,7 @@ network.video.get['1034'] = function (id, callback) {
   });
 };
 network.video.get['2017607'] = function (url, callback) {
-  GM_xmlhttpRequest({
+  util.xhr({
     'method': 'GET',
     'url': url,
     'headers': {
@@ -2332,7 +2345,7 @@ network.recent = (function () {
   // 访问个人主页
   var get = function (uid, callback) {
     util.debug('request user page: %o', uid);
-    GM_xmlhttpRequest({
+    util.xhr({
       'method': 'GET',
       'url': util.str.fill(url.user, { 'uid': uid }),
       'onload': function (resp) {
@@ -2407,7 +2420,7 @@ network.suggest.base = function (func, normalize, empty) {
 };
 
 network.suggest.topsuggest = function (query, callback) {
-  return GM_xmlhttpRequest({
+  return util.xhr({
     'method': 'GET',
     'url': util.str.fill(url.topsuggest, { 'query': encodeURIComponent(query), 'callback': util.str.fcb() }),
     'onload': function (resp) {
@@ -2439,7 +2452,7 @@ network.suggest.user = network.suggest.base(function (query, callback) {
   });
   // 推荐提到工具提供的候选用户
   // 这些是自己关注的帐号
-  var network2 = GM_xmlhttpRequest({
+  var network2 = util.xhr({
     'method': 'GET',
     'url': util.str.fill(url.attention, { 'query': encodeURIComponent(query) }),
     'onload': function (resp) {
@@ -2458,7 +2471,7 @@ network.suggest.user = network.suggest.base(function (query, callback) {
 
 // 推荐话题
 network.suggest.topic = network.suggest.base(function (query, callback) {
-  return GM_xmlhttpRequest({
+  return util.xhr({
     'method': 'GET',
     'url': util.str.fill(url.topicsuggest, { 'query': encodeURIComponent(query) }),
     'onload': function (resp) {
@@ -3139,7 +3152,6 @@ util.complete = (function () {
       }
       checker(input, suggest);
     };
-    var hideTimeout = null;
     var blur = function () {
       container.style.display = 'none';
     };
@@ -3530,7 +3542,6 @@ filter.collection.item = (function () {
   };
   // 初始化所有过滤器
   util.init(function () {
-    var times = [];
     items.forEach(function (item) {
       if (item._init) util.func.catched(item._init)();
     });
@@ -4409,7 +4420,6 @@ filter.items.base.scripttool.fast_hide_button = filter.item({
   'group': 'scripttool',
   'version': 279,
   'type': 'boolean',
-  'default': true,
   'key': 'weibo.tool.fast_hide_button',
   'text': '{{fastHideButton}}',
   'priority': 1e6,
@@ -4460,7 +4470,6 @@ filter.items.base.scripttool.disable_lazyload = filter.item({
   'group': 'scripttool',
   'version': 279,
   'type': 'boolean',
-  'default': true,
   'key': 'weibo.tool.disable_lazyload',
   'text': '{{disableLazyLoad}}',
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{disableLazyLoadDesc}}' } },
@@ -5939,8 +5948,6 @@ filter.items.comment.otherc.delete_comment = filter.item({
   'init': function () {
     if (!this.conf) return;
     var f = filter.fix.cmthidden.done;
-    var deleteComment = function (info) {
-    };
     filter.fix.cmthidden.done = function (comment) {
       f(comment);
       var delbutton = comment.querySelector('a[action-type="delete"]'); if (!delbutton) return;
@@ -6291,7 +6298,7 @@ filter.predef.group('layout');
     var updateSkin = function updateSkin() {
       var adskin = document.querySelector('link[href*="/skin35"]');
       if (adskin) {
-        var a = util.dom.create('a', ''), version = ''; a.href = adskin.href;
+        var a = util.dom.create('a', ''); version = ''; a.href = adskin.href;
         try { version = version || util.str.parsequery(a.search.slice(1)).version; } catch (e) { }
         util.debug('ad skin %o(version %o) has been replaced', adskin.href, version);
         adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/' + target + '/skin.css?version=' + version);
@@ -7174,7 +7181,6 @@ filter.items.tool.weibotool.fast_emoji = filter.item({
         ul.replaceChild(n, lis[i]);
         lis[i] = n;
       };
-      var prev = [null, null, null, null, null, null, null, null, null, null];
       var name = function (li) { return li.title || null; };
       var update = keep ?function (list) {
         // 更新列表，比较差异并尽量少修改已有的排列顺序
@@ -7292,7 +7298,6 @@ filter.items.tool.weibotool.fast_emoji = filter.item({
       var tab = document.querySelector('.layer_faces .WB_minitab:first-child'); if (!tab) return;
       var container = tab.parentNode;
       var area = container.insertBefore(util.dom.create(util.str.fill(html.fastEmojiInput)), tab);
-      var all = container.querySelector('.WB_minitab ~ .faces_list_box');
       var lists = Array.from(area.querySelectorAll('[yawf-face] ul'));
       var chatListNode = container.querySelector('ul[node-type="_phizListNode"]'), isIm =!!chatListNode;
       bindconf(lists[0], 'top', false, isIm);
@@ -7773,7 +7778,7 @@ if (!function isBJT() {
               var h = c.getFullYear(), j = c.getMonth() + 1, l = c.getDate(), n = c.getHours(), o = c.getMinutes();
               var tz = c.getTimezoneOffset(), tzm = Math.abs(tz) % 60, tzh = (Math.abs(tz) - tzm) / 60, tzt;
               if (tz === 0) tzt = ''; else tzt = (tz < 0 ? '+' : '-') + z(tzh) + ':' + z(tzm);
-              return h + '-' + z(j) + '-' + z(l) + ' ' + z(n) + ':' + z(o) + ' UTC' + tzt
+              return h + '-' + z(j) + '-' + z(l) + ' ' + z(n) + ':' + z(o) + ' UTC' + tzt;
             }(l));
             util.debug('timezone UTC+8 to Local: %o -> %o', title, i.title);
           }
@@ -7786,7 +7791,7 @@ if (!function isBJT() {
       var convertText = function (input) {
         var nums, c = null, a = new Date();
         var b = a; b.setTime(b.getTime() + 288e5);
-        var q = b.getUTCFullYear(), rr = b.getUTCMonth(), s = b.getUTCDate(), t = b.getUTCHours(), u = b.getUTCMinutes();
+        var q = b.getUTCFullYear(), rr = b.getUTCMonth(), s = b.getUTCDate();
         if ((nums = match(input, /^(\d+)-(\d+)-(\d+) (\d+):(\d+)$/))) c = new Date(Date.UTC(nums[0], nums[1] - 1, nums[2], nums[3], nums[4], 0));
         else if ((nums = match(input, new RegExp('^' + text.timeMonthDay.replace(/%s/g, '(\\d+)') + '$')))) c = new Date(Date.UTC(q, nums[0] - 1, nums[1], nums[2], nums[3], 0));
         else if ((nums = match(input, new RegExp('^' + e + '\\s*(\\d+):(\\d+)$')))) c = new Date(Date.UTC(q, rr, s, nums[0], nums[1], 0));
@@ -9104,7 +9109,7 @@ var extension = (function () {
       if (details.key) details.key = 'weibo.extent.' + details.key;
       if (details.group) details.group = 'extent.' + details.group;
       details.extern = true;
-      var item = filter.item(details).addto(extensionFilterGroup());
+      filter.item(details).addto(extensionFilterGroup());
     });
     // 向已有的内容、帐号等等过滤器中添加规则
     defineFunction('extent', ['name', 'type', 'words'], function (name, type, words) {
