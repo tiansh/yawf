@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.316
+// @version           3.6.317
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -370,7 +370,6 @@ var text = {
   'unauthappWeiboDesc': {
     'zh-cn': '未通过审核的应用有发布频率和可最多可授权15名用户的限制，除非您的好友中有人做相关的开发工作，否则您应当很难看到此来源的微博。来自未审核应用的微博往往是但开发微博应用过程中的测试微博。您可以通过微博开放平台文档中的<a target="_blank" href="http://open.weibo.com/wiki/%E5%BA%94%E7%94%A8%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98">应用相关问题</a>页面了解更多关于应用的信息。',
   },
-
   'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博{{<i>}}', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'en': 'Weibo mentioned | not less than {{<num>}} topics{{<i>}}' },
   'multiTopicDesc': {
     'zh-cn': '由于新浪热门话题和话题主持人的相关政策，存在一些帐号通过罗列若干热门话题以使自己的广告可以显示在热门话题页面。您可以隐藏一次性提到了太多话题的微博以避免看到他们。',
@@ -4130,7 +4129,7 @@ weibo.feed.author.dom = function (feed) {
 weibo.feed.author.id = function (feed) {
   var author = weibo.feed.author.dom(feed);
   if (!author) return null;
-  return author.getAttribute('usercard').split('=')[1];
+  return util.str.parsequery(author.getAttribute('usercard')).id;
 };
 weibo.feed.author.name = function (feed) {
   var author = weibo.feed.author.dom(feed);
@@ -4146,7 +4145,7 @@ weibo.comment.author.dom = function (comment) {
 weibo.comment.author.id = function (comment) {
   var author = weibo.comment.author.dom(comment);
   if (!author) return null;
-  return author.getAttribute('usercard').split('=')[1];
+  return util.str.parsequery(qauthor.getAttribute('usercard')).id;
 };
 weibo.comment.author.name = function (comment) {
   var author = weibo.comment.author.dom(comment);
@@ -4173,7 +4172,7 @@ weibo.feed.original.dom = function (feed) {
 weibo.feed.original.id = function (feed) {
   var originalAuthor = weibo.feed.original.dom(feed);
   if (!originalAuthor) return null;
-  return originalAuthor.getAttribute('usercard').split('=')[1];
+  return util.str.parsequery(originalAuthor.getAttribute('usercard')).id;
 };
 weibo.feed.original.name = function (feed) {
   var originalAuthor = weibo.feed.original.dom(feed);
@@ -4193,7 +4192,7 @@ weibo.feed.mentions.dom = function (feed) {
 };
 weibo.feed.mentions.name = function (feed) {
   return weibo.feed.mentions.dom(feed).map(function (link) {
-    return link.getAttribute('usercard').slice('name='.length);
+    return util.str.parsequery(link.getAttribute('usercard')).name;
   });
 };
 
@@ -5667,7 +5666,7 @@ filter.items.other.spam.same_account = filter.item({
     var id = weibo.feed.author.id(feed);
     if (!id) return;
     var number = document.querySelectorAll(
-      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_detail>.WB_detail>.WB_info>.W_fb[usercard="id=' + id + '"]'
+      '[node-type="feed_list"] .WB_feed_type[yawf-display]:not([yawf-display$="-fold"]):not([yawf-display$="-unfold"]):not([yawf-display$="-hidden"])>.WB_feed_detail>.WB_detail>.WB_info>.W_fb[usercard^="id=' + id + '"]'
     ).length;
     if (number >= this.ref.number.conf) {
       feed.setAttribute('yawf-reason', text.sameAccountFilterReason);
@@ -6832,7 +6831,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
       var users = Array.from(document.querySelectorAll('#yawf-rightmod_userlist li:not([yawf-noticeuser])'));
       users.forEach(function (li) {
         li.setAttribute('yawf-noticeuser', '');
-        var uid = li.querySelector('a[usercard^="id="]').getAttribute('usercard').slice('id='.length);
+        var uid = util.str.parsequery(li.querySelector('a[usercard^="id="]').getAttribute('usercard')).id;
         if (!lis[uid]) checkrec(uid); lis[uid] = li;
         if (users.indexOf(uid) === -1) return;
         util.debug('check user %o', uid);
