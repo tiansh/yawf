@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.317
+// @version           3.6.318
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -759,7 +759,7 @@ var text = {
     'en': 'Reorder comment control buttons{{<i>}}||{{<1>}}|{{<2>}}|{{<3>}}|{{<4>}}|{{<5>}}'
   },
   'layoutCommentReorderDescDesc': {
-    'zh-cn': '您还可以在版面清理选项卡中隐藏您不想看到的按钮，或在此勾选以隐藏：[[layout.weibo.report]]',
+    'zh-cn': '您还可以在版面清理选项卡中隐藏您不想看到的按钮，或在此勾选以隐藏：[[layout.weibo.report]] [[layout.weibo.likecomment]]',
   },
   'layoutCommentReorderReport': { 'zh-cn': '举报', 'zh-hk': '舉報', 'zh-tw': '檢舉', 'en': 'Report' },
   'layoutCommentReorderDelete': { 'zh-cn': '删除', 'zh-hk': '刪除', 'zh-tw': '刪除', 'en': 'Delete' },
@@ -6359,7 +6359,7 @@ filter.predef.group('layout');
 
   // 标记个人主页的模块
   var tagPLeftModsName = function () {
-    var names = Array.from(document.querySelectorAll('.WB_frame_b>div:not([yawf-obj-name]) h2.main_title'));
+    var names = Array.from(document.querySelectorAll('.WB_frame_b>div:not([yawf-obj-name]) .main_title'));
     if (!names.length) return;
     names.forEach(function (title) {
       var name = title && title.textContent.trim() || '';
@@ -8185,6 +8185,8 @@ filter.items.style.layout.width_weibo = filter.item({
       }
 
       .send_weibo { background-size: cover; }
+      .send_weibo .kind { max-width: calc({{width}} - 220px); }
+      .send_weibo .kind a { float: left; margin-bottom: 40px; }
 
     */ }), {
       'width': this.ref.width.conf + 'px',
