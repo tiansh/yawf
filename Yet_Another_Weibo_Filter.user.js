@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.319
+// @version           3.6.320
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -136,7 +136,7 @@ var text = {
     'zh-cn': '载入新微博后显示桌面提示{{<i>}}||{{<types>}}仅对白名单的微博显示桌面提示||{{<shorten>}}桌面提示仅显示|前{{<shortlen>}}字符摘要信息||{{<autohide>}}桌面提醒延时自动关闭|显示{{<duration>}}毫秒|＋字数×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
     'zh-hk': '载入新微博后顯示桌面提示{{<i>}}||{{<types>}}僅對白名單的微博顯示桌面提示||{{<shorten>}}桌面提示僅顯示|前{{<shortlen>}}字元摘要資訊||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
     'zh-tw': '载入新微博后顯示桌面提示{{<i>}}||{{<types>}}僅對白名單的微博顯示桌面提示||{{<shorten>}}桌面提示僅顯示|前{{<shortlen>}}字元摘要資訊||{{<autohide>}}桌面提醒延時自動關閉|顯示{{<duration>}}毫秒|＋字數×{{<durationc>}}毫秒||{{<ntypes>}}使用 webkitNotifications 而非 Notification',
-    'en': 'Show desktop notification after auto load {{<i>}}|| {{<types>}} Only show desktop notification for whitelist Weibo || {{<shorten>}} Desktop notification only show | first {{<shortlen>}} charactors Weibo content || {{<autohide>}} auto hide desktop notification after | {{<duration>}}ms | + {{<durationc>}}ms/char || {{<ntypes>}} Use webkitNotifications instead of Notification',
+    'en': 'Show desktop notification after auto load {{<i>}}|| {{<types>}} Only show desktop notification for whitelist Weibo || {{<shorten>}} Desktop notification only show | first {{<shortlen>}} characters Weibo content || {{<autohide>}} auto hide desktop notification after | {{<duration>}}ms | + {{<durationc>}}ms/char || {{<ntypes>}} Use webkitNotifications instead of Notification',
   },
   'desktopNotificationDesc': {
     'zh-cn': '需要启用“[[base.autoload.auto_load_new_weibo]]”功能才会生效。在载入后，无论浏览器是否被最小化都可以在屏幕右下角弹出包含新微博内容的提示，方便您第一时间了解新收到的微博。',
@@ -149,10 +149,10 @@ var text = {
     'en': 'Your browser blocked desktop notifications. Please follow the instruction to unblock: <br />Right click webpage - View Page Info - Permission - Notifications - Allow. You should also check settings of extensions, if you installed extensions like Tab notifier.',
   },
   'autoCloseWarning': {
-    'zh-cn': '当前火狐浏览器提供的 Notification 会强制显示 4 秒后关闭，如果您希望显示较长时间，请考虑使用 Tab notifier 等扩展提供的 webkitNotifications。',
-    'zh-hk': '當前火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
-    'zh-tw': '當前火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
-    'en': 'Currently, Notification provided by Firefox will be mandatorily closed with 4 seconds delay after shown. You may need to use webkitNotifications provided by add-ons like Tab notifier for longer notification display.',
+    'zh-cn': '43版以前的火狐浏览器提供的 Notification 会强制显示 4 秒后关闭，如果您希望显示较长时间，请考虑使用 Tab notifier 等扩展提供的 webkitNotifications。',
+    'zh-hk': '43版以前的火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
+    'zh-tw': '43版以前的火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
+    'en': 'Notification provided by Firefox (version <= 43) will be mandatorily closed with 4 seconds delay after shown. You may need to use webkitNotifications provided by add-ons like Tab notifier for longer notification display.',
   },
   // 搜索
   'searchNotFound': { 'zh-cn': '未找到与您输入匹配的设置项', 'zh-hk': '未找到與您輸入匹配的設置項', 'zh-tw': '未找到與您輸入匹配的設置項', 'en': 'No Matched Settings' },
@@ -647,6 +647,8 @@ var text = {
   'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
+  'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
+  'unfoldWeiboLength': { 'zh-cn': '（约{{length}}字）', 'zh-hk': '（約{{length}}字）', 'zh-tw': '（約{{length}}字）', 'en': '(about {{length}} charactors)' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
   'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
@@ -722,7 +724,7 @@ var text = {
     'en': 'Show all pages with | template {{<skin>}} {{<i>}}',
   },
   'setSkinDesc': {
-    'zh-cn': '开启后所有页面将显示您选择的模板，包括其他用户的个人主页。模板效果仅在您的浏览器中生效，他人访问您的个人主页时，仍会看到您在微博中设置的模板。<br />模板的选择请参考<a href="http://skin.vip.weibo.com/list?topnav=1&wvr=5" target="_blank">模板商店</a>，在模板商店中点击图片预览与应用模板。',
+    'zh-cn': '开启后所有页面将显示您选择的模板，包括其他用户的个人主页。模板效果仅在您的浏览器中生效，他人访问您的个人主页时，仍会看到您在微博中设置的模板。<br />模板的选择请参考<a href="http://skin.vip.weibo.com/list?topnav=1&wvr=6" target="_blank">模板商店</a>，在模板商店中点击图片预览与应用模板。',
   },
   'setSkinByPreview': {
     'zh-cn': 'Yet Another Weibo Filter 模板设置',
@@ -1044,6 +1046,7 @@ var url = {
   'topsuggest': 'http://s.weibo.com/ajax/topsuggest.php?key={{query}}&_v={{callback}}',
   'topicsuggest': '{{domainURL}}/aj/mblog/topic?ajwvr=6&q={{query}}',
   'attention': '{{domainURL}}/aj/mblog/attention?ajwvr=6&q={{query}}',
+  'getlongtext': '{{domainURL}}/p/aj/mblog/getlongtext?ajwvr=6&mid={{mid}}',
 };
 
 var font = {
@@ -1096,6 +1099,7 @@ util.browser.fx.version = (function () {
   return m && m[1] || null;
 }());
 util.browser.fx.avaliable = !!util.browser.fx.version;
+if (util.browser.fx.avaliable) util.browser.fx.mainversion = +util.browser.fx.version.match(/^\d+/);
 
 // 脚本识别
 util.script = {};
@@ -1598,9 +1602,9 @@ observer.weibo = (function () {
       if (feeds.length === 0) return checkFeedDone();
       var feed = feeds.shift();
       util.func.catched(function () {
-        [befores, [filter.active], afters].forEach(function (callbacks) {
-          callbacks.forEach(function (f) { f(feed); });
-        });
+        befores.forEach(function (f) { f(feed); });
+        if (filter.active(feed))
+          afters.forEach(function (f) { f(feed); });
       })();
       util.func.call(checkFeed);
     }());
@@ -1954,7 +1958,7 @@ util.notify = (function () {
     'showNotification': function (id, title, body, icon, delay, onclick) {
       if (shownFeed(id)) return null;
       util.debug('show notification: %s - %s', title, body);
-      var notify = new Notification(title, { 'body': body, 'icon': icon });
+      var notify = new Notification(title, { 'body': body, 'icon': icon, 'requireInteraction': !delay });
       if (delay && delay > 0) notify.addEventListener('show', function () {
         setTimeout(function () { notify.close(); }, delay);
       });
@@ -2484,6 +2488,68 @@ network.suggest.topic = network.suggest.base(function (query, callback) {
   });
 }, function (x) { return x.replace(/#/g, ''); }, []);
 
+network.weibo = {};
+
+network.weibo.longtext = (function () {
+  var maxlength = 2000, br = 1;
+  var wordCount = function (html) {
+    var p = util.dom.create('div', html), text = p.textContent, br = p.querySelectorAll('br').length;
+    var count = Math.ceil(text.length - (text.match(/[\u0000-\u00ff]/g) || []).length / 2); // 西文字母按半字计
+    return { 'count': count, 'br': br };
+  };
+  // 读写缓存
+  var getCache = function () {
+    var cache;
+    try { cache = JSON.parse(GM_getValue('long_weibo_cache', '{}')); } catch (e) { }
+    return cache || {};
+  };
+  var putCache = function (cache) {
+    GM_setValue('long_weibo_cache', JSON.stringify(cache));
+  };
+  // 更新缓存
+  var writeCache = function (mid, html, count, br) {
+    var cache = getCache();
+    while (Object.keys(cache).length > 2e4 / maxlength) {
+      delete cache[Math.min.apply(Math, Object.keys(cache))];
+    }
+    cache[mid] = { 'html': html, 'count': count, 'br': br };
+    util.debug('getlongtext cache write: %o -> %o', mid, cache[mid]);
+    util.debug('getlongtext cache keys: %o', Object.keys(cache));
+    putCache(cache);
+  };
+  // 检查缓存
+  var readCache = function (mid) {
+    var cache = getCache();
+    util.debug('getlongtext cache check (mid: %o): %o', mid, cache[mid]);
+    if (mid in cache && cache[mid].html &&
+      cache[mid].count + cache[mid].br * br > maxlength) return cache[mid].html;
+    if (mid in cache && cache[mid].count) return cache[mid].count;
+    return null;
+  };
+  // 检查某条微博的完整内容
+  var getter = function (mid, callback) {
+    // 首先查找缓存，或者得到html，或者得到文本长度
+    var html = readCache(mid) || null;
+    if (html) { callback(html); return; }
+    // 缓存没有联网查找
+    util.xhr({
+      'method': 'GET',
+      'url': util.str.fill(url.getlongtext, { 'mid': mid }),
+      'onload': function (resp) {
+        try { html = JSON.parse(resp.responseText).data.html || null; } catch (e) { }
+        if (!html) { callback(null); return; }
+        var wc = wordCount(html);
+        if (wc.count + wc.br * br > maxlength) html = null;
+        writeCache(mid, html, wc.count, wc.br);
+        callback(html || wc.count);
+      },
+    });
+  };
+  // 设置一下最大接受的长度
+  getter.setMaxLength = function (m, b) { maxlength = m; br = b; };
+  return getter;
+}());
+
 // 过滤器
 var filter = {};
 
@@ -2867,8 +2933,6 @@ filter.fast.active = (function () {
       if (!area.done() && valid) got(area.content(), e.target);
       area.clear(); area.hide();
     }, false);
-    // 拽出去了
-    document.body.addEventListener('mouseleave', function (e) { area.done(); area.hide(); });
     dropArea.addEventListener('dragenter', function (e) { valid = true; area.enter(); });
     dropArea.addEventListener('dragleave', function (e) { valid = false; area.leave(); });
   };
@@ -2949,7 +3013,13 @@ filter.fix.cmthidden.done = function (comment) {
 filter.active = function (feed) {
   var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
   var sson = [];
-  ([feed]).concat(son).forEach(function (feed, index) {
+  var notHidden = (function () {
+    var action = filter.rules.parse(feed, false) || 'unset';
+    feed.setAttribute('yawf-display', 'display-' + action);
+    return !action.match(/^(.*-)?hidden$/);
+  }())
+  if (!notHidden) return false;
+  son.forEach(function (feed, index) {
     var isSon = !!index;
     var action = filter.rules.parse(feed, isSon) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
@@ -2964,6 +3034,7 @@ filter.active = function (feed) {
       hd.parentNode.parentNode.removeChild(hd.parentNode);
     } else hd.querySelector('[node-type="followNum"]').textContent = sson.length;
   }
+  return true;
 };
 
 // 过滤评论的核心模块
@@ -4823,7 +4894,9 @@ if (util.notify.avaliableNotification().length) filter.items.base.autoload.deskt
 }).addto(filter.groups.base);
 
 // 提示火狐用户桌面提示问题
-if (util.notify.avaliableNotification().length && util.browser.fx.avaliable) {
+if (util.notify.avaliableNotification().length &&
+  util.browser.fx.avaliable &&
+  util.browser.fx.mainversion < 44) {
   filter.items.base.autoload.remark = filter.item({
     'group': 'autoload',
     'type': 'remark',
@@ -5468,7 +5541,7 @@ filter.items.other.hidethese_content.tb_tm_wb = filter.item({
   'key': 'weibo.other.red2014',
   'text': '{{redPackWeibo}}',
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{redPackWeiboDesc}}' } },
-  'rule': function red2014WeiboRule(feed) {
+  'rule': function redPackWeiboRule(feed) {
     if (!this.conf) return null;
     if (feed.querySelector('.PCD_event_red2014')) return 'hidden';
     if (feed.querySelector('.WB_feed_spec_red2015')) return 'hidden';
@@ -7123,6 +7196,52 @@ filter.items.tool.fixed.fixed_others = filter.item({
 // 微博相关工具
 filter.predef.subtitle('tool', 'weibotool', '{{weiboToolsTitle}}');
 
+// 自动展开字数不多的微博
+filter.items.tool.weibotool.auto_unfold_weibo = filter.item({
+  'group': 'weibotool',
+  'version': 320,
+  'type': 'boolean',
+  'key': 'weibo.tool.auto_unfold_weibo',
+  'text': '{{unfoldLongWeibo}}',
+  'ref': {
+    'count': { 'type': 'range', 'min': 140, 'max': 2000, 'step': 10, 'default': 200 },
+    'br': { 'type': 'range', 'min': 1, 'max': 60, 'step': 1, 'default': 30 },
+  },
+  'ainit': function () {
+    var count = this.ref.count.conf, br = this.ref.br.conf;
+    network.weibo.longtext.setMaxLength(count, br);
+    // 因为我们修改了微博的内容，所以需要标记微博为尚未过滤过，重新进行过滤
+    var resetWeibo = function (feed) {
+      var placeholder = util.dom.create('div', ''), parent = feed.parentNode;
+      parent.replaceChild(placeholder, feed);
+      feed.removeAttribute('yawf-display');
+      parent.replaceChild(feed, placeholder);
+      filter.active(feed);
+    };
+    // 每条微博在过滤后再扩展全文，寄希望于可以预先隐藏掉一些
+    observer.weibo.after(function (feed) {
+      var running = 0, needReset = false;
+      var unfold = Array.from(feed.querySelectorAll('[action-type="fl_unfold"]'));
+      unfold.forEach(function (button) {
+        var mid = util.str.parsequery(button.getAttribute('action-data')).mid;
+        var container = button.parentNode;
+        running++;
+        network.weibo.longtext(mid, function (data) {
+          if (!data) return; // 获取失败
+          if (typeof data === 'string') { // data: 内容
+            button.parentNode.innerHTML = data;
+            needReset = true;
+          } else if (data / 100) { // data: 长度
+            button.firstChild.textContent += util.str.fill('{{{unfoldWeiboLength}}}',
+              { 'length': Math.round(data / 100) + '00' });
+          }
+          if (--running === 0 && needReset) resetWeibo(feed);
+        });
+      });
+    });
+  },
+}).addto(filter.groups.tool);
+
 // 清除发布框中的默认话题 (wcf)
 filter.items.tool.weibotool.clear_def_topic = filter.item({
   'group': 'weibotool',
@@ -7640,6 +7759,12 @@ filter.items.tool.weibotool.replace_link = filter.item({
         var isshort = util.str.host(url) === 't.cn';
         // 如果我们不要短链接，但是又拿不到原地址，就放弃
         if (title && isshort) return;
+        // 如果是 feed.mix.sina.com.cn 域名，要特殊处理
+        if (url.match(/^http:\/\/feed\.mix\.sina\.com\.cn\/link_card\/redirect/)) {
+          var tempa = util.dom.create('a', ''); tempa.href = url;
+          var resurl = util.str.parsequery(tempa.search.slice(1)).url;
+          if (resurl) url = resurl;
+        }
         // 处理按钮什么的
         var button = link.querySelector('.yawf-cardLinkButton');
         if (!button) link.textContent = url;
