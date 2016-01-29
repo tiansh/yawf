@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.323
+// @version           3.6.324
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -744,7 +744,7 @@ var text = {
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
   'unwrapContent': { 'zh-cn': '将微博中的换行显示为|{{<text>}}{{<i>}}', 'zh-hk': '將微博中的換行顯示為|{{<text>}}{{<i>}}', 'zh-tw': '將微博中的換行顯示為|{{<text>}}{{<i>}}', 'en': 'Show line breaks as character |{{<text>}}{{<i>}}' },
   'unwrapContentDesc': {
-    'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。'
+    'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。需要设置内容过滤器时您仍需要使用正则表达式<code>\n</code>表示换行符。'
   },
   'noWeiboSpace': { 'zh-cn': '移除微博与微博间的空隙', 'zh-hk': '移除微博與微博間的空隙', 'zh-tw': '移除微博與微博間的空隙', 'en': 'Remove space between Weibo' },
   'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
@@ -3021,9 +3021,14 @@ filter.fix.cmthidden.done = function (comment) {
 filter.active = function (feed) {
   var son = Array.from(feed.querySelectorAll('.WB_sonFeed .WB_feed_detail'));
   var sson = [];
+  var fixFeed = function () {
+    filter.fix.fold(feed);
+    filter.fix.hidden(feed);
+  };
   var notHidden = (function () {
     var action = filter.rules.parse(feed, false) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
+    fixFeed(feed);
     return !action.match(/^(.*-)?hidden$/);
   }())
   if (!notHidden) return false;
@@ -3032,8 +3037,7 @@ filter.active = function (feed) {
     var action = filter.rules.parse(feed, isSon) || 'unset';
     feed.setAttribute('yawf-display', 'display-' + action);
     if (isSon && !action.match(/^(.*-)?hidden$/)) sson.push(feed);
-    filter.fix.fold(feed);
-    filter.fix.hidden(feed);
+    fixFeed(feed);
   });
   var hd = feed.querySelector('.WB_feed_together .wft_hd');
   if (hd) {
@@ -4128,7 +4132,7 @@ weibo.common.text = function (content, preclt) {
   var active = [function (node) {
     if (node.nodeType === Node.TEXT_NODE) return node.textContent.trim();
   }, function (node) {
-    if (util.dom.matches(node, 'br')) return '\n';
+    if (util.dom.matches(node, 'br, .yawf-linebreak')) return '\n';
   }];
   // 获取特定元素的文本
   var types = {};
@@ -8252,6 +8256,7 @@ filter.items.style.layout.width_weibo = filter.item({
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{widthWeiboDesc}}' }
   },
   'ainit': function () {
+    var width = this.ref.width.conf;
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       .FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
       .FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
@@ -8344,12 +8349,11 @@ filter.items.style.layout.width_weibo = filter.item({
       }
 
       .send_weibo { background-size: cover; }
-      .send_weibo .kind { max-width: calc({{width}} - 220px); }
-      .send_weibo .kind a { float: left; margin-bottom: 40px; }
-
     */ }), {
-      'width': this.ref.width.conf + 'px',
+      'width': width + 'px',
     }));
+    // 解决发布框下方的按钮在缩小宽度时排列不完全的问题
+    if (width < 600) util.css.add('.send_weibo .kind a { width: 20px; height: 26px; overflow: hidden; }');
   }
 }).addto(filter.groups.style);
 
@@ -8540,12 +8544,13 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed_type .WB_detail { overflow: hidden; }
-      .WB_feed_type .WB_detail > .WB_info, .WB_detail > .WB_info + .WB_text, .WB_detail > .WB_info + .WB_text + .WB_text,
+      .WB_feed_type .WB_detail > .WB_info,.WB_detail > .WB_info + .WB_text, .WB_detail > .WB_info + .WB_text + .WB_text,
       .WB_expand>.WB_info, .WB_expand > .WB_info + .WB_text, .WB_expand > .WB_info + .WB_text + .WB_text { display: inline; word-wrap: break-word; }
-      .WB_feed_type .WB_detail>.WB_info::after, .WB_expand>.WB_info::after { content: "："; }
-      .WB_feed_type .WB_detail>.WB_info+.WB_text::before { display: block; float: right; content: " "; width: 14px; height: 1px; }
-      .WB_feed_type[yawf-hide_box] .WB_detail>.WB_info+.WB_text::before { width: 37px; }
-      .WB_feed_type .WB_detail>.WB_info+.WB_text+.WB_from { margin-top: 1em; }
+      .WB_feed_type .WB_detail > .WB_info::after, .WB_expand > .WB_info::after { content: "："; }
+      
+      .WB_feed_type .WB_detail > .WB_info ~ .WB_text::before { display: block; float: right; content: " "; width: 14px; height: 1px; }
+      .WB_feed_type[yawf-hide_box] .WB_detail > .WB_info ~ .WB_text::before { width: 37px; }
+      .WB_feed_type .WB_detail > .WB_info ~ .WB_text + .WB_from { margin-top: 1em; }
     */ }));
   },
 }).addto(filter.groups.style);
