@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.322
+// @version           3.6.323
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -366,13 +366,17 @@ var text = {
   'gongyiSourceWeiboDesc': {
     'zh-cn': '使用微公益发布的微博，来源以“微公益”开头',
   },
-  'unauthappWeibo': { 'zh-cn': '来自未通过审核应用{{<i>}}', 'zh-hk': '來自未通过审核应用{{<i>}}', 'zh-tw': '來自未通过审核应用{{<i>}}', 'en': 'Weibo comes from 未通过审核应用 (unauthorized application){{<i>}}' },
+  'unauthappWeibo': { 'zh-cn': '来自未通过审核应用的微博{{<i>}}', 'zh-hk': '來自未通过审核应用的微博{{<i>}}', 'zh-tw': '來自未通过审核应用的微博{{<i>}}', 'en': 'Weibo comes from 未通过审核应用 (unauthorized application){{<i>}}' },
   'unauthappWeiboDesc': {
     'zh-cn': '未通过审核的应用有发布频率和可最多可授权15名用户的限制，除非您的好友中有人做相关的开发工作，否则您应当很难看到此来源的微博。来自未审核应用的微博往往是但开发微博应用过程中的测试微博。您可以通过微博开放平台文档中的<a target="_blank" href="http://open.weibo.com/wiki/%E5%BA%94%E7%94%A8%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98">应用相关问题</a>页面了解更多关于应用的信息。',
   },
   'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博{{<i>}}', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'en': 'Weibo mentioned | not less than {{<num>}} topics{{<i>}}' },
   'multiTopicDesc': {
     'zh-cn': '由于新浪热门话题和话题主持人的相关政策，存在一些帐号通过罗列若干热门话题以使自己的广告可以显示在热门话题页面。您可以隐藏一次性提到了太多话题的微博以避免看到他们。',
+  },
+  'tooLongNeedUnfold': { 'zh-cn': '篇幅过长需要展开全文的微博{{<i>}}', 'zh-hk': '篇幅過長需要展開全文的微博{{<i>}}', 'zh-tw': '篇幅過長需要展開全文的微博{{<i>}}', 'en': 'Lengthy Weibo needs unfold to view{{<i>}}' },
+  'tooLongNeedUnfoldDesc': {
+    'zh-cn': '如果您打开了[[tool.weibotool.auto_unfold_weibo]]，脚本会先试图展开不是很长的微博。',
   },
   // 刷屏与版聊
   'otherSpammingTitle': { 'zh-cn': '刷屏与版聊', 'zh-hk': '洗版與版聊', 'zh-tw': '洗版與版聊', 'en': 'Spamming &amp; Chatting' },
@@ -738,6 +742,10 @@ var text = {
   // 微博
   'weiboStyleTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'unwrapTextDesc': { 'zh-cn': '微博作者和正文同行', 'zh-hk': '微博作者和正文同行', 'zh-tw': '微博作者和正文同行', 'en': 'No line break after author' },
+  'unwrapContent': { 'zh-cn': '将微博中的换行显示为|{{<text>}}{{<i>}}', 'zh-hk': '將微博中的換行顯示為|{{<text>}}{{<i>}}', 'zh-tw': '將微博中的換行顯示為|{{<text>}}{{<i>}}', 'en': 'Show line breaks as character |{{<text>}}{{<i>}}' },
+  'unwrapContentDesc': {
+    'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。'
+  },
   'noWeiboSpace': { 'zh-cn': '移除微博与微博间的空隙', 'zh-hk': '移除微博與微博間的空隙', 'zh-tw': '移除微博與微博間的空隙', 'en': 'Remove space between Weibo' },
   'hoverShowFold': { 'zh-cn': '鼠标指向被折叠微博时显示内容', 'zh-hk': '滑鼠指向被折疊微博時顯示內容', 'zh-tw': '滑鼠指向被折疊微博時顯示內容', 'en': 'Show folded Weibo when mouse over' },
   'layoutReorderDesc': {
@@ -4883,9 +4891,9 @@ if (util.notify.avaliableNotification().length) filter.items.base.autoload.deskt
     var showFeed = util.func.catched(function () {
       filter.items.base.autoload.auto_expand.expand(feed, true);
       util.func.call(function () {
-        document.documentElement.scrollTop += feed.getClientRects()[0].bottom - 60;
+        document.documentElement.scrollTop += feed.getClientRects()[0].top - 80;
         var evt = document.createEvent("KeyboardEvent");
-        evt.initKeyEvent('keydown', true, true, null, false, false, false, false, util.keyboard.code.K, 0);
+        evt.initKeyEvent('keydown', true, true, null, false, false, false, false, util.keyboard.code.J, 0);
         document.documentElement.dispatchEvent(evt);
       });
     });
@@ -5603,6 +5611,22 @@ filter.items.other.hidethese_content.multi_topic = filter.item({
     if (!this.conf) return null;
     var topics = weibo.feed.topics.dom(feed);
     if (topics.length >= this.ref.num.conf) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 篇幅过长的微博
+filter.items.other.hidethese_content.too_long = filter.item({
+  'group': 'hidethese_content',
+  'version': 323,
+  'type': 'boolean',
+  'key': 'weibo.other.too_long',
+  'text': '{{tooLongNeedUnfold}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{tooLongNeedUnfoldDesc}}' } },
+  'rule': function tooLongNeedUnfoldRule(feed) {
+    if (!this.conf) return null;
+    if (!feed.hasAttribute('yawf-unfoldlong')) return null;
+    if (feed.querySelector('[action-type="fl_unfold"]')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -7207,20 +7231,31 @@ filter.items.tool.weibotool.auto_unfold_weibo = filter.item({
     'count': { 'type': 'range', 'min': 140, 'max': 2000, 'step': 10, 'default': 200 },
     'br': { 'type': 'range', 'min': 1, 'max': 60, 'step': 1, 'default': 30 },
   },
-  'ainit': function () {
+  'init': function () {
+    // 给已经展开过的（或试图展开过的）微博标记
+    var markUnfolded = function (feed) {
+      feed.setAttribute('yawf-unfoldlong', '');
+    };
+    // 如果设置不允许脚本展开，那么就直接打上标记然后结束
+    if (!this.conf) {
+      observer.weibo.onload(function (feed) { markUnfolded(feed); });
+      return;
+    }
     var count = this.ref.count.conf, br = this.ref.br.conf;
     network.weibo.longtext.setMaxLength(count, br);
     // 因为我们修改了微博的内容，所以需要标记微博为尚未过滤过，重新进行过滤
     var resetWeibo = function (feed) {
+      markUnfolded(feed);
       var placeholder = util.dom.create('div', ''), parent = feed.parentNode;
       parent.replaceChild(placeholder, feed);
       feed.removeAttribute('yawf-display');
+      feed.removeAttribute('yawf-weibo'); // FIXME 这样会让过滤器重新走，但是也会让无关的东西走两遍
       parent.replaceChild(feed, placeholder);
-      filter.active(feed);
     };
     // 每条微博在过滤后再扩展全文，寄希望于可以预先隐藏掉一些
     observer.weibo.after(function (feed) {
-      var running = 0, needReset = false;
+      if (feed.hasAttribute('yawf-unfoldlong')) return;
+      var running = 0;
       var unfold = Array.from(feed.querySelectorAll('[action-type="fl_unfold"]'));
       unfold.forEach(function (button) {
         var mid = util.str.parsequery(button.getAttribute('action-data')).mid;
@@ -7230,12 +7265,11 @@ filter.items.tool.weibotool.auto_unfold_weibo = filter.item({
           if (!data) return; // 获取失败
           if (typeof data === 'string') { // data: 内容
             button.parentNode.innerHTML = data;
-            needReset = true;
           } else if (data / 100) { // data: 长度
             button.firstChild.textContent += util.str.fill('{{{unfoldWeiboLength}}}',
-              { 'length': Math.round(data / 100) + '00' });
+              { 'length': data > 1000 ? Math.round(data / 100) + '00' : Math.round(data / 10) + '0' });
           }
-          if (--running === 0 && needReset) resetWeibo(feed);
+          if (--running === 0) resetWeibo(feed);
         });
       });
     });
@@ -8516,6 +8550,42 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
   },
 }).addto(filter.groups.style);
 
+// 替换微博内的换行为其他符号
+filter.items.style.sweibo.no_weibo_break = filter.item({
+  'group': 'sweibo',
+  'version': 323,
+  'type': 'boolean',
+  'key': 'weibo.tool.unwrapContent',
+  'text': '{{unwrapContent}}',
+  'ref': {
+    'text': {
+      'type': 'select',
+      'default': '⏎',
+      'select': [
+        { 'value': ' ', 'text': ' ' },
+        { 'value': ' / ', 'text': '/' },
+        { 'value': '⤶', 'text': '⤶' },
+        { 'value': '↵', 'text': '↵' },
+        { 'value': '⏎', 'text': '⏎' },
+        { 'value': '↲', 'text': '↲' },
+        { 'value': '↩', 'text': '↩' },
+      ],
+    },
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{unwrapContentDesc}}' }
+  },
+  'ainit': function () {
+    observer.dom.add(function () {
+      var br = Array.from(document.querySelectorAll('.WB_text br'));
+      br.forEach(function (b) {
+        var p = util.dom.create('span', '');
+        p.className = 'yawf-linebreak';
+        b.parentNode.replaceChild(p, b);
+      });
+    });
+    util.css.add('.yawf-linebreak::before { content: "' + this.ref.text.conf + '" }');
+  },
+}).addto(filter.groups.style);
+
 // 去除微博间的缝隙
 filter.items.style.sweibo.no_weibo_space = filter.item({
   'group': 'sweibo',
@@ -9379,7 +9449,7 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-whats-new-body { max-height: 300px; overflow: auto; padding: 0 20px; }
   .yawf-whats-new-footer { margin: 0 0 20px; color: #555; line-height: 20px; padding: 0 20px; }
   .yawf-whats-new-footer .yawf-configItem, .yawf-groupText { margin: 0; }
-  .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus) { display: none; }
+  .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus), .yawf-bubble input[type="range"] { display: none; }
   // 右栏用户列表设置
   #yawf-fave-people-config [node-type="inner"] { padding: 10px 0 30px; width: 600px; }
   .yawf-fave-people-config-body { max-height: 300px; overflow: auto; padding: 0 20px; }
