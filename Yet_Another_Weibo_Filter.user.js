@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.324
+// @version           3.6.325
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -91,6 +91,10 @@ var text = {
   'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器{{<i>}}', 'zh-hk': '使用拖放快速創建篩選器{{<i>}}', 'zh-tw': '使用拖放快速創建篩選器{{<i>}}', 'en': 'Use drag and drop to create filters{{<i>}}' },
   'useFastCreatorDesc': {
     'zh-cn': '您可以使用鼠标拖拽微博中的文字、帐号、话题、来源等，网页右上角会显示一个黄色的区域，拖拽到其上释放可创建过滤器。',
+  },
+  'useHoldCreator': { 'zh-cn': '使用长按鼠标创建过滤器{{<i>}}', 'zh-hk': '使用長按滑鼠創建篩選器{{<i>}}', 'zh-tw': '使用長按滑鼠創建篩選器{{<i>}}', 'en': 'Use holding mouse to create filters{{<i>}}' },
+  'useHoldCreatorDesc': {
+    'zh-cn': '在用户头像、昵称、话题链接、微博来源等位置长按鼠标，即可弹出创建过滤器的对话框。'
   },
   'useContextMenuCreator': { 'zh-cn': '使用右键菜单快速创建过滤器{{<i>}}', 'zh-hk': '使用右鍵功能表快速創建篩選器{{<i>}}', 'zh-tw': '使用右鍵功能表快速創建篩選器{{<i>}}', 'en': 'Use right-click menu to create filters{{<i>}}' },
   'useContextMenuCreatorDesc': {
@@ -1527,7 +1531,7 @@ util.init = (function () {
     callbacks.sort(function (x, y) {
       return y[0] - x[0] || y[1] - x[1];
     }).forEach(function (i) {
-      if (valid || i[3]) util.func.catched(i[2])();
+      if (valid || i[3]) util.func.catched(i[2])(valid);
     });
   };
   if (document.body) setTimeout(dcl, 0);
@@ -2874,6 +2878,28 @@ filter.fast.item = function (details) {
   filter.fast.right.add(details);
 };
 
+// 使用长按鼠标屏蔽
+filter.fast.hold = function () {
+  var timeout = null;
+  document.addEventListener('mousedown', function (e) {
+    var target = e.target;
+    if (target.firstChild !== target.lastChild) return;
+    if (util.dom.matches(target, '.WB_text')) return;
+    if (!filter.fast.valid.test(target)) return;
+    timeout = setTimeout(function () {
+      filter.fast.recognize.got(null, target);
+    }, 280);
+  });
+  var cancelTimeout = function () {
+    if (!timeout) return;
+    clearTimeout(timeout);
+    timeout = null;
+  };
+  ['mouseup', 'mouseout', 'drag'].forEach(function (eventName) {
+    document.addEventListener(eventName, cancelTimeout);
+  });
+};
+
 // 将文本、链接等拖拽到框内，快速创建过滤器
 filter.fast.active = (function () {
   var dropArea = null;
@@ -4101,7 +4127,7 @@ filter.fast.selected = {};
     };
   };
   define('feed', ['comment']);
-  define('comment', ['mention', 'feed', 'author']);
+  define('comment', ['feed', 'author']);
   define('author', ['comment', 'mention', 'original']);
   define('mention', ['comment', 'author', 'original']);
   define('original', ['comment', 'author', 'mention']);
@@ -4460,6 +4486,20 @@ filter.items.base.scripttool.use_fast_creator = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{useFastCreatorDesc}}' } },
   'ainit': function () {
     filter.fast.active();
+  },
+}).addto(filter.groups.base);
+
+// 长按鼠标创建过滤器
+filter.items.base.scripttool.use_hold_creator = filter.item({
+  'group': 'scripttool',
+  'version': 325,
+  'type': 'boolean',
+  'key': 'weibo.tool.use_hold_creator',
+  'default': true,
+  'text': '{{useHoldCreator}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{useHoldCreatorDesc}}' } },
+  'ainit': function () {
+    filter.fast.hold();
   },
 }).addto(filter.groups.base);
 
@@ -5415,6 +5455,7 @@ filter.items.other.hidethese_ad.ad_feed = filter.item({
     if (!this.conf) return null;
     if (feed.getAttribute('feedtype') === 'ad') return 'hidden';
     if (feed.querySelector('[action-type="feed_list_ad"]')) return 'hidden';
+    if (feed.querySelector('a[href^="http://adinside.weibo.cn/"]')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -8603,7 +8644,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed .WB_cardwrap { padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
       .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3) !important; padding: 10px 0 !important; margin: -1px 0 1px !important; box-shadow: none !important; border-radius: 0 !important; }
-      .WB_feed { box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important; border-radius: 2px !important; overflow: hidden !important; }
+      .WB_feed { box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important; }
 
       .WB_feed_type .WB_feed_handle > .WB_handle, .WB_feed_type .WB_feed_handle > .WB_handle .WB_row_line .line { height: 16px !important; line-height: 16px !important; padding: 0 !important; margin: 0 !important; border: 0 !important; }
       .WB_feed_type .WB_feed_handle > .WB_handle { display: inline-block !important; float: right !important; margin: 0 8px 0 -600px !important; position: relative !important; top: -26px !important; overflow: visible !important; }
@@ -9339,7 +9380,7 @@ var extension = (function () {
 
 }());
 
-GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
+var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   {{yawf-icon-font}}
   // 缩小搜索框为漏斗提供空间
@@ -9528,16 +9569,18 @@ GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
 */ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
+util.init(function (valid) {
+  if (valid) return;
+  try { mainStyle.textContent = ''; } catch (e2) { }
+  try { mainStyle.parentNode.removeChild(mainStyle); } catch (e3) { }
+}, util.priority.DEFAULT, true);
 
 // 在加载好之前隐藏内容
 (function () {
   var style = GM_addStyle('.WB_miniblog { visibility: hidden; }');
   util.init(function () {
-    try {
-      style.parentNode.removeChild(style);
-    } catch (e) {
-      GM_addStyle('.WB_miniblog { visibility: visible !important; }');
-    }
+    try { style.parentNode.removeChild(style); }
+    catch (e1) { GM_addStyle('.WB_miniblog { visibility: visible !important; }'); }
     util.debug('yawf initial done');
   }, util.priority.LAST + util.priority.AFTER + util.priority.AFTER, true);
 }());
