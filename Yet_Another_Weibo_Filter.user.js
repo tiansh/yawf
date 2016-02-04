@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.328
+// @version           3.6.329
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -2513,6 +2513,11 @@ network.weibo.longtext = (function () {
     var count = Math.ceil(text.length - (text.match(/[\u0000-\u00ff]/g) || []).length / 2); // 西文字母按半字计
     return { 'count': count, 'br': br };
   };
+  var checkLength = function (count, lines) {
+    if (maxlength === 2000) return true;
+    if (count + lines * br <= maxlength) return true;
+    return false;
+  };
   // 读写缓存
   var getCache = function () {
     var cache;
@@ -2538,7 +2543,7 @@ network.weibo.longtext = (function () {
     var cache = getCache();
     util.debug('getlongtext cache check (mid: %o): %o', mid, cache[mid]);
     if (mid in cache && cache[mid].html &&
-      cache[mid].count + cache[mid].br * br <= maxlength) return cache[mid].html;
+      checkLength(cache[mid].count, cache[mid].br)) return cache[mid].html;
     if (mid in cache && cache[mid].count) return cache[mid].count;
     return null;
   };
@@ -2555,7 +2560,7 @@ network.weibo.longtext = (function () {
         try { html = JSON.parse(resp.responseText).data.html || null; } catch (e) { }
         if (!html) { callback(null); return; }
         var wc = wordCount(html);
-        if (wc.count + wc.br * br > maxlength) html = null;
+        if (checkLength(wc.count, wc.br)) html = null;
         writeCache(mid, html, wc.count, wc.br);
         callback(html || wc.count);
       },
@@ -8611,7 +8616,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed_type .WB_detail { overflow: hidden; }
       .WB_feed_type .WB_detail > .WB_info, .WB_detail > .WB_info + .WB_text, .WB_detail > .WB_info + .WB_text + .WB_text,
-      .WB_expand>.WB_info, .WB_expand > .WB_info + .WB_text, .WB_expand > .WB_info + .WB_text + .WB_text { display: inline !important; word-wrap: break-word; }
+      .WB_expand>.WB_info, .WB_expand > .WB_info + .WB_text, .WB_expand > .WB_info + .WB_text + .WB_text { display: inline; word-wrap: break-word; }
       .WB_feed_type .WB_detail > .WB_info::after, .WB_expand > .WB_info::after { content: "："; }
       .WB_feed_type .WB_detail > .WB_info + .WB_from { display: none; }
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text::before { display: block; float: right; content: " "; width: 14px; height: 1px; }
