@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.331
+// @version           3.6.332
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -750,7 +750,10 @@ var text = {
   'unwrapContentDesc': {
     'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。需要设置内容过滤器时您仍需要使用正则表达式<code>\\n</code>表示换行符。'
   },
-  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3)||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3)||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3)||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore picture to normal size (feed v3)||{{<repost>}}同時縮小被轉發的原微博的寬度' },
+  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore picture to normal size (feed v3) {{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度' },
+  'imageSizeDesc': {
+    'zh-cn': '缩小图片尺寸仅影响图片在您的网页上的显示效果，不能降低网络数据流量用量。'
+  },
   'noWeiboSpace': { 'zh-cn': '移除微博与微博间的空隙', 'zh-hk': '移除微博與微博間的空隙', 'zh-tw': '移除微博與微博間的空隙', 'en': 'Remove space between Weibo' },
   'fromInBottom': { 'zh-cn': '将微博的发布时间和来源移动到微博末尾 (feed v3){{<i>}}', 'zh-hk': '將微博的發布時間和來源移動到微博末尾 (feed v3){{<i>}}', 'zh-tw': '將微博的發布時間和來源移動到微博末尾 (feed v3){{<i>}}', 'en': 'Move timestamp and source of Weibo to bottom (feed v3){{<i>}}' },
   'fromInBottomDesc': {
@@ -8642,7 +8645,10 @@ filter.items.style.sweibo.image_size = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.image_size',
   'text': '{{imageSize}}',
-  'ref': { 'repost': { 'type': 'boolean' } },
+  'ref': {
+    'repost': { 'type': 'boolean' },
+    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{imageSizeDesc}}' }
+  },
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_media_a { margin: -2px 0 0 6px; width: 258px; }
@@ -8652,22 +8658,22 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_a_m4 { width: 172px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid #d9d9d9; box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_info { height: 88px; width: 202px; padding: 7px 4px 5px 10px; }
-      .WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic, .WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic img, .WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic img { height: auto; min-height: 100px; }
-      .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_pic, .WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_pic { height: 100px; width: 250px; }
-      .WB_feed.WB_feed_v3 .WB_feed_spec_b, .WB_feed_v3 .WB_feed_spec_c, .WB_feed_v3 .WB_feed_spec2 { width: 250px; height: auto; }
+      .WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic img, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic img { height: auto; min-height: 100px; }
+      .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_pic { height: 100px; width: 250px; }
+      .WB_feed.WB_feed_v3 .WB_feed_spec_b, .WB_feed.WB_feed_v3 .WB_feed_spec_c, .WB_feed.WB_feed_v3 .WB_feed_spec2 { width: 250px; height: auto; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_info { float: right; height: 88px; padding: 7px 4px 5px 10px; width: 202px; }
-      .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info, .WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info, .WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info { float: none; height: auto; width: auto; padding: 10px 5px 0; }
-      .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit { font-size: inherit; font-weight: 700; margin: 0 0 6px; }
+      .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info { float: none; height: auto; width: auto; padding: 10px 5px 0; }
+      .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit { font-size: inherit; font-weight: 700; margin: 0 0 6px; }
     */ }).replace(/\/\/.*\n/g, '\n'));
     if (this.ref.repost.conf) util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_feed_expand .W_arrow_bor { display: block; }
-      .WB_feed_v3 .WB_expand_media { margin: 2px 0 8px; padding: 12px 16px 16px; }
+      .WB_feed.WB_feed_v3 .WB_expand_media { margin: 2px 0 8px; padding: 12px 16px 16px; }
       .WB_feed.WB_feed_v3 .WB_expand { margin: 0 0 10px; padding: 10px 16px 13px; }
       .WB_feed.WB_feed_v3 .WB_expand .WB_func { margin: 0; }
       .WB_feed.WB_feed_v3 .WB_expand_media_box { margin: 0;  }
       .WB_feed.WB_feed_v3 .WB_expand .WB_expand_media { padding: 0 0 5px; margin: 0; }
       .WB_feed.WB_feed_v3 .WB_media_view { margin: 6px auto 0; }
-      .WB_feed.WB_feed_v3 .WB_media_view, .WB_feed_v3 .WB_media_view .media_show_box li { width: 440px; }
+      .WB_feed.WB_feed_v3 .WB_media_view, .WB_feed.WB_feed_v3 .WB_media_view .media_show_box li { width: 440px; }
       .WB_feed.WB_feed_v3 .artwork_box { width: 440px; }
       .WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto; }
       .WB_feed.WB_feed_v3 .layer_view_morepic .view_pic { padding: 0 40px 20px; }
