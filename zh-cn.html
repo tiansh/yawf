@@ -39,7 +39,7 @@
         </svg>
       </div>
       <h1 itemprop="name" class="entry-title">Yet Another Weibo Filter</h1>
-      <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.333<!-- /VER --></div>
+      <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.334<!-- /VER --></div>
     </header>
     <nav>
       <dl>
@@ -91,20 +91,28 @@
       </div>
       <h2>设置脚本</h2>
       <div class="in">
-        <p>安装成功后，到新浪微博的页面点击右上角的漏斗图标<span class="yawf-iconfont">Y</span>即可进入脚本设置</p>
+        <p>安装成功后，到新浪微博的页面点击右上角的漏斗图标<span class="yawf-iconfont">Y</span>即可进入脚本设置。</p>
         <img itemprop="screenshot" width="238" height="60" alt="点击右上角漏斗图标显示脚本设置" src="./img/useage.png" /><br />
         <p>想要简化界面又不想仔细研究脚本设置？试试导入这个<a href="sample-config.yawf">示例脚本设置</a>吧。下载这个文件，在设置窗口中点选脚本选项卡，点击导入打开该文件即可快速设置过滤器。</p>
         <p>此外还有为您准备好的黑名单可供订阅，您可以来<a href="https://tiansh.github.io/yawf-rules/">YAWF 过滤规则订阅</a>页面看看。</p>
       </div>
       <h2>详细说明</h2>
       <div class="in">
-        <p>除了在设置界面添加关键字、用户、来源、链接的过滤器外，您还可以使用拖拽或右键菜单快速创建过滤器。</p>
-        <p>将您要隐藏、折叠或高亮的内容使用鼠标拖动，即可在右上角看到一个黄底的拖放区域，将对应内容拖放到该区域内松开鼠标，根据弹出的对话框选择即可快速创建过滤器。</p>
+        <p>安装脚本后，点击右上角的漏斗图标<span class="yawf-iconfont">Y</span>就可以开始设置脚本了。</p>
+        <p>虽然脚本的设置项很多，不过刚刚安装脚本后，您可以先看看“微博过滤 - 更多”“版面清理”“功能改造”“外观样式”四个选项卡。</p>
+        <ul>
+          <li>“微博过滤 - 更多”包括各种特殊类型的微博的过滤规则，比如推广微博，比如好友赞过的微博等等，刷微博时免受各种干扰。</li>
+          <li>“版面清理”可以隐藏掉版面上绝大多数的模块，哪个模块你不想看到，勾选对应的选项你就可以再也见不到他了。</li>
+          <li>“功能改造”为您提供了各种方便的小功能，从自动展开不是太长的长篇幅微博，到检查首页是不是丢了某些特定用户的微博，甚至恢复微博的双栏模式，总有您需要的小功能。</li>
+          <li>“外观样式”不管是增大微博正文字号，还是把点赞移到评论左面，或者把新版的超大图片恢复成正常的大小，您微博的样子您自己做主。</li>
+        </ul>
+        <p>刷新微博网页试试不同的选项，找到一组满意的设置。然后就继续浏览微博内容吧。至于按关键字、作者什么的过滤规则，等到遇到特定的微博时再去解决也不算晚。</p>
+        <p>浏览微博时遇到了什么想要隐藏的内容？不管是想按照关键字、用户、来源还是链接来过滤，只要把它们拖拽起来，扔到右上角出现的黄色的区域内，脚本就会识别对应的内容并帮您创建过滤器。</p>
         <img itemprop="screenshot" width="287" height="336" alt="拖动想要设置过滤器的内容显示的释放区域" src="./img/drop_chs.png" />
-        <p>在微博上点击右键，可以在菜单中找到快速创建过滤器的相关选项。（右键菜单功能仅支持 Mozilla Firefox 浏览器）</p>
+        <p>或者您可以看在微博上点击右键，可以在菜单中找到快速创建过滤器的选项。（右键菜单功能仅支持 Mozilla Firefox 浏览器）</p>
         <img itemprop="screenshot" width="750" height="381" alt="在微博上点击右键显示菜单" src="./img/contextmenu_chs.png" />
         <img itemprop="screenshot" width="434" height="315" alt="释放鼠标后显示“创建过滤器”的对话框" src="./img/fastcreate_chs.png" /><br />
-        <p>如果您之前使用眼不见心不烦脚本，您可以使用<a href="https://tiansh.github.io/yawf/wcf_convert.html">设置转换工具</a>将该脚本的设置导入到本脚本中。</p>
+        <p>如果您之前使用“眼不见心不烦”脚本，在设置脚本之前，您也可以在脚本的“关于脚本”选项卡中找到“从‘眼不见心不烦’脚本导入设置”的功能。（需要您同时安装并启用“眼不见心不烦”脚本或扩展，才会看到该功能）</p>
         <p>关于详细的使用指引，请参见<a href="https://tiansh.github.io/yawf/fqa.html" target="_blank">常见问题</a>。</p>
       </div>
       <h2>主要功能</h2>
@@ -119,7 +127,7 @@
           <li>仅显示微博列表等基本功能的阅读模式；</li>
           <li>检查首页是否遗漏了指定账号最近的某条微博；</li>
           <li>按字数自动展开或隐藏长篇幅的微博，禁用微博换行；</li>
-          <li>縮小圖片尺寸為正常尺寸，使用經典的轉發微博樣式；</li>
+          <li>缩小微博图片尺寸为正常大小，使用经典的转发微博样式；</li>
         </ul>
         <p>脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。</p>
         <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">点击查看脚本的全部功能</a></p>
@@ -151,7 +159,7 @@
           <li>脚本设置的隐藏、折叠或显示的用户编号、昵称，您的账号编号，您隐藏的微博的编号，及其他设置项；</li>
           <li>如果您开启了桌面提示功能，脚本还会记录最近20条显示桌面提示的微博的编号；</li>
           <li>如果您开启了表情输入的辅助功能，脚本还会记录您最近使用的表情和置顶的表情；</li>
-          <li>如果您开启了检查首页是否有缺失微博的功能，脚本还会记录您最近在首页看到过哪些微博，这些帐号最近发了哪些微博以及您看到了哪里；<li>
+          <li>如果您开启了检查首页是否有缺失微博的功能，脚本还会记录您最近在首页看到过哪些微博，这些帐号最近发了哪些微博以及您看到了哪里；</li>
           <li>如果您开启了自动展开长篇幅微博的功能，脚本会将最近遇到的若干条此类微博的长度和全文存储在本地以方便下次遇到时直接展开。</li>
         </ul>
         <p>任何使用该计算机的用户都可以读写该配置文件，所以建议不要在公共电脑上使用。</p>
@@ -165,7 +173,8 @@
       <div class="in">
         <p>
           Yet Another Weibo Filter - 看真正想看的微博 使用 <a rel="license" href="http://opensource.org/licenses/MIT">MIT 协议</a>授权。<br />
-          您可以访问<a href="https://github.com/tiansh/yawf">脚本主页</a>获取详细信息。<br />
+          脚本作者 <a href="http://weibo.com/tsh90?is_all=1">@tsh90</a>，同时感谢其他<a href="https://github.com/tiansh/yawf/graphs/contributors">为脚本贡献代码的人</a>。您可以关注 <a href="http://weibo.com/yawfscript?is_all=1">@YAWF脚本</a> 了解最新的脚本更新和功能介绍，遇到任何使用上的问题，也欢迎私信或在微博中提到 <a href="http://weibo.com/yawfscript?is_all=1">@YAWF脚本</a> 询问。<br />
+          您也可以访问<a href="https://github.com/tiansh/yawf">GitHub项目主页</a>获取脚本的源代码和历史版本，查看问题追踪器并反馈遇到的问题。<br />
         </p>
         <p>本脚本参考并使用了<a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner">眼不见心不烦</a>脚本的部分代码。</p>
       </div>

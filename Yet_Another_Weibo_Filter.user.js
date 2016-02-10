@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.333
+// @version           3.6.334
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -47,6 +47,10 @@
 // @connect-src       ent.v.sina.cn
 // @run-at            document-start
 // ==/UserScript==
+
+// ==OpenUserJS==
+// @unstableMinify Multi-line strings by using comments at the end of function body 在函数体末尾使用了注释块表示多行字符串
+// ==/OpenUserJS==
 
 // 字体
 var fonts = {
@@ -485,7 +489,6 @@ var text = {
   // 右栏
   'layoutHideRight': { 'zh-cn': '隐藏模块 - 右栏', 'zh-hk': '隱藏模組 - 右欄', 'zh-tw': '隱藏模組 - 右欄', 'en': 'Hide modules - Right Column' },
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
-  'layoutHideRightHongBaoEntrance': { 'zh-cn': '领红包咯/整点红包', 'zh-hk': '领红包咯/整点红包', 'zh-tw': '领红包咯/整点红包', 'en': '领红包咯/整点红包 (Redpacks)' },
   'layoutHideRightRecomMusicRank': { 'zh-cn': '亚洲新歌榜', 'zh-hk': '亚洲新歌榜', 'zh-tw': '亚洲新歌榜', 'en': '亚洲新歌榜 (Asian New Song List)' },
   'layoutHideRightBookRank': { 'zh-cn': '亚洲好书榜', 'zh-hk': '亚洲好书榜', 'zh-tw': '亚洲好书榜', 'en': '亚洲好书榜 (Asian Top Book List)' },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
@@ -1121,7 +1124,8 @@ var util = {};
 // 浏览器识别
 util.browser = {};
 // 一些兼容性代码
-if (!Array.from) Array.from = Function.prototype.call.bind([].slice);
+// Array.from 
+if (!Array.from) Array.from = function () { var r = Object.prototype.toString, n = function (n) { return "function" == typeof n || "[object Function]" === r.call(n) }, t = function (r) { var n = +r; return isNaN(n) ? 0 : 0 !== n && isFinite(n) ? (n > 0 ? 1 : -1) * Math.floor(Math.abs(n)) : n }, e = Math.pow(2, 53) - 1, o = function (r) { var n = t(r); return Math.min(Math.max(n, 0), e) }; return function (r) { var t = this, e = Object(r); if (null == r) throw new TypeError("Array.from requires an array-like object - not null or undefined"); var a, i = arguments.length > 1 ? arguments[1] : void 0; if (void 0 !== i) { if (!n(i)) throw new TypeError("Array.from: when provided, the second argument must be a function"); arguments.length > 2 && (a = arguments[2]) } for (var u, f = o(e.length), c = n(t) ? Object(new t(f)) : Array(f), h = 0; f > h;) u = e[h], c[h] = i ? void 0 === a ? i(u, h) : i.call(a, u, h) : u, h += 1; return c.length = f, c } }();
 // 检查是否是 Firefox 浏览器，部分特性不支持其他浏览器
 util.browser.fx = {};
 util.browser.fx.version = (function () {
@@ -6248,7 +6252,6 @@ filter.predef.group('layout');
 
   subtitle('Right', true);
   item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
-  item('HongBaoEntrance', 304, '#v6_pl_rightmod_hongbaoentrance, .PCD_event_redpacks { display: none !important; }');
   item('RecomMusicRank', 264, '#v6_TrustPagelet_Recom_MusicRank, [yawf-id="v6_pl_rightmod_rank_pop"] { display: none !important; }');
   item('BookRank', 264, '[yawf-id="v6_pl_rightmod_rank_book"] { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
@@ -9505,6 +9508,7 @@ wbp.showunsupport = function () {
 
 wbp.importer = function () {
   if (!wbp.config) return;
+  if (filter.items.script.importexport.importwbp) return;
   filter.items.script.importexport.importwbp = filter.item({
     'group': 'importexport',
     'version': 0,
@@ -10013,10 +10017,6 @@ util.init(function () {
   util.config.put('weibo.layoutHideRightTemplate');
   util.config.put('weibo.layoutHidePersonTemplate');
 }, util.priority.FIRST + util.priority.AFTER);
-
-// ==OpenUserJS==
-// @unstableMinify
-// ==/OpenUserJS==
 
 /*!
  * 本脚本使用了以下开源项目：
