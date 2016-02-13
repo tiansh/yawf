@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.334
+// @version           3.6.335
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -27,9 +27,9 @@
 // @copyright         田生; The MIT License
 // @license           The MIT License (MIT); http://opensource.org/licenses/MIT
 // @compatible        firefox 推荐
-// @compatible        opera   无法使用右键菜单创建过滤器
-// @compatible        chrome  无法使用右键菜单创建过滤器
-// @compatible        safari  无法使用右键菜单创建过滤器，无法重新排列微博下按钮的顺序，无法拖拽文本创建关键词的过滤器
+// @compatible        opera   支持
+// @compatible        chrome  支持
+// @compatible        safari  基本支持
 // @grant             GM_xmlhttpRequest
 // @grant             GM_setValue
 // @grant             GM_getValue
@@ -38,13 +38,13 @@
 // @grant             GM_registerMenuCommand
 // @grant             GM_info
 // @grant             unsafeWindow
-// @connect-src       weibo.com
-// @connect-src       www.weibo.com
-// @connect-src       s.weibo.com
-// @connect-src       video.weibo.com
-// @connect-src       t.cn
-// @connect-src       www.miaopai.com
-// @connect-src       ent.v.sina.cn
+// @connect           weibo.com
+// @connect           www.weibo.com
+// @connect           s.weibo.com
+// @connect           video.weibo.com
+// @connect           t.cn
+// @connect           www.miaopai.com
+// @connect           ent.v.sina.cn
 // @run-at            document-start
 // ==/UserScript==
 
@@ -825,8 +825,12 @@ var text = {
   // 颜色
   'colorStyleTitle': { 'zh-cn': '颜色', 'zh-hk': '顏色', 'zh-tw': '顏色', 'en': 'Color' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
-  'mainBackgroundColorOverride': { 'zh-cn': '首页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '首頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for home page | {{<color>}} | transparency {{<transparency>}}%' },
-  'profileBackgroundColorOverride': { 'zh-cn': '个人主页背景|颜色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '個人主頁背景|色彩{{<color>}}|透明度{{<transparency>}}%', 'en': 'Background color for personal home page | {{<color>}} | transparency {{<transparency>}}%' },
+  'colorOverride': {
+    'zh-cn': '修改网页配色（半透明背景）||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||输入框背景色{{<color3>}}|透明度{{<transparency3>}}%',
+    'zh-hk': '修改網頁配色（半透明背景）||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||輸入方塊背景色{{<color3>}}|透明度{{<transparency3>}}%',
+    'zh-tw': '修改網頁配色（半透明背景）||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||輸入方塊背景色{{<color3>}}|透明度{{<transparency3>}}%',
+    'en': 'Change colors on page (Semi-transparent background) | Primary Color {{<color2>}} | transparency {{<transparency2>}}% || Secondary Color {{<color1>}} | transparency {{<transparency1>}}% || Input box {{<color3>}} | transparency {{<transparency3>}}%'
+  },
   // 层叠样式表
   'CSSTitle': { 'zh-cn': '样式', 'zh-hk': '樣式', 'zh-tw': '樣式', 'en': 'CSS' },
   'userstyleTitle': {
@@ -8922,44 +8926,53 @@ filter.items.style.color.whitelist_highlight = filter.item({
 }).addto(filter.groups.style);
 
 // 首页背景
-filter.items.style.color.my_background_color = filter.item({
+filter.items.style.color.color_override = filter.item({
   'group': 'color',
-  'version': 29,
+  'version': 335,
   'type': 'boolean',
-  'key': 'weibo.tool.my_background_color',
-  'ref': filter.ref.rgba('#ffffff', 30),
-  'text': '{{mainBackgroundColorOverride}}',
+  'key': 'weibo.tool.color_override',
+  'ref': filter.ref.rgba('#f6f6f6', 30, 'color1', 'transparency1', 'rgba1',
+    filter.ref.rgba('#ffffff', 30, 'color2', 'transparency2', 'rgba2',
+    filter.ref.rgba('#ffffff', 30, 'color3', 'transparency3', 'rgba3'))),
+  'text': '{{colorOverride}}',
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-      body.FRAME_main .S_bg2 { background-color: {{color}} !important; }
-      body.FRAME_main :not(.W_arrow_bor) > .S_bg2_br { border-color: {{color}}; }
-      body.FRAME_main .WB_tab_a .tab_box_a_r5 .tab li.S_bg2 { background-color: transparent !important; }
-      body.FRAME_main .WB_tab_a .tab_box_a_r5 .tab li.S_bg2 .S_bg2_br { border-bottom-color: {{color}} !important; }
-      body.FRAME_main .WB_tab_a .tab_box_a_r5 .tab .b .W_arrow_bor { padding-left: 30px; }
-      body.FRAME_main .WB_tab_a .tab .b .W_arrow_bor i { border-width: 0 8px 9px; }
-      body.FRAME_main .WB_feed_expand .W_arrow_bor { height: 9px; margin-top: 1px; }
-    */ }), { 'color': '' + this.ref.rgba }));
-  },
-}).addto(filter.groups.style);
+      body .S_bg1, body .SW_fun_bg:hover, body .SW_fun_bg_active { background-color: {{color1}}; }
+      body .S_bg2, body blockquote, body .W_btn_b, body .W_input, body .SW_fun_bg { background-color: {{color2}}; }
+      body .S_bg1_br { border-color: {{color1}}; }
+      body .S_bg2_br { border-color: {{color2}}; }
+      body .W_input, body .send_weibo .input { background-color: {{color3}}; }
 
-// 个人主页背景
-filter.items.style.color.other_background_color = filter.item({
-  'group': 'color',
-  'version': 29,
-  'type': 'boolean',
-  'key': 'weibo.tool.other_background_color',
-  'ref': filter.ref.rgba('#ffffff', 30),
-  'text': '{{profileBackgroundColorOverride}}',
-  'ainit': function () {
-    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-      body.FRAME_page .S_bg2 { background-color: {{color}} !important; }
-      body.FRAME_page .S_bg2_br { border-color: {{color}}; }
-      body.FRAME_page .WB_tab_a .tab_box_a_r5 .tab li.S_bg2 { background-color: transparent !important; }
-      body.FRAME_page .WB_tab_a .tab_box_a_r5 .tab li.S_bg2 .S_bg2_br { border-bottom-color: {{color}} !important; }
-      body.FRAME_page .WB_tab_a .tab_box_a_r5 .tab .b .W_arrow_bor { padding-left: 30px; }
-      body.FRAME_page .WB_tab_a .tab .b .W_arrow_bor i { border-width: 0 8px 9px; }
-      body.FRAME_page .WB_feed_expand .W_arrow_bor { height: 9px; margin-top: 1px; }
-    */ }), { 'color': '' + this.ref.rgba }));
+      .S_bg2 .private_list.SW_fun_bg:not(.cur),
+      .WB_tab_a .tab .S_bg2 .S_bg2,
+      .S_bg2 .WB_webim_page .webim_contacts_mod
+      { background-color: transparent; }
+
+      .WB_notes { background-color: {{notes}} }
+
+      .W_arrow_bor_t i, .W_arrow_bor_t em { border-left-color: transparent; border-right-color: transparent; border-top-color: transparent; }
+      .W_arrow_bor_r i, .W_arrow_bor_r em { border-bottom-color: transparent; border-right-color: transparent; border-top-color: transparent; }
+      .W_arrow_bor_b i, .W_arrow_bor_b em { border-bottom-color: transparent; border-left-color: transparent; border-right-color: transparent; }
+      .W_arrow_bor_l i, .W_arrow_bor_l em { border-bottom-color: transparent; border-left-color: transparent; border-top-color: transparent; }
+
+      .WB_tab_a .tab_box_a_r2 .tab .li_first, .WB_tab_a .tab_box_a_r2 .tab .li_last { display: none; }
+      .WB_tab_a .tab_box_a .tab {
+        display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
+        display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
+        display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch;
+      }
+
+      .WB_tab_a .tab .t { height: 38px; }
+      .WB_tab_a .tab .b { display: none; }
+      .WB_tab_a .tab_box_a .tab.clearfix::after { display: none; }
+      .WB_tab_a .tab_box_a_r2 .tab li { margin: 0; -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1; }
+
+    */ }), {
+      'color1': '' + this.ref.rgba1,
+      'color2': '' + this.ref.rgba2,
+      'color3': '' + this.ref.rgba3,
+      'notes': '' + util.str.rgba('#fff8bf', Math.round(100 - Math.pow(100 - this.ref.transparency1.conf, 3) / 1e4)),
+    }));
   },
 }).addto(filter.groups.style);
 
@@ -9097,7 +9110,7 @@ wbp.converter = util.func.catched(function () {
   var readWbpConfig = function (key) {
     return wbpConfig[key];
   };
-  wbp.converter.table().forEach(function (config) {
+  wbp.converter.table().forEach(util.func.catched(function (config) {
     var wbpKey = config.wbp, yawfKey = config.yawf;
     var wbpValue = void 0;
     if (wbpKey) {
@@ -9106,8 +9119,8 @@ wbp.converter = util.func.catched(function () {
     }
     var yawfValue = config.map(wbpValue);
     util.debug('WBP2YAWF %o=%o -> %o=%o', wbpKey, wbpValue, yawfKey, yawfValue);
-    conf[yawfKey] = yawfValue;
-  });
+    if (yawfKey) conf[yawfKey] = yawfValue;
+  }));
   return result;
 });
 
@@ -9148,6 +9161,36 @@ wbp.converter.rules.keyword.regexp = function (keywords) {
     return ('' + reg).slice(1, -1);
   });
 };
+// 任意一个满足即满足
+wbp.converter.rules.some = function (booleans) {
+  return booleans.some(Boolean);
+};
+// 颜色设置转换
+wbp.converter.rules.color = function (color) {
+  var div = document.createElement('div');
+  document.body.appendChild(div);
+  var color, rgba, name = 'transparent';
+  var red = 0, green = 0, blue = 0, alpha = 0;
+  try {
+    div.style = 'color: ' + color + '!important';
+    name = window.getComputedStyle(div).color
+    rgba = name.match(/rgba?\((.*)\)/)[1].split(',').map(Number);
+    red = rgba[0]; blue = rgba[1]; green = rgba[2];
+    alpha = rgba.length > 3 ? rgba[3] : 1;
+  } catch (e) {}
+  div.parentNode.removeChild(div);
+  return { 'red': red, 'green': green, 'blue': blue, 'alpha': alpha, 'name': name };
+};
+wbp.converter.rules.color.hex = function (color) {
+  var hex = function (n) { return ('0' + n.toString(16)).slice(-2); };
+  var result = wbp.converter.rules.color(color);
+  var text = '#' + hex(result.red) + hex(result.green) + hex(result.blue);
+  return text;
+};
+wbp.converter.rules.color.transparency = function (color) {
+  var result = wbp.converter.rules.color(color);
+  return Math.round(result.alpha * 100);
+};
 
 wbp.unsupported = [];
 
@@ -9174,10 +9217,16 @@ wbp.converter.table = function () {
   };
   // 使用 CSS 处理一些 YAWF 不提供设置项的隐藏模块
   var cssText = '';
+  var style = function (cssInsert) { cssText += cssInsert + '\n'; };
   var c = function (wbpMod, css, description) {
-    cssText += '\n';
-    if (description) cssText += '/* ' + description + ' */\n';
-    cssText += css + '\n'
+    var addCss = function (enabled) {
+      if (!enabled) return;
+      var cssInsert;
+      if (typeof css === 'function') cssInsert = css(); else cssInsert = '' + css;
+      if (description) cssInsert = '/* ' + description + ' */\n' + cssInsert;
+      style(cssInsert);
+    };
+    m(wbpMod, null, addCss);
   };
   // 无法转换的功能
   var n = function (wbpKey, yawfKey) {
@@ -9216,6 +9265,16 @@ wbp.converter.table = function () {
   d(null, 'weibo.content.types_linkt', false);
   d(null, 'weibo.content.types_linku', false);
   d('filterSmiley', 'weibo.content.types_emotion'); // 允许表情关键词
+  d(['tipTextColor', 'tipBackColor'], null, function (color) {
+    if (color[0] === '#FF8080' && color[1] === '#FFD0D0') return; // 如果使用默认值，则导入后仍然使用默认值
+    style('/* 折叠微博颜色 */\n' + util.str.fill(util.str.cmt(function () { /*!CSS
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { color: {{text}}; background-color: {{back}}; border-color: {{text}} }
+      [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { color: #40d040; background-color: #d0ffd0;  border-color: #40d040 }
+    */ }), {
+      'text': r.color(color[0]).name,
+      'back': r.color(color[1]).name,
+    }));
+  });
   n(null, 'weibo.filters.account.whitelist');
   d('userBlacklist', 'weibo.filters.account.blacklist'); // 如果一条微博的发布者或转发原文的作者为下列用户之一，微博将被屏蔽。
   n(null, 'weibo.filters.account.foldlist');
@@ -9435,7 +9494,10 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.replace_image_emoji');
   n(null, 'weibo.other.customize_source');
   n(null, 'weibo.tool.show_local_time');
-  c('showAllSonFeeds', '.WB_feed_together [node-type="feed_list_wrapForward"] { display: block !important } .WB_feed_together>a[action-type="feed_list_seeAll"], .WB_feed_together>a[action-type="feed_list_foldForward"] { display: none }', '展开所有子微博（“还有?条对原微博的转发”）');
+  d('showAllSonFeeds', null, function (enabled) {
+    if (!enabled) return;
+    style('/*展开所有子微博（“还有?条对原微博的转发”） */\n.WB_feed_together [node-type="feed_list_wrapForward"] { display: block !important } .WB_feed_together>a[action-type="feed_list_seeAll"], .WB_feed_together>a[action-type="feed_list_foldForward"] { display: none }');
+  });
   n(null, 'weibo.tool.custom_font_family.wf');
   n(null, 'weibo.tool.custom_font_family.cf');
   n(null, 'weibo.tool.custom_font_family');
@@ -9462,9 +9524,9 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.image_size');
   d(['compactFeedToolbar', 'noHomeMargins'], 'weibo.tool.no_weibo_space', r.some); // 使用紧凑型（V5样式）微博工具栏（收藏 | 转发 | 评论 | 赞）, 在首页使用紧凑版式（去除卡片间空隙） // ⚠️ YAWF 未提供两个功能分开的设置
   n(null, 'weibo.tool.from_in_bottom');
-  n(null, 'weibo.tool.hover_show_fold');
-  n(null, 'weibo.tool.fold_text.text');
-  n(null, 'weibo.tool.fold_text');
+  d(null, 'weibo.tool.hover_show_fold', true);
+  d(null, 'weibo.tool.fold_text.text', 'author-reason');
+  d(null, 'weibo.tool.fold_text', true);
   n(null, 'weibo.layout.reorder.1');
   n(null, 'weibo.layout.reorder.2');
   n(null, 'weibo.layout.reorder.3');
@@ -9480,14 +9542,18 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.whitelist_highlight.color');
   n(null, 'weibo.tool.whitelist_highlight.transparency');
   n(null, 'weibo.tool.whitelist_highlight');
-  n(null, 'weibo.tool.my_background_color.color');
-  n(null, 'weibo.tool.my_background_color.transparency');
-  n(null, 'weibo.tool.my_background_color');
+  n(null, 'weibo.tool.color_override.color1');
+  d('backColor', 'weibo.tool.color_override.color2', r.color.hex);
+  n(null, 'weibo.tool.color_override.color3');
+  d('backColor', 'weibo.tool.color_override.transparency1', r.color.transparency);
+  d('backColor', 'weibo.tool.color_override.transparency2', r.color.transparency);
+  d('backColor', 'weibo.tool.color_override.transparency3', r.color.transparency);
+  n(null, 'weibo.tool.color_override'); // 设置我的首页个人主页透明背景色  // ⚠️ YAWF 不提供首页和个人主页分开的设置
   n(null, 'weibo.tool.other_background_color.color');
   n(null, 'weibo.tool.other_background_color.transparency');
   n(null, 'weibo.tool.other_background_color');
   n('useCustomStyles', null); // 自定义样式（CSS）：可用于屏蔽模块、改造版面， // ⚠️ YAWF 不提供自定义样式的开关
-  d('customStyles', 'weibo.tool.userstyle', function (css) { return cssText + '\n/* 以下是自定义样式 */\n' + css; }); // 自定义样式（CSS）：可用于屏蔽模块、改造版面，
+  d('customStyles', 'weibo.tool.userstyle', function (css) { if (cssText + css) return cssText + '\n/* 以下是自定义样式 */\n' + css; }); // 自定义样式（CSS）：可用于屏蔽模块、改造版面，
   n(null, 'script.other.auto_complete');
   n('updateNotify', null); // 更新后首次使用时显示新功能 // ⚠️ YAWF 提供了该选项，但无法通过导入脚本设置该功能
   return table;
@@ -10016,6 +10082,9 @@ util.init(function () {
   util.config.put('weibo.tool.block_hidden');
   util.config.put('weibo.layoutHideRightTemplate');
   util.config.put('weibo.layoutHidePersonTemplate');
+  util.config.put('weibo.tool.my_background_color.color');
+  util.config.put('weibo.tool.my_background_color.transparency');
+  util.config.put('weibo.tool.my_background_color');
 }, util.priority.FIRST + util.priority.AFTER);
 
 /*!
