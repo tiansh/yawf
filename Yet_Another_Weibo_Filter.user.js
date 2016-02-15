@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.336
+// @version           3.6.337
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -353,6 +353,10 @@ var text = {
   'appItemWeiboDesc': {
     'zh-cn': '介绍微博应用的微博，包括含有微博应用的链接或含有微博应用的卡片的情况。微博应用的链接会以应用图标标记。勾选此项以隐藏此类微博。',
   },
+  'wenwoDrWeibo': { 'zh-cn': '含有爱问医生健康科普文章的微博{{<i>}}', 'zh-hk': '含有愛問醫生健康科普文章的微博{{<i>}}', 'zh-tw': '含有愛問醫生健康科普文章的微博{{<i>}}', 'en': 'Weibo with 爱问医生 (iask medical) artical {{<i>}}' },
+  'wenwoDrWeiboDesc': {
+    'zh-cn': '爱问医生健康科普文章是一些来自 wenwo.com 的健康、医疗相关文章。打开爱问医生健康科普文章的网站时，您可能会自动关注文章作者或相应帐号。开启以隐藏包含此类文章的微博。',
+  },
   'stockWeibo': { 'zh-cn': '含有股票链接的微博{{<i>}}', 'zh-hk': '含有股票連結的微博{{<i>}}', 'zh-tw': '含有股票連結的微博{{<i>}}', 'en': 'Weibo with stock link {{<i>}}' },
   'stockWeiboDesc': {
     'zh-cn': '股票链接和话题相似，在发布框输入“$”即可添加股票链接。勾选以隐藏所有包含此类链接的微博。',
@@ -554,6 +558,7 @@ var text = {
   'layoutHidePersonHotWeibo': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   'layoutHidePersonUserList': { 'zh-cn': '与他/她相似的人', 'zh-hk': '與他/她相似的人', 'zh-tw': '與他/她相似的人', 'en': 'with He/SheSimilar Person' /* as is */ },
   'layoutHidePersonHongbao': { 'zh-cn': '微博红包', 'zh-hk': '微博红包', 'zh-tw': '微博红包', 'en': '微博红包 (Red pack)' },
+  'layoutHidePersonWenwoDr': { 'zh-cn': '爱问医生', 'zh-hk': '爱问医生', 'zh-tw': '爱问医生', 'en': '爱问医生 (Iask medical)' },
   'layoutHidePersonTimeline': { 'zh-cn': '时间轴', 'zh-hk': '時間軸', 'zh-tw': '時間軸', 'en': 'Timeline' },
   // 个人主页边栏模块
   'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏', 'zh-hk': '隱藏模組 - 個人主頁邊欄', 'zh-tw': '隱藏模組 - 個人主頁邊欄', 'en': 'Hide modules - Side column of personal homepage' },
@@ -826,10 +831,13 @@ var text = {
   'colorStyleTitle': { 'zh-cn': '颜色', 'zh-hk': '顏色', 'zh-tw': '顏色', 'en': 'Color' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
   'colorOverride': {
-    'zh-cn': '修改网页配色（半透明背景）||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||输入框背景色{{<color3>}}|透明度{{<transparency3>}}%',
-    'zh-hk': '修改網頁配色（半透明背景）||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||輸入方塊背景色{{<color3>}}|透明度{{<transparency3>}}%',
-    'zh-tw': '修改網頁配色（半透明背景）||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||輸入方塊背景色{{<color3>}}|透明度{{<transparency3>}}%',
-    'en': 'Change colors on page (Semi-transparent background) | Primary Color {{<color2>}} | transparency {{<transparency2>}}% || Secondary Color {{<color1>}} | transparency {{<transparency1>}}% || Input box {{<color3>}} | transparency {{<transparency3>}}%'
+    'zh-cn': '修改网页配色（半透明背景）{{<i>}}||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||输入框背景色{{<color3>}}|透明度{{<transparency3>}}%',
+    'zh-hk': '修改網頁配色（半透明背景）{{<i>}}||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||輸入方塊背景色{{<color3>}}|透明度{{<transparency3>}}%',
+    'zh-tw': '修改網頁配色（半透明背景）{{<i>}}||主背景色{{<color2>}}|透明度{{<transparency2>}}%||副背景色{{<color1>}}|透明度{{<transparency1>}}%||輸入方塊背景色{{<color3>}}|透明度{{<transparency3>}}%',
+    'en': 'Change colors on page (Semi-transparent background) {{<i>}} || Primary Color {{<color2>}} | transparency {{<transparency2>}}% || Secondary Color {{<color1>}} | transparency {{<transparency1>}}% || Input box {{<color3>}} | transparency {{<transparency3>}}%'
+  },
+  'colorOverrideDesc': {
+    'zh-cn': '推荐配合[[style.layout.set_skin]]使用，在各种页面达到一致的效果。'
   },
   // 层叠样式表
   'CSSTitle': { 'zh-cn': '样式', 'zh-hk': '樣式', 'zh-tw': '樣式', 'en': 'CSS' },
@@ -989,7 +997,7 @@ var html = {
   'configKeyInput': '<div class="yawf-configInput yawf-configKeyInput"><button class="W_f14 yawf-configKeyName"></button><input type="hidden" yawf-ci="{{key}}" name="yawf-{{key}}" /><span class="yawf-configKeyTip">{{keyInputTip}}</span></div>',
   'configSubscribe': '<div class="yawf-configSubscribe yawf-configItem "><div class="yawf-configSubscribeIcon"><img width="64" height="64" src="{{icon}}"></div><div class="yawf-configSubscribeTitle"><div class="yawf-configSubscribeName">{{name}}</div><div class="yawf-configSubscribeDate">{{date}}</div></div><div class="yawf-configSubscribeInfo">{{description}}</div><div class="yawf-configSubscribeButton"><a href="javascript:;" class="W_btn_b yawf-subscribeDisable"><span class="W_f14">{{subscribeDisableButton}}</span></a><a href="javascript:;" class="W_btn_b yawf-subscribeEnable"><span class="W_f14">{{subscribeEnableButton}}</span></a><a href="" target="_blank" rel="noreferrer" class="W_btn_b yawf-subscribeDetail"><span class="W_f14">{{subscribeDetailButton}}</span></a></div></div>',
   'configStrings': '<div class="yawf-configStrings yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configStringsDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configStringsInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configStringsAdd}}</span></button></form><ul class="yawf-configStringsItems yawf-configItems"></ul></div>',
-  'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a>{{[item]}}</li>',
+  'configStringsItem': '<li class="W_btn_b W_btn_tag yawf-configStringsItem" node-type="tag_item" title="{{[item]}}"><a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a>{{[item]}}</li>',
   'configUsers': '<div class="yawf-configUsers yawf-configItem"><form action="#"><label><span class="yawf-configDesc yawf-configUsersDesc">{{{text}}}</span><input id="yawf-{{key}}" class="W_input yawf-configUsersInput" type="text" name="yawf-{{key}}"></label><button id="yawf-add-{{key}}" class="W_btn_a yawf-configAdd" type="submit"><span>{{configUsersAdd}}</span></button></form><ul class="yawf-configUsersItems yawf-configItems"></ul></div>',
   'configUsersItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}"></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><span class="object_name" uid="{{id}}" title="{{name}}">{{name}}</span></p><p class="W_fr"><a class="W_ficon ficon_close S_ficon" action-data="uid={{id}}" href="javascript:void(0);">X</a></p></div><div class="other_info"></div></div></div></div></li>',
   'configPrefill': '<span class="yawf-configPrefill" id="{{id}}"></span>',
@@ -5639,6 +5647,23 @@ filter.items.other.hidethese_content.appitem= filter.item({
   },
 }).addto(filter.groups.other);
 
+// 爱问医生
+filter.items.other.hidethese_content.wenwodr= filter.item({
+  'group': 'hidethese_content',
+  'version': 337,
+  'type': 'boolean',
+  'key': 'weibo.other.wenwodr',
+  'text': '{{wenwoDrWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{wenwoDrWeiboDesc}}' } },
+  'rule': function wenwoDrFilterRule(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('div[action-data*="objectid=2017896001:"]')) return 'hidden';
+    if (feed.querySelector('a[suda-uatrack*="2017896001-product"]')) return 'hidden';
+    if (feed.querySelector('a[href^="http://dr.wenwo.com/"]')) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
 // 股票链接
 filter.items.other.hidethese_content.stock = filter.item({
   'group': 'hidethese_content',
@@ -6426,6 +6451,7 @@ filter.predef.group('layout');
   item('HotWeibo', 5, '[id^="Pl_Core_RightPicText__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
   item('UserList', 164, '[id^="Pl_Core_Ut1UserList__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
   item('Hongbao', 199, '[yawf-id="yawf-pr-hongbao"] { display: none !important; }');
+  item('WenwoDr', 337, '[yawf-obj-name="爱问医生"] { display: none !important; }'); // 对应模块没有繁体或英文翻译
   item('Timeline', 164, '[id^="Pl_Official_TimeBase__"] { display: none !important; }');
 
   subtitle('PLeft');
@@ -6528,13 +6554,13 @@ filter.predef.group('layout');
 
   // 标记个人主页的模块
   var tagPLeftModsName = function () {
-    var names = Array.from(document.querySelectorAll('.WB_frame_b>div:not([yawf-obj-name]) .main_title'));
+    var plc_main = document.querySelector('#plc_main'); if (!plc_main) return;
+    var names = Array.from(plc_main.querySelectorAll(':scope > * > div:not([yawf-obj-name]) .main_title'));
     if (!names.length) return;
     names.forEach(function (title) {
-      var name = title && title.textContent.trim() || '';
-      var p = title, d;
-      for (; !p.classList.contains('WB_frame_b') ; p = p.parentNode) d = p;
-      d.setAttribute('yawf-obj-name', name);
+      var name = title && title.textContent.trim() || '', p = title;
+      while (p.parentNode.parentNode !== plc_main) p = p.parentNode;
+      if (!p.hasAttribute('yawf-obj-name')) p.setAttribute('yawf-obj-name', name);
     });
   };
   var tagPLeftModsQs = tagMods('.WB_frame_b > div:not(:empty):not([yawf-id])', {
@@ -8933,10 +8959,12 @@ filter.items.style.color.color_override = filter.item({
   'version': 335,
   'type': 'boolean',
   'key': 'weibo.tool.color_override',
+  'text': '{{colorOverride}}',
   'ref': filter.ref.rgba('#f6f6f6', 30, 'color1', 'transparency1', 'rgba1',
     filter.ref.rgba('#ffffff', 30, 'color2', 'transparency2', 'rgba2',
-    filter.ref.rgba('#ffffff', 30, 'color3', 'transparency3', 'rgba3'))),
-  'text': '{{colorOverride}}',
+    filter.ref.rgba('#ffffff', 30, 'color3', 'transparency3', 'rgba3', {
+      'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{colorOverrideDesc}}' },
+    }))),
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body .S_bg1, body .SW_fun_bg:hover, body .SW_fun_bg_active { background-color: {{color1}}; }
@@ -9319,6 +9347,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.other.vote_weibo');
   n(null, 'weibo.other.red2014');
   n(null, 'weibo.other.appitem');
+  n(null, 'weibo.other.wenwodr');
   n(null, 'weibo.other.stock');
   n(null, 'weibo.other.multi_topic.num');
   n(null, 'weibo.other.multi_topic');
@@ -9436,6 +9465,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHidePersonHotWeibo');
   n(null, 'weibo.layoutHidePersonUserList');
   n(null, 'weibo.layoutHidePersonHongbao');
+  n(null, 'weibo.layoutHidePersonWenwoDr');
   n(null, 'weibo.layoutHidePersonTimeline');
   n(null, 'weibo.layout.pleft');
   n(null, 'weibo.layoutHideMessagesHelp');
@@ -9938,6 +9968,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-configStringsItem, .yawf-configUsersItem { display: inline-block; margin: 2px; }
   .yawf-configStringsItem.W_btn_tag { padding: 0 5px 0 10px; }
   .yawf-configStringsItem.W_btn_tag .ficon_close { margin: 0 0 0 -8px; }
+  .yawf-configStringsItem { max-width: 520px; overflow: hidden; text-overflow: ellipsis; }
   .yawf-configUsersItem .shield_object_card { display: inline-block; width: 220px; }
   .yawf-configUsersItem .shield_object_card .card_bg { border: 1px solid #e6e6e6; border-radius: 2px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.02); padding: 1px 5px 1px 1px; }
   .yawf-configUsersItem .shield_object_card .card_pic { float: left; width: 50px; }
