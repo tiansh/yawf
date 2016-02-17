@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.337
+// @version           3.6.338
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -6554,12 +6554,17 @@ filter.predef.group('layout');
 
   // 标记个人主页的模块
   var tagPLeftModsName = function () {
-    var plc_main = document.querySelector('#plc_main'); if (!plc_main) return;
-    var names = Array.from(plc_main.querySelectorAll(':scope > * > div:not([yawf-obj-name]) .main_title'));
+    var names = Array.from(document.querySelectorAll([
+      '.WB_frame_b > div:not([yawf-obj-name]) .main_title',
+      '.WB_frame_c > div:not([yawf-obj-name]) .main_title'
+    ].join(',')));
     if (!names.length) return;
     names.forEach(function (title) {
       var name = title && title.textContent.trim() || '', p = title;
-      while (p.parentNode.parentNode !== plc_main) p = p.parentNode;
+      while (
+        !p.parentNode.classList.contains('WB_frame_b') &&
+        !p.parentNode.classList.contains('WB_frame_c')
+      ) p = p.parentNode;
       if (!p.hasAttribute('yawf-obj-name')) p.setAttribute('yawf-obj-name', name);
     });
   };
@@ -8589,21 +8594,28 @@ filter.items.style.layout.set_skin = filter.item({
       (coverStyle || (coverStyle = document.head.appendChild(util.dom.create('style', '')))).textContent = coverCss;
     };
     var setSkin = function setSkin() {
+      var id = skinId();
       if (!skinStyle) {
         var skinCss = document.querySelector('link[href^="http://img.t.sinajs.cn/t6/skin/"][href*="/skin.css?"]');
         if (!skinCss) return;
         version = ((skinCss.href.match(/version=([a-fA-F0-9]*)/) || [])[1]) || '';
         skinStyle = skinCss.cloneNode(); skinStyle.id = 'yawf-skin_style';
-        setSkinId(skinId());
+        setSkinId(id);
       }
+      var isHome = document.body.classList.contains('FRAME_main');
       if (!document.getElementById('yawf-skin_style') ||
-        document.querySelector([
-        // 微博不能保证 id 为 skin_style 的对象，所以不能用 #skin_style 选择器，神奇吧
-          '#yawf-skin_style ~ [id="skin_style"]',
-          '#yawf-skin_style ~ [id="custom_style"]'
-      ].join(','))) {
-        setSkinId(skinId());
+        // 微博不能保证 id 为 skin_style 的对象唯一，所以不能用 #skin_style 选择器，神奇吧
+        document.querySelector('#yawf-skin_style ~ [id="skin_style"]') ||
+        (!isHome && document.querySelector('#yawf-skin_style ~ [id="custom_style"]'))
+      ) {
+        setSkinId(id);
         document.querySelector('head').appendChild(skinStyle);
+      }
+      // 如果是首页，而且使用了自定义模板；保证自定义模板优先级（但是在个人主页上覆盖自定义模板）
+      if (isHome && document.querySelector('[id="custom_style"] ~ #yawf-skin_style')) {
+        var custom_style_list = document.querySelectorAll('[id="custom_style"]');
+        var custom_style = custom_style_list[custom_style_list.length - 1];
+        skinStyle.parentNode.insertBefore(custom_style, skinStyle.nextSibling);
       }
     };
     observer.dom.add(setSkin);
