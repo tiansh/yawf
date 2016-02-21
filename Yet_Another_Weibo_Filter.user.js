@@ -7587,7 +7587,7 @@ filter.items.tool.weibotool.view_original = filter.item({
           return 'http://' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
         };
       </script></head>
-      <body><div id="container"><div id="imgarea"><img id="viewer" class="fit" /></div></div><div id="chose"><script>
+      <body><div id="container"><div id="imgarea"><img id="viewer" class="large" /></div></div><div id="chose"><script>
         info.filenames.forEach(function (filename, i) {
           document.write('<a href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
         });
@@ -7609,7 +7609,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         }
         viewer.onclick = function () {
           if (imgarea.className === 'normal') return;
-          if (viewer.className === 'large') viewer.className = 'large';
+          if (viewer.className === 'large') viewer.className = 'fit';
           else viewer.className = 'large';
         };
         window.onhashchange = show;
