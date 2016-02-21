@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
   <title>Yet Another Weibo Filter - 看真正想看的微博</title>
-  <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 看真正想看的微博, Weibo, Sina Weibo, 微博, 新浪微博, 过滤, Filter" />
-  <meta name="description" content="Yet Another Weibo Filter - 看真正想看的微博 - 新浪微博根据关键词、作者、话题、来源等过滤微博，修改版面，以及其他相关功能。" />
+  <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 看真正想看的微博, Weibo, Sina Weibo, 微博, 新浪微博, 过滤, Filter, 筛选" />
+  <meta name="description" content="Yet Another Weibo Filter - 看真正想看的微博 - 新浪微博根据关键词、作者、话题、来源等过滤微博，修改版面，以及其他相关功能。用户脚本，支持 Firefox 、 Opera 、 Chrome 和 Safari 浏览器。" />
   <link rel="alternate" hreflang="zh" href="https://tiansh.github.io/yawf/zh-cn.html" />
   <link rel="alternate" hreflang="zh-tw" href="https://tiansh.github.io/yawf/zh-tw.html" />
   <link rel="alternate" hreflang="zh-hk" href="https://tiansh.github.io/yawf/zh-hk.html" />
@@ -39,7 +39,7 @@
         </svg>
       </div>
       <h1 itemprop="name" class="entry-title">Yet Another Weibo Filter</h1>
-      <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.338<!-- /VER --></div>
+      <div itemprop="softwareVersion" id="version"><!-- VER -->3.6.339<!-- /VER --></div>
     </header>
     <nav>
       <dl>
@@ -95,6 +95,27 @@
         <p>想要简化界面又不想仔细研究脚本设置？试试导入这个<a href="sample-config.yawf">示例脚本设置</a>吧。下载这个文件，在设置窗口中点选脚本选项卡，点击导入打开该文件即可快速设置过滤器。</p>
         <p>此外还有为您准备好的黑名单可供订阅，您可以来<a href="https://tiansh.github.io/yawf-rules/">YAWF 过滤规则订阅</a>页面看看。</p>
       </div>
+      <h2>主要功能</h2>
+      <div itemprop="featureList" class="in">
+        <ul>
+          <li>根据关键字、作者、来源等隐藏、折叠或高亮微博；使用拖拽轻松定义过滤规则；</li>
+          <li>屏蔽推广、粉丝头条、投票、好友赞过、抢红包、爱问医生等各种微博；防刷屏、版聊；</li>
+          <li>自动加载和过滤新微博，白名单新微博桌面提示；禁用首页下方的延迟加载；</li>
+          <li>清理版面上的各种模块、图标、小红点，去广告；过滤热门话题；使用方形头像；</li>
+          <li>合并左右边栏的双栏模式，加宽加大的微博宽度和微博字号，自定义微博字体；</li>
+          <li>去除微博间的空白，缩小微博下操作按钮举例，重新安排他们的顺序；</li>
+          <li>自动检查首页上是否遗漏了特定用户的最新微博，不错过他的任何一条消息；</li>
+          <li>展开左栏消息分组；让各种浮动的模块回到原位；统一各种页面的边栏位置；</li>
+          <li>查看原图，展开 t.cn 短网址；清除发布框默认话题，禁止自动关注话题主持人；</li>
+          <li>微博作者和正文不拆行；按字数自动展开或隐藏长篇幅的微博，禁用微博换行；</li>
+          <li>设置网页模板，自定义半透明背景色，深色导航栏，经典导航栏布局；</li>
+          <li>方便的新功能更新提醒；设置备份，以及在导入时提示设置最新功能；</li>
+          <li>使用本机时区显示微博上的各种时间（针对非东八区用户）；</li>
+          <li>正常大小的微博缩略图尺寸，显示在微博下面的发布时间和来源；（针对2016新版）</li>
+        </ul>
+        <p>脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。随您使用的浏览器的不同，支持的功能可能有个别不同。</p>
+        <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">点击查看脚本的全部功能</a></p>
+      </div>
       <h2>详细说明</h2>
       <div class="in">
         <p>安装脚本后，点击右上角的漏斗图标<span class="yawf-iconfont">Y</span>就可以开始设置脚本了。</p>
@@ -114,23 +135,6 @@
         <p>如果您之前使用“眼不见心不烦”脚本，在设置脚本之前，您也可以在脚本的“关于脚本”选项卡中找到“从‘眼不见心不烦’脚本导入设置”的功能。（需要您同时安装并启用“眼不见心不烦”脚本或扩展，才会看到该功能）</p>
         <p>关于详细的使用指引，请参见<a href="https://tiansh.github.io/yawf/fqa.html" target="_blank">常见问题</a>。</p>
       </div>
-      <h2>主要功能</h2>
-      <div itemprop="featureList" class="in">
-        <ul>
-          <li>根据关键字、作者、来源等隐藏、折叠或高亮微博；</li>
-          <li>屏蔽推广、粉丝头条、投票等各种微博；防刷屏、版聊；</li>
-          <li>提示查看前自动过滤新微博，新微博桌面提示；</li>
-          <li>清理版面上的各种部件，去广告；定制微博下按钮顺序；</li>
-          <li>查看原图，展开 t.cn 短网址，清除发布框默认话题；</li>
-          <li>自定义网页外观，合并边栏，移除微博空隙，增大正文字号；</li>
-          <li>仅显示微博列表等基本功能的阅读模式；</li>
-          <li>检查首页是否遗漏了指定账号最近的某条微博；</li>
-          <li>按字数自动展开或隐藏长篇幅的微博，禁用微博换行；</li>
-          <li>缩小微博图片尺寸为正常大小，使用经典的转发微博样式；</li>
-        </ul>
-        <p>脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。</p>
-        <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">点击查看脚本的全部功能</a></p>
-      </div>
       <h2 class="hidden allfunc">完整功能列表</h2>
       <div class="in">
         <p class="hidden allfunc">列表仅供参考，您安装脚本后，可能显示的功能和以下略有不同。列表可能会随您的操作系统和浏览器的设置和版本不同有细微差别。</p>
@@ -147,7 +151,7 @@
         <ul>
           <li>您在设置中选择隐藏、折叠、显示的帐号的信息；</li>
           <li>如果您要求使用 HTML5 播放器替换 Flash 播放器，脚本会从新浪的服务器获取 MP4 文件的地址；</li>
-          <li>如果您要求检查是否有哪些特定账号的微博没有显示在首页上，脚本会自动每隔一段时间访问对应用户的个人主页；<li>
+          <li>如果您要求检查是否有哪些特定账号的微博没有显示在首页上，脚本会自动每隔一段时间访问对应用户的个人主页；</li>
           <li>如果您要求自动展开长篇幅微博，脚本在遇到此类微博时，会自动从微博的网站上获取微博全文。</li>
         </ul>
       </div>

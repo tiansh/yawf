@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.338
+// @version           3.6.339
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -49,7 +49,7 @@
 // ==/UserScript==
 
 // ==OpenUserJS==
-// @unstableMinify Multi-line strings by using comments at the end of function body 在函数体末尾使用了注释块表示多行字符串
+// @unstableMinify Experimental minification supporting, I am not sure if minification may break my script
 // ==/OpenUserJS==
 
 // 字体
@@ -669,7 +669,6 @@ var text = {
   'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
   'unfoldWeiboLength': { 'zh-cn': '（约{{length}}字）', 'zh-hk': '（約{{length}}字）', 'zh-tw': '（約{{length}}字）', 'en': '(about {{length}} charactors)' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
-  'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
@@ -704,6 +703,9 @@ var text = {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
   'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有{{count}}條新微博，點擊查看', 'zh-tw': '有{{count}}條新微博，點擊查看', 'en': '{{count}} new Weibo' },
+  // 其他
+  'otherToolsTitle': { 'zh-cn': '其他', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'Others' },
+  'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
   'showLocalTime': { 'zh-cn': '显示时间时使用本机时区', 'zh-hk': '顯示時間時使用本機時區', 'zh-tw': '顯示時間時使用本機時區', 'en': 'Show timestamp with local time zone' },
   // 样式
   'styleFilterGroupTitle': { 'zh-cn': '外观样式', 'zh-hk': '外觀樣式', 'zh-tw': '外觀樣式', 'en': 'Appearance' },
@@ -743,7 +745,7 @@ var text = {
     'en': 'Show all pages with | template {{<skin>}} {{<i>}}',
   },
   'setSkinDesc': {
-    'zh-cn': '开启后所有页面将显示您选择的模板，包括其他用户的个人主页。模板效果仅在您的浏览器中生效，他人访问您的个人主页时，仍会看到您在微博中设置的模板。<br />模板的选择请参考<a href="http://skin.vip.weibo.com/list?topnav=1&wvr=6" target="_blank">模板商店</a>，在模板商店中点击图片预览与应用模板。',
+    'zh-cn': '开启后所有页面将显示您选择的模板，包括其他用户的个人主页。模板不会覆盖您在主页自定义的背景图或配色，但是会覆盖个人主页的背景图或配色。模板效果仅在您的浏览器中生效，他人访问您的个人主页时，仍会看到您在微博中设置的模板。<br />模板的选择请参考<a href="http://skin.vip.weibo.com/list?topnav=1&wvr=6" target="_blank">模板商店</a>，在模板商店中点击图片预览与应用模板。',
   },
   'setSkinByPreview': {
     'zh-cn': 'Yet Another Weibo Filter 模板设置',
@@ -1082,7 +1084,6 @@ var fill = {
 // 超链接
 var url = {
   'newcard': '{{domainURL}}/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
-  'view_ori': 'http://photo.weibo.com/{{uid}}/wbphotos/large/mid/{{mid}}/pid/{{pid}}',
   'view_cmt_ori': 'http://ww1.sinaimg.cn/large/{{pid}}.jpg',
   'block_wb': '{{domainURL}}/aj/user/block?ajwvr=6',
   'del_cmt': '{{domainURL}}/aj/comment/del?ajwvr=6',
@@ -1158,8 +1159,15 @@ util.script.icon = (function () {
 // 检查是否是压缩版本
 util.script.ismin = (function () {
   try {
-    return !!GM_info.scriptMetaStr.match(new RegExp('// @downloadURL(?:\\s+.*\\.min\\.user\\.js)'));
-  } catch (e) { return false; }
+    // 检查多余的空格或分号、布尔字面常量、未消除的死代码、if语句，判断是否是压缩后的代码
+    var func = function () {
+      return
+      if (false) {
+        true;;
+      }
+    } + '';
+    return !func.match(/return[\s\S]*if[\s\S]*\s\strue;;[\r\n\s]/);
+  } catch (e) { }
 }());
 // 检查是否开启了调试
 util.script.isdebug = (function () {
@@ -1182,7 +1190,7 @@ util.priority = {
 util.func = {};
 
 // 基本函数
-util.func.noop = function () { };
+var noop = util.func.noop = function () { };
 util.func.identity = function (x) { return x; };
 util.func.constant = function (x) { return function () { return x; }; };
 
@@ -1212,7 +1220,7 @@ util.func.catched = function (f, fc) {
 };
 
 // 度量函数性能
-util.func.performance = util.script.isdebug ? (function (ignore) {
+util.func.performance = (util.script.isdebug && ('performance' in window)) ? (function (ignore) {
   var status = {}, p = false;
   var show = function () {
     if (p) return; p = true;
@@ -1240,7 +1248,7 @@ util.func.performance = util.script.isdebug ? (function (ignore) {
     if (!mfuncs[f.name]) mfuncs[f.name] = mfunc(f);
     return mfuncs[f.name];
   };
-}(10)) : function (f) { return f; };
+}(10)) : util.func.identity;
 
 // 向 unsafeWindow 暴露接口
 util.func.output = function (name, handler) {
@@ -1276,7 +1284,7 @@ util.str = {};
 
 // 多行字符串 
 util.str.cmt = function (f) {
-  var s = f.toString().split(/\r\n|\r|\n/g).slice(1, -1).join('\n');
+  var s = f.toString().replace(/^[\s\S]*\/\*.*/, '').replace(/.*\*\/[\s\S]*$/, '').replace(/\r\n|\r|\n/g, '\n');
   return s;
 };
 
@@ -1622,6 +1630,11 @@ observer.dom = (function () {
     (new MutationObserver(active))
       .observe(document.body, { 'childList': true, 'subtree': true });
   };
+  if (!('MutationObserver' in window)) observe = function () {
+    // for lagency browsers
+    document.body.addEventListener("DOMNodeInserted", function (e) { active(); }, false);
+    document.body.addEventListener("DOMNodeRemoved", function (e) { active(); }, false);
+  };
   util.init(function () {
     observe();
   }, util.priority.LAST + util.priority.AFTER * 2);
@@ -1770,7 +1783,7 @@ util.i18n.stylish = function (lang) {
   util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
     .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
     .layoutFilterGroupLayer .yawf-configBoolean.yawf-layoutConfig-line { width: 100%; }
-  */ }), { 'layoutOptionWidth': isEn ? '240px' : '160px' }));
+  */ noop(); }), { 'layoutOptionWidth': isEn ? '240px' : '160px' }));
 };
 
 // 根据用户界面上的语言做不同调整
@@ -4592,7 +4605,7 @@ filter.items.base.scripttool.fast_hide_button = filter.item({
       .WB_screen .yawf-hide_box ~ .screen_box { margin: -10px 0 0 -37px; position: absolute; }
       .WB_screen .yawf-hide_box ~ .screen_box .W_ficon, .WB_screen .yawf-hide_box .W_ficon { width: 20px; }
       .WB_screen .yawf-hide_box ~ .screen_box .layer_menu_list { right: -4px; }
-    */ }));
+    */ noop(); }));
   }
 }).addto(filter.groups.base);
 
@@ -4708,7 +4721,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
       .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none; }
       .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
       .WB_feed .WB_notes[requesttype="newFeed"] { display: none !important; }
-    */ }));
+    */ noop(); }));
 
     var loadKey = util.keyboard.code.PERIOD;
 
@@ -6260,7 +6273,7 @@ filter.predef.group('layout');
         .gn_search_v2 .placeholder:empty::before { content: ""; }
         .gn_search_v2 .placeholder::before { content: "{{searchBarPlaceholder}}"; display: block; }
         .gn_search_v2 .gn_topmenulist div:first-child:empty ~ * { display: none; }
-    */ })));
+    */ noop(); })));
   });
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
@@ -6305,7 +6318,7 @@ filter.predef.group('layout');
     .WB_vipcover, .WB_starcover { display: none !important; }
     .WB_feed_vipcover .WB_feed_detail { padding-top: 10px; }
     .WB_feed.WB_feed_v3 .WB_feed_vipcover .WB_feed_detail { padding-top: 20px; }
-  */ }));
+  */ noop(); }));
   item('LastPic', 72, function () {
     observer.dom.add(function hideLastPic() {
       var last;
@@ -6431,7 +6444,7 @@ filter.predef.group('layout');
       .PCD_header .shadow { margin: 0 calc(50% - 300px); width: 600px; }
       .PCD_header .pf_intro { height: 36px; line-height: 18px; }
       .PCD_header .pf_opt { margin-top: 8px; }
-    */ }));
+    */ noop(); }));
     observer.dom.add(function fullProfileIntroduction() {
       var intro = document.querySelector('.PCD_header .pf_intro:not([yawf-full-intro])'); if (!intro) return;
       intro.setAttribute('yawf-full-intro', (intro.textContent = intro.getAttribute('title')));
@@ -6760,7 +6773,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       .yawf-WB_left_nav .levmore .W_new{ position:absolute;top:0; right:-1px;}
       .yawf-WB_left_nav .W_scroll_y{ right:0;}
 
-    */ }));
+    */ noop(); }));
 
     // 将左栏的样式改为卡片效果（或改回）
     // 由于左栏样式都加在 .WB_left_nav 上，所以使用 .yawf-WB_left_nav 来躲开这些样式
@@ -7147,7 +7160,7 @@ filter.items.tool.fixed.hide_nav_bar = filter.item({
       .WB_global_nav[{{attr}}]:hover .gn_topmenulist_tips { padding-top: 2px; transition: padding-top ease-in-out 0.1s 0s; }
       .WB_global_nav[{{attr}}] .gn_topmenulist_tips .ficon_close { top: 56px; transition: top ease-in-out 0.1s 0.33s; }
       .WB_global_nav[{{attr}}]:hover .gn_topmenulist_tips .ficon_close { top: 6px; transition: top ease-in-out 0.1s 0s; }
-    */ }).replace(/\/\/.*\n/g, '\n'), { 'attr': attr }));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'), { 'attr': attr }));
   },
 }).addto(filter.groups.tool);
 
@@ -7169,7 +7182,7 @@ filter.items.tool.fixed.fixed_left = filter.item({
       .WB_main_r .WB_main_l { will-change: scroll-position; }
       .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
       body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
-    */ }));
+    */ noop(); }));
     if (filter.items.tool.fixed.hide_nav_bar) util.css.add('.WB_main_r[yawf-fixed] .WB_main_l { top: 10px !important; }');
 
     // 当左侧不够长时，需要滚动条，更新滚动条的状态
@@ -7307,7 +7320,7 @@ filter.items.tool.fixed.fixed_new_feed_tip = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       [yawf-id="home_new_feed_tip"][yawf-fixed], #home_new_feed_tip[yawf-fixed] { display: block; position: fixed; top: 66px; width: 600px; padding-top: 0; z-index: 9998; }
       [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; } 
-    */ }));
+    */ noop(); }));
   }
 }).addto(filter.groups.tool);
 
@@ -7396,189 +7409,6 @@ filter.items.tool.weibotool.clear_def_topic = filter.item({
       }
     };
     observer.dom.add(clearDefTopic);
-  },
-}).addto(filter.groups.tool);
-
-// 表情方便输入
-filter.items.tool.weibotool.fast_emoji = filter.item({
-  'group': 'weibotool',
-  'version': 226,
-  'type': 'boolean',
-  'key': 'weibo.tool.fast_emoji',
-  'text': '{{fastEmojiInput}}',
-  'ref': {
-    'top': { 'type': 'noui', 'default': [null, null, null, null, null, null, null, null, null, null] },
-    'recent': { 'type': 'noui', 'default': [null, null, null, null, null, null, null, null, null, null] },
-  },
-  'shown': function (dom) {
-    var that = this;
-    var clear = dom.appendChild(util.dom.create(util.str.fill(html.fastEmojiClearButton)));
-    clear.addEventListener('click', function () {
-      var nil = [null, null, null, null, null, null, null, null, null, null];
-      that.ref.top.putconf(nil); that.ref.recent.putconf(nil);
-    });
-  },
-  'ainit': function () {
-    var that = this;
-    var onputs = { 'top': null, 'recent': null };
-    // 显示一个表情；聊天窗口里面表情输入的格式和别的地方不一样
-    var createLi = function (item, isIm) {
-      if (!item) return util.dom.create('li', '');
-      var base = isIm ? html.fastEmojiListItemIM : html.fastEmojiListItem;
-      return util.dom.create('ul', util.str.fill(base, item)).firstChild;
-    };
-    // 将列表显示出来
-    var show = function (ul, list, keep, isIm) {
-      /// <param name="ul" type="HTMLUListElement">Description</param>
-      var lis = Array.from(ul.querySelectorAll('li'));
-      var replace = function (i, item) {
-        var n = createLi(item, isIm);
-        ul.replaceChild(n, lis[i]);
-        lis[i] = n;
-      };
-      var name = function (li) { return li.title || null; };
-      var update = keep ?function (list) {
-        // 更新列表，比较差异并尽量少修改已有的排列顺序
-        var ntitle = [], emoji = {}, emptys = [];
-        // 统计有哪些表情还要
-        list.forEach(function (i) {
-          if (!i || !i.title) return;
-          ntitle.push(i.title); emoji[i.title] = i;
-        });
-        // 把不在列表中的删除
-        lis.forEach(function (li, i) {
-          var title = name(li), pos = title ? ntitle.indexOf(title) : -1;
-          if (pos !== -1) ntitle.splice(pos, 1);
-          else if (title) replace(i);
-          if (pos === -1) emptys.push(i);
-        });
-        // 往空位里面塞新的表情
-        ntitle.forEach(function (title) { replace(emptys.shift(), emoji[title]); });
-      } : function (list) {
-        // 更新列表，保证位置的对应关系
-        list.forEach(function (item, i) {
-          if (lis[i].title === (item && item.title || '')) return;
-          replace(i, item);
-        });
-      };
-      update(list);
-      return { 'update': update };
-    };
-    // 从被点击的对象（图片或者列表项）得到表情的相关信息
-    var getEmoji = function (target) {
-      if (util.dom.matches(target, 'li>img')) target = target.parentNode;
-      try {
-        var emoji = {
-          'title': target.title,
-          'text': util.str.parsequery(target.getAttribute('action-data')).insert,
-          'img': target.querySelector('img').src
-        };
-        if (!emoji.title || !emoji.text || !emoji.img) return null;
-        return emoji;
-      } catch (e) { return null; }
-    };
-    // 将某个设置项和显示的界面结合
-    var bindconf = function (list, type, keep, isIm) {
-      onputs[type] = function (conf) { show(list, conf, keep, isIm); };
-      onputs[type](that.ref[type].getconf());
-    };
-    // 从列表中移除重复的项，并保留 10 个
-    var removeDuplicate = function (list) {
-      var rec = {}, ret = [];
-      list.forEach(function (i) {
-        if (!i || i.title in rec) return;
-        ret.push(rec[i.title] = i);
-      });
-      while (ret.length < 10) ret.push(null);
-      return ret.slice(0, 10);
-    };
-    // 在用户点击表情后更新最近使用的表情
-    var updateRecent = function (e) {
-      var emoji = getEmoji(e.target); if (!emoji) return;
-      var recent = [emoji].concat(that.ref.recent.getconf());
-      that.ref.recent.putconf(removeDuplicate(recent).slice(0, 10));
-    };
-    // 在设置修改之后同步到显示上去
-    ['top', 'recent'].forEach(function (type) {
-      util.config.onput(that.ref[type].key, function () {
-        if (onputs[type]) onputs[type].apply(this, arguments);
-      });
-    });
-    // 使用拖拽置顶表情
-    var dragEmoji = function (container, ul) {
-      // 显示和隐藏提示拖拽的标语
-      var notice = container.querySelector('#yawf-face-drop-area');
-      var showNotice = function () { notice.style.display = 'block'; };
-      var hideNotice = function () {
-        notice.style.display = 'none';
-      };
-      // 拖拽
-      var dragging = null, lis;
-      container.addEventListener('dragstart', function (e) {
-        dragging = getEmoji(e.target) || null;
-        // 开始拖拽的时候，标记所有目的地为可编辑的
-        lis = Array.from(ul.childNodes);
-        lis.forEach(function (li) { li.setAttribute('contenteditable', 'true'); });
-        showNotice();
-      });
-      container.addEventListener('mouseleave', function () { dragging = null; });
-      notice.addEventListener('dragenter', function () { hideNotice(); });
-      ul.addEventListener('dragenter', function () { hideNotice(); });
-      container.addEventListener('dragend', function (e) { hideNotice(); });
-      container.addEventListener('drop', function (e) {
-        // 结束拖拽的时候恢复原样
-        if (lis) lis.forEach(function (li) { li.removeAttribute('contenteditable'); }); lis = null;
-        var img_upload = document.querySelector('.send_weibo .img_upload');
-        if (img_upload) img_upload.style.display = 'none';
-        // 然后看看起止都在哪里
-        var current = e.target;
-        if (dragging === null) return;
-        e.preventDefault(); e.stopPropagation();
-        while (current.parentNode !== ul) current = current.parentNode;
-        var index = Array.from(ul.childNodes).indexOf(current);
-        // 把拽到的东西加到置顶里面去
-        var list = that.ref.top.getconf(), old = list[index];
-        list = list.map(function (e) {
-          if (!e) return null;
-          if (e.title === dragging.title) return old;
-          return e;
-        });
-        list[index] = dragging;
-        that.ref.top.putconf(list);
-      });
-      if (that.ref.top.getconf().some(Boolean)) hideNotice();
-    };
-    // 监视新的表情框
-    observer.dom.add(function emojiFastObserver() {
-      var tab = document.querySelector('.layer_faces .WB_minitab:first-child'); if (!tab) return;
-      var container = tab.parentNode;
-      var area = container.insertBefore(util.dom.create(util.str.fill(html.fastEmojiInput)), tab);
-      var lists = Array.from(area.querySelectorAll('[yawf-face] ul'));
-      var chatListNode = container.querySelector('ul[node-type="_phizListNode"]'), isIm =!!chatListNode;
-      bindconf(lists[0], 'top', false, isIm);
-      bindconf(lists[1], 'recent', true, isIm);
-      container.addEventListener('click', updateRecent);
-      dragEmoji(container, lists[0]);
-      if (isIm) fixChat(lists, chatListNode);
-    });
-    // 修理一下聊天窗口里面的情况
-    var fixChat = function (lists, chatListNode) {
-      var bindEvent = function (list) {
-        list.addEventListener('click', function (e) {
-          e.stopPropagation();
-          var target = e.target;
-          if (util.dom.matches(target, 'li img')) target = target.parentNode;
-          if (!target.title) return;
-          // 弄一个假的按钮，放在原本的列表末尾，骗他说我点的是原本的列表里面的
-          var fake = target.cloneNode(true);
-          fake.style.display = 'none';
-          chatListNode.appendChild(fake);
-          fake.click();
-          fake.parentNode.removeChild(fake);
-        });
-      };
-      lists.forEach(bindEvent);
-    };
   },
 }).addto(filter.groups.tool);
 
@@ -7733,24 +7563,102 @@ filter.items.tool.weibotool.view_original = filter.item({
   'key': 'weibo.tool.viewOriginal',
   'text': '{{viewOriginalDesc}}',
   'ainit': function () {
+    var imgPage = util.str.cmt(function () { /*!HTML
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>View Image - YAWF</title>
+        <style>
+          body, #chose { background: #222; }
+          body, body * { -moz-user-select: none; -webkit-user-select: none; user-select: none; margin: 0; padding: 0; }
+          #viwer { background: hsl(0, 0%, 90%); }
+          #viewer.large { width: auto; height: auto; cursor: zoom-out; }
+          #viewer.fit { max-width: calc(100% - 20px); max-height: calc(100% - 20px); cursor: zoom-in; }
+          #container { top: 0; overflow: auto; width: 100vw; height: calc(100vh - 101px); }
+          .single #container, .single #imgarea { height: 100vh; }
+          #imgarea { display: table-cell; vertical-align: middle; text-align: center; width: 100vw; height: calc(100vh - 101px); }
+          #chose { position: fixed; clear: both; width: 100%; bottom: 0; height: 100px; overflow: auto; overflow-x: hidden; border-top: 1px solid #aaa; }
+          .single #chose { display: none; }
+          #chose a { display: block; height: 80px; text-align: center; width: 80px; float: left; margin: 10px; }
+          #chose a:target { outline: 2px solid red; }
+          #chose img { max-height: 80px; max-width: 80px; }
+          @-moz-document url-prefix() {
+            body { background-image: url("chrome://global/skin/media/imagedoc-darknoise.png");  }
+            #viwer { background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png") repeat scroll 0 0; }
+          }
+        </style>
+        <script>
+          var info = {{info}};
+          var url = function (filename, large) {
+            return 'http://' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
+          };
+        </script>
+      </head>
+      <body>
+        <div id="container"><div id="imgarea"><img id="viewer" class="large" /></div></div>
+        <div id="chose"><script>
+          info.filenames.forEach(function (filename, i) {
+            document.write('<a href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
+          });
+        </script></div>
+        <script>
+          function show() {
+            var hashVal = Number(location.hash.slice(1));
+            if (hashVal !== parseInt(hashVal)) return;
+            current = hashVal;
+            viewer.src = '';
+            viewer.src = url(info.filenames[current], true);
+            container.scrollTop = 0;
+          };
+          viewer.onclick = function () {
+            if (viewer.className === 'large') viewer.className = 'fit';
+            else viewer.className = 'large';
+          };
+          window.onhashchange = show;
+          window.onload = show;
+          location.hash = '#' + info.current;
+          if (info.filenames.length === 1) document.body.className += ' single';
+        </script>
+      </body>
+      </html>
+    */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
     // 微博的图片
     var addOriLinkViewImage = function addOriLinkViewImage() {
-      var a = document.querySelector('.WB_detail [action-type="widget_photoview"]:not([yawf-viewori])'), l;
-      if (!a) return; a.setAttribute('yawf-viewori', 'yawf-viewori');
-      var ref;
-      var updateLink = function () {
-        var arg = util.str.parsequery(a.getAttribute('action-data'));
-        if (!arg || !arg.pid || !arg.mid || !arg.uid) return;
-        if (!l) {
-          var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
-          l = vol.querySelector('a');
-          for (ref = a; ref.tagName.toLocaleLowerCase() !== 'li'; ref = ref.parentNode);
-          while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
-        }
-        l.href = util.str.fill(url.view_ori, arg);
+      var a = document.querySelector('.WB_expand_media [action-type="widget_photoview"]:not([yawf-viewori])'), l, ref; if (!a) return;
+      a.setAttribute('yawf-viewori', 'yawf-viewori');
+      var container = a; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
+      var imgs = Array.from(container.querySelectorAll('.choose_box img'));
+      var addLink = function () {
+        var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
+        l = vol.querySelector('a');
+        for (ref = a; ref.tagName.toLocaleLowerCase() !== 'li'; ref = ref.parentNode);
+        while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       };
-      updateLink();
-      (new MutationObserver(updateLink)).observe(a, { 'attributes': true });
+      var setLink = function () {
+        l.href = 'data:text/html,' + encodeURIComponent(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
+      };
+      if (imgs.length) {
+        var info = {
+          'host': util.str.host(imgs[0].src),
+          'filenames': imgs.map(function (img) { return img.src.match(/\/([^\/]*)$/)[1]; })
+        };
+        var updateLink = function () {
+          imgs.forEach(function (img, i) { if (img.parentNode.classList.contains('current')) info.current = i; });
+          if (!l) addLink();
+          setLink();
+        };
+        updateLink();
+        (new MutationObserver(updateLink)).observe(a, { 'attributes': true });
+      } else {
+        addLink();
+        var img = container.querySelector('.artwork_box img');
+        var info = {
+          'host': util.str.host(img.src),
+          'filenames': [img.src.match(/\/([^\/]*)$/)[1]],
+          'current': 0
+        };
+        setLink();
+      }
     };
     // 评论的图片
     var addOriLinkViewCommentImage = function addOriLinkViewCommentImage() {
@@ -7974,6 +7882,192 @@ filter.items.tool.weibotool.replace_link = filter.item({
   },
 }).addto(filter.groups.tool);
 
+// 其他工具
+filter.predef.subtitle('tool', 'othertool', '{{otherToolsTitle}}');
+
+// 表情方便输入
+filter.items.tool.weibotool.fast_emoji = filter.item({
+  'group': 'othertool',
+  'version': 226,
+  'type': 'boolean',
+  'key': 'weibo.tool.fast_emoji',
+  'text': '{{fastEmojiInput}}',
+  'ref': {
+    'top': { 'type': 'noui', 'default': [null, null, null, null, null, null, null, null, null, null] },
+    'recent': { 'type': 'noui', 'default': [null, null, null, null, null, null, null, null, null, null] },
+  },
+  'shown': function (dom) {
+    var that = this;
+    var clear = dom.appendChild(util.dom.create(util.str.fill(html.fastEmojiClearButton)));
+    clear.addEventListener('click', function () {
+      var nil = [null, null, null, null, null, null, null, null, null, null];
+      that.ref.top.putconf(nil); that.ref.recent.putconf(nil);
+    });
+  },
+  'ainit': function () {
+    var that = this;
+    var onputs = { 'top': null, 'recent': null };
+    // 显示一个表情；聊天窗口里面表情输入的格式和别的地方不一样
+    var createLi = function (item, isIm) {
+      if (!item) return util.dom.create('li', '');
+      var base = isIm ? html.fastEmojiListItemIM : html.fastEmojiListItem;
+      return util.dom.create('ul', util.str.fill(base, item)).firstChild;
+    };
+    // 将列表显示出来
+    var show = function (ul, list, keep, isIm) {
+      /// <param name="ul" type="HTMLUListElement">Description</param>
+      var lis = Array.from(ul.querySelectorAll('li'));
+      var replace = function (i, item) {
+        var n = createLi(item, isIm);
+        ul.replaceChild(n, lis[i]);
+        lis[i] = n;
+      };
+      var name = function (li) { return li.title || null; };
+      var update = keep ?function (list) {
+        // 更新列表，比较差异并尽量少修改已有的排列顺序
+        var ntitle = [], emoji = {}, emptys = [];
+        // 统计有哪些表情还要
+        list.forEach(function (i) {
+          if (!i || !i.title) return;
+          ntitle.push(i.title); emoji[i.title] = i;
+        });
+        // 把不在列表中的删除
+        lis.forEach(function (li, i) {
+          var title = name(li), pos = title ? ntitle.indexOf(title) : -1;
+          if (pos !== -1) ntitle.splice(pos, 1);
+          else if (title) replace(i);
+          if (pos === -1) emptys.push(i);
+        });
+        // 往空位里面塞新的表情
+        ntitle.forEach(function (title) { replace(emptys.shift(), emoji[title]); });
+      } : function (list) {
+        // 更新列表，保证位置的对应关系
+        list.forEach(function (item, i) {
+          if (lis[i].title === (item && item.title || '')) return;
+          replace(i, item);
+        });
+      };
+      update(list);
+      return { 'update': update };
+    };
+    // 从被点击的对象（图片或者列表项）得到表情的相关信息
+    var getEmoji = function (target) {
+      if (util.dom.matches(target, 'li>img')) target = target.parentNode;
+      try {
+        var emoji = {
+          'title': target.title,
+          'text': util.str.parsequery(target.getAttribute('action-data')).insert,
+          'img': target.querySelector('img').src
+        };
+        if (!emoji.title || !emoji.text || !emoji.img) return null;
+        return emoji;
+      } catch (e) { return null; }
+    };
+    // 将某个设置项和显示的界面结合
+    var bindconf = function (list, type, keep, isIm) {
+      onputs[type] = function (conf) { show(list, conf, keep, isIm); };
+      onputs[type](that.ref[type].getconf());
+    };
+    // 从列表中移除重复的项，并保留 10 个
+    var removeDuplicate = function (list) {
+      var rec = {}, ret = [];
+      list.forEach(function (i) {
+        if (!i || i.title in rec) return;
+        ret.push(rec[i.title] = i);
+      });
+      while (ret.length < 10) ret.push(null);
+      return ret.slice(0, 10);
+    };
+    // 在用户点击表情后更新最近使用的表情
+    var updateRecent = function (e) {
+      var emoji = getEmoji(e.target); if (!emoji) return;
+      var recent = [emoji].concat(that.ref.recent.getconf());
+      that.ref.recent.putconf(removeDuplicate(recent).slice(0, 10));
+    };
+    // 在设置修改之后同步到显示上去
+    ['top', 'recent'].forEach(function (type) {
+      util.config.onput(that.ref[type].key, function () {
+        if (onputs[type]) onputs[type].apply(this, arguments);
+      });
+    });
+    // 使用拖拽置顶表情
+    var dragEmoji = function (container, ul) {
+      // 显示和隐藏提示拖拽的标语
+      var notice = container.querySelector('#yawf-face-drop-area');
+      var showNotice = function () { notice.style.display = 'block'; };
+      var hideNotice = function () {
+        notice.style.display = 'none';
+      };
+      // 拖拽
+      var dragging = null, lis;
+      container.addEventListener('dragstart', function (e) {
+        dragging = getEmoji(e.target) || null;
+        // 开始拖拽的时候，标记所有目的地为可编辑的
+        lis = Array.from(ul.childNodes);
+        lis.forEach(function (li) { li.setAttribute('contenteditable', 'true'); });
+        showNotice();
+      });
+      container.addEventListener('mouseleave', function () { dragging = null; });
+      notice.addEventListener('dragenter', function () { hideNotice(); });
+      ul.addEventListener('dragenter', function () { hideNotice(); });
+      container.addEventListener('dragend', function (e) { hideNotice(); });
+      container.addEventListener('drop', function (e) {
+        // 结束拖拽的时候恢复原样
+        if (lis) lis.forEach(function (li) { li.removeAttribute('contenteditable'); }); lis = null;
+        var img_upload = document.querySelector('.send_weibo .img_upload');
+        if (img_upload) img_upload.style.display = 'none';
+        // 然后看看起止都在哪里
+        var current = e.target;
+        if (dragging === null) return;
+        e.preventDefault(); e.stopPropagation();
+        while (current.parentNode !== ul) current = current.parentNode;
+        var index = Array.from(ul.childNodes).indexOf(current);
+        // 把拽到的东西加到置顶里面去
+        var list = that.ref.top.getconf(), old = list[index];
+        list = list.map(function (e) {
+          if (!e) return null;
+          if (e.title === dragging.title) return old;
+          return e;
+        });
+        list[index] = dragging;
+        that.ref.top.putconf(list);
+      });
+      if (that.ref.top.getconf().some(Boolean)) hideNotice();
+    };
+    // 监视新的表情框
+    observer.dom.add(function emojiFastObserver() {
+      var tab = document.querySelector('.layer_faces .WB_minitab:first-child'); if (!tab) return;
+      var container = tab.parentNode;
+      var area = container.insertBefore(util.dom.create(util.str.fill(html.fastEmojiInput)), tab);
+      var lists = Array.from(area.querySelectorAll('[yawf-face] ul'));
+      var chatListNode = container.querySelector('ul[node-type="_phizListNode"]'), isIm =!!chatListNode;
+      bindconf(lists[0], 'top', false, isIm);
+      bindconf(lists[1], 'recent', true, isIm);
+      container.addEventListener('click', updateRecent);
+      dragEmoji(container, lists[0]);
+      if (isIm) fixChat(lists, chatListNode);
+    });
+    // 修理一下聊天窗口里面的情况
+    var fixChat = function (lists, chatListNode) {
+      var bindEvent = function (list) {
+        list.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var target = e.target;
+          if (util.dom.matches(target, 'li img')) target = target.parentNode;
+          if (!target.title) return;
+          // 弄一个假的按钮，放在原本的列表末尾，骗他说我点的是原本的列表里面的
+          var fake = target.cloneNode(true);
+          fake.style.display = 'none';
+          chatListNode.appendChild(fake);
+          fake.click();
+          fake.parentNode.removeChild(fake);
+        });
+      };
+      lists.forEach(bindEvent);
+    };
+  },
+}).addto(filter.groups.tool);
+
 if (!function isBJT() {
   // 如果用户使用的是已经是和北京时间一致的时区，那么我们就不提供这个功能了
   // 但是需要注意的是是否在东八区一点需要额外判断是否受到夏令时影响
@@ -7986,7 +8080,7 @@ if (!function isBJT() {
 }()) {
   // 使用本地时区
   filter.items.tool.weibotool.show_local_time = filter.item({
-    'group': 'weibotool',
+    'group': 'othertool',
     'version': 274,
     'type': 'boolean',
     'key': 'weibo.tool.show_local_time',
@@ -8245,7 +8339,7 @@ filter.items.style.text.weibo_large_font = filter.item({
       .WB_feed_expand .WB_text .W_btn_b, .WB_text .W_btn_c, .WB_empty .W_btn_c { height: {{h2}}px !important; line-height: {{h2}}px !important; }
       .WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b *, .WB_text .W_btn_c *, .WB_empty .W_btn_c * { line-height: {{h2}}px !important; font-size: {{fs3}}px !important; }
       .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
-    */ }), this.pref[this.ref.ratio.conf]));
+    */ noop(); }), this.pref[this.ref.ratio.conf]));
   },
 }).addto(filter.groups.style);
 
@@ -8272,9 +8366,9 @@ filter.items.style.layout.avatar_shape = filter.item({
   'ainit': function () {
     util.css.add(this.ref.shape.conf === 'square' ? util.str.cmt(function () { /*!CSS
       .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box { border-radius: 0 !important; }
-    */ }) : util.str.cmt(function () { /*!CSS
+    */ noop(); }) : util.str.cmt(function () { /*!CSS
       img[usercard], .WB_face img { border-radius: 50% !important; } 
-    */ }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8297,7 +8391,7 @@ filter.items.style.layout.dark_nav_bar = filter.item({
       .FRAME_main .WB_global_nav .gn_nav_list li .home em { color: #fa7d3c; }
       .WB_global_nav .S_ficon, .WB_global_nav .S_ficon_dis, .WB_global_nav a.S_ficon_dis:hover, .WB_global_nav a:hover .S_ficon_dis { color: #a6afbf; }
       .WB_global_nav .S_txt1, .WB_global_nav .SW_fun .S_func1 { color: #eee; }
-    */ }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8331,7 +8425,7 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
         .WB_global_nav_us .gn_logo .box .logo, .WB_global_nav_us .gn_logo .box img { display: block; }
         .WB_global_nav .gn_logo .box .logo { margin-left: 0; }
         .WB_global_nav_us .gn_position { margin-right: 0; }
-      */ }));
+      */ noop(); }));
       observer.dom.remove(moveNavList);
     };
     observer.dom.add(moveNavList);
@@ -8450,7 +8544,7 @@ filter.items.style.layout.width_weibo = filter.item({
       }
 
       .send_weibo { background-size: cover; }
-    */ }), {
+    */ noop(); }), {
       'width': width + 'px',
     }));
     // 解决发布框下方的按钮在缩小宽度时排列不完全的问题
@@ -8543,7 +8637,7 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
       body[{{attr}}] #home_new_feed_tip[yawf-fixed], body[{{attr}}] [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px; }
       body[{{attr}}] #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
-    */ }), {
+    */ noop(); }), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
     }));
@@ -8663,7 +8757,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text + .WB_from { margin-top: 1em; }
 
       .WB_feed.WB_feed_v3 .WB_face .opt { margin: 10px 0 0 0; position: static; right: auto; top: auto; }
-    */ }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8729,7 +8823,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_feed_spec_info { float: right; height: 88px; padding: 7px 4px 5px 10px; width: 202px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info { float: none; height: auto; width: auto; padding: 10px 5px 0; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit { font-size: inherit; font-weight: 700; margin: 0 0 6px; }
-    */ }).replace(/\/\/.*\n/g, '\n'));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'));
     if (this.ref.repost.conf) util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_feed_expand .W_arrow_bor { display: block; }
       .WB_feed.WB_feed_v3 .WB_expand_media { margin: 2px 0 8px; padding: 12px 16px 16px; }
@@ -8743,7 +8837,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto; }
       .WB_feed.WB_feed_v3 .layer_view_morepic .view_pic { padding: 0 40px 20px; }
       .WB_feed.WB_feed_v3 .WB_media_view .pic_choose_box .stage_box { width: 440px; }
-    */ }).replace(/\/\/.*\n/g, '\n'));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'));
     // FIXME 八图或九图时，展开后图片列表显示不完整
   },
 }).addto(filter.groups.style);
@@ -8779,7 +8873,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed.WB_feed_v3 .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
       .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
 
-    */ }).replace(/\/\/.*\n/g, '\n'));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'));
   },
 }).addto(filter.groups.style);
 
@@ -8809,7 +8903,7 @@ filter.items.style.sweibo.hover_show_fold = filter.item({
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; }
-    */ }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8871,7 +8965,6 @@ if (function () {
   var keepDif = function (key, defaults) {
     var nums = Array(defaults.length).join().split(',');
     var keys = nums.map(function (_, i) { return key + '.' + (i + 1); });
-    console.log('keys: %o', keys);
     keys.forEach(function (k, i) {
       util.config.onput(k, function (val, oldval) {
         // 设置必须在选项中选择
@@ -8961,7 +9054,7 @@ filter.items.style.color.whitelist_highlight = filter.item({
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; }
-    */ }), { 'color': '' + this.ref.rgba }));
+    */ noop(); }), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.style);
 
@@ -9009,7 +9102,7 @@ filter.items.style.color.color_override = filter.item({
       .WB_tab_a .tab_box_a .tab.clearfix::after { display: none; }
       .WB_tab_a .tab_box_a_r2 .tab li { margin: 0; -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1; }
 
-    */ }), {
+    */ noop(); }), {
       'color1': '' + this.ref.rgba1,
       'color2': '' + this.ref.rgba2,
       'color3': '' + this.ref.rgba3,
@@ -9312,7 +9405,7 @@ wbp.converter.table = function () {
     style('/* 折叠微博颜色 */\n' + util.str.fill(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { color: {{text}}; background-color: {{back}}; border-color: {{text}} }
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { color: #40d040; background-color: #d0ffd0;  border-color: #40d040 }
-    */ }), {
+    */ noop(); }), {
       'text': r.color(color[0]).name,
       'back': r.color(color[1]).name,
     }));
@@ -9973,8 +10066,8 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-whitelistFilterTitle::before { background: #37c837; box-shadow: 0 0 2px #37c837; }
   .yawf-blacklistFilterTitle::before { background: #c83737; box-shadow: 0 0 2px #c83737; }
   .yawf-foldlistFilterTitle::before { background: #c8c837; box-shadow: 0 0 2px #c8c837; }
-  .yawf-configString span { line-height: 16px; width:calc(100% - 56px); margin: -20px 10px 0; padding: 2px 10px; display: block; position: relative; top: 20px; }
-  .yawf-configString textarea.W_input { width: calc(100% - 20px); padding-top: 20px; min-height: 80px; max-height: 400px; resize: vertical; background: linear-gradient(to bottom, #f0f0f0 0px, #f0f0f0 20px, transparent 21px, transparent 100%); background: linear-gradient(to bottom, -moz-dialog 0px, -moz-dialog 20px, transparent 21px, transparent 100%); }
+  .yawf-configString span { line-height: 16px; width: 100%; width:calc(100% - 56px); margin: -20px 10px 0; padding: 2px 10px; display: block; position: relative; top: 20px; }
+  .yawf-configString textarea.W_input { width: 100%; width: calc(100% - 20px); padding-top: 20px; min-height: 80px; max-height: 400px; resize: vertical; background: linear-gradient(to bottom, #f0f0f0 0px, #f0f0f0 20px, transparent 21px, transparent 100%); background: linear-gradient(to bottom, -moz-dialog 0px, -moz-dialog 20px, transparent 21px, transparent 100%); }
   .yawf-configStringsInput, .yawf-configUsersInput { margin: 5px; }
   .yawf-configStringsItems, .yawf-configUsersItems { padding: 5px 10px; line-height: 1em; }
   .yawf-configStringsItem, .yawf-configUsersItem { display: inline-block; margin: 2px; }
@@ -10063,7 +10156,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .WB_feed_together[yawf-sonfold="display"] [node-type="feed_list_wrapForward"] { display: block !important; }
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_seeAll"],
   .WB_feed_together[yawf-sonfold="display"] [action-type="feed_list_foldForward"] { display: none !important; }
-  .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
+  .yawf-range-container { background-color: #f0f0f0; background-color: -moz-dialog; position: relative; display: inline-block; margin-left: -66px; width: 81px; margin-right: -15px; -webkit-transform: rotate(270deg); transform: rotate(270deg); top: -50px; top: calc(-1em - 36px); box-shadow: 0px 12px #f0f0f0, 0px -12px #f0f0f0; box-shadow: 0px 12px -moz-dialog, 0px -12px -moz-dialog; }
   .yawf-link { word-wrap: break-word; }
   // 拖拽
   #yawf-drop-area { background: rgba(251, 251, 216, 1); opacity: 0.8; display: none; height: 230px; left: calc(50% + 260px); position: fixed; width: 230px; z-index: 9999; top: 50px; }
@@ -10100,7 +10193,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
     float: none; width: auto;
   }
-*/ }) + '\n').replace(/\/\/.*\n/g, '\n'), {
+*/ noop(); }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
 util.init(function (valid) {
@@ -10133,7 +10226,7 @@ util.init(function () {
 }, util.priority.FIRST + util.priority.AFTER);
 
 /*!
- * 本脚本使用了以下开源项目：
+ * 本脚本使用了以下开源项目中的代码：
  *
  * 本脚本中使用了眼不见心不烦脚本的部分代码。眼不见心不烦使用 MIT 协议，该脚本的协议如下
  * Copyright (C) 2012-2016, Fang Zhang <zhangfang.thu@gmail.com>
@@ -10146,7 +10239,7 @@ util.init(function () {
 /*!
  * 本脚本使用 MIT 协议
  * The MIT License (MIT)
- * Copyright (c) 2014 田生
+ * Copyright (c) 2014-2016 田生
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
