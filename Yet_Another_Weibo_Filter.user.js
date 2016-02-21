@@ -7609,7 +7609,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         }
         viewer.onclick = function () {
           if (imgarea.className === 'normal') return;
-          if (viewer.className === 'large') viewer.className = 'fit';
+          if (viewer.className === 'large') viewer.className = 'large';
           else viewer.className = 'large';
         };
         window.onhashchange = show;
