@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.339
+// @version           3.6.340
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -47,10 +47,6 @@
 // @connect           ent.v.sina.cn
 // @run-at            document-start
 // ==/UserScript==
-
-// ==OpenUserJS==
-// @unstableMinify Experimental minification supporting, I am not sure if minification may break my script
-// ==/OpenUserJS==
 
 // 字体
 var fonts = {
@@ -7566,60 +7562,63 @@ filter.items.tool.weibotool.view_original = filter.item({
     var imgPage = util.str.cmt(function () { /*!HTML
       <!DOCTYPE html>
       <html>
-      <head>
-        <title>View Image - YAWF</title>
-        <style>
-          body, #chose { background: #222; }
-          body, body * { -moz-user-select: none; -webkit-user-select: none; user-select: none; margin: 0; padding: 0; }
-          #viwer { background: hsl(0, 0%, 90%); }
-          #viewer.large { width: auto; height: auto; cursor: zoom-out; }
-          #viewer.fit { max-width: calc(100% - 20px); max-height: calc(100% - 20px); cursor: zoom-in; }
-          #container { top: 0; overflow: auto; width: 100vw; height: calc(100vh - 101px); }
-          .single #container, .single #imgarea { height: 100vh; }
-          #imgarea { display: table-cell; vertical-align: middle; text-align: center; width: 100vw; height: calc(100vh - 101px); }
-          #chose { position: fixed; clear: both; width: 100%; bottom: 0; height: 100px; overflow: auto; overflow-x: hidden; border-top: 1px solid #aaa; }
-          .single #chose { display: none; }
-          #chose a { display: block; height: 80px; text-align: center; width: 80px; float: left; margin: 10px; }
-          #chose a:target { outline: 2px solid red; }
-          #chose img { max-height: 80px; max-width: 80px; }
-          @-moz-document url-prefix() {
-            body { background-image: url("chrome://global/skin/media/imagedoc-darknoise.png");  }
-            #viwer { background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png") repeat scroll 0 0; }
-          }
-        </style>
-        <script>
-          var info = {{info}};
-          var url = function (filename, large) {
-            return 'http://' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
-          };
-        </script>
-      </head>
-      <body>
-        <div id="container"><div id="imgarea"><img id="viewer" class="large" /></div></div>
-        <div id="chose"><script>
-          info.filenames.forEach(function (filename, i) {
-            document.write('<a href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
-          });
-        </script></div>
-        <script>
-          function show() {
-            var hashVal = Number(location.hash.slice(1));
-            if (hashVal !== parseInt(hashVal)) return;
-            current = hashVal;
-            viewer.src = '';
-            viewer.src = url(info.filenames[current], true);
-            container.scrollTop = 0;
-          };
-          viewer.onclick = function () {
-            if (viewer.className === 'large') viewer.className = 'fit';
-            else viewer.className = 'large';
-          };
-          window.onhashchange = show;
-          window.onload = show;
-          location.hash = '#' + info.current;
-          if (info.filenames.length === 1) document.body.className += ' single';
-        </script>
-      </body>
+      <head><title>View Image - YAWF</title><style>
+        body, #chose { background: #222; }
+        body, body * { -moz-user-select: none; -webkit-user-select: none; user-select: none; margin: 0; padding: 0; }
+        #viewer { background: hsl(0, 0%, 90%); }
+        .normal #viewer { width: auto; height: auto; cursor: auto; }
+        .over #viewer.large { width: auto; height: auto; cursor: zoom-out; }
+        .over #viewer.fit { max-width: 100vw; max-height: calc(100% - 20px); cursor: zoom-in; }
+        #container { top: 0; overflow: auto; width: 100vw; height: calc(100vh - 101px); }
+        .single #container, .single #imgarea { height: 100vh; }
+        #imgarea { display: table-cell; vertical-align: middle; text-align: center; width: 100vw; height: calc(100vh - 101px); }
+        #chose { position: fixed; clear: both; width: 100%; bottom: 0; height: 100px; overflow: auto; overflow-x: hidden; border-top: 1px solid #aaa; }
+        .single #chose { display: none; }
+        #chose a { display: block; height: 80px; text-align: center; width: 80px; float: left; margin: 10px; }
+        #chose a:target { outline: 2px solid red; }
+        #chose img { max-height: 80px; max-width: 80px; }
+        @-moz-document url-prefix() {
+          body { background-image: url("chrome://global/skin/media/imagedoc-darknoise.png");  }
+          #viewer { background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png") repeat scroll 0 0; }
+        }
+      </style><script>
+        var info = {{info}};
+        var url = function (filename, large) {
+          return 'http://' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
+        };
+      </script></head>
+      <body><div id="container"><div id="imgarea"><img id="viewer" class="fit" /></div></div><div id="chose"><script>
+        info.filenames.forEach(function (filename, i) {
+          document.write('<a href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
+        });
+      </script></div><script>
+        function resize() {
+          var width = viewer.naturalWidth;
+          var height = viewer.naturalHeight;
+          if (width > container.clientWidth || height > container.clientHeight) imgarea.className = 'over';
+          else imgarea.className = 'normal';
+        }
+        function show() {
+          var hashVal = Number(location.hash.slice(1));
+          if (hashVal !== parseInt(hashVal)) return;
+          current = hashVal;
+          viewer.src = '';
+          viewer.src = url(info.filenames[current], true);
+          container.scrollTop = 0;
+          container.scrollLeft = 0;
+        }
+        viewer.onclick = function () {
+          if (imgarea.className === 'normal') return;
+          if (viewer.className === 'large') viewer.className = 'fit';
+          else viewer.className = 'large';
+        };
+        window.onhashchange = show;
+        window.onload = show;
+        location.hash = '#' + info.current;
+        if (info.filenames.length === 1) document.body.className = 'single';
+        viewer.onload = function () { setTimeout(resize, 0); };
+        window.onresize = resize;
+      </script></body>
       </html>
     */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
     // 微博的图片
