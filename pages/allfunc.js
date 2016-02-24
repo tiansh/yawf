@@ -14,6 +14,9 @@
 // CONFIG stub
 $CONFIG = { 'uid': '3921589057', 'nick': 'tsh90' };
 
+GM_setValue('whatsnew', 'false');
+GM_setValue('user3921589057config', '{"weibo._yawf_version":1e10}');
+
 // show all functions
 function showAll() {
   GM_addStyle('.no-allfunc { display: none; }');
