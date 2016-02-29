@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.341
+// @version           3.6.342
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -677,7 +677,9 @@ var text = {
   'cardButtonDesc': {
     'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
   },
-  'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接', 'zh-hk': '添加「查看原圖」連結', 'zh-tw': '添加「查看原圖」連結', 'en': 'add "Original Picture" link' },
+  'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}', 'en': 'add "Original Picture" link | which target to {{<open>}}' },
+  'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
+  'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -7562,7 +7564,18 @@ filter.items.tool.weibotool.view_original = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.viewOriginal',
   'text': '{{viewOriginalDesc}}',
+  'ref': {
+    'open': {
+      'type': 'select',
+      'default': 'page',
+      'select': [
+        { 'value': 'page', 'text': '{{viewOriginalPage}}' },
+        { 'value': 'image', 'text': '{{viewOriginalImage}}' },
+      ],
+    }
+  },
   'ainit': function () {
+    var openPage = this.ref.open.conf === 'page';
     var imgPage = util.str.cmt(function () { /*!HTML
       <!DOCTYPE html>
       <html>
@@ -7638,7 +7651,8 @@ filter.items.tool.weibotool.view_original = filter.item({
         while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       };
       var setLink = function () {
-        l.href = 'data:text/html,' + encodeURIComponent(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
+        if (openPage) l.href = 'data:text/html,' + encodeURIComponent(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
+        else l.href = 'http://' + info.host + '/large/' + info.filenames[info.current];
       };
       if (imgs.length) {
         var info = {
