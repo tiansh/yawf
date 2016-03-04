@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.342
+// @version           3.6.343
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -115,6 +115,7 @@ var text = {
   'autoLoadNewWeiboDesc': {
     'zh-cn': '启用该选项可以在显示“有×条新微博”的提示横幅出现前过滤微博，避免提示不希望看到的新微博；但勾选此项会导致在其他移动设备上收不到有新微博的提示。',
   },
+  'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有{{count}}條新微博，點擊查看', 'zh-tw': '有{{count}}條新微博，點擊查看', 'en': '{{count}} new Weibo' },
   // 分组浏览
   'otherGroupTitle': { 'zh-cn': '分组浏览', 'zh-hk': '分組流覽', 'zh-tw': '分組流覽', 'en': 'Browse by Group' },
   'accountByGroup': { 'zh-cn': '分组浏览时禁用按帐号隐藏', 'zh-hk': '分組流覽時禁用按帳號隱藏', 'zh-tw': '分組流覽時禁用按帳號隱藏', 'en': 'Disable hide by account filter when browsing by group' },
@@ -700,7 +701,13 @@ var text = {
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
-  'newWeiboNotify': { 'zh-cn': '有 {{count}} 条新微博，点击查看', 'zh-hk': '有{{count}}條新微博，點擊查看', 'zh-tw': '有{{count}}條新微博，點擊查看', 'en': '{{count}} new Weibo' },
+  'showFeedListPage': { 'zh-cn': '微博首页将“查看更多”按钮替换为翻页按钮', 'zh-hk': '微博首頁將“查看更多”按鈕替換為翻頁按鈕', 'zh-tw': '微博首頁將“查看更多”按鈕替換為翻頁按鈕', 'en': 'Replace home page "View more" button by Previous / Next page buttons' },
+  'showFeedListPageDesc': {
+    'zh-cn': '将首页下方的查看更多替换为上一页/下一页的按钮，点击后页面刷新而不保留已经显示的微博。（可能会导致微音乐播放中断）',
+  },
+  'feedListPagePrev': { 'zh-cn': '上一页', 'zh-hk': '上一頁', 'zh-tw': '上一頁', 'en': 'Previous' },
+  'feedListPageNext': { 'zh-cn': '下一页', 'zh-hk': '下一頁', 'zh-hk': '下一頁', 'en': 'Next' },
+  'feedListPageIndex': { 'zh-cn': '第 {{index}} 页', 'zh-cn': '第 {{index}} 頁', 'en': 'page {{index}}' },
   // 其他
   'otherToolsTitle': { 'zh-cn': '其他', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'Others' },
   'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
@@ -1043,6 +1050,9 @@ var html = {
   // 视频播放
   'videoMediaDisplay': '<div class="WB_expand_media_box" node-type="feed_list_media_disp" style=""><div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div></div>',
   'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
+  // 微博翻页
+  'feedListPage': '<div class="WB_cardwrap S_bg2" node-type="feed_list_page"><div class="W_pages"><a class="page prev S_txt1 S_line1" href="">{{feedListPagePrev}}</a><span class="list"><div style="display: none" class="layer_menu_list W_scroll" action-type="feed_list_page_morelist"><ul></ul></div></span><a class="page S_txt1" href="javascript:void(0)" action-type="feed_list_page_more" action-data="currentPage={{index}}&amp;countPage=10">{{{feedListPageIndex}}}<em class="W_ficon ficon_arrow_down S_ficon">c</em></a><a class="page next S_txt1 S_line1" href="" bpfilter="page">{{feedListPageNext}}</a></div></div>',
+  'feedListPageListItem': '<li><a href="" bpfilter="page"></a></li>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -6684,6 +6694,10 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     var left0 = util.dom.create(html.leftFake);
     left.parentNode.insertBefore(left0, left);
     left.parentNode.removeChild(left);
+    var updateMainAttr = function (side) {
+      if (side && main.getAttribute('yawf-merge-left') !== side) main.setAttribute('yawf-merge-left', side);
+      if (!side && main.hasAttribute('yawf-merge-left')) main.removeAttribute('yawf-merge-left');
+    };
     var positionLeft = function () {
       var ref = document.querySelector('#v6_pl_rightmod_myinfo');
       var right = document.querySelector('.WB_main_r');
@@ -6692,19 +6706,19 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       if (ref) {
         if (ref.nextSibling !== left) {
           ref.parentNode.insertBefore(left, ref.nextSibling);
-          main.setAttribute('yawf-merge-left', side);
+          updateMainAttr(side);
           fixStylish(true);
         }
       } else if (right) {
         if (right.firstChild !== left) {
           right.insertBefore(left, right.firstChild);
-          main.setAttribute('yawf-merge-left', side);
+          updateMainAttr(side);
           fixStylish(true);
         }
       } else {
         if (left0.previousSibling !== left) {
           left0.parentNode.insertBefore(left, left0);
-          main.removeAttribute('yawf-merge-left');
+          updateMainAttr();
           fixStylish(false);
         }
       }
@@ -7638,67 +7652,71 @@ filter.items.tool.weibotool.view_original = filter.item({
       </script></body>
       </html>
     */ 喵 }).split('\n').map(function (x) { return x.trim(); }).join('\n');
-    // 微博的图片
-    var addOriLinkViewImage = function addOriLinkViewImage() {
-      var a = document.querySelector('.WB_expand_media [action-type="widget_photoview"]:not([yawf-viewori])'), l, ref; if (!a) return;
-      a.setAttribute('yawf-viewori', 'yawf-viewori');
-      var container = a; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
+    // 获取图片信息
+    var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
+    var imageUrl = function (info, single) {
+      if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0 };
+      if (openPage && !single) return 'data:text/html,' + encodeURIComponent(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
+      return 'http://' + info.host + '/large/' + info.filenames[info.current];
+    };
+    var getImages = function (ref) {
+      var container = ref; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
       var imgs = Array.from(container.querySelectorAll('.choose_box img'));
-      var addLink = function () {
-        var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
-        l = vol.querySelector('a');
-        for (ref = a; ref.tagName.toLocaleLowerCase() !== 'li'; ref = ref.parentNode);
-        while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
+      if (!imgs.length) imgs = [container.querySelector('.artwork_box img')];
+      return imgs.map(function (img) { return img.src; });
+    };
+    var genInfo = function (imgs) {
+      return {
+        'host': util.str.host(imgs[0]),
+        'filenames': imgs.map(function (img) { return img.match(/\/([^\/]*)$/)[1]; })
       };
-      var setLink = function () {
-        if (openPage) l.href = 'data:text/html,' + encodeURIComponent(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
-        else l.href = 'http://' + info.host + '/large/' + info.filenames[info.current];
-      };
-      if (imgs.length) {
-        var info = {
-          'host': util.str.host(imgs[0].src),
-          'filenames': imgs.map(function (img) { return img.src.match(/\/([^\/]*)$/)[1]; })
-        };
-        var updateLink = function () {
-          imgs.forEach(function (img, i) { if (img.parentNode.classList.contains('current')) info.current = i; });
-          if (!l) addLink();
-          setLink();
-        };
-        updateLink();
-        (new MutationObserver(updateLink)).observe(a, { 'attributes': true });
-      } else {
-        addLink();
-        var img = container.querySelector('.artwork_box img');
-        var info = {
-          'host': util.str.host(img.src),
-          'filenames': [img.src.match(/\/([^\/]*)$/)[1]],
-          'current': 0
-        };
-        setLink();
-      }
+    };
+    var getPid = function (a) {
+      try { return util.str.parsequery(a.getAttribute('action-data')).pid || null; }
+      catch (e) { return null; }
+    };
+    // 添加查看原图的链接
+    var addLink = function (ref) {
+      var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
+      var link = vol.querySelector('a');
+      for (; ref.tagName.toLocaleLowerCase() !== 'li'; ref = ref.parentNode);
+      while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
+      return link;
+    };
+    var updateLink = function (link, info, ref) {
+      var current = info.current || 0, pid = getPid(ref);
+      if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
+      if (!link) link = addLink(ref);
+      var full = { 'host': info.host, 'filenames': info.filenames, 'current': current };
+      link.href = imageUrl(full); link.setAttribute('yawf-img-url', imageUrl(full, true));
+      return link;
+    };
+    var markLink = function (selector) {
+      var a = document.querySelector(selector);
+      if (a) a.setAttribute('yawf-viewori', 'yawf-viewori');
+      return a;
+    };
+    // 处理微博的配图
+    var addOriLinkViewImage = function addOriLinkViewImage() {
+      var a = markLink('.WB_expand_media [action-type="widget_photoview"]:not([yawf-viewori])'); if (!a) return;
+      var link, info = genInfo(getImages(a)), update = function () { link = updateLink(link, info, a); };
+      if (info.filenames.length > 1) (new MutationObserver(update)).observe(a, { 'attributes': true });
+      update();
     };
     // 评论的图片
     var addOriLinkViewCommentImage = function addOriLinkViewCommentImage() {
-      var a = document.querySelector(
+      var a = markLink(
         '[node-type="feed_list_commentList"] [action-type="widget_commentPhotoView"]:not([yawf-viewori]), ' +
         '[node-type="comment_list"] [action-type="widget_commentPhotoView"]:not([yawf-viewori])'
       ); if (!a) return;
-      a.setAttribute('yawf-viewori', '');
-      var arg = util.str.parsequery(a.getAttribute('action-data'));
-      if (!arg || !arg.pid) return;
-      var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
-      var l = vol.querySelector('a');
-      var ref = a.parentNode.parentNode;
-      while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
-      l.href = util.str.fill(url.view_cmt_ori, arg);
+      updateLink(null, genInfo(getImages(a)), a);
     };
     // 转发的评论的图片
     var addOriLinkViewForwardCommentImage = function addOriLinkViewForwardCommentImage() {
-      var a = document.querySelector('.WB_detail [action-type="widget_commentPhotoView"]'); if (!a) return;
-      var arg = util.str.parsequery(a.getAttribute('action-data'));
-      if (!arg || !arg.pid) return;
-      a.href = util.str.fill(url.view_cmt_ori, arg); a.target = '_blank';
-      a.setAttribute('action-type', '');
+      var a = markLink('.WB_text a.W_btn_cardlink[action-type="widget_photoview"]:not([yawf-viewori])'); if (!a) return;
+      var info = { 'host': 'ww2.sinaimg.cn', 'filenames': [getPid(a) + '.jpg']};
+      a.target = '_blank'; updateLink(a, info);
+      a.setAttribute('yawf-action-type', a.getAttribute('action-type')); a.removeAttribute('action-type');
     };
     observer.dom.add(addOriLinkViewImage);
     observer.dom.add(addOriLinkViewCommentImage);
@@ -7896,6 +7914,43 @@ filter.items.tool.weibotool.replace_link = filter.item({
       });
     };
     observer.dom.add(customized);
+  },
+}).addto(filter.groups.tool);
+
+// 查看更多换成上一页下一页
+filter.items.tool.weibotool.feed_list_page = filter.item({
+  'group': 'weibotool',
+  'version': 343,
+  'type': 'boolean',
+  'key': 'weibo.other.feed_list_page',
+  'text': '{{showFeedListPage}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{showFeedListPageDesc}}' } },
+  'ainit': function () {
+    // 这里认为首页可以翻10页微博，老用户不会有问题，新用户我也不知道会怎么样
+    // 第十页因为没有“查看更多”，而这里是“替换”，所以第十页显示不出“上一页”按钮来；虽然我希望这功能可以在第十页用，但是太麻烦了
+    var replaceLoadMore = function replaceLoadMore() {
+      var loadMore = document.querySelector('#v6_pl_content_homefeed div[action-type="fl_loadmore"]'); if (!loadMore) return;
+      var data = util.str.parsequery(loadMore.getAttribute('action-data')), page = Number(data.pre_page);
+      var pathname = location.pathname, search = util.str.parsequery(location.search.slice(1));
+      search.end_id = data.end_id; search.pre_page = data.pre_page;
+      var pageLink = function (page_num) {
+        var searchp = JSON.parse(JSON.stringify(search)); searchp.page = page_num;
+        return pathname + '?' + util.str.toquery(searchp);
+      };
+      var pageListItem = function (page_num, iscur) {
+        var ul = util.dom.create('ul', html.feedListPageListItem), a = ul.querySelector('a'), li = ul.firstChild;
+        a.href = pageLink(page_num); a.textContent = util.str.fill(text.feedListPageIndex, { 'index': '' + page_num });
+        if (iscur) li.classList.add('cur');
+        return li;
+      };
+      var feedListPage = util.dom.create('div', util.str.fill(html.feedListPage, { 'index': '' + page }));
+      var ul = feedListPage.querySelector('ul'), prev = feedListPage.querySelector('.prev'), next = feedListPage.querySelector('.next');
+      for (var i = 1; i <= 10; i++) ul.appendChild(pageListItem(i, i === page));
+      if (page > 1) prev.href = pageLink(page - 1); else prev.parentNode.removeChild(prev);
+      next.href = pageLink(page + 1);
+      loadMore.parentNode.replaceChild(feedListPage, loadMore);
+    };
+    observer.dom.add(replaceLoadMore);
   },
 }).addto(filter.groups.tool);
 
