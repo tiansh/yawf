@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.344
+// @version           3.6.345
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -681,6 +681,7 @@ var text = {
   'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}', 'en': 'add "Original Picture" link | which target to {{<open>}}' },
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
+  'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -701,13 +702,15 @@ var text = {
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
-  'showFeedListPage': { 'zh-cn': '微博首页将“查看更多”按钮替换为翻页按钮', 'zh-hk': '微博首頁將“查看更多”按鈕替換為翻頁按鈕', 'zh-tw': '微博首頁將“查看更多”按鈕替換為翻頁按鈕', 'en': 'Replace home page "View more" button by Previous / Next page buttons' },
+  'showFeedListPage': { 'zh-cn': '将“查看更多”按钮替换为翻页按钮', 'zh-hk': '將“查看更多”按鈕替換為翻頁按鈕', 'zh-tw': '將“查看更多”按鈕替換為翻頁按鈕', 'en': 'Replace "View more" button by Previous / Next page buttons' },
   'showFeedListPageDesc': {
     'zh-cn': '将首页下方的查看更多替换为上一页/下一页的按钮，点击后页面刷新而不保留已经显示的微博。（可能会导致微音乐播放中断）',
   },
   'feedListPagePrev': { 'zh-cn': '上一页', 'zh-hk': '上一頁', 'zh-tw': '上一頁', 'en': 'Previous' },
   'feedListPageNext': { 'zh-cn': '下一页', 'zh-hk': '下一頁', 'zh-hk': '下一頁', 'en': 'Next' },
   'feedListPageIndex': { 'zh-cn': '第 {{index}} 页', 'zh-hk': '第 {{index}} 頁', 'zh-tw': '第 {{index}} 頁', 'en': 'page {{index}}' },
+  'feedListPageIndex1': { 'zh-cn': '第', 'zh-hk': '第', 'zh-tw': '第', 'en': 'page' },
+  'feedListPageIndex2': { 'zh-cn': '页', 'zh-hk': '頁', 'zh-tw': '頁', 'en': '' },
   // 其他
   'otherToolsTitle': { 'zh-cn': '其他', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'Others' },
   'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
@@ -1051,7 +1054,9 @@ var html = {
   'videoMediaDisplay': '<div class="WB_expand_media_box" node-type="feed_list_media_disp" style=""><div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div></div>',
   'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
   // 微博翻页
-  'feedListPage': '<div class="WB_cardwrap S_bg2" node-type="feed_list_page"><div class="W_pages"><a class="page prev S_txt1 S_line1" href="">{{feedListPagePrev}}</a><span class="list"><div style="display: none" class="layer_menu_list W_scroll" action-type="feed_list_page_morelist"><ul></ul></div></span><a class="page S_txt1" href="javascript:void(0)" action-type="feed_list_page_more" action-data="currentPage={{index}}&amp;countPage=10">{{{feedListPageIndex}}}<em class="W_ficon ficon_arrow_down S_ficon">c</em></a><a class="page next S_txt1 S_line1" href="" bpfilter="page">{{feedListPageNext}}</a></div></div>',
+  'feedListPage': '<div class="WB_cardwrap S_bg2" node-type="feed_list_page"><div class="W_pages"><a class="page prev S_txt1 S_line1" href="">{{feedListPagePrev}}</a>{{{pages}}}<a class="page next S_txt1 S_line1" href="" bpfilter="page">{{feedListPageNext}}</a></div></div>',
+  'feedListChose': '<span class="list"><div style="display: none" class="layer_menu_list W_scroll" action-type="feed_list_page_morelist"><ul></ul></div></span><a class="page S_txt1" href="javascript:void(0)" action-type="feed_list_page_more" action-data="currentPage={{index}}&amp;countPage={{count}}">{{{feedListPageIndex}}}<em class="W_ficon ficon_arrow_down S_ficon">c</em></a>',
+  'feedListInput': '<span class="page S_txt1"><form method="get"><label>{{feedListPageIndex1}}<input type="number" value="{{index}}" min="1" class="W_input yawf-pageInput" id="yawf-pageInput">{{feedListPageIndex2}}</label><a class="W_ficon ficon_arrow_right S_ficon gotopage">a</a></form></span>',
   'feedListPageListItem': '<li><a href="" bpfilter="page"></a></li>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
@@ -1147,7 +1152,10 @@ util.browser = {};
 // 一些兼容性代码
 // Array.from 
 if (!Array.from) Array.from = function () { var r = Object.prototype.toString, n = function (n) { return "function" == typeof n || "[object Function]" === r.call(n) }, t = function (r) { var n = +r; return isNaN(n) ? 0 : 0 !== n && isFinite(n) ? (n > 0 ? 1 : -1) * Math.floor(Math.abs(n)) : n }, e = Math.pow(2, 53) - 1, o = function (r) { var n = t(r); return Math.min(Math.max(n, 0), e) }; return function (r) { var t = this, e = Object(r); if (null == r) throw new TypeError("Array.from requires an array-like object - not null or undefined"); var a, i = arguments.length > 1 ? arguments[1] : void 0; if (void 0 !== i) { if (!n(i)) throw new TypeError("Array.from: when provided, the second argument must be a function"); arguments.length > 2 && (a = arguments[2]) } for (var u, f = o(e.length), c = n(t) ? Object(new t(f)) : Array(f), h = 0; f > h;) u = e[h], c[h] = i ? void 0 === a ? i(u, h) : i.call(a, u, h) : u, h += 1; return c.length = f, c } }();
-// 检查是否是 Firefox 浏览器，部分特性不支持其他浏览器
+// Object.assign
+if (!Object.assign) Object.assign = function (n) { "use strict"; if (void 0 === n || null === n) throw new TypeError("Cannot convert undefined or null to object"); for (var r = Object(n), t = 1; t < arguments.length; t++) { var e = arguments[t]; if (void 0 !== e && null !== e) for (var o in e) e.hasOwnProperty(o) && (r[o] = e[o]) } return r };
+
+// 检查是否是 Firefox 浏览器
 util.browser.fx = {};
 util.browser.fx.version = (function () {
   var m = navigator.userAgent.match(/^Mozilla\/5\.0 \([^)]+; rv:([\d.]+)\) Gecko\/[\d]{8} Firefox\/[\d.]+$/);
@@ -7593,7 +7601,7 @@ filter.items.tool.weibotool.view_original = filter.item({
     var imgPage = util.str.cmt(function () { /*!HTML
       <!DOCTYPE html>
       <html>
-      <head><title>View Image - YAWF</title><style>
+      <head><meta charset="UTF-8" /><title>{{viewOriginalTitle}}</title><style>
         body, #chose { background: #222; }
         body, body * { -moz-user-select: none; -webkit-user-select: none; user-select: none; margin: 0; padding: 0; }
         #viewer { background: hsl(0, 0%, 90%); }
@@ -7656,7 +7664,7 @@ filter.items.tool.weibotool.view_original = filter.item({
     var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
     var imageUrl = function (info, single) {
       if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0 };
-      if (openPage && !single) return 'data:text/html,' + encodeURIComponent(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
+      if (openPage && !single) return 'data:text/html;base64,' + util.str.base64(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
       return 'http://' + info.host + '/large/' + info.filenames[info.current];
     };
     var getImages = function (ref) {
@@ -7929,12 +7937,13 @@ filter.items.tool.weibotool.feed_list_page = filter.item({
     // 这里认为首页可以翻10页微博，老用户不会有问题，新用户我也不知道会怎么样
     // 第十页因为没有“查看更多”，而这里是“替换”，所以第十页显示不出“上一页”按钮来；虽然我希望这功能可以在第十页用，但是太麻烦了
     var replaceLoadMore = function replaceLoadMore() {
-      var loadMore = document.querySelector('#v6_pl_content_homefeed div[action-type="fl_loadmore"]'); if (!loadMore) return;
+      var loadMore = document.querySelector('div[action-type="fl_loadmore"]'); if (!loadMore) return;
       var data = util.str.parsequery(loadMore.getAttribute('action-data')), page = Number(data.pre_page);
       var pathname = location.pathname, search = util.str.parsequery(location.search.slice(1));
-      search.end_id = data.end_id; search.pre_page = data.pre_page;
+      Object.assign(search, data);
       var pageLink = function (page_num) {
-        var searchp = JSON.parse(JSON.stringify(search)); searchp.page = page_num;
+        var searchp = Object.assign({}, search, { 'page': '' + page_num });
+        if (Number(page_num) === 1) delete searchp.end_id, delete searchp.pre_page, delete searchp.page;
         return pathname + '?' + util.str.toquery(searchp);
       };
       var pageListItem = function (page_num, iscur) {
@@ -7943,14 +7952,31 @@ filter.items.tool.weibotool.feed_list_page = filter.item({
         if (iscur) li.classList.add('cur');
         return li;
       };
-      var feedListPage = util.dom.create('div', util.str.fill(html.feedListPage, { 'index': '' + page }));
-      var ul = feedListPage.querySelector('ul'), prev = feedListPage.querySelector('.prev'), next = feedListPage.querySelector('.next');
-      for (var i = 1; i <= 10; i++) ul.appendChild(pageListItem(i, i === page));
+
+      var count_page = util.dom.matches(loadMore, '#v6_pl_content_homefeed *') ? 10 : null; // FIXME WQNMLGB
+
+      var feedListPage = util.dom.create('div', util.str.fill(html.feedListPage, {
+        'index': '' + page, 'count': '' + count_page, 'pages': count_page ? html.feedListChose : html.feedListInput,
+      }));
+      var prev = feedListPage.querySelector('.prev'), next = feedListPage.querySelector('.next');
+
+      if (count_page) {
+        var ul = feedListPage.querySelector('ul'), chose = feedListPage.querySelector('.list + .page');
+        for (var i = 1; i <= count_page; i++) ul.appendChild(pageListItem(i, i === page));
+      } else {
+        var form = feedListPage.querySelector('form'), input = feedListPage.querySelector('input'), gotopage = feedListPage.querySelector('.gotopage');
+        form.addEventListener('submit', function (e) { e.preventDefault(); e.stopPropagation(); location.href = pageLink(input.value); });
+        input.addEventListener('change', function (e) { gotopage.href = pageLink(input.value); });
+        input.value = page; gotopage.href = pageLink(input.value);
+      }
+
       if (page > 1) prev.href = pageLink(page - 1); else prev.parentNode.removeChild(prev);
       next.href = pageLink(page + 1);
+
       loadMore.parentNode.replaceChild(feedListPage, loadMore);
     };
     observer.dom.add(replaceLoadMore);
+    util.css.add('.yawf-pageInput { vertical-align: baseline; width: 4em; height: 20px; }')
   },
 }).addto(filter.groups.tool);
 
@@ -8279,7 +8305,7 @@ if (!function isBJT() {
 filter.predef.group('style');
 
 // 一个带有颜色/透明度的选框项
-filter.ref.rgba = function (defcolor, deft, color, transparency, rgba, base) {
+filter.ref.rgba = function (defcolor, deft, color, transparency, rgba) {
   var _color = {
     'type': 'color',
     'default': defcolor || '#000000',
@@ -8290,7 +8316,7 @@ filter.ref.rgba = function (defcolor, deft, color, transparency, rgba, base) {
     'min': 0,
     'max': 100,
   };
-  base = base || {};
+  var base = {};
   base[color || 'color'] = _color;
   base[transparency || 'transparency'] = _transparency;
   base[rgba || 'rgba'] = {
@@ -9137,11 +9163,12 @@ filter.items.style.color.color_override = filter.item({
   'type': 'boolean',
   'key': 'weibo.tool.color_override',
   'text': '{{colorOverride}}',
-  'ref': filter.ref.rgba('#f6f6f6', 30, 'color1', 'transparency1', 'rgba1',
-    filter.ref.rgba('#ffffff', 30, 'color2', 'transparency2', 'rgba2',
-    filter.ref.rgba('#ffffff', 30, 'color3', 'transparency3', 'rgba3', {
-      'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{colorOverrideDesc}}' },
-    }))),
+  'ref': Object.assign({},
+    filter.ref.rgba('#f6f6f6', 30, 'color1', 'transparency1', 'rgba1'),
+    filter.ref.rgba('#ffffff', 30, 'color2', 'transparency2', 'rgba2'),
+    filter.ref.rgba('#ffffff', 30, 'color3', 'transparency3', 'rgba3'),
+    { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{colorOverrideDesc}}' } }
+  ),
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body .S_bg1, body .SW_fun_bg:hover, body .SW_fun_bg_active { background-color: {{color1}}; }
