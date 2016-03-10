@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.347
+// @version           3.6.348
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -437,7 +437,7 @@ var text = {
   'commentEmojiTypesDesc': { 'zh-cn': '隐藏表情|种类超过{{<number>}}种的评论', 'zh-hk': '隱藏表情|種類超過{{<number>}}種的評論', 'zh-tw': '隱藏表情|種類超過{{<number>}}種的評論', 'en': 'Hide comments | with more than {{<number>}} kinds of emoji' },
   'commentWithOutContentDesc': { 'zh-cn': '隐藏没有内容的评论（只有表情、提到等）', 'zh-hk': '隱藏沒有內容的評論（只有表情、提到等）', 'zh-tw': '隱藏沒有內容的評論（只有表情、提到等）', 'en': 'Comments without any text content (only mentions and emoji)' },
   'commentWithForwardDesc': { 'zh-cn': '隐藏含有转发消息的微博', 'zh-hk': '隱藏含有轉發消息的微博', 'zh-tw': '隱藏含有轉發消息的微博', 'en': 'Comments contains forwarded messages' },
-  'commentWithPictureDesc': { 'zh-cn': '带有图片的评论|{{<act>}}', 'zh-hk': '帶有圖片的評論|{{<act>}}', 'zh-tw': '帶有圖片的評論|{{<act>}}', 'en': 'Comments with picture | {{<act>}}' },
+  'commentWithPicture': { 'zh-cn': '带有图片的评论|{{<act>}}', 'zh-hk': '帶有圖片的評論|{{<act>}}', 'zh-tw': '帶有圖片的評論|{{<act>}}', 'en': 'Comments with picture | {{<act>}}' },
   'commentWithPictureHide': { 'zh-cn': '隐藏评论', 'zh-hk': '隱藏評論', 'zh-tw': '隱藏評論', 'en': 'Hide comment' },
   'commentWithPictureFold': { 'zh-cn': '使用查看图片按钮替换缩略图', 'zh-hk': '使用查看圖片按鈕替換縮圖', 'zh-tw': '使用查看圖片按鈕替換縮圖', 'en': 'Replace thumbnail with "View Pictrue" button' },
   'deleteCommentHidden': { 'zh-cn': '如果权限允许自动删除被隐藏的评论{{<i>}}', 'zh-hk': '如果權限允許自動刪除被隱藏的評論{{<i>}}', 'zh-tw': '如果權限允許自動刪除被隱藏的評論{{<i>}}', 'en': 'Automatically delete hidden comments if permission allowed {{<i>}}' },
@@ -1053,7 +1053,7 @@ var html = {
   'hideBoxSimple': '<div class="yawf-hide_box"><a href="javascript:void(0);" title="{{hideThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   // 查看原图
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
-  'viewOriginalFCLink': '<a class="W_btn_b btn_22px W_btn_cardlink" href="javascript:;"><i class="W_ficon ficon_cd_img S_ficon WBficon">¡</i><i class="W_vline S_line1"></i><em class="W_autocut S_link1">{{viewOriginalFCText}}</em></a>',
+  'viewOriginalFCLink': '<a imagecard="pid={{pid}}" href="javascript:void(0);"><i class="W_ficon ficon_cd_img WBficon">¡</i>{{viewOriginalFCText}}</a>',
   // 视频播放
   'videoMediaDisplay': '<div class="WB_expand_media_box" node-type="feed_list_media_disp" style=""><div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div></div>',
   'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
@@ -1085,8 +1085,6 @@ var html = {
   'navLogo': '<span class="logo"></span>',
   // 来自 微博 weibo.com
   'weiboViaWeiboCom': '<a rel="nofollow" href="http://weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
-  // 在卡片链接中显示按钮上的文本
-  'cardLinkButton': '<span class="yawf-cardLinkButton W_btn_icon"><em class="W_autocut S_link1">{{text}}</em><i class="W_vline S_line1_c">|</i></span>',
 };
 
 var fill = {
@@ -5696,7 +5694,7 @@ filter.items.other.hidethese_content.appitem= filter.item({
     if (!this.conf) return null;
     if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="1042005-appItem"]'))
       return 'hidden';
-    if (feed.querySelector('a.W_btn_cardlink[yawf-link-type="S"]'))
+    if (feed.querySelector('a[yawf-link-type="S"]'))
       return 'hidden';
     return null;
   },
@@ -6153,7 +6151,7 @@ filter.items.comment.otherc.with_picture = filter.item({
   'version': 223,
   'type': 'boolean',
   'key': 'weibo.comment.with_picture',
-  'text': '{{commentWithPictureDesc}}',
+  'text': '{{commentWithPicture}}',
   'ref': {
     'act': {
       'type': 'select',
@@ -6169,8 +6167,9 @@ filter.items.comment.otherc.with_picture = filter.item({
     var media = comment.querySelector('.WB_media_wrap'); if (!media) return null;
     var img = media.querySelector('li[action-type="comment_media_img"] img');
     if (this.ref.act.conf === 'hidden') return 'hidden';
+    var pid = img.src.match(/\/([^\/]*)\.[^\/]*$/)[1];
     var text = comment.querySelector('.WB_text');
-    var a = util.dom.create(util.str.fill(html.viewOriginalFCLink));
+    var a = util.dom.create(util.str.fill(html.viewOriginalFCLink, { 'pid': pid }));
     media.setAttribute('yawf-cmt-img', 'hidden');
     a.addEventListener('click', function () { img.click(); });
     text.appendChild(a);
@@ -7553,7 +7552,7 @@ filter.items.tool.weibotool.card_button = filter.item({
     };
     var fixButton = function (feed) {
       if (fixed.indexOf(feed) !== -1) return; fixed.push(feed);
-      var links = Array.from(feed.querySelectorAll('.W_btn_cardlink[action-type="feed_list_url"], .yawf-link[action-type="feed_list_url"]'));
+      var links = Array.from(feed.querySelectorAll('[action-type="feed_list_url"]'));
       var buttons = Array.from(feed.querySelectorAll('.media_box [exp-data*="key=tblog_weibocard"] .W_fr .W_btn_a'));
       var ttarticles = Array.from(feed.querySelectorAll('.media_box [action-type="widget_articleLayer"]'));
       // 每个链接，检查是否有对应的按钮
@@ -7589,12 +7588,8 @@ filter.items.tool.weibotool.card_button = filter.item({
           e.stopPropagation(); e.preventDefault();
           target.click();
         });
-        var text = target === button ? button.textContent : '';
-        if (text) {
-          var linktext = util.dom.create(util.str.fill(html.cardLinkButton, { 'text': text }));
-          var span = link.querySelector('.W_autocut');
-          if (span) span.insertBefore(linktext, span.firstChild);
-        }
+        var text = target === button ? button.textContent : null;
+        if (text) link.insertBefore(document.createTextNode('[' + text + ']'), link.querySelector('.W_ficon').nextSibling);
       });
     };
     observer.weibo.after(fixButton);
@@ -7743,7 +7738,7 @@ filter.items.tool.weibotool.view_original = filter.item({
     };
     // 转发的评论的图片
     var addOriLinkViewForwardCommentImage = function addOriLinkViewForwardCommentImage() {
-      var a = markLink('.WB_text a.W_btn_cardlink[action-type="widget_photoview"]:not([yawf-viewori])'); if (!a) return;
+      var a = markLink('.WB_text a[action-type="widget_photoview"]:not([yawf-viewori])'); if (!a) return;
       var info = { 'host': 'ww2.sinaimg.cn', 'filenames': [getPid(a) + '.jpg']};
       a.target = '_blank'; updateLink(a, info);
       a.setAttribute('yawf-action-type', a.getAttribute('action-type')); a.removeAttribute('action-type');
@@ -7845,7 +7840,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
   },
   'mark': function markLinkType() {
     // 标记每个链接都是什么类型的，方便过滤和处理
-    var icon = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink:not([yawf-link-type])>.W_ficon'));
+    var icon = Array.from(document.querySelectorAll('.WB_feed_type a:not([yawf-link-type]) > .W_ficon:first-child'));
     icon.forEach(function (i) { i.parentNode.setAttribute('yawf-link-type', i.textContent.trim()); });
   },
   'init': function () {
@@ -7860,7 +7855,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
     var title = conf === 'title';
     var expandLink = function expandWeiboLink() {
       that.mark();
-      var links = Array.from(document.querySelectorAll('.WB_feed_type a.W_btn_cardlink[yawf-link-type="O"]:not([yawf-link-expand])'));
+      var links = Array.from(document.querySelectorAll('.WB_feed_type a[yawf-link-type="O"]:not([yawf-link-expand])'));
       links.forEach(function (link) {
         link.setAttribute('yawf-link-expand', '');
         // 用原本的链接做默认值，原本的链接可能是完整的，也可能不是
@@ -7877,11 +7872,7 @@ filter.items.tool.weibotool.replace_link = filter.item({
           var resurl = util.str.parsequery(tempa.search.slice(1)).url;
           if (resurl) url = resurl;
         }
-        // 处理按钮什么的
-        var button = link.querySelector('.yawf-cardLinkButton');
-        if (!button) link.textContent = url;
-          // 特殊处理替换卡片按钮的标题
-        else link.textContent = button.textContent + url;
+        link.textContent = url;
         link.className = 'yawf-link';
       });
     };
@@ -7975,7 +7966,7 @@ filter.items.tool.weibotool.feed_list_page = filter.item({
         return li;
       };
 
-      var count_page = util.dom.matches(loadMore, '#v6_pl_content_homefeed *') ? 10 : null; // FIXME WQNMLGB
+      var count_page = util.dom.matches(loadMore, '#v6_pl_content_homefeed *') ? 10 : null;
 
       var feedListPage = util.dom.create('div', util.str.fill(html.feedListPage, {
         'index': '' + page, 'count': '' + count_page, 'pages': count_page ? html.feedListChose : html.feedListInput,
