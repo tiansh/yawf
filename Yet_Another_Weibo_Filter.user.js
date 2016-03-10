@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.345
+// @version           3.6.346
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -320,6 +320,10 @@ var text = {
   'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博{{<i>}}', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity{{<i>}}' },
   'taobaoTianmaoWeiboDesc': {
     'zh-cn': '带有<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tb"></i></span><span class="W_autocut">淘宝商品</span></span>、<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_tmall"></i></span><span class="W_autocut">天猫商品</span></span>或<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon icon_cd_ju"></i></span><span class="W_autocut">聚划算商品</span></span>的微博',
+  },
+  'weiboPayGift': { 'zh-cn': '带有微博支付积分礼品兑换卡片的微博{{<i>}}', 'zh-hk': '帶有微博支付積分禮品兌換卡片的微博{{<i>}}', 'zh-tw': '帶有微博支付積分禮品兌換卡片的微博{{<i>}}', 'en': 'Weibo with Weibo pay with points gift exchange card{{<i>}}' },
+  'weiboPayGiftDesc': {
+    'zh-cn': '微博支付积分指通过在微博中消费（如购买会员）产生的积分，并非微博等级经验值，可以用于兑换礼品（礼品一般是优惠券或抽奖）。勾选本选项以隐藏带有此类兑换信息的卡片的微博。',
   },
   'insertFeedFilter': { 'zh-cn': '插入到消息流中的微博（如好友赞过的微博等）{{<i>}}', 'zh-hk': '插入到消息流中的微博（如好友贊過的微博等）{{<i>}}', 'zh-tw': '插入到消息流中的微博（如好友贊過的微博等）{{<i>}}', 'en': 'Inserted Weibo in feed list{{<i>}}' },
   'insertFeedFilterDesc': {
@@ -5551,6 +5555,22 @@ filter.items.other.hidethese_ad.tb_tm_wb = filter.item({
   },
 }).addto(filter.groups.other);
 
+// 微博支付积分兑换
+filter.items.other.hidethese_ad.weibo_pay_gift= filter.item({
+  'group': 'hidethese_content',
+  'version': 346,
+  'type': 'boolean',
+  'key': 'weibo.other.weibo_pay_gift',
+  'text': '{{weiboPayGift}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{weiboPayGiftDesc}}' } },
+  'rule': function weiboPayGift(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('div[action-data*="objectid=1042025:"]')) return 'hidden';
+    if (feed.querySelector('a[suda-uatrack*="1042025-webpage"]')) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
 // 被插入的消息
 filter.items.other.hidethese_ad.insert_feed = filter.item({
   'group': 'hidethese_ad',
@@ -5647,7 +5667,7 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
 }).addto(filter.groups.other);
 
 // 抢红包微博
-filter.items.other.hidethese_content.tb_tm_wb = filter.item({
+filter.items.other.hidethese_content.redpack = filter.item({
   'group': 'hidethese_content',
   'version': 305,
   'type': 'boolean',
@@ -6409,7 +6429,7 @@ filter.predef.group('layout');
   item('Shield', 294, '.screen_box .layer_menu_list a[action-type="feed_list_shield_novip"] { display: none !important; }');
   item('UseCardBackground', 294, '.screen_box .layer_menu_list a[action-type="fl_cardCover"] { display: none !important; }');
 
-  // 处理微博按钮的平均分布
+  // 标记微博按钮
   observer.weibo.onload(function (feed) {
     var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
     li.forEach(function (li) {
@@ -9548,6 +9568,7 @@ wbp.converter.table = function () {
   d('filterHot', 'weibo.other.fans_top'); // 屏蔽热门微博（粉丝头条）
   n(null, 'weibo.other.product_card');
   d('filterTaobao', 'weibo.other.tb_tm_wb'); // 屏蔽带有 淘宝商品 或 天猫商品 的微博 // ⚠️ YAWF还会过滤 聚划算商品 但是至今未见过聚划算商品
+  n(null, 'weibo.other.weibo_pay_gift');
   d('filterLiked', 'weibo.other.insert_feed'); // 屏蔽好友赞过的微博
   m('TimelineMods', 'weibo.other.fake_weibo'); // 时间线嵌入模块（好友关注等）
   d('filterDeleted', 'weibo.other.deleted_forward'); // 屏蔽已删除微博的转发
@@ -10286,7 +10307,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #v6_pl_rightmod_myinfo:empty { hegiht: 156px; }
   // 切换视图
   body #yawf-weibo-only { float: right; height: 38px; width: 80px; line-height: 38px; text-align: center; }
-  // v6 微博按钮的平均分布
+  // 微博按钮的平均分布
   body .WB_handle ul {
     display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
     display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
