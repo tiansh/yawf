@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.6.349
+// @version           3.7.350
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -277,13 +277,13 @@ var text = {
   // 超链接
   'hyperlinkFilterGroupTitle': { 'zh-cn': '链接', 'zh-hk': '連結', 'zh-tw': '連結', 'en': 'Link' },
   'hyperlinkFilterDesc': { 'zh-cn': '超链接', 'zh-hk': '超連結', 'zh-tw': '超連結', 'en': 'Hyperlink' },
-  'hyperlinkFilterDetails': { 'zh-cn': '包含指向以下网站的超链接的微博', 'zh-hk': '包含指向以下站點的超連結的微博', 'zh-tw': '包含指向以下站點的超連結的微博', 'en': 'Weibo with hyperlink to these website' },
+  'hyperlinkFilterDetails': { 'zh-cn': '包含以下超链接的微博', 'zh-hk': '包含以下超連結的微博', 'zh-tw': '包含以下超連結的微博', 'en': 'Weibo with these hyperlinks' },
   'hyperlinkFilterDetailsDesc': {
-    'zh-cn': '如果将鼠标指向链接可以显示链接的地址，则会试图使用该地址匹配。子串匹配。'
+    'zh-cn': '匹配微博的短链接，子串匹配。'
   },
-  'hyperlinkFilterFast': { 'zh-cn': '包含链接到“{{host}}”地址链接的微博', 'zh-hk': '包含鏈接到「{{host}}」位址連結的微博', 'zh-tw': '包含鏈接到「{{host}}」位址連結的微博', 'en': 'Weibo contains hyperlink to "{{host}}"' },
+  'hyperlinkFilterFast': { 'zh-cn': '包含链接到“{{url}}”地址链接的微博', 'zh-hk': '包含鏈接到「{{url}}」位址連結的微博', 'zh-tw': '包含鏈接到「{{url}}」位址連結的微博', 'en': 'Weibo contains hyperlink to "{{url}}"' },
   'hyperlinkFilterContextMenuGroup': { 'zh-cn': '链接到', 'zh-hk': '鏈接到', 'zh-tw': '鏈接到', 'en': 'hyperlink to' },
-  'hyperlinkFilterContextMenu': { 'zh-cn': '{{host}}', 'zh-hk': '{{host}}', 'zh-tw': '{{host}}', 'en': '{{host}}' },
+  'hyperlinkFilterContextMenu': { 'zh-cn': '{{url}}', 'zh-hk': '{{url}}', 'zh-tw': '{{url}}', 'en': '{{url}}' },
   'hyperlinkFilterReason': { 'zh-cn': '因链接到“{{detail}}”', 'zh-hk': '因連結到「{{detail}}」', 'zh-tw': '因連結到「{{detail}}」', 'en': 'because it contains hyperlink to "{{detail}}" ' },
   // 链接标题
   'linktitleFilterDesc': { 'zh-cn': '标题', 'zh-hk': '標題', 'zh-tw': '標題', 'en': 'Title' },
@@ -682,7 +682,7 @@ var text = {
   'cardButtonDesc': {
     'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
   },
-  'viewOriginalDesc': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}', 'en': 'add "Original Picture" link | which target to {{<open>}}' },
+  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}', 'en': 'add "Original Picture" link | which target to {{<open>}}' },
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
@@ -693,10 +693,7 @@ var text = {
   'foldDetails': { 'zh-cn': '收起', 'zh-hk': '收起', 'zh-tw': '收起', 'en': '收起'/* as is */ },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
-  'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为|{{<url>}}', 'zh-hk': '將微博中的网页链接替換為|{{<url>}}', 'zh-tw': '將微博中的网页链接替換為|{{<url>}}', 'en': 'Replace 网页链接 in Weibo by | {{<url>}}' },
-  'replaceLinkByShortUrl': { 'zh-cn': '短网址', 'zh-hk': '短網址', 'zh-tw': '短網址', 'en': 'shortened URL' },
-  'replaceLinkByFullUrl': { 'zh-cn': '完整网址或短网址', 'zh-hk': '完整網址或短網址', 'zh-tw': '完整網址或短網址', 'en': 'full URL or shortened URL' },
-  'replaceLinkByTitleUrl': { 'zh-cn': '完整网址或标题文本', 'zh-hk': '完整網址或標題文本', 'zh-tw': '完整網址或標題文本', 'en': 'full URL or description' },
+  'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为短网址', 'zh-hk': '將微博中的网页链接替換為短網址', 'zh-tw': '將微博中的网页链接替換為短網址', 'en': 'Replace 网页链接 in Weibo by shortened URL' },
   'replaceImageEmoji': { 'zh-cn': '将微博中图片表示的 Unicode 表情符号替换为文本{{<i>}}', 'zh-hk': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'zh-tw': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'en': 'Use text for unicode emoji instead of image {{<i>}}' },
   'replaceImageEmojiDesc': {
     'zh-cn': '使用文本替换对应图片。表情会随您使用的操作系统、浏览器、安装的字体的不同而显示成不的样子。Firefox 和 Safari 可以得到较好的效果。<hr />替换前 <span style="font-size: 20px"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8192.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8098.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84b2.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8cac.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8992.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee888b.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84ad.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee9493.png"></span><br />替换后 <span style="font-size: 20px">🐶⚽️🏁💛⚠️📶🀄️🇨🇳</span>'
@@ -711,7 +708,7 @@ var text = {
     'zh-cn': '将首页下方的查看更多替换为上一页/下一页的按钮，点击后页面刷新而不保留已经显示的微博。（可能会导致微音乐播放中断）',
   },
   'feedListPagePrev': { 'zh-cn': '上一页', 'zh-hk': '上一頁', 'zh-tw': '上一頁', 'en': 'Previous' },
-  'feedListPageNext': { 'zh-cn': '下一页', 'zh-hk': '下一頁', 'zh-hk': '下一頁', 'en': 'Next' },
+  'feedListPageNext': { 'zh-cn': '下一页', 'zh-hk': '下一頁', 'zh-tw': '下一頁', 'en': 'Next' },
   'feedListPageIndex': { 'zh-cn': '第 {{index}} 页', 'zh-hk': '第 {{index}} 頁', 'zh-tw': '第 {{index}} 頁', 'en': 'page {{index}}' },
   'feedListPageIndex1': { 'zh-cn': '第', 'zh-hk': '第', 'zh-tw': '第', 'en': 'page' },
   'feedListPageIndex2': { 'zh-cn': '页', 'zh-hk': '頁', 'zh-tw': '頁', 'en': '' },
@@ -4133,22 +4130,18 @@ filter.fast.hyperlink.recognizer = function (element, callback) {
   if (element.nodeType === Node.TEXT_NODE) return callback();
   var c = util.dom.create('body', element.outerHTML);
   do {
-    var link = c.querySelector('a[title][href^="http://t.cn/"]');
+    var link = c.querySelector('a[href^="http://t.cn/"][yawf-link-type="O"]');
     if (!link) break;
-    var title = link.title;
-    if (!title.match(/^https?:/)) break;
-    var host = util.str.host(title);
-    if ([location.host, 't.cn'].indexOf(host) === -1) return callback({ 'host': host });
+    return callback({ 'url': link.href });
   } while (false);
   do {
-    var linkc = c.querySelector('a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"]'); if (!linkc) break;
+    var linkc = c.querySelector('a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"][yawf-link-type="O"]'); if (!linkc) break;
     var url = util.str.parsequery(linkc.search.slice(1)).url; if (!url) break;
-    var paramhost = util.str.host(url);
-    if (paramhost) return callback({ 'host': paramhost });
+    return callback({ 'url': url });
   } while (false);
   return callback();
 };
-filter.fast.hyperlink.add = function (val) { return val.host; };
+filter.fast.hyperlink.add = function (val) { return val.url; };
 
 // 快速创建超链接标题的过滤器
 filter.fast.linktitle = {};
@@ -4161,7 +4154,7 @@ filter.fast.linktitle.recognizer = function (element, callback) {
   var link = c.querySelector('a[action-type="feed_list_url"][title], a[action-type="fl_url_addparams"][title]');
   if (!link) return callback();
   var title = link.title;
-  if (title.match(/^https?:/)) return callback();
+  if (title.match(/^https?:/) || title === '网页链接') return callback();
   return callback({ 'title': title });
 };
 filter.fast.linktitle.add = function (val) { return val.title; };
@@ -4402,23 +4395,20 @@ weibo.feed.hyperlinks = {};
 weibo.feed.hyperlinks.dom = function (feed) {
   return weibo.feed.content(feed, function (m) {
     return Array.from(m.querySelectorAll([
-      'a[title][href^="http://t.cn/"]', 
+      'a[yawf-link-type="O"][href^="http://t.cn/"]', 
       'a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"]'
     ].join(',')));
   }).filter(filter.fast.hyperlink.validator);
 };
 weibo.feed.hyperlinks.text = function (feed) {
-  return weibo.feed.hyperlinks.dom(feed).map(function (a) {
-    if (a.href.indexOf('http://t.cn/') === 0) return a.title;
-    return a.href;
-  });
+  return weibo.feed.hyperlinks.dom(feed).map(function (a) { return a.href; });
 };
 
 // 从一条微博中找出所有超链接标题
 weibo.feed.linktitle = {};
 weibo.feed.linktitle.dom = function (feed) {
   return weibo.feed.content(feed, function (m) {
-    return Array.from(m.querySelectorAll('a[action-type="feed_list_url"][title]'));
+    return Array.from(m.querySelectorAll('a[yawf-link-type="O"]'));
   }).filter(filter.fast.linktitle.validator);
 };
 weibo.feed.linktitle.text = function (feed) {
@@ -5372,7 +5362,7 @@ filter.predef.group('hyperlink').addto(filter.groups.base);
 // 超链接地址过滤
 filter.predef.wbfc({
   'name': 'hyperlink',
-  'version': 7,
+  'version': 350,
   'add': function (s) { return s.trim() || null; },
   'rule': function hyperlinkMatch(action, feed) {
     var links = this.conf.concat(this.extent), _links = weibo.feed.hyperlinks.text(feed);
@@ -5392,12 +5382,12 @@ filter.predef.wbfc({
     'add': filter.fast.hyperlink.add,
     'description': filter.fast.description.gen({
       'group': 'hyperlink', 'name': 'hyperlink',
-      'attr': 'host', 'chosen': true
+      'attr': 'url', 'chosen': true
     }),
     'contextmenu': weibo.feed.hyperlinks.dom,
     'menugrouped': '{{hyperlinkFilterContextMenuGroup}}',
     'menudesc': function (hyperlink) {
-      return util.str.fill(text.hyperlinkFilterContextMenu, { 'host': util.str.host(hyperlink.getAttribute('title')) });
+      return util.str.fill(text.hyperlinkFilterContextMenu, { 'url': hyperlink.href });
     },
   },
 }, filter.groups.hyperlink);
@@ -6538,7 +6528,7 @@ filter.predef.group('layout');
       '[id*="pl_rightmod_ads"]', '[id*="pl_content_biz"]', '[id*="pl_ad_"]', '[id^="sinaadToolkitBox"]',
       '[class*="WB_ad_"]',
       '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay',
-      '.WB_feed_yy2016_up_but', '.WB_feed_yy2016_down_but',
+      '.WB_feed_yy2016_up_but', '.WB_feed_yy2016_down_but', '#pl_common_ali',
     ].join(',') + ' { display: none !important; } ' +
     '#wrapAD, .news_logo { visibility: hidden !important; }');
     var version = '', defaultSkin = 'skin058', target = defaultSkin;
@@ -7602,7 +7592,7 @@ filter.items.tool.weibotool.view_original = filter.item({
   'version': 10,
   'type': 'boolean',
   'key': 'weibo.tool.viewOriginal',
-  'text': '{{viewOriginalDesc}}',
+  'text': '{{viewOriginal}}',
   'ref': {
     'open': {
       'type': 'select',
@@ -7742,6 +7732,13 @@ filter.items.tool.weibotool.view_original = filter.item({
       var info = { 'host': 'ww2.sinaimg.cn', 'filenames': [getPid(a) + '.jpg']};
       a.target = '_blank'; updateLink(a, info);
       a.setAttribute('yawf-action-type', a.getAttribute('action-type')); a.removeAttribute('action-type');
+      // 点击弹出的图片时，微博网页中的逻辑会点击对应的链接，但会阻止该链接打开网页；所以这里强制打开新网页，因为在可信点击后，所以打开网页权限一般没问题
+      a.addEventListener('click', function (e) {
+        // 我也不知道为什么要这样，但是直接 window.open 在我这会打开空白页我也不懂为什么
+        var aa = document.createElement('a'); aa.href = a; aa.target = a;
+        document.body.appendChild(aa); aa.click(); aa.parentNode.removeChild(aa);
+        e.preventDefault();
+      });
     };
     observer.dom.add(addOriLinkViewImage);
     observer.dom.add(addOriLinkViewCommentImage);
@@ -7823,21 +7820,10 @@ if (function supportMp4Video() {
 // 用 URL 替换微博内的网页链接
 filter.items.tool.weibotool.replace_link = filter.item({
   'group': 'weibotool',
-  'version': 203,
+  'version': 350,
   'type': 'boolean',
   'key': 'weibo.tool.replace_link',
   'text': '{{replaceLinkByUrl}}',
-  'ref': {
-    'url': {
-      'type': 'select',
-      'select': [
-        { 'value': 'title', 'text': '{{replaceLinkByTitleUrl}}' },
-        { 'value': 'full', 'text': '{{replaceLinkByFullUrl}}' },
-        { 'value': 'short', 'text': '{{replaceLinkByShortUrl}}' },
-      ],
-      'default': 'title'
-    },
-  },
   'mark': function markLinkType() {
     // 标记每个链接都是什么类型的，方便过滤和处理
     var icon = Array.from(document.querySelectorAll('.WB_feed_type a:not([yawf-link-type]) > .W_ficon:first-child'));
@@ -7850,28 +7836,12 @@ filter.items.tool.weibotool.replace_link = filter.item({
   },
   'ainit': function () {
     var that = this;
-    var conf = this.ref.url.conf;
-    var full = conf === 'full';
-    var title = conf === 'title';
     var expandLink = function expandWeiboLink() {
       that.mark();
-      var links = Array.from(document.querySelectorAll('.WB_feed_type a[yawf-link-type="O"]:not([yawf-link-expand])'));
+      var links = Array.from(document.querySelectorAll('.WB_feed_type a[yawf-link-type="O"][title="网页链接"]:not([yawf-link-expand])'));
       links.forEach(function (link) {
         link.setAttribute('yawf-link-expand', '');
-        // 用原本的链接做默认值，原本的链接可能是完整的，也可能不是
         var url = link.href;
-        // 如果我们想要完整的链接，而且能够获取到完整的链接，那么就用完整的链接
-        if ((full || title) && link.title.match(/^https?:\/\//i)) url = link.title;
-        // 我们根据域名是否是 t.cn 来判断是不是短链接
-        var isshort = util.str.host(url) === 't.cn';
-        // 如果我们不要短链接，但是又拿不到原地址，就放弃
-        if (title && isshort) return;
-        // 如果是 feed.mix.sina.com.cn 域名，要特殊处理
-        if (url.match(/^http:\/\/feed\.mix\.sina\.com\.cn\/link_card\/redirect/)) {
-          var tempa = util.dom.create('a', ''); tempa.href = url;
-          var resurl = util.str.parsequery(tempa.search.slice(1)).url;
-          if (resurl) url = resurl;
-        }
         link.textContent = url;
         link.className = 'yawf-link';
       });
