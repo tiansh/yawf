@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.351
+// @version           3.7.352
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -305,9 +305,9 @@ var text = {
   'showMentionMeDesc': { 'zh-cn': '提到自己的微博', 'zh-hk': '提到自己的微博', 'zh-tw': '提到自己的微博', 'en': 'Weibo mentioned myself' },
   // 隐藏
   'otherBlacklistTitleAd': { 'zh-cn': '隐藏以下微博 - 广告/商品', 'zh-hk': '隱藏以下內容 - 廣告/商品', 'zh-tw': '隱藏以下內容 - 廣告/商品', 'en': 'Hide following content - Ad / Promotion' },
-  'adfeedFilter': { 'zh-cn': '推广微博/粉丝通微博/品牌速递{{<i>}}', 'zh-hk': '推廣微博/粉絲通微博/品牌速遞{{<i>}}', 'zh-tw': '推廣微博/粉絲通微博/品牌速遞{{<i>}}', 'en': 'Ad Weibo{{<i>}}' },
+  'adfeedFilter': { 'zh-cn': '推广微博/粉丝通微博/品牌速递/好友赞过的微博{{<i>}}', 'zh-hk': '推廣微博/粉絲通微博/品牌速遞/好友贊過的微博{{<i>}}', 'zh-tw': '推廣微博/粉絲通微博/品牌速遞/好友贊過的微博{{<i>}}', 'en': 'Ad Weibo / Instered not followed Weibo {{<i>}}' },
   'adfeedFilterDesc': {
-    'zh-cn': '推广微博一般出现在首页微博列表靠前的位置，并标记“推荐”字样。通过付费和新浪的审核，可以推广某条微博。微博会根据您的喜好随机将一些被推广的微博推荐给您。虽然推广微博出现在您的微博列表中，但这些微博不一定您关注的人发的微博。',
+    'zh-cn': '推广微博一般出现在首页微博列表靠前的位置，并标记“推荐”字样。通过付费和新浪的审核，可以推广某条微博。微博会根据您的喜好随机将一些被推广的微博推荐给您。好友赞过的微博混在首页中间，并标记“某某赞过”。虽然这些微博出现在您的微博列表中，但它们往往不是您关注的人发的微博。',
   },
   'fansTopFilter': { 'zh-cn': '粉丝头条{{<i>}}', 'zh-hk': '粉丝头条{{<i>}}', 'zh-tw': '粉丝头条{{<i>}}'/* as is */, 'en': 'Fans top / Headline Weibo{{<i>}}' },
   'fansTopFilterDesc': {
@@ -527,6 +527,7 @@ var text = {
   'layoutHideWeiboArticalPay': { 'zh-cn': '微博打赏', 'zh-hk': '微博打赏', 'zh-tw': '微博打赏', 'en': '微博打赏 (Weibo Actical Pay)' },
   'layoutHideWeiboTag': { 'zh-cn': '微博标签', 'zh-hk': '微博標籤', 'zh-tw': '微博標籤', 'en': 'Tags for Weibo' },
   'layoutHideWeiboMovieTag': { 'zh-cn': '微博电影/话题', 'zh-hk': '微博電影/話題', 'zh-tw': '微博電影/話題', 'en': 'Weibo Movie / Topic' },
+  'layoutHideWeiboMovieTagDesc': { 'zh-cn': '位于微博底部的根据微博正文内容的关键字自动生成的话题、电影等的链接。' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
   'layoutHideWeiboPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
   'layoutHideWeiboLike': { 'zh-cn': '赞 - 微博', 'zh-hk': '讚 - 微博', 'zh-tw': '讚 - 微博', 'en': 'Like - Weibo' },
@@ -8935,9 +8936,6 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed [node-type="feed_list_timeTip"], .WB_feed .yawf-timeTip { height: 30px !important; margin: -16px 0 -15px !important; background: transparent !important; text-align: center !important; }
       .WB_feed [node-type="feed_list_timeText"], .WB_feed .yawf-timeTip div { display: inline-block !important; color: rgba(128, 128, 128, 0.6) !important; }
 
-      .WB_feed.WB_feed_v3 .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
-      .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
-
     */ 喵 }).replace(/\/\/.*\n/g, '\n'));
   },
 }).addto(filter.groups.style);
@@ -8955,6 +8953,10 @@ filter.items.style.sweibo.from_in_bottom = filter.item({
       var from = feed.querySelector('.WB_detail > .WB_info + .WB_from');
       if (from) from.parentNode.appendChild(from);
     });
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_feed.WB_feed_v3 .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
+      .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
+    */ 喵 }));
   },
 }).addto(filter.groups.style);
 
