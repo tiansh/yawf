@@ -7579,7 +7579,7 @@ filter.items.tool.weibotool.card_button = filter.item({
 // 查看大图旁添加查看原图链接
 filter.items.tool.weibotool.view_original = filter.item({
   'group': 'weibotool',
-  'version': 10,
+  'version': 357,
   'type': 'boolean',
   'key': 'weibo.tool.viewOriginal',
   'text': '{{viewOriginal}}',
