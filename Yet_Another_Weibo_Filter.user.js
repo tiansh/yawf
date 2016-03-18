@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.356
+// @version           3.7.357
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -679,7 +679,7 @@ var text = {
   'cardButtonDesc': {
     'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
   },
-  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}', 'en': 'add "Original Picture" link | which target to {{<open>}}' },
+  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}||{{<direct>}}点击缩略图时直接查看原图', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'en': 'add "Original Picture" link | which target to {{<open>}} || {{<direct>}} View orignal picture by clicking on thumbnail' },
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
@@ -1574,10 +1574,16 @@ util.page.discovery = (function () {
   return location.hostname === 'd.weibo.com';
 }());
 
-// 检查是不是我的个人主页 
-util.page.myhome = function () {
+// 检查当前是否是用户个人主页
+util.page.user = function () {
   if (!document.body.classList.contains('FRAME_page')) return false;
   if (!document.querySelector('.PCD_header .username')) return false;
+  return true;
+};
+
+// 检查是不是我的个人主页 
+util.page.myhome = function () {
+  if (!util.page.user()) return false;
   return !!util.info.uid && util.info.oid() === util.info.uid;
 };
 
@@ -5874,6 +5880,8 @@ filter.items.other.spam.same_account = filter.item({
     if (!this.conf) return null;
     // 如果在分组页面，而且用户设置了分组页面忽略该过滤器，则不工作
     if (filter.items.base.grouping.group_same_account.conf && util.page.group()) return null;
+    // 个人主页同样不能应用
+    if (util.page.user()) return;
     var id = weibo.feed.author.id(feed);
     if (!id) return;
     var number = document.querySelectorAll(
@@ -7583,7 +7591,8 @@ filter.items.tool.weibotool.view_original = filter.item({
         { 'value': 'page', 'text': '{{viewOriginalPage}}' },
         { 'value': 'image', 'text': '{{viewOriginalImage}}' },
       ],
-    }
+    },
+    'direct': { 'type': 'boolean' },
   },
   'ainit': function () {
     var openPage = this.ref.open.conf === 'page';
@@ -7669,8 +7678,10 @@ filter.items.tool.weibotool.view_original = filter.item({
       };
     };
     var getPid = function (a) {
-      try { return util.str.parsequery(a.getAttribute('action-data')).pid || null; }
-      catch (e) { return null; }
+      try {
+        var action_data = util.str.parsequery(a.getAttribute('action-data'));
+        return action_data.pid || action_data.pic_id || null;
+      } catch (e) { return null; }
     };
     // 添加查看原图的链接
     var addLink = function (ref) {
@@ -7721,11 +7732,27 @@ filter.items.tool.weibotool.view_original = filter.item({
       // 点击弹出的图片时，微博网页中的逻辑会点击对应的链接，但会阻止该链接打开网页；所以这里强制打开新网页，因为在可信点击后，所以打开网页权限一般没问题
       a.addEventListener('click', function (e) {
         // 我也不知道为什么要这样，但是直接 window.open 在我这会打开空白页我也不懂为什么
-        var aa = document.createElement('a'); aa.href = a; aa.target = a;
+        var aa = document.createElement('a'); aa.href = a.href; aa.target = a.target;
         document.body.appendChild(aa); aa.click(); aa.parentNode.removeChild(aa);
         e.preventDefault();
       });
     };
+      // 点击缩略图时
+    if (this.ref.direct.conf) document.addEventListener('click', util.func.catched(function (e) {
+      var thumbnail = e.target;
+      while (util.dom.matches(thumbnail, '[action-type="feed_list_media_img"] *, [action-type="fl_pics"] *')) thumbnail = thumbnail.parentNode;
+      if (!util.dom.matches(thumbnail, '[action-type="feed_list_media_img"], [action-type="fl_pics"]')) return;
+      var imgs = Array.from(thumbnail.parentNode.childNodes)
+        .filter(function (i) { return util.dom.matches(i, '[action-type="feed_list_media_img"], [action-type="fl_pics"]'); });
+      var info = {
+        'host': 'ww2.sinaimg.cn',
+        'filenames': imgs.map(function (i) { return getPid(i); }),
+        'current': imgs.indexOf(thumbnail),
+      };
+      var aa = document.createElement('a'); aa.href = imageUrl(info); aa.target = '_blank';
+      document.body.appendChild(aa); aa.click(); aa.parentNode.removeChild(aa);
+      e.preventDefault(); e.stopPropagation();
+    }), true);
     observer.dom.add(addOriLinkViewImage);
     observer.dom.add(addOriLinkViewCommentImage);
     observer.dom.add(addOriLinkViewForwardCommentImage);
@@ -8944,8 +8971,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
 
       .WB_feed.WB_feed_v3 .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
       .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
-
-      .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: -5px; }
+      .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
 
     */ 喵 }).replace(/\/\/.*\n/g, '\n'));
   },
@@ -8967,6 +8993,7 @@ filter.items.style.sweibo.from_in_bottom = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
       .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
+      .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
     */ 喵 }));
   },
 }).addto(filter.groups.style);
