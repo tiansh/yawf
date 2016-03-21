@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.359
+// @version           3.7.360
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7647,10 +7647,17 @@ filter.items.tool.weibotool.view_original = filter.item({
           if (width > container.clientWidth || height > container.clientHeight) imgarea.className = 'over';
           else imgarea.className = 'normal';
         }
-        function show() {
+        function readHash() {
           var hashVal = Number(location.hash.slice(1));
-          if (hashVal !== parseInt(hashVal)) return;
-          current = hashVal;
+          var count = info.filenames.length;
+          hashVal = ((parseInt(hashVal) % count) + count) % count;
+          if ('#' + hashVal !== location.hash) {
+            location.hash = '#' + hashVal;
+          }
+          return hashVal;
+        }
+        function show() {
+          current = readHash();
           viewer.src = '';
           viewer.src = url(info.filenames[current], true);
           container.scrollTop = 0;
@@ -7752,6 +7759,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       // 点击缩略图时
     if (this.ref.direct.conf) document.addEventListener('click', util.func.catched(function (e) {
       if (util.page.search) return;
+      if (e.button !== 0) return; // 只响应左键操作
       var selector = '[action-type="feed_list_media_img"], [action-type="fl_pics"]';
       var thumbnail = util.dom.parent(e.target, selector); if (!thumbnail) return;
       var imgs = Array.from(util.dom.parent(thumbnail, 'ul').querySelectorAll(selector));
@@ -8930,6 +8938,9 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_feed_spec_info { float: right; height: 88px; padding: 7px 4px 5px 10px; width: 202px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info { float: none; height: auto; width: auto; padding: 10px 5px 0; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit { font-size: inherit; font-weight: 700; margin: 0 0 6px; }
+
+      .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a { margin: 0; width: auto; }
+      .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: none; max-height: none; min-width: auto; }
     */ 喵 }).replace(/\/\/.*\n/g, '\n'));
     if (this.ref.repost.conf) util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_feed_expand .W_arrow_bor { display: block; }
