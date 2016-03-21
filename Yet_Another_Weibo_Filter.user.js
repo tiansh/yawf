@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.360
+// @version           3.7.361
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -700,15 +700,6 @@ var text = {
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
-  'showFeedListPage': { 'zh-cn': '将“查看更多”按钮替换为翻页按钮', 'zh-hk': '將“查看更多”按鈕替換為翻頁按鈕', 'zh-tw': '將“查看更多”按鈕替換為翻頁按鈕', 'en': 'Replace "View more" button by Previous / Next page buttons' },
-  'showFeedListPageDesc': {
-    'zh-cn': '将首页下方的查看更多替换为上一页/下一页的按钮，点击后页面刷新而不保留已经显示的微博。（可能会导致微音乐播放中断）',
-  },
-  'feedListPagePrev': { 'zh-cn': '上一页', 'zh-hk': '上一頁', 'zh-tw': '上一頁', 'en': 'Previous' },
-  'feedListPageNext': { 'zh-cn': '下一页', 'zh-hk': '下一頁', 'zh-tw': '下一頁', 'en': 'Next' },
-  'feedListPageIndex': { 'zh-cn': '第 {{index}} 页', 'zh-hk': '第 {{index}} 頁', 'zh-tw': '第 {{index}} 頁', 'en': 'page {{index}}' },
-  'feedListPageIndex1': { 'zh-cn': '第', 'zh-hk': '第', 'zh-tw': '第', 'en': 'page' },
-  'feedListPageIndex2': { 'zh-cn': '页', 'zh-hk': '頁', 'zh-tw': '頁', 'en': '' },
   // 其他
   'otherToolsTitle': { 'zh-cn': '其他', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'Others' },
   'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
@@ -1052,11 +1043,6 @@ var html = {
   // 视频播放
   'videoMediaDisplay': '<div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div>',
   'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
-  // 微博翻页
-  'feedListPage': '<div class="WB_cardwrap S_bg2" node-type="feed_list_page"><div class="W_pages"><a class="page prev S_txt1 S_line1" href="">{{feedListPagePrev}}</a>{{{pages}}}<a class="page next S_txt1 S_line1" href="" bpfilter="page">{{feedListPageNext}}</a></div></div>',
-  'feedListChose': '<span class="list"><div style="display: none" class="layer_menu_list W_scroll" action-type="feed_list_page_morelist"><ul></ul></div></span><a class="page S_txt1" href="javascript:void(0)" action-type="feed_list_page_more" action-data="currentPage={{index}}&amp;countPage={{count}}">{{{feedListPageIndex}}}<em class="W_ficon ficon_arrow_down S_ficon">c</em></a>',
-  'feedListInput': '<span class="page S_txt1"><form method="get"><label>{{feedListPageIndex1}}<input type="number" value="{{index}}" min="1" class="W_input yawf-pageInput" id="yawf-pageInput">{{feedListPageIndex2}}</label><a class="W_ficon ficon_arrow_right S_ficon gotopage">a</a></form></span>',
-  'feedListPageListItem': '<li><a href="" bpfilter="page"></a></li>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -7940,61 +7926,6 @@ filter.items.tool.weibotool.replace_link = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 查看更多换成上一页下一页
-filter.items.tool.weibotool.feed_list_page = filter.item({
-  'group': 'weibotool',
-  'version': 343,
-  'type': 'boolean',
-  'key': 'weibo.other.feed_list_page',
-  'text': '{{showFeedListPage}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{showFeedListPageDesc}}' } },
-  'ainit': function () {
-    // 这里认为首页可以翻10页微博，老用户不会有问题，新用户我也不知道会怎么样
-    // 第十页因为没有“查看更多”，而这里是“替换”，所以第十页显示不出“上一页”按钮来；虽然我希望这功能可以在第十页用，但是太麻烦了
-    var replaceLoadMore = function replaceLoadMore() {
-      var loadMore = document.querySelector('div[action-type="fl_loadmore"]'); if (!loadMore) return;
-      var data = util.str.parsequery(loadMore.getAttribute('action-data')), page = Number(data.pre_page);
-      var pathname = location.pathname, search = util.str.parsequery(location.search.slice(1));
-      Object.assign(search, data);
-      var pageLink = function (page_num) {
-        var searchp = Object.assign({}, search, { 'page': '' + page_num });
-        if (Number(page_num) === 1) delete searchp.end_id, delete searchp.pre_page, delete searchp.page;
-        return pathname + '?' + util.str.toquery(searchp);
-      };
-      var pageListItem = function (page_num, iscur) {
-        var ul = util.dom.create('ul', html.feedListPageListItem), a = ul.querySelector('a'), li = ul.firstChild;
-        a.href = pageLink(page_num); a.textContent = util.str.fill(text.feedListPageIndex, { 'index': '' + page_num });
-        if (iscur) li.classList.add('cur');
-        return li;
-      };
-
-      var count_page = util.dom.matches(loadMore, '#v6_pl_content_homefeed *') ? 10 : null;
-
-      var feedListPage = util.dom.create('div', util.str.fill(html.feedListPage, {
-        'index': '' + page, 'count': '' + count_page, 'pages': count_page ? html.feedListChose : html.feedListInput,
-      }));
-      var prev = feedListPage.querySelector('.prev'), next = feedListPage.querySelector('.next');
-
-      if (count_page) {
-        var ul = feedListPage.querySelector('ul'), chose = feedListPage.querySelector('.list + .page');
-        for (var i = 1; i <= count_page; i++) ul.appendChild(pageListItem(i, i === page));
-      } else {
-        var form = feedListPage.querySelector('form'), input = feedListPage.querySelector('input'), gotopage = feedListPage.querySelector('.gotopage');
-        form.addEventListener('submit', function (e) { e.preventDefault(); e.stopPropagation(); location.href = pageLink(input.value); });
-        input.addEventListener('change', function (e) { gotopage.href = pageLink(input.value); });
-        input.value = page; gotopage.href = pageLink(input.value);
-      }
-
-      if (page > 1) prev.href = pageLink(page - 1); else prev.parentNode.removeChild(prev);
-      next.href = pageLink(page + 1);
-
-      loadMore.parentNode.replaceChild(feedListPage, loadMore);
-    };
-    observer.dom.add(replaceLoadMore);
-    util.css.add('.yawf-pageInput { vertical-align: baseline; width: 4em; height: 20px; }')
-  },
-}).addto(filter.groups.tool);
-
 // 其他工具
 filter.predef.subtitle('tool', 'othertool', '{{otherToolsTitle}}');
 
@@ -8927,7 +8858,8 @@ filter.items.style.sweibo.image_size = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_media_a { margin: -2px 0 0 6px; width: 258px; }
       .WB_feed.WB_feed_v3 .WB_media_a_mn .WB_pic { width: 80px; height: 80px; }
-      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; }
+      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto; width: auto; }
+      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto; height: auto; position: static; transform: none; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video { width: 120px; height: 80px; min-width: 36px; }
       .WB_feed.WB_feed_v3 .WB_media_a_m4 { width: 172px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid rgba(127,127,127,0.3); box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
@@ -9574,7 +9506,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.other.mention_me');
   n('filterPaused', null); // 暂停屏蔽：选中时暂时停止屏蔽微博 // ⚠️ YAWF未提供该功能
   d('filterPromotions', 'weibo.other.ad_feed'); // 屏蔽推广微博 // ⚠️ YAWF 的过滤规则更宽松
-  d('filterHot', 'weibo.other.fans_top'); // 屏蔽热门微博（粉丝头条）
+  d(['filterHot', 'filterLiked'], 'weibo.other.fans_top', r.some); // 屏蔽热门微博（粉丝头条） & 屏蔽好友赞过的微博
   n(null, 'weibo.other.product_card');
   d('filterTaobao', 'weibo.other.tb_tm_wb'); // 屏蔽带有 淘宝商品 或 天猫商品 的微博 // ⚠️ YAWF还会过滤 聚划算商品 但是至今未见过聚划算商品
   n(null, 'weibo.other.weibo_pay_gift');
@@ -9793,7 +9725,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.image_size.repost');
   n(null, 'weibo.tool.image_size');
   d(['compactFeedToolbar', 'noHomeMargins'], 'weibo.tool.no_weibo_space', r.some); // 使用紧凑型（V5样式）微博工具栏（收藏 | 转发 | 评论 | 赞）, 在首页使用紧凑版式（去除卡片间空隙） // ⚠️ YAWF 未提供两个功能分开的设置
-  n(null, 'weibo.tool.from_in_bottom');
+  d(['moveSrcToBtm', 'unwrapText', 'compactFeedToolbar'], 'weibo.tool.from_in_bottom', r.some); // 微博来源移动至微博底部
   d(null, 'weibo.tool.hover_show_fold', true);
   d(null, 'weibo.tool.fold_text.text', 'author-reason');
   d(null, 'weibo.tool.fold_text', true);
