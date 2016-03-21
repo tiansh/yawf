@@ -761,7 +761,7 @@ var text = {
   'unwrapContentDesc': {
     'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。需要设置内容过滤器时您仍需要使用正则表达式<code>\\n</code>表示换行符。'
   },
-  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore picture to normal size (feed v3) {{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度' },
+  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore pictures to normal size (feed v3) {{<i>}}||{{<repost>}} and restore the size original weibo' },
   'imageSizeDesc': {
     'zh-cn': '缩小图片尺寸仅影响图片在您的网页上的显示效果，不能降低网络数据流量用量。'
   },
