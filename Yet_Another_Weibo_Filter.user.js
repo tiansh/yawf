@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.357
+// @version           3.7.358
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1467,6 +1467,12 @@ util.dom.matches = (function () {
   };
 }());
 
+// 找到符合条件的父节点
+util.dom.parent = function (node, selector) {
+  while (node && !util.dom.matches(node, selector)) node = node.parentNode;
+  return node || null;
+};
+
 // 同一个元素多个输入框同步
 // 将输入框和某个设置项绑定
 util.dom.bind = (function () {
@@ -1735,6 +1741,34 @@ observer.comment = (function () {
       filter.cmt_active(comment);
     });
   });
+}());
+
+// 阻止页面通过 jsonp 获取数据
+observer.stopjsonp = (function () {
+  var initialed = false, patterns = [];
+  var checkAndCleanCallback = function (script) {
+    if (!script || (script.tagName || '').toLowerCase() !== 'script') return;
+    var match;
+    for (var i = 0, l = patterns.length; i < l; i++) {
+      match = script.src.match(patterns[i]);
+      if (match && match[1]) break;
+    }
+    var callback = match && match[1] || null; if (!callback) return;
+    util.func.page(function (cb) { delete window[cb]; }, callback);
+    script.parentNode.removeChild(script);
+  };
+  var initial = function () {
+    if ('onbeforescriptexecute' in document) document.addEventListener('beforescriptexecute', function (e) {
+      if (checkAndCleanCallback(e.target)) e.preventDefault();
+    }); else document.documentElement.addEventListener('DOMNodeInserted', function (e) {
+      checkAndCleanCallback(e.target);
+    });
+    initialed = true;
+  };
+  return function (pattern) {
+    if (!initialed) initial();
+    patterns.push(pattern);
+  };
 }());
 
 // 键盘相关工具
@@ -6271,31 +6305,7 @@ filter.predef.group('layout');
   item('Main', 5, '.gn_nav_list>li:nth-child(1) { display: none !important; }');
   item('Hot', 5, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
   item('Game', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
-  item('HotSearch', 277, function () {
-    // 用暴力拦截 JSONP 请求的方法解决
-    util.func.page(function jsonpWrap() {
-      var getWrapResult = function (ori) {
-        return function (d) {
-          if (d.url.match(/^http:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug/)) return;
-          return ori.apply(this, arguments);
-        };
-      };
-      (function wraper() {
-        if (window.STK && STK.namespace) {
-          STK.namespace('v6home', function (a) {
-            STK.jsonp = a.jsonp = getWrapResult(a.jsonp);
-          });
-        } else setTimeout(wraper, 0);
-      }());
-    });
-    // 再用样式处理一下
-    // 如果暴力拦截的方法失败了，这个可以勉强隐藏掉显示的热搜词，但是不输入内容点搜索按钮会搜索热搜词
-    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-        .gn_search_v2 .placeholder:empty::before { content: ""; }
-        .gn_search_v2 .placeholder::before { content: "{{searchBarPlaceholder}}"; display: block; }
-        .gn_search_v2 .gn_topmenulist div:first-child:empty ~ * { display: none; }
-    */ 喵 })));
-  });
+  item('HotSearch', 277, function () { observer.stopjsonp(/http:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?(?:.*&)?_cb=(STK_\d+)/); });
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
 
@@ -7739,11 +7749,9 @@ filter.items.tool.weibotool.view_original = filter.item({
     };
       // 点击缩略图时
     if (this.ref.direct.conf) document.addEventListener('click', util.func.catched(function (e) {
-      var thumbnail = e.target;
-      while (util.dom.matches(thumbnail, '[action-type="feed_list_media_img"] *, [action-type="fl_pics"] *')) thumbnail = thumbnail.parentNode;
-      if (!util.dom.matches(thumbnail, '[action-type="feed_list_media_img"], [action-type="fl_pics"]')) return;
-      var imgs = Array.from(thumbnail.parentNode.childNodes)
-        .filter(function (i) { return util.dom.matches(i, '[action-type="feed_list_media_img"], [action-type="fl_pics"]'); });
+      var selector = '[action-type="feed_list_media_img"], [action-type="fl_pics"]';
+      var thumbnail = util.dom.parent(e.target, selector); if (!thumbnail) return;
+      var imgs = Array.from(util.dom.parent(thumbnail, 'ul').querySelectorAll(selector));
       var info = {
         'host': 'ww2.sinaimg.cn',
         'filenames': imgs.map(function (i) { return getPid(i); }),
