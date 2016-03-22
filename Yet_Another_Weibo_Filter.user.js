@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.363
+// @version           3.7.364
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -683,7 +683,7 @@ var text = {
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
-  'noTagDialog': { 'zh-cn': '收藏微博时将添加标签的对话框替换为气泡（试验性）', 'zh-hk': '收藏微博時將添加標籤的對話框替換為泡泡圖（試驗性）', 'zh-tw': '收藏微博時將添加標籤的對話框替換為泡泡圖（試驗性）', 'en': 'Show bubble instead of dialog after marking weibo favorite (Experimental)' },
+  'noTagDialog': { 'zh-cn': '收藏微博时将添加标签的对话框替换为气泡（试验性）', 'zh-hk': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'zh-tw': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'en': 'Show bubble instead of dialog after marking weibo favorite (Experimental)' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -7743,10 +7743,11 @@ filter.items.tool.weibotool.view_original = filter.item({
         e.preventDefault();
       });
     };
-      // 点击缩略图时
+    // 点击缩略图时
     if (this.ref.direct.conf) document.addEventListener('click', util.func.catched(function (e) {
       if (util.page.search) return;
       if (e.button !== 0) return; // 只响应左键操作
+      if (e.shiftKey) return; // 按下 Shift 时不响应
       var selector = '[action-type="feed_list_media_img"], [action-type="fl_pics"]';
       var thumbnail = util.dom.parent(e.target, selector); if (!thumbnail) return;
       var imgs = Array.from(util.dom.parent(thumbnail, 'ul').querySelectorAll(selector));
@@ -8433,7 +8434,7 @@ filter.items.style.layout.avatar_shape = filter.item({
   },
   'ainit': function () {
     util.css.add(this.ref.shape.conf === 'square' ? util.str.cmt(function () { /*!CSS
-      .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box { border-radius: 0 !important; }
+      .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box, .PCD_counter_b .pic_box { border-radius: 0 !important; }
     */ 喵 }) : util.str.cmt(function () { /*!CSS
       img[usercard], .WB_face img { border-radius: 50% !important; } 
     */ 喵 }));
