@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.362
+// @version           3.7.363
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -683,6 +683,7 @@ var text = {
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
+  'noTagDialog': { 'zh-cn': '收藏微博时将添加标签的对话框替换为气泡（试验性）', 'zh-hk': '收藏微博時將添加標籤的對話框替換為泡泡圖（試驗性）', 'zh-tw': '收藏微博時將添加標籤的對話框替換為泡泡圖（試驗性）', 'en': 'Show bubble instead of dialog after marking weibo favorite (Experimental)' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -761,7 +762,7 @@ var text = {
   'unwrapContentDesc': {
     'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。需要设置内容过滤器时您仍需要使用正则表达式<code>\\n</code>表示换行符。'
   },
-  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore pictures to normal size (feed v3) {{<i>}}||{{<repost>}} and restore the size original weibo' },
+  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore pictures to normal size (feed v3) {{<i>}}||{{<repost>}} and restore the size of original weibo' },
   'imageSizeDesc': {
     'zh-cn': '缩小图片尺寸仅影响图片在您的网页上的显示效果，不能降低网络数据流量用量。'
   },
@@ -4657,7 +4658,7 @@ filter.items.base.scripttool.disable_lazyload = filter.item({
     util.func.page(function () {
       (function disableLazyLoad() {
         if (self !== top) return;
-        if (!document.querySelector('[node-type="lazyload"]')) { setTimeout(disableLazyLoad, 100); return; }
+        if (!document.querySelector('#v6_pl_content_homefeed [node-type="lazyload"]')) { setTimeout(disableLazyLoad, 100); return; }
         if (typeof STK === typeof void 0 || !STK.namespace) setTimeout(disableLazyLoad, 100);
         else STK.namespace('v6home', function (a) {
           var fire = null;
@@ -7762,6 +7763,27 @@ filter.items.tool.weibotool.view_original = filter.item({
     observer.dom.add(addOriLinkViewCommentImage);
     observer.dom.add(addOriLinkViewForwardCommentImage);
   },
+}).addto(filter.groups.tool);
+
+// 将添加标签的对话框换成气球
+filter.items.tool.weibotool.no_tag_dialog = filter.item({
+  'group': 'weibotool',
+  'version': 363,
+  'type': 'boolean',
+  'key': 'weibo.tool.noTagDialog',
+  'text': '{{noTagDialog}}',
+  'ainit': function () {
+    util.func.page(function noTagDialog() {
+      var favorite;
+      try {
+        try { favorite = STK.namespace.v6home.lib.feed.plugins.favorite; }
+        catch (e1) { favorite = STK.namespace.v6page.lib.feed.plugins.favorite; }
+      } catch (e2) { setTimeout(noTagDialog, 0); }
+      favorite.tagDialog = function () {
+        return favorite.tagBubble.apply(this, arguments);
+      };
+    });
+  }
 }).addto(filter.groups.tool);
 
 // 使用 HTML5 播放器播放秒拍视频
