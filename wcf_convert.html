@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="pages/main.css" />
   <script src="https://ajaxorg.github.io/ace/build/src/ace.js"></script>
   <script src="https://ajaxorg.github.io/ace/build/src/mode-json.js"></script>
+  <script src="pages/gm_stub.js"></script>
+  <script> $CONFIG.lang = 'zh-cn'; </script>
+  <script src="Yet_Another_Weibo_Filter.user.js"></script>
   <script>
     window.addEventListener('load', function () {
       var wcf_s = ace.edit("settingsString");
@@ -28,129 +31,8 @@
         try {
           yawf_s.removeAttribute('href');
           var w = JSON.parse(wcf_s.getValue());
-          if (typeof w === 'string') w = JSON.parse(w);
-          var v = {
-            'ua': navigator.userAgent,
-            'yawf': 'WCF - YAWF Converter',
-            'ver': '1.1.52',
-            'gver': '1.0',
-            'gm': null,
-            'conf': {
-              'weibo.other.same_forward.action': 'hidden',
-              'weibo.other.same_account.action': 'hidden',
-              'weibo.tool.mergeColumns.side': 'right',
-              'weibo.tool.avatar_shape': 'square',
-              'weibo.tool.fold_text': true,
-              'weibo.tool.fold_text.text': 'author-reason',
-            },
-          };
-          var r = v.conf;
-          var addItem = function (key, item) {
-            r[key] = r[key] || [];
-            r[key].push(item);
-          };
-          [
-            ['whiteKeywords', 'weibo.filters.keyword.whitelist', 'weibo.filters.regexp.whitelist'],
-            ['blackKeywords', 'weibo.filters.keyword.blacklist', 'weibo.filters.regexp.blacklist'],
-            ['grayKeywords', 'weibo.filters.keyword.foldlist', 'weibo.filters.regexp.foldlist'],
-          ].forEach(function (l) {
-            (w[l[0]] || []).map(function (s) {
-              try {
-                if (s.length > 2 && s[0] === '/' && s[s.length - 1] === '/') {
-                  return RegExp(s.slice(1, -1));
-                }
-              } catch (e) { }
-              try {
-                if (s.indexOf('+') !== -1) return RegExp(s.split('+').map(function (p) {
-                  return '(?=.*' + p.replace(/([.*+?^${}()|\[\]\/\\])/g, "\\$1") + ')';
-                }).join(''));
-              } catch (e) { }
-              return s;
-            }).forEach(function (s) {
-              if (s.constructor === RegExp) addItem(l[2], (s + '').slice(1, -1));
-              else addItem(l[1], s);
-            });
-          });
-          [
-            ['weibo.content.types_emotion', 'filterSmiley'],
-            ['weibo.content.types_mention', 'filterName'],
-            ['weibo.filters.hyperlink.blacklist', 'URLKeywords'],
-            ['weibo.filters.account.blacklist', 'userBlacklist'],
-            ['weibo.filters.original.blacklist', 'userBlacklist'],
-            ['weibo.filters.source.blacklist', 'sourceKeywords'],
-            ['weibo.filters.hyperlink.foldlist', 'sourceGrayKeywords'],
-            ['weibo.other.my_weibo', 'filterOthersOnly'],
-            ['weibo.other.ad_feed', 'filterPromotions'],
-            ['weibo.other.deleted_forward', 'filterDeleted'],
-            ['weibo.other.tb_tm_wb', 'filterTaobao'],
-            ['weibo.other.same_forward', 'filterDupFwd'],
-            ['weibo.other.same_forward.number', 'maxDupFwd', Number, String],
-            ['weibo.other.same_account', 'filterFlood'],
-            ['weibo.other.same_account.number', 'maxFlood', Number, String],
-            ['weibo.tool.mergeColumns', 'mergeSidebars'],
-            ['weibo.tool.showAllGroup', 'showAllGroups'],
-            ['weibo.tool.showAllMsgNav', 'showAllMsgNav'],
-            ['weibo.tool.unwrapText', 'unwrapText'],
-            ['weibo.tool.viewOriginal', 'directBigImg'],
-            ['weibo.tool.redirectWeibo', 'directFeeds'],
-            ['weibo.tool.clear_def_topic', 'clearDefTopic'],
-            ['weibo.tool.weibo_only.width', 'readerModeWidth', Number, String],
-            ['weibo.tool.userstyle', 'customStyles'],
-            ['weibo.tool.no_weibo_space', 'noHomeMargins'],
-            ['weibo.tool.avatar_shape', 'squareAvatar'],
-          ].forEach(function (l) {
-            if (l[1] in w) r[l[0]] = w[l[1]];
-            if (l[2]) r[l[0]] = l[2](r[l[0]]);
-          });
-          if ('hideMods' in w) [
-            ['weibo.layoutHideOtherAds', 'Ads'],
-            ['weibo.layoutHideOtherFooter', 'Footer'],
-            ['weibo.layoutHideMiddleRecommendedTopic', 'RecommendedTopic'],
-            ['weibo.layoutHideLeftApp', 'App'],
-            ['weibo.layoutHideWeiboFeedTip', 'CommentTip'],
-            ['weibo.layoutHideMiddleMemberTip', 'MemberTip'],
-            ['weibo.layoutHideOtherWbIm', 'IMNews'],
-            ['weibo.layoutHideMiddleFeedRecommand', 'RecomFeed'],
-            ['weibo.other.fake_weibo', 'TimelineMods'],
-            ['weibo.layoutHideWeiboTopicCard', 'TopicCard'],
-            ['weibo.layoutHideWeiboLocationCard', 'LocationCard'],
-            ['weibo.layoutHideRightInfo', 'Avatar'],
-            ['weibo.layoutHideRightAtten', 'Stats'],
-            ['weibo.layoutHideLeftToMe', 'ToMe'],
-            ['weibo.layoutHideLeftFriends', 'Friends'],
-            ['weibo.layoutHideRightInterest', 'InterestUser'],
-            ['weibo.layoutHideRightHotTopic', 'Topic'],
-            ['weibo.layoutHideRightWeibo', 'WeiboRecom'],
-            ['weibo.layoutHideRightLocation', 'LocationRecom'],
-            ['weibo.layoutHideRightMusic', 'MusicRecom'],
-            ['weibo.layoutHideRightMovie', 'MovieRecom'],
-            ['weibo.layoutHideRightBook', 'BookRecom'],
-            ['weibo.layoutHideRightMember', 'Member'],
-            ['weibo.layoutHideRightNotice', 'Notice'],
-            ['weibo.layoutHideIconApprove', 'VerifyIcon'],
-            ['weibo.layoutHideIconApproveCo', 'VerifyIcon'],
-            ['weibo.layoutHideIconClub', 'DarenIcon'],
-            ['weibo.layoutHideIconMember', 'MemberIcon'],
-            ['weibo.layoutHideIconVGirl', 'VgirlIcon'],
-            ['weibo.layoutHideIconTaobao', 'TaobaoIcon'],
-            ['weibo.layoutHideIconZongyika', 'ZongyiIcon'],
-            ['weibo.layoutHideIconDouble11', 'Double11Icon'],
-            ['weibo.layoutHidePersonCover', 'ProfCover'],
-            ['weibo.layoutHidePersonMyData', 'ProfStats'],
-            ['weibo.layoutHidePersonMyData', 'MyMicroworld'],
-            ['weibo.layoutHidePersonRelation', 'Relation'],
-            ['weibo.layoutHidePersonAlbum', 'Album'],
-            ['weibo.layoutHidePersonHotTopic', 'ProfHotTopic'],
-            ['weibo.layoutHidePersonHotWeibo', 'ProfHotWeibo'],
-            ['weibo.layoutHideOtherFeedRecom', 'FeedRecom'],
-            ['weibo.layoutHideOtherMusic', 'MusicPlayer'],
-          ].forEach(function (l) {
-            if (w.hideMods.indexOf(l[1]) !== -1) r[l[0]] = true;
-          });
-          if ('floatSetting' in w) {
-            r['weibo.tool.fixedLeft.items'] = { 'Nav': 'whole', 'Groups': 'default', 'None': 'default' }[w.floatSetting];
-            r['weibo.tool.fixedLeft'] = w.floatSetting != 'None';
-          }
+          wbp.config = w;
+          var v = wbp.converter();
           yawf_s.href = 'data:application/octet-stream;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(v, null, 2))));
           message.style.visibility = 'hidden';
         } catch (e) {
@@ -176,6 +58,7 @@
   <header>
     <h1>眼不见心不烦到 YAWF 配置文件转换工具</h1>
   </header>
+  <p>脚本已经内置了转换工具，您如果同时安装了 YAWF脚本 和眼不见心不烦，那么在 YAWF脚本的关于脚本选项卡，就能找到导入设置的功能。使用该功能效果更好。</p>
   <h2>转换</h2>
   <div class="in">
     <p>请将眼不见心不烦脚本，设置选项卡文本框中的内容复制粘贴到下面的文本框内。</p>
@@ -185,51 +68,12 @@
     <div id="message" style="visibility: hidden;">转换时发生错误，您输入的设置信息可能不正确或不完整。</div>
     <div id="wrap"><div id="yawf"><a id="export" download="wcf_convert.yawf">保存 YAWF 配置文件</a></div></div>
   </div>
-  <p>相关工具：<a href="convert_wcf.html">从 YAWF 转换到眼不见心不烦的工具</a></p>
   <h2>简介</h2>
   <div class="in">
-    <p>本工具可以帮助你将眼不见心不烦（Weibo Content Filter）的设置转换为 Yet Another Weibo Filter 的设置文件。</p>
+    <p>本工具可以帮助你将眼不见心不烦的设置转换为 Yet Another Weibo Filter 的设置文件。</p>
     <p>注意，转换前后的设置并非完全等价，这是因为：1. 两个脚本对一些内容的处理不同；2. Yet Another Weibo Filter 并未实现眼不见心不烦的所有功能 3. 一些设置项无法进行转换。</p>
     <p>如果转换工具有任何问题，请参考 Yet Another Weibo Filter 的反馈方式进行反馈。</p>
     <p>本工具是在您的浏览器中本地执行的，不会将您的设置发送到服务器上，请放心使用。（需要启用 JavaScript）</p>
   </div>
-<!--
-  <h2>帮助</h2>
-  <div class="in">
-    <p>如果您的眼不见心不烦脚本设置对话框不能打开，您可以按照如下方法操作获取脚本的设置项。您可以选择下面两种方法的一个获取您脚本的设置项。</p>
-    <h3>使用脚本读取设置项</h3>
-    <p>您还可以使用 Greasemonkey 脚本读取设置项。由于 Greasemonkey 的限制，操作过程中需要您安装一个同名脚本覆盖眼不见心不烦脚本以读取该脚本的配置。</p>
-    <ol>
-      <li>在浏览器的附加组件页面，用户脚本选项卡中，找到眼不见心不烦脚本。</li>
-      <li>右击脚本，选择显示脚本所在目录，并备份文件夹中的文件</li>
-      <li>回到附加组件页面，右击脚本选择编辑，使用如下内容替换脚本当前的内容：<pre>// ==UserScript==
-// @name 眼不见心不烦（新浪微博）
-// @namespace http://weibo.com/salviati
-// @description 导出眼不见心不烦脚本设置项的工具，并非眼不见心不烦脚本
-// @version 0
-// @grant GM_getValue
-// @grant unsafeWindow
-// @include http://www.weibo.com/*
-// @include http://weibo.com/*
-// ==/UserScript==
-self==top&amp;&amp;(uid=unsafeWindow.$CONFIG.uid)&amp;&amp;
-prompt('wcf settings:',GM_getValue(''+uid));
-</pre></li>
-      <li>安装后，回到微博页面，访问微博首页；</li>
-      <li>弹出的对话框中的文本框内的内容即为设置项；</li>
-      <li>最后恢复第二步您备份的文件，以保证眼不见心不烦可以继续使用。</li>
-    </ol>
-    <h3>直接读取 SQLite 文件</h3>
-    <p>您可以找到眼不见心不烦脚本在浏览器储存设置用的文件，以找到脚本的设置。</p>
-    <ul>
-      <li>安装 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/sqlite-manager/">SQLite Manager</a> 扩展（如果您有其他读取 SQLite 的工具，您可以忽略该步骤，但对下文需要一些变通）；</li>
-      <li>在浏览器的附加组件页面，用户脚本选项卡中，找到眼不见心不烦脚本；</li>
-      <li>向上一级目录，找到“眼不见心不烦（新浪微博）.db”文件；</li>
-      <li>从浏览器工具菜单中找到刚刚安装的 SQLite Manager 打开，选择 Database - Connect Database，打开上一步找到的文件；</li>
-      <li>在左侧展开 Tables - scriptvals - value ，右侧表格中 name 列中找到您微博的 uid （应该是一个很大的数字）；</li>
-      <li>对应您微博 uid 的那个单元格右侧 value 列的值即为您脚本的设置项；右击该单元格选择 Copy Cell 即可拷贝该内容到剪贴板。</li>
-    </ul>
-  </div>
--->
 </body>
 </html>
