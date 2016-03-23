@@ -74,6 +74,15 @@
           .W_scroll_y .bar { border-radius: calc(8px / 2) !important; }
         </div>
       </div>
+      <h2>个人主页隐藏作者信息</h2>
+      <div class="in">
+        <div class="css_code">
+          .FRAME_page .WB_feed_type .WB_feed_detail .WB_face,
+          .FRAME_page .WB_feed_type .WB_feed_detail .WB_detail > .WB_info
+          { display: none; }
+          .FRAME_page .WB_feed_type .WB_detail { margin-left: 0; }
+        </div>
+      </div>
       <h2>自定义折叠微博样式</h2>
       <div class="in">
         <p>可以通过对[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before、[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before添加样式自定义折叠提示的样式，例如：</p>
