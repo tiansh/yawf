@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.366
+// @version           3.7.367
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4618,9 +4618,10 @@ filter.items.base.scripttool.fast_hide_button = filter.item({
     var that = this;
     observer.weibo.after(function (feed) {
       var authorId = weibo.feed.author.id(feed);
-      if (!authorId || authorId === util.info.uid) return;
+      if (!authorId || authorId === util.info.uid) return; // 自己的微博，不显示按钮
       if (util.dom.matches(feed, '#v6_pl_content_atmeweibo *')) return; // 不在提到页面显示，避免与“屏蔽at”发生歧义
-      if (feed.hasAttribute('yawf-hide_box')) return;
+      if (feed.hasAttribute('yawf-hide_box')) return; // 已经有了按钮，不显示按钮
+      if (document.querySelector('[id^="Pl_Official_WeiboDetail__"]')) return; // 单条微博页面，不显示按钮
       feed.setAttribute('yawf-hide_box', 'yawf-hide_box');
       var mid = feed.getAttribute('mid');
       var screen_box = feed.querySelector('.WB_screen .screen_box'); if (!screen_box) return;
@@ -7780,10 +7781,10 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
       try {
         try { favorite = STK.namespace.v6home.lib.feed.plugins.favorite; }
         catch (e1) { favorite = STK.namespace.v6page.lib.feed.plugins.favorite; }
+        favorite.tagDialog = function () {
+          return favorite.tagBubble.apply(this, arguments);
+        };
       } catch (e2) { setTimeout(noTagDialog, 0); }
-      favorite.tagDialog = function () {
-        return favorite.tagBubble.apply(this, arguments);
-      };
     });
   }
 }).addto(filter.groups.tool);
@@ -8614,6 +8615,7 @@ filter.items.style.layout.width_weibo = filter.item({
       }
 
       .send_weibo { background-size: cover; }
+      body:not([yawf-weibo-only]) .WB_feed_v3 .WB_face .opt { right: calc(132px - {{width}}); }
     */ 喵 }), {
       'width': width + 'px',
     }));
@@ -8707,6 +8709,7 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
       body[{{attr}}] #home_new_feed_tip[yawf-fixed], body[{{attr}}] [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px; }
       body[{{attr}}] #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+      body[{{attr}}] .WB_feed_v3 .WB_face .opt { right: calc(132px - {{width}}); }
     */ 喵 }), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
