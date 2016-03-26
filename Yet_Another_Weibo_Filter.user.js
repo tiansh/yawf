@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.368
+// @version           3.7.369
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -57,6 +57,8 @@ var fonts = {
 // 请以简体中文为原文，参考这些资料翻译
 // http://zh.wikipedia.org/wiki/Template:CGroup/IT
 // http://www.microsoft.com/Language/zh-cn/Search.aspx
+// 翻译时优先考虑微博网页中的翻译，网页中未翻译或表意不明时用括号加注。如果该内容不对应微博网页中的元素，可以自由发挥
+// 符号“|”分割多个输入框的响应区域，“||”会同时换行，“{{<name>}}”可以嵌入一个输入框；翻译应保证输入框一一对应
 var text = {
   // 基本按钮
   'okButtonTitle': { 'zh-cn': '确定', 'zh-hk': '確定', 'zh-tw': '確定', 'en': 'Confirm' },
@@ -768,6 +770,9 @@ var text = {
   },
   'noWeiboSpace': { 'zh-cn': '移除微博与微博间的空隙', 'zh-hk': '移除微博與微博間的空隙', 'zh-tw': '移除微博與微博間的空隙', 'en': 'Remove space between Weibo' },
   'fromInBottom': { 'zh-cn': '将微博的发布时间和来源移动到微博末尾 (feed v3){{<i>}}', 'zh-hk': '將微博的發布時間和來源移動到微博末尾 (feed v3){{<i>}}', 'zh-tw': '將微博的發布時間和來源移動到微博末尾 (feed v3){{<i>}}', 'en': 'Move timestamp and source of Weibo to bottom (feed v3){{<i>}}' },
+  'userPageNoAuthor': { 'zh-cn': '不在个人主页显示作者头像与用户名|{{<who>}} (feed v3)', 'zh-hk': '不在個人主頁顯示作者頭像與用戶名|{{<who>}} (feed v3)', 'zh-tw': '不在個人主頁顯示作者頭像與用戶名|{{<who>}} (feed v3)', 'en': 'Hide avatar and username of author | on {{<who>}} (feed v3)' },
+  'userPageNoAuthorMine': { 'zh-cn': '仅自己的个人主页', 'zh-hk': '僅自己的個人主頁', 'zh-tw': '僅自己的個人主頁', 'en': 'my user page' },
+  'userPageNoAuthorAll': { 'zh-cn': '所有人的个人主页', 'zh-hk': '所有人的個人主頁', 'zh-tw': '所有人的個人主頁', 'en': 'all user pages' },
   'fromInBottomDesc': {
     'zh-cn': '如果您开启了[[style.sweibo.no_weibo_space]]，但未开启本功能，则微博的发布时间和来源将会被隐藏。'
   },
@@ -8982,6 +8987,35 @@ filter.items.style.sweibo.from_in_bottom = filter.item({
   },
 }).addto(filter.groups.style);
 
+// 把来源换到微博最后面去
+filter.items.style.sweibo.user_page_no_author = filter.item({
+  'group': 'sweibo',
+  'version': 369,
+  'type': 'boolean',
+  'key': 'weibo.tool.user_page_no_author',
+  'text': '{{userPageNoAuthor}}',
+  'ref': {
+    'who': {
+      'type': 'select',
+      'default': 'all',
+      'select': [
+        { 'value': 'mine', 'text': '{{userPageNoAuthorMine}}' },
+        { 'value': 'all', 'text': '{{userPageNoAuthorAll}}' },
+      ],
+    }
+  },
+  'ainit': function () {
+    if (this.ref.who.conf === 'mine' && util.info.oid() !== util.info.uid) return;
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_face,
+      .FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_detail > .WB_info { display: none; }
+      .FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_detail { margin-left: 0; }
+    */ 喵 }));
+    if (!filter.items.style.sweibo.image_size.conf || !filter.items.style.sweibo.image_size.ref.repost.conf)
+      util.css.add('.FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_expand { margin-left: -20px; padding-left: 40px; }');
+  },
+}).addto(filter.groups.style);
+
 // 鼠标滑过折叠微博时自动展示内容
 filter.items.style.sweibo.hover_show_fold = filter.item({
   'group': 'sweibo',
@@ -9756,6 +9790,7 @@ wbp.converter.table = function () {
   d('smallImgLayout', 'weibo.tool.image_size'); // 启用小图版式（自定义微博配图尺寸） // ⚠️ YAWF 不提供尺寸定义的功能，因为自定义尺寸可能和其他功能冲突
   d(['compactFeedToolbar', 'noHomeMargins'], 'weibo.tool.no_weibo_space', r.some); // 使用紧凑型（V5样式）微博工具栏（收藏 | 转发 | 评论 | 赞）, 在首页使用紧凑版式（去除卡片间空隙） // ⚠️ YAWF 未提供两个功能分开的设置
   d(['moveSrcToBtm', 'unwrapText', 'compactFeedToolbar'], 'weibo.tool.from_in_bottom', r.some); // 微博来源移动至微博底部
+  n(null, 'weibo.tool.user_page_no_author');
   d(null, 'weibo.tool.hover_show_fold', true);
   d(null, 'weibo.tool.fold_text.text', 'author-reason');
   d(null, 'weibo.tool.fold_text', true);
