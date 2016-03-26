@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.369
+// @version           3.7.370
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -9007,12 +9007,12 @@ filter.items.style.sweibo.user_page_no_author = filter.item({
   'ainit': function () {
     if (this.ref.who.conf === 'mine' && util.info.oid() !== util.info.uid) return;
     util.css.add(util.str.cmt(function () { /*!CSS
-      .FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_face,
-      .FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_detail > .WB_info { display: none; }
-      .FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_detail { margin-left: 0; }
+      .FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_face,
+      .FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_detail > .WB_info { display: none; }
+      .FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_detail { margin-left: 0; }
     */ 喵 }));
     if (!filter.items.style.sweibo.image_size.conf || !filter.items.style.sweibo.image_size.ref.repost.conf)
-      util.css.add('.FRAME_page .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_expand { margin-left: -20px; padding-left: 40px; }');
+      util.css.add('.FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_expand { margin-left: -20px; padding-left: 40px; }');
   },
 }).addto(filter.groups.style);
 
