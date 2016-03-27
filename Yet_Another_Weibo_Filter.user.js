@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.370
+// @version           3.7.371
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1723,6 +1723,7 @@ observer.weibo = (function () {
 }());
 
 observer.comment = (function () {
+  var before = [], after = [];
   observer.dom.add(function commentObserver() {
     var comments = Array.from(document.querySelectorAll(
       '.list_ul[node-type="feed_list_commentList"] .list_li:not([yawf-comment]), ' +
@@ -1730,9 +1731,15 @@ observer.comment = (function () {
     ));
     comments.forEach(function (comment) {
       comment.setAttribute('yawf-comment', '');
+      before.forEach(function (f) { f(comment); });
       filter.cmt_active(comment);
+      after.forEach(function (f) { f(comment); });
     });
   });
+  return {
+    'before': function (f) { before.push(util.func.catched(f)); },
+    'after': function (f) { after.push(util.func.catched(f)); },
+  };
 }());
 
 // 阻止页面通过 jsonp 获取数据
@@ -6173,13 +6180,20 @@ filter.items.comment.otherc.with_picture = filter.item({
     if (!this.conf) return null;
     var media = comment.querySelector('.WB_media_wrap'); if (!media) return null;
     var img = media.querySelector('li[action-type="comment_media_img"] img');
-    if (this.ref.act.conf === 'hidden') return 'hidden';
-    var pid = img.src.match(/\/([^\/]*)\.[^\/]*$/)[1];
-    var text = comment.querySelector('.WB_text');
-    var a = util.dom.create(util.str.fill(html.viewOriginalFCLink, { 'pid': pid }));
-    media.setAttribute('yawf-cmt-img', 'hidden');
-    a.addEventListener('click', function () { img.click(); });
-    text.appendChild(a);
+    if (this.ref.act.conf === 'hidden') return 'hidden'; else return null;
+  },
+  'ainit': function () {
+    if (this.ref.act.conf !== 'fold') return;
+    observer.comment.after(function (comment) {
+      var media = comment.querySelector('.WB_media_wrap:not([yawf-cmt-img])'); if (!media) return;
+      var img = media.querySelector('li[action-type="comment_media_img"] img'); if (!img) return;
+      var pid = img.src.match(/\/([^\/]*)\.[^\/]*$/)[1];
+      var text = comment.querySelector('.WB_text');
+      var a = util.dom.create(util.str.fill(html.viewOriginalFCLink, { 'pid': pid }));
+      media.setAttribute('yawf-cmt-img', 'hidden');
+      a.addEventListener('click', function () { img.click(); });
+      text.appendChild(a);
+    });
   },
 }).addto(filter.groups.comment);
 
@@ -6365,7 +6379,7 @@ filter.predef.group('layout');
     });
   });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
-  item('Card', 182, '.WB_feed_spec[exp-data*="key=tblog_weibocard"], .WB_pic_app, .WB_feed_spec, .WB_music { display: none !important; }');
+  item('Card', 182, '.WB_pic_app, .WB_feed_spec, .WB_music { display: none !important; }');
   item('ArticalPay', 220, function () {
     observer.dom.add(function hideArticalPay() {
       var t1 = document.querySelector('.feed_app_btn_a a[action-data*="px.e.weibo.com"]');
@@ -6385,7 +6399,7 @@ filter.predef.group('layout');
       }
     });
   });
-  item('Tag', 186, '.WB_tag_s[node-type="feed_list_tagList"] { display: none !important; }');
+  item('Tag', 186, '.WB_tag { display: none !important; }');
   item('MovieTag', 218, '.WB_feed_type .WB_tag_rec { display: none !important; }');
   item('Source', 34, '.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }' +
     '.WB_feed_detail .WB_from a[date]::after { content: " "; display: block; } .WB_feed_detail .WB_from { height: 16px; overflow: hidden; }');
@@ -7738,7 +7752,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         '.WB_detail .WB_text a[action-type="widget_photoview"]:not([yawf-viewori])',
         '.WB_detail .WB_text a[action-type="widget_commentPhotoView"]:not([yawf-viewori])'
       ].join(',')); if (!a) return;
-      var pid = getPid(a), info = { 'host': 'ww2.sinaimg.cn', 'filenames': [pid + '.jpg']};
+      var pid = getPid(a), info = { 'host': 'ww2.sinaimg.cn', 'filenames': [pid]};
       a.target = '_blank'; updateLink(a, info);
       if (!a.hasAttribute('imagecard')) a.setAttribute('imagecard', 'pid=' + pid);
       a.setAttribute('yawf-action-type', a.getAttribute('action-type')); a.removeAttribute('action-type');
