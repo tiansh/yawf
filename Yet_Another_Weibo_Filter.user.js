@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.374
+// @version           3.7.375
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -454,7 +454,7 @@ var text = {
   'layoutHideIconClub': { 'zh-cn': '微博达人', 'zh-hk': '微博達人', 'zh-tw': '微博達人', 'en': 'Pioneer' },
   'layoutHideIconVGirl': { 'zh-cn': '微博女郎', 'zh-hk': '微博女郎', 'zh-tw': '微博女郎', 'en': 'Weibo girl' },
   'layoutHideIconTaobao': { 'zh-cn': '淘宝/天猫商户', 'zh-hk': '淘寶/天貓商戶', 'zh-tw': '淘寶/天貓商戶', 'en': 'Taobao / Tmall Merchant' },
-  'layoutHideIconCheng': { 'zh-cn': '阿里诚信通会员', 'zh-hk': '阿里誠信通會員', 'zh-tw': '阿里誠信通會員', 'en': 'Alibaba TrustPass Member' },
+  'layoutHideIconCheng': { 'zh-cn': '阿里诚信通', 'zh-hk': '阿里誠信通', 'zh-tw': '阿里誠信通', 'en': 'Alibaba 诚信通' },
   'layoutHideIconGongyi': { 'zh-cn': '公益', 'zh-hk': '公益', 'zh-tw': '公益', 'en': 'public Interest' },
   'layoutHideIconZongyika': { 'zh-cn': '综艺', 'zh-hk': '综艺', 'zh-tw': '综艺', 'en': 'Variety' },
   'layoutHideIconSuishoupai': { 'zh-cn': '随手拍', 'zh-hk': '随手拍', 'zh-tw': '随手拍', 'en': 'Photograph' },
@@ -470,7 +470,7 @@ var text = {
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
   'layoutHideNavHot': { 'zh-cn': '发现', 'zh-hk': '发现', 'zh-tw': '发现', 'en': 'Discover' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
-  'layoutHideNavHotSearch': { 'zh-cn': '大家正在热搜', 'zh-hk': '大家正在熱搜', 'zh-tw': '大家正在熱搜', 'en': 'Hot search' },
+  'layoutHideNavHotSearch': { 'zh-cn': '大家正在搜', 'zh-hk': '大家正在搜', 'zh-tw': '大家正在熱搜', 'en': 'Hot search' },
   'layoutHideNavHotSearchDesc': {
     'zh-cn': '建议使用ABP等扩展，添加规则“ <code>http://s.weibo.com/ajax/jsonp/gettopsug*</code> ”，以达到更好的效果。',
   },
@@ -1076,6 +1076,7 @@ var html = {
   'weiboViaWeiboCom': '<a rel="nofollow" href="http://weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
 };
 
+// 其他在填写格式化字符串时自动填写的内容
 var fill = {
   'domainURL': {
     'toString': function () {
@@ -1199,7 +1200,7 @@ util.priority = {
 util.func = {};
 
 // 基本函数
-util.func.noop = function () { };
+var noop = util.func.noop = function () { };
 util.func.identity = function (x) { return x; };
 util.func.constant = function (x) { return function () { return x; }; };
 
@@ -1841,7 +1842,7 @@ util.i18n.stylish = function (lang) {
   util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
     .layoutFilterGroupLayer .yawf-configBoolean { width: {{layoutOptionWidth}}; }
     .layoutFilterGroupLayer .yawf-configBoolean.yawf-layoutConfig-line { width: 100%; }
-  */ 喵 }), { 'layoutOptionWidth': isEn ? '240px' : '160px' }));
+  */ noop(); }), { 'layoutOptionWidth': isEn ? '240px' : '160px' }));
 };
 
 // 根据用户界面上的语言做不同调整
@@ -2178,7 +2179,7 @@ util.ui.form = function (dom, display, details) {
   var setPos = function (pos) {
     var left = pos[0], top = pos[1];
     left = Math.min(Math.max(0, left), document.body.clientWidth - dom.clientWidth - 2);
-    top = Math.min(Math.max(pageYOffset, top), pageYOffset + window.innerHeight - dom.clientHeight - 2);
+    top = Math.min(Math.max(window.pageYOffset, top), window.pageYOffset + window.innerHeight - dom.clientHeight - 2);
     if (left + 'px' !== dom.style.left) dom.style.left = left + 'px';
     if (top + 'px' !== dom.style.top) dom.style.top = top + 'px';
     return [left, top];
@@ -2247,7 +2248,7 @@ util.ui.form = function (dom, display, details) {
     document.body.appendChild(dom);
     if (top == null) top = (window.innerHeight - dom.clientHeight) / 2;
     if (left == null) left = (window.innerWidth - dom.clientWidth) / 2;
-    pos = setPos([left, top + pageYOffset]);
+    pos = setPos([left, top + window.pageYOffset]);
     document.addEventListener('keydown', keys);
     document.addEventListener('scroll', hold);
     window.addEventListener('resize', hold);
@@ -2970,7 +2971,7 @@ filter.fast.right = (function () {
     });
     if (menu.firstChild && submenu.firstChild) {
       feed.appendChild(menu);
-      feed.setAttribute('contextmenu', (menu.id = 'yawf-weibo-menu-' + ++counter));
+      feed.setAttribute('contextmenu', (menu.id = 'yawf-weibo-menu-' + (++counter)));
     }
   };
   var active = function () {
@@ -3148,7 +3149,7 @@ filter.active = function (feed) {
     feed.setAttribute('yawf-display', 'display-' + action);
     fixFeed(feed);
     return !action.match(/^(.*-)?hidden$/);
-  }())
+  }());
   if (!notHidden) return false;
   son.forEach(function (feed, index) {
     var isSon = !!index;
@@ -4657,7 +4658,7 @@ filter.items.base.scripttool.fast_hide_button = filter.item({
       .WB_screen .yawf-hide_box ~ .screen_box { margin: -10px 0 0 -37px; position: absolute; }
       .WB_screen .yawf-hide_box ~ .screen_box .W_ficon, .WB_screen .yawf-hide_box .W_ficon { width: 20px; }
       .WB_screen .yawf-hide_box ~ .screen_box .layer_menu_list { right: -4px; }
-    */ 喵 }));
+    */ noop(); }));
   }
 }).addto(filter.groups.base);
 
@@ -4773,7 +4774,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
       .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none; }
       .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
       .WB_feed .WB_notes[requesttype="newFeed"] { display: none !important; }
-    */ 喵 }));
+    */ noop(); }));
 
     var loadKey = util.keyboard.code.PERIOD;
 
@@ -6181,7 +6182,6 @@ filter.items.comment.otherc.with_picture = filter.item({
   'comment': function withPictureCommentRule(comment) {
     if (!this.conf) return null;
     var media = comment.querySelector('.WB_media_wrap'); if (!media) return null;
-    var img = media.querySelector('li[action-type="comment_media_img"] img');
     if (this.ref.act.conf === 'hidden') return 'hidden'; else return null;
   },
   'ainit': function () {
@@ -6360,7 +6360,7 @@ filter.predef.group('layout');
     .WB_vipcover, .WB_starcover { display: none !important; }
     .WB_feed_vipcover .WB_feed_detail { padding-top: 10px; }
     .WB_feed.WB_feed_v3 .WB_feed_vipcover .WB_feed_detail { padding-top: 20px; }
-  */ 喵 }));
+  */ noop(); }));
   item('LastPic', 72, function () {
     observer.dom.add(function hideLastPic() {
       var last;
@@ -6487,7 +6487,7 @@ filter.predef.group('layout');
       .PCD_header .shadow { margin: 0 calc(50% - 300px); width: 600px; }
       .PCD_header .pf_intro { height: 36px; line-height: 18px; }
       .PCD_header .pf_opt { margin-top: 8px; }
-    */ 喵 }));
+    */ noop(); }));
     observer.dom.add(function fullProfileIntroduction() {
       var intro = document.querySelector('.PCD_header .pf_intro:not([yawf-full-intro])'); if (!intro) return;
       intro.setAttribute('yawf-full-intro', (intro.textContent = intro.getAttribute('title')));
@@ -6543,9 +6543,13 @@ filter.predef.group('layout');
       '.WB_feed_yy2016_up_but', '.WB_feed_yy2016_down_but', '#pl_common_ali',
     ].join(',') + ' { display: none !important; } ' +
     '#wrapAD, .news_logo { visibility: hidden !important; }');
-    var version = '', defaultSkin = 'skin058', target = defaultSkin;
-    try { unsafeWindow.$CONFIG.skin || defaultSkin; } catch (e) { }
-    if (/skin35\d/.test(target) !== -1) target = defaultSkin;
+    var version = '';
+    // 检查应当替换为哪种皮肤
+    // 网页中 $CONFIG.skin 给出了用户选择的皮肤
+    var defaultSkin = 'skin058', target = defaultSkin;
+    try { target = unsafeWindow.$CONFIG.skin || defaultSkin; } catch (e) { }
+    if (/skin35\d/.test(target)) target = defaultSkin;
+    // 检查网页中是否被插入了广告皮肤，如果有则换成用户选择的（或默认的）皮肤
     var updateSkin = function updateSkin() {
       var adskin = document.querySelector('link[href*="/skin35"]');
       if (adskin) {
@@ -6558,6 +6562,8 @@ filter.predef.group('layout');
       if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/' + target + '/images/profile_cover_s.jpg?version=' + version + '")';
     };
     observer.dom.add(updateSkin);
+    // 移除一些显示广告的 className ，不移除对象本身
+    // 这些 className 因为影响过大，通过样式覆盖较为困难且容易发生问题
     var adClassName = ['WB_feed_yy2016_up', 'WB_feed_yy2016_down'];
     var removeClassName = function noAdsRemoveClassName() {
       adClassName.forEach(function (className) {
@@ -6821,7 +6827,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       .yawf-WB_left_nav .levmore .W_new{ position:absolute;top:0; right:-1px;}
       .yawf-WB_left_nav .W_scroll_y{ right:0;}
 
-    */ 喵 }));
+    */ noop(); }));
 
     // 将左栏的样式改为卡片效果（或改回）
     // 由于左栏样式都加在 .WB_left_nav 上，所以使用 .yawf-WB_left_nav 来躲开这些样式
@@ -7208,7 +7214,7 @@ filter.items.tool.fixed.hide_nav_bar = filter.item({
       .WB_global_nav[{{attr}}]:hover .gn_topmenulist_tips { padding-top: 2px; transition: padding-top ease-in-out 0.1s 0s; }
       .WB_global_nav[{{attr}}] .gn_topmenulist_tips .ficon_close { top: 56px; transition: top ease-in-out 0.1s 0.33s; }
       .WB_global_nav[{{attr}}]:hover .gn_topmenulist_tips .ficon_close { top: 6px; transition: top ease-in-out 0.1s 0s; }
-    */ 喵 }).replace(/\/\/.*\n/g, '\n'), { 'attr': attr }));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'), { 'attr': attr }));
   },
 }).addto(filter.groups.tool);
 
@@ -7230,7 +7236,7 @@ filter.items.tool.fixed.fixed_left = filter.item({
       .WB_main_r .WB_main_l { will-change: scroll-position; }
       .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
       body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
-    */ 喵 }));
+    */ noop(); }));
     if (filter.items.tool.fixed.hide_nav_bar.conf) {
         util.css.add('.WB_main_r[yawf-fixed] .WB_main_l { top: 10px !important; }');
     }
@@ -7328,7 +7334,7 @@ filter.items.tool.fixed.fixed_right = filter.item({
     };
     if (!fright) subs('.WB_main_r');
     if (!fleft) subs('.WB_main_l');
-    if (!fother) subs('.WB_frame_b'), subs('.WB_frame_c');
+    if (!fother) { subs('.WB_frame_b'); subs('.WB_frame_c'); }
     if (query.length === 0) return; else query = query.join(',');
     var removeFixed = function removeRightFixed() {
       var items = Array.from(document.querySelectorAll(query));
@@ -7370,7 +7376,7 @@ filter.items.tool.fixed.fixed_new_feed_tip = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       [yawf-id="home_new_feed_tip"][yawf-fixed], #home_new_feed_tip[yawf-fixed] { display: block; position: fixed; top: 66px; width: 600px; padding-top: 0; z-index: 9998; }
       [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; } 
-    */ 喵 }));
+    */ noop(); }));
   }
 }).addto(filter.groups.tool);
 
@@ -7491,7 +7497,7 @@ filter.items.tool.weibotool.redirect_weibo = filter.item({
         '.pic_box a[suda-uatrack*="user_pic"]', // 单条微博上方的用户
         '.WB_artical .main_editor .authorinfo a', // 头条文章的作者信息
         '.webim_chat_window .chat_title a[node-type="_chatUserName"]', // 聊天窗口上的用户名
-      ].map(function (x) { return x + '[href]:not([href*="is_all"])'}).join(',')));
+      ].map(function (x) { return x + '[href]:not([href*="is_all"])'; }).join(',')));
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
         s.is_all = '1';
@@ -7688,7 +7694,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         window.onresize = resize;
       </script></body>
       </html>
-    */ 喵 }).split('\n').map(function (x) { return x.trim(); }).join('\n');
+    */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
     // 获取图片信息
     var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
     var imageUrl = function (info, single) {
@@ -8433,7 +8439,7 @@ filter.items.style.text.weibo_large_font = filter.item({
       .WB_feed_expand .WB_text .W_btn_b, .WB_text .W_btn_c, .WB_empty .W_btn_c { height: {{h2}}px !important; line-height: {{h2}}px !important; }
       .WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b *, .WB_text .W_btn_c *, .WB_empty .W_btn_c * { line-height: {{h2}}px !important; font-size: {{fs3}}px !important; }
       .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
-    */ 喵 }), this.pref[this.ref.ratio.conf]));
+    */ noop(); }), this.pref[this.ref.ratio.conf]));
   },
 }).addto(filter.groups.style);
 
@@ -8460,9 +8466,9 @@ filter.items.style.layout.avatar_shape = filter.item({
   'ainit': function () {
     util.css.add(this.ref.shape.conf === 'square' ? util.str.cmt(function () { /*!CSS
       .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box, .PCD_counter_b .pic_box, .WB_feed_v3 .WB_sonFeed .WB_face, .WB_feed_v3 .WB_sonFeed .WB_face .face img { border-radius: 0 !important; }
-    */ 喵 }) : util.str.cmt(function () { /*!CSS
+    */ noop(); }) : util.str.cmt(function () { /*!CSS
       img[usercard], .WB_face img { border-radius: 50% !important; } 
-    */ 喵 }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8485,7 +8491,7 @@ filter.items.style.layout.dark_nav_bar = filter.item({
       .FRAME_main .WB_global_nav .gn_nav_list li .home em { color: #fa7d3c; }
       .WB_global_nav .S_ficon, .WB_global_nav .S_ficon_dis, .WB_global_nav a.S_ficon_dis:hover, .WB_global_nav a:hover .S_ficon_dis { color: #a6afbf; }
       .WB_global_nav .S_txt1, .WB_global_nav .SW_fun .S_func1 { color: #eee; }
-    */ 喵 }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8519,7 +8525,7 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
         .WB_global_nav_us .gn_logo .box .logo, .WB_global_nav_us .gn_logo .box img { display: block; }
         .WB_global_nav .gn_logo .box .logo { margin-left: 0; }
         .WB_global_nav_us .gn_position { margin-right: 0; }
-      */ 喵 }));
+      */ noop(); }));
       observer.dom.remove(moveNavList);
     };
     observer.dom.add(moveNavList);
@@ -8547,100 +8553,59 @@ filter.items.style.layout.width_weibo = filter.item({
   'ainit': function () {
     var width = this.ref.width.conf;
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-      .FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
-      .FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
-      .FRAME_main:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
-      .FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      .FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 400px); }
-      .FRAME_main:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
-      .FRAME_main:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
-      .FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
-      .FRAME_main:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
-      .FRAME_main:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
-      .FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
+      body:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
+      body:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
+      body:not([yawf-weibo-only]) .WB_main_c,
+      body:not([yawf-weibo-only]) .WB_frame_c { width: {{width}}; }
+      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 400px); }
+      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
+      body:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+      body:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
+      body:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
+      body:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
+      body:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
+      body:not([yawf-weibo-only]) .private_dialogue_box .private_dialogue_body { width: {{width}}; }
+      body:not([yawf-weibo-only]) .webim_chat_window .private_dialogue_box .private_dialogue_body { width: 400px; }
       @media screen and (max-width: 1006px) {
-        .FRAME_main:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
-        .FRAME_main:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
-        .FRAME_main:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
-        .FRAME_main:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+        body:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
+        body:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
+        body:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
+        body:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       }
 
-      .FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
-      .FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
-      .FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
-      .FRAME_main[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
+      body[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
+      body[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
+      body[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
+      body[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
       @media screen and (max-width: 1006px) {
-        .FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
-        .FRAME_main[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
-        .FRAME_main[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+        body[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
+        body[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
+        body[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       }
 
-      .FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
-      .FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
-      .FRAME_message:not([yawf-weibo-only]) .WB_main_c { width: {{width}}; }
-      .FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      .FRAME_message:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
-      .FRAME_message:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
-      .FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
-      .FRAME_message:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
-      .FRAME_message:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; }
-      .FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 40px); }
-      .FRAME_message:not([yawf-weibo-only]) .private_dialogue_box .private_dialogue_body { width: {{width}}; }
-      .FRAME_message:not([yawf-weibo-only]) .webim_chat_window .private_dialogue_box .private_dialogue_body { width: 400px; }
-      @media screen and (max-width: 1006px) {
-        .FRAME_message:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 160px) !important; }
-        .FRAME_message:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 10px) !important; }
-        .FRAME_message:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 80px); }
-        .FRAME_message:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
-      }
-
-      .FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) .WB_main .WB_frame { width: calc({{width}} + 240px) !important; max-width: 100%; }
-      .FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 130px); }
-      .FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% - {{width}} / 2 - 120px); }
-      .FRAME_message[yawf-merge-left="right"]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 110px); }
-      @media screen and (max-width: 1006px) {
-        .FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) .WB_main .WB_frame { width: {{width}} !important; max-width: 100%; }
-        .FRAME_message[yawf-merge-left="left"]:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 10px); }
-        .FRAME_message[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
-      }
-
-      .FRAME_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 240px) !important; }
-      .FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
-      .FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
-      .FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 250px) !important; }
-      .FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 260px); }
-      .FRAME_page:not([yawf-weibo-only]) .WB_frame_c { width: calc({{width}}); }
-      .FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      .FRAME_page:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
-      .FRAME_page:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
-      .FRAME_page:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; }
-      .FRAME_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 220px); }
-      .FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 100px); }
+      body.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
+      body.B_page:not([yawf-weibo-only]) .WB_frame_a,
+      body.B_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
+      body.B_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 340px); }
+      body.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
+      body.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
+      body.B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 170px); }
+      body.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
+      body.B_page:not([yawf-weibo-only]) .send_weibo_simple .input_simple_wrap .inputfunc_simple_wrap { width: calc({{width}} - 96px); }
       @media screen and (max-width: 939px) {
-        .FRAME_page:not([yawf-weibo-only]) .WB_frame { width: {{width}} !important; }
-        .FRAME_page:not([yawf-weibo-only]) .WB_frame_a,
-        .FRAME_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
-        .FRAME_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
-        .FRAME_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 10px) !important; }
-        .FRAME_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+        body.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
+        body.B_page:not([yawf-weibo-only]) .WB_frame_a,
+        body.B_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
+        body.B_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
+        body.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
+        body.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
+        body.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       }
-
-      .B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
-      .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
-      .B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
-      .B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 170px); }
-      .B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
-      .B_page:not([yawf-weibo-only]) .send_weibo_simple .input_simple_wrap .inputfunc_simple_wrap { width: calc({{width}} - 96px); }
-      @media screen and (max-width: 939px) {
-        .B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
-        .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
-        .B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
-        .B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
-      }
+      body.B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
 
       .send_weibo { background-size: cover; }
-      body:not([yawf-weibo-only]) .WB_feed_v3 .WB_face .opt { right: calc(132px - {{width}}); }
-    */ 喵 }), {
+    */ noop(); }), {
       'width': width + 'px',
     }));
     // 解决发布框下方的按钮在缩小宽度时排列不完全的问题
@@ -8699,20 +8664,6 @@ filter.items.style.layout.weibo_only = filter.item({
       updateMode(null);
       e.stopPropagation();
     });
-    // 显示切换按钮
-    if (that.ref['switch'].conf) {
-      var showSwitch = function showReaderSwitch() {
-        return;
-        var search = document.querySelector('#v6_pl_content_homefeed .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added]), div[id^="Pl_Official_ProfileFeedNav__"] .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added])');
-        if (!search) return; search.setAttribute('yawf-weibo-only-added', 'added');
-        var weiboOnly = util.dom.create('div', util.str.fill(html.weiboOnlyButton, {
-          'shortcut': key.conf === 0 ? '' : ' (' + util.keyboard.name(key.conf) + ')',
-        })).firstChild;
-        weiboOnly.addEventListener('click', updateMode.bind(that, null));
-        search.parentNode.appendChild(weiboOnly);
-      };
-      observer.dom.add(showSwitch);
-    }
     // 注册样式
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body[{{attr}}] .WB_miniblog { padding-top: 50px; }
@@ -8736,7 +8687,7 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] #home_new_feed_tip[yawf-fixed], body[{{attr}}] [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px; }
       body[{{attr}}] #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       body[{{attr}}] .WB_feed_v3 .WB_face .opt { right: calc(132px - {{width}}); }
-    */ 喵 }), {
+    */ noop(); }), {
       'width': that.ref.width.conf + 'px',
       'attr': attr,
     }));
@@ -8856,7 +8807,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text + .WB_from { margin-top: 1em; }
 
       .WB_feed.WB_feed_v3 .WB_face .opt { margin: 10px 0 0 0; position: static; right: auto; top: auto; }
-    */ 喵 }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -8927,7 +8878,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a { margin: 0; width: auto; }
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: none; max-height: none; min-width: auto; }
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-width: 260px; max-width: 40vw; max-height: 260px; max-height: 40vh; min-width: auto; }
-    */ 喵 }).replace(/\/\/.*\n/g, '\n'));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'));
     if (this.ref.repost.conf) util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_feed_expand .W_arrow_bor { display: block; }
       .WB_feed.WB_feed_v3 .WB_expand_media { margin: 2px 0 8px; padding: 12px 16px 16px; }
@@ -8942,7 +8893,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto; }
       .WB_feed.WB_feed_v3 .layer_view_morepic .view_pic { padding: 0 40px 20px; }
       .WB_feed.WB_feed_v3 .WB_media_view .pic_choose_box .stage_box { width: 440px; }
-    */ 喵 }).replace(/\/\/.*\n/g, '\n'));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'));
     // FIXME 八图或九图时，展开后图片列表显示不完整
   },
 }).addto(filter.groups.style);
@@ -8982,7 +8933,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
       .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
 
-    */ 喵 }).replace(/\/\/.*\n/g, '\n'));
+    */ noop(); }).replace(/\/\/.*\n/g, '\n'));
   },
 }).addto(filter.groups.style);
 
@@ -9004,7 +8955,7 @@ filter.items.style.sweibo.from_in_bottom = filter.item({
       .WB_feed.WB_feed_v3 .WB_sonFeed .WB_detail::after { display: none; }
       .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
       .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
-    */ 喵 }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -9031,7 +8982,7 @@ filter.items.style.sweibo.user_page_no_author = filter.item({
       .FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_face,
       .FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_feed_detail .WB_detail > .WB_info { display: none; }
       .FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_detail { margin-left: 0; }
-    */ 喵 }));
+    */ noop(); }));
     if (!filter.items.style.sweibo.image_size.conf || !filter.items.style.sweibo.image_size.ref.repost.conf)
       util.css.add('.FRAME_page [id^="Pl_Official_MyProfileFeed__"] .WB_feed_v3:not(.WB_feed_v3_one) .WB_feed_type .WB_expand { margin-left: -20px; padding-left: 40px; }');
   },
@@ -9047,7 +8998,7 @@ filter.items.style.sweibo.hover_show_fold = filter.item({
   'ainit': function () {
     util.css.add(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; }
-    */ 喵 }));
+    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
@@ -9198,7 +9149,7 @@ filter.items.style.color.whitelist_highlight = filter.item({
   'ainit': function () {
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-show"] { background-color: {{color}} !important; }
-    */ 喵 }), { 'color': '' + this.ref.rgba }));
+    */ noop(); }), { 'color': '' + this.ref.rgba }));
   },
 }).addto(filter.groups.style);
 
@@ -9251,7 +9202,7 @@ filter.items.style.color.color_override = filter.item({
       .private_list_box .private_head { padding-bottom: 8px; }
       .private_list_box .private_body { margin-top: 0; }
 
-    */ 喵 }), {
+    */ noop(); }), {
       'color1': '' + this.ref.rgba1,
       'color2': '' + this.ref.rgba2,
       'color3': '' + this.ref.rgba3,
@@ -9388,7 +9339,7 @@ var wbp = {};
 wbp.config = null;
 
 wbp.converter = util.func.catched(function () {
-  var wbpConfig = wbp.config
+  var wbpConfig = wbp.config;
   var result = { 'yawf': 'WBP - YAWF Converter', 'ver': '0', 'conf': {} };
   var conf = result.conf;
   var readWbpConfig = function (key) {
@@ -9453,11 +9404,11 @@ wbp.converter.rules.some = function (booleans) {
 wbp.converter.rules.color = function (color) {
   var div = document.createElement('div');
   document.body.appendChild(div);
-  var color, rgba, name = 'transparent';
+  var rgba, name = 'transparent';
   var red = 0, green = 0, blue = 0, alpha = 0;
   try {
     div.style = 'color: ' + color + '!important';
-    name = window.getComputedStyle(div).color
+    name = window.getComputedStyle(div).color;
     rgba = name.match(/rgba?\((.*)\)/)[1].split(',').map(Number);
     red = rgba[0]; blue = rgba[1]; green = rgba[2];
     alpha = rgba.length > 3 ? rgba[3] : 1;
@@ -9554,7 +9505,7 @@ wbp.converter.table = function () {
     style('/* 折叠微博颜色 */\n' + util.str.fill(util.str.cmt(function () { /*!CSS
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { color: {{text}}; background-color: {{back}}; border-color: {{text}} }
       [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before { color: #40d040; background-color: #d0ffd0;  border-color: #40d040 }
-    */ 喵 }), {
+    */ noop(); }), {
       'text': r.color(color[0]).name,
       'back': r.color(color[1]).name,
     }));
@@ -9645,7 +9596,7 @@ wbp.converter.table = function () {
   m('TaobaoIcon', 'weibo.layoutHideIconTaobao');
   n(null, 'weibo.layoutHideIconCheng');
   m('GongyiIcon', 'weibo.layoutHideIconGongyi');
-  n(null, 'weibo.layoutHideIconSuishoupai');
+  m('PaiIcon', 'weibo.layoutHideIconSuishoupai');
   n(null, 'weibo.layoutHideIconZongyika');
   n(null, 'weibo.layoutHideIconYouji');
   n(null, 'weibo.layoutHideIconDouble11');
@@ -9803,7 +9754,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.weibo_only.switch');
   n(null, 'weibo.tool.weibo_only._enabled');
   d(null, 'weibo.tool.weibo_only', true); // 启用极简阅读模式 // ⚠️ 具体样式稍有不同
-  n(['readerModeIndex', 'readerModeProfile'], null) // ⚠️ YAWF 不提供通过设置开关阅读视图的选项
+  n(['readerModeIndex', 'readerModeProfile'], null); // ⚠️ YAWF 不提供通过设置开关阅读视图的选项
   d('skinID', 'weibo.tool.set_skin.skin'); // 覆盖我的首页模板设置为 
   d('overrideMySkin', 'weibo.tool.set_skin'); // 覆盖我的首页模板设置为 // ⚠️ YAWF 不提供对首页和个人主页的分开设置
   d('unwrapText', 'weibo.tool.unwrapText'); // 微博作者与正文间不折行
@@ -9875,7 +9826,7 @@ wbp.importer = function () {
         var configText = JSON.stringify(wbp.converter());
         filter.items.script.importexport.importexport['import'](configText, function (version) {
           if (version !== 0) return;
-          util.func.call(wbp.showunsupport)
+          util.func.call(wbp.showunsupport);
         });
       });
       return dom;
@@ -9937,14 +9888,14 @@ updater.showfuncset = util.func.catched(function (itemSelector, title, genConten
   var dialog = util.ui.dialog('yawf-funcset', title, function (inner) { 
     var content = genContent(count);
     if (content.header) inner.appendChild(content.header);
-    newFilters.show(content.body)
+    newFilters.show(content.body);
     if (content.top) content.body.insertBefore(content.top, content.body.firstChild);
     if (content.bottom) content.body.appendChild(content.bottom);
     inner.appendChild(content.body);
     if (content.footer) inner.appendChild(content.footer);
   });
   dialog.show();
-  return dialog
+  return dialog;
 });
 
 // 显示新功能提示对话框
@@ -10346,7 +10297,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
     float: none; width: auto;
   }
-*/ 喵 }) + '\n').replace(/\/\/.*\n/g, '\n'), {
+*/ noop(); }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
 util.init(function (valid) {
