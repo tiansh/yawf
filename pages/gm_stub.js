@@ -6,10 +6,10 @@
   root.GM_getValue = function (k, v) { return k in GM_values ? GM_values[k] : v; };
   root.GM_deleteValue = function (k) { delete GM_values[k]; };
   root.GM_addStyle = function (t) { addstyle.textContent += '\n' + t; };
-  root.GM_registerMenuCommand = function () { }
-  root.GM_info = {}
+  root.GM_registerMenuCommand = function () { };
+  root.GM_info = {};
   root.unsafeWindow = window;
-}(this))
+}(this));
 
 // CONFIG stub
 $CONFIG = { 'uid': '3921589057', 'nick': 'tsh90' };

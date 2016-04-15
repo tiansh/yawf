@@ -19,4 +19,4 @@ function showAll() {
     }, util.priority.LAST * 2);
   };
   document.body.appendChild(userscript);
-};
+}

@@ -11,7 +11,7 @@ h1 { float: left; line-height: 1.5em; margin: 0.5em 0; font-size: 200%; }
 h2 { border-bottom: 2px solid #ccc; margin-top: 1em; font-size: 150%; }
 h3 { font-size: 125%; margin: 1em 0 0 0; }
 h4 { font-size: 100%; margin: 1em 0 0 0; }
-.anchor { display: block; float: left; text-align: center; text-decoration: none; width: 1em; vertical-align: top; transform: rotate(90deg); left: -1em; position: relative; margin-right: -1em; opacity: 0; color: #999; }
+.anchor { display: block; float: left; text-align: center; text-decoration: none; width: 1em; vertical-align: top; -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); -webkit-transform: rotate(90deg); transform: rotate(90deg); left: -1em; position: relative; margin-right: -1em; opacity: 0; color: #999; }
 h1:hover .anchor, h2:hover .anchor, h3:hover .anchor, h4:hover .anchor { opacity: 1; }
 .anchor:hover { color: #666; }
 nav.index { margin: 0 40px; padding: 10px 20px; border: 1px solid #aaa; background: #fafafa; display: table; }
