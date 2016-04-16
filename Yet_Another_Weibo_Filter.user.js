@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.375
+// @version           3.7.376
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -758,6 +758,10 @@ var text = {
     'zh-hk': '您要在 Yet Another Weibo Filter 腳本中使用「{{name}}」模板嗎？<br />啟用後您訪問各種頁面時都將使用當前的模板。<br />在腳本中使用皮膚不會影響其他用戶查看您個人主頁時的模板樣式。',
     'zh-tw': '您要在 Yet Another Weibo Filter 腳本中使用「{{name}}」模板嗎？<br />啟用後您訪問各種頁面時都將使用當前的模板。<br />在腳本中使用皮膚不會影響其他用戶查看您個人主頁時的模板樣式。',
     'en': 'Do you want to enable the template "{{name}}" in Yet Another Weibo Filter script?<br />All pages will show current template if you choose enable it.',
+  },
+  'feedListNavFix': { 'zh-cn': '处理消息流导航栏排版错位的问题（临时性）{{<i>}}', 'zh-hk': '處理消息流導航欄排版錯位的問題（臨時性）{{<i>}}', 'zh-tw': '臨時處理消息流導航欄排版錯位的問題（臨時性）{{<i>}}', 'en': 'Fix the wrong layout of feed list nav bar (Temporary) {{<i>}}' },
+  'feedListNavFixDesc': {
+    'zh-cn': '如果您消息流导航栏的排版出现错位，导致第一条微博的作者头像被显示到右侧，您可以尝试临时打开本功能。如果您没有发现任何异常，请不要开启本功能。注意：微博修复对应功能后您可能需要关闭本功能以保证正常的浏览。',
   },
   // 微博
   'weiboStyleTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
@@ -8783,6 +8787,34 @@ filter.items.style.layout.set_skin = filter.item({
   },
 }).addto(filter.groups.style);
 
+// 修复4月14日改版后，在部分浏览器特定的缩放比例下消息流导航栏显示错位的问题
+// 已知在 Chrome 浏览器缩放到 110% 时会出现问题
+filter.items.style.layout.set_skin = filter.item({
+  'group': 'layout',
+  'version': 376,
+  'type': 'boolean',
+  'text': '{{feedListNavFix}}',
+  'key': 'weibo.tool.feedlist_nav_fix',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{feedListNavFixDesc}}' } },
+  'ainit': function () {
+    // 微博出现的问题在于若干元素手动设置的宽度恰好等于容器的总宽度，
+    // 而缩放后浮点数舍入造成误差，浏览器认为内容宽度超过容器，从而将最后一项内容排版到第二行，导致第一行末尾空白
+    // 因为容器在末尾使用 ::after 清除了浮动，所以容器的高度从原来的一行变为两行，导致第一条微博的作者被挤到右面
+    // 这里的解决方法是使用 flex 布局代替原本的浮动布局。
+    // 不使用额外的空间或负外边距解决是因为这样可以尽可能好地兼容半透明配色，避免因为重叠造成半透明配色颜色不正确
+    // 这段样式与半透明背景色中的一段是一样的
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_tab_a .tab_box_a .tab {
+        display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
+        display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
+        display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch;
+      }
+      .WB_tab_a .tab_box_a .tab.clearfix::after { display: none; }
+      .WB_tab_a .tab_box_a .tab li { margin: 0; -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1; }
+    */ noop(); }));
+  },
+}).addto(filter.groups.style);
+
 // 微博相关样式
 filter.predef.subtitle('style', 'sweibo', '{{weiboStyleTitle}}');
 
@@ -9757,6 +9789,7 @@ wbp.converter.table = function () {
   n(['readerModeIndex', 'readerModeProfile'], null); // ⚠️ YAWF 不提供通过设置开关阅读视图的选项
   d('skinID', 'weibo.tool.set_skin.skin'); // 覆盖我的首页模板设置为 
   d('overrideMySkin', 'weibo.tool.set_skin'); // 覆盖我的首页模板设置为 // ⚠️ YAWF 不提供对首页和个人主页的分开设置
+  n(null, 'weibo.tool.feedlist_nav_fix');
   d('unwrapText', 'weibo.tool.unwrapText'); // 微博作者与正文间不折行
   n(null, 'weibo.tool.unwrapContent.text');
   n(null, 'weibo.tool.unwrapContent');
