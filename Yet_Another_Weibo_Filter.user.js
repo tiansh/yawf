@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.377
+// @version           3.7.378
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -734,10 +734,10 @@ var text = {
     'zh-cn': '如果您开启了[[tool.sidebar.merge_left_right]]，调整该宽度为 750px 可以恢复原有的页面宽度。'
   },
   'weiboOnly': {
-    'zh-cn': '阅读视图|宽度{{<width>}}像素||快捷键{{<key>}}', // '||{{<switch>}}在微博列表顶部显示快捷开关按钮',
-    'zh-hk': '閱讀視圖|寬度{{<width>}}圖元||快速鍵{{<key>}}', // '||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'zh-tw': '閱讀視圖|寬度{{<width>}}圖元||快速鍵{{<key>}}', // '||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
-    'en': 'Reading View | width {{<width>}}px || shortcut {{<key>}}', // ' || {{<switch>}} show switch button at top of Weibo list'
+    'zh-cn': '阅读视图|宽度{{<width>}}像素||快捷键{{<key>}}||{{<switch>}}在微博列表顶部显示快捷开关按钮',
+    'zh-hk': '閱讀視圖|寬度{{<width>}}圖元||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'zh-tw': '閱讀視圖|寬度{{<width>}}圖元||快速鍵{{<key>}}||{{<switch>}}在微博清單頂部顯示快速開關按鈕',
+    'en': 'Reading View | width {{<width>}}px || shortcut {{<key>}} || {{<switch>}} show switch button at top of Weibo list'
   },
   'weiboOnlyButtonDesc': { 'zh-cn': '切换视图', 'zh-hk': '切換視圖', 'zh-tw': '切換視圖', 'en': 'Switch View' },
   'keyInputTip': { 'zh-cn': '按下键盘修改快捷键设置', 'zh-hk': '按下鍵盤修改快速鍵設置', 'zh-tw': '按下鍵盤修改快速鍵設置', 'en': 'Press key to modify shortcut key setting' },
@@ -8562,7 +8562,7 @@ filter.items.style.layout.width_weibo = filter.item({
       body:not([yawf-weibo-only]) .WB_main_c,
       body:not([yawf-weibo-only]) .WB_frame_c { width: {{width}}; }
       body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
-      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 400px); }
+      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 312px); }
       body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
       body:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       body:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
@@ -8606,6 +8606,10 @@ filter.items.style.layout.width_weibo = filter.item({
         body.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
         body.B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
       }
+
+      body.B_artical .WB_frame,
+      body.B_artical .WB_frame #plc_main,
+      body.B_artical .WB_frame_a { width: 1000px !important; }
 
       .send_weibo { background-size: cover; }
     */ noop(); }), {
@@ -8667,6 +8671,19 @@ filter.items.style.layout.weibo_only = filter.item({
       updateMode(null);
       e.stopPropagation();
     });
+    // 显示切换按钮
+    if (that.ref['switch'].conf) {
+      var showSwitch = function showReaderSwitch() {
+        var search = document.querySelector('#v6_pl_content_homefeed .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added]), div[id^="Pl_Official_ProfileFeedNav__"] .WB_tab_a .tab_box_a .fr_box .search_box:not([yawf-weibo-only-added])');
+        if (!search) return; search.setAttribute('yawf-weibo-only-added', 'added');
+        var weiboOnly = util.dom.create('div', util.str.fill(html.weiboOnlyButton, {
+          'shortcut': key.conf === 0 ? '' : ' (' + util.keyboard.name(key.conf) + ')',
+        })).firstChild;
+        weiboOnly.addEventListener('click', updateMode.bind(that, null));
+        search.parentNode.appendChild(weiboOnly);
+      };
+      observer.dom.add(showSwitch);
+    }
     // 注册样式
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body[{{attr}}] .WB_miniblog { padding-top: 50px; }
@@ -8683,7 +8700,7 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] .WB_main_c { width: {{width}}; max-width: calc(100% - 20px); }
       body[{{attr}}] .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); max-width: calc(100% - 300px); } 
       body[{{attr}}] .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); max-width: calc(100% - 400px); } 
-      body[{{attr}}] .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 400px); }
+      body[{{attr}}] .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 312px); }
       body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] .WB_frame_c { width: {{width}}; max-width: calc(100% - 20px); }
@@ -8783,34 +8800,6 @@ filter.items.style.layout.set_skin = filter.item({
       },
     });
     confirm.dom.style.zIndex = '10001';
-  },
-}).addto(filter.groups.style);
-
-// 修复4月14日改版后，在部分浏览器特定的缩放比例下消息流导航栏显示错位的问题
-// 已知在 Chrome 浏览器缩放到 110% 时会出现问题
-filter.items.style.layout.set_skin = filter.item({
-  'group': 'layout',
-  'version': 376,
-  'type': 'boolean',
-  'text': '{{feedListNavFix}}',
-  'key': 'weibo.tool.feedlist_nav_fix',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{feedListNavFixDesc}}' } },
-  'ainit': function () {
-    // 微博出现的问题在于若干元素手动设置的宽度恰好等于容器的总宽度，
-    // 而缩放后浮点数舍入造成误差，浏览器认为内容宽度超过容器，从而将最后一项内容排版到第二行，导致第一行末尾空白
-    // 因为容器在末尾使用 ::after 清除了浮动，所以容器的高度从原来的一行变为两行，导致第一条微博的作者被挤到右面
-    // 这里的解决方法是使用 flex 布局代替原本的浮动布局。
-    // 不使用额外的空间或负外边距解决是因为这样可以尽可能好地兼容半透明配色，避免因为重叠造成半透明配色颜色不正确
-    // 这段样式与半透明背景色中的一段是一样的
-    util.css.add(util.str.cmt(function () { /*!CSS
-      .WB_tab_a .tab_box_a .tab {
-        display: -moz-flex; -moz-flex-direction: row; -moz-flex-wrap: nowrap; -moz-justify-content: -moz-space-around; -moz-align-items: stretch;
-        display: -webkit-flex; -webkit-flex-direction: row; -webkit-flex-wrap: nowrap; -webkit-justify-content: -webkit-space-around; -webkit-align-items: stretch;
-        display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around; align-items: stretch;
-      }
-      .WB_tab_a .tab_box_a .tab.clearfix::after { display: none; }
-      .WB_tab_a .tab_box_a .tab li { margin: 0; -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1; }
-    */ noop(); }));
   },
 }).addto(filter.groups.style);
 
