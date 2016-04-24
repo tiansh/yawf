@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.378
+// @version           3.7.379
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -563,9 +563,9 @@ var text = {
   'layoutHidePersonWenwoDr': { 'zh-cn': '爱问医生', 'zh-hk': '爱问医生', 'zh-tw': '爱问医生', 'en': '爱问医生 (Iask medical)' },
   'layoutHidePersonTimeline': { 'zh-cn': '时间轴', 'zh-hk': '時間軸', 'zh-tw': '時間軸', 'en': 'Timeline' },
   // 个人主页边栏模块
-  'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 个人主页边栏', 'zh-hk': '隱藏模組 - 個人主頁邊欄', 'zh-tw': '隱藏模組 - 個人主頁邊欄', 'en': 'Hide modules - Side column of personal homepage' },
+  'layoutHidePLeft': { 'zh-cn': '隐藏模块 - 边栏其他', 'zh-hk': '隱藏其他 - 邊欄其他', 'zh-tw': '隱藏模組 - 邊欄其他', 'en': 'Hide modules - Others in side column' },
   'layoutHidePLeftDesc': {
-    'zh-cn': '个人主页除上述的一些统一的模块外，有一些可以自定义的模块（主要是企业认证用户）。这些模块无法一一列举，你可以将要屏蔽的模块的标题添加到这里来屏蔽这些模块。'
+    'zh-cn': '边栏除上述的一些统一的模块外，有一些可以自定义的模块（主要是企业认证用户）。这些模块无法一一列举，你可以将要屏蔽的模块的标题添加到这里来屏蔽这些模块。'
   },
   'layoutHidePLeftDetails': { 'zh-cn': '隐藏个人主页边栏中以下标题的模块<br />模块', 'zh-hk': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'zh-tw': '隱藏個人主頁邊欄中以下標題的模組<br />模組', 'en': 'Hide modules on personal homepage with these titles<br />Modules' },
   // 消息页面
@@ -688,6 +688,7 @@ var text = {
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'noTagDialog': { 'zh-cn': '收藏微博时将添加标签的对话框替换为气泡（试验性）', 'zh-hk': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'zh-tw': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'en': 'Show bubble instead of dialog after marking weibo favorite (Experimental)' },
+  'commentForwardCopy': { 'zh-cn': '回复评论勾选“同时转发”时将原评论内容添加到评论框末尾', 'zh-hk': '回複評論選擇「同時轉發」時將原評論內容添加到評論框末尾', 'zh-tw': '回複評論選擇「同時轉發」時將原評論內容添加到評論框末尾', 'en': 'Automatically copy original comment text when check "and forward" on a comment reply' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -1116,6 +1117,7 @@ var font = {
   'chinese': [
     ['"SimSun", "宋体"', '中易宋体'],
     ['"Heiti SC", "黑体-简"', '黑体-简'],
+    ['"PingFang SC", "苹方-简"', '苹方-简'],
     ['"STHeiti", "华文黑体"', '华文黑体'],
     ['"Hiragino Sans GB", "冬青黑体简体中文"', '冬青黑体'],
     ['"Microsoft YaHei", "微软雅黑"', '微软雅黑'],
@@ -1127,6 +1129,8 @@ var font = {
     ['"PMingLiU", "新細明體"', '新細明體'],
     ['"MingLiU", "細明體"', '細明體'],
     ['"Heiti TC", "黑體-繁"', '黑體-繁'],
+    ['"PingFang TC", "蘋方-繁"', '蘋方-繁'],
+    ['"PingFang HK", "蘋方-港"', '蘋方-港'],
     ['"LiHei Pro Medium", "儷黑 Pro"', '儷黑 Pro'],
     ['"Microsoft JhengHei", "微軟正黑體"', '微軟正黑體'],
     ['"Noto Sans CJK TC", "思源黑體 TC"', '思源黑體'],
@@ -7822,6 +7826,27 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
   }
 }).addto(filter.groups.tool);
 
+// 回复评论时，如果勾选“同时转发”则自动将原微博内容拷贝到评论文本框末尾
+filter.items.tool.weibotool.comment_forward_copy = filter.item({
+  'group': 'weibotool',
+  'version': 379,
+  'type': 'boolean',
+  'key': 'weibo.tool.comment_forward_copy',
+  'text': '{{commentForwardCopy}}',
+  'ainit': function () {
+    var autoCopyComment = function autoCopyComment() {
+      var checkboxes = Array.from(document.querySelectorAll('[node-type="feed_list_commentList"] [comment_id] .WB_publish input[type="checkbox"][node-type="forward"]:not([yawf-copy-comment])'));
+      checkboxes.forEach(util.func.catched(function (checkbox) {
+        checkbox.setAttribute('yawf-copy-comment', 'yawf-copy-comment');
+        var comment = util.dom.parent(checkbox, '[comment_id]');
+        var textarea = comment.querySelector('.WB_publish textarea[node-type="textEl"]');
+        var todo;
+      }));
+    };
+    observer.dom.add(autoCopyComment);
+  }
+}).addto(filter.groups.tool);
+
 // 使用 HTML5 播放器播放秒拍视频
 if (function supportMp4Video() {
     var v = util.dom.create('video', '');
@@ -8587,24 +8612,25 @@ filter.items.style.layout.width_weibo = filter.item({
         body[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
       }
 
-      body.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 320px) !important; }
-      body.B_page:not([yawf-weibo-only]) .WB_frame_a,
-      body.B_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
-      body.B_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 340px); }
-      body.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
-      body.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
-      body.B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 170px); }
-      body.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
-      body.B_page:not([yawf-weibo-only]) .send_weibo_simple .input_simple_wrap .inputfunc_simple_wrap { width: calc({{width}} - 96px); }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 340px) !important; }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame_a,
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: calc({{width}} + 320px); }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 340px); }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 340px) !important; }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 160px); }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 170px); }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 70px); }
+      :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .send_weibo_simple .input_simple_wrap .inputfunc_simple_wrap { width: calc({{width}} - 96px); }
       @media screen and (max-width: 939px) {
-        body.B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
-        body.B_page:not([yawf-weibo-only]) .WB_frame_a,
-        body.B_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
-        body.B_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
-        body.B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
-        body.B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
-        body.B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
-        body.B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 0px) !important; }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame_a,
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame_a_fix { width: {{width}}; }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .DSC_header { width: calc({{width}} + 20px); }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_frame #plc_main { width: calc({{width}} + 20px) !important; }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 120px); }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + {{width}} / 2 - 230px); }
+        :not([yawf-weibo-only]) > .B_page:not([yawf-weibo-only]) .WB_timeline { margin-left: calc({{width}} / 2 + 10px); }
       }
 
       body.B_artical .WB_frame,

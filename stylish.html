@@ -74,15 +74,6 @@
           .W_scroll_y .bar { border-radius: calc(8px / 2) !important; }
         </div>
       </div>
-      <h2>个人主页隐藏作者信息</h2>
-      <div class="in">
-        <div class="css_code">
-          .FRAME_page .WB_feed_type .WB_feed_detail .WB_face,
-          .FRAME_page .WB_feed_type .WB_feed_detail .WB_detail > .WB_info
-          { display: none; }
-          .FRAME_page .WB_feed_type .WB_detail { margin-left: 0; }
-        </div>
-      </div>
       <h2>自定义折叠微博样式</h2>
       <div class="in">
         <p>可以通过对[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before、[node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]:hover::before添加样式自定义折叠提示的样式，例如：</p>
@@ -93,6 +84,19 @@
           { color: #fff; background: #351; border-color: #777; }
         </div>
       </div>
+      <h2>隐藏导航栏中的用户名</h2>
+      <div class="in">
+        <p>如果想要完全隐藏用户名的文本，可以使用如下样式：</p>
+        <div class="css_code">
+          .WB_global_nav .gn_nav_list li .gn_name .S_txt1 { display: none; }
+        </div>
+        <p>如果您想用自定义的文本取代显示的用户名，您可以使用如下样式：</p>
+        <div class="css_code">
+          .WB_global_nav .gn_nav_list li .gn_name .S_txt1::before { content: "个人主页"; display: block; }
+          .WB_global_nav .gn_nav_list li .gn_name .S_txt1 { height: 26px; }
+        </div>
+        <p>将其中的“个人主页”几个字替换成你需要的文字即可。</p>
+      </div>
       <h2>隐藏漏斗图标</h2>
       <div class="in">
         <div class="css_code">
@@ -101,6 +105,19 @@
         </div>
         <p>隐藏后还可以通过旁边齿轮图标菜单中的“过滤器设置”项目打开设置窗口。</p>
         <p>此外，如果您因为自定义 CSS 无法打开设置对话框，请参考常见问题中的相关说明进行处理。</p>
+      </div>
+      <h2>隐藏发布微博按钮</h2>
+      <div class="in">
+        <p>如果你希望完全隐藏这个按钮，可以试试这个样式：</p>
+        <div class="css_code">
+          .WB_global_nav .gn_set_list:last-child { display: none; }
+        </div>
+        <p>如果你只是希望他和其他几个按钮外观一致，可以试试：</p>
+        <div class="css_code">
+          .WB_global_nav .ficon_send,
+          .WB_global_nav .ficon_send:hover { background: none !important; color: #696e78 !important; vertical-align: middle; }
+        </div>
+        <p>如果您开启了将导航栏变为深色的功能，修改上面的样式中 <code>color</code> 后的颜色为 <code>#a6afbf</code> 即可。</p>
       </div>
     </div>
   </article>
