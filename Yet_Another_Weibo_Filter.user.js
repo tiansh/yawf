@@ -688,7 +688,6 @@ var text = {
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'noTagDialog': { 'zh-cn': '收藏微博时将添加标签的对话框替换为气泡（试验性）', 'zh-hk': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'zh-tw': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'en': 'Show bubble instead of dialog after marking weibo favorite (Experimental)' },
-  'commentForwardCopy': { 'zh-cn': '回复评论勾选“同时转发”时将原评论内容添加到评论框末尾', 'zh-hk': '回複評論選擇「同時轉發」時將原評論內容添加到評論框末尾', 'zh-tw': '回複評論選擇「同時轉發」時將原評論內容添加到評論框末尾', 'en': 'Automatically copy original comment text when check "and forward" on a comment reply' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -7823,27 +7822,6 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
         };
       } catch (e2) { setTimeout(noTagDialog, 0); }
     });
-  }
-}).addto(filter.groups.tool);
-
-// 回复评论时，如果勾选“同时转发”则自动将原微博内容拷贝到评论文本框末尾
-filter.items.tool.weibotool.comment_forward_copy = filter.item({
-  'group': 'weibotool',
-  'version': 379,
-  'type': 'boolean',
-  'key': 'weibo.tool.comment_forward_copy',
-  'text': '{{commentForwardCopy}}',
-  'ainit': function () {
-    var autoCopyComment = function autoCopyComment() {
-      var checkboxes = Array.from(document.querySelectorAll('[node-type="feed_list_commentList"] [comment_id] .WB_publish input[type="checkbox"][node-type="forward"]:not([yawf-copy-comment])'));
-      checkboxes.forEach(util.func.catched(function (checkbox) {
-        checkbox.setAttribute('yawf-copy-comment', 'yawf-copy-comment');
-        var comment = util.dom.parent(checkbox, '[comment_id]');
-        var textarea = comment.querySelector('.WB_publish textarea[node-type="textEl"]');
-        var todo;
-      }));
-    };
-    observer.dom.add(autoCopyComment);
   }
 }).addto(filter.groups.tool);
 
