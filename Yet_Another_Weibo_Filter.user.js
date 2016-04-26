@@ -2115,10 +2115,6 @@ util.notify = (function () {
   // 显示消息
   var showNotification = function (title, body, icon, delay, onclick) {
     var notify = use.showNotification.apply(this, arguments);
-    // 点击关闭
-    notify.addEventListener('click', function() {
-      notify.close();
-    });
     shown.push(notify);
     return notify;
   };
@@ -5027,7 +5023,11 @@ if (util.notify.avaliableNotification().length) filter.items.base.autoload.deskt
         document.documentElement.dispatchEvent(evt);
       });
     });
-    util.notify.showNotification(mid, author, body, face, delay, showFeed);
+    var notification = util.notify.showNotification(mid, author, body, face, delay, showFeed);
+	// Chrome 默认点击提醒无动作
+	notification.addEventListener('click', function() {
+		util.notify.hideNotification(notification)
+	})
   },
 }).addto(filter.groups.base);
 
