@@ -2115,6 +2115,10 @@ util.notify = (function () {
   // 显示消息
   var showNotification = function (title, body, icon, delay, onclick) {
     var notify = use.showNotification.apply(this, arguments);
+    // 点击关闭
+    notify.addEventListener('click', function() {
+      notify.close();
+    });
     shown.push(notify);
     return notify;
   };
