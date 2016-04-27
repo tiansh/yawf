@@ -5023,7 +5023,11 @@ if (util.notify.avaliableNotification().length) filter.items.base.autoload.deskt
         document.documentElement.dispatchEvent(evt);
       });
     });
-    util.notify.showNotification(mid, author, body, face, delay, showFeed);
+    var notification = util.notify.showNotification(mid, author, body, face, delay, showFeed);
+	// Chrome 默认点击提醒无动作
+	notification.addEventListener('click', function() {
+		util.notify.hideNotification(notification)
+	})
   },
 }).addto(filter.groups.base);
 
