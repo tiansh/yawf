@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.379
+// @version           3.7.380
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -2052,6 +2052,7 @@ util.notify = (function () {
     },
     'hideNotification': function (notify) {
       notify.cancel();
+      afterHideNotification(notify);
     },
     'showNotification': function (id, title, body, icon, delay, onclick) {
       if (shownFeed(id)) return null;
@@ -2082,13 +2083,14 @@ util.notify = (function () {
     },
     'hideNotification': function (notify) {
       notify.close();
+      afterHideNotification(notify);
     },
     'showNotification': function (id, title, body, icon, delay, onclick) {
       if (shownFeed(id)) return null;
       util.debug('show notification: %s - %s', title, body);
       var notify = new Notification(title, { 'body': body, 'icon': icon, 'requireInteraction': !delay });
       if (delay && delay > 0) notify.addEventListener('show', function () {
-        setTimeout(function () { notify.close(); }, delay);
+        setTimeout(function () { hideNotification(); }, delay);
       });
       if (onclick) notify.addEventListener('click', onclick);
       return notify;
@@ -2121,8 +2123,10 @@ util.notify = (function () {
   // 隐藏已经显示的消息
   var hideNotification = function (notify) {
     use.hideNotification.apply(this, arguments);
-    shown = shown.filter(function (x) { return x !== notify; });
     return notify;
+  };
+  var afterHideNotification = function (notify) {
+    shown = shown.filter(function (x) { return x !== notify; });
   };
 
   document.addEventListener('unload', function () {
@@ -5016,18 +5020,16 @@ if (util.notify.avaliableNotification().length) filter.items.base.autoload.deskt
     if (this.conf) delay = this.ref.duration.conf + body.length * this.ref.durationc.conf;
     var showFeed = util.func.catched(function () {
       filter.items.base.autoload.auto_expand.expand(feed, true);
+      util.notify.hideNotification(notification)
       util.func.call(function () {
         document.documentElement.scrollTop += feed.getClientRects()[0].top - 80;
         var evt = document.createEvent("KeyboardEvent");
         evt.initKeyEvent('keydown', true, true, null, false, false, false, false, util.keyboard.code.J, 0);
         document.documentElement.dispatchEvent(evt);
       });
+      window.focus();
     });
     var notification = util.notify.showNotification(mid, author, body, face, delay, showFeed);
-	// Chrome 默认点击提醒无动作
-	notification.addEventListener('click', function() {
-		util.notify.hideNotification(notification)
-	})
   },
 }).addto(filter.groups.base);
 
@@ -9195,6 +9197,7 @@ filter.items.style.color.color_override = filter.item({
     { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{colorOverrideDesc}}' } }
   ),
   'ainit': function () {
+    if (util.page.search) return;
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body .S_bg1, body .SW_fun_bg:hover, body .SW_fun_bg_active { background-color: {{color1}}; }
       body .S_bg2, body blockquote, body .W_btn_b, body .W_input, body .SW_fun_bg { background-color: {{color2}}; }
@@ -9225,6 +9228,7 @@ filter.items.style.color.color_override = filter.item({
       .WB_tab_a .tab .b { display: none; }
       .WB_tab_a .tab_box_a .tab.clearfix::after { display: none; }
       .WB_tab_a .tab_box_a .tab li { margin: 0; -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1; }
+      .WB_tab_a .tab_box_a_r6 .t { width: calc(100% - 14px); }
 
       .search_directarea, .WB_editor_iframe { background: none; }
       .private_list_box .private_head { padding-bottom: 8px; }
