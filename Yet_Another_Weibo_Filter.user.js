@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.383
+// @version           3.7.384
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -730,6 +730,13 @@ var text = {
   'reorderNavBarDesc': {
     'zh-cn': '微博字样紧贴在标识右侧显示，“首页”“热门”“游戏”的链接出现在搜索框的左侧。'
   },
+  'navHideName': { 'zh-cn': '将导航栏上的用户名|{{<act>}}{{<i>}}', 'zh-hk': '將導覽列上的用戶名|{{<act>}}{{<i>}}', 'zh-tw': '將導覽列上的用戶名|{{<act>}}{{<i>}}', 'en': 'Username on nav bar will be | {{<act>}}{{<i>}}' },
+  'navHideNameReplace': { 'zh-cn': '替换为“{{navHideNameReplaceText}}”', 'zh-hk': '替換為「{{navHideNameReplaceText}}」', 'zh-tw': '替換為「{{navHideNameReplaceText}}」', 'en': 'replaced to text "{{navHideNameReplaceText}}"' },
+  'navHideNameHidden': { 'zh-cn': '隐藏', 'zh-hk': '隱藏', 'zh-tw': '隱藏', 'en': 'hidden' },
+  'navHideNameDesc': {
+    'zh-cn': '此外您还可以在版面清理选项卡或在此勾选，以隐藏隐藏右栏的 [[layout.right.info]] 模块。此外还可以在功能改造选项卡或此处选择 [[tool.fixed.hide_nav_bar]] 。'
+  },
+  'navHideNameReplaceText': { 'zh-cn': '个人主页', 'zh-hk': '個人主頁', 'zh-tw': '個人主頁', 'en': 'My Profile' },
   'widthWeibo': { 'zh-cn': '设置微博宽度为|{{<width>}}像素 {{<i>}}', 'zh-hk': '設置微博寬度為|{{<width>}}圖元 {{<i>}}', 'zh-tw': '設置微博寬度為|{{<width>}}圖元 {{<i>}}', 'en': 'Set width of Weibo to | {{<width>}}px {{<i>}}' },
   'widthWeiboDesc': {
     'zh-cn': '如果您开启了[[tool.sidebar.merge_left_right]]，调整该宽度为 750px 可以恢复原有的页面宽度。'
@@ -8552,6 +8559,38 @@ filter.items.style.layout.reorder_nav_bar = filter.item({
   },
 }).addto(filter.groups.style);
 
+// 隐藏昵称
+filter.items.style.layout.nav_hide_name = filter.item({
+  'group': 'layout',
+  'version': 384,
+  'type': 'boolean',
+  'key': 'weibo.tool.nav_hide_name',
+  'text': '{{navHideName}}',
+  'ref': {
+    'act': {
+      'type': 'select',
+      'default': 'replace',
+      'select': [
+        { 'value': 'hidden', 'text': '{{navHideNameHidden}}' },
+        { 'value': 'replace', 'text': '{{{navHideNameReplace}}}' },
+      ],
+    },
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{navHideNameDesc}}' },
+  },
+  'init': function () {
+    if (!this.conf) {
+      util.css.add(util.str.cmt(function () { /*!CSS
+        .WB_global_nav .gn_nav_list li .gn_name .S_txt1 { display: inline-block; }
+      */ noop(); }));
+    } else if (this.ref.act.conf === 'replace') {
+      util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
+        .WB_global_nav .gn_nav_list li .gn_name .S_txt1::before { content: "{{navHideNameReplaceText}}"; display: block; }
+        .WB_global_nav .gn_nav_list li .gn_name .S_txt1 { height: 26px; display: inline-block; width: 4em; }
+      */ noop(); })));
+    }
+  },
+}).addto(filter.groups.style);
+
 // 加宽微博
 filter.items.style.layout.width_weibo = filter.item({
   'group': 'layout',
@@ -8570,6 +8609,7 @@ filter.items.style.layout.width_weibo = filter.item({
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{widthWeiboDesc}}' }
   },
   'ainit': function () {
+    if (util.page.search) return;
     var width = this.ref.width.conf;
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
       body:not([yawf-weibo-only]) .WB_frame { width: calc({{width}} + 400px) !important; }
@@ -9785,6 +9825,7 @@ wbp.converter.table = function () {
   d('squareAvatar', 'weibo.tool.avatar_shape'); // 使用方形头像
   n(null, 'weibo.tool.dark_nav_bar');
   n(null, 'weibo.tool.reorder_nav_bar');
+  n(null, 'weibo.tool.nav_hide_name');
   n(null, 'weibo.tool.width_weibo.width');
   n(null, 'weibo.tool.width_weibo');
   n(null, 'weibo.tool.weibo_only.width');
@@ -10336,6 +10377,8 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     -moz-flex-grow: 1; -webkit-flex-grow: 1; flex-grow: 1;
     float: none; width: auto;
   }
+  // 加载前隐藏用户名
+  .WB_global_nav .gn_nav_list li .gn_name .S_txt1 { display: none; }
 */ noop(); }) + '\n').replace(/\/\/.*\n/g, '\n'), {
   'yawf-icon-font': fonts.iconfont,
 }));
