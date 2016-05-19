@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.384
+// @version           3.7.385
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -356,6 +356,9 @@ var text = {
   'wenwoDrWeiboDesc': {
     'zh-cn': '爱问医生健康科普文章是一些来自 wenwo.com 的健康、医疗相关文章。打开爱问医生健康科普文章的网站时，您可能会自动关注文章作者或相应帐号。开启以隐藏包含此类文章的微博。',
   },
+  'yizhiboWeibo': { 'zh-cn': '含有“一直播”视频直播的微博|{{<type>}}', 'zh-hk': '含有「一直播」直播視頻的微博|{{<type>}}', 'zh-tw': '含有「一直播」直播視頻的微博|{{<type>}}', 'en': 'Weibo with live video on yizhibo | {{<type>}}' },
+  'yizhiboWeiboAll': { 'zh-cn': '隐藏正在直播或已结束回放', 'zh-hk': '隱藏正在直播或已結束回放', 'zh-tw': '隱藏正在直播或已結束回放', 'en': 'hide live and replay' },
+  'yizhiboWeiboReplay': { 'zh-cn': '仅隐藏已结束回放', 'zh-hk': '僅隱藏已結束回放', 'zh-tw': '僅隱藏已結束回放', 'en': 'hide replay only' },
   'stockWeibo': { 'zh-cn': '含有股票链接的微博{{<i>}}', 'zh-hk': '含有股票連結的微博{{<i>}}', 'zh-tw': '含有股票連結的微博{{<i>}}', 'en': 'Weibo with stock link {{<i>}}' },
   'stockWeiboDesc': {
     'zh-cn': '股票链接和话题相似，在发布框输入“$”即可添加股票链接。勾选以隐藏所有包含此类链接的微博。',
@@ -5721,7 +5724,7 @@ filter.items.other.hidethese_content.redpack = filter.item({
 }).addto(filter.groups.other);
 
 // 微博应用介绍
-filter.items.other.hidethese_content.appitem= filter.item({
+filter.items.other.hidethese_content.appitem = filter.item({
   'group': 'hidethese_content',
   'version': 265,
   'type': 'boolean',
@@ -5739,7 +5742,7 @@ filter.items.other.hidethese_content.appitem= filter.item({
 }).addto(filter.groups.other);
 
 // 爱问医生
-filter.items.other.hidethese_content.wenwodr= filter.item({
+filter.items.other.hidethese_content.wenwodr = filter.item({
   'group': 'hidethese_content',
   'version': 337,
   'type': 'boolean',
@@ -5751,6 +5754,35 @@ filter.items.other.hidethese_content.wenwodr= filter.item({
     if (feed.querySelector('div[action-data*="objectid=2017896001:"]')) return 'hidden';
     if (feed.querySelector('a[suda-uatrack*="2017896001-product"]')) return 'hidden';
     if (feed.querySelector('a[href^="http://dr.wenwo.com/"]')) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 一直播
+filter.items.other.hidethese_content.yizhibo = filter.item({
+  'group': 'hidethese_content',
+  'version': 385,
+  'type': 'boolean',
+  'key': 'weibo.other.yizhibo',
+  'text': '{{yizhiboWeibo}}',
+  'ref': {
+    'type': {
+      'type': 'select',
+      'default': 'all',
+      'select': [
+        { 'value': 'all', 'text': '{{yizhiboWeiboAll}}' },
+        { 'value': 'replay', 'text': '{{yizhiboWeiboReplay}}' },
+      ],
+    }
+  },
+  'rule': function yizhiboFilterRule(feed) {
+    if (!this.conf) return null;
+    var live = feed.querySelector('.WB_video[suda-uatrack*="2227747001-live"]');
+    if (!live) return null;
+    if (this.ref.type.conf === 'all') return 'hidden';
+    var type = live.querySelector('.W_icon_tag').textContent;
+    util.debug('found yizhibo video with status text: %o', type);
+    if (type === '回放') return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -9631,6 +9663,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.other.red2014');
   n(null, 'weibo.other.appitem');
   n(null, 'weibo.other.wenwodr');
+  n(null, 'weibo.other.yizhibo');
   n(null, 'weibo.other.stock');
   n(null, 'weibo.other.multi_topic.num');
   n(null, 'weibo.other.multi_topic');
