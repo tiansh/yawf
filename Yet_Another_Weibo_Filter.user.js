@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.386
+// @version           3.7.387
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -498,9 +498,10 @@ var text = {
   // 右栏
   'layoutHideRight': { 'zh-cn': '隐藏模块 - 右栏', 'zh-hk': '隱藏模組 - 右欄', 'zh-tw': '隱藏模組 - 右欄', 'en': 'Hide modules - Right Column' },
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
-  'layoutHideRightRecomMusicRank': { 'zh-cn': '亚洲新歌榜', 'zh-hk': '亚洲新歌榜', 'zh-tw': '亚洲新歌榜', 'en': '亚洲新歌榜 (Asian New Songs List)' },
-  'layoutHideRightBookRank': { 'zh-cn': '亚洲好书榜', 'zh-hk': '亚洲好书榜', 'zh-tw': '亚洲好书榜', 'en': '亚洲好书榜 (Asian Top Books List)' },
-  'layoutHideRightHongRank': { 'zh-cn': '主播红人榜', 'zh-hk': '主播红人榜', 'zh-tw': '主播红人榜', 'en': '主播红人榜 (Top Network Broadcaster)' },
+  'layoutHideRightRecomMusicRank': { 'zh-cn': '榜单（新歌榜等）', 'zh-hk': '榜單（新歌榜等）', 'zh-tw': '榜單（新歌榜等）', 'en': 'Rank List (Song list, etc.)' },
+  'layoutHideRightRecomMusicRankDesc': {
+    'zh-cn': '包括“亚洲新歌榜实时趋势”“微博电影热议榜”“亚洲好书榜实时趋势”“主播红人榜”“亚洲动漫榜”等。'
+  },
   'layoutHideRightHotTopic': { 'zh-cn': '热门话题', 'zh-hk': '熱門話題', 'zh-tw': '熱門話題', 'en': 'Hot Topic' },
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
@@ -6393,9 +6394,7 @@ filter.predef.group('layout');
 
   subtitle('Right', true);
   item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
-  item('RecomMusicRank', 264, '#v6_TrustPagelet_Recom_MusicRank, [yawf-id="v6_pl_rightmod_rank_pop"] { display: none !important; }');
-  item('BookRank', 264, '[yawf-id="v6_pl_rightmod_rank_book"] { display: none !important; }');
-  item('HongRank', 386, '[yawf-id="v6_pl_rightmod_rank_hong"] { display: none !important; }');
+  item('RecomMusicRank', 387, '#v6_pl_rightmod_rank { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
   item('HotTopicExpand', 178, '.hot_topic .WB_right_expand { display: none !important; }');
   item('Interest', 5, '[yawf-id="rightmod_recom_interest"] { display: none !important; }');
@@ -9736,8 +9735,6 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideRightInfo');
   n(null, 'weibo.layoutHideRightHongBaoEntrance');
   m('MusicRecom', 'weibo.layoutHideRightRecomMusicRank'); // 亚洲新歌榜/好书榜
-  m('MusicRecom', 'weibo.layoutHideRightBookRank'); // 亚洲新歌榜/好书榜
-  n('MusicRecom', 'weibo.layoutHideRightHongRank'); // 亚洲新歌榜/好书榜
   m('Topic', 'weibo.layoutHideRightHotTopic'); // 热门话题
   n(null, 'weibo.layoutHideRightHotTopicExpand');
   n(null, 'weibo.layoutHideRightInterest');
