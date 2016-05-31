@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.387
+// @version           3.7.388
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -539,7 +539,7 @@ var text = {
   'layoutHideWeiboMovieTag': { 'zh-cn': '微博电影/话题', 'zh-hk': '微博電影/話題', 'zh-tw': '微博電影/話題', 'en': 'Weibo Movie / Topic' },
   'layoutHideWeiboMovieTagDesc': { 'zh-cn': '位于微博底部的根据微博正文内容的关键字自动生成的话题、电影等的链接。' },
   'layoutHideWeiboSource': { 'zh-cn': '来源', 'zh-hk': '來源', 'zh-tw': '來源', 'en': 'Source' },
-  'layoutHideWeiboPop': { 'zh-cn': '推广', 'zh-hk': '推廣', 'zh-tw': '推廣', 'en': ' Promote' },
+  'layoutHideWeiboPop': { 'zh-cn': '阅读数和推广', 'zh-hk': '閱讀數和推廣', 'zh-tw': '閱讀數和推廣', 'en': 'Reading Count &amp; Promote' },
   'layoutHideWeiboLike': { 'zh-cn': '赞 - 微博', 'zh-hk': '讚 - 微博', 'zh-tw': '讚 - 微博', 'en': 'Like - Weibo' },
   'layoutHideWeiboLikeComment': { 'zh-cn': '赞 - 评论', 'zh-hk': '讚 - 評論', 'zh-tw': '讚 - 評論', 'en': 'Like - Comment' },
   'layoutHideWeiboForward': { 'zh-cn': '转发', 'zh-hk': '轉發', 'zh-tw': '轉發', 'en': 'Forward' },
@@ -6605,17 +6605,17 @@ filter.predef.group('layout');
     // 网页中 $CONFIG.skin 给出了用户选择的皮肤
     var defaultSkin = 'skin058', target = defaultSkin;
     try { target = unsafeWindow.$CONFIG.skin || defaultSkin; } catch (e) { }
-    if (/skin35\d/.test(target)) target = defaultSkin;
+    if (/skin3[56]\d/.test(target)) target = defaultSkin;
     // 检查网页中是否被插入了广告皮肤，如果有则换成用户选择的（或默认的）皮肤
     var updateSkin = function updateSkin() {
-      var adskin = document.querySelector('link[href*="/skin35"]');
+      var adskin = document.querySelector('link[href*="/skin35"], link[href*="/skin36"]');
       if (adskin) {
         var a = util.dom.create('a', ''); version = ''; a.href = adskin.href;
         try { version = version || util.str.parsequery(a.search.slice(1)).version; } catch (e) { }
         util.debug('ad skin %o(version %o) has been replaced', adskin.href, version);
         adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/' + target + '/skin.css?version=' + version);
       }
-      var adskincover = document.querySelector('#skin_cover_s[style*="/skin35"]');
+      var adskincover = document.querySelector('#skin_cover_s[style*="/skin35"], #skin_cover_s[style*="/skin36"]');
       if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/' + target + '/images/profile_cover_s.jpg?version=' + version + '")';
     };
     observer.dom.add(updateSkin);
