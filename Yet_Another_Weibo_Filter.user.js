@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.389
+// @version           3.7.390
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -483,6 +483,10 @@ var text = {
   'layoutHideNavSettingNew': { 'zh-cn': '新设置红点', 'zh-hk': '新設定紅點', 'zh-tw': '新設定紅點', 'en': 'Red dot for new settings' },
   // 左栏
   'layoutHideLeft': { 'zh-cn': '隐藏模块 - 左栏', 'zh-hk': '隱藏模組 - 左欄', 'zh-tw': '隱藏模組 - 左欄', 'en': 'Hide modules - Left Column' },
+  'layoutHideLeftHome': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
+  'layoutHideLeftFav': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favorite' },
+  'layoutHideLeftLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
+  'layoutHideLeftHot': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
   'layoutHideLeftGroupToMe': { 'zh-cn': '群微博', 'zh-hk': '群微博', 'zh-tw': '群微博', 'en': '群微博 (Group)' },
   'layoutHideLeftSpecial': { 'zh-cn': '特别关注', 'zh-hk': '特别關注', 'zh-tw': '特别關注', 'en': 'Special Focus' },
@@ -618,10 +622,10 @@ var text = {
   'sideColumnToolsTitle': { 'zh-cn': '边栏', 'zh-hk': '邊欄', 'zh-tw': '邊欄', 'en': 'Side Column' },
   'showAllGroupDesc': { 'zh-cn': '展开左栏分组', 'zh-hk': '展開左欄分組', 'zh-tw': '展開左欄分組', 'en': 'Unfold groups in left column' },
   'showAllMsgNav': {
-    'zh-cn': '在首页左栏展开消息，显示以下快捷链接{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}|{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}',
-    'zh-hk': '在首頁左欄展開消息，顯示以下快捷連結{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}|{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}',
-    'zh-tw': '在首頁左欄展開消息，顯示以下快捷連結{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}|{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}',
-    'en': 'Expand news in left column of home page with following items{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}||{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}'
+    'zh-cn': '在首页左栏显示消息分组，包含以下快捷链接{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}|{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}',
+    'zh-hk': '在首頁左欄顯示消息分組，包含以下快捷連結{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}|{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}',
+    'zh-tw': '在首頁左欄顯示消息分組，包含以下快捷連結{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}|{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}',
+    'en': 'Show news in left column of home page with following items{{<i>}}||{{<atme>}}{{leftNavAtMe}}|{{<cmt>}}{{leftNavCmt}}|{{<like>}}{{leftNavLike}}||{{<dm>}}{{leftNavDM}}|{{<msgbox>}}{{leftNavMsgBox}}|{{<group>}}{{leftNavGroup}}|{{<dmsub>}}{{leftNavDMSub}}'
   },
   'showAllMsgNavDesc': {
     'zh-cn': '屏幕分辨率过小时请勿选择该项，否则可能会显示不完全。'
@@ -1046,15 +1050,15 @@ var html = {
   'wbpImportSuccessBody': '<div class="wbp-import-success-body yawf-window-body"><div class="wbp-import-success-desc">{{wbpImportSuccessDesc}}</div></div>',
   // 合并左边栏占位符
   'leftFake': '<div style="display: none !important;" id="yawf-left-fake"></div>',
-  // 左栏展开消息
-  'leftMsgHeader': '<div class="lev_Box yawf-leftMsg"><h3 class="lev"><a href="/at/weibo?leftnav=1" class="S_txt1" node-type="item" suda-uatrack="key=V6update_leftnavigate&amp;value=message" bpfilter="message"><span class="levtxt">{{leftNavMsg}}</span></a></h3>',
-  'leftMsgAtMe': '<div class="lev"><a class="S_txt1" nm="mention_all" bpfilter="message" hrefextra="/at/weibo|/at/comment" nt="mention" node-type="item" href="/at/weibo?leftnav=1&amp;wvr=6&amp;nofilter=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavAtMe}}</span></a></div>',
-  'leftMsgCmt': '<div class="lev"><a class="S_txt1" nm="cmt_all" bpfilter="message" hrefextra="/comment/inbox|/comment/outbox" node-type="item" href="/comment/inbox?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavCmt}}</span></a></div>',
-  'leftMsgLike': '<div class="lev"><a class="S_txt1" nm="attitude" bpfilter="message" node-type="item" href="/like/inbox?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavLike}}</span></a></div></div>',
-  'leftMsgDM': '<div class="lev_Box"><div class="lev"><a class="S_txt1" nm="dm" bpfilter="message" hrefextra="/messages|/message/history" node-type="item" href="/messages?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavDM}}</span></a></div>',
-  'leftMsgBox': '<div class="lev"><a class="S_txt1" nm="msgbox_c" bpfilter="message" node-type="item" href="/notesboard?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavMsgBox}}</span></a></div>',
-  'leftMsgGroup': '<div class="lev"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6&amp;is_notice=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
-  'leftMsgDMSub': '<div class="lev"><a class="S_txt1" nm="dm_group" bpfilter="message" node-type="item" href="/message/sub?leftnav=1&wvr=6"><span class="ico_block"><em class="W_ficon ficon_dot S_ficon" node-type="left_item">D</em></span><span class="levtxt">{{leftNavDMSub}}</span></a></div>',
+  // 左栏显示消息
+  'leftMsgHeader': '<div class="lev_Box lev_Box_noborder yawf-leftMsg"><h3 class="lev"><a href="/at/weibo?leftnav=1" class="S_txt1" node-type="item" suda-uatrack="key=V6update_leftnavigate&amp;value=message" bpfilter="message"><span class="levtxt">{{leftNavMsg}}</span></a></h3>',
+  'leftMsgAtMe': '<div class="lev" yawf-id="leftnav_msg_at"><a class="S_txt1" nm="mention_all" bpfilter="message" hrefextra="/at/weibo|/at/comment" nt="mention" node-type="item" href="/at/weibo?leftnav=1&amp;wvr=6&amp;nofilter=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavAtMe}}</span></a></div>',
+  'leftMsgCmt': '<div class="lev" yawf-id="leftnav_msg_cmt"><a class="S_txt1" nm="cmt_all" bpfilter="message" hrefextra="/comment/inbox|/comment/outbox" node-type="item" href="/comment/inbox?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavCmt}}</span></a></div>',
+  'leftMsgLike': '<div class="lev" yawf-id="leftnav_msg_like"><a class="S_txt1" nm="attitude" bpfilter="message" node-type="item" href="/like/inbox?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavLike}}</span></a></div></div>',
+  'leftMsgDM': '<div class="lev" yawf-id="leftnav_msg_dm"><a class="S_txt1" nm="dm" bpfilter="message" hrefextra="/messages|/message/history" node-type="item" href="/messages?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavDM}}</span></a></div>',
+  'leftMsgBox': '<div class="lev" yawf-id="leftnav_msg_msgbox"><a class="S_txt1" nm="msgbox_c" bpfilter="message" node-type="item" href="/notesboard?leftnav=1&amp;wvr=6"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavMsgBox}}</span></a></div>',
+  'leftMsgGroup': '<div class="lev" yawf-id="leftnav_msg_group"><a class="S_txt1" nm="chat_group_notice" bpfilter="message" node-type="item" href="/messages?leftnav=1&amp;wvr=6&amp;is_notice=1"><span class="ico_block"><em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em></span><span class="levtxt">{{leftNavGroup}}</span></a></div>',
+  'leftMsgDMSub': '<div class="lev" yawf-id="leftnav_msg_dmsub"><a class="S_txt1" nm="dm_group" bpfilter="message" node-type="item" href="/message/sub?leftnav=1&wvr=6"><span class="ico_block"><em class="W_ficon ficon_dot S_ficon" node-type="left_item">D</em></span><span class="levtxt">{{leftNavDMSub}}</span></a></div>',
   'leftMsgFooter': '</div>',
   // 右侧栏收藏用户列表
   'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4><div class="opt_box"><a class="W_ficon ficon_setup S_ficon">J</a></div></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
@@ -6378,11 +6382,71 @@ filter.predef.group('layout');
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
 
+  // 隐藏左栏的辅助函数
+  var levHidden = (function (id) {
+    var firstRun = true;
+    var ids = [];
+    // 移除一个左栏链接或相关元素
+    var removeNode = function removeNode(node) {
+      var container = node.parentNode, prev, next;
+      var removeBlank = function (node) {
+        if (node && node.nodeType === Node.TEXT_NODE && node.data.match(/^\s*$/))
+          return container.removeChild(node);
+      };
+      var removeBlankSibling = function (node) {
+        while (removeBlank(node.previousSibling));
+        while (removeBlank(node.nextSibling));
+      };
+      removeBlankSibling(node);
+      prev = node.previousSibling, next = node.nextSibling;
+      // 如果前后都是分割线（连续的分割线）那么应当删掉一个（删掉前面一个）
+      // 如果分割线在开头或末尾，那么应该删掉分割线
+      // 如果前后都没有东西，那么应该连同容器一起删除
+      while ((!prev || util.dom.matches(prev, '.lev_line')) &&
+        (!next || util.dom.matches(next, '.lev_line'))) {
+        var line = null;
+        if (prev && util.dom.matches(prev, '.lev_line_v2')) line = prev;
+        if (next && util.dom.matches(next, '.lev_line_v2')) line = next;
+        if (line) {
+          var line = prev || next;
+          removeBlankSibling(line);
+          container.removeChild(line);
+          prev = node.previousSibling;
+          next = node.nextSibling;
+        }
+        else break;
+      }
+      container.removeChild(node);
+      if (!prev && !next) removeNode(container);
+    };
+    // 检查是否有未筛选的左栏链接并根据名称判断
+    var listener = function leftNavRemove() {
+      var levs = Array.from(document.querySelectorAll('#v6_pl_leftnav_group .lev[yawf-id]:not([yawf-checked-lev])')); if (!levs) return;
+      levs.forEach(function (lev) {
+        lev.setAttribute('yawf-checked-lev', '');
+        var id = lev.getAttribute('yawf-id'); if (ids.indexOf(id) === -1) return;
+        removeNode(lev);
+      });
+    };
+    return function (id) {
+      return function () {
+        ids.push('leftnav_' + id);
+        if (firstRun) {
+          observer.dom.add(listener); listener();
+          util.css.add('#v6_pl_leftnav_group .lev:not([yawf-checked-lev]) { visibility: hidden; }');
+        }
+      };
+    };
+  }());
   subtitle('Left', true);
-  item('Friends', 5, '.lev_Box .lev > a[href^="/friends"] { display: none !important; }');
-  item('GroupToMe', 333, '.lev_Box .lev > a[href^="/groupsfeed"] { display: none !important; }');
-  item('Special', 333, '.lev_Box [specialgid] { display: none !important; }');
-  item('Whisper', 333, '.lev_Box a[href^="/mygroups?whisper=1"] { display: none !important; }');
+  item('Home', 390, levHidden('home'));
+  item('Fav', 390, levHidden('fav'));
+  item('Like', 390, levHidden('like'));
+  item('Hot', 390, levHidden('hot'));
+  item('Friends', 5, levHidden('friends'));
+  item('GroupToMe', 333, levHidden('groupsfeed'));
+  item('Special', 333, levHidden('special'));
+  item('Whisper', 333, levHidden('whisper'));
   item('New', 106, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
   item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
@@ -6657,6 +6721,24 @@ filter.predef.group('layout');
     };
   };
 
+  // 标记首页左栏导航链接
+  var tagLeftNavMods = tagMods([
+    '#v6_pl_leftnav_group .lev:not([yawf-id])',
+  ].join(','), {
+    'a[href*="/home?"]': 'leftnav_home',
+    'a[href^="/at/"]': 'leftnav_message',
+    'a[href^="/fav"]': 'leftnav_fav',
+    'a[href^="/like"]': 'leftnav_like',
+    'a[href^="/friends"]': 'leftnav_friends',
+    'a[href^="/groupsfeed"]': 'leftnav_groupsfeed',
+    'a[href^="/mygroups"]': 'leftnav_mygroups',
+    'a[href^="/mygroups"][href*="ishotfeed=1"]': 'leftnav_hot',
+    'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
+    'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
+  });
+  observer.dom.add(tagLeftNavMods);
+  tagLeftNavMods();
+
   // 标记首页右栏元素
   var tagRightbarMods = tagMods([
     '#trustPagelet_indexright_recom .WB_right_module:not([yawf-id])',
@@ -6716,7 +6798,7 @@ filter.predef.subtitle('tool', 'sidebar', '{{sideColumnToolsTitle}}');
 // 展开左栏消息
 filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   'group': 'sidebar',
-  'version': 276,
+  'version': 390,
   'type': 'boolean',
   'key': 'weibo.tool.showAllMsgNav',
   'text': '{{{showAllMsgNav}}}',
@@ -6733,10 +6815,11 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   'ainit': function () {
     var confs = this.ref;
     observer.dom.add(function showAllMsgNav() {
-      var home = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"] > .lev_Box:first-child:not([yawf-message]) > .lev:first-child'); if (!home) return;
-      var msg = home.parentNode.querySelector('.lev + .lev');
-      var l1 = home.parentNode, ref = l1.nextSibling;
-      l1.setAttribute('yawf-message', 'yawf-message'); if (msg) l1.removeChild(msg);
+      var groupList = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"]:not([yawf-message])');
+      var home = groupList.querySelector('.lev a[href*="/home?"]');
+      while (home && home.parentNode !== groupList) home = home.parentNode;
+      var ref = home ? home.nextSibling : groupList.firstChild;
+      groupList.setAttribute('yawf-message', '');
       var msgHtml = [html.leftMsgHeader,
         confs.atme.conf ? html.leftMsgAtMe : '',
         confs.cmt.conf ? html.leftMsgCmt : '',
@@ -6746,8 +6829,8 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
         confs.group.conf ? html.leftMsgGroup : '',
         confs.dmsub.conf ? html.leftMsgDMSub : '',
       html.leftMsgFooter].join('');
-      var mn = util.dom.create('div', util.str.fill(msgHtml));
-      while (mn.firstChild) ref.parentNode.insertBefore(mn.firstChild, ref);
+      var mn = util.dom.create(util.str.fill(msgHtml));
+      ref.parentNode.insertBefore(mn, ref);
     });
   },
 }).addto(filter.groups.tool);
@@ -9725,6 +9808,10 @@ wbp.converter.table = function () {
   m('HotSearch', 'weibo.layoutHideNavHotSearch'); // 大家正在热搜（搜索栏）
   n(null, 'weibo.layoutHideNavNoticeNew');
   n(null, 'weibo.layoutHideNavSettingNew');
+  n(null, 'weibo.layoutHideLeftHome');
+  n(null, 'weibo.layoutHideLeftFav');
+  n(null, 'weibo.layoutHideLeftLike');
+  n(null, 'weibo.layoutHideLeftHot');
   m('Friends', 'weibo.layoutHideLeftFriends'); // 好友圈
   m('ToMe', 'weibo.layoutHideLeftGroupToMe'); // 群微博
   n(null, 'weibo.layoutHideLeftNew');
