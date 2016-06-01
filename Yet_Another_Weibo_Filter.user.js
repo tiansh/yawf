@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.390
+// @version           3.7.391
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -467,7 +467,11 @@ var text = {
   'layoutHideIconRedPack': { 'zh-cn': '红包', 'zh-hk': '红包', 'zh-tw': '红包', 'en': 'Red Pack' },
   'layoutHideIconRun': { 'zh-cn': '跑步', 'zh-hk': '跑步', 'zh-tw': '跑步', 'en': 'Run' },
   'layoutHideIconFoolsDay': { 'zh-cn': '愚人节', 'zh-hk': '愚人节', 'zh-tw': '愚人节', 'en': "Fools' Day" },
-  'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': "Internet celebrity" },
+  'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': 'Internet celebrity' },
+  'layoutHideIconEuro2016': { 'zh-cn': '2016欧洲杯', 'zh-hk': '2016歐洲杯', 'zh-tw': '2016歐洲杯', 'en': 'Euro 2016' },
+  'layoutHideIconEuro2016Desc': {
+    'zh-cn': Array(24).join().split(',').map(function (_, i) { return '<i class="W_icon_EURO icon_EURO_' + (i + 1) + '" style="display:inline-block!important"></i>'; }).join(''),
+  },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -6364,6 +6368,7 @@ filter.predef.group('layout');
   item('Run', 247, '.icon_run2015 { display: none !important; }', { 'extt': '<i class="W_icon icon_run2015" style="display:inline-block!important"></i>' });
   item('FoolsDay', 372, '.icon_foolsday { display: none !important; }', { 'extt': '<i class="W_icon icon_foolsday" style="display:inline-block!important"></i>' });
   item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
+  item('Euro2016', 391, '.W_icon_EURO { display: none !important; }');
 
   subtitle('Nav', true);
   item('LogoImg', 256, function replaceLogo() {
@@ -6815,7 +6820,7 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
   'ainit': function () {
     var confs = this.ref;
     observer.dom.add(function showAllMsgNav() {
-      var groupList = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"]:not([yawf-message])');
+      var groupList = document.querySelector('#v6_pl_leftnav_group [node-type="groupList"]:not([yawf-message])'); if (!groupList) return;
       var home = groupList.querySelector('.lev a[href*="/home?"]');
       while (home && home.parentNode !== groupList) home = home.parentNode;
       var ref = home ? home.nextSibling : groupList.firstChild;
