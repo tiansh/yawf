@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.391
+// @version           3.7.392
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -6811,7 +6811,7 @@ filter.items.tool.sidebar.show_all_msg_nav = filter.item({
     'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{showAllMsgNavDesc}}' },
     'atme': { 'type': 'boolean', 'default': true },
     'cmt': { 'type': 'boolean', 'default': true },
-    'like': { 'type': 'boolean', 'default': true },
+    'like': { 'type': 'boolean', 'default': false },
     'dm': { 'type': 'boolean', 'default': false },
     'msgbox': { 'type': 'boolean', 'default': false },
     'group': { 'type': 'boolean', 'default': false },
@@ -9789,23 +9789,25 @@ wbp.converter.table = function () {
   n(null, 'weibo.comment.with_picture');
   n(null, 'weibo.comment.delete_comment');
   m('Level', 'weibo.layoutHideIconLevel'); // 用户等级
-  m('MemberIcon', 'weibo.layoutHideIconMember');
-  m('VerifyIcon', 'weibo.layoutHideIconApprove');
-  m('VerifyIcon', 'weibo.layoutHideIconApproveCo');
-  m('VerifyIcon', 'weibo.layoutHideIconApproveDead');
-  m('DarenIcon', 'weibo.layoutHideIconClub');
-  m('VgirlIcon', 'weibo.layoutHideIconVGirl');
-  m('TaobaoIcon', 'weibo.layoutHideIconTaobao');
+  m('MemberIcon', 'weibo.layoutHideIconMember'); // 微博会员标识
+  m('VerifyIcon', 'weibo.layoutHideIconApprove'); // 个人/机构认证标识
+  m('VerifyIcon', 'weibo.layoutHideIconApproveCo'); // 个人/机构认证标识
+  m('VerifyIcon', 'weibo.layoutHideIconApproveDead'); // 个人/机构认证标识
+  m('DarenIcon', 'weibo.layoutHideIconClub'); // 微博达人标识
+  m('VgirlIcon', 'weibo.layoutHideIconVGirl'); // 微博女郎标识
+  m('TaobaoIcon', 'weibo.layoutHideIconTaobao'); // 淘宝商户
   n(null, 'weibo.layoutHideIconCheng');
-  m('GongyiIcon', 'weibo.layoutHideIconGongyi');
-  m('PaiIcon', 'weibo.layoutHideIconSuishoupai');
+  m('GongyiIcon', 'weibo.layoutHideIconGongyi'); // 微公益
+  m('PaiIcon', 'weibo.layoutHideIconSuishoupai'); // 随手拍2016
   n(null, 'weibo.layoutHideIconZongyika');
   n(null, 'weibo.layoutHideIconYouji');
   n(null, 'weibo.layoutHideIconDouble11');
   n(null, 'weibo.layoutHideIconNight');
-  m('HongbaoIcon', 'weibo.layoutHideIconRedPack');
+  m('HongbaoIcon', 'weibo.layoutHideIconRedPack'); // 让红包飞
   n(null, 'weibo.layoutHideIconRun');
   n(null, 'weibo.layoutHideIconFoolsDay');
+  m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
+  m('Euro2016Icon', 'weibo.layoutHideIconEuro2016'); // 围观欧洲杯
   n(null, 'weibo.layoutHideNavLogoImg');
   n(null, 'weibo.layoutHideNavMain');
   n(null, 'weibo.layoutHideNavHot');
@@ -9816,7 +9818,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideLeftHome');
   n(null, 'weibo.layoutHideLeftFav');
   n(null, 'weibo.layoutHideLeftLike');
-  n(null, 'weibo.layoutHideLeftHot');
+  m('HotWeibo', 'weibo.layoutHideLeftHot'); // 热门微博
   m('Friends', 'weibo.layoutHideLeftFriends'); // 好友圈
   m('ToMe', 'weibo.layoutHideLeftGroupToMe'); // 群微博
   n(null, 'weibo.layoutHideLeftNew');
@@ -9902,7 +9904,7 @@ wbp.converter.table = function () {
   d(null, 'weibo.tool.showAllMsgNav.msgbox', true);
   d(null, 'weibo.tool.showAllMsgNav.group', false);
   d(null, 'weibo.tool.showAllMsgNav.dmsub', false);
-  d('showAllMsgNav', 'weibo.tool.showAllMsgNav'); // 展开导航栏中的所有消息链接（左边栏“消息”下的“提到我的”、“评论”等）
+  d('showAllMsgNav', 'weibo.tool.showAllMsgNav'); // 在左边栏增加消息导航（“评论”、“私信”等）
   d('showAllGroups', 'weibo.tool.showAllGroup'); // 展开分组栏中的所有分组
   d(null, 'weibo.tool.mergeColumns.side', 'left'); // 去除首页右边栏 
   d('noHomeMargins', 'weibo.tool.mergeColumns'); // 去除首页右边栏 // ⚠️ YAWF未提供去除右边栏的功能，使用将右边栏合并到左侧作为替代
