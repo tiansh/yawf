@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.393
+// @version           3.7.394
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -2009,6 +2009,7 @@ util.init(function () {
   // 保存用户信息
   util.info.uid = unsafeWindow.$CONFIG.uid;
   util.info.nick = unsafeWindow.$CONFIG.nick;
+  util.info.skin = unsafeWindow.$CONFIG.skin;
   // 初始化语言选项
   util.i18n.chose = util._languages(unsafeWindow.$CONFIG.lang);
   Object.keys(text).map(function (key) { util.i18n.chose(text[key]); text[key] = text[key].local; });
@@ -4885,7 +4886,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
     // 全都过滤完成后要更新计数
     observer.weibo.done(function () { that.counter(); });
 
-    // 允许按 R 显示新微博
+    // 允许按对应按键显示新微博
     util.keyboard.reg('keyup', loadKey, function () { that.showNew(); }, true);
 
   },
@@ -6674,7 +6675,7 @@ filter.predef.group('layout');
     // 检查应当替换为哪种皮肤
     // 网页中 $CONFIG.skin 给出了用户选择的皮肤
     var defaultSkin = 'skin058', target = defaultSkin;
-    try { target = unsafeWindow.$CONFIG.skin || defaultSkin; } catch (e) { }
+    try { target = util.info.skin || defaultSkin; } catch (e) { }
     if (/skin3[56]\d/.test(target)) target = defaultSkin;
     // 检查网页中是否被插入了广告皮肤，如果有则换成用户选择的（或默认的）皮肤
     var updateSkin = function updateSkin() {
@@ -6689,6 +6690,16 @@ filter.predef.group('layout');
       if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/' + target + '/images/profile_cover_s.jpg?version=' + version + '")';
     };
     observer.dom.add(updateSkin);
+
+    // 处理 2016.6.18 的广告
+    util.func.page(function () {
+      // 你的广告我已经看过上万遍了，所以别给我放广告
+      document.cookie = 'wb_barrage' + $CONFIG.uid + '=' + (10000 + Math.round(Math.random() * 1000)) +
+        '; expires=' + new Date(Number(new Date()) + 2.6e8).toGMTString() + '; path=/';
+    });
+    // 总之你放的东西我看不到，所以别给我放广告了
+    util.css.add('.WB_ad_tm2015 ~ div[style*="position"][style*="fixed"][style*="z-index"][style*="99999"] { display: none !important; }');
+
     // 移除一些显示广告的 className ，不移除对象本身
     // 这些 className 因为影响过大，通过样式覆盖较为困难且容易发生问题
     var adClassName = ['WB_feed_yy2016_up', 'WB_feed_yy2016_down'];
