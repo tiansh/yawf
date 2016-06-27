@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.394
+// @version           3.7.395
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -684,6 +684,7 @@ var text = {
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
   'unfoldWeiboLength': { 'zh-cn': '（约{{length}}字）', 'zh-hk': '（約{{length}}字）', 'zh-tw': '（約{{length}}字）', 'en': '(about {{length}} charactors)' },
+  'unfoldTTArtical': { 'zh-cn': '头条文章直接显示全文以免误操作关注作者', 'zh-hk': '頭條文章直接顯示全文以免誤操作關注作者', 'zh-tw': '頭條文章直接顯示全文以免誤操作關注作者', 'en': 'Unfold artical to avoid follow artical author' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
@@ -7605,6 +7606,21 @@ filter.items.tool.weibotool.auto_unfold_weibo = filter.item({
   },
 }).addto(filter.groups.tool);
 
+// 自动展开头条文章以免关注作者
+filter.items.tool.weibotool.auto_unfold_ttartical = filter.item({
+  'group': 'weibotool',
+  'version': 395,
+  'type': 'boolean',
+  'key': 'weibo.tool.auto_unfold_ttartical',
+  'text': '{{unfoldTTArtical}}',
+  'ainit': function () {
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_editor_iframe { height: auto !important; }
+      .artical_add_box [node-type="maskContent"] { display: none; }
+    */ noop(); }))
+  },
+}).addto(filter.groups.tool);
+
 // 清除发布框中的默认话题 (wcf)
 filter.items.tool.weibotool.clear_def_topic = filter.item({
   'group': 'weibotool',
@@ -9939,6 +9955,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.auto_unfold_weibo.count');
   n(null, 'weibo.tool.auto_unfold_weibo.br');
   d('showAllText', 'weibo.tool.auto_unfold_weibo'); // 展开字数超长的微博内容 // ⚠️ YAWF将默认只展开不超过200字（换行计30字）的微博，用户需要修改设置为允许展开2000字微博达到相同的效果
+  n(null, 'weibo.tool.auto_unfold_ttartical');
   d('clearDefTopic', 'weibo.tool.clear_def_topic'); // 清除微博发布框中的默认话题
   n(null, 'weibo.tool.fast_emoji.top');
   n(null, 'weibo.tool.fast_emoji.recent');
