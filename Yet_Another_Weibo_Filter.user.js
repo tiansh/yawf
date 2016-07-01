@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.395
+// @version           3.7.396
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -488,8 +488,8 @@ var text = {
   // 左栏
   'layoutHideLeft': { 'zh-cn': '隐藏模块 - 左栏', 'zh-hk': '隱藏模組 - 左欄', 'zh-tw': '隱藏模組 - 左欄', 'en': 'Hide modules - Left Column' },
   'layoutHideLeftHome': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
-  'layoutHideLeftFav': { 'zh-cn': '收藏', 'zh-hk': '收藏', 'zh-tw': '收藏', 'en': 'Favorite' },
-  'layoutHideLeftLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
+  'layoutHideLeftFav': { 'zh-cn': '我的收藏', 'zh-hk': '我的收藏', 'zh-tw': '我的收藏', 'en': 'Favorite' },
+  'layoutHideLeftLike': { 'zh-cn': '我的赞', 'zh-hk': '我的讚', 'zh-tw': '我的讚', 'en': 'Like' },
   'layoutHideLeftHot': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
   'layoutHideLeftGroupToMe': { 'zh-cn': '群微博', 'zh-hk': '群微博', 'zh-tw': '群微博', 'en': '群微博 (Group)' },
@@ -660,8 +660,8 @@ var text = {
   'addRightUserListTooManyTitle': { 'zh-cn': '收藏帐号过多', 'zh-hk': '收藏帳號過多', 'zh-tw': '收藏帳號過多', 'en': 'Too Many Fave People' },
   'addRightUserListTooMany': {
     'zh-cn': '您添加了过多的收藏帐号，为了避免给服务器造成过大的压力，自动检查首页是否有遗漏的微博的功能将仅对该列表中的前 50 位帐号生效。',
-    'zh-hk': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該列表中的前 50 位帳號生效。',
-    'zh-tw': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該列表中的前 50 位帳號生效。',
+    'zh-hk': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該清單中的前 50 位帳號生效。',
+    'zh-tw': '您添加了過多的收藏帳號，為了避免給伺服器造成過大的壓力，自動檢查首頁是否有遺漏的微博的功能將僅對該清單中的前 50 位帳號生效。',
     'en': 'Too many fave people: The function for checking if there are any Weibo not shown on home page will only apply to first 50 accounts to avoid too many network access.'
   },
   'addRightUserListNotice': { 'zh-cn': '自动检查您是否遗漏了收藏用户的微博{{<i>}}', 'zh-hk': '自動檢查您是否遺漏了收藏用戶的微博{{<i>}}', 'zh-tw': '自動檢查您是否遺漏了收藏用戶的微博{{<i>}}', 'en': 'Check if all Weibo from fave people you have read {{<i>}}' },
@@ -684,14 +684,12 @@ var text = {
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
   'unfoldWeiboLength': { 'zh-cn': '（约{{length}}字）', 'zh-hk': '（約{{length}}字）', 'zh-tw': '（約{{length}}字）', 'en': '(about {{length}} charactors)' },
-  'unfoldTTArtical': { 'zh-cn': '头条文章直接显示全文以免误操作关注作者', 'zh-hk': '頭條文章直接顯示全文以免誤操作關注作者', 'zh-tw': '頭條文章直接顯示全文以免誤操作關注作者', 'en': 'Unfold artical to avoid follow artical author' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
   'fastEmojiClear': { 'zh-cn': '清空列表', 'zh-hk': '清除清單', 'zh-tw': '清除清單', 'en': 'Clear List' },
   'personalRedirectWeibo': { 'zh-cn': '用户主页默认显示全部微博而非热门微博', 'zh-hk': '用戶主頁默認顯示全部微博而非热门微博', 'zh-tw': '用戶主頁默認顯示全部微博而非热门微博', 'en': 'Personal page show all Weibo instead of hot by default' },
-  'uncheckFollowPresenter': { 'zh-cn': '话题页面发布框取消默认勾选关注主持人', 'zh-hk': '話題頁面發佈框取消預設勾選關注主持人', 'zh-tw': '話題頁面發佈框取消預設勾選關注主持人', 'en': 'Uncheck follow presenter in topic page' },
   'publishToPublicDefault': { 'zh-cn': '分组浏览时默认发布公开微博', 'zh-hk': '分組流覽時默認發佈公開微博', 'zh-tw': '分組流覽時默認發佈公開微博', 'en': 'Publish to public by default when browsing by group' },
   'publishToPublicText': { 'zh-cn': '公开', 'zh-hk': '公開', 'zh-tw': '公開', 'en': 'Public' },
   'cardButton': { 'zh-cn': '使用微博卡片的按钮替换对应链接{{<i>}}', 'zh-hk': '使用微博卡片的按鈕替換對應連結{{<i>}}', 'zh-tw': '使用微博卡片的按鈕替換對應連結{{<i>}}', 'en': 'Replace the corresponding links by buttons in Weibo cards' },
@@ -720,6 +718,38 @@ var text = {
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
+  // 关注
+  'followingToolsTitle': { 'zh-cn': '关注', 'zh-hk': '關注', 'zh-tw': '關注', 'en': 'Following' },
+  'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化（试验性）|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list (Experimental) | {{<frequency>}}{{<i>}}' },
+  'autoCheckFollowingDesc': {
+    'zh-cn': '开启本功能后脚本会每隔一段时间，检查您的关注列表，并和上一次得到的结果比较，将不同之处展示出来。脚本检查关注列表只能像您在网页中检查关注列表一样，一页一页的翻看，因此检查可能需要较长的时间，如果您关注了大量的帐号，请考虑降低自动检查的频率。<br /><strong>该功能目前为试验性功能，可能出现任何问题。</strong>'
+  },
+  'autoCheckFollowing1': {'zh-cn': '每天', 'zh-hk': '每天', 'zh-tw': '每天', 'en': 'every day' },
+  'autoCheckFollowing3': {'zh-cn': '每三天', 'zh-hk': '每三天', 'zh-tw': '每三天', 'en': 'every 3 days' },
+  'autoCheckFollowing7': {'zh-cn': '每周', 'zh-hk': '每週', 'zh-tw': '每週', 'en': 'every week' },
+  'autoCheckFollowingLastTime': { 'zh-cn': '上次检查时间：', 'zh-hk': '上次檢查時間', 'zh-tw': '上次檢查時間', 'en': 'Last checking time: ' },
+  'autoCheckFollowingNever': { 'zh-cn': '尚未检查', 'zh-hk': '尚未檢查', 'zh-tw': '尚未檢查', 'en': 'Never' },
+  'autoCheckFollowingNow': { 'zh-cn': '立即检查', 'zh-hk': '立即檢查', 'zh-tw': '立即檢查', 'en': 'Check Now' },
+  'autoCheckFollowingRunning': { 'zh-cn': '（正在检查）', 'zh-hk': '（正在檢查）', 'zh-tw': '正在檢查', 'en': '(Checking)' },
+  'autoCheckFollowingClean': { 'zh-cn': '清除本地数据', 'zh-hk': '清除本機資料', 'zh-tw': '清除本機資料', 'en': 'Clear Local data' },
+  'autoCheckFollowingDialogTitle': { 'zh-cn': '关注列表变化', 'zh-hk': '關注清單變化', 'zh-tw': '關注清單變化', 'en': 'Following List Changes' },
+  'autoCheckFollowingTitle': { 'zh-cn': '关注列表变化', 'zh-hk': '關注清單變化', 'zh-tw': '關注清單變化', 'en': 'Following List Changes' },
+  'autoCheckFollowingTip': {
+    'zh-cn': '您的关注列表自从上次检查并确认至今发生了如下变化，请您复查：',
+    'zh-hk': '您的關注清單自從上次檢查並確認至今發生了如下變化，請您複查：',
+    'zh-tw': '您的關注清單自從上次檢查並確認至今發生了如下變化，請您複查：',
+    'en': 'Your following list had been changed since last checking, please review: ',
+  },
+  'autoCheckFollowingTipDetail': {
+    'zh-cn': '这些变化可能是因为脚本在检查时的不准确，您自己有意或无意的操作，或一些操作或应用的修改导致的。如果您的关注列表经常出现预期之外的变动，请检查<a href="http://app.weibo.com/my" target="_blank">您的应用授权</a>。',
+    'zh-hk': '這些變化可能是因為腳本在檢查時的不準確，您自己有意或無意的操作，或一些操作或應用的修改導致的。如果您的關注清單經常出現預期之外的變動，請檢查<a href="http://app.weibo.com/my" target="_blank">您的應用授權</a>。',
+    'zh-tw': '這些變化可能是因為腳本在檢查時的不準確，您自己有意或無意的操作，或一些操作或應用的修改導致的。如果您的關注清單經常出現預期之外的變動，請檢查<a href="http://app.weibo.com/my" target="_blank">您的應用授權</a>。',
+    'en': 'These changes occurred might be caused by: inaccurate script checking behaviour; your own operations, whether you do interested or by mistake; or some other operations or applications that has the authority to make these changes. If your following list continuously shows unexpected changes, please review <a href="http://app.weibo.com/my" target="_blank">your application authorisations</a>.',
+  },
+  'autoCheckFollowingAdd': { 'zh-cn': '新增如下关注', 'zh-hk': '新增如下關注', 'zh-tw': '新增如下關注', 'en': 'Recent Following' },
+  'autoCheckFollowingLost': { 'zh-cn': '减少如下关注', 'zh-hk': '減少如下關注', 'zh-tw': '減少如下關注', 'en': 'Recent Unfollowed' },
+  'unfoldTTArtical': { 'zh-cn': '头条文章直接显示全文以免误操作关注作者', 'zh-hk': '頭條文章直接顯示全文以免誤操作關注作者', 'zh-tw': '頭條文章直接顯示全文以免誤操作關注作者', 'en': 'Unfold artical to avoid follow artical author' },
+  'uncheckFollowPresenter': { 'zh-cn': '话题页面发布框取消默认勾选关注主持人', 'zh-hk': '話題頁面發佈框取消預設勾選關注主持人', 'zh-tw': '話題頁面發佈框取消預設勾選關注主持人', 'en': 'Uncheck follow presenter in topic page' },
   // 其他
   'otherToolsTitle': { 'zh-cn': '其他', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'Others' },
   'fastEmojiInput': { 'zh-cn': '表情选择框优先列出常用及置顶表情', 'zh-hk': '表情選擇框優先列出常用及置頂表情', 'zh-tw': '表情選擇框優先列出常用及置頂表情', 'en': 'List top and recent emoji on the top of emoji selector' },
@@ -1046,10 +1076,10 @@ var html = {
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-groupRemark">{{configImportWbpWarning}}</div></div>',
   // 新功能提示对话框
-  'whatsNewHeader': '<div class="yawf-whats-new-header">{{updateSuccessHeader}}</div>',
-  'whatsNewBody': '<div class="yawf-whats-new-body yawf-window-body"><div class="yawf-whats-new-desc">{{updateSuccessDesc}}</div></div>',
-  'whatsNewFooter': '<div class="yawf-whats-new-footer"><hr /></div>',
-  'whatsNewBottom': '<div class="yawf-whats-new-bottom"></div>',
+  'whatsNewHeader': '<div class="yawf-whats-new-header yawf-window-header">{{updateSuccessHeader}}</div>',
+  'whatsNewBody': '<div class="yawf-whats-new-body yawf-window-body"><div class="yawf-whats-new-desc yawf-window-desc">{{updateSuccessDesc}}</div></div>',
+  'whatsNewFooter': '<div class="yawf-whats-new-footer yawf-window-footer"><hr /></div>',
+  'whatsNewBottom': '<div class="yawf-whats-new-bottom yawf-window-bottom"></div>',
   // 从 WBP 导入成功对话框
   'wbpImportSuccessHeader': '<div class="wbp-import-success-header">{{wbpImportSuccessHeader}}</div>',
   'wbpImportSuccessBody': '<div class="wbp-import-success-body yawf-window-body"><div class="wbp-import-success-desc">{{wbpImportSuccessDesc}}</div></div>',
@@ -1084,6 +1114,10 @@ var html = {
   'fastFilterFooter': '</ul></div><div class="W_layer_btn S_bg2"><a action-type="ok" node-type="ok" class="W_btn_a btn_34px" href="javascript:void(0);"><span>{{okButtonTitle}}</span></a><a action-type="cancel" node-type="cancel" class="W_btn_b btn_34px" href="javascript:void(0);"><span>{{cancelButtonTitle}}</span></a></div></div>',
   'fastFilterString': '<label><span></span></label>',
   'fastFilterStringInput': '<input width="12" class="input_default" type="text" />',
+  // 自动检查关注列表发生的变化
+  'autoCheckFollowingBody': '<div><div class="yawf-following-notice-header yawf-window-header">{{autoCheckFollowingTitle}}</div><div class="yawf-following-notice-body yawf-window-body"><div class="yawf-following-notice-desc yawf-window-desc">{{autoCheckFollowingTip}}</div><div class="yawf-following-notice-text" style="margin-top:5px;">{{autoCheckFollowingTipDetail}}</div><div class="yawf-following-add" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingAdd}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingLost}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div></div><div node-type="confirmBox" class="yawf-following-notice-buttons yawf-window-buttons W_layer_btn S_bg1"><a class="yawf-following-notice-confirm W_btn_a btn_34px" node-type="confirm" href="javascript:void(0)">{{okButtonTitle}}</a></div></div>',
+  'autoCheckFollowingItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{domainURL}}/u/{{id}}" target="_black"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" usercard="id={{id}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{domainURL}}/u/{{id}}" target="_black" usercard="id={{id}}" class="object_name S_txt1" uid="{{id}}" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
+  'autoCheckFollowingConfig': '<div style="margin: 0 0 0 4em;">{{autoCheckFollowingLastTime}}<span class="yawf-following-last"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingNow}}</span></a><span class="yawf-following-checking" style="display:none; margin-left:1em;">{{autoCheckFollowingRunning}}</span><a href="javascript:;" class="W_btn_b yawf-following-clear" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingClean}}</span></a></div>',
   // 表情输入
   'fastEmojiInput': '<div class="faces_list yawf-faces_list" node-type="scrollView"><div yawf-face="top" node-type="list"><span>{{fastEmojiInputTop}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><span id="yawf-face-drop-area">{{fastEmojiInputTopNotice}}</span></div><div yawf-face="recent" node-type="list"><span>{{fastEmojiInputRecent}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>',
   'fastEmojiListItem': '<li title="{{title}}" action-data="insert={{text}}" action-type="select"><img src="{{img}}"></li>',
@@ -1124,6 +1158,7 @@ var url = {
   'topicsuggest': '{{domainURL}}/aj/mblog/topic?ajwvr=6&q={{query}}',
   'attention': '{{domainURL}}/aj/mblog/attention?ajwvr=6&q={{query}}',
   'getlongtext': '{{domainURL}}/p/aj/mblog/getlongtext?ajwvr=6&mid={{mid}}',
+  'myfollow': '{{domainURL}}/{{uid}}/myfollow',
 };
 
 var font = {
@@ -1396,7 +1431,7 @@ util.str.fill = function (base, func) {
 util.str.fcb = (function () {
   var last = 0;
   return function () {
-    return 'STK_' + (last = Math.max(last + 1, Number(new Date())));
+    return 'STK_' + (last = Math.max(last + 1, Date.now()));
   };
 }());
 
@@ -2010,9 +2045,10 @@ util.init(function () {
   // 保存用户信息
   util.info.uid = unsafeWindow.$CONFIG.uid;
   util.info.nick = unsafeWindow.$CONFIG.nick;
+  util.info.lang = unsafeWindow.$CONFIG.lang;
   util.info.skin = unsafeWindow.$CONFIG.skin;
   // 初始化语言选项
-  util.i18n.chose = util._languages(unsafeWindow.$CONFIG.lang);
+  util.i18n.chose = util._languages(util.info.lang);
   Object.keys(text).map(function (key) { util.i18n.chose(text[key]); text[key] = text[key].local; });
   Object.keys(html).map(function (key) { html[key] = util.str.fill(html[key]); });
   // 初始化设置集
@@ -2490,13 +2526,13 @@ network.recent = (function () {
   var cache = (function () {
     var data;
     var rm = function () {
-      var time = Number(new Date());
+      var time = Date.now();
       Object.keys(data).forEach(function (user) { if (data[user].exp < time) delete data[user]; });
     };
     var read = function () { data = JSON.parse(GM_getValue('recentmid', '{}')) || {}; rm(); };
     var write = function () { GM_setValue('recentmid', JSON.stringify(data)); };
     return function (uid, mids) {
-      read(); if (mids) data[uid] = { 'exp': Number(new Date()) + 1e6, 'mid': mids }; write();
+      read(); if (mids) data[uid] = { 'exp': Date.now() + 1e6, 'mid': mids }; write();
       return (data[uid] || {}).mid;
     };
   }());
@@ -2709,6 +2745,109 @@ network.weibo.longtext = (function () {
   // 设置一下最大接受的长度
   getter.setMaxLength = function (m, b) { maxlength = m; br = b; };
   return getter;
+}());
+
+// 检查关注的人的列表
+network.following = (function () {
+  // 检查某一页关注人列表，获取关注人相关文档树节点
+  var getFollowingContent = function (page, callback) {
+    // 避免两个标签页同时获取关注列表造成冲突
+    var last_try = Number(GM_getValue('following_list_fetching_timestamp', 0));
+    if (last_try < Date.now() && last_try > Date.now() - 30e3) return;
+    GM_setValue('following_list_fetching_timestamp', Date.now());
+    return util.xhr({
+      'method': 'GET',
+      'url': page,
+      'onload': function (resp) {
+        GM_deleteValue('following_list_fetching_timestamp');
+        var dom = null;
+        try {
+          var d = String(resp.responseText);
+          var re = /<script>FM\.view\({"ns":"pl\.relation\.myFollow\.index".*"html":(?=.*member_box)(".*")}\)<\/script>\n/;
+          var html = JSON.parse(d.match(re)[1]);
+          dom = util.dom.create('div', html);
+        } catch (e) { }
+        callback(dom);
+      },
+      'onerror': function () { callback(null); },
+    });
+  };
+  // 从关注人的头像文档树节点中获取相关信息
+  var getUserInfo = function (img) {
+    var id = util.str.parsequery(img.getAttribute('usercard')).id;
+    var name = img.getAttribute('title');
+    var avatar = img.getAttribute('src');
+    var data = { 'id': id, 'avatar': avatar, 'name': name };
+    return data;
+  };
+  // 从文档树中获取关注人的头像并以此获取关注人信息
+  var getUsersInfo = function (dom) {
+    return Array.from(dom.querySelectorAll('.member_box .member_wrap .mod_pic .pic_box img'))
+      .map(getUserInfo);
+  };
+  // 从文档树中检查一共有多少页关注人
+  var getPageCount = function (dom) {
+    try {
+      var pagelink = dom.querySelectorAll('.W_pages .page');
+      var last = pagelink[pagelink.length - 2];
+      return Number(last.textContent);
+    } catch (e) { return 1; }
+  };
+  // 格式化关注信息
+  var formatFollowing = function (following) {
+    var users = {};
+    return following.filter(function (user) {
+      if (user.id in users) return false;
+      users[user.id] = user;
+      return true;
+    });
+  };
+  // 使用 GM_values 维护状态
+  var getStatus = function () {
+    var status = {}, valid = true;
+    try { status = JSON.parse(GM_getValue('following_list_fetching', '{}')); } catch (e) {}
+    if (!status) valid = false;
+    else if (status.uid !== util.info.uid) valid = false;
+    else if (!Number(status.timestamp) || status.timestamp > Date.now() || status.timestamp < Date.now() - 600e3) valid = false;
+    if (!valid) status = { 'uid': util.info.uid, 'n': 0, };
+    return status;
+  };
+  var putStatus = function (status, updateTimestamp) {
+    if (updateTimestamp !== false) status.timestamp = Date.now();
+    GM_setValue('following_list_fetching', JSON.stringify(status));
+  };
+  var gotResult = function (status, callback) {
+    putStatus(status, false);
+    util.func.call(callback, status.following);
+  };
+  // 获取我自己的关注信息
+  return function (callback) {
+    var uid = util.info.uid;
+    // 获取下一页数据
+    // 这个函数被设计成通过 GM_values 维护状态，因为这样可以有效避免因为获取过程中关闭网页造成的问题
+    (function getNextPage() {
+      var status = getStatus(), page;
+      if (status.pageCount && status.n === status.pageCount) return gotResult(status, callback);
+      if (++status.n === 1) page = util.str.fill(url.myfollow, { 'uid': uid }); // 第一页使用默认的地址获取
+      else page = status.template.replace(/_page=\d+/, '_page=' + status.n); // 其他页使用从第一页得到的地址
+      var xhr = getFollowingContent(page, function (dom) {
+        // 如果已经获取到了最后一页，那么结束并得到结果
+        // 如果是第一页，要获取一些额外的信息，包括一共多少页以及接下来每页的地址
+        if (status.n === 1) {
+          status.pageCount = getPageCount(dom);
+          if (status.pageCount > 1) status.template = dom.querySelector('.W_pages a.page[href]').href;
+        }
+        util.debug('fetching following list... %o / %o done', status.n, status.pageCount);
+        try {
+          status.following = (status.following || []).concat(getUsersInfo(dom));
+          putStatus(status);
+          setTimeout(getNextPage, 3e3);
+        } catch (e) { setTimeout(getNextPage, 300e3); }
+      });
+      var busy = !xhr;
+      if (busy) setTimeout(getNextPage, 10e3);
+    }());
+  };
 }());
 
 // 过滤器
@@ -4019,7 +4158,6 @@ filter.predef.subtitle = function (group, subgroup, text) {
     'text': text,
   }).addto(filter.groups[group]);
 };
-
 
 // 快速创建过滤器的描述
 filter.fast.description = {};
@@ -6696,7 +6834,7 @@ filter.predef.group('layout');
     util.func.page(function () {
       // 你的广告我已经看过上万遍了，所以别给我放广告
       document.cookie = 'wb_barrage' + $CONFIG.uid + '=' + (10000 + Math.round(Math.random() * 1000)) +
-        '; expires=' + new Date(Number(new Date()) + 2.6e8).toGMTString() + '; path=/';
+        '; expires=' + new Date(Date.now() + 2.6e8).toGMTString() + '; path=/';
     });
     // 总之你放的东西我看不到，所以别给我放广告了
     util.css.add('.WB_ad_tm2015 ~ div[style*="position"][style*="fixed"][style*="z-index"][style*="99999"] { display: none !important; }');
@@ -7606,21 +7744,6 @@ filter.items.tool.weibotool.auto_unfold_weibo = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 自动展开头条文章以免关注作者
-filter.items.tool.weibotool.auto_unfold_ttartical = filter.item({
-  'group': 'weibotool',
-  'version': 395,
-  'type': 'boolean',
-  'key': 'weibo.tool.auto_unfold_ttartical',
-  'text': '{{unfoldTTArtical}}',
-  'ainit': function () {
-    util.css.add(util.str.cmt(function () { /*!CSS
-      .WB_editor_iframe { height: auto !important; }
-      .artical_add_box [node-type="maskContent"] { display: none; }
-    */ noop(); }))
-  },
-}).addto(filter.groups.tool);
-
 // 清除发布框中的默认话题 (wcf)
 filter.items.tool.weibotool.clear_def_topic = filter.item({
   'group': 'weibotool',
@@ -7679,24 +7802,6 @@ filter.items.tool.weibotool.redirect_weibo = filter.item({
       });
     };
     observer.dom.add(updateUserLinksWithIsAll);
-  },
-}).addto(filter.groups.tool);
-
-// 取消勾选话题页面发布框“自动关注话题主持人”
-filter.items.tool.weibotool.uncheck_follow_presenter = filter.item({
-  'group': 'weibotool',
-  'version': 155,
-  'type': 'boolean',
-  'key': 'weibo.tool.uncheck_follow_presenter',
-  'text': '{{uncheckFollowPresenter}}',
-  'ainit': function () {
-    var uncheckFollowPresenter = function uncheckFollowPresenter() {
-      var checkbox = document.querySelector('input[node-type="followpresenter"]:not([yawf-uncheck])');
-      if (!checkbox) return;
-      checkbox.setAttribute('yawf-uncheck', '');
-      if (checkbox.checked) checkbox.click();
-    };
-    observer.dom.add(uncheckFollowPresenter);
   },
 }).addto(filter.groups.tool);
 
@@ -8153,6 +8258,183 @@ filter.items.tool.weibotool.replace_link = filter.item({
       });
     };
     observer.dom.add(customized);
+  },
+}).addto(filter.groups.tool);
+
+// 关注相关工具
+filter.predef.subtitle('tool', 'followingtool', '{{followingToolsTitle}}');
+
+// 自动检查关注了哪些人
+filter.items.tool.followingtool.auto_check_following = filter.item({
+  'group': 'followingtool',
+  'version': 396,
+  'type': 'boolean',
+  'key': 'weibo.tool.auto_check_following',
+  'text': '{{autoCheckFollowing}}',
+  'ref': {
+    'frequency': {
+      'type': 'select',
+      'default': '3',
+      'select': [
+        { 'text': '{{autoCheckFollowing1}}', 'value': '1' },
+        { 'text': '{{autoCheckFollowing3}}', 'value': '3' },
+        { 'text': '{{autoCheckFollowing7}}', 'value': '7' },
+      ],
+    },
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{autoCheckFollowingDesc}}' },
+  },
+  'get_last': function () {
+    try { return JSON.parse(GM_getValue('following_info_' + util.info.uid, '{}')); }
+    catch (e1) { return {}; }
+  },
+  'get_notice': function () {
+    try { return JSON.parse(GM_getValue('following_notice_' + util.info.uid, '{}')); }
+    catch (e1) { return {}; }
+  },
+  'current': { 'fetching': false },
+  'updateinfo': util.func.noop,
+  'checknow': function (userActive) {
+    util.debug('start checking following list');
+    var that = this, uid = util.info.uid;
+    this.current.fetching = true; this.updateinfo();
+    // 获取关注列表
+    network.following(function (users) {
+      that.current.fetching = false;
+      var last = that.get_last();
+      util.debug('got following list: %o', users);
+      GM_setValue('following_info_' + uid, JSON.stringify({ 'timestamp': Date.now(), 'following': users }));
+      var notice = that.compare(last.following, users, that.get_notice());
+      GM_setValue('following_notice_' + uid, JSON.stringify(notice));
+      that.updateinfo();
+      // 仅当是用户触发的检查时展示检查结果，自动检查的将在下次刷新页面时展示以免打扰用户
+      if (userActive) that.notice();
+    });
+  },
+  'notice': function () {
+    if (self !== top) return;
+    var that = this, notice = this.get_notice();
+    if (!notice.add || !notice.lost || !(notice.add.length + notice.lost.length)) return;
+    util.debug('following list have been changed: %o', notice);
+    // 展示一个对话框，提醒用户关注列表发生了变化
+    var dialog = util.ui.dialog('yawf-following-notice', '{{autoCheckFollowingDialogTitle}}', function (inner) {
+      var content = util.dom.create(util.str.fill(html.autoCheckFollowingBody));
+      ['add', 'lost'].forEach(function (type) {
+        if (!(notice[type] || []).length) return;
+        var container = content.querySelector('.yawf-following-' + type);
+        var ul = container.querySelector('ul');
+        if (notice[type] && notice[type].length) {
+          notice[type].forEach(function (u) {
+            ul.appendChild(util.dom.create(util.str.fill(html.autoCheckFollowingItem, u)));
+          });
+          container.style.display = '';
+        }
+      });
+      var confirm = content.querySelector('.yawf-following-notice-confirm');
+      confirm.addEventListener('click', function (e) {
+        if ('isTrusted' in e && !e.isTrusted) return; // 这个确认操作不应当被其他脚本触发
+        var current = that.get_notice();
+        ['add', 'lost'].forEach(function (type) {
+          current[type] = current[type].filter(function (u) {
+            return notice[type].every(function (v) { return v.id !== u.id; });
+          });
+        });
+        GM_setValue('following_notice_' + util.info.uid, JSON.stringify(current));
+        dialog.hide();
+      });
+      inner.appendChild(content);
+    });
+    dialog.show();
+  },
+  'cleanup': function () {
+    var uid = util.info.uid;
+    GM_deleteValue('following_notice_' + uid);
+    GM_deleteValue('following_info_' + uid);
+    this.updateinfo();
+  },
+  'compare': function (ori, now, notice) {
+    if (!ori || !now) return {};
+    var add = [], lost = [];
+    var ori_m = {}, now_m = {};
+    ori.forEach(function (u) { ori_m[u.id] = u; });
+    try {
+      ((notice || {}).add || []).forEach(function (u) { delete ori_m[u.id]; });
+      ((notice || {}).lost || []).forEach(function (u) { ori_m[u.id] = u; });
+    } catch (e) { }
+    now.forEach(function (u) { now_m[u.id] = u; });
+    Object.keys(ori_m).forEach(function (id) { var u = ori_m[id]; if (!(u.id in now_m)) lost.push(u); });
+    Object.keys(now_m).forEach(function (id) { var u = now_m[id]; if (!(u.id in ori_m)) add.push(u); });
+    return { 'add': add, 'lost': lost };
+  },
+  'init': function () {
+    // 总是检查是否有消息需要提示，即便没有开启“自动检查”的功能
+    var last = this.get_last(), days = Number(this.ref.frequency.conf) || 3;
+    this.notice();
+    if (!this.conf) return;
+    if (!last.timestamp ||
+      last.timestamp < Date.now() - days * 864e5 ||
+      last.timestamp > Date.now() + 60e3)
+      setTimeout(this.checknow.bind(this, false), 15e3);
+  },
+  'shown': function (dom) {
+    var last = this.get_last();
+    var formatTime = function (timestamp) {
+      var option = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+      if (!timestamp) return util.str.fill('{{autoCheckFollowingNever}}');;
+      var date = new Date(timestamp);
+      try { return new Intl.DateTimeFormat(util.info.lang, option).format(date); }
+      catch (e1) {
+        try { return new Intl.DateTimeFormat('zh-CN', option).format(date); }
+        catch (e2) { return '' + timestamp; }
+      }
+    };
+    dom.appendChild(util.dom.create(util.str.fill(html.autoCheckFollowingConfig)));
+    dom.querySelector('.yawf-following-check-now')
+      .addEventListener('click', this.checknow.bind(this, true));
+    dom.querySelector('.yawf-following-clear')
+      .addEventListener('click', this.cleanup.bind(this, true));
+    this.updateinfo = function () {
+      var last = this.get_last();
+      var fetching = this.current.fetching;
+      var status = fetching ? 2 : (last.timestamp > Date.now() - 1800e3 ? 3 : 1);
+      dom.querySelector('.yawf-following-check-now').style.display = status === 1 ? '' : 'none';
+      dom.querySelector('.yawf-following-checking').style.display = status === 2 ? '' : 'none';
+      dom.querySelector('.yawf-following-last').textContent = formatTime(last.timestamp);
+      dom.querySelector('.yawf-following-clear').style.display = Number(last.timestamp) ? '' : 'none';
+    };
+    this.updateinfo();
+  },
+}).addto(filter.groups.tool);
+
+// 自动展开头条文章以免关注作者
+filter.items.tool.followingtool.auto_unfold_ttartical = filter.item({
+  'group': 'followingtool',
+  'version': 395,
+  'type': 'boolean',
+  'key': 'weibo.tool.auto_unfold_ttartical',
+  'text': '{{unfoldTTArtical}}',
+  'ainit': function () {
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_editor_iframe { height: auto !important; }
+      .artical_add_box [node-type="maskContent"] { display: none; }
+    */ noop(); }))
+  },
+}).addto(filter.groups.tool);
+
+// 取消勾选话题页面发布框“自动关注话题主持人”
+filter.items.tool.followingtool.uncheck_follow_presenter = filter.item({
+  'group': 'followingtool',
+  'version': 155,
+  'type': 'boolean',
+  'key': 'weibo.tool.uncheck_follow_presenter',
+  'text': '{{uncheckFollowPresenter}}',
+  'ainit': function () {
+    var uncheckFollowPresenter = function uncheckFollowPresenter() {
+      var checkbox = document.querySelector('input[node-type="followpresenter"]:not([yawf-uncheck])');
+      if (!checkbox) return;
+      checkbox.setAttribute('yawf-uncheck', '');
+      if (checkbox.checked) checkbox.click();
+    };
+    observer.dom.add(uncheckFollowPresenter);
   },
 }).addto(filter.groups.tool);
 
@@ -9534,8 +9816,13 @@ filter.items.script.importexport.importexport = filter.item({
       'onOk': function () {
         util.config.clear();
         GM_deleteValue('notification');
+        GM_deleteValue('following_info_' + util.info.uid);
+        GM_deleteValue('following_notice_' + util.info.uid);
+        GM_deleteValue('following_list_fetching');
+        GM_deleteValue('following_list_fetching_timestamp');
+        GM_deleteValue('recentmid');
+        GM_deleteValue('long_weibo_cache');
         that['export']();
-
       },
     });
   },
@@ -10457,16 +10744,21 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-autoCompleteList[yawf-complete-items="0"] { display: none; }
   // 新功能提示
   #yawf-funcset [node-type="inner"] { padding: 10px 0; width: 600px; }
-  .yawf-whats-new-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
-  .yawf-whats-new-desc { font-size: 14px; }
-  .yawf-whats-new-bottom { height: 20px; }
-  .yawf-whats-new-body { max-height: 300px; overflow: auto; padding: 0 20px; }
-  .yawf-whats-new-footer { margin: 0 0 20px; color: #555; line-height: 20px; padding: 0 20px; }
-  .yawf-whats-new-footer .yawf-configItem, .yawf-groupText { margin: 0; }
+  .yawf-window-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
+  .yawf-window-desc { font-size: 14px; }
+  .yawf-window-bottom { height: 20px; }
+  .yawf-window-body { max-height: 300px; overflow: auto; padding: 0 20px; }
+  .yawf-window-footer { margin: 0 0 20px; color: #555; line-height: 20px; padding: 0 20px; }
+  .yawf-window-footer .yawf-configItem, .yawf-groupText { margin: 0; }
   .wbp-import-success-header { font-size: 16px; line-height: 40px; padding: 0 20px; }
   .wbp-import-success-desc { font-size: 14px; }
   .wbp-import-success-body { max-height: 300px; overflow: auto; padding: 0 20px; }
   .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus), .yawf-bubble input[type="range"] { display: none; }
+  // 自动检查关注列表
+  #yawf-following-notice [node-type="inner"] { padding: 10px 0; width: 600px; }
+  #yawf-following-notice .yawf-following-notice-body { height: 280px; overflow: auto; }
+  #yawf-following-notice .yawf-following-items-title { margin: 10px 0 0; font-weight: bold; }
+  .yawf-window-buttons { margin-bottom: -10px; }
   // 右栏用户列表设置
   #yawf-fave-people-config [node-type="inner"] { padding: 10px 0 30px; width: 600px; }
   .yawf-fave-people-config-body { max-height: 300px; overflow: auto; padding: 0 20px; }
