@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.396
+// @version           3.7.397
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1117,6 +1117,7 @@ var html = {
   // 自动检查关注列表发生的变化
   'autoCheckFollowingBody': '<div><div class="yawf-following-notice-header yawf-window-header">{{autoCheckFollowingTitle}}</div><div class="yawf-following-notice-body yawf-window-body"><div class="yawf-following-notice-desc yawf-window-desc">{{autoCheckFollowingTip}}</div><div class="yawf-following-notice-text" style="margin-top:5px;">{{autoCheckFollowingTipDetail}}</div><div class="yawf-following-add" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingAdd}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingLost}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div></div><div node-type="confirmBox" class="yawf-following-notice-buttons yawf-window-buttons W_layer_btn S_bg1"><a class="yawf-following-notice-confirm W_btn_a btn_34px" node-type="confirm" href="javascript:void(0)">{{okButtonTitle}}</a></div></div>',
   'autoCheckFollowingItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{domainURL}}/u/{{id}}" target="_black"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" usercard="id={{id}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{domainURL}}/u/{{id}}" target="_black" usercard="id={{id}}" class="object_name S_txt1" uid="{{id}}" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
+  'autoCheckFollowingOtherItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{href}}" target="_black"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{href}}" target="_black" class="object_name S_txt1" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
   'autoCheckFollowingConfig': '<div style="margin: 0 0 0 4em;">{{autoCheckFollowingLastTime}}<span class="yawf-following-last"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingNow}}</span></a><span class="yawf-following-checking" style="display:none; margin-left:1em;">{{autoCheckFollowingRunning}}</span><a href="javascript:;" class="W_btn_b yawf-following-clear" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingClean}}</span></a></div>',
   // 表情输入
   'fastEmojiInput': '<div class="faces_list yawf-faces_list" node-type="scrollView"><div yawf-face="top" node-type="list"><span>{{fastEmojiInputTop}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><span id="yawf-face-drop-area">{{fastEmojiInputTopNotice}}</span></div><div yawf-face="recent" node-type="list"><span>{{fastEmojiInputRecent}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>',
@@ -2774,15 +2775,22 @@ network.following = (function () {
   };
   // 从关注人的头像文档树节点中获取相关信息
   var getUserInfo = function (img) {
-    var id = util.str.parsequery(img.getAttribute('usercard')).id;
-    var name = img.getAttribute('title');
-    var avatar = img.getAttribute('src');
-    var data = { 'id': id, 'avatar': avatar, 'name': name };
+    var id, href, name, avatar, data;
+    name = img.getAttribute('title');
+    avatar = img.getAttribute('src');
+    try {
+      id = util.str.parsequery(img.getAttribute('usercard')).id;
+      href = util.str.fill(url.user, { 'uid': id });
+    } catch (e) {
+      href = img.parentNode.href;
+      id = '#' + href;
+    }
+    data = { 'id': id, 'href': href, 'avatar': avatar, 'name': name };
     return data;
   };
   // 从文档树中获取关注人的头像并以此获取关注人信息
   var getUsersInfo = function (dom) {
-    return Array.from(dom.querySelectorAll('.member_box .member_wrap .mod_pic .pic_box img'))
+    return Array.from(dom.querySelectorAll('.member_box .member_wrap .mod_pic .pic_box a > img'))
       .map(getUserInfo);
   };
   // 从文档树中检查一共有多少页关注人
@@ -8324,7 +8332,10 @@ filter.items.tool.followingtool.auto_check_following = filter.item({
         var ul = container.querySelector('ul');
         if (notice[type] && notice[type].length) {
           notice[type].forEach(function (u) {
-            ul.appendChild(util.dom.create(util.str.fill(html.autoCheckFollowingItem, u)));
+            ul.appendChild(util.dom.create(u.id[0] !== '#' ?
+              util.str.fill(html.autoCheckFollowingItem, u) :
+              util.str.fill(html.autoCheckFollowingOtherItem, u)
+            ));
           });
           container.style.display = '';
         }
