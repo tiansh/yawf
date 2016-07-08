@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.397
+// @version           3.7.398
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1116,8 +1116,8 @@ var html = {
   'fastFilterStringInput': '<input width="12" class="input_default" type="text" />',
   // 自动检查关注列表发生的变化
   'autoCheckFollowingBody': '<div><div class="yawf-following-notice-header yawf-window-header">{{autoCheckFollowingTitle}}</div><div class="yawf-following-notice-body yawf-window-body"><div class="yawf-following-notice-desc yawf-window-desc">{{autoCheckFollowingTip}}</div><div class="yawf-following-notice-text" style="margin-top:5px;">{{autoCheckFollowingTipDetail}}</div><div class="yawf-following-add" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingAdd}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingLost}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div></div><div node-type="confirmBox" class="yawf-following-notice-buttons yawf-window-buttons W_layer_btn S_bg1"><a class="yawf-following-notice-confirm W_btn_a btn_34px" node-type="confirm" href="javascript:void(0)">{{okButtonTitle}}</a></div></div>',
-  'autoCheckFollowingItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{domainURL}}/u/{{id}}" target="_black"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" usercard="id={{id}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{domainURL}}/u/{{id}}" target="_black" usercard="id={{id}}" class="object_name S_txt1" uid="{{id}}" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
-  'autoCheckFollowingOtherItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{href}}" target="_black"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{href}}" target="_black" class="object_name S_txt1" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
+  'autoCheckFollowingItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{domainURL}}/u/{{id}}" target="_blank"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" usercard="id={{id}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{domainURL}}/u/{{id}}" target="_blank" usercard="id={{id}}" class="object_name S_txt1" uid="{{id}}" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
+  'autoCheckFollowingOtherItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{href}}" target="_blank"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{href}}" target="_blank" class="object_name S_txt1" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
   'autoCheckFollowingConfig': '<div style="margin: 0 0 0 4em;">{{autoCheckFollowingLastTime}}<span class="yawf-following-last"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingNow}}</span></a><span class="yawf-following-checking" style="display:none; margin-left:1em;">{{autoCheckFollowingRunning}}</span><a href="javascript:;" class="W_btn_b yawf-following-clear" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingClean}}</span></a></div>',
   // 表情输入
   'fastEmojiInput': '<div class="faces_list yawf-faces_list" node-type="scrollView"><div yawf-face="top" node-type="list"><span>{{fastEmojiInputTop}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><span id="yawf-face-drop-area">{{fastEmojiInputTopNotice}}</span></div><div yawf-face="recent" node-type="list"><span>{{fastEmojiInputRecent}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>',
@@ -1160,6 +1160,8 @@ var url = {
   'attention': '{{domainURL}}/aj/mblog/attention?ajwvr=6&q={{query}}',
   'getlongtext': '{{domainURL}}/p/aj/mblog/getlongtext?ajwvr=6&mid={{mid}}',
   'myfollow': '{{domainURL}}/{{uid}}/myfollow',
+  'stock': '{{domainURL}}/p/230677{{stockid}}',
+  'topic': '{{domainURL}}/k/{{topic}}',
 };
 
 var font = {
@@ -2775,18 +2777,61 @@ network.following = (function () {
   };
   // 从关注人的头像文档树节点中获取相关信息
   var getUserInfo = function (img) {
-    var id, href, name, avatar, data;
-    name = img.getAttribute('title');
+    var description, avatar;
+    description = img.getAttribute('title');
     avatar = img.getAttribute('src');
-    try {
-      id = util.str.parsequery(img.getAttribute('usercard')).id;
-      href = util.str.fill(url.user, { 'uid': id });
-    } catch (e) {
-      href = img.parentNode.href;
-      id = '#' + href;
-    }
-    data = { 'id': id, 'href': href, 'avatar': avatar, 'name': name };
-    return data;
+    return (util.func.catched(function () {
+      // 关注了一个用户
+      var id = util.str.parsequery(img.getAttribute('usercard') || '').id; if (!id) return;
+      var href = util.str.fill(url.user, { 'uid': id });
+      return {
+        'id': id, // 向前兼容的id，后面的版本要使用href代替id作为唯一标识
+        'type': 'user',
+        'user': id,
+        'href': href,
+        'avatar': avatar,
+        'name': '@' + description,
+        'description': '@' + description,
+      };
+    })()) || (util.func.catched(function () {
+      // 关注了一支股票
+      var id = (img.parentNode.href.match(/weibo.com\/p\/230677([a-zA-Z\d]+)/) || [])[1]; if (!id) return;
+      var href = util.str.fill(url.stock, { 'stockid': id });
+      return {
+        'id': '#' + img.parentNode.href, // 向前兼容
+        'type': 'stock',
+        'stock': id,
+        'href': href,
+        'avatar': avatar,
+        'name': '$' + description + '$',
+        'description': '$' + description + '$',
+      };
+    })()) || (util.func.catched(function () {
+      // 关注了一个话题
+      var ref = img.parentNode.href.match(/huati.weibo.com/); if (!ref) return;
+      var text = img.title;
+      // 原本的链接包含的是编号，这里换成话题文本，因为话题文本比编号更固定：编号可以被删除，文本无法修改
+      var href = util.str.fill(url.topic, { 'topic': text });
+      return {
+        'id': '#' + img.parentNode.href, // 向前兼容
+        'type': 'topic',
+        'topic': text,
+        'href': href,
+        'avatar': avatar,
+        'name': '#' + description + '#',
+        'description': '#' + description + '#',
+      };
+    })()) || (util.func.catched(function () {
+      // 未知关注内容
+      return {
+        'id': '#' + img.parentNode.href, // 向前兼容
+        'type': 'unknown',
+        'href': href,
+        'avatar': avatar,
+        'description': '?' + description,
+        'name': '?' + description,
+      };
+    })());
   };
   // 从文档树中获取关注人的头像并以此获取关注人信息
   var getUsersInfo = function (dom) {
@@ -8332,7 +8377,7 @@ filter.items.tool.followingtool.auto_check_following = filter.item({
         var ul = container.querySelector('ul');
         if (notice[type] && notice[type].length) {
           notice[type].forEach(function (u) {
-            ul.appendChild(util.dom.create(u.id[0] !== '#' ?
+            ul.appendChild(util.dom.create(u.id[0] !== '#' ? // 向前兼容的处理方式，将来要换成使用description
               util.str.fill(html.autoCheckFollowingItem, u) :
               util.str.fill(html.autoCheckFollowingOtherItem, u)
             ));
@@ -8366,14 +8411,15 @@ filter.items.tool.followingtool.auto_check_following = filter.item({
     if (!ori || !now) return {};
     var add = [], lost = [];
     var ori_m = {}, now_m = {};
-    ori.forEach(function (u) { ori_m[u.id] = u; });
+    var attr = 'id';
+    ori.forEach(function (u) { ori_m[u[attr]] = u; });
     try {
-      ((notice || {}).add || []).forEach(function (u) { delete ori_m[u.id]; });
-      ((notice || {}).lost || []).forEach(function (u) { ori_m[u.id] = u; });
+      ((notice || {}).add || []).forEach(function (u) { delete ori_m[u[attr]]; });
+      ((notice || {}).lost || []).forEach(function (u) { ori_m[u[attr]] = u; });
     } catch (e) { }
-    now.forEach(function (u) { now_m[u.id] = u; });
-    Object.keys(ori_m).forEach(function (id) { var u = ori_m[id]; if (!(u.id in now_m)) lost.push(u); });
-    Object.keys(now_m).forEach(function (id) { var u = now_m[id]; if (!(u.id in ori_m)) add.push(u); });
+    now.forEach(function (u) { now_m[u[attr]] = u; });
+    Object.keys(ori_m).forEach(function (id) { var u = ori_m[id]; if (!(u[attr] in now_m)) lost.push(u); });
+    Object.keys(now_m).forEach(function (id) { var u = now_m[id]; if (!(u[attr] in ori_m)) add.push(u); });
     return { 'add': add, 'lost': lost };
   },
   'init': function () {
