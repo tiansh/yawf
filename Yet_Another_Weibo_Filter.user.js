@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.398
+// @version           3.7.399
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7972,6 +7972,10 @@ filter.items.tool.weibotool.view_original = filter.item({
         .over #viewer.fit { max-width: 100vw; max-height: calc(100% - 20px); cursor: zoom-in; }
         #container { top: 0; overflow: auto; width: 100vw; height: calc(100vh - 101px); }
         .single #container, .single #imgarea { height: 100vh; }
+        #prev, #next { display: block; position: absolute; width: 10%; min-width: 80px; height: calc(100vh - 101px); top: 0; cursor: pointer; opacity: 0; }
+        .single #prev, .single #next { display: none; }
+        #prev { left: 0; cursor: url("http://img.t.sinajs.cn/t6/style/images/common/pic_prev.cur"), auto; }
+        #next { right: 0; cursor: url("http://img.t.sinajs.cn/t6/style/images/common/pic_next.cur"), auto; }
         #imgarea { display: table-cell; vertical-align: middle; text-align: center; width: 100vw; height: calc(100vh - 101px); }
         #chose { position: fixed; clear: both; width: 100%; bottom: 0; height: 100px; overflow: auto; overflow-x: hidden; border-top: 1px solid #aaa; }
         .single #chose { display: none; }
@@ -7988,7 +7992,7 @@ filter.items.tool.weibotool.view_original = filter.item({
           return 'http://' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
         };
       </script></head>
-      <body><div id="container"><div id="imgarea"><img id="viewer" class="large" /></div></div><div id="chose"><script>
+      <body><div id="container"><div id="prev"></div><div id="imgarea"><img id="viewer" class="large" /></div><div id="next"></div></div><div id="chose"><script>
         info.filenames.forEach(function (filename, i) {
           document.write('<a href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
         });
@@ -8026,6 +8030,12 @@ filter.items.tool.weibotool.view_original = filter.item({
         if (info.filenames.length === 1) document.body.className = 'single';
         viewer.onload = function () { setTimeout(resize, 0); };
         window.onresize = resize;
+        window.onkeydown = function (e) {
+          if (e.keyCode === 33) prevImg(); else if (e.keyCode === 34) nextImg();
+        };
+        var prevImg = function () { location.hash = '#' + (Number(location.hash.slice(1)) - 1); };
+        var nextImg = function () { location.hash = '#' + (Number(location.hash.slice(1)) + 1); };
+        prev.onclick = prevImg; next.onclick = nextImg;
       </script></body>
       </html>
     */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
