@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.402
+// @version           3.7.403
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -8012,9 +8012,7 @@ filter.items.tool.weibotool.view_original = filter.item({
           var hashVal = Number(location.hash.slice(1));
           var count = info.filenames.length;
           hashVal = ((parseInt(hashVal) % count) + count) % count;
-          if ('#' + hashVal !== location.hash) {
-            location.hash = '#' + hashVal;
-          }
+          if ('#' + hashVal !== location.hash) goto(hashVal);
           return hashVal;
         }
         function show() {
@@ -8024,10 +8022,13 @@ filter.items.tool.weibotool.view_original = filter.item({
           container.scrollTop = 0;
           container.scrollLeft = 0;
         }
+        function focus() { container.focus(); }
         if (info.filenames.length === 1) document.body.className = 'single';
-        function prevImg() { location.hash = '#' + (Number(location.hash.slice(1)) - 1); };
-        function nextImg() { location.hash = '#' + (Number(location.hash.slice(1)) + 1); };
+        function prevImg() { goto(Number(location.hash.slice(1)) - 1); };
+        function nextImg() { goto(Number(location.hash.slice(1)) + 1); };
+        function goto(n) { location.hash = '#' + n; };
         function checkLR(x) {
+          if (info.filenames.length === 1) return 'mid';
           var pos = 'mid', w = container.clientWidth;
           if (x < 100 && x < w * 0.2) pos = 'left';
           if (x > w - 100 && x > w * 0.8) pos = 'right';
@@ -8048,11 +8049,19 @@ filter.items.tool.weibotool.view_original = filter.item({
         });
         window.onresize = resize;
         window.onkeydown = function (e) {
-          if (e.keyCode === 33) prevImg(); else if (e.keyCode === 34) nextImg();
+          var key = e.keyCode, n = key & 15;
+          if (key === 33) prevImg(); else if (key === 34) nextImg();
+          if ([48, 96].indexOf(key & -16) !== -1) {
+            if (n > 0 && n <= info.filenames.length) goto(n - 1);
+          }
         };
         window.onhashchange = show;
-        window.onload = show;
-        location.hash = '#' + info.current;
+        window.onload = function () {
+          show();
+          focus();
+        };
+        goto(info.current);
+        container.onblur = function () { setTimeout(focus, 0); };
       </script></body>
       </html>
     */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
