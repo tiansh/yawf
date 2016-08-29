@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.403
+// @version           3.7.404
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -468,11 +468,6 @@ var text = {
   'layoutHideIconRun': { 'zh-cn': '跑步', 'zh-hk': '跑步', 'zh-tw': '跑步', 'en': 'Run' },
   'layoutHideIconFoolsDay': { 'zh-cn': '愚人节', 'zh-hk': '愚人节', 'zh-tw': '愚人节', 'en': "Fools' Day" },
   'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': 'Internet celebrity' },
-  'layoutHideIconEuro2016': { 'zh-cn': '2016欧洲杯', 'zh-hk': '2016歐洲杯', 'zh-tw': '2016歐洲杯', 'en': 'Euro 2016' },
-  'layoutHideIconEuro2016Desc': {
-    'zh-cn': Array(24).join().split(',').map(function (_, i) { return '<i class="W_icon_EURO icon_EURO_' + (i + 1) + '" style="display:inline-block!important"></i>'; }).join(''),
-  },
-  'layoutHideIconOlympic': { 'zh-cn': '奥运', 'zh-hk': '奧運', 'zh-tw': '奧運', 'en': 'Olympic' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -492,7 +487,6 @@ var text = {
   'layoutHideLeftFav': { 'zh-cn': '我的收藏', 'zh-hk': '我的收藏', 'zh-tw': '我的收藏', 'en': 'Favorite' },
   'layoutHideLeftLike': { 'zh-cn': '我的赞', 'zh-hk': '我的讚', 'zh-tw': '我的讚', 'en': 'Like' },
   'layoutHideLeftHot': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
-  'layoutHideLeftOlympic': { 'zh-cn': '里约奥运会', 'zh-hk': '里约奥运会', 'zh-tw': '里约奥运会', 'en': '里约奥运会 (Rio Olympic)' },
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
   'layoutHideLeftGroupToMe': { 'zh-cn': '群微博', 'zh-hk': '群微博', 'zh-tw': '群微博', 'en': '群微博 (Group)' },
   'layoutHideLeftSpecial': { 'zh-cn': '特别关注', 'zh-hk': '特别關注', 'zh-tw': '特别關注', 'en': 'Special Focus' },
@@ -508,7 +502,6 @@ var text = {
   // 右栏
   'layoutHideRight': { 'zh-cn': '隐藏模块 - 右栏', 'zh-hk': '隱藏模組 - 右欄', 'zh-tw': '隱藏模組 - 右欄', 'en': 'Hide modules - Right Column' },
   'layoutHideRightInfo': { 'zh-cn': '个人信息', 'zh-hk': '个人信息', 'zh-tw': '个人信息', 'en': 'Personal Info' },
-  'layoutHideRightOlympic': { 'zh-cn': '里约奥运会榜单', 'zh-hk': '里约奥运会榜单', 'zh-tw': '里约奥运会榜单', 'en': '里约奥运会榜单 (Olympic related)' },
   'layoutHideRightRecomMusicRank': { 'zh-cn': '榜单（新歌榜等）', 'zh-hk': '榜單（新歌榜等）', 'zh-tw': '榜單（新歌榜等）', 'en': 'Rank List (Song list, etc.)' },
   'layoutHideRightRecomMusicRankDesc': {
     'zh-cn': '包括“亚洲新歌榜实时趋势”“微博电影热议榜”“亚洲好书榜实时趋势”“主播红人榜”“亚洲动漫榜”等。'
@@ -6564,8 +6557,6 @@ filter.predef.group('layout');
   item('Run', 247, '.icon_run2015 { display: none !important; }', { 'extt': '<i class="W_icon icon_run2015" style="display:inline-block!important"></i>' });
   item('FoolsDay', 372, '.icon_foolsday { display: none !important; }', { 'extt': '<i class="W_icon icon_foolsday" style="display:inline-block!important"></i>' });
   item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
-  item('Euro2016', 391, '.W_icon_EURO { display: none !important; }');
-  item('Olympic', 401, '.icon_olympic { display: none !important; }', { 'extt': '<i class="W_icon icon_olympic" style="display:inline-block!important"></i>' });
 
   subtitle('Nav', true);
   item('LogoImg', 256, function replaceLogo() {
@@ -6594,6 +6585,8 @@ filter.predef.group('layout');
       var removeBlank = function (node) {
         if (node && node.nodeType === Node.TEXT_NODE && node.data.match(/^\s*$/))
           return container.removeChild(node);
+        if (node && node.nodeType === Node.COMMENT_NODE)
+          return container.removeChild(node)
       };
       var removeBlankSibling = function (node) {
         while (removeBlank(node.previousSibling));
@@ -6615,8 +6608,7 @@ filter.predef.group('layout');
           container.removeChild(line);
           prev = node.previousSibling;
           next = node.nextSibling;
-        }
-        else break;
+        } else break;
       }
       container.removeChild(node);
       if (!prev && !next) removeNode(container);
@@ -6645,7 +6637,6 @@ filter.predef.group('layout');
   item('Fav', 390, levHidden('fav'));
   item('Like', 390, levHidden('like'));
   item('Hot', 390, levHidden('hot'));
-  item('Olympic', 402, levHidden('olympic'));
   item('Friends', 5, levHidden('friends'));
   item('GroupToMe', 333, levHidden('groupsfeed'));
   item('Special', 333, levHidden('special'));
@@ -6661,7 +6652,6 @@ filter.predef.group('layout');
 
   subtitle('Right', true);
   item('Info', 5, '#v6_pl_rightmod_myinfo { display: none !important; }');
-  item('Olympic', 401, '#v6_pl_rightmod_olympicrank, .WB_Olympic { display: none !important; }');
   item('RecomMusicRank', 387, '#v6_pl_rightmod_rank { display: none !important; }');
   item('HotTopic', 5, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }');
   item('HotTopicExpand', 178, '.hot_topic .WB_right_expand { display: none !important; }');
@@ -6947,7 +6937,6 @@ filter.predef.group('layout');
     'a[href^="/groupsfeed"]': 'leftnav_groupsfeed',
     'a[href^="/mygroups"]': 'leftnav_mygroups',
     'a[href^="/feed/hot"]': 'leftnav_hot',
-    'a[href^="/feed/olympics"]': 'leftnav_olympic',
     'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
     'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
   });
@@ -10217,7 +10206,6 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideIconRun');
   n(null, 'weibo.layoutHideIconFoolsDay');
   m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
-  m('Euro2016Icon', 'weibo.layoutHideIconEuro2016'); // 围观欧洲杯
   n(null, 'weibo.layoutHideNavLogoImg');
   n(null, 'weibo.layoutHideNavMain');
   n(null, 'weibo.layoutHideNavHot');
@@ -10335,7 +10323,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.auto_unfold_weibo.count');
   n(null, 'weibo.tool.auto_unfold_weibo.br');
   d('showAllText', 'weibo.tool.auto_unfold_weibo'); // 展开字数超长的微博内容 // ⚠️ YAWF将默认只展开不超过200字（换行计30字）的微博，用户需要修改设置为允许展开2000字微博达到相同的效果
-  n(null, 'weibo.tool.auto_unfold_ttartical');
+  d('showAllArticleText', 'weibo.tool.auto_unfold_ttartical');
   d('clearDefTopic', 'weibo.tool.clear_def_topic'); // 清除微博发布框中的默认话题
   n(null, 'weibo.tool.fast_emoji.top');
   n(null, 'weibo.tool.fast_emoji.recent');
