@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.404
+// @version           3.7.405
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -472,6 +472,7 @@ var text = {
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
   'layoutHideNavMain': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
+  'layoutHideNavTV': { 'zh-cn': '视频', 'zh-hk': '视频', 'zh-tw': '视频', 'en': '视频 (Video)' },
   'layoutHideNavHot': { 'zh-cn': '发现', 'zh-hk': '发现', 'zh-tw': '发现', 'en': 'Discover' },
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
   'layoutHideNavHotSearch': { 'zh-cn': '大家正在搜', 'zh-hk': '大家正在搜', 'zh-tw': '大家正在熱搜', 'en': 'Hot search' },
@@ -481,6 +482,7 @@ var text = {
   'searchBarPlaceholder': {'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Count for new notice' },
   'layoutHideNavSettingNew': { 'zh-cn': '新设置红点', 'zh-hk': '新設定紅點', 'zh-tw': '新設定紅點', 'en': 'Red dot for new settings' },
+  'layoutHideNavHotTip': { 'zh-cn': '热门微博小黄签', 'zh-hk': '熱門微博小黃簽', 'zh-tw': '熱門微博小黃簽', 'en': 'Yellow tip for new hot weibo' },
   // 左栏
   'layoutHideLeft': { 'zh-cn': '隐藏模块 - 左栏', 'zh-hk': '隱藏模組 - 左欄', 'zh-tw': '隱藏模組 - 左欄', 'en': 'Hide modules - Left Column' },
   'layoutHideLeftHome': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
@@ -6569,11 +6571,33 @@ filter.predef.group('layout');
     img.parentNode.replaceChild(logo, img);
   });
   item('Main', 5, '.gn_nav_list>li:nth-child(1) { display: none !important; }');
-  item('Hot', 5, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
-  item('Game', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
+  item('TV', 405, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
+  item('Hot', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
+  item('Game', 5, '.gn_nav_list>li:nth-child(4) { display: none !important; }');
   item('HotSearch', 277, function () { observer.stopjsonp(/http:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?(?:.*&)?_cb=(STK_\d+)/); });
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
+  item('HotTip', 405, function () {
+    var hideTopMenuListHotTip = function hideTopMenuListHotTip() {
+      var ul = document.querySelector('.WB_global_nav .gn_topmenulist_tips ul'); if (!ul) return;
+      var tips = Array.from(ul.querySelectorAll('li:not([yawf-topmenulist-tip-type])')); if (!tips.length) return;
+      tips.forEach(function (tip) {
+        var a = tip.querySelector('a[href]'), href = a && a.href || '';
+        tip.setAttribute('yawf-topmenulist-tiptype', href);
+        if (href.indexOf('/feed/hot') !== -1) {
+          tip.parentNode.removeChild(tip);
+        }
+      });
+      if (ul.childNodes.length === 0) ul.parentNode.removeChild(ul);
+      else ul.style.display = 'block';
+    };
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .WB_global_nav .gn_topmenulist_tips { padding: 0; border: 0; overflow: hidden; }
+      .WB_global_nav .gn_topmenulist_tips ul { padding: 6px 2px; border: 1px solid #ffeebb; border-radius: 0 0 3px 3px; display: none; }
+    */ noop(); }));
+    observer.dom.add(hideTopMenuListHotTip);
+    hideTopMenuListHotTip();
+  });
 
   // 隐藏左栏的辅助函数
   var levHidden = (function (id) {
@@ -10712,19 +10736,17 @@ var extension = (function () {
   });
 
   return yawf;
-
 }());
 
 var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   {{yawf-icon-font}}
   // 缩小搜索框为漏斗提供空间
-  .WB_global_nav .gn_search_v2 { width: 245px !important; }
-  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 202px !important; }
-  .gn_topmenulist_search { width: 247px !important; }
-  .WB_global_nav_us .gn_search_v2 { width: 185px !important; }
-  .WB_global_nav_us .gn_search_v2 .placeholder, .WB_global_nav_us .gn_search_v2 .W_input { width: 142px !important; }
-  .WB_global_nav_us .gn_topmenulist_search { width: 170px !important; }
+  .WB_global_nav .gn_search,
+  .WB_global_nav .gn_search_v2 { width: 178px !important; }
+  .WB_global_nav .gn_search .placeholder, .WB_global_nav .gn_search .W_input,
+  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 135px !important; }
+  .gn_topmenulist_search { width: 180px !important; }
   @media screen and (min-width:1295px) {
     .WB_global_nav .gn_search_v2 { width: 505px !important; }
     .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 462px !important; }
