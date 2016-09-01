@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.405
+// @version           3.7.406
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -820,7 +820,7 @@ var text = {
   'unwrapContentDesc': {
     'zh-cn': '您还可以在自定义样式中使用“ .yawf-linebreak::before { content: "⏎" } ”自定义。需要设置内容过滤器时您仍需要使用正则表达式<code>\\n</code>表示换行符。'
   },
-  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore pictures to normal size (feed v3) {{<i>}}||{{<repost>}} and restore the size of original weibo' },
+  'imageSize': { 'zh-cn': '恢复图片大小为正常尺寸 (feed v3) (feed v4){{<i>}}||{{<repost>}}同时缩小被转发的原微博的宽度', 'zh-hk': '恢復圖片大小為正常尺寸 (feed v3) (feed v4){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'zh-tw': '恢復圖片大小為正常尺寸 (feed v3) (feed v4){{<i>}}||{{<repost>}}同時縮小被轉發的原微博的寬度', 'en': 'Restore pictures to normal size (feed v3) (feed v4) {{<i>}}||{{<repost>}} and restore the size of original weibo' },
   'imageSizeDesc': {
     'zh-cn': '缩小图片尺寸仅影响图片在您的网页上的显示效果，不能降低网络数据流量用量。'
   },
@@ -9479,6 +9479,7 @@ filter.items.style.sweibo.image_size = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_media_a { margin: -2px 0 0 6px; width: 258px; }
       .WB_feed.WB_feed_v3 .WB_media_a_mn .WB_pic { width: 80px; height: 80px; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic { width: 80px !important; height: 80px !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto !important; width: auto !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto; height: auto; position: static; -webkit-transform: none; transform: none; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video { width: 120px; height: 80px; min-width: 36px; }
@@ -10742,28 +10743,20 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
   {{yawf-icon-font}}
   // 缩小搜索框为漏斗提供空间
-  .WB_global_nav .gn_search,
   .WB_global_nav .gn_search_v2 { width: 178px !important; }
-  .WB_global_nav .gn_search .placeholder, .WB_global_nav .gn_search .W_input,
   .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 135px !important; }
   .gn_topmenulist_search { width: 180px !important; }
   @media screen and (min-width:1295px) {
-    .WB_global_nav .gn_search_v2 { width: 505px !important; }
-    .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 462px !important; }
-    .gn_topmenulist_search { width: 507px !important; }
-    .WB_global_nav_us .gn_search_v2 { width: 185px !important; }
-    .WB_global_nav_us .gn_search_v2 .placeholder, .WB_global_nav_us .gn_search_v2 .W_input { width: 142px !important; }
-    .WB_global_nav_us .gn_topmenulist_search { width: 170px !important; }
+    .WB_global_nav .gn_search_v2 { width: 435px !important; }
+    .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 392px !important; }
+    .gn_topmenulist_search { width: 437px !important; }
   }
   @media screen and (max-width:1006px) {
     .WB_global_nav .gn_search_v2 { width: 115px !important; } 
     .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 72px !important; } 
     .gn_topmenulist_search { width: 117px !important; }
-    .WB_global_nav_us .gn_search_v2 { width: 85px !important; }
-    .WB_global_nav_us .gn_search_v2 .placeholder, .WB_global_nav_us .gn_search_v2 .W_input { width: 42px !important; }
-    .WB_global_nav_us .gn_topmenulist_search { width: 70px !important; }
   }
-  .gn_topmenulist_search, .WB_global_nav_us .gn_topmenulist_search { min-width: 200px !important; }
+  .gn_topmenulist_search { min-width: 200px !important; }
   // 设置框相关样式
   #yawf-config [node-type="inner"] { padding: 0; width: 800px; height: 480px; }
   #yawf-config .yawf-config-header { float: left; width: 160px; height: 480px; }
