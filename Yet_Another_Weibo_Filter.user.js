@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.406
+// @version           3.7.407
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -88,6 +88,12 @@ var text = {
   'contextMenuCreateLabel': { 'zh-cn': '创建过滤器', 'zh-hk': '創建篩選器', 'zh-tw': '創建篩選器', 'en': 'Create Filter' },
   // 微博过滤
   'baseFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博篩選', 'zh-tw': '微博篩選', 'en': 'Weibo Filter' },
+  // 微博
+  'loadWeiboTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
+  'loadWeiboBySearch': { 'zh-cn': '使用搜索代替首页{{<i>}}', 'zh-hk': '使用檢索代替首頁', 'zh-tw': '使用檢索代替首頁', 'en': 'Use search to replace home page' },
+  'loadWeiboBySearchDesc': {
+    'zh-cn': '如果您的首页上微博排序混乱，以致无法正常使用微博。请尝试打开此功能。'
+  },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器{{<i>}}', 'zh-hk': '使用拖放快速創建篩選器{{<i>}}', 'zh-tw': '使用拖放快速創建篩選器{{<i>}}', 'en': 'Use drag and drop to create filters{{<i>}}' },
@@ -4783,6 +4789,56 @@ filter.collection.group.add(function () {
 // 由于历史原因，基础设置下键值归属 other
 filter.predef.group('base');
 
+// 如何加载微博
+filter.predef.subtitle('base', 'loadweibo', '{{loadWeiboTitle}}');
+
+// 快速创建过滤器
+filter.items.base.loadweibo.load_weibo_by_search = filter.item({
+  'group': 'loadweibo',
+  'version': 407,
+  'type': 'boolean',
+  'key': 'weibo.tool.load_weibo_by_search',
+  'text': '{{loadWeiboBySearch}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboBySearchDesc}}' } },
+  'ainit': function () {
+    // 发现当前不是搜索，就跳转到搜索去
+    var updateLocation = function redirectHomeWeiboUseSearch() {
+      // 只在首页工作
+      var homefeed = document.getElementById('v6_pl_content_homefeed');
+      if (!homefeed) return;
+      // 检查是否添加了 is_search 关键词
+      var query = util.str.parsequery(location.search.slice(1));
+      var has_is_search = 'is_search' in query;
+      if (has_is_search) {
+        // 如果添加了 is_search，但是并没有搜索关键词，那么隐藏掉搜索到多少条微博的提示信息
+        if (!('key_word' in query)) {
+          var searchTip = homefeed.querySelector('.WB_result');
+          if (searchTip) searchTip.parentNode.removeChild(searchTip);
+        }
+      } else {
+        // 如果没有添加该关键词，则自动添加该关键词
+        query.is_search = '1';
+        location.search = '?' + util.str.toquery(query);
+      }
+    };
+    observer.dom.add(updateLocation);
+    // 给指向首页的链接加上 is_search 参数，免去更多的跳转
+    var updateHomeLinksWithIsSearch = function updateHomeLinksWithIsSearch() {
+      var links = Array.from(document.querySelectorAll([
+        '.gn_logo a', // 导航栏logo
+        'a[suda-uatrack*="homepage"]', // 首页链接，根据跟踪标识识别；适用于顶栏和左栏
+        '#v6_pl_content_homefeed a[action-type="search_type"][action-data="type=0"]', // 首页消息流顶部的“全部”链接
+      ].join(',')));
+      links.forEach(function (l) {
+        var s = util.str.parsequery(l.search.slice(1));
+        s.is_search = '1';
+        l.search = util.str.toquery(s);
+      });
+    };
+    observer.dom.add(updateHomeLinksWithIsSearch);
+  },
+}).addto(filter.groups.base);
+
 // 脚本工具
 filter.predef.subtitle('base', 'scripttool', '{{scriptToolsTitle}}');
 
@@ -5760,6 +5816,7 @@ filter.items.other.hidethese_ad.ad_feed = filter.item({
     if (feed.querySelector('a[href^="http://adinside.weibo.cn/"]')) return 'hidden';
     if (feed.querySelector('[diss-data*="feedad"]')) return 'hidden';
     if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hidden';
+    if (feed.querySelector('[suda-uatrack*="negativefeedback]')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -10094,6 +10151,7 @@ wbp.converter.table = function () {
   };
   var r = wbp.converter.rules; // 特殊转换规则
 
+  n(null, 'weibo.tool.load_weibo_by_search');
   n(null, 'weibo.tool.use_fast_creator');
   n(null, 'weibo.tool.use_context_menu_creator');
   d(null, 'weibo.tool.refilter', true);
@@ -10233,11 +10291,13 @@ wbp.converter.table = function () {
   m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
   n(null, 'weibo.layoutHideNavLogoImg');
   n(null, 'weibo.layoutHideNavMain');
+  n(null, 'weibo.layoutHideNavTV');
   n(null, 'weibo.layoutHideNavHot');
   n(null, 'weibo.layoutHideNavGame');
   m('HotSearch', 'weibo.layoutHideNavHotSearch'); // 大家正在热搜（搜索栏）
   n(null, 'weibo.layoutHideNavNoticeNew');
   n(null, 'weibo.layoutHideNavSettingNew');
+  n(null, 'weibo.layoutHideNavHotTip');
   n(null, 'weibo.layoutHideLeftHome');
   n(null, 'weibo.layoutHideLeftFav');
   n(null, 'weibo.layoutHideLeftLike');
