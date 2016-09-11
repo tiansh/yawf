@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.407
+// @version           3.7.408
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4816,9 +4816,11 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
           if (searchTip) searchTip.parentNode.removeChild(searchTip);
         }
       } else {
-        // 如果没有添加该关键词，则自动添加该关键词
-        query.is_search = '1';
-        location.search = '?' + util.str.toquery(query);
+        // 如果没有添加该关键词，而且不是分组，则自动添加该关键词
+        if (!('gid' in query)) {
+          query.is_search = '1';
+          location.search = '?' + util.str.toquery(query);
+        }
       }
     };
     observer.dom.add(updateLocation);
@@ -4828,7 +4830,7 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
         '.gn_logo a', // 导航栏logo
         'a[suda-uatrack*="homepage"]', // 首页链接，根据跟踪标识识别；适用于顶栏和左栏
         '#v6_pl_content_homefeed a[action-type="search_type"][action-data="type=0"]', // 首页消息流顶部的“全部”链接
-      ].join(',')));
+      ].map(function (x) { return x + ':not([href*="is_search"])'; }).join(',')));
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
         s.is_search = '1';
