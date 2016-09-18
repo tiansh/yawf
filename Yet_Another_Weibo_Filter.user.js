@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.410
+// @version           3.7.411
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -621,6 +621,7 @@ var text = {
   'layoutHideOtherRelatedWBDesc': {
     'zh-cn': '在单条微博页面可以看到的相关微博推荐',
   },
+  'layoutHideOtherRelatedArtical': { 'zh-cn': '头条文章页推荐阅读', 'zh-hk': '頭條文章頁推薦閱讀', 'zh-tw': '頭條文章頁推薦閱讀', 'en': '推荐阅读 (Suggested Artical)' },
   'layoutHideOtherSendWeibo': { 'zh-cn': '首页外的微博发布框', 'zh-hk': '首頁外的微博發佈框', 'zh-tw': '首頁外的微博發佈框', 'en': 'All other Weibo publishers' },
   'layoutHideOtherSendWeiboDesc': {
     'zh-cn': '除了首页的微博发布框，右上角按钮弹出的快速发布框外；其他的各种发布框。如微博文章下方转发用的发布框等。',
@@ -6994,6 +6995,7 @@ filter.predef.group('layout');
   item('IM', 189, '#WB_webim { display: none !important; }');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
+  item('RelatedArtical', 411, '.WB_artical [node-type="recommend"] { display: none !important; }');
   item('SendWeibo', 220, '.send_weibo_simple { display: none !important; }');
 
   // 根据元素内容标记元素
@@ -10381,6 +10383,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideOtherIM');
   n(null, 'weibo.layoutHideOtherTip');
   m('FeedRecom', 'weibo.layoutHideOtherRelatedWB'); // 相关推荐：单条微博右边栏
+  n(null, 'weibo.layoutHideOtherRelatedArtical');
   n(null, 'weibo.layoutHideOtherSendWeibo');
   c('IMNews', '.webim_news { display: none !important }', '右下角新闻快讯'); // 因为可以在微博的设置中关闭该快讯，所以YAWF未提供该功能；关闭方法：打开聊天框，点击左下角查看全部私信右侧齿轮图标，点击“关闭新闻提醒”菜单项
   c('Stats', '#v6_pl_rightmod_myinfo .W_person_info { height: auto !important } #v6_pl_rightmod_myinfo .user_atten { display: none !important; }', '关注/粉丝/微博数'); // 未提供该功能；因为隐藏后会导致用户信息比发布框小
