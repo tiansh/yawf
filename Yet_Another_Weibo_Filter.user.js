@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.413
+// @version           3.7.414
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4807,23 +4807,31 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
     var updateLocation = function redirectHomeWeiboUseSearch() {
       // 只在首页工作
       var homefeed = document.getElementById('v6_pl_content_homefeed');
-      if (!homefeed) return;
+      var nothomefeed = document.getElementById('v6_pl_content_commentlist');
+      if (!homefeed && !nothomefeed) return;
+      var a = util.dom.create('a', ''); a.href = location.href;
       // 检查是否添加了 is_search 关键词
       var query = util.str.parsequery(location.search.slice(1));
       var has_is_search = 'is_search' in query;
-      if (has_is_search) {
-        // 如果添加了 is_search，但是并没有搜索关键词，那么隐藏掉搜索到多少条微博的提示信息
-        if (!('key_word' in query)) {
+      do {
+        if (has_is_search && homefeed) {
+          // 如果添加了 is_search，但是并没有搜索关键词，那么隐藏掉搜索到多少条微博的提示信息
+          if ('key_word' in query) break;
           var searchTip = homefeed.querySelector('.WB_result');
           if (searchTip) searchTip.parentNode.removeChild(searchTip);
-        }
-      } else {
-        // 如果没有添加该关键词，而且不是分组、不是悄悄关注，则自动添加该关键词
-        if (!(('gid' in query) || ('whisper' in query))) {
+        } else if (has_is_search && nothomefeed) {
+          // 评论页面不应该使用 is_search ，但是点击小黄签时会有问题，所以在这里处理一下
+          delete query.is_search;
+          a.search = '?' + util.str.toquery(query);
+          location.replace(a.href);
+        } else if (!has_is_search && homefeed) {
+          // 如果没有添加 is_search ，而且不是分组、不是悄悄关注，则自动跳转到 is_search
+          if (('gid' in query) || ('whisper' in query)) break;
           query.is_search = '1';
-          location.search = '?' + util.str.toquery(query);
+          a.search = '?' + util.str.toquery(query);
+          location.replace(a.href);
         }
-      }
+      } while (false);
     };
     observer.dom.add(updateLocation);
     // 给指向首页的链接加上 is_search 参数，免去更多的跳转
