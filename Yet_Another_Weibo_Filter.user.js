@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.415
+// @version           3.7.416
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -486,7 +486,7 @@ var text = {
   'layoutHideNavHotSearchDesc': {
     'zh-cn': '建议使用ABP等扩展，添加规则“ <code>http://s.weibo.com/ajax/jsonp/gettopsug*</code> ”，以达到更好的效果。',
   },
-  'searchBarPlaceholder': {'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
+  'searchBarPlaceholder': { 'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Count for new notice' },
   'layoutHideNavSettingNew': { 'zh-cn': '新设置红点', 'zh-hk': '新設定紅點', 'zh-tw': '新設定紅點', 'en': 'Red dot for new settings' },
   'layoutHideNavHotTip': { 'zh-cn': '热门微博小黄签', 'zh-hk': '熱門微博小黃簽', 'zh-tw': '熱門微博小黃簽', 'en': 'Yellow tip for new hot weibo' },
@@ -691,6 +691,11 @@ var text = {
   'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
   'unfoldWeiboLength': { 'zh-cn': '（约{{length}}字）', 'zh-hk': '（約{{length}}字）', 'zh-tw': '（約{{length}}字）', 'en': '(about {{length}} charactors)' },
   'clearDefTopicDesc': { 'zh-cn': '清除发布框中的默认话题', 'zh-hk': '清除發布框中的預設話題', 'zh-tw': '清除發布框中的預設話題', 'en': 'Remove default topic in Publisher' },
+  'disableNotification': { 'zh-cn': '禁用微博的桌面提示 {{<i>}}', 'zh-hk': '阻止微博的桌面提示 {{<i>}}', 'zh-tw': '阻止微博的桌面提示 {{<i>}}', 'en': 'Disable desktop notification from Weibo {{<i>}}' },
+  'disableNotificationDesc': {
+    'zh-cn': '勾选以禁用微博的桌面提示，您也可以直接在浏览器的权限管理中禁用微博的桌面提示功能，但这样做您将同样无法使用脚本提供的桌面提示功能。'
+  },
+  'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
@@ -730,9 +735,9 @@ var text = {
   'autoCheckFollowingDesc': {
     'zh-cn': '开启本功能后脚本会每隔一段时间，检查您的关注列表，并和上一次得到的结果比较，将不同之处展示出来。脚本检查关注列表只能像您在网页中检查关注列表一样，一页一页的翻看，因此检查可能需要较长的时间，如果您关注了大量的帐号，请考虑降低自动检查的频率。<br /><strong>该功能目前为试验性功能，可能出现任何问题。</strong>'
   },
-  'autoCheckFollowing1': {'zh-cn': '每天', 'zh-hk': '每天', 'zh-tw': '每天', 'en': 'every day' },
-  'autoCheckFollowing3': {'zh-cn': '每三天', 'zh-hk': '每三天', 'zh-tw': '每三天', 'en': 'every 3 days' },
-  'autoCheckFollowing7': {'zh-cn': '每周', 'zh-hk': '每週', 'zh-tw': '每週', 'en': 'every week' },
+  'autoCheckFollowing1': { 'zh-cn': '每天', 'zh-hk': '每天', 'zh-tw': '每天', 'en': 'every day' },
+  'autoCheckFollowing3': { 'zh-cn': '每三天', 'zh-hk': '每三天', 'zh-tw': '每三天', 'en': 'every 3 days' },
+  'autoCheckFollowing7': { 'zh-cn': '每周', 'zh-hk': '每週', 'zh-tw': '每週', 'en': 'every week' },
   'autoCheckFollowingLastTime': { 'zh-cn': '上次检查时间：', 'zh-hk': '上次檢查時間', 'zh-tw': '上次檢查時間', 'en': 'Last checking time: ' },
   'autoCheckFollowingNever': { 'zh-cn': '尚未检查', 'zh-hk': '尚未檢查', 'zh-tw': '尚未檢查', 'en': 'Never' },
   'autoCheckFollowingNow': { 'zh-cn': '立即检查', 'zh-hk': '立即檢查', 'zh-tw': '立即檢查', 'en': 'Check Now' },
@@ -1277,11 +1282,71 @@ var noop = util.func.noop = function () { };
 util.func.identity = function (x) { return x; };
 util.func.constant = function (x) { return function () { return x; }; };
 
+util.uneval = (function () {
+  var helper = function (obj, seen) {
+    try {
+      if (obj === null) return 'null'; // null
+      if (obj === void 0) return '(void 0)'; // undefined
+      if (obj == null) return '({})'; // maybe undetectable
+      if (typeof obj === 'number') {
+        if (1 / obj === -Infinity) return '-0';
+        // toString should work all values but not -0
+        return Number.prototype.toString.call(obj);
+      }
+      // string or boolean
+      if (!(obj instanceof Object)) return JSON.stringify(obj);
+      // String, Number, Boolean
+      if (obj instanceof String) return '(new String(' + helper(String.prototype.valueOf.call(obj)) + '))';
+      if (obj instanceof Number) return '(new Number(' + helper(Number.prototype.valueOf.call(obj)) + '))';
+      if (obj instanceof Boolean) return '(new Boolean(' + helper(Boolean.prototype.valueOf.call(obj)) + '))';
+      // RegExp; toString should work
+      if (obj instanceof RegExp) return RegExp.prototype.toString.call(obj);
+      // Date; convert obj to Number should work
+      if (obj instanceof Date) return '(new Date(' + helper(Number(obj)) + '))';
+      // Function
+      if (obj instanceof Function) {
+        var func = Function.prototype.toString.call(obj);
+        if (/\{\s*\[native code\]\s*\}\s*$/.test(func)) return null;
+        return '(' + func + ')';
+      }
+      if (seen.indexOf(obj) !== -1) return '({})';
+      var newSeen = seen.concat([obj]);
+      // Array
+      if (obj instanceof Array) {
+        var array = obj.map(function (o) { return helper(o, newSeen); });
+        // Add a comma at end if last element is a hole
+        var lastHole = array.length && !((array.length - 1) in array);
+        return '[' + array.join(', ') + (lastHole ? ',' : '') + ']';
+      }
+      // Object
+      if (obj instanceof Object) {
+        var pairs = [];
+        for (var key in obj) {
+          pairs.push(JSON.stringify(key) + ':' + helper(obj[key], newSeen));
+        }
+        return '({' + pairs.join(', ') + '})';
+      }
+      return '({})';
+    } catch (_ignore1) { }
+    // there should be something wrong; maybe obj is a Proxy
+    try {
+      if (obj instanceof Object) return '({})';
+      else return 'null';
+    } catch (_ignore2) { }
+    // there really should be something wrong which cannot be handled
+    return 'null';
+  };
+  return function un_eval(obj) {
+    return helper(obj, []);
+  };
+}());
+
 // 在页面执行一个函数
+// 对于参数，会首先转换为JSON，如果无法转换为JSON则直接toString
 util.func.page = function (f) {
-  var args = JSON.stringify(Array.from(arguments).slice(1)).slice(1, -1);
+  var args = Array.from(arguments).slice(1).map(util.uneval).join(', ');
   var js = 'void(' + f + '(' + args + '));';
-  window.eval(js); // YES! eval! windoww.eval!
+  window.eval(js); // YES! eval! window.eval!
 };
 
 // 延迟调用函数
@@ -1683,6 +1748,75 @@ util.init = (function () {
   return add;
 }());
 
+// 覆盖 STK 相关函数
+// 由于 STK 的实现机制和脚本沙箱等因素限制
+//   1. 这个函数需要在 STK 注册相关函数前调用
+//   2. 封装函数会通过转换为字符串再eval的形式被暴露到页面脚本上下文中
+// 因此，这个函数必须在初始化前调用，而且函数内不能引用外部的变量
+util.func.wrapstk = (function () {
+  util.func.page(function (isDebug) {
+    if (window.STK) {
+      if (isDebug) console.error('YAWF failed to wrap STK. STK already defined.');
+    }
+
+    var wrapRegister = function (namespace, register) {
+      return function (name, registerFunction, scope) {
+        var original = registerFunction;
+        if (name === 'namespace') {
+          registerFunction = wrapNamespace(registerFunction);
+        } else {
+          wrappers.forEach(function (o) {
+            if (name === o.name) registerFunction = o.wrapper(registerFunction);
+          });
+        }
+        if (isDebug && registerFunction !== original) {
+          console.log('register: %o->%o = %o (this: %o)', namespace, name, registerFunction, this);
+        }
+        return register.call(this, name, registerFunction, namespace);
+      };
+    };
+
+    var wrapNamespace = function (namespaceFunctionGetter) {
+      return function () {
+        var namespaceFunction = namespaceFunctionGetter.apply(this, arguments);
+        return function (namespace, callback) {
+          return namespaceFunction(namespace, function (stk) {
+            if (!stk.yawf_original_register) {
+              stk.yawf_original_register = stk.register;
+              stk.register = wrapRegister(namespace, stk.yawf_original_register);
+            }
+            return callback.call(this, stk, stk);
+          });
+        };
+      };
+    };
+
+    var stk = null, wrappers = [];
+    Object.defineProperty(window, 'STK', {
+      get: function () { return stk; },
+      set: function (trueStk) {
+        trueStk.register = wrapRegister('', trueStk.register);
+        stk = trueStk;
+      },
+      enumerable: true
+    });
+
+    window.$YAWF$ = window.$YAWF$ || {};
+    window.$YAWF$.stkWrapper = function (name, regFuncWrapper) {
+      wrappers.push({ name: name, wrapper: regFuncWrapper });
+    };
+
+  }, util.script.isdebug);
+
+  return function (name, wrapper) {
+    util.func.page(function (name, wrapper) {
+      $YAWF$.stkWrapper(name, wrapper);
+    }, name, wrapper);
+  };
+
+}());
+
+
 // 对页面中添加元素时的监听
 var observer = {};
 
@@ -1820,29 +1954,34 @@ observer.comment = (function () {
 
 // 阻止页面通过 jsonp 获取数据
 observer.stopjsonp = (function () {
-  var initialed = false, patterns = [];
-  var checkAndCleanCallback = function (script) {
-    if (!script || (script.tagName || '').toLowerCase() !== 'script') return;
-    var match;
-    for (var i = 0, l = patterns.length; i < l; i++) {
-      match = script.src.match(patterns[i]);
-      if (match && match[1]) break;
-    }
-    var callback = match && match[1] || null; if (!callback) return;
-    util.func.page(function (cb) { delete window[cb]; }, callback);
-    script.parentNode.removeChild(script);
+  // 新的基于 STK 的解决方法
+  var jsonpDisallowPatterns = [];
+  var update = function () {
+    util.func.page(function (patterns) {
+      window.$YAWF$ = window.$YAWF$ || {};
+      window.$YAWF$.jsonpDisallowPatterns = patterns;
+    }, jsonpDisallowPatterns);
   };
-  var initial = function () {
-    if ('onbeforescriptexecute' in document) document.addEventListener('beforescriptexecute', function (e) {
-      if (checkAndCleanCallback(e.target)) e.preventDefault();
-    }); else document.documentElement.addEventListener('DOMNodeInserted', function (e) {
-      checkAndCleanCallback(e.target);
-    });
-    initialed = true;
-  };
+  update();
+  util.func.wrapstk('core.io.jsonp', function (regFunc) {
+    return function () {
+      return (function (jsonp) {
+        return function (details) {
+          var patterns = window.$YAWF$.jsonpDisallowPatterns, valid = true;
+          try { patterns.forEach(function (p) { if (p.test(details.url)) valid = false; }); }
+          catch (e) {  }
+          if (valid) {
+            return jsonp.apply(this, arguments);
+          } else {
+            return document.createElement('script');
+          }
+        };
+      }(regFunc.apply(this, arguments)));
+    };
+  });
   return function (pattern) {
-    if (!initialed) initial();
-    patterns.push(pattern);
+    jsonpDisallowPatterns.push(pattern);
+    update();
   };
 }());
 
@@ -5065,6 +5204,7 @@ filter.items.base.autoload.auto_load_new_weibo = filter.item({
       .WB_feed a.notes[action-type="feed_list_newBar"][node-type="feed_list_newBar"] { display: none; }
       .WB_feed div.W_loading[requesttype="newFeed"] { display: none !important; }
       .WB_feed .WB_notes[requesttype="newFeed"] { display: none !important; }
+      .WB_feed [node-type="lazyload"]:not(:last-child) { display: none !important; }
     */ noop(); }));
 
     var loadKey = util.keyboard.code.PERIOD;
@@ -6643,7 +6783,7 @@ filter.predef.group('layout');
   item('TV', 405, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
   item('Hot', 5, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
   item('Game', 5, '.gn_nav_list>li:nth-child(4) { display: none !important; }');
-  item('HotSearch', 277, function () { observer.stopjsonp(/http:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?(?:.*&)?_cb=(STK_\d+)/); });
+  item('HotSearch', 277, function () { observer.stopjsonp(/\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?/); });
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
   item('HotTip', 405, function () {
@@ -8933,6 +9073,56 @@ if (!function isBJT() {
     }
   }).addto(filter.groups.tool);
 }
+
+// 禁用桌面提醒
+if (function desktopNotificationSupport() {
+  // 检查微博是否会开启桌面提醒功能
+  var hasNotification = "Notification" in window || "mozNotification" in window || "webkitNotification" in window;
+  var isMaxthonLike = navigator.userAgent.indexOf("Maxthon") !== -1;
+  return hasNotification && !isMaxthonLike;
+}()) {
+  filter.items.tool.weibotool.disable_desktop_notification = filter.item({
+    'group': 'othertool',
+    'version': 416,
+    'type': 'boolean',
+    'key': 'weibo.tool.disable_desktop_notification',
+    'text': '{{disableNotification}}',
+    'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{disableNotificationDesc}}' } },
+    'ainit': function () {
+      util.func.wrapstk('lib.notification.browserNotification', function (regFunc) {
+        return function () {
+          return void 0;
+        };
+      });
+    },
+  }).addto(filter.groups.tool);
+};
+
+// 禁用微博的Live Photo
+if (function livePhotoSupported() {
+  // 检查微博是否会开启 Live Photo 功能
+  var video = util.dom.create('video', '');
+  var isSafariLike = navigator.userAgent.indexOf("Safari") >= 0;
+  return isSafariLike && !!video.canPlayType && !!video.canPlayType("video/mp4");
+}()) {
+  filter.items.tool.weibotool.disable_live_photo = filter.item({
+    'group': 'weibotool',
+    'version': 416,
+    'type': 'boolean',
+    'key': 'weibo.tool.disable_live_photo',
+    'text': '{{disableLivePhoto}}',
+    'ainit': function () {
+      util.func.wrapstk('lib.image.livephoto', function (regFunc) {
+        return function (img, id, callbacks) {
+          if (callbacks && callbacks.canNotPlay) {
+            callbacks.canNotPlay();
+          }
+          return false;
+        };
+      });
+    },
+  }).addto(filter.groups.tool);
+};
 
 // 样式
 // 由于历史原因，样式下键值归属 tool
