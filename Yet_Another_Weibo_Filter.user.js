@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.417
+// @version           3.7.418
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -711,7 +711,7 @@ var text = {
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
-  'noTagDialog': { 'zh-cn': '收藏微博时将添加标签的对话框替换为气泡（试验性）', 'zh-hk': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'zh-tw': '收藏微博時將添加標籤的對話方塊替換為泡泡圖（試驗性）', 'en': 'Show bubble instead of dialog after marking weibo favorite (Experimental)' },
+  'noTagDialog': { 'zh-cn': '屏蔽收藏微博时的添加标签对话框', 'zh-hk': '阻擋收藏微博時的添加標籤對話方塊', 'zh-tw': '阻擋收藏微博時的添加標籤對話方塊', 'en': 'Block the dialog after marking weibo favorite' },
   'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
@@ -1755,8 +1755,9 @@ util.init = (function () {
 // 因此，这个函数必须在初始化前调用，而且函数内不能引用外部的变量
 util.func.wrapstk = (function () {
   util.func.page(function (isDebug) {
-    if (window.STK) {
-      if (isDebug) console.error('YAWF failed to wrap STK. STK already defined.');
+    if ('STK' in window) {
+      if (isDebug) console.error('YAWF failed to wrap STK. STK already defined. Some functions may not work.');
+      return;
     }
 
     var wrapRegister = function (namespace, register) {
@@ -5102,10 +5103,12 @@ filter.items.base.scripttool.disable_lazyload = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{disableLazyLoadDesc}}' } },
   'ainit': function () {
     util.func.page(function () {
+      var weiboCountLimit = 50;
       (function disableLazyLoad() {
         if (self !== top) return;
         if (!document.querySelector('#v6_pl_content_homefeed [node-type="lazyload"]')) { setTimeout(disableLazyLoad, 100); return; }
         if (typeof STK === typeof void 0 || !STK.namespace) setTimeout(disableLazyLoad, 100);
+        else if (document.querySelectorAll('.WB_feed').length > weiboCountLimit) return;
         else STK.namespace('v6home', function (a) {
           var fire = null;
           try { fire = a.conf.channel.window.fire; } catch (e) { }
@@ -8399,15 +8402,11 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
   'key': 'weibo.tool.noTagDialog',
   'text': '{{noTagDialog}}',
   'ainit': function () {
-    util.func.page(function noTagDialog() {
-      var favorite;
-      try {
-        try { favorite = STK.namespace.v6home.lib.feed.plugins.favorite; }
-        catch (e1) { favorite = STK.namespace.v6page.lib.feed.plugins.favorite; }
-        favorite.tagDialog = function () {
-          return favorite.tagBubble.apply(this, arguments);
+    util.func.wrapstk('lib.feed.plugins.favorite.tagDialog', function (regFunc) {
+      return function (stk) {
+        return function () {
         };
-      } catch (e2) { setTimeout(noTagDialog, 0); }
+      };
     });
   }
 }).addto(filter.groups.tool);
@@ -9093,10 +9092,7 @@ if (function desktopNotificationSupport() {
       util.func.wrapstk('lib.notification.browserNotification', function (regFunc) {
         return function (stk) {
           return function () {
-            return {
-              show: function () { },
-              destroy: function () { }
-            };
+            return void 0;
           };
         };
       });
