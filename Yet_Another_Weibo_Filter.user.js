@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.420
+// @version           3.7.421
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -37,6 +37,7 @@
 // @grant             GM_addStyle
 // @grant             GM_registerMenuCommand
 // @grant             GM_info
+// @grant             GM_openInTab
 // @grant             unsafeWindow
 // @connect           weibo.com
 // @connect           www.weibo.com
@@ -7096,6 +7097,7 @@ filter.predef.group('layout');
       '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay',
       '.WB_feed_yy2016_up_but', '.WB_feed_yy2016_down_but', '#pl_common_ali',
       '.W_skin_banner',
+      '[node-type="imgBtn"][action-data="canUploadImage=0"]'
     ].join(',') + ' { display: none !important; } ' +
     '#wrapAD, .news_logo { visibility: hidden !important; }');
     var version = '';
@@ -8367,9 +8369,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       a.setAttribute('yawf-action-type', a.getAttribute('action-type')); a.removeAttribute('action-type');
       // 点击弹出的图片时，微博网页中的逻辑会点击对应的链接，但会阻止该链接打开网页；所以这里强制打开新网页，因为在可信点击后，所以打开网页权限一般没问题
       a.addEventListener('click', function (e) {
-        // 我也不知道为什么要这样，但是直接 window.open 在我这会打开空白页我也不懂为什么
-        var aa = document.createElement('a'); aa.href = a.href; aa.target = a.target;
-        document.body.appendChild(aa); aa.click(); aa.parentNode.removeChild(aa);
+        GM_openInTab(a.href, false);
         e.preventDefault();
       });
     };
@@ -8386,8 +8386,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         'filenames': imgs.map(function (i) { return getPid(i); }),
         'current': imgs.indexOf(thumbnail),
       };
-      var aa = document.createElement('a'); aa.href = imageUrl(info); aa.target = '_blank';
-      document.body.appendChild(aa); aa.click(); aa.parentNode.removeChild(aa);
+      GM_openInTab(imageUrl(info), false);
       e.preventDefault(); e.stopPropagation();
     }), true);
     observer.dom.add(addOriLinkViewImage);
