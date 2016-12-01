@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.421
+// @version           3.7.422
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -542,7 +542,6 @@ var text = {
   'layoutHideWeiboVIPBackground': { 'zh-cn': '自定义卡片背景', 'zh-hk': '自訂卡片背景', 'zh-tw': '自訂卡片背景', 'en': 'Customized Card Background' },
   'layoutHideWeiboLastPic': { 'zh-cn': '图片列表封底', 'zh-hk': '圖片清單封底', 'zh-tw': '圖片清單封底', 'en': 'Back cover of picture list' },
   'layoutHideWeiboPicTag': { 'zh-cn': '图片标签', 'zh-hk': '圖片標籤', 'zh-tw': '圖片標籤', 'en': 'Tags for picture' },
-  'layoutHideWeiboTopComment': { 'zh-cn': '热门评论', 'zh-hk': '热门评论', 'zh-tw': '热门评论'/* as is */, 'en': 'Top comments' },
   'layoutHideWeiboSonTitle': { 'zh-cn': '同源转发合并提示', 'zh-hk': '同源转发合并提示', 'zh-tw': '同源转发合并提示', 'en': '同源转发合并 (Merged forwards)' },
   'layoutHideWeiboCard': { 'zh-cn': '微博卡片', 'zh-hk': '微博卡片', 'zh-tw': '微博卡片', 'en': 'Weibo Cards' },
   'layoutHideWeiboCardDesc': {
@@ -4711,33 +4710,6 @@ weibo.feed.author.name = function (feed) {
   return author.textContent.trim();
 };
 
-// 评论中都涉及了哪些用户，包括评论作者、回复的人和提到的人
-weibo.comment.author = {};
-weibo.comment.author.dom = function (comment) {
-  return comment.querySelector('.WB_face img[alt]');
-};
-weibo.comment.author.id = function (comment) {
-  var author = weibo.comment.author.dom(comment);
-  if (!author) return null;
-  return util.str.parsequery(author.getAttribute('usercard')).id;
-};
-weibo.comment.author.name = function (comment) {
-  var author = weibo.comment.author.dom(comment);
-  return author ? author.getAttribute('alt') : null;
-};
-weibo.comment.mentions = {};
-weibo.comment.mentions.dom = function (comment) {
-  return Array.from(comment.querySelectorAll('a[usercard^="name="]'));
-};
-weibo.comment.mentions.name = function (comment) {
-  var mentions = weibo.comment.mentions.dom(comment);
-  return mentions.map(function (a) { return util.str.parsequery(a.getAttribute('usercard')).name; });
-};
-weibo.comment.users = {};
-weibo.comment.users.name = function (comment) {
-  return [weibo.comment.author.name(comment)].concat(weibo.comment.mentions.name(comment)).filter(Boolean);
-};
-
 // 从一条微博中找到他的原作者
 weibo.feed.original = {};
 weibo.feed.original.dom = function (feed) {
@@ -4768,6 +4740,34 @@ weibo.feed.mentions.name = function (feed) {
   return weibo.feed.mentions.dom(feed).map(function (link) {
     return util.str.parsequery(link.getAttribute('usercard')).name;
   });
+};
+
+// 评论中都涉及了哪些用户，包括评论作者、回复的人和提到的人
+weibo.comment.author = {};
+weibo.comment.author.dom = function (comment) {
+  return comment.querySelector('.WB_face img[alt]') || comment.querySelector('.WB_text a[usercard]');
+};
+weibo.comment.author.id = function (comment) {
+  var author = weibo.comment.author.dom(comment);
+  if (!author) return null;
+  return util.str.parsequery(author.getAttribute('usercard')).id;
+};
+weibo.comment.author.name = function (comment) {
+  var author = weibo.comment.author.dom(comment);
+  if (!author) return null;
+  return author.getAttribute('alt');
+};
+weibo.comment.mentions = {};
+weibo.comment.mentions.dom = function (comment) {
+  return Array.from(comment.querySelector('.WB_text').querySelectorAll('a[usercard^="name="]'));
+};
+weibo.comment.mentions.name = function (comment) {
+  var mentions = weibo.comment.mentions.dom(comment);
+  return mentions.map(function (a) { return util.str.parsequery(a.getAttribute('usercard')).name; });
+};
+weibo.comment.users = {};
+weibo.comment.users.name = function (comment) {
+  return [weibo.comment.author.name(comment)].concat(weibo.comment.mentions.name(comment)).filter(Boolean);
 };
 
 // 找到在一条微博里面提到的所有话题
@@ -6800,7 +6800,7 @@ filter.predef.group('layout');
       tips.forEach(function (tip) {
         var a = tip.querySelector('a[href]'), href = a && a.href || '';
         tip.setAttribute('yawf-topmenulist-tiptype', href);
-        if (href.indexOf('/feed/hot') !== -1) {
+        if (href.indexOf('http://d.weibo.com') !== -1) {
           tip.parentNode.removeChild(tip);
         }
       });
@@ -6931,12 +6931,6 @@ filter.predef.group('layout');
     util.css.add('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/small.cur"), auto !important; }');
   });
   item('PicTag', 179, '.WB_media_view .media_show_box .artwork_box .tag_showpicL, .WB_media_view .media_show_box .artwork_box .tag_showpicR, .icon_taged_pic { display: none !important; }');
-  item('TopComment', 54, function () {
-    observer.dom.add(function hideTopComment() {
-      var split = document.querySelector('.WB_feed_repeat .repeat_list .between_line, .WB_feed_repeat .repeat_list .between_line_t'), parent;
-      if (split) while ((parent = split.parentNode)) parent.removeChild(parent.firstChild);
-    });
-  });
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
   item('Card', 182, '.WB_pic_app, .WB_feed_spec, .WB_music { display: none !important; }');
   item('ArticalPay', 220, function () {
@@ -7178,7 +7172,7 @@ filter.predef.group('layout');
     'a[href^="/friends"]': 'leftnav_friends',
     'a[href^="/groupsfeed"]': 'leftnav_groupsfeed',
     'a[href^="/mygroups"]': 'leftnav_mygroups',
-    'a[href^="/feed/hot"]': 'leftnav_hot',
+    'a[href^="http://d.weibo.com"]': 'leftnav_hot',
     'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
     'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
   });
@@ -10538,7 +10532,6 @@ wbp.converter.table = function () {
   m('MemberCover', 'weibo.layoutHideWeiboVIPBackground'); // 会员微博背景 // ⚠️ YAWF 的过滤规则更宽松
   n(null, 'weibo.layoutHideWeiboLastPic');
   n(null, 'weibo.layoutHideWeiboPicTag');
-  n(null, 'weibo.layoutHideWeiboTopComment');
   n(null, 'weibo.layoutHideWeiboSonTitle');
   m(['TopicCard', 'LocationCard'], 'weibo.layoutHideWeiboCard', r.some); // 微博话题卡片, 微博位置卡片 // ⚠️ YAWF对所有卡片提供唯一的设置项
   n(null, 'weibo.layoutHideWeiboArticalPay');
