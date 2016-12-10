@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.422
+// @version           3.7.423
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -497,6 +497,7 @@ var text = {
   'layoutHideLeftFav': { 'zh-cn': '我的收藏', 'zh-hk': '我的收藏', 'zh-tw': '我的收藏', 'en': 'Favorite' },
   'layoutHideLeftLike': { 'zh-cn': '我的赞', 'zh-hk': '我的讚', 'zh-tw': '我的讚', 'en': 'Like' },
   'layoutHideLeftHot': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
+  'layoutHideLeftTV': { 'zh-cn': '热门视频', 'zh-hk': '熱門視頻', 'zh-tw': '熱門視頻', 'en': 'Hot Video' },
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
   'layoutHideLeftGroupToMe': { 'zh-cn': '群微博', 'zh-hk': '群微博', 'zh-tw': '群微博', 'en': '群微博 (Group)' },
   'layoutHideLeftSpecial': { 'zh-cn': '特别关注', 'zh-hk': '特别關注', 'zh-tw': '特别關注', 'en': 'Special Focus' },
@@ -729,6 +730,7 @@ var text = {
   'customizeSourceWeiboDesc': {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
+  'foldChildComment': { 'zh-cn': '默认折叠二级评论', 'zh-hk': '預設折疊二級評論', 'zh-tw': '預設折疊二級評論', 'en': 'Fold child comments by default' },
   // 关注
   'followingToolsTitle': { 'zh-cn': '关注', 'zh-hk': '關注', 'zh-tw': '關注', 'en': 'Following' },
   'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化（试验性）|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list (Experimental) | {{<frequency>}}{{<i>}}' },
@@ -1144,8 +1146,12 @@ var html = {
   'feedTimeTip': '<div class="WB_cardwrap S_bg2 yawf-timeTip"><div class="WB_cardtitle_a W_tc"><a node-type="feed_list_item_date" date="{{date}}" style="color:inherit"></a> {{{time}}}</div></div>',
   // 顶栏徽标
   'navLogo': '<span class="logo"></span>',
+  // 顶栏提示
+  'topMenuListTips': '<div class="gn_topmenulist_tips yawf-gn_topmenulist_tips" style="display: none;"><a href="javascript:void(0);" class="W_ficon ficon_close S_ficon">X</a><ul></ul></div>',
   // 来自 微博 weibo.com
   'weiboViaWeiboCom': '<a rel="nofollow" href="http://weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
+  // 二级评论展开
+  'unfoldChildComment': '<a class="S_txt1" action-type="click_more_child_comment_big" action-data="more_comment=big&amp;root_comment_id={{comment_id}}&amp;is_child_comment=ture&amp;id={{mid}}">({{child_count}})</a>',
 };
 
 // 其他在填写格式化字符串时自动填写的内容
@@ -1512,7 +1518,6 @@ util.str.fcb = (function () {
 // 从 JSONP 的返回结果中截取有用的东西
 util.str.parsejsonp = function (resp) {
   return JSON.parse(resp.replace(/^try\{[^{]*\(\{/, '{').replace(/}\)\s*;?\s*}catch\(e\)\{\};?$/, '}'));
-
 };
 
 // 检查一个字串是否是正则式，如果出错报告用户
@@ -6794,25 +6799,54 @@ filter.predef.group('layout');
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
   item('HotTip', 405, function () {
-    var hideTopMenuListHotTip = function hideTopMenuListHotTip() {
-      var ul = document.querySelector('.WB_global_nav .gn_topmenulist_tips ul'); if (!ul) return;
-      var tips = Array.from(ul.querySelectorAll('li:not([yawf-topmenulist-tip-type])')); if (!tips.length) return;
-      tips.forEach(function (tip) {
-        var a = tip.querySelector('a[href]'), href = a && a.href || '';
-        tip.setAttribute('yawf-topmenulist-tiptype', href);
-        if (href.indexOf('http://d.weibo.com') !== -1) {
-          tip.parentNode.removeChild(tip);
-        }
+    // 添加一个假的小黄签
+    var fakeTips = null;
+    var addFakeTip = function addFakeTip() {
+      if (fakeTips) return fakeTips;
+      var container = document.querySelector('.WB_global_nav .gn_topmenulist_tips').parentNode;
+      fakeTips = util.dom.create(html.topMenuListTips);
+      fakeTips.querySelector('.ficon_close').addEventListener('click', function (e) {
+        fakeTips.style.display = 'none';
+        var realTips = document.querySelector('.WB_global_nav .gn_topmenulist_tips');
+        realTips.querySelector('.ficon_close').click();
       });
-      if (ul.childNodes.length === 0) ul.parentNode.removeChild(ul);
-      else ul.style.display = 'block';
+      container.appendChild(fakeTips);
+      return fakeTips;
+    };
+    // 在真的小黄签有变化的时候更新假的小黄签
+    var updateFakeTips = function updateFakeTips() {
+      var realTips = document.querySelector('.WB_global_nav .gn_topmenulist_tips'); if (!realTips) return;
+      var fakeTips = addFakeTip(); if (!fakeTips) return;
+
+      var tipsContainer = fakeTips.querySelector('ul');
+      var currentTips = Array.from(tipsContainer.querySelectorAll('li'));
+
+      var allTips = Array.from(realTips.querySelectorAll('li'));
+      allTips = allTips.filter(function (tip) {
+        var a = tip.querySelector('a[href]'), href = a && a.href || '';
+        if (href.indexOf('http://d.weibo.com') !== -1) return false;
+        return true;
+      });
+
+      var changed = allTips.map(function (tip) { return tip.textContent; }).join(',') !==
+        currentTips.map(function (tip) { return tip.textContent; }).join(',');
+      if (!changed) return;
+
+      var newContainer = tipsContainer.cloneNode(true);
+      newContainer.innerHTML = '';
+      allTips.forEach(function (tip) { newContainer.appendChild(tip.cloneNode(true)); });
+      tipsContainer.parentNode.replaceChild(newContainer, tipsContainer);
+      if (allTips.length && realTips.style.display !== 'none') {
+        fakeTips.style.display = 'block';
+      } else {
+        fakeTips.style.display = 'none';
+      }
     };
     util.css.add(util.str.cmt(function () { /*!CSS
-      .WB_global_nav .gn_topmenulist_tips { padding: 0; border: 0; overflow: hidden; }
-      .WB_global_nav .gn_topmenulist_tips ul { padding: 6px 2px; border: 1px solid #ffeebb; border-radius: 0 0 3px 3px; display: none; }
+      .WB_global_nav .gn_topmenulist_tips:not(.yawf-gn_topmenulist_tips) { display: none !important; }
     */ noop(); }));
-    observer.dom.add(hideTopMenuListHotTip);
-    hideTopMenuListHotTip();
+    observer.dom.add(updateFakeTips);
+    updateFakeTips();
   });
 
   // 隐藏左栏的辅助函数
@@ -6826,7 +6860,10 @@ filter.predef.group('layout');
         if (node && node.nodeType === Node.TEXT_NODE && node.data.match(/^\s*$/))
           return container.removeChild(node);
         if (node && node.nodeType === Node.COMMENT_NODE)
-          return container.removeChild(node)
+          return container.removeChild(node);
+        if (node && node.nodeType === Node.ELEMENT_NODE &&node.textContent.trim() === '')
+          if (node.clientHeight * node.clientWidth === 0)
+            return container.removeChild(node);
       };
       var removeBlankSibling = function (node) {
         while (removeBlank(node.previousSibling));
@@ -6877,6 +6914,7 @@ filter.predef.group('layout');
   item('Fav', 390, levHidden('fav'));
   item('Like', 390, levHidden('like'));
   item('Hot', 390, levHidden('hot'));
+  item('TV', 423, levHidden('tv'));
   item('Friends', 5, levHidden('friends'));
   item('GroupToMe', 333, levHidden('groupsfeed'));
   item('Special', 333, levHidden('special'));
@@ -7173,6 +7211,7 @@ filter.predef.group('layout');
     'a[href^="/groupsfeed"]': 'leftnav_groupsfeed',
     'a[href^="/mygroups"]': 'leftnav_mygroups',
     'a[href^="http://d.weibo.com"]': 'leftnav_hot',
+    'a[href^="http://weibo.com/tv"]': 'leftnav_tv',
     'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
     'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
   });
@@ -7377,39 +7416,60 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       @media screen and (max-width:1006px) {
         body[yawf-merge-left]:not([yawf-weibo-only]) #yawf-drop-area { left: calc(50% + 70px); }
       }
-
-      .yawf-WB_left_nav { width:150px; overflow: hidden; }
-      .yawf-WB_left_nav .lev_Box_noborder{ border-bottom:none;}
-      .yawf-WB_left_nav .lev_line::before{ border-top: 1px solid; content: " "; display: block; margin: 11px 0 -12px; opacity: 0.3; }
-      .yawf-WB_left_nav .lev_line fieldset{ display:block; height:22px;padding: 0 0 0 120px; zoom:1; clear:both; border-top: none;}
-      .yawf-WB_left_nav .lev_line legend{ line-height:22px; font-size:14px; padding:0 3px 0 4px;}
-      .yawf-WB_left_nav .lev_line legend .ficon_setup:hover{text-shadow:0px 0px 4px rgba(0,0,0,.4);}
-      .yawf-WB_left_nav .lev_Box h3{display:block;height:34px;line-height:34px;font-size:14px; font-weight:bold;text-decoration:none;overflow:hidden;}
-      .yawf-WB_left_nav .lev_Box h3.lev a{font-size:14px; font-weight:bold; padding:0 0 0 15px;height:34px;line-height:34px;}
-      .yawf-WB_left_nav .lev_Box h3.lev a .pic{ width:18px; height:18px; float:left;margin:8px 5px 0 0;}
-      .yawf-WB_left_nav .lev_Box h3.lev a .W_ficon{ float:right;}
-      .yawf-WB_left_nav .lev_Box h3.S_txt1{ padding:0 0 0 15px;}
-      .yawf-WB_left_nav .lev_Box h3 .ficon_add,.yawf-WB_left_nav .lev_Box h3 .ficon_setup{ display:block; _display:block; float:right; font-size:14px;font-size:12px\9; margin-right:10px; *margin:-32px 10px 0 0;}
-      .yawf-WB_left_nav .lev_Box h3 .ficon_add:hover,.yawf-WB_left_nav .lev_Box h3 .ficon_setup:hover{text-shadow:0px 0px 4px rgba(0,0,0,.4);}
-      .yawf-WB_left_nav .lev a{display:block;height:34px;line-height:34px;font-size:12px; padding:0 0 0 13px;text-decoration:none;overflow:hidden; position:relative;}
-      .yawf-WB_left_nav .lev .lev_curr .levtxt{ font-weight:bold;}
-      .yawf-WB_left_nav .lev .lev_curr .ficon_dot,.yawf-WB_left_nav .lev .lev_curr .ficon_friends,.yawf-WB_left_nav .lev .lev_curr .ficon_p_interest,.yawf-WB_left_nav .lev .lev_curr .ficon_p_rmd,.yawf-WB_left_nav .lev .lev_curr .ficon_p_quietfollow{ width:12px; letter-spacing:18px;text-indent:-30px;*letter-spacing:0px;*text-indent:0; }
-      .yawf-WB_left_nav .lev .lev_curr .ficon_dot:after,.yawf-WB_left_nav .lev .lev_curr .ficon_friends:after,.yawf-WB_left_nav .lev .lev_curr .ficon_p_interest:after,.yawf-WB_left_nav .lev .lev_curr .ficon_p_rmd:after,.yawf-WB_left_nav .lev .lev_curr .ficon_p_quietfollow:after{content:"B";}
-      .yawf-WB_left_nav .lev .ficon_gotop{ display:none;}
-      .yawf-WB_left_nav .lev_gotop a:hover .ficon_gotop{display:block;}
-      .yawf-WB_left_nav .lev_gotop a:hover .ficon_gotop:hover{text-shadow:0px 0px 4px rgba(0,0,0,.4);}
-      .yawf-WB_left_nav .lev .levtxt{ display:inline-block;max-width:82px; _width:82px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;cursor:pointer;}
-      .yawf-WB_left_nav .lev .W_new_count{ float:right; margin:10px 10px 0 0;*margin:-25px 10px 0 0;}
-      .yawf-WB_left_nav .lev .W_new{ float:right; margin:12px 8px 0 0;*margin-top:-21px;}
-      .yawf-WB_left_nav .lev .ico_block{ float:left; width:17px; text-align:center;margin:-1px 3px 0 0;}
-      .yawf-WB_left_nav .lev .ico_block .pic{ width:16px; height:16px; float:left;margin-top:7px;}
-      .yawf-WB_left_nav .levmore{display:block;height:30px;line-height:30px; text-align:center;}
-      .yawf-WB_left_nav .levmore .more{ position:relative; height:14px; line-height:14px; padding:2px 6px; border-radius:3px; text-decoration:none; zoom:1;}
-      .yawf-WB_left_nav .levmore .W_btn_b{ margin:8px 10px 8px 0;}
-      .yawf-WB_left_nav .levmore .W_new{ position:absolute;top:0; right:-1px;}
-      .yawf-WB_left_nav .W_scroll_y{ right:0;}
-
     */ noop(); }));
+
+    // following codes are copied and modified from weibo, some one else may hold copyright
+    // codes modified from http://img.t.sinajs.cn/t6/style/css/module/combination/home_A.css begin
+    util.css.add(util.str.cmt(function () { /*!CSS
+      .yawf-WB_left_nav { width: 150px; }
+      .yawf-WB_left_nav .lev_Box { border-bottom-width: 1px; border-bottom-style: solid; }
+      .yawf-WB_left_nav .lev_Box_noborder { border-bottom: none; }
+      .yawf-WB_left_nav .lev_line {}
+      .yawf-WB_left_nav .lev_line fieldset { display: block; height: 22px; padding: 0 0 0 120px; zoom: 1; clear: both; border-top-width: 1px; border-top-style: solid; }
+      .yawf-WB_left_nav .lev_line legend { line-height: 22px; font-size: 14px; padding: 0 3px 0 4px; }
+      .yawf-WB_left_nav .lev_line legend .ficon_setup:hover { text-shadow: 0px 0px 4px rgba(0, 0, 0, .4); }
+      .yawf-WB_left_nav .lev_line_v2 fieldset { height: 11px; margin-top: 11px; }
+      .yawf-WB_left_nav .lev_Box h3 { display: block; height: 34px; line-height: 34px; font-size: 14px; font-weight: bold; text-decoration: none; overflow: hidden; }
+      .yawf-WB_left_nav .lev_Box h3.lev a { font-size: 14px; font-weight: bold; padding: 0 0 0 15px; height: 34px; line-height: 34px; }
+      .yawf-WB_left_nav .lev_Box h3.lev a .pic { width: 18px; height: 18px; float: left; margin: 8px 5px 0 0; }
+      .yawf-WB_left_nav .lev_Box h3.lev a .W_ficon { float: right; }
+      .yawf-WB_left_nav .lev_Box h3.S_txt1 { padding: 0 0 0 15px; }
+      .yawf-WB_left_nav .lev_Box h3 .ficon_add,
+      .yawf-WB_left_nav .lev_Box h3 .ficon_setup { display: block; float: right; font-size: 14px; font-size: 12px\9; margin-right: 10px; }
+      .yawf-WB_left_nav .lev_Box h3 .ficon_add:hover,
+      .yawf-WB_left_nav .lev_Box h3 .ficon_setup:hover { text-shadow: 0px 0px 4px rgba(0, 0, 0, .4); }
+      .yawf-WB_left_nav .lev a { display: block; height: 34px; line-height: 34px; font-size: 12px; padding: 0 0 0 13px; text-decoration: none; overflow: hidden; position: relative; }
+      .yawf-WB_left_nav .lev .lev_curr .levtxt { font-weight: bold; }
+      .yawf-WB_left_nav .lev .lev_curr .ficon_dot,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_friends,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_groupwb,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_p_interest,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_p_rmd,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_p_quietfollow { width: 12px; letter-spacing: 18px; text-indent: -30px; }
+      .yawf-WB_left_nav .lev .lev_curr .ficon_dot:after,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_friends:after,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_groupwb:after,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_p_interest:after,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_p_rmd:after,
+      .yawf-WB_left_nav .lev .lev_curr .ficon_p_quietfollow:after { content: "B"; }
+      .yawf-WB_left_nav .lev .ficon_gotop { display: none; }
+      .yawf-WB_left_nav .lev_gotop a:hover .ficon_gotop { display: block; }
+      .yawf-WB_left_nav .lev_gotop a:hover .ficon_gotop:hover { text-shadow: 0px 0px 4px rgba(0, 0, 0, .4); }
+      .yawf-WB_left_nav .lev .levtxt { display: inline-block; max-width: 82px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+      .yawf-WB_left_nav .lev .W_new_count { float: right; margin: 10px 10px 0 0; background: #ed741c; color: #fff; }
+      .yawf-WB_left_nav .lev .W_new { float: right; margin: 12px 8px 0 0; }
+      .yawf-WB_left_nav .lev .ico_block { float: left; width: 17px; text-align: center; margin: -1px 3px 0 0; }
+      .yawf-WB_left_nav .lev .ico_block .pic { width: 16px; height: 16px; float: left; margin-top: 7px; }
+      .yawf-WB_left_nav .lev .ficon_hot,
+      .yawf-WB_left_nav .lev .ficon_video { margin: 0; line-height: 36px; line-height: 34px\9; font-size: 14px; }
+      .yawf-WB_left_nav .levmore { display: block; height: 30px; line-height: 30px; text-align: center; }
+      .yawf-WB_left_nav .levmore .more { position: relative; height: 14px; line-height: 14px; padding: 2px 6px; border-radius: 3px; text-decoration: none; zoom: 1; }
+      .yawf-WB_left_nav .levmore .W_btn_b { margin: 8px 10px 8px 0; }
+      .yawf-WB_left_nav .levmore .W_new { position: absolute; top: 0; right: -1px; }
+      .yawf-WB_left_nav .UI_scrollView { position: relative; }
+      .yawf-WB_left_nav .W_scroll_y { right: 0; }
+    */ noop(); }));
+    // codes modified from http://img.t.sinajs.cn/t6/style/css/module/combination/home_A.css end
 
     // 将左栏的样式改为卡片效果（或改回）
     // 由于左栏样式都加在 .WB_left_nav 上，所以使用 .yawf-WB_left_nav 来躲开这些样式
@@ -8236,7 +8296,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         function readHash() {
           var hashVal = Number(location.hash.slice(1));
           var count = info.filenames.length;
-          hashVal = ((parseInt(hashVal) % count) + count) % count;
+          hashVal = ((parseInt(hashVal, 10) % count) + count) % count;
           if ('#' + hashVal !== location.hash) goto(hashVal);
           return hashVal;
         }
@@ -8565,6 +8625,57 @@ filter.items.tool.weibotool.replace_link = filter.item({
       });
     };
     observer.dom.add(customized);
+  },
+}).addto(filter.groups.tool);
+
+// 折叠二级评论（楼中楼）
+filter.items.tool.weibotool.fold_child_comment = filter.item({
+  'group': 'weibotool',
+  'version': 423,
+  'type': 'boolean',
+  'key': 'weibo.other.fold_child_comment',
+  'text': '{{foldChildComment}}',
+  'ainit': function () {
+    var foldChildComment = function foldChildComment() {
+      var rootComment = Array.from(document.querySelectorAll('.list_li[node-type="root_comment"]:not([yawf-folded-root-comment])'));
+      rootComment.forEach(function (rootComment) {
+        rootComment.setAttribute('yawf-folded-root-comment', 'yawf-folded-root-comment');
+
+        var feed = util.dom.parent(rootComment, '.WB_feed_type[mid]');
+        var reply = rootComment.querySelector('a[action-type="reply"]');
+        var childComment = rootComment.querySelector('.list_ul[node-type="child_comment"]');
+
+        var commentId = rootComment.getAttribute('comment_id');
+        var mid = feed.getAttribute('mid');
+        var childCount = 0;
+
+        if (!childCount) do {
+          var moreChildLinks = rootComment.querySelectorAll('[node-type="more_child_comment"] a');
+          var moreChild = moreChildLinks[moreChildLinks.length - 1];
+          if (!moreChild) break;
+          var moreChildNumber = moreChild.textContent.match(/\d+/);
+          if (!moreChildNumber || !moreChildNumber[0]) break;
+          childCount = parseInt(moreChildNumber[0], 10) || 0;
+        } while (false);
+
+        if (!childCount) do {
+          var childCommentItems = childComment.querySelectorAll('.list_li[comment_id]')
+          childCount = childCommentItems.length || 0;
+        } while (false);
+
+        if (!childCount) return;
+
+        var unfold = util.dom.create(util.str.fill(html.unfoldChildComment,
+          { 'mid': mid, 'comment_id': commentId, 'child_count': childCount }));
+        reply.parentNode.insertBefore(unfold, reply.nextSibling);
+        
+        childComment.parentNode.style.display = 'none';
+        unfold.addEventListener('click', function () {
+          childComment.parentNode.style.display = 'block';
+        });
+      });
+    };
+    observer.dom.add(foldChildComment);
   },
 }).addto(filter.groups.tool);
 
@@ -10491,6 +10602,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideIconRun');
   n(null, 'weibo.layoutHideIconFoolsDay');
   m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
+  n('NetstarIcon', 'weibo.layoutHideIconWedding');
   n(null, 'weibo.layoutHideNavLogoImg');
   n(null, 'weibo.layoutHideNavMain');
   n(null, 'weibo.layoutHideNavTV');
@@ -10504,6 +10616,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideLeftFav');
   n(null, 'weibo.layoutHideLeftLike');
   m('HotWeibo', 'weibo.layoutHideLeftHot'); // 热门微博
+  n('HotWeibo', 'weibo.layoutHideLeftTV');
   m('Friends', 'weibo.layoutHideLeftFriends'); // 好友圈
   m('ToMe', 'weibo.layoutHideLeftGroupToMe'); // 群微博
   n(null, 'weibo.layoutHideLeftNew');
@@ -10625,8 +10738,12 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.replace_link');
   n(null, 'weibo.tool.replace_image_emoji');
   n(null, 'weibo.other.customize_source');
+  n(null, 'weibo.other.fold_child_comment');
+  n(null, 'weibo.tool.auto_check_following');
   n(null, 'weibo.other.feed_list_type');
   n(null, 'weibo.tool.show_local_time');
+  n(null, 'weibo.tool.disable_desktop_notification');
+  n(null, 'weibo.tool.disable_live_photo');
   d('showAllSonFeeds', null, function (enabled) {
     if (!enabled) return;
     style('/*展开所有子微博（“还有?条对原微博的转发”） */\n.WB_feed_together [node-type="feed_list_wrapForward"] { display: block !important } .WB_feed_together>a[action-type="feed_list_seeAll"], .WB_feed_together>a[action-type="feed_list_foldForward"] { display: none }');
