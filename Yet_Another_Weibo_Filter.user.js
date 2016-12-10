@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.423
+// @version           3.7.424
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1765,7 +1765,7 @@ util.func.wrapstk = (function () {
       return;
     }
 
-    var wrapRegister = function (namespace, register) {
+    var wrapRegister = function (register) {
       return function (name, registerFunction, scope) {
         var original = registerFunction;
         if (name === 'namespace') {
@@ -1776,24 +1776,21 @@ util.func.wrapstk = (function () {
           });
         }
         if (isDebug && registerFunction !== original) {
-          console.log('register: %o->%o = %o (this: %o)', namespace, name, registerFunction, this);
+          console.log('register: %o = %o (this: %o)', name, registerFunction, this);
         }
-        return register.call(this, name, registerFunction, namespace);
+        return register.call(this, name, registerFunction, scope);
       };
     };
 
     var wrapNamespace = function (namespaceFunctionGetter) {
       return function () {
         var namespaceFunction = namespaceFunctionGetter.apply(this, arguments);
-        return function (namespace, callback) {
-          return namespaceFunction(namespace, function (stk) {
-            if (!stk.yawf_original_register) {
-              stk.yawf_original_register = stk.register;
-              stk.register = wrapRegister(namespace, stk.yawf_original_register);
-            }
-            return callback.call(this, stk, stk);
-          });
-        };
+        var fakeNamespaceKey = 'yawf_proto_getter';
+        var namespaceInstance = namespaceFunction(fakeNamespaceKey);
+        var namespacePrototype = namespaceInstance.constructor.prototype;
+        namespacePrototype.register = wrapRegister(namespacePrototype.register);
+        delete namespacePrototype.namespace[fakeNamespaceKey];
+        return namespaceFunction;
       };
     };
 
@@ -1801,7 +1798,7 @@ util.func.wrapstk = (function () {
     Object.defineProperty(window, 'STK', {
       get: function () { return stk; },
       set: function (trueStk) {
-        trueStk.register = wrapRegister('', trueStk.register);
+        trueStk.register = wrapRegister(trueStk.register);
         stk = trueStk;
       },
       enumerable: true
@@ -7391,8 +7388,9 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       [yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
       [yawf-merge-left] .WB_frame .WB_main_l #v6_pl_leftnav_msgbox.yawf-cardwrap h3 { padding: 0 16px; }
       [yawf-merge-left] a.W_gotop { margin-left: 430px; }
-      [yawf-merge-left] .WB_webim_page .webim_contacts_mod { position: static !important; max-height: calc(100vh - 350px); }
-      [yawf-merge-left] .WB_webim_page .webim_contacts_bd { max-height: calc(100vh - 410px); }
+      [yawf-merge-left] .WB_webim_page #weibochat { position: static !important; }
+      [yawf-merge-left] .WB_webim_page .webim_contacts_mod { position: static !important; max-height: calc(100vh - 410px); }
+      [yawf-merge-left] .WB_webim_page .webim_contacts_bd { max-height: calc(100vh - 470px); }
       [yawf-merge-left] .webim_chat_window .WB_webim_page .webim_contacts_mod,
       [yawf-merge-left] .webim_chat_window .WB_webim_page .webim_contacts_bd { max-height: none; }
       [yawf-merge-left="left"] .WB_frame .WB_main_r { float: left; }
@@ -7422,7 +7420,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     // codes modified from http://img.t.sinajs.cn/t6/style/css/module/combination/home_A.css begin
     util.css.add(util.str.cmt(function () { /*!CSS
       .yawf-WB_left_nav { width: 150px; }
-      .yawf-WB_left_nav .lev_Box { border-bottom-width: 1px; border-bottom-style: solid; }
       .yawf-WB_left_nav .lev_Box_noborder { border-bottom: none; }
       .yawf-WB_left_nav .lev_line {}
       .yawf-WB_left_nav .lev_line fieldset { display: block; height: 22px; padding: 0 0 0 120px; zoom: 1; clear: both; border-top-width: 1px; border-top-style: solid; }
@@ -10191,7 +10188,7 @@ filter.items.style.color.color_override = filter.item({
       .search_directarea, .WB_editor_iframe { background: none; }
       .private_list_box .private_head { padding-bottom: 8px; }
       .private_list_box .private_body { margin-top: 0; }
-
+      #weibochat { background: none; }
     */ noop(); }), {
       'color1': '' + this.ref.rgba1,
       'color2': '' + this.ref.rgba2,
