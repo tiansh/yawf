@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.424
+// @version           3.7.425
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -731,6 +731,7 @@ var text = {
     'zh-cn': '微博会员在发布微博时可以使用自定义文本来显示个性化来源，您可以隐藏这些微博或将这些微博的来源显示为默认来源',
   },
   'foldChildComment': { 'zh-cn': '默认折叠二级评论', 'zh-hk': '預設折疊二級評論', 'zh-tw': '預設折疊二級評論', 'en': 'Fold child comments by default' },
+  'commentShowAll': { 'zh-cn': '查看评论时自动切换到全部评论', 'zh-hk': '查閱評論時自動切換到全部評論', 'zh-tw': '查閱評論時自動切換到全部評論', 'en': 'Automatically switch view of comments to all' },
   // 关注
   'followingToolsTitle': { 'zh-cn': '关注', 'zh-hk': '關注', 'zh-tw': '關注', 'en': 'Following' },
   'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化（试验性）|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list (Experimental) | {{<frequency>}}{{<i>}}' },
@@ -6858,9 +6859,6 @@ filter.predef.group('layout');
           return container.removeChild(node);
         if (node && node.nodeType === Node.COMMENT_NODE)
           return container.removeChild(node);
-        if (node && node.nodeType === Node.ELEMENT_NODE &&node.textContent.trim() === '')
-          if (node.clientHeight * node.clientWidth === 0)
-            return container.removeChild(node);
       };
       var removeBlankSibling = function (node) {
         while (removeBlank(node.previousSibling));
@@ -6884,7 +6882,7 @@ filter.predef.group('layout');
           next = node.nextSibling;
         } else break;
       }
-      container.removeChild(node);
+      if (node.parentNode) node.parentNode.removeChild(node);
       if (!prev && !next) removeNode(container);
     };
     // 检查是否有未筛选的左栏链接并根据名称判断
@@ -8640,7 +8638,7 @@ filter.items.tool.weibotool.fold_child_comment = filter.item({
 
         var feed = util.dom.parent(rootComment, '.WB_feed_type[mid]');
         var reply = rootComment.querySelector('a[action-type="reply"]');
-        var childComment = rootComment.querySelector('.list_ul[node-type="child_comment"]');
+        var childCommentList = Array.from(rootComment.querySelectorAll('.list_ul[node-type="child_comment"]'));
 
         var commentId = rootComment.getAttribute('comment_id');
         var mid = feed.getAttribute('mid');
@@ -8656,7 +8654,7 @@ filter.items.tool.weibotool.fold_child_comment = filter.item({
         } while (false);
 
         if (!childCount) do {
-          var childCommentItems = childComment.querySelectorAll('.list_li[comment_id]')
+          var childCommentItems = rootComment.querySelectorAll('.list_ul .list_li[comment_id]')
           childCount = childCommentItems.length || 0;
         } while (false);
 
@@ -8666,14 +8664,37 @@ filter.items.tool.weibotool.fold_child_comment = filter.item({
           { 'mid': mid, 'comment_id': commentId, 'child_count': childCount }));
         reply.parentNode.insertBefore(unfold, reply.nextSibling);
         
-        childComment.parentNode.style.display = 'none';
+        childCommentList.forEach(function (childComment) {
+          childComment.parentNode.style.display = 'none';
+        });
         unfold.addEventListener('click', function () {
-          childComment.parentNode.style.display = 'block';
+          childCommentList.forEach(function (childComment) {
+            childComment.parentNode.style.display = 'block';
+          });
         });
       });
     };
     observer.dom.add(foldChildComment);
   },
+}).addto(filter.groups.tool);
+
+// 自动从热门评论切换到全部评论
+filter.items.tool.weibotool.comment_show_all = filter.item({
+  'group': 'weibotool',
+  'version': 425,
+  'type': 'boolean',
+  'key': 'weibo.other.comment_show_all',
+  'text': '{{commentShowAll}}',
+  'ainit': function () {
+    var switchToAllComment = function switchToAllComment() {
+      var allButtons = Array.from(document.querySelectorAll('a[action-type="feed_list_commentSearch"][action-data*="filter=all"]:not([yawf-all-comment])'));
+      allButtons.forEach(function (button) {
+        button.setAttribute('yawf-all-comment', 'yawf-all-comment');
+        if (!button.classList.contains('curr')) button.click();
+      });
+    };
+    observer.dom.add(switchToAllComment);
+  }
 }).addto(filter.groups.tool);
 
 // 关注相关工具
@@ -10736,6 +10757,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.replace_image_emoji');
   n(null, 'weibo.other.customize_source');
   n(null, 'weibo.other.fold_child_comment');
+  n(null, 'weibo.other.comment_show_all');
   n(null, 'weibo.tool.auto_check_following');
   n(null, 'weibo.other.feed_list_type');
   n(null, 'weibo.tool.show_local_time');
