@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.425
+// @version           3.7.426
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1190,6 +1190,7 @@ var font = {
     ['Arial', 'Arial'],
     ['Helvetica', 'Helvetica'],
     ['Verdana', 'Verdana'],
+    ['".SFNSDisplay-Regular"', 'San Francisco'],
   ],
   'chinese': [
     ['"SimSun", "宋体"', '中易宋体'],
@@ -2459,6 +2460,9 @@ util.ui.form = function (dom, display, details) {
   };
   // 关闭对话框
   var hide = function () {
+    if (typeof form.onbeforehide === 'function') {
+      if (util.func.catched(form.onbeforehide)() === false) return;
+    }
     dom.className += ' UI_animated UI_speed_fast UI_ani_bounceOut';
     document.removeEventListener('keydown', keys);
     document.removeEventListener('scroll', hold);
@@ -2486,7 +2490,8 @@ util.ui.form = function (dom, display, details) {
   if (ok) ok.addEventListener('click', hide);
   if (cancel) cancel.addEventListener('click', hide);
   if (close) close.addEventListener('click', hide);
-  return { 'hide': hide, 'show': show, 'dom': dom };
+  var form = { 'hide': hide, 'show': show, 'dom': dom, 'onbeforehide': null };
+  return form;
 };
 
 // 显示一个对话框
@@ -10931,7 +10936,7 @@ updater.showfuncset = util.func.catched(function (itemSelector, title, genConten
 
 // 显示新功能提示对话框
 updater.whatsnew = function (sourceVersion) {
-  updater.showfuncset(
+  return updater.showfuncset(
     updater.selector.version(sourceVersion),
     util.str.fill('{{updateSuccessTitle}}'),
     function (count) {
@@ -10961,8 +10966,14 @@ filter.items.script.update.update = filter.item({
     if (util.page.search) return;
     var sourceVersion = util.config.get('weibo._yawf_version', null, Number);
     if (!sourceVersion) util.func.call(updater.userguide);
-    else if (sourceVersion < updater.currentver) util.func.call(updater.whatsnew, sourceVersion);
-    util.config.put('weibo._yawf_version', updater.currentver);
+    else if (sourceVersion < updater.currentver) util.func.call(function () {
+      var dialog = updater.whatsnew(sourceVersion);
+      dialog.onbeforehide = function () {
+        util.config.put('weibo._yawf_version', updater.currentver);
+      };
+    }); else if (sourceVersion > updater.currentver) {
+      util.config.put('weibo._yawf_version', updater.currentver);
+    }
   },
 }).addto(filter.groups.script);
 
