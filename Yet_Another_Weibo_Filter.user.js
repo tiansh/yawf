@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.428
+// @version           3.7.429
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -490,7 +490,7 @@ var text = {
   'searchBarPlaceholder': { 'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Count for new notice' },
   'layoutHideNavSettingNew': { 'zh-cn': '新设置红点', 'zh-hk': '新設定紅點', 'zh-tw': '新設定紅點', 'en': 'Red dot for new settings' },
-  'layoutHideNavHotTip': { 'zh-cn': '热门微博小黄签', 'zh-hk': '熱門微博小黃簽', 'zh-tw': '熱門微博小黃簽', 'en': 'Yellow tip for new hot weibo' },
+  'layoutHideNavHotTip': { 'zh-cn': '热门黄签提醒', 'zh-hk': '熱門黃簽提醒', 'zh-tw': '熱門黃簽提醒', 'en': 'Yellow tip for new hots' },
   // 左栏
   'layoutHideLeft': { 'zh-cn': '隐藏模块 - 左栏', 'zh-hk': '隱藏模組 - 左欄', 'zh-tw': '隱藏模組 - 左欄', 'en': 'Hide modules - Left Column' },
   'layoutHideLeftHome': { 'zh-cn': '首页', 'zh-hk': '首頁', 'zh-tw': '首頁', 'en': 'Home' },
@@ -6828,6 +6828,7 @@ filter.predef.group('layout');
       allTips = allTips.filter(function (tip) {
         var a = tip.querySelector('a[href]'), href = a && a.href || '';
         if (href.indexOf('http://d.weibo.com') !== -1) return false;
+        if (href.indexOf('http://weibo.com/tv') !== -1) return false;
         return true;
       });
 
@@ -6847,6 +6848,7 @@ filter.predef.group('layout');
     };
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_global_nav .gn_topmenulist_tips:not(.yawf-gn_topmenulist_tips) { display: none !important; }
+      .WB_global_nav .gn_topmenulist_notice:not([style*="none"]) ~ .yawf-gn_topmenulist_tips { display: none !important; }
     */ noop(); }));
     observer.dom.add(updateFakeTips);
     updateFakeTips();
@@ -8383,16 +8385,17 @@ filter.items.tool.weibotool.view_original = filter.item({
       while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       return link;
     };
+    var updateLinkHandler = function (e) {
+      GM_openInTab(e.currentTarget.href, false);
+      e.preventDefault();
+    };
     var updateLink = function (link, info, ref) {
       var current = info.current || 0, pid = getPid(ref);
       if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
       if (!link) link = addLink(ref);
       var full = { 'host': info.host, 'filenames': info.filenames, 'current': current };
       link.href = imageUrl(full); link.setAttribute('yawf-img-url', imageUrl(full, true));
-      link.addEventListener('click', function (e) {
-        GM_openInTab(link.href, false);
-        e.preventDefault();
-      });
+      link.addEventListener('click', updateLinkHandler);
       return link;
     };
     var markLink = function (selector) {
