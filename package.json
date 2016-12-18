@@ -1,0 +1,11 @@
+{
+  "name": "yawf-compile",
+  "version": "1.0.0",
+  "description": "compile yawf from ../userscripts to ../pages",
+  "main": "update.js",
+  "scripts": {
+  },
+  "author": "ts",
+  "license": "MIT",
+  "private": true
+}
