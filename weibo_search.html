@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <title>将微博搜索添加到您的浏览器</title>
+  <link rel="canonical" href="https://tiansh.github.io/yawf/weibo_search.html">
+  <link rel="stylesheet" href="css/main.css" />
+  <script>
+    function addWeiboSearch() { window.external.AddSearchProvider('https://tiansh.github.io/yawf/weibo_search.xml'); }
+  </script>
+</head>
+<body>
+  <header><h1>添加微博搜索</h1></header>
+  <nav>
+    <dl>
+      <dt><a class="install" href="javascript:addWeiboSearch();">添加搜索引擎</a></dt>
+    </dl>
+  </nav>
+  <p>点击添加搜索引擎按钮，您可以将“新浪微博”搜索添加到您的浏览器搜索栏中。</p>
+  <h2>如何隐藏微博网页上的搜索框</h2>
+  <div class="in">
+    <p>如果您需要隐藏微博网页上的搜索框，您可以在自定义 CSS 中添加：</p>
+    <div class="in">
+      <pre>.WB_global_nav .gn_search { display: none !important; }</pre>
+    </div>
+    <p>或使用如下 Stylish 样式：</p>
+    <div class="in">
+      <pre>@namespace url(http://www.w3.org/1999/xhtml);
+  
+@-moz-document domain("weibo.com") {
+  .WB_global_nav .gn_search { display: none !important; }
+}</pre>
+    </div>
+    <p>或应用如下 AdBlock Plus 规则：</p>
+    <div class="in">
+      <pre>weibo.com##.gn_search</pre>
+    </div>
+  </div>
+</body>
+</html>

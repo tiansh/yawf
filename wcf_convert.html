@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <title>眼不见心不烦到 YAWF 配置文件转换工具</title>
+  <link rel="canonical" href="https://tiansh.github.io/yawf/wcf_convert.html">
+  <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 微博, 眼不见心不烦0" />
+  <meta name="description" content="将眼不见心不烦（Weibo Content Filter）的配置文件转换为Yet Another Weibo Filter的配置文件" />
+  <link rel="stylesheet" href="css/main.css" />
+  <script src="https://ace.c9.io/build/src/ace.js"></script>
+  <script src="https://ace.c9.io/build/src/mode-json.js"></script>
+  <script src="js/gm_stub.js"></script>
+  <script> $CONFIG.lang = 'zh-cn'; </script>
+  <script src="Yet_Another_Weibo_Filter.user.js"></script>
+  <script>
+    window.addEventListener('load', function () {
+      var wcf_s = ace.edit("settingsString");
+      var wcf_s_s = wcf_s.getSession();
+      wcf_s_s.setMode("ace/mode/json");
+      wcf_s_s.setTabSize(2);
+      wcf_s_s.setUseWrapMode(true);
+      var yawf_s = document.querySelector('#export');
+      var message = document.querySelector('#message');
+      var update = function () {
+        if (wcf_s.getValue() === '') {
+          message.style.visibility = 'hidden';
+          yawf_s.removeAttribute('href');
+          return;
+        }
+        try {
+          yawf_s.removeAttribute('href');
+          var w = JSON.parse(wcf_s.getValue());
+          wbp.config = w;
+          var v = wbp.converter();
+          yawf_s.href = 'data:application/octet-stream;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(v, null, 2))));
+          message.style.visibility = 'hidden';
+        } catch (e) {
+          message.style.visibility = 'visible';
+        }
+      };
+      wcf_s.on('change', update);
+      wcf_s.on('paste', update);
+      update();
+    });
+  </script>
+  <style>
+    #settingsString { width: 100%; height: 200px; }
+    #export { float: right; padding: 10px 2em; color: #fff; text-decoration: none; background: #aaa; }
+    #export[href] { background: #ffa00a; }
+    #export:hover { background: #ffb137; }
+    #message { color: #710; font-weight: bold; }
+    #wrap { height: 50px; }
+    body { padding-bottom: 120px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>眼不见心不烦到 YAWF 配置文件转换工具</h1>
+  </header>
+  <p>脚本已经内置了转换工具，您如果同时安装了 YAWF脚本 和眼不见心不烦，那么在 YAWF脚本的关于脚本选项卡，就能找到导入设置的功能。使用该功能效果更好。</p>
+  <h2>转换</h2>
+  <div class="in">
+    <p>请将眼不见心不烦脚本，设置选项卡文本框中的内容复制粘贴到下面的文本框内。</p>
+    <div id="wcf">
+      <div id="settingsString"></div>
+    </div>
+    <div id="message" style="visibility: hidden;">转换时发生错误，您输入的设置信息可能不正确或不完整。</div>
+    <div id="wrap"><div id="yawf"><a id="export" download="wcf_convert.yawf">保存 YAWF 配置文件</a></div></div>
+  </div>
+  <h2>简介</h2>
+  <div class="in">
+    <p>本工具可以帮助你将眼不见心不烦的设置转换为 Yet Another Weibo Filter 的设置文件。</p>
+    <p>注意，转换前后的设置并非完全等价，这是因为：1. 两个脚本对一些内容的处理不同；2. Yet Another Weibo Filter 并未实现眼不见心不烦的所有功能 3. 一些设置项无法进行转换。</p>
+    <p>如果转换工具有任何问题，请参考 Yet Another Weibo Filter 的反馈方式进行反馈。</p>
+    <p>本工具是在您的浏览器中本地执行的，不会将您的设置发送到服务器上，请放心使用。（需要启用 JavaScript）</p>
+  </div>
+</body>
+</html>
