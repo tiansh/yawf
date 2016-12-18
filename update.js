@@ -1,33 +1,52 @@
-﻿// NodeJS
-const fs = require('fs');
-const updateMeta = require('./userscript-meta-update.js');
+﻿const fs = require('fs');
+const userscript = require('./userscript/userscript');
 
-const updateHTMLVersion = function (html, version) {
-  fs.readFile(html, function (error, content) {
-    if (error) console.warn('Error while reading file %s: %o', html, error);
-    else {
-      content = String(content).replace(
-        /<!--\s*VER\s*-->.*<!--\s*\/VER\s*-->/g,
-        '<!-- VER -->' + version + '<!-- /VER -->'
-      );
-      fs.writeFile(html, content);
-    }
-  });
-};
-
-var metaFiles = function () {
-  updateMeta.update(function (filename, content, meta) {
-    const version = function (meta) {
-      var ver = null;
-      meta.forEach(function (item) {
-        if (item.header === 'version' && !item.locale) ver = item.value;
-      });
-      return ver;
-    };
-    ['zh-cn.html', 'zh-hk.html', 'zh-tw.html', 'en.html'].forEach(function (html) {
-      updateHTMLVersion(html, version(meta));
+const writeFile = function (filename, content) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(filename, content, (error) => {
+      if (error) reject(error); else resolve();
     });
   });
 };
 
-metaFiles();
+const updateHTMLVersion = function (targetFile, version) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(targetFile, (error, data) => {
+      if (error) { reject(); return; }
+      let content = String(data);
+      let newContent = content.replace(
+        /<!--\s*VER\s*-->.*<!--\s*\/VER\s*-->/g,
+        '<!-- VER -->' + version + '<!-- /VER -->'
+      );
+      writeFile(targetFile, newContent).then(resolve).catch(reject);
+    });
+  });
+};
+
+const updateMetaFile = function (targetFile, meta) {
+  return writeFile(targetFile, meta);
+};
+
+; (function () {
+  let inputFolder = `../userscripts`;
+  let outputFolder = `../pages`;
+  let scriptName = 'Yet_Another_Weibo_Filter';
+  new Promise((resolve, reject) => {
+    userscript.readScript(`${inputFolder}/${scriptName}.user.js`).then(({script, meta}) => {
+      if (!meta || !(meta.details.get('version') || []).length) {
+        reject('failed to parse userscript file'); return;
+      }
+      let version = meta.details.get('version')[0];
+      Promise.all([
+        writeFile(`${outputFolder}/${scriptName}.user.js`, script),
+        writeFile(`${outputFolder}/${scriptName}.meta.js`, meta.full),
+        ...([
+          'en',
+          'zh-cn',
+          'zh-hk',
+          'zh-tw',
+        ].map(lang => updateHTMLVersion(`${outputFolder}/${lang}.html`, version)))
+      ]).then(resolve).catch(reject);
+    }).catch(reject);
+  }).catch(error => { console.error(error); process.exit(1); });
+}());
