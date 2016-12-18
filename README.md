@@ -31,12 +31,6 @@ Opera 浏览器或 Google Chrome 浏览器的用户，请使用 Violent monkey �
 
 脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。
 
-## 项目结构 ##
-
-* 脚本的源代码请见 `userscripts` 分支
-* 脚本的主页请见 `gh-pages` 分支
-* 脚本的历史更新信息和历史的主页，请见 `userscripts` 分支
-
 ## 关于 ##
 
 YAWF (Yet Another Weibo Filter) [使用 MIT 协议授权][许可协议]。
