@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name              Yet Another Weibo Filter
 // @name:zh-CN        Yet Another Weibo Filter 看真正想看的微博
 // @name:zh-HK        Yet Another Weibo Filter 看真正想看的微博
@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.430
+// @version           3.7.431
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -358,6 +358,10 @@ var text = {
   'appItemWeibo': { 'zh-cn': '介绍微博应用的微博{{<i>}}', 'zh-hk': '介紹微博應用的微博{{<i>}}', 'zh-tw': '介紹微博應用的微博{{<i>}}', 'en': 'Weibo with app item {{<i>}}' },
   'appItemWeiboDesc': {
     'zh-cn': '介绍微博应用的微博，包括含有微博应用的链接或含有微博应用的卡片的情况。微博应用的链接会以应用图标标记。勾选此项以隐藏此类微博。',
+  },
+  'wendaWeibo': { 'zh-cn': '微博问答相关的提问、回答或围观{{<i>}}', 'zh-hk': '微博問答相關的提問、回答或圍觀{{<i>}}', 'zh-tw': '微博問答相關的提問、回答或圍觀{{<i>}}', 'en': 'Weibo asking, answering, or viewing Weibo Q and A {{<i>}}' },
+  'wendaWeiboDesc': {
+    'zh-cn': '微博问答功能的提问、回答或围观都会发布一条新微博，如果您不希望看到相关微博，您可以勾选此选项以隐藏相关微博。'
   },
   'wenwoDrWeibo': { 'zh-cn': '含有爱问医生健康科普文章的微博{{<i>}}', 'zh-hk': '含有愛問醫生健康科普文章的微博{{<i>}}', 'zh-tw': '含有愛問醫生健康科普文章的微博{{<i>}}', 'en': 'Weibo with 爱问医生 (iask medical) artical {{<i>}}' },
   'wenwoDrWeiboDesc': {
@@ -3074,7 +3078,7 @@ filter.filters = function () {
     list.some(function (item) {
       try { result = item.rule(obj, confs) || result; }
       catch (e) { util.error('Exception while parsing rule %o: %o\n%o', item.rule, e, e.stack); }
-      if (result) util.debug('%o(%o) -> %s', item.rule, obj, result);
+      if (result) util.debug('%o[%o](%o) -> %s', item.rule, item.rule && item.rule.name, obj, result);
       return result !== null;
     });
     return result;
@@ -5079,6 +5083,7 @@ filter.items.base.scripttool.fast_hide_button = filter.item({
       if (util.dom.matches(feed, '#v6_pl_content_atmeweibo *')) return; // 不在提到页面显示，避免与“屏蔽at”发生歧义
       if (feed.hasAttribute('yawf-hide_box')) return; // 已经有了按钮，不显示按钮
       if (document.querySelector('[id^="Pl_Official_WeiboDetail__"]')) return; // 单条微博页面，不显示按钮
+      if (!feed.hasAttribute('mid')) return; // 不是微博，不显示按钮
       feed.setAttribute('yawf-hide_box', 'yawf-hide_box');
       var mid = feed.getAttribute('mid');
       var screen_box = feed.querySelector('.WB_screen .screen_box'); if (!screen_box) return;
@@ -6062,6 +6067,8 @@ filter.items.other.hidethese_ad.fake_weibo = filter.item({
   'priority': 1e6, // 最高优先级
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{fakeWeiboFilterDesc}}' } },
   'rule': function fakeWeiboFilterRule(feed) {
+    // 问答列表不是微博列表，因此不应生效
+    if (util.dom.matches(feed, '[id^="Pl_Core_WendaList__"] *')) return null;
     if (feed.hasAttribute('mid')) return null;
     if (this.conf) return 'hidden';
     return 'unset';
@@ -6161,6 +6168,23 @@ filter.items.other.hidethese_content.appitem = filter.item({
       return 'hidden';
     if (feed.querySelector('a[yawf-link-type="S"]'))
       return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 微博问答
+filter.items.other.hidethese_content.wenda = filter.item({
+  'group': 'hidethese_content',
+  'version': 431,
+  'type': 'boolean',
+  'key': 'weibo.other.wenda',
+  'text': '{{wendaWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{wendaWeiboDesc}}' } },
+  'rule': function wendaFilterRule(feed) {
+    if (!this.conf) return null;
+    // 这条规则不在显示某人的全部问答页面生效，避免显示空页面
+    if (util.dom.matches(feed, '[id^="Pl_Core_WendaList__"] *')) return null;
+    if (feed.querySelector('[suda-uatrack*="1022-wenda"]')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -6765,7 +6789,7 @@ filter.predef.group('layout');
   subtitle('Icon', true);
   item('Level', 12, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }', { 'extt': '<span class="W_icon_level icon_level_c2" style="display:inline-block!important;margin-bottom:-2px;"><span>Lv.1</span></span>' });
   item('Member', 5, '[class*="icon_member"], [class*="ico_member"], [class*="ico_vip"], [class*="icon_vip"] { display: none !important; }', { 'extt': '<i class="W_icon icon_member1" style="display:inline-block!important"></i><img src="https://h5.sinaimg.cn/upload/2016/05/25/494/vip_icon_zuanshi5_1.png" class="W_icon_vipstyle" style="display:inline-block!important"><img src="https://h5.sinaimg.cn/upload/2016/05/30/494/birthdayhat_level_1.png" class="W_icon_vipstyle" style="display:inline-block!important"><img src="https://h5.sinaimg.cn/upload/2016/05/25/494/vip_icon_yangyang_1.png" class="W_icon_vipstyle" style="display:inline-block!important">' });
-  item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve, .icon_approve_gold { display: none !important; }', { 'extt': '<i class="W_icon icon_approve" style="display:inline-block!important"></i><i class="W_icon icon_approve_gold" style="display:inline-block!important"></i>' });
+  item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve, .icon_approve_gold, .icon_pf_approve_gold { display: none !important; }', { 'extt': '<i class="W_icon icon_approve" style="display:inline-block!important"></i><i class="W_icon icon_approve_gold" style="display:inline-block!important"></i>' });
   item('ApproveCo', 5, '.approve_co, .icon_approve_co, .icon_pf_approve_co, [class^="W_icon_co"], [class^=".icon_approve_co_"], [class^=".icon_pf_approve_co_"] { display: none !important; }', { 'extt': '<i class="W_icon icon_approve_co" style="display:inline-block!important"></i>' });
   item('ApproveDead', 107, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }', { 'extt': '<i class="W_icon icon_approve_dead" style="display:inline-block!important"></i>' });
   item('Club', 5, '.ico_club, .icon_pf_club, .icon_club { display: none !important; }', { 'extt': '<i class="W_icon icon_club" style="display:inline-block!important"></i>' });
@@ -9819,6 +9843,8 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text + .WB_from { margin-top: 1em; }
 
       .WB_feed.WB_feed_v3 .WB_face .opt { margin: 10px 0 0 0; position: static; right: auto; top: auto; }
+
+      [id^="Pl_Core_WendaList__"] .WB_feed_type .WB_detail > .WB_info ~ .WB_text::before { width: 68px; }
     */ noop(); }));
   },
 }).addto(filter.groups.style);
@@ -10573,6 +10599,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.other.vote_weibo');
   n(null, 'weibo.other.red2014');
   n(null, 'weibo.other.appitem');
+  n(null, 'weibo.other.wenda');
   n(null, 'weibo.other.wenwodr');
   n(null, 'weibo.other.yizhibo');
   n(null, 'weibo.other.stock');
