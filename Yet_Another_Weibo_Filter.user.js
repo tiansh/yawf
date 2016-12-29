@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.431
+// @version           3.7.432
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -525,7 +525,7 @@ var text = {
   'layoutHideRightHotTopicExpand': { 'zh-cn': '热门话题中的话题描述', 'zh-hk': '熱門話題中的話題描述', 'zh-tw': '熱門話題中的話題描述', 'en': 'Topic description in Hot Topic' },
   'layoutHideRightGroups': { 'zh-cn': '分组成员列表', 'zh-hk': '分組成員列表', 'zh-tw': '分組成員列表', 'en': 'Members of group' },
   'layoutHideRightRecomGroupUser': { 'zh-cn': '建议加入该分组', 'zh-hk': '建議加入該分組', 'zh-tw': '建議加入該分組', 'en': 'Suggest to add to this group' },
-  'layoutHideRightHongbaoRank': { 'zh-cn': '红包排行榜', 'zh-hk': '紅包排行榜', 'zh-tw': '紅包排行榜', 'en': 'Red Envelope Rank' },
+  'layoutHideRightHongbaoRank': { 'zh-cn': '让红包飞', 'zh-hk': '讓紅包飛', 'zh-tw': '讓紅包飛', 'en': '让红包飞 (Red Envelope)' },
   'layoutHideRightInterest': { 'zh-cn': '可能感兴趣的人', 'zh-hk': '可能感興趣的人', 'zh-tw': '可能感興趣的人', 'en': 'You may know' },
   'layoutHideRightMovie': { 'zh-cn': '电影热评榜', 'zh-hk': '电影热评榜', 'zh-tw': '电影热评榜', 'en': '电影热评榜 (Hot Movie)' },
   'layoutHideRightAttFeed': { 'zh-cn': '好友关注动态', 'zh-hk': '好友关注动态', 'zh-tw': '好友关注动态', 'en': '好友关注动态 (Friends\' Attention)' },
@@ -6963,7 +6963,7 @@ filter.predef.group('layout');
   item('Member', 5, '#v6_trustPagelet_recom_member { display: none !important; }');
   item('Groups', 102, '#v6_pl_rightmod_groups { display: none; }');
   item('RecomGroupUser', 191, '#v6_pl_rightmod_recomgroupuser { display: none; }');
-  item('HongbaoRank', 205, '[node-type="hongbao_rank"] { display: none !important; }');
+  item('HongbaoRank', 432, '#v6_pl_rightmod_hongbao { display: none !important; }');
   item('Movie', 186, '[yawf-id="rightmod_recom_movie"] { display: none !important; }');
   item('AttFeed', 248, '#v6_pl_rightmod_attfeed { display: none !important; }', { 'icon': 'warn' });
   item('TaobaoMovie', 200, '[yawf-id="rightmod_taobao_movie"] { display: none !important; }');
