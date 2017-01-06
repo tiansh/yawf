@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.432
+// @version           3.7.433
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -493,7 +493,7 @@ var text = {
   },
   'searchBarPlaceholder': { 'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Count for new notice' },
-  'layoutHideNavSettingNew': { 'zh-cn': '新设置红点', 'zh-hk': '新設定紅點', 'zh-tw': '新設定紅點', 'en': 'Red dot for new settings' },
+  'layoutHideNavNew': { 'zh-cn': '提示红点', 'zh-hk': '提示紅點', 'zh-tw': '提示紅點', 'en': 'Red dot tips' },
   'layoutHideNavHotTip': { 'zh-cn': '热门黄签提醒', 'zh-hk': '熱門黃簽提醒', 'zh-tw': '熱門黃簽提醒', 'en': 'Yellow tip for new hots' },
   // 左栏
   'layoutHideLeft': { 'zh-cn': '隐藏模块 - 左栏', 'zh-hk': '隱藏模組 - 左欄', 'zh-tw': '隱藏模組 - 左欄', 'en': 'Hide modules - Left Column' },
@@ -1557,6 +1557,7 @@ util.str.parsequery = function (str) {
   var o = {};
   if (str === '') return o;
   str.split('&').map(function (kv) {
+    if (kv === '') return;
     if (kv.indexOf('=') === -1) o[kv] = null;
     else {
       kv = kv.split('=', 2);
@@ -1568,7 +1569,7 @@ util.str.parsequery = function (str) {
 // 将对象换成 & 连接的键值
 util.str.toquery = function (o) {
   return Object.keys(o).map(function (k) {
-    if (o[k] == null) return encodeURIComponent(k);
+    if (o[k] == null || o[k] === true) return encodeURIComponent(k);
     return encodeURIComponent(k) + '=' + encodeURIComponent(o[k]);
   }).join('&');
 };
@@ -4968,18 +4969,21 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
       // 检查是否添加了 is_search 关键词
       var query = util.str.parsequery(location.search.slice(1));
       var has_is_search = 'is_search' in query;
+      var all_search_types = ['is_ori', 'is_pic', 'is_video', 'is_music', 'is_article'];
+      var is_other_search = all_search_types.some(function (t) { return t in query; });
+      var is_search_needed = homefeed && !is_other_search;
       do {
-        if (has_is_search && homefeed) {
+        if (has_is_search && is_search_needed) {
           // 如果添加了 is_search，但是并没有搜索关键词，那么隐藏掉搜索到多少条微博的提示信息
           if ('key_word' in query) break;
           var searchTip = homefeed.querySelector('.WB_result');
           if (searchTip) searchTip.parentNode.removeChild(searchTip);
-        } else if (has_is_search && nothomefeed) {
+        } else if (has_is_search && !is_search_needed) {
           // 评论页面不应该使用 is_search ，但是点击小黄签时会有问题，所以在这里处理一下
           delete query.is_search;
           a.search = '?' + util.str.toquery(query);
           location.replace(a.href);
-        } else if (!has_is_search && homefeed) {
+        } else if (!has_is_search && is_search_needed) {
           // 如果没有添加 is_search ，而且不是分组、不是悄悄关注，则自动跳转到 is_search
           if (('gid' in query) || ('whisper' in query)) break;
           query.is_search = '1';
@@ -6824,7 +6828,7 @@ filter.predef.group('layout');
   item('Game', 5, '.gn_nav_list>li:nth-child(4) { display: none !important; }');
   item('HotSearch', 277, function () { observer.stopjsonp(/\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?/); });
   item('NoticeNew', 87, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
-  item('SettingNew', 257, '.WB_global_nav .gn_set_list a[nm="account"] .W_new, .WB_global_nav .gn_set_list a[nm="account"] ~ div .W_new { display: none !important; }');
+  item('New', 433, '.WB_global_nav .W_new { display: none !important; }');
   item('HotTip', 430, function () {
     // 添加一个假的小黄签
     var fakeTips = null;
@@ -11197,6 +11201,10 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     .gn_topmenulist_search { width: 117px !important; }
   }
   .gn_topmenulist_search { min-width: 200px !important; }
+  // 重置头条文章页面顶栏样式
+  .WB_global_nav .W_ficon.W_ficon, .WB_global_nav .W_ficon.W_ficon:hover { background-image: none !important; background-repeat: repeat; text-indent: 0; text-align: center; }
+  .WB_global_nav .ficon_send.ficon_send { background-image: linear-gradient(to bottom, #fa7d3c, #f56010) !important; }
+  .WB_global_nav .ficon_send.ficon_send:hover { background: linear-gradient(to bottom, #f4712c,#f15909) !important; }
   // 设置框相关样式
   #yawf-config [node-type="inner"] { padding: 0; width: 800px; height: 480px; }
   #yawf-config .yawf-config-header { float: left; width: 160px; height: 480px; }
