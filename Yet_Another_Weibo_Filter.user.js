@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.435
+// @version           3.7.436
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -94,6 +94,12 @@ var text = {
   'loadWeiboBySearch': { 'zh-cn': '使用搜索代替首页以恢复正常首页顺序{{<i>}}', 'zh-hk': '使用檢索代替首頁以恢復正常首頁順序{{<i>}}', 'zh-tw': '使用檢索代替首頁以恢復正常首頁順序{{<i>}}', 'en': 'Use search on home page for better order of Weibo' },
   'loadWeiboBySearchDesc': {
     'zh-cn': '如果您的首页上微博排序混乱，以致无法正常使用微博，请尝试打开此功能。<strong>打开此功能会导致您微博中设置的屏蔽规则失效，您需要将会员中设置的屏蔽规则在脚本中再隐藏一遍。</strong>'
+  },
+  'loadWeiboBySearchWarnTitle': {
+    'zh-cn': '使用搜索代替首页'
+  },
+  'loadWeiboBySearchWarn': {
+    'zh-cn': '本功能利用搜索页不支持“智能排序”的特点，在您访问首页时自动跳转到搜索结果页，因此本功能的正常工作完全受制于微博搜索功能。<br />如果您打开后无法正常浏览微博，请考虑关闭此功能。<br />点击查看<a href="https://tiansh.github.io/yawf/fqa.html#%E5%85%B3%E4%BA%8E%E4%BD%BF%E7%94%A8%E6%90%9C%E7%B4%A2%E4%BB%A3%E6%9B%BF%E9%A6%96%E9%A1%B5%E5%8A%9F%E8%83%BD">关于本功能的详细说明</a><br />确实要打开本功能吗？'
   },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
@@ -1232,7 +1238,7 @@ var util = {};
 // 浏览器识别
 util.browser = {};
 // 一些兼容性代码
-// Array.from 
+// Array.from
 if (!Array.from) Array.from = function () { var r = Object.prototype.toString, n = function (n) { return "function" == typeof n || "[object Function]" === r.call(n) }, t = function (r) { var n = +r; return isNaN(n) ? 0 : 0 !== n && isFinite(n) ? (n > 0 ? 1 : -1) * Math.floor(Math.abs(n)) : n }, e = Math.pow(2, 53) - 1, o = function (r) { var n = t(r); return Math.min(Math.max(n, 0), e) }; return function (r) { var t = this, e = Object(r); if (null == r) throw new TypeError("Array.from requires an array-like object - not null or undefined"); var a, i = arguments.length > 1 ? arguments[1] : void 0; if (void 0 !== i) { if (!n(i)) throw new TypeError("Array.from: when provided, the second argument must be a function"); arguments.length > 2 && (a = arguments[2]) } for (var u, f = o(e.length), c = n(t) ? Object(new t(f)) : Array(f), h = 0; f > h;) u = e[h], c[h] = i ? void 0 === a ? i(u, h) : i.call(a, u, h) : u, h += 1; return c.length = f, c } }();
 // Object.assign
 if (!Object.assign) Object.assign = function (n) { "use strict"; if (void 0 === n || null === n) throw new TypeError("Cannot convert undefined or null to object"); for (var r = Object(n), t = 1; t < arguments.length; t++) { var e = arguments[t]; if (void 0 !== e && null !== e) for (var o in e) e.hasOwnProperty(o) && (r[o] = e[o]) } return r };
@@ -1442,7 +1448,7 @@ util.obj.dotted = function (o, p) {
 // 字符串工具
 util.str = {};
 
-// 多行字符串 
+// 多行字符串
 // 传入的函数内包含一大段注释，提取注释内容作为字符串
 // 传入的函数末尾的附加内容是为了避免 UglifyJS2 压缩时造成错误而添加的
 util.str.cmt = function (f) {
@@ -1732,7 +1738,7 @@ util.page.user = function () {
   return true;
 };
 
-// 检查是不是我的个人主页 
+// 检查是不是我的个人主页
 util.page.myhome = function () {
   if (!util.page.user()) return false;
   return !!util.info.uid && util.info.oid() === util.info.uid;
@@ -2288,7 +2294,7 @@ util.notify = (function () {
 
   // Notification
   // Firefox 22+
-  // 显示4秒会自动关闭 https://bugzil.la/875114 
+  // 显示4秒会自动关闭 https://bugzil.la/875114
   if (typeof Notification !== 'undefined') avaliable.standard = {
     'hasPermission': function () {
       return {
@@ -3237,7 +3243,7 @@ filter.fast.dialog = function (candidate, selected) {
       });
       return active;
     };
-    // 确定按钮 
+    // 确定按钮
     var ok = inner.querySelector('[action-type="ok"]');
     var updateOkButton = function () {
       if (chosen().length) ok.classList.remove('W_btn_a_disable');
@@ -4178,7 +4184,7 @@ filter.collection.item = (function () {
       // 依次列出所有新的设置项
       found.forEach(function (item) {
         var dom = item._show(body);
-        // 在列出时标明所属分类 
+        // 在列出时标明所属分类
         if (item.type === 'subtitle' && item.grouped && item.grouped.length) {
           var text = util.str.fill('{{' + item.grouped[0].name + 'FilterGroupTitle}} - ');
           var node = document.createTextNode(util.str.fill(text));
@@ -4822,7 +4828,7 @@ weibo.feed.hyperlinks = {};
 weibo.feed.hyperlinks.dom = function (feed) {
   return weibo.feed.content(feed, function (m) {
     return Array.from(m.querySelectorAll([
-      'a[yawf-link-type="O"][href^="http://t.cn/"]', 
+      'a[yawf-link-type="O"][href^="http://t.cn/"]',
       'a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"]'
     ].join(',')));
   }).filter(filter.fast.hyperlink.validator);
@@ -4958,6 +4964,19 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
   'key': 'weibo.tool.load_weibo_by_search',
   'text': '{{loadWeiboBySearch}}',
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboBySearchDesc}}' } },
+  'shown': function (dom) {
+    var that = this;
+    var checkbox = dom.querySelector('[name="yawf-weibo.tool.load_weibo_by_search"]');
+    checkbox.addEventListener('change', function () {
+      if (!checkbox.checked) return;
+      that.putconf(false);
+      util.ui.confirm('yawf-enable-load-by-search', {
+        'title': util.str.fill('{{loadWeiboBySearchWarnTitle}}'),
+        'text': util.str.fill('{{loadWeiboBySearchWarn}}'),
+        'onOk': function () { that.putconf(true); },
+      });
+    });
+  },
   'ainit': function () {
     // 发现当前不是搜索，就跳转到搜索去
     var updateLocation = function redirectHomeWeiboUseSearch() {
@@ -6702,6 +6721,8 @@ filter.items.comment.otherc.with_picture = filter.item({
       media.setAttribute('yawf-cmt-img', 'hidden');
       a.addEventListener('click', function () { img.click(); });
       text.appendChild(a);
+      var oldLink = text.querySelector('a[imagecard]');
+      if (oldLink && oldLink !== a) oldLink.parentNode.removeChild(oldLink);
     });
   },
 }).addto(filter.groups.comment);
@@ -7831,7 +7852,7 @@ filter.items.tool.sidebar.right_user_list_notice = filter.item({
         updateAll();
       });
     }());
-    
+
     // 我们在一个人的个人主页上看到了哪条微博
     // 如果已经在个人主页上看过了那么一样不应该有小红点
     var last = (function () {
@@ -7904,7 +7925,7 @@ filter.items.tool.fixed.fixed_left = filter.item({
     // 这时候左栏如果还要浮动，那么就要重新让他动起来
     // 这里的程序是为了让左栏再动起来的
     if (!filter.items.tool.sidebar.merge_left_right.conf) return;
-    util.css.add(util.str.cmt(function () { /*!CSS 
+    util.css.add(util.str.cmt(function () { /*!CSS
       .WB_main_r .WB_main_l { will-change: scroll-position; }
       .WB_main_r[yawf-fixed] .WB_main_l { position: fixed; top: 60px !important; overflow: hidden; height: auto !important; width: 150px; }
       body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
@@ -8047,7 +8068,7 @@ filter.items.tool.fixed.fixed_new_feed_tip = filter.item({
     observer.dom.add(updatePosition);
     util.css.add(util.str.cmt(function () { /*!CSS
       [yawf-id="home_new_feed_tip"][yawf-fixed], #home_new_feed_tip[yawf-fixed] { display: block; position: fixed; top: 66px; width: 600px; padding-top: 0; z-index: 9998; }
-      [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; } 
+      [yawf-id="home_new_feed_tip"][yawf-fixed] + .WB_feed, #home_new_feed_tip[yawf-fixed] + .WB_feed { margin-top: 40px; }
     */ noop(); }));
   }
 }).addto(filter.groups.tool);
@@ -8698,7 +8719,7 @@ filter.items.tool.weibotool.fold_child_comment = filter.item({
         var unfold = util.dom.create(util.str.fill(html.unfoldChildComment,
           { 'mid': mid, 'comment_id': commentId, 'child_count': childCount }));
         reply.parentNode.insertBefore(unfold, reply.nextSibling);
-        
+
         childCommentList.forEach(function (childComment) {
           childComment.parentNode.style.display = 'none';
         });
@@ -9454,7 +9475,7 @@ filter.items.style.layout.avatar_shape = filter.item({
     util.css.add(this.ref.shape.conf === 'square' ? util.str.cmt(function () { /*!CSS
       .W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box, .PCD_counter_b .pic_box, .WB_feed_v3 .WB_sonFeed .WB_face, .WB_feed_v3 .WB_sonFeed .WB_face .face img { border-radius: 0 !important; }
     */ noop(); }) : util.str.cmt(function () { /*!CSS
-      img[usercard], .WB_face img { border-radius: 50% !important; } 
+      img[usercard], .WB_face img { border-radius: 50% !important; }
     */ noop(); }));
   },
 }).addto(filter.groups.style);
@@ -9580,9 +9601,9 @@ filter.items.style.layout.width_weibo = filter.item({
       body:not([yawf-weibo-only]) #plc_main { width: calc({{width}} + 250px) !important; }
       body:not([yawf-weibo-only]) .WB_main_c,
       body:not([yawf-weibo-only]) .WB_frame_c { width: {{width}}; }
-      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); } 
+      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); }
       body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 312px); }
-      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); } 
+      body:not([yawf-weibo-only]) .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); }
       body:not([yawf-weibo-only]) a.W_gotop { margin-left: calc({{width}} / 2 + 200px); }
       body:not([yawf-weibo-only]) #home_new_feed_tip[yawf-fixed],
       body:not([yawf-weibo-only]) [yawf-id="home_new_feed_tip"][yawf-fixed] { width: {{width}}; top: 15px }
@@ -9718,8 +9739,8 @@ filter.items.style.layout.weibo_only = filter.item({
       body[{{attr}}] #plc_main { width: calc({{width}} + 20px) !important; max-width: 100%; }
       body[{{attr}}] .WB_global_nav { position: static; margin-top: -50px; }
       body[{{attr}}] .WB_main_c { width: {{width}}; max-width: calc(100% - 20px); }
-      body[{{attr}}] .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); max-width: calc(100% - 300px); } 
-      body[{{attr}}] .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); max-width: calc(100% - 400px); } 
+      body[{{attr}}] .WB_tab_a .tab_box_a .fr_box { width: calc({{width}} - 300px); max-width: calc(100% - 300px); }
+      body[{{attr}}] .WB_tab_a .tab_box_a_r2_s .fr_box { width: calc({{width}} - 400px); max-width: calc(100% - 400px); }
       body[{{attr}}] .WB_tab_a .tab_box_a_r6 .fr_box { width: calc({{width}} - 312px); }
       body[{{attr}}] .WB_timeline { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
       body[{{attr}}] a.W_gotop { margin-left: calc({{width}} / 2 + 10px); max-width: calc(100% - 10px); }
@@ -9837,12 +9858,12 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed_type .WB_detail > .WB_info, .WB_detail > .WB_info ~ .WB_text,
       .WB_feed_type .WB_detail .WB_expand > .WB_info, .WB_expand > .WB_info ~ .WB_text { display: inline; word-wrap: break-word; }
-      
+
       .WB_feed_type .WB_detail > .WB_info::after, .WB_expand > .WB_info::after { content: "："; }
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text::before { display: block; float: right; content: " "; width: 14px; height: 1px; }
 
       .WB_feed_type .WB_detail > .WB_info + .WB_from { display: none; }
-      
+
       .WB_feed_type[yawf-hide_box] .WB_detail > .WB_info ~ .WB_text::before { width: 37px; }
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text + .WB_from { margin-top: 1em; }
 
@@ -9923,7 +9944,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a { margin: 0; width: auto; }
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: none; max-height: none; min-width: auto; }
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-width: 260px; max-width: 40vw; max-height: 260px; max-height: 40vh; min-width: auto; }
-      
+
       .html5-video.hv-c1 { width: 120px; height: 80px; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video.WB_video_h5 { width: auto; height: auto; display: table; }
     */ noop(); }).replace(/\/\/.*\n/g, '\n'));
@@ -9973,7 +9994,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed_type .WB_feed_handle .WB_row_line .line .icon_praised_b, .WB_feed_type .WB_feed_handle .WB_row_line .line .icon_praised_bc { margin: 1px 0 0 !important; }
       .WB_feed_type .WB_feed_handle .WB_row_line .W_arrow_bor { top: 0px !important; }
       .WB_feed_repeat, .WB_feed_together { margin-bottom: -10px !important; padding-bottom: 10px !important; }
-        
+
       .WB_feed [node-type="feed_list_timeTip"], .WB_feed .yawf-timeTip { height: 30px !important; margin: -16px 0 -15px !important; background: transparent !important; text-align: center !important; }
       .WB_feed [node-type="feed_list_timeText"], .WB_feed .yawf-timeTip div { display: inline-block !important; color: rgba(128, 128, 128, 0.6) !important; }
 
@@ -10673,7 +10694,7 @@ wbp.converter.table = function () {
   m('HotSearch', 'weibo.layoutHideNavHotSearch'); // 大家正在热搜（搜索栏）
   n(null, 'weibo.layoutHideNavNoticeNew');
   n(null, 'weibo.layoutHideNavSettingNew');
-  n(null, 'weibo.layoutHideNavHotTip');
+  d('noHotYellowTags', 'weibo.layoutHideNavHotTip');
   n(null, 'weibo.layoutHideLeftHome');
   n(null, 'weibo.layoutHideLeftFav');
   n(null, 'weibo.layoutHideLeftLike');
@@ -10696,7 +10717,7 @@ wbp.converter.table = function () {
   m('Member', 'weibo.layoutHideRightMember'); // 会员专区
   n(null, 'weibo.layoutHideRightGroups');
   n(null, 'weibo.layoutHideRightRecomGroupUser');
-  n(null, 'weibo.layoutHideRightHongbaoRank');
+  m('Hongbao', 'weibo.layoutHideRightHongbaoRank');
   m('MovieRecom', 'weibo.layoutHideRightMovie'); // 电影热议榜
   m('AttFeed', 'weibo.layoutHideRightAttFeed'); // 好友关注动态
   n(null, 'weibo.layoutHideRightTaobaoMovie');
@@ -10766,7 +10787,7 @@ wbp.converter.table = function () {
   d(null, 'weibo.tool.showAllMsgNav.dmsub', false);
   d('showAllMsgNav', 'weibo.tool.showAllMsgNav'); // 在左边栏增加消息导航（“评论”、“私信”等）
   d('showAllGroups', 'weibo.tool.showAllGroup'); // 展开分组栏中的所有分组
-  d(null, 'weibo.tool.mergeColumns.side', 'left'); // 去除首页右边栏 
+  d(null, 'weibo.tool.mergeColumns.side', 'left'); // 去除首页右边栏
   d('noHomeMargins', 'weibo.tool.mergeColumns'); // 去除首页右边栏 // ⚠️ YAWF未提供去除右边栏的功能，使用将右边栏合并到左侧作为替代
   n(null, 'weibo.tool.chose_side.side');
   n(null, 'weibo.tool.chose_side');
@@ -10829,7 +10850,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.weibo_only._enabled');
   d(null, 'weibo.tool.weibo_only', true); // 启用极简阅读模式 // ⚠️ 具体样式稍有不同
   n(['readerModeIndex', 'readerModeProfile'], null); // ⚠️ YAWF 不提供通过设置开关阅读视图的选项
-  d('skinID', 'weibo.tool.set_skin.skin'); // 覆盖我的首页模板设置为 
+  d('skinID', 'weibo.tool.set_skin.skin'); // 覆盖我的首页模板设置为
   d('overrideMySkin', 'weibo.tool.set_skin'); // 覆盖我的首页模板设置为 // ⚠️ YAWF 不提供对首页和个人主页的分开设置
   n(null, 'weibo.tool.feedlist_nav_fix');
   d('unwrapText', 'weibo.tool.unwrapText'); // 微博作者与正文间不折行
@@ -10960,7 +10981,7 @@ updater.showfuncset = util.func.catched(function (itemSelector, title, genConten
   var count = newFilters.count();
   if (count === 0) return; // 如果没有选出任何功能，则不显示对话框
   // 显示对话框
-  var dialog = util.ui.dialog('yawf-funcset', title, function (inner) { 
+  var dialog = util.ui.dialog('yawf-funcset', title, function (inner) {
     var content = genContent(count);
     if (content.header) inner.appendChild(content.header);
     newFilters.show(content.body);
@@ -11202,8 +11223,8 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
     .gn_topmenulist_search { width: 437px !important; }
   }
   @media screen and (max-width:1006px) {
-    .WB_global_nav .gn_search_v2 { width: 115px !important; } 
-    .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 72px !important; } 
+    .WB_global_nav .gn_search_v2 { width: 115px !important; }
+    .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 72px !important; }
     .gn_topmenulist_search { width: 117px !important; }
   }
   .gn_topmenulist_search { min-width: 200px !important; }
@@ -11435,6 +11456,6 @@ util.init(function () {
  * Copyright (c) 2014-2016 田生
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 脚本项目地址 https://github.com/tiansh/yawf
  */
