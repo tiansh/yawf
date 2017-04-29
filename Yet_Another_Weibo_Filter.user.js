@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.436
+// @version           3.7.437
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -328,9 +328,9 @@ var text = {
   'fansTopFilterDesc': {
     'zh-cn': '粉丝头条会显示在首页微博列表的顶端，一般标记“热门”等字样。粉丝头条是新浪微博官方的一项推广产品，使用粉丝头条的微博可在 24 小时内出现在所有微博粉丝首页的第一位。粉丝头条微博总是来自于您关注的人。',
   },
-  'productCardWeibo': { 'zh-cn': '带有商品卡片的微博{{<i>}}', 'zh-hk': '帶有商品卡片的微博{{<i>}}', 'zh-tw': '帶有商品卡片的微博{{<i>}}', 'en': 'Weibo with product weibo card{{<i>}}' },
+  'productCardWeibo': { 'zh-cn': '带有微博橱窗商品链接的微博{{<i>}}', 'zh-hk': '帶有微博櫥窗商品連接的微博{{<i>}}', 'zh-tw': '帶有微博櫥窗商品連接的微博{{<i>}}', 'en': 'Weibo with link to weibo shop {{<i>}}' },
   'productCardWeiboDesc': {
-    'zh-cn': '带有商品卡片的微博，卡片中一般有一个“去购买”按钮链接到商品页面，可在微博内购买对应商品。此类微博一般是对应商品的宣传，勾选以隐藏此类微博。',
+    'zh-cn': '带有微博橱窗商品链接的微博，点击链接可以到商品的购买页面。勾选以隐藏此类微博。',
   },
   'taobaoTianmaoWeibo': { 'zh-cn': '带有淘宝、天猫或聚划算商品的微博{{<i>}}', 'zh-hk': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'zh-tw': '帶有淘寶、天貓或聚划算商品的微博{{<i>}}', 'en': 'Weibo with Taobao / Tmall / Juhuasuan commodity{{<i>}}' },
   'taobaoTianmaoWeiboDesc': {
@@ -1212,7 +1212,8 @@ var font = {
     ['"DengXian", "等线"', '等线'],
     ['"WenQuanYi Zen Hei", "文泉驿正黑"', '文泉驿正黑'],
     ['"WenQuanYi Micro Hei", "文泉驿微米黑"', '文泉驿微米黑'],
-    ['"Noto Sans CJK SC", "思源黑体 SC"', '思源黑体'],
+    ['"Noto Sans CJK SC", "Source Han Sans SC", "思源黑体 SC"', '思源黑体'],
+    ['"Noto Serif CJK SC", "Source Han Serif SC", "思源宋体 SC"', '思源宋体'],
     ['"SimKai", "楷体"', '中易楷体'],
     ['"PMingLiU", "新細明體"', '新細明體'],
     ['"MingLiU", "細明體"', '細明體'],
@@ -1221,7 +1222,8 @@ var font = {
     ['"PingFang HK", "蘋方-港"', '蘋方-港'],
     ['"LiHei Pro Medium", "儷黑 Pro"', '儷黑 Pro'],
     ['"Microsoft JhengHei", "微軟正黑體"', '微軟正黑體'],
-    ['"Noto Sans CJK TC", "思源黑體 TC"', '思源黑體'],
+    ['"Noto Sans CJK TC", "Source Han Sans TC", "思源黑體 TC"', '思源黑體'],
+    ['"Noto Serif CJK TC", "Source Han Serif TC", "思源宋體 TC"', '思源宋體'],
     ['"DFKai-SB", "BiauKai", "標楷體"', '標楷體'],
   ]
 };
@@ -1410,7 +1412,7 @@ util.func.performance = (util.script.isdebug && ('performance' in window)) ? (fu
   }, mfuncs = {}, recorded = {};
   return function (f) {
     if (!f.name) { console.log('function name needed: %o', f); return f; }
-    if (recorded[f.name] && recorded[f.name] !== f) { console.log('duplicate function name: %o, %o', recorded[f.name], f); return f; } else recorded[f.name] = f;
+    if (recorded[f.name] && recorded[f.name] !== f) { console.log('duplicate function name (%s): %o, %o', f.name, recorded[f.name], f); return f; } else recorded[f.name] = f;
     if (!mfuncs[f.name]) mfuncs[f.name] = mfunc(f);
     return mfuncs[f.name];
   };
@@ -4980,21 +4982,23 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
   'ainit': function () {
     // 发现当前不是搜索，就跳转到搜索去
     var updateLocation = function redirectHomeWeiboUseSearch() {
-      // 只在首页工作
+      // 首页才需要 is_search ，其他有些页面可能是因为从首页点过去的时候误带参数，需要特殊处理
       var homefeed = document.getElementById('v6_pl_content_homefeed');
       var nothomefeed = document.getElementById('v6_pl_content_commentlist');
-      if (!homefeed && !nothomefeed) return;
+      var ismessage = document.getElementById('v6_pl_content_messagesearch');
+      if (!homefeed && !nothomefeed && !ismessage) return;
       var a = util.dom.create('a', ''); a.href = location.href;
       // 检查是否添加了 is_search 关键词
       var query = util.str.parsequery(location.search.slice(1));
       var has_is_search = 'is_search' in query;
+      var has_keyword = 'key_word' in query && query.key_word && query.key_word.replace(/[\\"'<\n+$]/g, '');
       var all_search_types = ['is_ori', 'is_pic', 'is_video', 'is_music', 'is_article'];
       var is_other_search = all_search_types.some(function (t) { return t in query; });
-      var is_search_needed = homefeed && !is_other_search;
+      var is_search_needed = homefeed && !is_other_search || (ismessage && has_is_search && has_keyword);
       do {
         if (has_is_search && is_search_needed) {
           // 如果添加了 is_search，但是并没有搜索关键词，那么隐藏掉搜索到多少条微博的提示信息
-          if ('key_word' in query) break;
+          if (has_keyword) break;
           var searchTip = homefeed.querySelector('.WB_result');
           if (searchTip) searchTip.parentNode.removeChild(searchTip);
         } else if (has_is_search && !is_search_needed) {
@@ -5006,7 +5010,7 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
           // 如果没有添加 is_search ，而且不是分组、不是悄悄关注，则自动跳转到 is_search
           if (('gid' in query) || ('whisper' in query)) break;
           query.is_search = '1';
-          a.search = '?' + util.str.toquery(query);
+          a.search = '?' + util.str.toquery(query) + '&key_word=+';
           location.replace(a.href);
         }
       } while (false);
@@ -5022,7 +5026,7 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
         s.is_search = '1';
-        l.search = util.str.toquery(s);
+        l.search = util.str.toquery(s) + '&key_word=+';
       });
     };
     observer.dom.add(updateHomeLinksWithIsSearch);
@@ -6043,6 +6047,8 @@ filter.items.other.hidethese_ad.product_card = filter.item({
     if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="1022-product"]'))
       return 'hidden';
     if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="2017845002-product"]'))
+      return 'hidden';
+    if (feed.querySelector('a[action-type="feed_list_url"][suda-uatrack*="2017845002-product"]'))
       return 'hidden';
     return null;
   },
@@ -7144,7 +7150,7 @@ filter.predef.group('layout');
   item('HotTopic', 5, '[id^="Pl_Core_RightTextSingle__"], .WB_frame_b [id^="Pl_Core_RightTextSingle__"] { display: none !important; }');
   item('HotWeibo', 5, '[id^="Pl_Core_RightPicText__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
   item('UserList', 164, '[id^="Pl_Core_Ut1UserList__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
-  item('Hongbao', 199, '[yawf-id="yawf-pr-hongbao"] { display: none !important; }');
+  item('Hongbao', 199, '[yawf-id="yawf-pr-hongbao"], .WB_red2017 { display: none !important; }');
   item('WenwoDr', 337, '[yawf-obj-name="爱问医生"] { display: none !important; }'); // 对应模块没有繁体或英文翻译
   item('Timeline', 164, '[id^="Pl_Official_TimeBase__"] { display: none !important; }');
 
@@ -7283,8 +7289,6 @@ filter.predef.group('layout');
     'h4.obj_name a[href*="pop.weibo.com"]': 'v6_pl_rightmod_rank_pop',
     'div.obj_name a[href*="100808faecebff8a54b97a91699c654e5f4cda"]': 'v6_pl_rightmod_rank_hong',
   });
-  observer.dom.add(tagRightbarMods);
-  tagRightbarMods();
 
   // 标记个人主页的模块
   var tagPLeftModsName = function () {
@@ -7314,7 +7318,12 @@ filter.predef.group('layout');
     tagPLeftModsName();
     tagPLeftModsQs();
   };
-  observer.dom.add(tagPLeftMods);
+
+  observer.dom.add(function tagMods() {
+    tagRightbarMods();
+    tagPLeftMods();
+  });
+  tagRightbarMods();
   tagPLeftMods();
 
 }());
@@ -11345,7 +11354,8 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .type_spe_pos,
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen):not(.WB_feed_detail) { display: none !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { top: 10px; min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
-  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { padding-top: 0; padding-bottom: 0; }
+  [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail,
+  [node-type="feed_list"].WB_feed.WB_feed_v3 .WB_feed_type[yawf-display$="-fold"] .WB_feed_vipcover .WB_feed_detail { padding-top: 0; padding-bottom: 0; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { padding: 10px 15px; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 1em 20px; border: 1px solid; border-color: transparent; margin: 0 1em; width: calc(100% - 6em - 2px); cursor: pointer; opacity: 0.8; }
