@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.438
+// @version           3.7.439
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4985,14 +4985,15 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
     var updateLocation = function redirectHomeWeiboUseSearch() {
       // 首页才需要 is_search ，其他有些页面可能是因为从首页点过去的时候误带参数，需要特殊处理
       var homefeed = document.getElementById('v6_pl_content_homefeed');
-      var nothomefeed = document.getElementById('v6_pl_content_commentlist');
+      var nothomefeed = document.getElementById('v6_pl_content_commentlist') ||
+        document.querySelector('[id^="Pl_Official_MyProfileFeed__"]');
       var ismessage = document.getElementById('v6_pl_content_messagesearch');
       if (!homefeed && !nothomefeed && !ismessage) return;
       var a = util.dom.create('a', ''); a.href = location.href;
       // 检查是否添加了 is_search 关键词
       var query = util.str.parsequery(location.search.slice(1));
       var has_is_search = 'is_search' in query;
-      var has_keyword = 'key_word' in query && query.key_word && query.key_word.replace(/[\\"'<\n+$]/g, '');
+      var has_keyword = 'key_word' in query && query.key_word && query.key_word.replace(/[/\\"'<\n+$]/g, '');
       var all_search_types = ['is_ori', 'is_pic', 'is_video', 'is_music', 'is_article'];
       var is_other_search = all_search_types.some(function (t) { return t in query; });
       var is_search_needed = homefeed && !is_other_search || (ismessage && has_is_search && has_keyword);
@@ -5005,6 +5006,7 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
         } else if (has_is_search && !is_search_needed) {
           // 评论页面不应该使用 is_search ，但是点击小黄签时会有问题，所以在这里处理一下
           delete query.is_search;
+          delete query.key_word;
           a.search = '?' + util.str.toquery(query);
           location.replace(a.href);
         } else if (!has_is_search && is_search_needed) {
@@ -6831,7 +6833,7 @@ filter.predef.group('layout');
   item('Taobao', 5, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }', { 'extt': '<i class="W_icon icon_taobao" style="display:inline-block!important"></i><i class="W_icon icon_tmall" style="display:inline-block!important"></i>' });
   item('Cheng', 373, '.icon_cheng { display: none !important; }', { 'extt': '<i class="W_icon icon_cheng" style="display:inline-block!important"></i>' });
   item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }', { 'extt': '<i class="W_icon icon_gongyi" style="display:inline-block!important"></i>' });
-  item('Suishoupai', 146, '.suishoupai2014, .icon_suishoupai2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_suishoupai2014" style="display:inline-block!important"></i>' });
+  item('Suishoupai', 146, '.suishoupai2014, .icon_suishoupai2014, .W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i>' });
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_zongyika2014" style="display:inline-block!important"></i>' });
   item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }', { 'extt': '<i class="W_icon icon_airball" style="display:inline-block!important"></i>' });
   item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }', { 'extt': '<i class="W_icon icon_double11" style="display:inline-block!important"></i>' });
