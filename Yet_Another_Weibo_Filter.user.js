@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.437
+// @version           3.7.438
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -373,7 +373,7 @@ var text = {
   'wenwoDrWeiboDesc': {
     'zh-cn': '爱问医生健康科普文章是一些来自 wenwo.com 的健康、医疗相关文章。打开爱问医生健康科普文章的网站时，您可能会自动关注文章作者或相应帐号。开启以隐藏包含此类文章的微博。',
   },
-  'yizhiboWeibo': { 'zh-cn': '含有“一直播”视频直播的微博|{{<type>}}', 'zh-hk': '含有「一直播」直播視頻的微博|{{<type>}}', 'zh-tw': '含有「一直播」直播視頻的微博|{{<type>}}', 'en': 'Weibo with live video on yizhibo | {{<type>}}' },
+  'yizhiboWeibo': { 'zh-cn': '含有“一直播”视频直播的微博|{{<type>}}', 'zh-hk': '含有「一直播」直播影片的微博|{{<type>}}', 'zh-tw': '含有「一直播」直播影片的微博|{{<type>}}', 'en': 'Weibo with live video on yizhibo | {{<type>}}' },
   'yizhiboWeiboAll': { 'zh-cn': '隐藏正在直播或已结束回放', 'zh-hk': '隱藏正在直播或已結束回放', 'zh-tw': '隱藏正在直播或已結束回放', 'en': 'hide live and replay' },
   'yizhiboWeiboReplay': { 'zh-cn': '仅隐藏已结束回放', 'zh-hk': '僅隱藏已結束回放', 'zh-tw': '僅隱藏已結束回放', 'en': 'hide replay only' },
   'stockWeibo': { 'zh-cn': '含有股票链接的微博{{<i>}}', 'zh-hk': '含有股票連結的微博{{<i>}}', 'zh-tw': '含有股票連結的微博{{<i>}}', 'en': 'Weibo with stock link {{<i>}}' },
@@ -723,11 +723,12 @@ var text = {
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'noTagDialog': { 'zh-cn': '屏蔽收藏微博时的添加标签对话框', 'zh-hk': '阻擋收藏微博時的添加標籤對話方塊', 'zh-tw': '阻擋收藏微博時的添加標籤對話方塊', 'en': 'Block the dialog after marking weibo favorite' },
-  'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍視頻時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
+  'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍影片時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍影片時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
   'html5VdieoDesc': {
     'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
   },
   'foldDetails': { 'zh-cn': '收起', 'zh-hk': '收起', 'zh-tw': '收起', 'en': '收起'/* as is */ },
+  'disableAutoPlay': { 'zh-cn': '禁用视频自动播放', 'zh-hk': '停用影片自動播放', 'zh-tw': '停用影片自動播放', 'en': 'Disable video auto play' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为短网址', 'zh-hk': '將微博中的网页链接替換為短網址', 'zh-tw': '將微博中的网页链接替換為短網址', 'en': 'Replace 网页链接 in Weibo by shortened URL' },
@@ -5010,7 +5011,8 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
           // 如果没有添加 is_search ，而且不是分组、不是悄悄关注，则自动跳转到 is_search
           if (('gid' in query) || ('whisper' in query)) break;
           query.is_search = '1';
-          a.search = '?' + util.str.toquery(query) + '&key_word=+';
+          query.key_word = '"';
+          a.search = '?' + util.str.toquery(query);
           location.replace(a.href);
         }
       } while (false);
@@ -5026,7 +5028,8 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
         s.is_search = '1';
-        l.search = util.str.toquery(s) + '&key_word=+';
+        s.key_word = '"';
+        l.search = util.str.toquery(s);
       });
     };
     observer.dom.add(updateHomeLinksWithIsSearch);
@@ -8597,6 +8600,18 @@ if (function supportMp4Video() {
   }
 }).addto(filter.groups.tool);
 
+// 禁止视频自动播放
+filter.items.tool.weibotool.disable_auto_play = filter.item({
+  'group': 'weibotool',
+  'version': 438,
+  'type': 'boolean',
+  'key': 'weibo.tool.disable_auto_play',
+  'text': '{{disableAutoPlay}}',
+  'ainit': function () {
+    unsafeWindow.$CONFIG.isAuto = "1";
+  }
+}).addto(filter.groups.tool);
+
 // 用 URL 替换微博内的网页链接
 filter.items.tool.weibotool.replace_link = filter.item({
   'group': 'weibotool',
@@ -10826,6 +10841,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.cardButton');
   d('directBigImg', 'weibo.tool.viewOriginal'); // 点击“查看大图”直接打开大图
   n(null, 'weibo.tool.html5Video');
+  n(null, 'weibo.tool.disable_auto_play');
   n(null, 'weibo.tool.replace_link.url');
   n(null, 'weibo.tool.replace_link');
   n(null, 'weibo.tool.replace_image_emoji');
