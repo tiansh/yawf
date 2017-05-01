@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.439
+// @version           3.7.440
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -723,12 +723,8 @@ var text = {
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'noTagDialog': { 'zh-cn': '屏蔽收藏微博时的添加标签对话框', 'zh-hk': '阻擋收藏微博時的添加標籤對話方塊', 'zh-tw': '阻擋收藏微博時的添加標籤對話方塊', 'en': 'Block the dialog after marking weibo favorite' },
-  'html5Vdieo': { 'zh-cn': '播放秒拍视频时使用 HTML5 播放器{{<i>}}', 'zh-hk': '播放秒拍影片時使用 HTML5 播放器{{<i>}}', 'zh-tw': '播放秒拍影片時使用 HTML5 播放器{{<i>}}', 'en': 'Play weibo video via HTML5 player{{<i>}}' },
-  'html5VdieoDesc': {
-    'zh-cn': '仅支持部分视频，可能有一些视频无法正常替换。此外还请确认您的浏览器支持播放 MP4 格式视频：部分操作系统上的旧版 Firefox 、Chromium 和一些基于 Chromium 的浏览器可能并不支持 MP4 格式视频。',
-  },
   'foldDetails': { 'zh-cn': '收起', 'zh-hk': '收起', 'zh-tw': '收起', 'en': '收起'/* as is */ },
-  'disableAutoPlay': { 'zh-cn': '禁用视频自动播放', 'zh-hk': '停用影片自動播放', 'zh-tw': '停用影片自動播放', 'en': 'Disable video auto play' },
+  'disableAutoPlay': { 'zh-cn': '禁用视频自动播放||{{<pause>}}视频移出屏幕时不自动暂停播放', 'zh-hk': '停用影片自動播放||{{<pause>}}影片移出荧幕时不自动暂停播放', 'zh-tw': '停用影片自動播放||{{<pause>}}影片移出荧幕时不自动暂停播放', 'en': 'Disable video auto play||{{<pause>}} Disable video auto pause after scrolled off the screen' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为短网址', 'zh-hk': '將微博中的网页链接替換為短網址', 'zh-tw': '將微博中的网页链接替換為短網址', 'en': 'Replace 网页链接 in Weibo by shortened URL' },
@@ -1122,13 +1118,17 @@ var html = {
   'leftMsgFooter': '</div>',
   // 右侧栏收藏用户列表
   'rightUserList': '<div id="yawf-rightmod_userlist"><div class="WB_cardwrap S_bg2"><div ucardconf="type=1" class="WB_right_module"><div class="WB_cardtitle_b S_line2"><h4 class="obj_name"><span title="{{rightUserListTitle}}" class="main_title W_fb W_f14 S_txt1"></a>{{rightUserListTitle}}</h4><div class="opt_box"><a class="W_ficon ficon_setup S_ficon">J</a></div></div><div class="WB_innerwrap"><div class="m_wrap clearfix"><ul class="group_list"></ul></div></div></div></div></div>',
-  'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb">{{name}}</a><span class="W_new" style="display:none"></span></p></div></li>',
+  'rightUserListItem': '<li node-type="row" class="S_line2"><div class="pic"><a href="/u/{{id}}" title="{{name}}" target="_blank"><img width="30" height="30" src="{{avatar}}" alt="{{name}}" usercard="id={{id}}"></a></div><div class="con"><p class="name"><a usercard="id={{id}}" href="/u/{{id}}" class="S_txt1 W_fb" target="_blank">{{name}}</a><span class="W_new" style="display:none"></span></p></div></li>',
   'rightUserListConfig': '<div class="yawf-fave-people-config-body yawf-window-body"></div>',
   // 屏蔽微博
   'hideBoxSimple': '<div class="yawf-hide_box"><a href="javascript:void(0);" title="{{hideThisWeibo}}"><i class="W_ficon ficon_close S_ficon">X</i></a></div>',
   // 查看原图
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   'viewOriginalFCLink': '<a imagecard="pid={{pid}}" href="javascript:void(0);"><i class="W_ficon ficon_cd_img WBficon">¡</i>{{viewOriginalFCText}}</a>',
+  // 视频位置标记符
+  'videoFakePlaceholderContainer': '<div class="yawf-video-fake-placeholder-container" style="height: 0; width: 100%; overflow: hidden; position: relative;"></div>',
+  'videoFakePlaceholder': '<div class="yawf-video-fake-placeholder" yawf-fake-placeholder="yawf-fake-placeholder" style="width: 1px; height: 2000000px; position: absolute; top: -1000000px; z-index: -1;" node-type="fl_h5_video"></div>',
+  'videoDocumentHeightNotifier': '<div style="width: 100%; height: 10px; display: table; clear: both; overflow: hidden; position: relative;"></div>',
   // 视频播放
   'videoMediaDisplay': '<div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div>',
   'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
@@ -8531,86 +8531,64 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
   }
 }).addto(filter.groups.tool);
 
-// 使用 HTML5 播放器播放秒拍视频
-if (function supportMp4Video() {
-    var v = util.dom.create('video', '');
-    return !!(v.canPlayType && v.canPlayType('video/mp4').replace(/no/, ''));
-}()) filter.items.tool.weibotool.html5_video = filter.item({
-  'group': 'weibotool',
-  'version': 261,
-  'type': 'boolean',
-  'default': false,
-  'key': 'weibo.tool.html5Video',
-  'text': '{{html5Vdieo}}',
-  'ref': {
-    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{html5VdieoDesc}}' },
-  },
-  'replace': {
-    '1034': function (id, got) { network.video.get['1034'](id, got); return true; },
-    '2017607': function (id, got) {
-      var a = document.querySelector('a[suda-uatrack*="2017607-video:2017607%3A' + id.split(':')[1] + '"]');
-      if (!a) return false;
-      network.video.get['2017607'](a.href, got);
-      return true;
-    },
-  },
-  'ainit': function () {
-    var that = this;
-    document.body.addEventListener('click', function (e) {
-      // 首先我们先找到所有有用的节点
-      // 确定是不是点在了视频上，视频是什么类型
-      var target = e.target;
-      if (!util.dom.matches(target, '.WB_video, .WB_video *')) return;
-      var matches = [
-        '[action-type="feed_list_third_rend"]',
-        '[node-type="feed_list_media_prev"]'
-      ];
-      var results = [];
-      while (results.length !== matches.length && target) {
-        while (results.length !== matches.length &&
-          util.dom.matches(target, matches[results.length])) results.push(target);
-        target = target.parentNode;
-      }
-      if (!target) return;
-      util.debug('click match video: %o', results);
-      var button = results[0], prev = results[1];
-      var disp = prev.parentNode.querySelector('[node-type="feed_list_media_disp"]');
-
-      // 然后我们根据 id 判断是哪种视频，并按种类分开处理
-      var attr = util.str.parsequery(button.getAttribute('action-data'));
-      // 这个属性有时候是 objectid 有时候是 object_id
-      // 就像我头一次听说某视频站获取视频地址成功时的状态一会儿是 succ 一会儿是 suee 一样神奇
-      var id = attr.objectid || attr.object_id;
-      util.debug('media objectid: %o', id);
-      var group = id.split(':')[0];
-      if (!that.replace[group]) return;
-      util.debug('clicked on a video, with id = %o', id);
-
-      // 替换成功之后生成网页
-      var gotURL = function (url) {
-        var view = disp.querySelector('.WB_app_view');
-        view.innerHTML = util.str.fill(html.videoMediaPlayer, { 'url': url });
-      };
-      if (!that.replace[group](id, gotURL)) return;
-
-      // 如果可以成功处理，禁用原本的替换，并处理界面
-      e.preventDefault(); e.stopPropagation();
-      disp.innerHTML = util.str.fill(html.videoMediaDisplay);
-      prev.style.display = 'none';
-      disp.style.display = '';
-    }, true);
-  }
-}).addto(filter.groups.tool);
-
 // 禁止视频自动播放
 filter.items.tool.weibotool.disable_auto_play = filter.item({
   'group': 'weibotool',
-  'version': 438,
+  'version': 440,
   'type': 'boolean',
   'key': 'weibo.tool.disable_auto_play',
   'text': '{{disableAutoPlay}}',
+  'ref': { 'pause': { 'type': 'boolean' } },
+  'init': function () {
+    // 禁止自动暂停功能必须在禁止自动播放功能开启后才能开启
+    // 这样做是为了避免所有视频全在播放造成严重性能问题
+    var key = 'weibo.tool.disable_auto_play';
+    util.config.onput(key, function (newValue) {
+      if (!newValue) util.config.put(key + '.pause', false);
+    });
+    util.config.onput(key + '.pause', function (newValue) {
+      if (newValue) util.config.put(key, true);
+    });
+  },
   'ainit': function () {
+    var that = this;
     unsafeWindow.$CONFIG.isAuto = "1";
+    if (!that.ref.pause.conf) return;
+    // 微博自动暂停视频的逻辑是在页面滚动时检查视频是否移出了屏幕区域
+    // 检查时获取的视频位置是由上一次位置更新后缓存下来的
+    // 缓存更新的逻辑是视频首次加入，或页面的高度发生了变化
+    // 如果是视频首次加入，还要储存视频相关的其他参数，并给定视频一个 [unique-video] 编号
+    // 修改首次加入的流程可能导致视频无法正常播放，所以我们不考虑这个办法
+    // 而之后更新时，程序会选取所有 [node-type="fl_h5_video"][unique-video] 的元素
+    // 根据元素上 [unique-video] 指示的编号，保存视频的位置（顶部位置和高度）
+    // 由于使用的是 Sizzle 选择器逐个操作，后面的匹配项会覆盖前面的
+    // 所以这里在原有视频的后面，添加一个匹配项并触发一次页面高度变化
+    // 此时微博的程序会获取到我们的占位符，并利用它更新了视频的位置（-1000000px 到 1000000px）
+    // 一般来说，我们的页面滚动不会超过这个区域，因此对于微博的程序来说，它总会认为我们的视频没有移出屏幕
+    // 选择这种解决方法的原因是我目前只看到这个可行的办法，如果有更好的办法欢迎 PR
+    var addPlaceholder = function addPlaceholder(video) {
+      // 获取 id
+      var id = video.getAttribute('unique-video');
+      if (!id) return setTimeout(addPlaceholder, 1000, video);
+      // 创建我们的占位符并放到指定位置
+      var placeholder = util.dom.create(html.videoFakePlaceholder);
+      placeholder.setAttribute('unique-video', id);
+      var feed = util.dom.parent(video, '.WB_feed_type');
+      var container = feed.appendChild(util.dom.create(html.videoFakePlaceholderContainer));
+      container.appendChild(placeholder);
+      // 在最后增加一个元素，导致页面的高度变化，触发微博中代码的更新检查逻辑
+      var heightNotifier = document.body.appendChild(util.dom.create(html.videoDocumentHeightNotifier));
+      setTimeout(function () { heightNotifier.parentNode.removeChild(heightNotifier); }, 3000);
+    };
+    var addFakeVideoPlaceholder = function addFakeVideoPlaceholder() {
+      var videoes = Array.from(document.querySelectorAll('[node-type="feed_list"] [node-type="fl_h5_video"]:not([yawf-fake-placeholder])'));
+      videoes.forEach(function (video) {
+        addPlaceholder(video);
+        video.setAttribute('yawf-fake-placeholder', 'yawf-fake-placeholder');
+      });
+    };
+    addFakeVideoPlaceholder();
+    observer.dom.add(addFakeVideoPlaceholder);
   }
 }).addto(filter.groups.tool);
 
@@ -9730,8 +9708,8 @@ filter.items.style.layout.weibo_only = filter.item({
       if (valid !== enabled) {
         if (valid) document.body.setAttribute(attr, attr);
         else document.body.removeAttribute(attr);
+        that.ref.enabled.putconf(enable);
       }
-      that.ref.enabled.putconf(enable);
     };
     // 检查快捷键按键
     if (key.conf) util.keyboard.reg('keyup', key.conf, function (e) {
@@ -9988,7 +9966,6 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto; }
       .WB_feed.WB_feed_v3 .layer_view_morepic .view_pic { padding: 0 40px 20px; }
       .WB_feed.WB_feed_v3 .WB_media_view .pic_choose_box .stage_box { width: 440px; }
-      .WB_feed_expand .html5-video.hv-c3 { margin-left: -22px; }
     */ noop(); }).replace(/\/\/.*\n/g, '\n'));
     // FIXME 八图或九图时，展开后图片列表显示不完整
   },
