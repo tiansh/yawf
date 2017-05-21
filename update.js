@@ -28,7 +28,7 @@ const updateMetaFile = function (targetFile, meta) {
 };
 
 ; (function () {
-  let inputFolder = `../userscripts`;
+  let inputFolder = `../master`;
   let outputFolder = `../pages`;
   let scriptName = 'Yet_Another_Weibo_Filter';
   new Promise((resolve, reject) => {
