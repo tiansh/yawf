@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.443
+// @version           3.7.444
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -706,7 +706,6 @@ var text = {
   'disableNotificationDesc': {
     'zh-cn': '勾选以禁用微博的桌面提示，您也可以直接在浏览器的权限管理中禁用微博的桌面提示功能，但这样做您将同样无法使用脚本提供的桌面提示功能。'
   },
-  'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
@@ -718,16 +717,8 @@ var text = {
   'cardButtonDesc': {
     'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
   },
-  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}||{{<direct>}}点击缩略图时直接查看原图', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'en': 'add "Original Picture" link | which target to {{<open>}} || {{<direct>}} View orignal picture by clicking on thumbnail' },
-  'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
-  'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
-  'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'noTagDialog': { 'zh-cn': '屏蔽收藏微博时的添加标签对话框', 'zh-hk': '阻擋收藏微博時的添加標籤對話方塊', 'zh-tw': '阻擋收藏微博時的添加標籤對話方塊', 'en': 'Block the dialog after marking weibo favorite' },
   'foldDetails': { 'zh-cn': '收起', 'zh-hk': '收起', 'zh-tw': '收起', 'en': '收起'/* as is */ },
-  'disableAutoPlay': { 'zh-cn': '禁用视频自动播放||{{<pause>}}视频移出屏幕时不自动暂停播放', 'zh-hk': '停用影片自動播放||{{<pause>}}影片移出熒幕是不自動暫停播放', 'zh-tw': '停用影片自動播放||{{<pause>}}影片移出熒幕是不自動暫停播放', 'en': 'Disable video auto play||{{<pause>}} Disable video auto pause after scrolled off the screen' },
-  'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
-  'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
-  'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为短网址', 'zh-hk': '將微博中的网页链接替換為短網址', 'zh-tw': '將微博中的网页链接替換為短網址', 'en': 'Replace 网页链接 in Weibo by shortened URL' },
   'replaceImageEmoji': { 'zh-cn': '将微博中图片表示的 Unicode 表情符号替换为文本{{<i>}}', 'zh-hk': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'zh-tw': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'en': 'Use text for unicode emoji instead of image {{<i>}}' },
   'replaceImageEmojiDesc': {
@@ -740,6 +731,26 @@ var text = {
   },
   'foldChildComment': { 'zh-cn': '默认折叠二级评论', 'zh-hk': '預設折疊二級評論', 'zh-tw': '預設折疊二級評論', 'en': 'Fold child comments by default' },
   'commentShowAll': { 'zh-cn': '查看评论时自动切换到全部评论', 'zh-hk': '查閱評論時自動切換到全部評論', 'zh-tw': '查閱評論時自動切換到全部評論', 'en': 'Automatically switch view of comments to all' },
+  // 图片和视频
+  'mediaToolsTitle': { 'zh-cn': '图片与视频', 'zh-hk': '圖片與視頻', 'zh-tw': '圖片與視頻', 'en': 'Images &amp; Videos' },
+  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}||{{<direct>}}点击缩略图时直接查看原图', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'en': 'add "Original Picture" link | which target to {{<open>}} || {{<direct>}} View orignal picture by clicking on thumbnail' },
+  'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
+  'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
+  'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
+  'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
+  'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
+  'disableAutoPause': { 'zh-cn': '禁止视频随页面滚动自动播放与暂停|{{<i>}}', 'zh-hk': '禁用影片雖頁面滾動自動播放與暫停|{{<i>}}', 'zh-tw': '用影片雖頁面滾動自動播放與暫停|{{<i>}}', 'en': 'Disable video\'s auto play or auto pause when page scrolled | {{<i>}}' },
+  'disableAutoPlayNoticeTitle': {
+    'zh-cn': '禁用自动播放'
+  },
+  'disableAutoPlayNotice': {
+    'zh-cn': '打开本功能会禁用视频的自动播放。但仍强烈建议您在微博的<a target="_blank" href="http://account.weibo.com/set/prefer">偏好设置</a>中，关闭“视频自动播放”，以获得更好的效果。'
+  },
+  'disableAutoPauseDesc': { 'zh-cn': '{{disableAutoPlayNotice}}', },
+  'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
+  'videoAddFold': { 'zh-cn': '给视频添加“收起”按钮|{{<i>}}', 'zh-hk': '添加影片收起按鈕|{{<i>}}', 'zh-tw': '添加影片收起按鈕|{{<i>}}', 'en': 'Add fold button for videos | {{<i>}}' },
+  'videoAddFoldDesc': { 'zh-cn': '{{disableAutoPlayNotice}}' },
+  'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
   // 关注
   'followingToolsTitle': { 'zh-cn': '关注', 'zh-hk': '關注', 'zh-tw': '關注', 'en': 'Following' },
   'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化（试验性）|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list (Experimental) | {{<frequency>}}{{<i>}}' },
@@ -1131,8 +1142,7 @@ var html = {
   'videoFakePlaceholder': '<div class="yawf-video-fake-placeholder" yawf-fake-placeholder="yawf-fake-placeholder" style="width: 1px; height: 2000000px; position: absolute; top: -1000000px; z-index: -1;" node-type="fl_h5_video"></div>',
   'videoDocumentHeightNotifier': '<div style="width: 100%; height: 10px; display: table; clear: both; overflow: hidden; position: relative;"></div>',
   // 视频播放
-  'videoMediaDisplay': '<div class="WB_expand_media S_bg1"><div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a class="S_txt1" href="javascript:;" action-type="feed_list_media_toSmall"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div><div class="WB_app_view" node-type="feed_list_media_widgetDiv"><img class="loading_gif" src="http://img.t.sinajs.cn/t6//style/images/common/loading.gif"></div></div>',
-  'videoMediaPlayer': '<video src="{{url}}" autoplay="autoplay" controls="controls" style="max-width: 482px; max-height: 482px;"></video>',
+  'videoFold': '<div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a action-type="feed_list_media_toSmall" href="javascript:;" class="S_txt1" yawf-link-type="k"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div>',
   // 拖拽
   'dropArea': '<div id="yawf-drop-area" style="display: none;"><div class="yawf-drop-area-desc"><div class="yawf-drop-area-title">{{dropAreaTitle}}</div><div class="yawf-drop-area-text">{{dropAreaText}}</div></div><div contenteditable="true" id="yawf-drop-area-content"></div></div>',
   'fastFilterHeader': '<div id="yawf-fast-filter-chose"><div class="yawf-fast-filter-option"><span class="yawf-fast-filter-text">{{fastFilterChoseText}}</span><ul id="yawf-fast-filter-list">',
@@ -1626,7 +1636,8 @@ util.dom.matches = (function () {
 }());
 
 // 找到符合条件的父节点
-util.dom.parent = function (node, selector) {
+util.dom.closest = function (node, selector) {
+  if (node.closest) return node.closest(selector);
   while (node && !util.dom.matches(node, selector)) node = node.parentNode;
   return node || null;
 };
@@ -8304,7 +8315,7 @@ filter.items.tool.weibotool.card_button = filter.item({
 
 // 查看大图旁添加查看原图链接
 filter.items.tool.weibotool.view_original = filter.item({
-  'group': 'weibotool',
+  'group': 'mediatool',
   'version': 357,
   'type': 'boolean',
   'key': 'weibo.tool.viewOriginal',
@@ -8505,8 +8516,8 @@ filter.items.tool.weibotool.view_original = filter.item({
       if (e.button !== 0) return; // 只响应左键操作
       if (e.shiftKey) return; // 按下 Shift 时不响应
       var selector = '[action-type="feed_list_media_img"], [action-type="fl_pics"]';
-      var thumbnail = util.dom.parent(e.target, selector); if (!thumbnail) return;
-      var imgs = Array.from(util.dom.parent(thumbnail, 'ul').querySelectorAll(selector));
+      var thumbnail = util.dom.closest(e.target, selector); if (!thumbnail) return;
+      var imgs = Array.from(util.dom.closest(thumbnail, 'ul').querySelectorAll(selector));
       var info = {
         'host': 'ww2.sinaimg.cn',
         'filenames': imgs.map(function (i) { return getPid(i); }),
@@ -8538,75 +8549,164 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
   }
 }).addto(filter.groups.tool);
 
-// 禁止视频自动播放
-filter.items.tool.weibotool.disable_auto_play = filter.item({
-  'group': 'weibotool',
-  'version': 440,
-  'type': 'boolean',
-  'key': 'weibo.tool.disable_auto_play',
-  'text': '{{disableAutoPlay}}',
-  'ref': { 'pause': { 'type': 'boolean' } },
-  'init': function () {
-    // 禁止自动暂停功能必须在禁止自动播放功能开启后才能开启
-    // 这样做是为了避免所有视频全在播放造成严重性能问题
-    var key = 'weibo.tool.disable_auto_play';
-    util.config.onput(key, function (newValue) {
-      if (!newValue) util.config.put(key + '.pause', false);
-    });
-    util.config.onput(key + '.pause', function (newValue) {
-      if (newValue) util.config.put(key, true);
-    });
-  },
-  'ainit': function () {
-    var that = this;
-    var disableVideoAutoPlay = function disableVideoAutoPlay() {
-      // $CONFIG.isAuto 为 "0" 表示开启自动播放，为 "1" 表示不开启
-      if (unsafeWindow.$CONFIG.isAuto !== '1') unsafeWindow.$CONFIG.isAuto = '1';
+// 多媒体类（视频和图片）
+filter.predef.subtitle('tool', 'mediatool', '{{mediaToolsTitle}}');
+
+; (function () {
+
+  // 视频自动播放相关辅助函数
+  var videoAutoPlay = (function () {
+    var needConfig = null;
+    var disable = function () {
+      var disableVideoAutoPlay = function disableVideoAutoPlay() {
+        // $CONFIG.isAuto 为 "0" 表示开启自动播放，为 "1" 表示不开启
+        if (unsafeWindow.$CONFIG.isAuto !== '1') {
+          unsafeWindow.$CONFIG.isAuto = '1';
+          needConfig = true;
+        }
+      };
+      observer.dom.add(disableVideoAutoPlay);
+      disableVideoAutoPlay();
     };
-    observer.dom.add(disableVideoAutoPlay);
-    disableVideoAutoPlay();
-    if (!that.ref.pause.conf) return;
-    // 微博自动暂停视频的逻辑是在页面滚动时检查视频是否移出了屏幕区域
-    // 检查时获取的视频位置是由上一次位置更新后缓存下来的
-    // 缓存更新的逻辑是视频首次加入，或页面的高度发生了变化
-    // 如果是视频首次加入，还要储存视频相关的其他参数，并给定视频一个 [unique-video] 编号
-    // 修改首次加入的流程可能导致视频无法正常播放，所以我们不考虑这个办法
-    // 而之后更新时，程序会选取所有 [node-type="fl_h5_video"][unique-video] 的元素
-    // 根据元素上 [unique-video] 指示的编号，保存视频的位置（顶部位置和高度）
-    // 由于使用的是 Sizzle 选择器逐个操作，后面的匹配项会覆盖前面的
-    // 所以这里在原有视频的后面，添加一个匹配项并触发一次页面高度变化
-    // 此时微博的程序会获取到我们的占位符，并利用它更新了视频的位置（-1000000px 到 1000000px）
-    // 一般来说，我们的页面滚动不会超过这个区域，因此对于微博的程序来说，它总会认为我们的视频没有移出屏幕
-    // 选择这种解决方法的原因是我目前只看到这个可行的办法，如果有更好的办法欢迎 PR
-    var addPlaceholder = function addPlaceholder(video) {
-      // 获取 id
-      var id = video.getAttribute('unique-video');
-      if (!id) return setTimeout(addPlaceholder, 1000, video);
-      // 创建我们的占位符并放到指定位置
-      var placeholder = util.dom.create(html.videoFakePlaceholder);
-      placeholder.setAttribute('unique-video', id);
-      var feed = util.dom.parent(video, '.WB_feed_type');
-      var container = feed.appendChild(util.dom.create(html.videoFakePlaceholderContainer));
-      container.appendChild(placeholder);
-      // 在最后增加一个元素，导致页面的高度变化，触发微博中代码的更新检查逻辑
-      var heightNotifier = document.body.appendChild(util.dom.create(html.videoDocumentHeightNotifier));
-      setTimeout(function () { heightNotifier.parentNode.removeChild(heightNotifier); }, 3000);
-    };
-    var addFakeVideoPlaceholder = function addFakeVideoPlaceholder() {
-      var videoes = Array.from(document.querySelectorAll('[node-type="feed_list"] [node-type="fl_h5_video"]:not([yawf-fake-placeholder])'));
-      videoes.forEach(function (video) {
-        addPlaceholder(video);
-        video.setAttribute('yawf-fake-placeholder', 'yawf-fake-placeholder');
+    // 用户开启相关功能时弹出提示框
+    var notice = function (key) {
+      if (!needConfig && unsafeWindow.$CONFIG.isAuto === '1') return;
+      util.config.onput(key, function (newValue) {
+        if (newValue) util.ui.alert('yawf-auto-play-notice', {
+          title: util.str.fill('{{disableAutoPlayNoticeTitle}}'),
+          text: util.str.fill('{{disableAutoPlayNotice}}'),
+          icon: 'warn',
+        });
       });
     };
-    addFakeVideoPlaceholder();
-    observer.dom.add(addFakeVideoPlaceholder);
-  }
-}).addto(filter.groups.tool);
+    return { 'disable': disable, 'notice': notice };
+  }());
+
+  // 禁止视频自动播放
+  filter.items.tool.weibotool.disable_auto_pause = filter.item({
+    'group': 'mediatool',
+    'version': 444,
+    'type': 'boolean',
+    'key': 'weibo.tool.disable_auto_pause',
+    'text': '{{disableAutoPause}}',
+    'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{disableAutoPauseDesc}}' } },
+    'init': function () { videoAutoPlay.notice(this.key); },
+    'ainit': function () {
+      videoAutoPlay.disable();
+      // FIXME
+      // 微博自动暂停视频的逻辑是在页面滚动时检查视频是否移出了屏幕区域
+      // 检查时获取的视频位置是由上一次位置更新后缓存下来的
+      // 缓存更新的逻辑是视频首次加入，或页面的高度发生了变化
+      // 如果是视频首次加入，还要储存视频相关的其他参数，并给定视频一个 [unique-video] 编号
+      // 修改首次加入的流程可能导致视频无法正常播放，所以我们不考虑这个办法
+      // 而之后更新时，程序会选取所有 [node-type="fl_h5_video"][unique-video] 的元素
+      // 根据元素上 [unique-video] 指示的编号，保存视频的位置（顶部位置和高度）
+      // 由于使用的是 Sizzle 选择器逐个操作，后面的匹配项会覆盖前面的
+      // 所以这里在原有视频的后面，添加一个匹配项并触发一次页面高度变化
+      // 此时微博的程序会获取到我们的占位符，并利用它更新了视频的位置（-1000000px 到 1000000px）
+      // 一般来说，我们的页面滚动不会超过这个区域，因此对于微博的程序来说，它总会认为我们的视频没有移出屏幕
+      // 选择这种解决方法的原因是我目前只看到这个可行的办法，如果有更好的办法欢迎 PR
+      var addPlaceholder = function addPlaceholder(video) {
+        // 获取 id
+        var id = video.getAttribute('unique-video');
+        if (!id) return setTimeout(addPlaceholder, 1000, video);
+        // 创建我们的占位符并放到指定位置
+        var placeholder = util.dom.create(html.videoFakePlaceholder);
+        placeholder.setAttribute('unique-video', id);
+        var feed = util.dom.closest(video, '.WB_feed_type');
+        var container = feed.appendChild(util.dom.create(html.videoFakePlaceholderContainer));
+        container.appendChild(placeholder);
+        // 在最后增加一个元素，导致页面的高度变化，触发微博中代码的更新检查逻辑
+        var heightNotifier = document.body.appendChild(util.dom.create(html.videoDocumentHeightNotifier));
+        setTimeout(function () { heightNotifier.parentNode.removeChild(heightNotifier); }, 3000);
+      };
+      var addFakeVideoPlaceholder = function addFakeVideoPlaceholder() {
+        var videoes = Array.from(document.querySelectorAll('[node-type="feed_list"] [node-type="fl_h5_video"]:not([yawf-fake-placeholder])'));
+        videoes.forEach(function (video) {
+          addPlaceholder(video);
+          video.setAttribute('yawf-fake-placeholder', 'yawf-fake-placeholder');
+        });
+      };
+      addFakeVideoPlaceholder();
+      observer.dom.add(addFakeVideoPlaceholder);
+    }
+  }).addto(filter.groups.tool);
+
+  // 给视频添加折叠按钮
+  filter.items.tool.weibotool.video_fold = filter.item({
+    'group': 'mediatool',
+    'version': 444,
+    'type': 'boolean',
+    'key': 'weibo.tool.video_fold',
+    'text': '{{videoAddFold}}',
+    'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{videoAddFoldDesc}}' } },
+    'init': function () { videoAutoPlay.notice(this.key); },
+    'ainit': function () {
+      videoAutoPlay.disable();
+      // 空白视频，来源： github.com/mathiasbynens/small
+      var blankVideo = 'data:video/mp4;base64,AAAAHGZ0eXBpc29tAAACAGlzb21pc28ybXA0MQAAAAhmcmVlAAAC721kYXQhEAUgpBv/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3pwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcCEQBSCkG//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADengAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcAAAAsJtb292AAAAbG12aGQAAAAAAAAAAAAAAAAAAAPoAAAALwABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAAAB7HRyYWsAAABcdGtoZAAAAAMAAAAAAAAAAAAAAAIAAAAAAAAALwAAAAAAAAAAAAAAAQEAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAACRlZHRzAAAAHGVsc3QAAAAAAAAAAQAAAC8AAAAAAAEAAAAAAWRtZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAAKxEAAAIAFXEAAAAAAAtaGRscgAAAAAAAAAAc291bgAAAAAAAAAAAAAAAFNvdW5kSGFuZGxlcgAAAAEPbWluZgAAABBzbWhkAAAAAAAAAAAAAAAkZGluZgAAABxkcmVmAAAAAAAAAAEAAAAMdXJsIAAAAAEAAADTc3RibAAAAGdzdHNkAAAAAAAAAAEAAABXbXA0YQAAAAAAAAABAAAAAAAAAAAAAgAQAAAAAKxEAAAAAAAzZXNkcwAAAAADgICAIgACAASAgIAUQBUAAAAAAfQAAAHz+QWAgIACEhAGgICAAQIAAAAYc3R0cwAAAAAAAAABAAAAAgAABAAAAAAcc3RzYwAAAAAAAAABAAAAAQAAAAIAAAABAAAAHHN0c3oAAAAAAAAAAAAAAAIAAAFzAAABdAAAABRzdGNvAAAAAAAAAAEAAAAsAAAAYnVkdGEAAABabWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAbWRpcmFwcGwAAAAAAAAAAAAAAAAtaWxzdAAAACWpdG9vAAAAHWRhdGEAAAABAAAAAExhdmY1Ni40MC4xMDE=';
+      var updateVideoStatus = function (container) {
+        var realUrl = null;
+        var feed = util.dom.closest(container, '.WB_feed_type[mid]');
+        var controller = feed.querySelector('.WB_expand_media_box');
+        var video = container.querySelector('video');
+        var containerStyle = null, videoStyle = null;
+        // 点击收起按钮时的处理函数
+        var videoHideHandler = function () {
+          var pauseButton = container.querySelector('.hv-icon-pause');
+          if (pauseButton) pauseButton.click();
+          if (!realUrl) realUrl = video.src;
+          container.classList.add('hv-loading');
+          // 这里要等暂停之后再收上去
+          util.func.call(function () {
+            if (containerStyle === null) containerStyle = container.getAttribute('style');
+            if (videoStyle === null) videoStyle = video.getAttribute('style');
+            container.removeAttribute('style');
+            video.removeAttribute('style');
+            container.className = 'html5-video hv-c1';
+            video.src = blankVideo;
+            video.pause();
+          });
+        };
+        // 展开视频时，添加收起按钮
+        var videoShown = function () {
+          var foldElements = util.dom.create(util.str.fill(html.videoFold));
+          foldElements.querySelector('li').addEventListener('click', videoHideHandler);
+          controller.innerHTML = '';
+          controller.appendChild(foldElements);
+          controller.style.display = 'block';
+          if (realUrl && video.src !== realUrl) video.src = realUrl;
+          if (containerStyle !== null) container.setAttribute('style', containerStyle);
+          if (videoStyle !== null) video.setAttribute('style', videoStyle);
+        };
+        // 隐藏视频时，隐藏收起按钮
+        var videoHidden = function () {
+          controller.style.display = 'none';
+        };
+        return function () {
+          var playing = container.classList.contains('hv-c3') &&
+            !container.classList.contains('hv-loading');
+          // 如果当前视频被展开展示，那么视频的收起按钮也要显示，反之要隐藏
+          if (playing) videoShown();
+          else videoHidden();
+        };
+      };
+      observer.dom.add(function addObserverOnVideoContainer() {
+        var containers = Array.from(document.querySelectorAll('[node-type="fl_h5_video"] .html5-video:not([yawf-observer-added])'));
+        containers.forEach(function (container) {
+          container.setAttribute('yawf-observer-added', 'yawf-observer-added');
+          var observer = new MutationObserver(updateVideoStatus(container));
+          observer.observe(container, { attributes: true, attributeFilter: ['class'] });
+        });
+      });
+    }
+  }).addto(filter.groups.tool);
+
+}());
 
 // 禁用视频右键菜单
 filter.items.tool.weibotool.disable_video_menu = filter.item({
-  'group': 'weibotool',
+  'group': 'mediatool',
   'version': 442,
   'type': 'boolean',
   'key': 'weibo.tool.disable_video_menu',
@@ -8727,7 +8827,7 @@ filter.items.tool.weibotool.fold_child_comment = filter.item({
       rootComment.forEach(function (rootComment) {
         rootComment.setAttribute('yawf-folded-root-comment', 'yawf-folded-root-comment');
 
-        var feed = util.dom.parent(rootComment, '.WB_feed_type[mid]');
+        var feed = util.dom.closest(rootComment, '.WB_feed_type[mid]');
         var reply = rootComment.querySelector('a[action-type="reply"]');
         var childCommentList = Array.from(rootComment.querySelectorAll('.list_ul[node-type="child_comment"]'));
 
@@ -9323,7 +9423,7 @@ if (function livePhotoSupported() {
   return isSafariLike && !!video.canPlayType && !!video.canPlayType("video/mp4");
 }()) {
   filter.items.tool.weibotool.disable_live_photo = filter.item({
-    'group': 'weibotool',
+    'group': 'mediatool',
     'version': 416,
     'type': 'boolean',
     'key': 'weibo.tool.disable_live_photo',
@@ -10851,7 +10951,8 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.cardButton');
   d('directBigImg', 'weibo.tool.viewOriginal'); // 点击“查看大图”直接打开大图
   n(null, 'weibo.tool.html5Video');
-  n(null, 'weibo.tool.disable_auto_play');
+  n(null, 'weibo.tool.disable_auto_pause');
+  n(null, 'weibo.tool.video_fold');
   n(null, 'weibo.tool.disable_video_menu');
   n(null, 'weibo.tool.replace_link.url');
   n(null, 'weibo.tool.replace_link');
