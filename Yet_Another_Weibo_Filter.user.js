@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.447
+// @version           3.7.448
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -736,12 +736,14 @@ var text = {
   'commentShowAll': { 'zh-cn': '查看评论时自动切换到全部评论', 'zh-hk': '查閱評論時自動切換到全部評論', 'zh-tw': '查閱評論時自動切換到全部評論', 'en': 'Automatically switch view of comments to all' },
   // 图片和视频
   'mediaToolsTitle': { 'zh-cn': '图片与视频', 'zh-hk': '圖片與視頻', 'zh-tw': '圖片與視頻', 'en': 'Images &amp; Videos' },
-  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}||{{<direct>}}点击缩略图时直接查看原图', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮略圖時直接查看原圖', 'en': 'add "Original Picture" link | which target to {{<open>}} || {{<direct>}} View orignal picture by clicking on thumbnail' },
+  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}||{{<direct>}}点击缩略图时直接查看原图', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮圖時直接查看原圖', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮圖時直接查看原圖', 'en': 'add "Original Picture" link | which target to {{<open>}} || {{<direct>}} View orignal picture by clicking on thumbnail' },
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
+  'pauseAnimatedImage': { 'zh-cn': '动画图像(GIF)在缩略图显示时保持静止{{<i>}}', 'zh-hk': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'zh-tw': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'en': 'Pause thumbnail animated image (GIF) {{<i>}}' },
+  'pauseAnimatedImageDesc': { 'zh-cn': '该功能仅影响显示效果，并不会降低网络数据用量。' },
   'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
   'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
   // 关注
@@ -2722,6 +2724,21 @@ network.video.get['2017607'] = function (url, callback) {
       var video = d.querySelector('.vid_img');
       callback(video.getAttribute('data-url'));
     },
+  });
+};
+
+network.image = {};
+network.image.get = function (url, callback) {
+  util.xhr({
+    'method': 'GET',
+    'url': url,
+    'responseType': 'arraybuffer',
+    'onload': function (resp) {
+      try {
+        callback(resp.response);
+      } catch (_ignore) { callback(); }
+    },
+    'onerror': function () { callback(); },
   });
 };
 
@@ -8593,6 +8610,53 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
 // 多媒体类（视频和图片）
 filter.predef.subtitle('tool', 'mediatool', '{{mediaToolsTitle}}');
 
+// 动图保持静止
+filter.items.tool.weibotool.pause_animated_image = filter.item({
+  'group': 'mediatool',
+  'version': 448,
+  'type': 'boolean',
+  'key': 'weibo.tool.pause_animated_image',
+  'text': '{{pauseAnimatedImage}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{pauseAnimatedImageDesc}}' } },
+  'ainit': function () {
+    var emptyImage = 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg"/>');
+    observer.dom.add(function pauseAnimatedImage() {
+      var images = Array.from(document.querySelectorAll([
+        '.PCD_photolist img[src$=".gif"]:not([yawf-pause-animate])',
+        '.WB_pic img[src$=".gif"]:not([yawf-pause-animate])',
+      ].join(',')));
+      images.forEach(function (image) {
+        var src = image.src; image.src = emptyImage; image.setAttribute('ori-src', src);
+        image.setAttribute('yawf-pause-animate', 'yawf-pause-animate');
+        var fail = function () { image.src = src; };
+        network.image.get(src, function (arraybuffer) {
+          if (!arraybuffer) return fail();
+          var uint8arr = new Uint8Array(arraybuffer);
+          var base64 = [], i, l = uint8arr.length;
+          for (i = 0; i < l; i += 1023) {
+            base64.push(btoa(String.fromCharCode.apply(null, uint8arr.slice(i, i + 1023))));
+          }
+          var url = 'data:image/gif;charset=utf-8;base64,' + base64.join('');
+          var animated = new Image();
+          animated.addEventListener('load', function () {
+            var width = animated.width, height = animated.height;
+            var canvas = document.createElement('canvas');
+            canvas.width = width; canvas.height = height;
+            canvas.getContext('2d').drawImage(animated, 0, 0, width, height);
+            image.src = canvas.toDataURL("image/png");
+          });
+          animated.src = url;
+        });
+      });
+    });
+    util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
+      .PCD_photolist img[src$=".gif"]:not([yawf-pause-animate]),
+      .WB_pic img[src$=".gif"]:not([yawf-pause-animate])
+      { display: none !important; }
+    */ noop();
+    }), { 'attr': attr }));
+  }
+}).addto(filter.groups.tool);
 
 // 禁用视频右键菜单
 filter.items.tool.weibotool.disable_video_menu = filter.item({
@@ -10858,6 +10922,7 @@ wbp.converter.table = function () {
   d('directBigImg', 'weibo.tool.viewOriginal'); // 点击“查看大图”直接打开大图
   n(null, 'weibo.tool.html5Video');
   n(null, 'weibo.tool.disable_video_menu');
+  n(null, 'weibo.tool.pause_animated_image');
   n(null, 'weibo.tool.replace_link.url');
   n(null, 'weibo.tool.replace_link');
   n(null, 'weibo.tool.replace_image_emoji');
