@@ -59,15 +59,15 @@
     <div class="entry-content">
       <h2>安装教程</h2>
       <div class="in">
-        <div class="browser odd ie nosupport"><p>对不起，脚本当前不支持您使用的浏览器。请考虑选择以下几个支持的浏览器之一。</p></div>
-        <div class="browser firefox support all odd ie unknow noscript">
+        <div class="browser odd ie safari nosupport"><p>对不起，脚本当前不支持您使用的浏览器。请考虑选择以下几个支持的浏览器之一。</p></div>
+        <div class="browser firefox support all odd ie safari unknow noscript">
           <a href="http://www.mozilla.org/en-US/firefox/all/#zh-CN" class="browser-icon"><img src="img/logo/firefox.png" alt="Mozilla Firefox" width="64" height="64" /></a>
           <div>
             使用 Mozilla Firefox 浏览器的用户，需要 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/">GreaseMonkey 附加组件</a>运行本脚本。<br />
             如果您已经安装了以上附加组件，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>，在弹出的对话框中确认脚本安装。
           </div>
         </div>
-        <div class="browser opera support all odd ie unknow noscript">
+        <div class="browser opera support all odd ie safari unknow noscript">
           <a href="http://www.opera.com/zh-cn" class="browser-icon"><img src="img/logo/opera.png" alt="Opera" width="64" height="64" /></a>
           <div>
             使用 Opera 的用户，需要<a href="https://addons.opera.com/zh-cn/extensions/details/violent-monkey/?display=zh">暴力猴扩展</a>运行本脚本。<br />
@@ -75,7 +75,7 @@
             注：不支持 Opera 12。
           </div>
         </div>
-        <div class="browser chrome chromium support all odd ie unknow noscript">
+        <div class="browser chrome chromium support all odd ie safari unknow noscript">
           <a href="http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html?standalone=1" class="browser-icon"><img src="img/logo/chrome.png" alt="Google Chrome" width="64" height="64" /></a>
           <div>
             使用 Google Chrome 的用户，需要 <a href="https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag?hl=zh-CN">暴力猴 扩展程序（应用商店）</a><a href="https://github.com/violentmonkey/violentmonkey/releases/latest" style="font-size:80%;">（下载crx）</a>或 TamperMonkey 扩展程序运行本脚本。<br />
@@ -83,16 +83,10 @@
             脚本从未推出过 Chrome 扩展版本， Chrome 网上应用商店或其他来源的类似扩展与本脚本作者无关。这些扩展可能存在恶意行为，请多加小心。
           </div>
         </div>
-        <div class="browser safari support all odd ie unknow noscript">
-          <a href="http://www.apple.com/cn/safari/" class="browser-icon"><img src="img/logo/safari.png" alt="Safari" width="64" height="64" /></a>
-          <div>
-            使用 Safari 的用户，如果您已经安装了 Tampermonkey 扩展。您可以，<a href="https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>，在打开的页面中确认脚本安装，并根据扩展提示启用脚本。<br />
-          </div>
-        </div>
-        <div class="browser odd ie unknow nosupport noscript">
+        <div class="browser odd ie safari unknow nosupport noscript">
           脚本当前不支持 IE 浏览器、 Edge 浏览器。Chromium 和其它基于 Chromium 的浏览器的用户，可以仿照如上 Chrome 的安装方式，在浏览器的应用商店中搜索并安装对应猴子扩展后尝试安装本脚本；基于 Firefox 的浏览器的用户，可以仿照 Firefox 的方式安装本脚本。由于作者无力照顾所有的浏览器，所以如果您使用的浏览器版本过旧，或使用的猴子扩展兼容性有问题，脚本可能有部分功能不能正常工作。虽然仍然欢迎您反馈各种遇到的问题，但不保证作者可以处理您遇到的问题。
         </div>
-        <div onclick="this.innerHTML='&lt;style&gt;.all{display:block}&lt;style&gt;'" id="show_all" class="browser firefox opera chrome chromium safari">点击以查看所有支持的浏览器</div>
+        <div onclick="this.innerHTML='&lt;style&gt;.all{display:block}&lt;style&gt;'" id="show_all" class="browser firefox opera chrome chromium">点击以查看所有支持的浏览器</div>
       </div>
       <h2>设置脚本</h2>
       <div class="in">
@@ -122,7 +116,7 @@
           <li>使用本机时区显示微博上的各种时间（针对非东八区用户）；</li>
         </ul>
         <p>脚本安装后大部分功能不会默认启用，您需要到脚本设置中启用对应功能。随您使用的浏览器的不同，支持的功能可能有个别不同。</p>
-        <p class="all-button no-allfunc"><a class="hidden firefox opera chrome safari" href="javascript:showAll();">点击查看脚本的全部功能</a></p>
+        <p class="all-button no-allfunc"><a class="hidden firefox opera chrome" href="javascript:showAll();">点击查看脚本的全部功能</a></p>
       </div>
       <h2 class="hidden allfunc">完整功能列表</h2>
       <div class="in">
