@@ -17,7 +17,7 @@
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.448
+// @version           3.7.449
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -46,6 +46,7 @@
 // @connect           t.cn
 // @connect           www.miaopai.com
 // @connect           ent.v.sina.cn
+// @connect           sinaimg.cn
 // @run-at            document-start
 // ==/UserScript==
 
@@ -548,6 +549,10 @@ var text = {
   // 微博内
   'layoutHideWeibo': { 'zh-cn': '隐藏模块 - 微博内', 'zh-hk': '隱藏模組 - 微博內', 'zh-tw': '隱藏模組 - 微博內', 'en': 'Hide modules - Weibo' },
   'layoutHideWeiboRecomFeed': { 'zh-cn': '精彩微博推荐', 'zh-hk': '精彩微博推薦', 'zh-tw': '精彩微博推薦', 'en': 'Weibo you may interested in' },
+  'layoutHideWeiboFeedOuterTip': { 'zh-cn': '消息流提示横幅', 'zh-hk': '消息流提示橫幅', 'zh-tw': '消息流提示橫幅', 'en': 'Tips for feed' },
+  'layoutHideWeiboFeedOuterTipDesc': {
+    'zh-cn': '消息流内部的提示横幅，如“ 系统提示：根据你的屏蔽设置，系统已过滤掉部分微博。”等内容。'
+  },
   'layoutHideWeiboFeedTip': { 'zh-cn': '评论框提示横幅', 'zh-hk': '評論框提示橫幅', 'zh-tw': '評論框提示橫幅', 'en': 'Tips for comment' },
   'layoutHideWeiboFeedTipDesc': {
     'zh-cn': '经常出现在评论框上方的横幅，通常包含如“微博社区管理中心举报处理大厅，欢迎查阅！”等内容。'
@@ -7084,6 +7089,7 @@ filter.predef.group('layout');
 
   subtitle('Weibo', true);
   item('RecomFeed', 2, '[node-type="recommfeed"] { display: none !important; }');
+  item('FeedOuterTip', 449, '.WB_feed .W_tips { display: none !important; }');
   item('FeedTip', 7, '[node-type="feed_privateset_tip"] { display: none !important; }');
   item('GroupTip', 97, '.WB_feed_type .WB_cardtitle_b { display: none !important; }');
   item('VIPBackground', 253, util.str.cmt(function () { /*!CSS
@@ -8667,13 +8673,13 @@ filter.items.tool.weibotool.disable_video_menu = filter.item({
   'text': '{{disableVideoContextMenu}}',
   'ainit': function () {
     observer.dom.add(function disableVideoContextMenu() {
-      var videoes = Array.from(document.querySelectorAll('video:not([yawf-disable-menu])'));
+      var videoes = Array.from(document.querySelectorAll('.WB_video video:not([yawf-disable-menu])'));
       videoes.forEach(function (video) {
         video.setAttribute('yawf-disable-menu', 'yawf-disable-menu');
         video.addEventListener('contextmenu', function (event) { event.stopPropagation(); }, true);
       });
     });
-    util.css.add('.html5-video .layer_menu_list { display: none !important; }');
+    util.css.add('.WB_video .con-7 { display: none !important; }');
   }
 }).addto(filter.groups.tool);
 
@@ -10035,7 +10041,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-width: 260px; max-width: 40vw; max-height: 260px; max-height: 40vh; min-width: auto; }
 
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video.WB_video_h5 { width: auto; height: auto; display: table; }
-      .WB_h5video.hv-s1, .WB_h5video.hv-s3-2, .WB_h5video.hv-s3-5 { width: 120px; height: 80px; min-width: 36px; }
+      .WB_h5video.hv-s1, .WB_h5video.hv-s3-2, .WB_h5video.hv-s3-5 { width: 120px; height: 80px; max-width: 120px; max-height: 80px; min-width: 36px; }
       .WB_h5video.hv-s1 video, .WB_h5video.hv-s3-2 video, .WB_h5video.hv-s3-5 video { max-width: 100%; max-height: 100%; }
       .WB_h5video.hv-s3.hv-s3-2 .con-4,
       .WB_h5video.hv-s3.hv-s3-5 .con-4 { opacity: 1; z-index: 1; }
