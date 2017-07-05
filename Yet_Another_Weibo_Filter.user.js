@@ -14,10 +14,17 @@
 // @include           http://weibo.com/*
 // @include           http://d.weibo.com/*
 // @include           http://s.weibo.com/*
+// @include           https://www.weibo.com/*
+// @include           https://weibo.com/*
+// @include           https://d.weibo.com/*
+// @include           https://s.weibo.com/*
 // @exclude           http://weibo.com/a/bind/*
 // @exclude           http://weibo.com/nguide/*
 // @exclude           http://weibo.com/
-// @version           3.7.449
+// @exclude           https://weibo.com/a/bind/*
+// @exclude           https://weibo.com/nguide/*
+// @exclude           https://weibo.com/
+// @version           3.7.450
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -404,7 +411,7 @@ var text = {
   },
   'unauthappWeibo': { 'zh-cn': '来自未通过审核应用的微博{{<i>}}', 'zh-hk': '來自未通过审核应用的微博{{<i>}}', 'zh-tw': '來自未通过审核应用的微博{{<i>}}', 'en': 'Weibo comes from 未通过审核应用 (unauthorized application){{<i>}}' },
   'unauthappWeiboDesc': {
-    'zh-cn': '未通过审核的应用有发布频率和可最多可授权15名用户的限制，除非您的好友中有人做相关的开发工作，否则您应当很难看到此来源的微博。来自未审核应用的微博往往是但开发微博应用过程中的测试微博。您可以通过微博开放平台文档中的<a target="_blank" href="http://open.weibo.com/wiki/%E5%BA%94%E7%94%A8%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98">应用相关问题</a>页面了解更多关于应用的信息。',
+    'zh-cn': '未通过审核的应用有发布频率和可最多可授权15名用户的限制，除非您的好友中有人做相关的开发工作，否则您应当很难看到此来源的微博。来自未审核应用的微博往往是但开发微博应用过程中的测试微博。您可以通过微博开放平台文档中的<a target="_blank" href="//open.weibo.com/wiki/%E5%BA%94%E7%94%A8%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98">应用相关问题</a>页面了解更多关于应用的信息。',
   },
   'multiTopic': { 'zh-cn': '提到的话题|不少于{{<num>}}个的微博{{<i>}}', 'zh-hk': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'zh-tw': '提到的話題|不少於{{<num>}}個的微博{{<i>}}', 'en': 'Weibo mentioned | not less than {{<num>}} topics{{<i>}}' },
   'multiTopicDesc': {
@@ -500,7 +507,7 @@ var text = {
   'layoutHideNavGame': { 'zh-cn': '游戏', 'zh-hk': '遊戲', 'zh-tw': '遊戲', 'en': 'Game' },
   'layoutHideNavHotSearch': { 'zh-cn': '大家正在搜', 'zh-hk': '大家正在搜', 'zh-tw': '大家正在熱搜', 'en': 'Hot search' },
   'layoutHideNavHotSearchDesc': {
-    'zh-cn': '建议使用ABP等扩展，添加规则“ <code>http://s.weibo.com/ajax/jsonp/gettopsug*</code> ”，以达到更好的效果。',
+    'zh-cn': '建议使用ABP等扩展，添加规则“ <code>*://s.weibo.com/ajax/jsonp/gettopsug*</code> ”，以达到更好的效果。',
   },
   'searchBarPlaceholder': { 'zh-cn': '搜索微博、找人', 'zh-hk': '搜索微博、找人', 'zh-tw': '搜索微博、找人', 'en': 'Search for Weibo, People' },
   'layoutHideNavNoticeNew': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Count for new notice' },
@@ -730,7 +737,7 @@ var text = {
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为短网址', 'zh-hk': '將微博中的网页链接替換為短網址', 'zh-tw': '將微博中的网页链接替換為短網址', 'en': 'Replace 网页链接 in Weibo by shortened URL' },
   'replaceImageEmoji': { 'zh-cn': '将微博中图片表示的 Unicode 表情符号替换为文本{{<i>}}', 'zh-hk': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'zh-tw': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'en': 'Use text for unicode emoji instead of image {{<i>}}' },
   'replaceImageEmojiDesc': {
-    'zh-cn': '使用文本替换对应图片。表情会随您使用的操作系统、浏览器、安装的字体的不同而显示成不的样子。Firefox 和 Safari 可以得到较好的效果。<hr />替换前 <span style="font-size: 20px"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8192.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8098.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84b2.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8cac.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8992.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee888b.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84ad.png"><img width="20px" height="20px" src="http://img.t.sinajs.cn//t4/appstyle/expression/emimage/ee9493.png"></span><br />替换后 <span style="font-size: 20px">🐶⚽️🏁💛⚠️📶🀄️🇨🇳</span>'
+    'zh-cn': '使用文本替换对应图片。表情会随您使用的操作系统、浏览器、安装的字体的不同而显示成不的样子。Firefox 和 Safari 可以得到较好的效果。<hr />替换前 <span style="font-size: 20px"><img width="20px" height="20px" src="//img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8192.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8098.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee84b2.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8cac.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8992.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee888b.png"><img width="20px" height="20px" src="//img.t.sinajs.cn/t4/appstyle/expression/emimage/ee84ad.png"><img width="20px" height="20px" src="//img.t.sinajs.cn/t4/appstyle/expression/emimage/ee9493.png"></span><br />替换后 <span style="font-size: 20px">🐶⚽️🏁💛⚠️📶🀄️🇨🇳</span>'
   },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博仅显示“来自微博 weibo.com”', 'zh-hk': '自訂來源微博僅顯示「來自微博 weibo.com」', 'zh-tw': '自訂來源微博僅顯示「來自微博 weibo.com」', 'en': 'Weibo with customize source show "come from 微博 weibo.com" only' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
@@ -774,10 +781,10 @@ var text = {
     'en': 'Your following list had been changed since last checking, please review: ',
   },
   'autoCheckFollowingTipDetail': {
-    'zh-cn': '这些变化可能是因为脚本在检查时的不准确，您自己有意或无意的操作，或一些操作或应用的修改导致的。如果您的关注列表经常出现预期之外的变动，请检查<a href="http://app.weibo.com/my" target="_blank">您的应用授权</a>。',
-    'zh-hk': '這些變化可能是因為腳本在檢查時的不準確，您自己有意或無意的操作，或一些操作或應用的修改導致的。如果您的關注清單經常出現預期之外的變動，請檢查<a href="http://app.weibo.com/my" target="_blank">您的應用授權</a>。',
-    'zh-tw': '這些變化可能是因為腳本在檢查時的不準確，您自己有意或無意的操作，或一些操作或應用的修改導致的。如果您的關注清單經常出現預期之外的變動，請檢查<a href="http://app.weibo.com/my" target="_blank">您的應用授權</a>。',
-    'en': 'These changes occurred might be caused by: inaccurate script checking behaviour; your own operations, whether you do interested or by mistake; or some other operations or applications that has the authority to make these changes. If your following list continuously shows unexpected changes, please review <a href="http://app.weibo.com/my" target="_blank">your application authorisations</a>.',
+    'zh-cn': '这些变化可能是因为脚本在检查时的不准确，您自己有意或无意的操作，或一些操作或应用的修改导致的。如果您的关注列表经常出现预期之外的变动，请检查<a href="//app.weibo.com/my" target="_blank">您的应用授权</a>。',
+    'zh-hk': '這些變化可能是因為腳本在檢查時的不準確，您自己有意或無意的操作，或一些操作或應用的修改導致的。如果您的關注清單經常出現預期之外的變動，請檢查<a href="//app.weibo.com/my" target="_blank">您的應用授權</a>。',
+    'zh-tw': '這些變化可能是因為腳本在檢查時的不準確，您自己有意或無意的操作，或一些操作或應用的修改導致的。如果您的關注清單經常出現預期之外的變動，請檢查<a href="//app.weibo.com/my" target="_blank">您的應用授權</a>。',
+    'en': 'These changes occurred might be caused by: inaccurate script checking behaviour; your own operations, whether you do interested or by mistake; or some other operations or applications that has the authority to make these changes. If your following list continuously shows unexpected changes, please review <a href="//app.weibo.com/my" target="_blank">your application authorisations</a>.',
   },
   'autoCheckFollowingAdd': { 'zh-cn': '新增如下关注', 'zh-hk': '新增如下關注', 'zh-tw': '新增如下關注', 'en': 'Recent Following' },
   'autoCheckFollowingLost': { 'zh-cn': '减少如下关注', 'zh-hk': '減少如下關注', 'zh-tw': '減少如下關注', 'en': 'Recent Unfollowed' },
@@ -833,7 +840,7 @@ var text = {
     'en': 'Show all pages with | template {{<skin>}} {{<i>}}',
   },
   'setSkinDesc': {
-    'zh-cn': '开启后所有页面将显示您选择的模板，包括其他用户的个人主页。模板不会覆盖您在主页自定义的背景图或配色，但是会覆盖个人主页的背景图或配色。模板效果仅在您的浏览器中生效，他人访问您的个人主页时，仍会看到您在微博中设置的模板。<br />模板的选择请参考<a href="http://skin.vip.weibo.com/list?topnav=1&wvr=6" target="_blank">模板商店</a>，在模板商店中点击图片预览与应用模板。',
+    'zh-cn': '开启后所有页面将显示您选择的模板，包括其他用户的个人主页。模板不会覆盖您在主页自定义的背景图或配色，但是会覆盖个人主页的背景图或配色。模板效果仅在您的浏览器中生效，他人访问您的个人主页时，仍会看到您在微博中设置的模板。<br />模板的选择请参考<a href="//skin.vip.weibo.com/list?topnav=1&wvr=6" target="_blank">模板商店</a>，在模板商店中点击图片预览与应用模板。',
   },
   'setSkinByPreview': {
     'zh-cn': 'Yet Another Weibo Filter 模板设置',
@@ -1013,10 +1020,10 @@ var text = {
   // 关于
   'scriptAboutTitle': { 'zh-cn': '关于', 'zh-hk': '關於', 'zh-tw': '關於', 'en': 'About' },
   'scriptAbout': {
-    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以关注 <a href="http://weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF脚本</a> 了解脚本最新的更新。<br />如果您觉得脚本给您很大的帮助，帮助宣传脚本是对我们最大的支持。</p><p>如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或<a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">私信 @YAWF脚本</a> ；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>脚本使用 MIT 协议开放源代码，作者 <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查阅</a>，欢迎任何人贡献代码。<br />脚本中参考并使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不见心不烦</a> 的部分代码。</p>',
-    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以關注 <a href="http://weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF腳本</a> 瞭解腳本最新的更新。<br />如果您覺得腳本給您很大的幫助，幫助宣傳腳本是對我們最大的支持。</p><p>如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或<a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">私信 @YAWF脚本</a> ；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>腳本使用 MIT 協定開放原始程式碼，作者 <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查閱</a>，歡迎任何人貢獻程式碼。<br />腳本中參考並使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不見心不煩</a> 的部分程式碼。</p>',
-    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以關注 <a href="http://weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF腳本</a> 瞭解腳本最新的更新。<br />如果您覺得腳本給您很大的幫助，幫助宣傳腳本是對我們最大的支持。</p><p>如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或<a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">私信 @YAWF脚本</a> ；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>腳本使用 MIT 協定開放原始程式碼，作者 <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查閱</a>，歡迎任何人貢獻程式碼。<br />腳本中參考並使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不見心不煩</a> 的部分程式碼。</p>',
-    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>Follow <a href="http://weibo.com/yawfscript" namecard="id=5601033111" target="_blank" rel="noreferrer">@YAWF脚本</a> for last update info.<br />Please help us spread the word if the script helps you.</p><p>If you find any bugs or have feature requests, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">issues page</a>, or <a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">send message to @YAWF脚本</a> . Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>The script is liscensed under the MIT License. Author is <a href="http://weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a>. You may <a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">view the project on GitHub</a>. Pull request is welcomed.<br />Some codes of this script come from <a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> script.</p>',
+    'zh-cn': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以关注 <a href="//weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF脚本</a> 了解脚本最新的更新。<br />如果您觉得脚本给您很大的帮助，帮助宣传脚本是对我们最大的支持。</p><p>如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">反馈页面</a>提供报告，或<a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">私信 @YAWF脚本</a> ；反馈前建议先阅读<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常见问题</a>。</p><p>脚本使用 MIT 协议开放源代码，作者 <a href="//weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查阅</a>，欢迎任何人贡献代码。<br />脚本中参考并使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不见心不烦</a> 的部分代码。</p>',
+    'zh-hk': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以關注 <a href="//weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF腳本</a> 瞭解腳本最新的更新。<br />如果您覺得腳本給您很大的幫助，幫助宣傳腳本是對我們最大的支持。</p><p>如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或<a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">私信 @YAWF脚本</a> ；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>腳本使用 MIT 協定開放原始程式碼，作者 <a href="//weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查閱</a>，歡迎任何人貢獻程式碼。<br />腳本中參考並使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不見心不煩</a> 的部分程式碼。</p>',
+    'zh-tw': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>您可以關注 <a href="//weibo.com/yawfscript" usercard="id=5601033111" target="_blank" rel="noreferrer">@YAWF腳本</a> 瞭解腳本最新的更新。<br />如果您覺得腳本給您很大的幫助，幫助宣傳腳本是對我們最大的支持。</p><p>如果您在使用過程中遇到任何腳本的錯誤，或對腳本有任何建議，您可以到<a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">回饋頁面</a>提供報告，或<a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">私信 @YAWF脚本</a> ；回饋前建議先閱讀<a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">常見問題（簡體）</a>。</p><p>腳本使用 MIT 協定開放原始程式碼，作者 <a href="//weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a> ，您可以<a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">在 GitHub 上查閱</a>，歡迎任何人貢獻程式碼。<br />腳本中參考並使用了 <a href="https://bitbucket.org/salviati/weibo-cleaner" target="_blank" rel="noreferrer">眼不見心不煩</a> 的部分程式碼。</p>',
+    'en': '<p>Yet Another Weibo Filter (YAWF) {{version}}</p><p>Follow <a href="//weibo.com/yawfscript" namecard="id=5601033111" target="_blank" rel="noreferrer">@YAWF脚本</a> for last update info.<br />Please help us spread the word if the script helps you.</p><p>If you find any bugs or have feature requests, please report them in the <a target="_blank" href="https://tiansh.github.io/yawf/issues.html" rel="noreferrer">issues page</a>, or <a action-data="uid=5601033111&nick=YAWF脚本" action-type="webim.conversation" href="javascript:;">send message to @YAWF脚本</a> . Please read <a target="_blank" href="https://tiansh.github.io/yawf/fqa.html" rel="noreferrer">FQA (Chinese)</a> page for common questions.</p><p>The script is liscensed under the MIT License. Author is <a href="//weibo.com/tsh90" usercard="id=3921589057" target="_blank" rel="noreferrer">@tsh90</a>. You may <a href="https://github.com/tiansh/yawf" target="_blank" rel="noreferrer">view the project on GitHub</a>. Pull request is welcomed.<br />Some codes of this script come from <a target="_blank" href="https://bitbucket.org/salviati/weibo-cleaner" rel="noreferrer"><span lang="zh-cn">眼不见心不烦</span> (Weibo Cleaner)</a> script.</p>',
   },
   // 拖拽
   'dropAreaTitle': { 'zh-cn': '拖放至此<br />快速创建过滤器', 'zh-hk': '拖放至此<br />快速創建篩選器', 'zh-tw': '拖放至此<br />快速創建篩選器', 'en': 'Drop Here to Create Filter' },
@@ -1172,7 +1179,7 @@ var html = {
   // 顶栏提示
   'topMenuListTips': '<div class="gn_topmenulist_tips yawf-gn_topmenulist_tips" style="display: none;"><a href="javascript:void(0);" class="W_ficon ficon_close S_ficon">X</a><ul></ul></div>',
   // 来自 微博 weibo.com
-  'weiboViaWeiboCom': '<a rel="nofollow" href="http://weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
+  'weiboViaWeiboCom': '<a rel="nofollow" href="//weibo.com/" target="_blank" action-type="app_source" class="S_txt2">{{defaultSource}}</a>',
   // 二级评论展开
   'unfoldChildComment': '<a class="S_txt1" action-type="click_more_child_comment_big" action-data="more_comment=big&amp;root_comment_id={{comment_id}}&amp;is_child_comment=ture&amp;id={{mid}}">({{child_count}})</a>',
 };
@@ -1181,8 +1188,8 @@ var html = {
 var fill = {
   'domainURL': {
     'toString': function () {
-      if (document.domain === 'www.weibo.com') return 'http://www.weibo.com';
-      return 'http://weibo.com';
+      if (document.domain === 'www.weibo.com') return '//www.weibo.com';
+      return '//weibo.com';
     }
   },
 };
@@ -1190,12 +1197,12 @@ var fill = {
 // 超链接
 var url = {
   'newcard': '{{domainURL}}/aj/user/newcard?type=1&{{query}}&_t=1&callback={{callback}}',
-  'view_cmt_ori': 'http://ww1.sinaimg.cn/large/{{pid}}.jpg',
+  'view_cmt_ori': '//ww1.sinaimg.cn/large/{{pid}}.jpg',
   'block_wb': '{{domainURL}}/aj/filter/block?ajwvr=6',
   'del_cmt': '{{domainURL}}/aj/comment/del?ajwvr=6',
-  'video_show': 'http://video.weibo.com/show?fid={{id}}',
+  'video_show': '//video.weibo.com/show?fid={{id}}',
   'user': '{{domainURL}}/u/{{uid}}',
-  'topsuggest': 'http://s.weibo.com/ajax/topsuggest.php?key={{query}}&_v={{callback}}',
+  'topsuggest': '//s.weibo.com/ajax/topsuggest.php?key={{query}}&_v={{callback}}',
   'topicsuggest': '{{domainURL}}/aj/mblog/topic?ajwvr=6&q={{query}}',
   'attention': '{{domainURL}}/aj/mblog/attention?ajwvr=6&q={{query}}',
   'getlongtext': '{{domainURL}}/p/aj/mblog/getlongtext?ajwvr=6&mid={{mid}}',
@@ -4620,12 +4627,12 @@ filter.fast.hyperlink.recognizer = function (element, callback) {
   if (element.nodeType === Node.TEXT_NODE) return callback();
   var c = util.dom.create('body', element.outerHTML);
   do {
-    var link = c.querySelector('a[href^="http://t.cn/"][yawf-link-type="O"]');
+    var link = c.querySelector('a[href*="//t.cn/"][yawf-link-type="O"]');
     if (!link) break;
     return callback({ 'url': link.href });
   } while (false);
   do {
-    var linkc = c.querySelector('a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"][yawf-link-type="O"]'); if (!linkc) break;
+    var linkc = c.querySelector('a[href*="//feed.mix.sina.com.cn/link_card/redirect?"][yawf-link-type="O"]'); if (!linkc) break;
     var url = util.str.parsequery(linkc.search.slice(1)).url; if (!url) break;
     return callback({ 'url': url });
   } while (false);
@@ -4722,7 +4729,7 @@ weibo.common.text = function (content, preclt) {
     if (util.dom.matches(node, 'img[type="face"][alt]')) return node.getAttribute('alt').trim();
   };
   types.emoji = function (node) {
-    if (!util.dom.matches(node, '[src^="http://img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]')) return void 0;
+    if (!util.dom.matches(node, '[src*="//img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]')) return void 0;
     // 这些表情都在 0xe000+ 的区间，对应的 utf8 编码都是三位，所以一定是 e 开头
     var code = node.getAttribute('src').match(/(e.....)\.png/)[1];
     var unicode = util.str.emoji(code);
@@ -4886,8 +4893,8 @@ weibo.feed.hyperlinks = {};
 weibo.feed.hyperlinks.dom = function (feed) {
   return weibo.feed.content(feed, function (m) {
     return Array.from(m.querySelectorAll([
-      'a[yawf-link-type="O"][href^="http://t.cn/"]',
-      'a[href^="http://feed.mix.sina.com.cn/link_card/redirect?"]'
+      'a[yawf-link-type="O"][href*="//t.cn/"]',
+      'a[href*="//feed.mix.sina.com.cn/link_card/redirect?"]'
     ].join(',')));
   }).filter(filter.fast.hyperlink.validator);
 };
@@ -6098,7 +6105,7 @@ filter.items.other.hidethese_ad.ad_feed = filter.item({
     if (!this.conf) return null;
     if (feed.getAttribute('feedtype') === 'ad') return 'hidden';
     if (feed.querySelector('[action-type="feed_list_ad"]')) return 'hidden';
-    if (feed.querySelector('a[href^="http://adinside.weibo.cn/"]')) return 'hidden';
+    if (feed.querySelector('a[href*="//adinside.weibo.cn/"]')) return 'hidden';
     if (feed.querySelector('[diss-data*="feedad"]')) return 'hidden';
     if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hidden';
     if (feed.querySelector('[suda-uatrack*="negativefeedback]')) return 'hidden';
@@ -6240,7 +6247,7 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{voteWeiboFilterDesc}}' } },
   'rule': function voteWeiboFilterRule(feed) {
     if (!this.conf) return null;
-    if (feed.querySelector('.WB_from a[href^="http://vote.weibo.com/"]'))
+    if (feed.querySelector('.WB_from a[href*="//vote.weibo.com/"]'))
       return 'hidden';
     if (feed.querySelector('.WB_feed_spec_cont a[action-data*="vote.weibo.com"]'))
       return 'hidden';
@@ -6317,7 +6324,7 @@ filter.items.other.hidethese_content.wenwodr = filter.item({
     if (!this.conf) return null;
     if (feed.querySelector('div[action-data*="objectid=2017896001:"]')) return 'hidden';
     if (feed.querySelector('a[suda-uatrack*="2017896001-product"]')) return 'hidden';
-    if (feed.querySelector('a[href^="http://dr.wenwo.com/"]')) return 'hidden';
+    if (feed.querySelector('a[href*="//dr.wenwo.com/"]')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -6422,9 +6429,9 @@ filter.items.other.hidethese_source.wei_huati = filter.item({
     if (!this.conf) return null;
     if (feed.querySelector('a[suda-data="key=tblog_home_new&value=feed_come_from"][href*="huati.weibo.com"]'))
       return 'hidden';
-    if (feed.querySelector('a[href*="http://weibo.com/p/"][href$="from=feed_card"]'))
+    if (feed.querySelector('a[href*="//weibo.com/p/"][href$="from=feed_card"]'))
       return 'hidden';
-    if (feed.querySelector('.WB_from a[href="http://app.weibo.com/t/feed/4AbAFV"]'))
+    if (feed.querySelector('.WB_from a[href*="//app.weibo.com/t/feed/4AbAFV"]'))
       return 'hidden';
     return null;
   },
@@ -6440,7 +6447,7 @@ filter.items.other.hidethese_source.wei_qun = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{weiqunSourceWeiboDesc}}' } },
   'rule': function weiqunSourceWeiboRule(feed) {
     if (!this.conf) return null;
-    if (feed.querySelector('a[href*="http://q.weibo.com/"][href$="source=weibosource"]'))
+    if (feed.querySelector('a[href*="//q.weibo.com/"][href$="source=weibosource"]'))
       return 'hidden';
     return null;
   },
@@ -6916,7 +6923,7 @@ filter.predef.group('layout');
   item('Cheng', 373, '.icon_cheng { display: none !important; }', { 'extt': '<i class="W_icon icon_cheng" style="display:inline-block!important"></i>' });
   item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }', { 'extt': '<i class="W_icon icon_gongyi" style="display:inline-block!important"></i>' });
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_zongyika2014" style="display:inline-block!important"></i>' });
-  item('Youji', 35, '.lvxing2014, .icon_airball, a[href^="http://huodong.weibo.com/travel2014"] { display: none !important; }', { 'extt': '<i class="W_icon icon_airball" style="display:inline-block!important"></i>' });
+  item('Youji', 35, '.lvxing2014, .icon_airball, a[href*="//huodong.weibo.com/travel2014"] { display: none !important; }', { 'extt': '<i class="W_icon icon_airball" style="display:inline-block!important"></i>' });
   item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }', { 'extt': '<i class="W_icon icon_double11" style="display:inline-block!important"></i>' });
   item('Night', 185, '.icon_wbnight2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_wbnight2014" style="display:inline-block!important"></i>' });
   item('RedPack', 434, '.icon_redpack, .icon_wealth { display: none !important; }', { 'extt': '<i class="W_icon icon_redpack" style="display:inline-block!important"></i><i class="W_icon icon_wealth" style="display:inline-block!important"></i>' });
@@ -6969,8 +6976,8 @@ filter.predef.group('layout');
       var allTips = Array.from(realTips.querySelectorAll('li'));
       allTips = allTips.filter(function (tip) {
         var a = tip.querySelector('a[href]'), href = a && a.href || '';
-        if (href.indexOf('http://d.weibo.com') !== -1) return false;
-        if (href.indexOf('http://weibo.com/tv') !== -1) return false;
+        if (href.indexOf('//d.weibo.com') !== -1) return false;
+        if (href.indexOf('//weibo.com/tv') !== -1) return false;
         return true;
       });
 
@@ -7111,7 +7118,7 @@ filter.predef.group('layout');
       var close = document.querySelector('.WB_feed_type .WB_expand_media .WB_media_view .artwork_box .ficon_close ');
       if (close) close.click();
     });
-    util.css.add('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .rightcursor { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/small.cur"), auto !important; }');
+    util.css.add('.WB_feed_type .WB_expand_media .WB_media_view[yawf-piclast] .rightcursor { cursor: url("//img.t.sinajs.cn/t6/style/images/common/small.cur"), auto !important; }');
   });
   item('PicTag', 179, '.WB_media_view .media_show_box .artwork_box .tag_showpicL, .WB_media_view .media_show_box .artwork_box .tag_showpicR, .icon_taged_pic { display: none !important; }');
   item('SonTitle', 35, '.WB_feed_type .WB_feed_together .wft_hd { display: none !important; }');
@@ -7289,10 +7296,10 @@ filter.predef.group('layout');
         var a = util.dom.create('a', ''); version = ''; a.href = adskin.href;
         try { version = version || util.str.parsequery(a.search.slice(1)).version; } catch (e) { }
         util.debug('ad skin %o(version %o) has been replaced', adskin.href, version);
-        adskin.setAttribute('href', 'http://img.t.sinajs.cn/t6/skin/' + target + '/skin.css?version=' + version);
+        adskin.setAttribute('href', '//img.t.sinajs.cn/t6/skin/' + target + '/skin.css?version=' + version);
       }
       var adskincover = document.querySelector('#skin_cover_s[style*="/skin35"], #skin_cover_s[style*="/skin36"]');
-      if (adskincover) adskincover.style.backgroundImage = 'url("http://img.t.sinajs.cn/t6/skin/' + target + '/images/profile_cover_s.jpg?version=' + version + '")';
+      if (adskincover) adskincover.style.backgroundImage = 'url("//img.t.sinajs.cn/t6/skin/' + target + '/images/profile_cover_s.jpg?version=' + version + '")';
     };
     observer.dom.add(updateSkin);
 
@@ -7322,7 +7329,7 @@ filter.predef.group('layout');
   item('Template', 279, '.icon_setskin { display: none !important; }');
   item('HomeTip', 124, '#v6_pl_content_hometip { display: none !important }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
-  item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href^="http://desktop.weibo.com/download.php"] { display: none !important; }');
+  item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href*="//desktop.weibo.com/download.php"] { display: none !important; }');
   item('IM', 189, '#WB_webim { display: none !important; }');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
@@ -7354,8 +7361,8 @@ filter.predef.group('layout');
     'a[href^="/friends"]': 'leftnav_friends',
     'a[href^="/groupsfeed"]': 'leftnav_groupsfeed',
     'a[href^="/mygroups"]': 'leftnav_mygroups',
-    'a[href^="http://d.weibo.com"]': 'leftnav_hot',
-    'a[href^="http://weibo.com/tv"]': 'leftnav_tv',
+    'a[href*="//d.weibo.com"]': 'leftnav_hot',
+    'a[href*="//weibo.com/tv"]': 'leftnav_tv',
     'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
     'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
   });
@@ -7398,7 +7405,7 @@ filter.predef.group('layout');
     '.PCD_person_info': 'yawf-pr-pcd-person-info',
     '.WB_cardwrap[action-data*="weibo.com%2Fhongbao"]': 'yawf-pr-hongbao',
     '.WB_cardwrap[action-data*="sina.com.cn%2Fhongbao"]': 'yawf-pr-hongbao',
-    'a[href^="http://hongbao.weibo.com/hongbao"]': 'yawf-pr-hongbao',
+    'a[href*="//hongbao.weibo.com/hongbao"]': 'yawf-pr-hongbao',
     '.PCD_person_info a.WB_cardmore[href^="/p/"][href$="info?mod=pedit"]': 'yawf-pr-pcd-person-info-my',
   });
   var tagPLeftMods = function tagPLeftMods() {
@@ -7643,7 +7650,7 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
         left.addEventListener('click', function (e) {
           var t = e.target; if (!util.dom.matches(t, 'a, a *')) return;
           while (t.tagName.toLowerCase() !== 'a') t = t.parentNode;
-          var href = t.href; if (!href.match(/^http:\/\//)) return;
+          var href = t.href; if (!href.match(/^(?:https?:)\/\//)) return;
           e.stopPropagation(); e.preventDefault();
           util.func.page(function (href) { location.assign(href); }, href);
         }, true);
@@ -8660,7 +8667,7 @@ filter.items.tool.weibotool.pause_animated_image = filter.item({
       .WB_pic img[src$=".gif"]:not([yawf-pause-animate])
       { display: none !important; }
     */ noop();
-    }), { 'attr': attr }));
+    })));
   }
 }).addto(filter.groups.tool);
 
@@ -8727,7 +8734,7 @@ filter.items.tool.weibotool.replace_image_emoji = filter.item({
   'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{replaceImageEmojiDesc}}' } },
   'ainit': function () {
     var replaceImageEmoji = function replaceImageEmoji() {
-      var emoji = Array.from(document.querySelectorAll('[src^="http://img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]'));
+      var emoji = Array.from(document.querySelectorAll('[src*="//img.t.sinajs.cn/t4/appstyle/expression/emimage/e"]'));
       emoji.forEach(function (node) {
         var code = node.getAttribute('src').match(/(e.....)\.png/)[1];
         var text = document.createTextNode(util.str.emoji(code));
@@ -9587,9 +9594,9 @@ filter.items.style.layout.dark_nav_bar = filter.item({
       .WB_global_nav { background: #333; }
       .WB_global_nav_alpha { background: rgba(51, 51, 51, 0.94); }
       .gn_logo .logo:empty { background: none !important; }
-      .gn_logo .logo:empty::before, .gn_logo .logo:empty::after { content: " "; display: block; background: url("http://img.t.sinajs.cn/t6/style/images/global_nav/WB_logo.png?id=1404211047727") no-repeat 0 40%; height: 48px; }
+      .gn_logo .logo:empty::before, .gn_logo .logo:empty::after { content: " "; display: block; background: url("//img.t.sinajs.cn/t6/style/images/global_nav/WB_logo.png?id=1404211047727") no-repeat 0 40%; height: 48px; }
       @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (min-device-pixel-ratio: 2) {
-        .gn_logo .logo:empty::before, .gn_logo .logo:empty::after { background-image:url("http://img.t.sinajs.cn/t6/style/images/global_nav/WB_logo-x2.png?id=1404211047727"); background-size:80px 27px; }
+        .gn_logo .logo:empty::before, .gn_logo .logo:empty::after { background-image:url("//img.t.sinajs.cn/t6/style/images/global_nav/WB_logo-x2.png?id=1404211047727"); background-size:80px 27px; }
       }
       .gn_logo .logo:empty::before { width: 36px; float: left; }
       .gn_logo .logo:empty::after { width: 104px; float: right; background-position: -36px 40%; }
@@ -9889,14 +9896,14 @@ filter.items.style.layout.set_skin = filter.item({
     };
     var setSkinId = function (skinId) {
       skinStyle.href = skinStyle.href.replace(/\/skin\/[^\/]*\/skin.css/, '/skin/' + skinId + '/skin.css');
-      var coverCss = '#skin_cover_s { background-image: url("http://img.t.sinajs.cn/t6/skin/' +
+      var coverCss = '#skin_cover_s { background-image: url("//img.t.sinajs.cn/t6/skin/' +
         skinId + '/images/profile_cover_s.jpg?version=' + version + '") !important; }';
       (coverStyle || (coverStyle = document.head.appendChild(util.dom.create('style', '')))).textContent = coverCss;
     };
     var setSkin = function setSkin() {
       var id = skinId();
       if (!skinStyle) {
-        var skinCss = document.querySelector('link[href^="http://img.t.sinajs.cn/t6/skin/"][href*="/skin.css?"]');
+        var skinCss = document.querySelector('link[href*="//img.t.sinajs.cn/t6/skin/"][href*="/skin.css?"]');
         if (!skinCss) return;
         version = ((skinCss.href.match(/version=([a-fA-F0-9]*)/) || [])[1]) || '';
         skinStyle = skinCss.cloneNode(); skinStyle.id = 'yawf-skin_style';
