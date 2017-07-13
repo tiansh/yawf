@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.450
+// @version           3.7.451
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7171,7 +7171,7 @@ filter.predef.group('layout');
 
   // 标记微博按钮
   observer.weibo.onload(function (feed) {
-    var li = Array.from(feed.querySelectorAll('.WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
+    var li = Array.from(feed.querySelectorAll('.WB_feed_type .WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
     li.forEach(function (li) {
       var type = li.querySelector('a').getAttribute('action-type');
       if (!type && li.querySelector('a[suda-uatrack="key=profile_feed&value=popularize_host"]')) type = 'fl_pop';
@@ -7188,16 +7188,18 @@ filter.predef.group('layout');
 
   // 标记微博评论按钮
   observer.dom.add(function markCommentButton() {
-    var cli = Array.from(document.querySelectorAll(
-      '.list_ul[node-type="feed_list_commentList"] .WB_handle ul li:not([yawf-comment-handle-type]), ' +
-      '.list_ul[node-type="comment_list"] .WB_handle ul li:not([yawf-comment-handle-type])'
-    ));
+    var cli = Array.from(document.querySelectorAll([
+      '.list_ul[node-type="feed_list_commentList"] .WB_handle ul li:not([yawf-comment-handle-type])',
+      '.list_ul[node-type="comment_list"] .WB_handle ul li:not([yawf-comment-handle-type])',
+      '.WB_feed_comment .WB_handle ul li:not([yawf-comment-handle-type])'
+    ].join(',')));
     cli.forEach(function (li) {
       var a = li.querySelector('a'), type = null;
       if (util.dom.matches(a, '[onclick*="service.account.weibo.com/reportspam"]')) type = 'report';
       else if (util.dom.matches(a, '[action-type="delete"]')) type = 'delete';
       else if (util.dom.matches(a, '[action-type="commentDialogue"]')) type = 'conversition';
       else if (util.dom.matches(a, '[action-type="reply"]')) type = 'reply';
+      else if (util.dom.matches(a, '[action-type="replycomment"]')) type = 'reply';
       else if (util.dom.matches(a, '[action-type="fl_like"]')) type = 'like';
       li.setAttribute('yawf-comment-handle-type', type || '');
     });
@@ -10099,8 +10101,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
 
       .WB_feed .WB_cardwrap { padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
-      .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3) !important; padding: 10px 0 10px 0 !important; margin: -1px 0 1px !important; box-shadow: none !important; border-radius: 0 !important; }
-      .WB_feed.WB_feed_v3 .WB_feed_type { padding-top: 0 !important; }
+      .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3) !important; padding: 0 0 10px 0 !important; margin: -1px 0 1px !important; box-shadow: none !important; border-radius: 0 !important; }
       .WB_feed { box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important; }
 
       .WB_feed_type .WB_feed_handle > .WB_handle, .WB_feed_type .WB_feed_handle > .WB_handle .WB_row_line .line { height: 16px !important; line-height: 15.6px !important; padding: 0 !important; margin: 0 !important; border: 0 !important; }
@@ -10115,11 +10116,10 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed [node-type="feed_list_timeTip"], .WB_feed .yawf-timeTip { height: 30px !important; margin: -16px 0 -15px !important; background: transparent !important; text-align: center !important; }
       .WB_feed [node-type="feed_list_timeText"], .WB_feed .yawf-timeTip div { display: inline-block !important; color: rgba(128, 128, 128, 0.6) !important; }
 
-      .WB_feed.WB_feed_v3 .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
-      .WB_feed.WB_feed_v3 .WB_sonFeed .WB_detail::after { display: none; }
-      .WB_feed.WB_feed_v3 .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
-      .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
-
+      .WB_feed .WB_detail::after { content: " "; display: block; height: 36px; width: 100%;  }
+      .WB_feed .WB_sonFeed .WB_detail::after { display: none; }
+      .WB_feed .WB_detail > .WB_from:last-child { margin: 10px 0 -31px 0; }
+      .WB_feed .WB_expand, .WB_feed.WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
     */ noop(); }).replace(/\/\/.*\n/g, '\n'));
   },
 }).addto(filter.groups.style);
