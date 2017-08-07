@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.451
+// @version           3.7.452
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7502,6 +7502,8 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
     'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{mergeLeftRightDesc}}' },
   },
   'ainit': function mergeLeftRight() {
+    // 发现页面的逻辑不一样，做处理很麻烦，所以不做处理
+    if (document.querySelector('.B_discover')) return;
     var main = document.body, side = this.ref.side.conf;
     var left = document.querySelector('.WB_main_l');
     if (!left) return setTimeout(mergeLeftRight.bind(this), 100);
@@ -8408,6 +8410,8 @@ filter.items.tool.weibotool.view_original = filter.item({
     var openPage = this.ref.open.conf === 'page';
     // chrome 不能处理带 hash 的 data uri
     // https://bugs.chromium.org/p/chromium/issues/detail?id=123004
+    // chrome (60+) 的 data uri 网页不能改 hash
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=594215
     var imgPage = util.str.cmt(function () { /*!HTML
       <!DOCTYPE html>
       <html>
@@ -8419,8 +8423,8 @@ filter.items.tool.weibotool.view_original = filter.item({
         .over #viewer.large { width: auto; height: auto; cursor: zoom-out; }
         .over #viewer.fit { max-width: 100vw; max-height: calc(100% - 20px); cursor: zoom-in; }
         #container { top: 0; overflow: auto; width: 100vw; height: calc(100vh - 101px); }
-        #container.left, #container.left #viewer { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/pic_prev.cur"), auto; }
-        #container.right, #container.right #viewer { cursor: url("http://img.t.sinajs.cn/t6/style/images/common/pic_next.cur"), auto; }
+        #container.left, #container.left #viewer { cursor: url("https://img.t.sinajs.cn/t6/style/images/common/pic_prev.cur"), auto; }
+        #container.right, #container.right #viewer { cursor: url("https://img.t.sinajs.cn/t6/style/images/common/pic_next.cur"), auto; }
         .single #container, .single #imgarea { height: 100vh; }
         #imgarea { display: table-cell; position: relative; vertical-align: middle; text-align: center; width: 100vw; height: calc(100vh - 101px); }
         #chose { position: fixed; clear: both; width: 100%; bottom: 0; height: 100px; overflow: auto; overflow-x: hidden; border-top: 1px solid #aaa; }
@@ -8435,12 +8439,12 @@ filter.items.tool.weibotool.view_original = filter.item({
       </style><script>
         var info = {{info}};
         var url = function (filename, large) {
-          return 'http://' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
+          return info.protocol + '//' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
         };
       </script></head>
       <body><div id="container"><div id="imgarea"><img id="viewer" class="large" /></div></div><div id="chose"><script>
         info.filenames.forEach(function (filename, i) {
-          document.write('<a href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
+          document.write('<a onclick="return goto(this.id) && false" href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
         });
       </script></div><script>
         function resize() {
@@ -8448,6 +8452,18 @@ filter.items.tool.weibotool.view_original = filter.item({
           var height = viewer.naturalHeight;
           if (width > container.clientWidth || height > container.clientHeight) imgarea.className = 'over';
           else imgarea.className = 'normal';
+        }
+        function checkHash(n) {
+          var hash = '#' + n, href = location.href;
+          try { location.hash = hash; } catch (_ignore) {}
+          if (top !== self) return true;
+          if (location.hash === hash) return true;
+          var iframe = document.createElement('iframe');
+          iframe.src = href.replace(/#.*$/, '');
+          iframe.style = 'position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0;';
+          document.body.innerHTML = '';
+          document.body.appendChild(iframe);
+          return false;
         }
         function readHash() {
           var hashVal = Number(location.hash.slice(1));
@@ -8465,9 +8481,9 @@ filter.items.tool.weibotool.view_original = filter.item({
         }
         function focus() { container.focus(); }
         if (info.filenames.length === 1) document.body.className = 'single';
-        function prevImg() { goto(Number(location.hash.slice(1)) - 1); };
-        function nextImg() { goto(Number(location.hash.slice(1)) + 1); };
-        function goto(n) { location.hash = '#' + n; };
+        function prevImg() { goto(Number(location.hash.slice(1)) - 1); }
+        function nextImg() { goto(Number(location.hash.slice(1)) + 1); }
+        function goto(n) { location.hash = '#' + n; }
         function checkLR(x) {
           if (info.filenames.length === 1) return 'mid';
           var pos = 'mid', w = container.clientWidth;
@@ -8476,42 +8492,44 @@ filter.items.tool.weibotool.view_original = filter.item({
           if (container.className !== pos) container.className = pos;
           return pos;
         }
-        viewer.onload = function () { setTimeout(resize, 0); };
-        imgarea.onmousemove = function (e) { checkLR(e.clientX); };
-        imgarea.addEventListener('click', function (e) {
-          var pos = checkLR(e.clientX);
-          if (pos === 'left') prevImg(); else if (pos === 'right') nextImg(); else return true;
-          e.stopPropagation();
-        }, true);
-        viewer.addEventListener('click', function () {
-          if (imgarea.className === 'normal') return;
-          if (viewer.className === 'large') viewer.className = 'fit';
-          else viewer.className = 'large';
-        });
-        window.onresize = resize;
-        window.onkeydown = function (e) {
-          var key = e.keyCode, n = key & 15;
-          if (key === 33) prevImg(); else if (key === 34) nextImg();
-          if ([48, 96].indexOf(key & -16) !== -1) {
-            if (n > 0 && n <= info.filenames.length) goto(n - 1);
-          }
-        };
-        window.onhashchange = show;
-        window.onload = function () {
-          show();
-          focus();
-        };
-        goto(info.current);
-        container.onblur = function () { setTimeout(focus, 0); };
+        function addEvents() {
+          viewer.onload = function () { setTimeout(resize, 0); };
+          imgarea.onmousemove = function (e) { checkLR(e.clientX); };
+          imgarea.addEventListener('click', function (e) {
+            var pos = checkLR(e.clientX);
+            if (pos === 'left') prevImg(); else if (pos === 'right') nextImg(); else return true;
+            e.stopPropagation();
+          }, true);
+          viewer.addEventListener('click', function () {
+            if (imgarea.className === 'normal') return;
+            if (viewer.className === 'large') viewer.className = 'fit';
+            else viewer.className = 'large';
+          });
+          window.onresize = resize;
+          window.onkeydown = function (e) {
+            var key = e.keyCode, n = key & 15;
+            if (key === 33) prevImg(); else if (key === 34) nextImg();
+            if ([48, 96].indexOf(key & -16) !== -1) {
+              if (n > 0 && n <= info.filenames.length) goto(n - 1);
+            }
+          };
+          window.onhashchange = show;
+          window.onload = function () {
+            show();
+            focus();
+          };
+          container.onblur = function () { setTimeout(focus, 0); };
+        }
+        if (checkHash(info.current)) addEvents();
       </script></body>
       </html>
     */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
     // 获取图片信息
     var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
     var imageUrl = function (info, single) {
-      if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0 };
+      if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0, 'protocol': location.protocol };
       if (openPage && !single) return 'data:text/html;charset=utf-8;base64,' + util.str.base64(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
-      return 'http://' + info.host + '/large/' + info.filenames[info.current];
+      return location.protocol + '//' + info.host + '/large/' + info.filenames[info.current];
     };
     var getImages = function (ref) {
       var container = ref; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
@@ -8547,7 +8565,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       var current = info.current || 0, pid = getPid(ref);
       if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
       if (!link) link = addLink(ref);
-      var full = { 'host': info.host, 'filenames': info.filenames, 'current': current };
+      var full = { 'host': info.host, 'filenames': info.filenames, 'current': current, 'protocol': location.protocol };
       link.href = imageUrl(full); link.setAttribute('yawf-img-url', imageUrl(full, true));
       link.addEventListener('click', updateLinkHandler);
       return link;
@@ -8592,6 +8610,7 @@ filter.items.tool.weibotool.view_original = filter.item({
       var thumbnail = util.dom.closest(e.target, selector); if (!thumbnail) return;
       var imgs = Array.from(util.dom.closest(thumbnail, 'ul').querySelectorAll(selector));
       var info = {
+        'protocol': location.protocol,
         'host': 'ww2.sinaimg.cn',
         'filenames': imgs.map(function (i) { return getPid(i); }),
         'current': imgs.indexOf(thumbnail),
