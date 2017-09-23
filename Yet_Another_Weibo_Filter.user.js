@@ -57,10 +57,7 @@
 // @run-at            document-start
 // ==/UserScript==
 
-/**
- * Workaround for GreaseMonkey on Firefox 55+
- * style can't be added before document_end
- */
+// 解决 GM_addStyle 的一些兼容问题
 if (!function testAddStyle() {
   try {
     var style = GM_addStyle(':root{}');
