@@ -57,27 +57,33 @@
 // @run-at            document-start
 // ==/UserScript==
 
-/**
- * Workaround for GreaseMonkey on Firefox 55+
- * style can't be added before document_end
- */
-GM_addStyle = (function () {
+// 解决 GM_addStyle 的一些兼容问题
+if (!function testAddStyle() {
+  try {
+    var style = GM_addStyle(':root{}');
+    if (!style) return false;
+    if (style.parentNode) style.parentNode.removeChild(style);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}()) GM_addStyle = (function () {
   var addStyleQueue = [];
-  setTimeout(function () {
-    while (addStyleQueue.length)
-      document.head.appendChild(addStyleQueue.shift());
-  }, 10);
+  (function addStyles() {
+    if (!document.head) return setTimeout(addStyles, 16);
+    addStyleQueue.splice(0).forEach(function (style) {
+      document.head.appendChild(style);
+    });
+    addStyleQueue = null;
+  }());
   return function (str) {
     var style = document.createElement('style');
     style.textContent = str;
-    if (!document.head) {
-      addStyleQueue.push(style);
-    } else {
-      document.head.appendChild(style);
-    }
+    if (addStyleQueue) addStyleQueue.push(style);
+    else document.head.appendChild(style);
     return style;
   };
-})();
+}());
 
 // 字体
 var fonts = {
