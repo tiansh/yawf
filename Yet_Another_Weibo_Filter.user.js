@@ -57,6 +57,28 @@
 // @run-at            document-start
 // ==/UserScript==
 
+/**
+ * Workaround for GreaseMonkey on Firefox 55+
+ * style can't be added before document_end
+ */
+GM_addStyle = (function () {
+  var addStyleQueue = [];
+  setTimeout(function () {
+    while (addStyleQueue.length)
+      document.head.appendChild(addStyleQueue.shift());
+  }, 10);
+  return function (str) {
+    var style = document.createElement('style');
+    style.textContent = str;
+    if (!document.head) {
+      addStyleQueue.push(style);
+    } else {
+      document.head.appendChild(style);
+    }
+    return style;
+  };
+})();
+
 // 字体
 var fonts = {
   'iconfont': '@font-face { font-family: "yawf-iconfont"; font-style: normal; font-weight: normal; src: url("data:image/woff;base64,d09GRk9UVE8AAAPIAAoAAAAABbQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAAA9AAAANUAAADot8EQFkZGVE0AAAHMAAAAGgAAABxtAw0mT1MvMgAAAegAAABJAAAAYFmdYldjbWFwAAACNAAAADgAAAFCAA0DAGhlYWQAAAJsAAAAMAAAADYD5a1oaGhlYQAAApwAAAAdAAAAJAaAA4BobXR4AAACvAAAAAgAAAAICAAAd21heHAAAALEAAAABgAAAAYAAlAAbmFtZQAAAswAAADkAAAB1Hh5OPRwb3N0AAADsAAAABYAAAAg/4YAM3icVY2xagJBFADfO+9O1GNNJBcLFwWxPLUXAumvDekPQUmjTYjYCNbP0sLO+Ak2NsLWfkN+ZN/ebiTaBG6qqWYQfB8QUSyzxaT/MZ7PJvPZJ6AHCC/c8liWuOlvImxXofL1PiT6l6isa7aZt00SSFjVJcCDhPWjBCHhpwHePSGgVQgXLzdG4CF230hxqlApc1El9ZwP+HgdhMqtYk7NxaVlkVdMEn+T3bkeuY7dE3HH7rgX8PD3NT7oc6gzfXJT0pk9kT0HIt8+UbzYm4RCiqp/hZJWXgAAAHicY2BgYGQAgjO2i86D6AtJW7VhNABKVQagAAB4nGNgZmFg/MLAysDBNJPpDAMDQz+EZnzNYMzIycDAxMAGJKGAkQEJBKS5pjA4MEQyRDLr/NdhiGGawdCMUAPkKQAhIwBYTwumAAAAeJxjYGBgZoBgGQZGBhCwAfIYwXwWBgUgzQKEIH7k//8Q8v8KqEoGRjYGGJP6gGYGUxcAAJgrBwx4nGNgZGBgAOK+F//94vltvjJwszCAwIWkrdpwuvx/LXMX0wwgl4OBCSQKAFMCC7x4nGNgZGBgmvG/liGGhQEEmLsYGBlQARMAU6MDCAAAAAQAAAAEAAB3AABQAAACAAB4nJWPwWoCMRCGv+gqihV6KB7EQ85ClmTxJL12n0C8i+zKXjawCuKLeOn79EH6BH2ETnSglFJoA0m+mf+fzAR44IohLcOUhXKPEc/KfZa8KmfieVceMDEj5SFT48VpsrFk5reqxD0epfrOfTa8KGfieVMeMONDecjcPHFhx5kaR8OeSCuczhNcdufaNfvY1rGV8If+JZWaSnfHgQpLQY6Xey379yZ3PbASLYjfSZ2/xZTydBm7Q2WL3Nu1/TaOxGHlgneFD+L9+y+2MlzHUXxJT63TmGyr7tjE1obc/+O1T5RwTOJ4nGNgZgCD/80MRkCKkQENAAAoVQG5AAA=") format("woff"); }',
@@ -712,6 +734,7 @@ var text = {
   },
   'fixedNewFeedTip': { 'zh-cn': '允许新微博提示随页面滚动始终显示', 'zh-hk': '允許新微博提示隨頁面滾動始終顯示', 'zh-tw': '允許新微博提示隨頁面滾動始終顯示', 'en': 'Floating new feeds tip' },
   'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
+  'floatBlackClose': { 'zh-cn': '点击浮动框外侧关闭浮动框', 'zh-hk': '點擊浮動框外側關閉浮動框', 'zh-tw': '點擊浮動框外側關閉浮動框', 'en': 'Click outside the floating box to close'},
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
@@ -8187,6 +8210,41 @@ filter.items.tool.fixed.fixed_others = filter.item({
   'key': 'weibo.tool.fixedOthers',
   'text': '{{fixedOthers}}',
   'default': true,
+}).addto(filter.groups.tool);
+
+filter.items.tool.fixed.black_close = filter.item({
+  'group': 'fixed',
+  'version': 454,
+  'type': 'boolean',
+  'key': 'weibo.tool.blackClose',
+  'text': '{{floatBlackClose}}',
+  'default': true,
+  'init': function () {
+    //Moved from Weibo_Popup_Black_Remover
+    var WPBR_click_wrapper = function () {
+      this.WPBR_reference.forEach(function (i) {
+        i.click();
+      });
+    }, WPBR_observer = function () {
+      [].slice.call(document.body.children).forEach(function (i) {
+        if (i.WPBR) return;
+        if (i.getAttribute && i.getAttribute('node-type') == 'outer' && i.childNodes.length === 0) {
+          var referenceCloseBtns = [];
+          [].slice.call(document.querySelectorAll('.content>.W_layer_close>a')).forEach(function (j) {
+            if (j.WPBR) return;
+            j.WPBR = true;
+            referenceCloseBtns.push(j);
+          });
+          if (referenceCloseBtns.length) {
+            i.WPBR_reference = referenceCloseBtns;
+            i.WPBR = true;
+            i.addEventListener('click', WPBR_click_wrapper);
+          }
+        }
+      });
+    };
+    observer.dom.add(WPBR_observer);
+  }
 }).addto(filter.groups.tool);
 
 // 微博相关工具
