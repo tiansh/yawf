@@ -61,23 +61,32 @@
  * Workaround for GreaseMonkey on Firefox 55+
  * style can't be added before document_end
  */
-GM_addStyle = (function () {
+if (!function testAddStyle() {
+  try {
+    var style = GM_addStyle(':root{}');
+    if (!style) return false;
+    if (style.parentNode) style.parentNode.removeChild(style);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}()) GM_addStyle = (function () {
   var addStyleQueue = [];
-  setTimeout(function () {
-    while (addStyleQueue.length)
-      document.head.appendChild(addStyleQueue.shift());
-  }, 10);
+  (function addStyles() {
+    if (!document.head) return setTimeout(addStyles, 16);
+    addStyleQueue.splice(0).forEach(function (style) {
+      document.head.appendChild(style);
+    });
+    addStyleQueue = null;
+  }());
   return function (str) {
     var style = document.createElement('style');
     style.textContent = str;
-    if (!document.head) {
-      addStyleQueue.push(style);
-    } else {
-      document.head.appendChild(style);
-    }
+    if (addStyleQueue) addStyleQueue.push(style);
+    else document.head.appendChild(style);
     return style;
   };
-})();
+}());
 
 // 字体
 var fonts = {
@@ -8476,6 +8485,7 @@ filter.items.tool.weibotool.view_original = filter.item({
           else imgarea.className = 'normal';
         }
         function checkHash(n) {
+          if (location.protocol !== 'data:') return true;
           var hash = '#' + n, href = location.href;
           try { location.hash = hash; } catch (_ignore) {}
           if (top !== self) return true;
@@ -8550,8 +8560,30 @@ filter.items.tool.weibotool.view_original = filter.item({
     var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
     var imageUrl = function (info, single) {
       if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0, 'protocol': location.protocol };
-      if (openPage && !single) return 'data:text/html;charset=utf-8;base64,' + util.str.base64(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
-      return location.protocol + '//' + info.host + '/large/' + info.filenames[info.current];
+      if (openPage && !single) {
+        var content = util.str.fill(imgPage, { 'info': JSON.stringify(info) });
+        return {
+          url: 'data:text/html;charset=utf-8;base64,' + util.str.base64(content),
+          content: content,
+        };
+      };
+      return {
+        url: location.protocol + '//' + info.host + '/large/' + info.filenames[info.current],
+        content: null
+      };
+    };
+    var tabCreate = function (page, event) {
+      var isFirefox = !!util.browser.fx.version;
+      var isGM3OrOlder = GM_info && !('scriptHandler' in GM_info) && parseInt(GM_info.version) < 4;
+      var isFirefoxWebExtension = isFirefox && !isGM3OrOlder;
+      if (!page.content || !isFirefoxWebExtension) {
+        GM_openInTab(page.url, false);
+        return;
+      }
+      // 我也不知道为什么，总之这样可以骗过 ABP 而在 Firefox 下工作
+      var tempPage = window.open('about:blank');
+      tempPage.document.write('<p>');
+      tempPage.location.href=page.url;
     };
     var getImages = function (ref) {
       var container = ref; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
@@ -8579,17 +8611,13 @@ filter.items.tool.weibotool.view_original = filter.item({
       while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       return link;
     };
-    var updateLinkHandler = function (e) {
-      GM_openInTab(e.currentTarget.href, false);
-      e.preventDefault();
-    };
     var updateLink = function (link, info, ref) {
       var current = info.current || 0, pid = getPid(ref);
       if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
       if (!link) link = addLink(ref);
       var full = { 'host': info.host, 'filenames': info.filenames, 'current': current, 'protocol': location.protocol };
-      link.href = imageUrl(full); link.setAttribute('yawf-img-url', imageUrl(full, true));
-      link.addEventListener('click', updateLinkHandler);
+      var page = imageUrl(full); link.href = page.url;
+      link.addEventListener('click', function (e) { tabCreate(page, e); e.preventDefault(); });
       return link;
     };
     var markLink = function (selector) {
@@ -8637,7 +8665,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         'filenames': imgs.map(function (i) { return getPid(i); }),
         'current': imgs.indexOf(thumbnail),
       };
-      GM_openInTab(imageUrl(info), false);
+      tabCreate(imageUrl(info), e);
       e.preventDefault(); e.stopPropagation();
     }), true);
     observer.dom.add(addOriLinkViewImage);
