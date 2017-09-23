@@ -62,19 +62,19 @@
  * style can't be added before document_end
  */
 GM_addStyle = (function () {
-  var addStyleQueue = [], loaded = false;
-  window.addEventListener('DOMContentLoaded', function () {
-    loaded = true;
+  var addStyleQueue = [];
+  setTimeout(function () {
     while (addStyleQueue.length)
-    GM_addStyle(addStyleQueue.shift());
-  });
+      document.head.appendChild(addStyleQueue.shift());
+  }, 10);
   return function (str) {
-    if (!loaded) {
-      addStyleQueue.push(str);
-      return;
-    }
-    var style = document.head.appendChild(document.createElement('style'));
+    var style = document.createElement('style');
     style.textContent = str;
+    if (!document.head) {
+      addStyleQueue.push(style);
+    } else {
+      document.head.appendChild(style);
+    }
     return style;
   };
 })();
