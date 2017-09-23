@@ -8222,14 +8222,24 @@ filter.items.tool.fixed.black_close = filter.item({
   'init': function () {
     //Moved from Weibo_Popup_Black_Remover
     var WPBR_click_wrapper = function () {
-      var closeBtn = [].slice.call(document.querySelectorAll('.W_layer_close>a')).pop();
-      closeBtn && closeBtn.click();
+      this.WPBR_reference.forEach(function (i) {
+        i.click();
+      });
     }, WPBR_observer = function () {
       [].slice.call(document.body.children).forEach(function (i) {
         if (i.WPBR) return;
-        if (i.getAttribute && i.getAttribute('node-type') == 'outer') {
-          i.WPBR = true;
-          i.addEventListener('click', WPBR_click_wrapper);
+        if (i.getAttribute && i.getAttribute('node-type') == 'outer' && i.childNodes.length === 0) {
+          var referenceCloseBtns = [];
+          [].slice.call(document.querySelectorAll('.content>.W_layer_close>a')).forEach(function (j) {
+            if (j.WPBR) return;
+            j.WPBR = true;
+            referenceCloseBtns.push(j);
+          });
+          if (referenceCloseBtns.length) {
+            i.WPBR_reference = referenceCloseBtns;
+            i.WPBR = true;
+            i.addEventListener('click', WPBR_click_wrapper);
+          }
         }
       });
     };
