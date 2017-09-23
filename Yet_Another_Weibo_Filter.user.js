@@ -734,7 +734,6 @@ var text = {
   },
   'fixedNewFeedTip': { 'zh-cn': '允许新微博提示随页面滚动始终显示', 'zh-hk': '允許新微博提示隨頁面滾動始終顯示', 'zh-tw': '允許新微博提示隨頁面滾動始終顯示', 'en': 'Floating new feeds tip' },
   'fixedOthers': { 'zh-cn': '允许其他元素随页面滚动始终显示', 'zh-hk': '允許其他元素隨頁面滾動始終顯示', 'zh-tw': '允許其他元素隨頁面滾動始終顯示', 'en': 'Other floating items' },
-  'floatBlackClose': { 'zh-cn': '点击浮动框外侧关闭浮动框', 'zh-hk': '點擊浮動框外側關閉浮動框', 'zh-tw': '點擊浮動框外側關閉浮動框', 'en': 'Click outside the floating box to close'},
   // 微博
   'weiboToolsTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
   'unfoldLongWeibo': { 'zh-cn': '自动展开|不超过{{<count>}}字的微博|（每个换行符计{{<br>}}字）', 'zh-hk': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'zh-tw': '自動展開|不超過{{<count>}}個字的微博|（每個換行符計{{<br>}}字）', 'en': 'Automatically unfold weibo | within {{<count>}} characters || (count each line break as {{<br>}} characters)' },
@@ -8210,31 +8209,6 @@ filter.items.tool.fixed.fixed_others = filter.item({
   'key': 'weibo.tool.fixedOthers',
   'text': '{{fixedOthers}}',
   'default': true,
-}).addto(filter.groups.tool);
-
-filter.items.tool.fixed.black_close = filter.item({
-  'group': 'fixed',
-  'version': 454,
-  'type': 'boolean',
-  'key': 'weibo.tool.blackClose',
-  'text': '{{floatBlackClose}}',
-  'default': true,
-  'init': function () {
-    //Moved from Weibo_Popup_Black_Remover
-    var WPBR_click_wrapper = function () {
-      var closeBtn = [].slice.call(document.querySelectorAll('.W_layer_close>a')).pop();
-      closeBtn && closeBtn.click();
-    }, WPBR_observer = function () {
-      [].slice.call(document.body.children).forEach(function (i) {
-        if (i.WPBR) return;
-        if (i.getAttribute && i.getAttribute('node-type') == 'outer') {
-          i.WPBR = true;
-          i.addEventListener('click', WPBR_click_wrapper);
-        }
-      });
-    };
-    observer.dom.add(WPBR_observer);
-  }
 }).addto(filter.groups.tool);
 
 // 微博相关工具
