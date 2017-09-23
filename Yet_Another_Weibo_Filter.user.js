@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.453
+// @version           3.7.455
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -56,6 +56,34 @@
 // @connect           sinaimg.cn
 // @run-at            document-start
 // ==/UserScript==
+
+// 解决 GM_addStyle 的一些兼容问题
+if (!function testAddStyle() {
+  try {
+    var style = GM_addStyle(':root{}');
+    if (!style) return false;
+    if (style.parentNode) style.parentNode.removeChild(style);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}()) GM_addStyle = (function () {
+  var addStyleQueue = [];
+  (function addStyles() {
+    if (!document.head) return setTimeout(addStyles, 16);
+    addStyleQueue.splice(0).forEach(function (style) {
+      document.head.appendChild(style);
+    });
+    addStyleQueue = null;
+  }());
+  return function (str) {
+    var style = document.createElement('style');
+    style.textContent = str;
+    if (addStyleQueue) addStyleQueue.push(style);
+    else document.head.appendChild(style);
+    return style;
+  };
+}());
 
 // 字体
 var fonts = {
@@ -8454,6 +8482,7 @@ filter.items.tool.weibotool.view_original = filter.item({
           else imgarea.className = 'normal';
         }
         function checkHash(n) {
+          if (location.protocol !== 'data:') return true;
           var hash = '#' + n, href = location.href;
           try { location.hash = hash; } catch (_ignore) {}
           if (top !== self) return true;
@@ -8528,8 +8557,32 @@ filter.items.tool.weibotool.view_original = filter.item({
     var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
     var imageUrl = function (info, single) {
       if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0, 'protocol': location.protocol };
-      if (openPage && !single) return 'data:text/html;charset=utf-8;base64,' + util.str.base64(util.str.fill(imgPage, { 'info': JSON.stringify(info) }));
-      return location.protocol + '//' + info.host + '/large/' + info.filenames[info.current];
+      if (openPage && !single) {
+        var content = util.str.fill(imgPage, { 'info': JSON.stringify(info) });
+        return {
+          url: 'data:text/html;charset=utf-8;base64,' + util.str.base64(content),
+          content: content,
+        };
+      };
+      return {
+        url: location.protocol + '//' + info.host + '/large/' + info.filenames[info.current],
+        content: null
+      };
+    };
+    var tabCreate = function (page, event) {
+      var isFirefox = !!util.browser.fx.version;
+      var isGM3OrOlder = GM_info && !('scriptHandler' in GM_info) && parseInt(GM_info.version) < 4;
+      var isFirefoxWebExtension = isFirefox && !isGM3OrOlder;
+      if (!page.content || !isFirefoxWebExtension) {
+        GM_openInTab(page.url, false);
+        return;
+      }
+      // FIXME 这都在干嘛
+      var tempPage = window.open('about:blank');
+      tempPage.document.open();
+      tempPage.document.write(page.content);
+      tempPage.document.close();
+      tempPage.location.replace(page.url);
     };
     var getImages = function (ref) {
       var container = ref; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
@@ -8557,17 +8610,13 @@ filter.items.tool.weibotool.view_original = filter.item({
       while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       return link;
     };
-    var updateLinkHandler = function (e) {
-      GM_openInTab(e.currentTarget.href, false);
-      e.preventDefault();
-    };
     var updateLink = function (link, info, ref) {
       var current = info.current || 0, pid = getPid(ref);
       if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
       if (!link) link = addLink(ref);
       var full = { 'host': info.host, 'filenames': info.filenames, 'current': current, 'protocol': location.protocol };
-      link.href = imageUrl(full); link.setAttribute('yawf-img-url', imageUrl(full, true));
-      link.addEventListener('click', updateLinkHandler);
+      var page = imageUrl(full); link.href = page.url;
+      link.addEventListener('click', function (e) { tabCreate(page, e); e.preventDefault(); });
       return link;
     };
     var markLink = function (selector) {
@@ -8615,7 +8664,7 @@ filter.items.tool.weibotool.view_original = filter.item({
         'filenames': imgs.map(function (i) { return getPid(i); }),
         'current': imgs.indexOf(thumbnail),
       };
-      GM_openInTab(imageUrl(info), false);
+      tabCreate(imageUrl(info), e);
       e.preventDefault(); e.stopPropagation();
     }), true);
     observer.dom.add(addOriLinkViewImage);
