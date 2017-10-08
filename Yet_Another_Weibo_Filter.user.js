@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.457
+// @version           3.7.458
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7573,7 +7573,6 @@ filter.items.tool.sidebar.merge_left_right = filter.item({
       [yawf-merge-left] .WB_frame .WB_main_l,
       [yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .yawf-WB_left_nav, body[yawf-merge-left]:not([yawf-weibo-only]) .WB_frame .WB_left_nav { width: 229px; padding: 0; float: none; }
       [yawf-merge-left]:not([yawf-weibo-only]) .WB_frame { width: 840px !important; padding: 10px; background-position: -300px center; }
-      [yawf-merge-left] #v6_pl_leftnav_group { margin-bottom: 10px; }
       [yawf-merge-left] .WB_frame .yawf-WB_left_nav .lev_line fieldset, body[yawf-merge-left] .WB_frame .WB_left_nav .lev_line fieldset { padding-left: 190px; }
       [yawf-merge-left] .WB_left_nav .lev a:hover, .WB_left_nav .lev_curr, .WB_left_nav .lev_curr:hover, .WB_left_nav .levmore .more { background: rgba(128, 128, 128, 0.1) !important; }
       [yawf-merge-left] .WB_left_nav .lev_Box, .WB_left_nav fieldset { border-color: rgba(128, 128, 128, 0.5) !important; }
@@ -8158,22 +8157,38 @@ filter.items.tool.fixed.fixed_right = filter.item({
     var fleft = filter.items.tool.fixed.fixed_left.conf;
     var fright = filter.items.tool.fixed.fixed_right.conf && !(merge && fleft);
     var fother = filter.items.tool.fixed.fixed_others.conf;
-    var attrs = ['fixed-item', 'fixed-box', 'fixed-inbox', 'fixed-id'], query = [];
-    var subs = function (s) {
-      query = query.concat(attrs.map(function (a) { return s + ' [' + a + ']'; }));
+    var itemAttrs = ['fixed-item', 'fixed-box'];
+    var containerAttrs = ['fixed-inbox', 'fixed-id'];
+    var withIn = [];
+    var queryString = function (classNames, attributes) {
+      return classNames.map(function (className) {
+        return attributes.map(function (attribute) {
+          return className + ' [' + attribute + ']';
+        }).join(',');
+      }).join(',');
     };
-    if (!fright) subs('.WB_main_r');
-    if (!fleft) subs('.WB_main_l');
-    if (!fother) { subs('.WB_frame_b'); subs('.WB_frame_c'); }
-    if (query.length === 0) return; else query = query.join(',');
+    if (!fright) withIn.push('.WB_main_r');
+    if (!fleft) withIn.push('.WB_main_l');
+    if (!fother) { withIn.push('.WB_frame_b', '.WB_frame_c'); }
+    if (withIn.length === 0) return;
     var removeFixed = function removeRightFixed() {
-      var items = Array.from(document.querySelectorAll(query));
-      if (!items.length) return;
+      var itemQuery = queryString(withIn, itemAttrs);
+      var items = Array.from(document.querySelectorAll(itemQuery));
       items.forEach(function (fixed) {
         var x = fixed.cloneNode(true);
-        attrs.forEach(function (attr) { x.removeAttribute(attr); });
+        itemAttrs.forEach(function (attr) { x.removeAttribute(attr); });
         fixed.parentNode.insertBefore(x, fixed);
         fixed.parentNode.removeChild(fixed);
+      });
+      var containerQuery = queryString(withIn, containerAttrs);
+      var containers = Array.from(document.querySelectorAll(containerQuery));
+      containers.forEach(function (container) {
+        var x = container.cloneNode(true);
+        var parent = container.parentNode; if (!parent) return;
+        parent = parent.parentNode; if (!parent) return;
+        containerAttrs.forEach(function (attr) { x.removeAttribute(attr); });
+        parent.innerHTML = '';
+        parent.appendChild(x);
       });
     };
     removeFixed();
@@ -8612,19 +8627,44 @@ filter.items.tool.weibotool.view_original = filter.item({
       while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
       return link;
     };
-    var openLink = function (e) {
-      var link = util.dom.closest(e.target, 'a'); if (!link) return;
-      var page = JSON.parse(link  .getAttribute('yawf-link-page')); if (!page) return;
+    var pageHandler = (function () {
+      try { return new WeakMap(); } catch (e) {}
+      // 这样理论上会有内存泄露，不过老浏览器随他去吧
+      var map = [], count = 0;
+      return {
+        set: function (link, page) {
+          var index = link.getAttribute('yawf-view-ori-index');
+          if (!index) link.setAttribute('yawf-view-ori-index', (index = count++));
+          map[index] = page;
+        },
+        get: function (link) {
+          var index = link.getAttribute('yawf-view-ori-index');
+          return index && map[index];
+        },
+        has: function (link) {
+          return !!this.get(link);
+        }
+      };
+    }());
+    var addHandler = function (link, page) {
+      pageHandler.set(link, page);
+    };
+    window.addEventListener('click', function (e) {
+      if (e.button !== 0) return;
+      var link = util.dom.closest(e.target, 'a');
+      if (!link || !pageHandler.has(link)) return;
+      var page = pageHandler.get(link);
       tabCreate(page);
       e.preventDefault();
-    };
+      e.stopPropagation();
+    }, true);
     var updateLink = function (link, info, ref) {
       var current = info.current || 0, pid = getPid(ref);
       if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
       if (!link) link = addLink(ref);
       var full = { 'host': info.host, 'filenames': info.filenames, 'current': current, 'protocol': location.protocol };
-      var page = imageUrl(full); link.href = page.url; link.setAttribute('yawf-link-page', JSON.stringify(page));
-      link.addEventListener('click', openLink);
+      var page = imageUrl(full);
+      addHandler(link, page);
       return link;
     };
     var markLink = function (selector) {
