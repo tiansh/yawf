@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.458
+// @version           3.7.459
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -8177,18 +8177,19 @@ filter.items.tool.fixed.fixed_right = filter.item({
       items.forEach(function (fixed) {
         var x = fixed.cloneNode(true);
         itemAttrs.forEach(function (attr) { x.removeAttribute(attr); });
-        fixed.parentNode.insertBefore(x, fixed);
-        fixed.parentNode.removeChild(fixed);
+        fixed.parentNode.replaceChild(x, fixed);
       });
       var containerQuery = queryString(withIn, containerAttrs);
       var containers = Array.from(document.querySelectorAll(containerQuery));
       containers.forEach(function (container) {
         var x = container.cloneNode(true);
-        var parent = container.parentNode; if (!parent) return;
-        parent = parent.parentNode; if (!parent) return;
         containerAttrs.forEach(function (attr) { x.removeAttribute(attr); });
-        parent.innerHTML = '';
-        parent.appendChild(x);
+        var parent = container.parentNode;
+        var prev = parent.previousElementSibling;
+        var hadWraped = parent.style.willChange && prev && prev.innerHTML === '';
+        var replaceTarget = hadWraped ? parent : container;
+        if (hadWraped) prev.parentNode.removeChild(prev);
+        replaceTarget.parentNode.replaceChild(x, replaceTarget);
       });
     };
     removeFixed();
