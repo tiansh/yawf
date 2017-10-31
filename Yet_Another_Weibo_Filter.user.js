@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.460
+// @version           3.7.461
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -5107,7 +5107,10 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
           // 如果没有添加 is_search ，而且不是分组、不是悄悄关注，则自动跳转到 is_search
           if (('gid' in query) || ('whisper' in query)) break;
           query.is_search = '1';
-          delete query.key_word;
+          query.key_word = '"';
+          query.start_time = '1970-01-02';
+          query.end_time = '2038-01-19'; // 放心，可能并不是世界末日
+          query.gid = '0';
           a.search = '?' + util.str.toquery(query);
           location.replace(a.href);
         }
@@ -5124,7 +5127,10 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
         s.is_search = '1';
-        delete s.key_word;
+        s.key_word = '"';
+        s.start_time = '1970-01-02';
+        s.end_time = '2038-01-19';
+        s.gid = '0';
         l.search = util.str.toquery(s);
       });
     };
@@ -7395,6 +7401,7 @@ filter.predef.group('layout');
     'a[href^="/mygroups"]': 'leftnav_mygroups',
     'a[href*="//d.weibo.com"]': 'leftnav_hot',
     'a[href*="//weibo.com/tv"]': 'leftnav_tv',
+    'a[href*="krcom.cn"]': 'leftnav_tv',
     'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
     'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
   });
