@@ -32,7 +32,7 @@
 // @supportURL        https://github.com/tiansh/yawf/issues
 // @author            田生 http://weibo.com/tsh90
 // @copyright         田生; The MIT License
-// @license           The MIT License (MIT); http://opensource.org/licenses/MIT
+// @license           MIT; https://opensource.org/licenses/MIT
 // @compatible        firefox 推荐
 // @compatible        opera   支持
 // @compatible        chrome  支持
