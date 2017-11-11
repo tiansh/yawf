@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.461
+// @version           3.7.462
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -127,16 +127,15 @@ var text = {
   'baseFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博篩選', 'zh-tw': '微博篩選', 'en': 'Weibo Filter' },
   // 微博
   'loadWeiboTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
-  'loadWeiboBySearch': { 'zh-cn': '使用搜索代替首页以恢复正常首页顺序{{<i>}}', 'zh-hk': '使用檢索代替首頁以恢復正常首頁順序{{<i>}}', 'zh-tw': '使用檢索代替首頁以恢復正常首頁順序{{<i>}}', 'en': 'Use search on home page for better order of Weibo' },
-  'loadWeiboBySearchDesc': {
-    'zh-cn': '如果您的首页上微博排序混乱，以致无法正常使用微博，请尝试打开此功能。<strong>打开此功能会导致您微博中设置的屏蔽规则失效，您需要将会员中设置的屏蔽规则在脚本中再隐藏一遍。</strong>'
+  'loadWeiboByGroup': { 'zh-cn': '使用分组代替首页 {{<i>}}', 'zh-hk': '使用分組代替首頁 {{<i>}}', 'zh-tw': '使用分組代替首頁 {{<i>}}', 'en': 'View by group on home page {{<i>}}' },
+  'loadWeiboByGroupDesc': {
+    'zh-cn': '使用分组代替首页可以部分解决排序混乱和微博丢失的问题，但请注意分组有人数限制。'
   },
-  'loadWeiboBySearchWarnTitle': {
-    'zh-cn': '使用搜索代替首页'
-  },
-  'loadWeiboBySearchWarn': {
-    'zh-cn': '本功能利用搜索页不支持“智能排序”的特点，在您访问首页时自动跳转到搜索结果页，因此本功能的正常工作完全受制于微博搜索功能。<br />如果您打开后无法正常浏览微博，请考虑关闭此功能。<br />点击查看<a href="https://tiansh.github.io/yawf/fqa.html#%E5%85%B3%E4%BA%8E%E4%BD%BF%E7%94%A8%E6%90%9C%E7%B4%A2%E4%BB%A3%E6%9B%BF%E9%A6%96%E9%A1%B5%E5%8A%9F%E8%83%BD">关于本功能的详细说明</a><br />确实要打开本功能吗？'
-  },
+  'selectGroupTitle': { 'zh-cn': '选择分组', 'zh-hk': '選取分組', 'zh-tw': '選取分組', 'en': 'Select Group' },
+  'selectGroupHeader': { 'zh-cn': '选择代替首页的分组', 'zh-hk': '選取取代首頁的分組', 'zh-tw': '選取取代替首頁的分組', 'en': 'Select group for home page' },
+  'selectGroupLoading': { 'zh-cn': '正在获取分组信息……', 'zh-hk': '正在擷取分組資訊……', 'zh-tw': '正在擷取分組資訊……', 'en': 'Loading group data ...' },
+  'selectedGroup': { 'zh-cn': '选择分组：', 'zh-hk': '選取分組：', 'zh-tw': '選取分組：', 'en': 'Selected: ' },
+  'selectGroupButton': { 'zh-cn': '更改', 'zh-hk': '變更', 'zh-tw': '變更', 'en': 'Change' },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器{{<i>}}', 'zh-hk': '使用拖放快速創建篩選器{{<i>}}', 'zh-tw': '使用拖放快速創建篩選器{{<i>}}', 'en': 'Use drag and drop to create filters{{<i>}}' },
@@ -1141,6 +1140,13 @@ var html = {
   'suggestionItem': '<li yawf-suggestion="{{text}}"><a>{{text}}</a></li>',
   // 选中当前分组所有
   'configSelectAll': '<div class="yawf-configSelectAll yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f12">{{configSelectAllDesc}}</span></a></div>',
+  // 使用分组代替首页
+  'selectGroupButton': '<div style="margin: 0 0 0 4em;">{{selectedGroup}}<span class="yawf-select-group-show"></span><a href="javascript:;" class="W_btn_b yawf-select-group-button" style="margin-left: 1em;"><span class="W_f14">{{selectGroupButton}}</span></a></div>',
+  'selectGroupHeader': '<div class="yawf-select-group-header yawf-window-header">{{selectGroupHeader}}</div>',
+  'selectGroupBody': '<div class="yawf-select-group-body yawf-window-body"><span class="yawf-select-group-loading">{{selectGroupLoading}}</span><ul class=""></ul></div>',
+  'selectGroupItem': '<li><a href="javascript:;"><span class="ico_block"></span><span gid="{{id}}">{{name}}</span></a></li>',
+  'selectGroupItemDot': '<em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em>',
+  'selectGroupItemChosed': '<em node-type="left_item" class="W_ficon ficon_dot S_ficon">B</em>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-groupRemark">{{configImportWbpWarning}}</div></div>',
@@ -1238,6 +1244,7 @@ var url = {
   'myfollow': '{{domainURL}}/{{uid}}/myfollow',
   'stock': '{{domainURL}}/p/230677{{stockid}}',
   'topic': '{{domainURL}}/k/{{topic}}',
+  'list_group': '{{domainURL}}/aj/f/group/list',
 };
 
 var font = {
@@ -2672,6 +2679,20 @@ network.buffered = (function () {
     return callback;
   };
 }());
+
+// 获取用户的关注分组情况
+network.group = function (callback) {
+  util.xhr({
+    'method': 'GET',
+    'url': util.str.fill(url.list_group),
+    'onload': function (resp) {
+      var groups = JSON.parse(resp.responseText).data;
+      callback(groups.map(function (group) {
+        return { id: group.gid, name: group.gname };
+      }));
+    },
+  });
+};
 
 network.headers = function () {
   return {
@@ -5050,75 +5071,93 @@ filter.predef.group('base');
 // 如何加载微博
 filter.predef.subtitle('base', 'loadweibo', '{{loadWeiboTitle}}');
 
-// 快速创建过滤器
-filter.items.base.loadweibo.load_weibo_by_search = filter.item({
+// 使用分组代替首页
+filter.items.base.loadweibo.load_weibo_by_group = filter.item({
   'group': 'loadweibo',
   'version': 407,
   'type': 'boolean',
-  'key': 'weibo.tool.load_weibo_by_search',
-  'text': '{{loadWeiboBySearch}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboBySearchDesc}}' } },
+  'key': 'weibo.tool.load_weibo_by_group',
+  'text': '{{loadWeiboByGroup}}',
+  'ref': {
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByGroupDesc}}' },
+    'group': { 'type': 'noui', 'default': {} },
+  },
   'shown': function (dom) {
     var that = this;
-    var checkbox = dom.querySelector('[name="yawf-weibo.tool.load_weibo_by_search"]');
-    checkbox.addEventListener('change', function () {
-      if (!checkbox.checked) return;
-      that.putconf(false);
-      util.ui.confirm('yawf-enable-load-by-search', {
-        'title': util.str.fill('{{loadWeiboBySearchWarnTitle}}'),
-        'text': util.str.fill('{{loadWeiboBySearchWarn}}'),
-        'onOk': function () { that.putconf(true); },
+    var chose = function (group) { that.ref.group.putconf(group); };
+    var clear = function () { that.ref.group.putconf({}); };
+    var askGroup = function () {
+      var dialog = util.ui.dialog('yawf-select-group', text.selectGroupTitle, function (inner) {
+        var header = util.dom.create(html.selectGroupHeader); inner.appendChild(header);
+        var body = util.dom.create(html.selectGroupBody); inner.appendChild(body);
+        var loading = body.querySelector('.yawf-select-group-loading');
+        var ul = body.querySelector('ul');
+        network.group(function (groups) {
+          loading.parentNode.removeChild(loading);
+          var chosed = that.ref.group.conf || {};
+          groups.forEach(function (group) {
+            var li = util.dom.create('ul', util.str.fill(html.selectGroupItem, group)).firstChild;
+            var icon = util.dom.create(group.id === chosed.id ? html.selectGroupItemChosed : html.selectGroupItemDot);
+            var ico_block = li.querySelector('.ico_block'); ico_block.appendChild(icon);
+            li.addEventListener('click', function () {
+              chose(group); dialog.hide();
+              that.putconf(true); show();
+            });
+            ul.appendChild(li);
+          });
+        });
       });
+      dialog.show();
+    };
+    // 当用户更改设置时
+    var checkbox = dom.querySelector('[name="yawf-weibo.tool.load_weibo_by_group"]');
+    checkbox.addEventListener('change', function () {
+      var checked = checkbox.checked;
+      // 首先将设置暂时设为关闭，如果用户试图打开设置，弹出选择分组的对话框，设置会在选择分组后自动打开
+      that.putconf(false);
+      clear(); show();
+      if (checked) askGroup();
     });
+    // 显示选择的分组信息
+    var buttonRow = util.dom.create(html.selectGroupButton);
+    dom.appendChild(buttonRow);
+    var name = buttonRow.querySelector('.yawf-select-group-show');
+    var button = buttonRow.querySelector('.yawf-select-group-button');
+    var show = function () {
+      var active = that.conf;
+      buttonRow.style.display = active ? 'block' : 'none';
+      if (!active) return;
+      var group = that.ref.group.conf;
+      if (group && group.name) name.textContent = group.name;
+    };
+    show();
+    button.addEventListener('click', askGroup);
   },
   'ainit': function () {
+    var group = this.ref.group.conf;
+    if (!group || !group.id) { this.putconf(false); return; }
     // 发现当前不是搜索，就跳转到搜索去
-    var updateLocation = function redirectHomeWeiboUseSearch() {
-      // 首页才需要 is_search ，其他有些页面可能是因为从首页点过去的时候误带参数，需要特殊处理
+    var updateLocation = function redirectHomeWeiboUseGroup() {
+      // 首页才需要 gid ，其他有些页面可能是因为从首页点过去的时候误带参数，需要特殊处理
       var homefeed = document.getElementById('v6_pl_content_homefeed');
       var nothomefeed = document.getElementById('v6_pl_content_commentlist') ||
         document.querySelector('[id^="Pl_Official_MyProfileFeed__"]');
-      var ismessage = document.getElementById('v6_pl_content_messagesearch');
       if (!homefeed && !nothomefeed && !ismessage) return;
       var a = util.dom.create('a', ''); a.href = location.href;
-      // 检查是否添加了 is_search 关键词
+      // 检查是否添加了 gid 分组信息
       var query = util.str.parsequery(location.search.slice(1));
-      var has_is_search = 'is_search' in query;
-      var has_keyword = 'key_word' in query && query.key_word && query.key_word.replace(/[/\\"'<\n+$]/g, '');
-      var all_search_types = ['is_ori', 'is_pic', 'is_video', 'is_music', 'is_article'];
-      var is_other_search = all_search_types.some(function (t) { return t in query; });
-      var is_search_needed = homefeed && !is_other_search || (ismessage && has_is_search && has_keyword);
-      do {
-        if (has_is_search && is_search_needed) {
-          // 如果添加了 is_search，但是并没有搜索关键词，那么隐藏掉搜索到多少条微博的提示信息
-          if (has_keyword) break;
-          var searchInput = homefeed.querySelector('input[node-type="simpleSearch"]');
-          if (searchInput && searchInput.value === query.key_word) searchInput.value = '';
-          var searchTip = homefeed.querySelector('.WB_result');
-          if (searchTip) searchTip.parentNode.removeChild(searchTip);
-        } else if (has_is_search && !is_search_needed) {
-          // 评论页面不应该使用 is_search ，但是点击小黄签时会有问题，所以在这里处理一下
-          if (has_keyword) break;
-          delete query.is_search;
-          delete query.key_word;
-          a.search = '?' + util.str.toquery(query);
-          location.replace(a.href);
-        } else if (!has_is_search && is_search_needed) {
-          // 如果没有添加 is_search ，而且不是分组、不是悄悄关注，则自动跳转到 is_search
-          if (('gid' in query) || ('whisper' in query)) break;
-          query.is_search = '1';
-          query.key_word = '"';
-          query.start_time = '1970-01-02';
-          query.end_time = '2038-01-19'; // 放心，可能并不是世界末日
-          query.gid = '0';
-          a.search = '?' + util.str.toquery(query);
-          location.replace(a.href);
-        }
-      } while (false);
+      var has_gid = 'gid' in query && query.gid > 0;
+      var gid_needed = homefeed;
+      if (!has_gid && gid_needed) {
+        // 如果没有添加 gid 那么自动添上
+        query.gid = group.id;
+        a.search = '?' + util.str.toquery(query);
+        location.replace(a.href);
+      }
     };
     observer.dom.add(updateLocation);
-    // 给指向首页的链接加上 is_search 参数，免去更多的跳转
-    var updateHomeLinksWithIsSearch = function updateHomeLinksWithIsSearch() {
+    // 给指向首页的链接加上 gid 参数，免去更多的跳转
+    var updateHomeLinksWithGid = function updateHomeLinksWithGid() {
       var links = Array.from(document.querySelectorAll([
         '.gn_logo a', // 导航栏logo
         'a[suda-uatrack*="homepage"]', // 首页链接，根据跟踪标识识别；适用于顶栏和左栏
@@ -5126,15 +5165,11 @@ filter.items.base.loadweibo.load_weibo_by_search = filter.item({
       ].map(function (x) { return x + ':not([href*="is_search"])'; }).join(',')));
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
-        s.is_search = '1';
-        s.key_word = '"';
-        s.start_time = '1970-01-02';
-        s.end_time = '2038-01-19';
-        s.gid = '0';
+        s.gid = group.id;
         l.search = util.str.toquery(s);
       });
     };
-    observer.dom.add(updateHomeLinksWithIsSearch);
+    observer.dom.add(updateHomeLinksWithGid);
   },
 }).addto(filter.groups.base);
 
@@ -10787,7 +10822,7 @@ wbp.converter.table = function () {
   };
   var r = wbp.converter.rules; // 特殊转换规则
 
-  n(null, 'weibo.tool.load_weibo_by_search');
+  n(null, 'weibo.tool.load_weibo_by_group');
   n(null, 'weibo.tool.use_fast_creator');
   n(null, 'weibo.tool.use_context_menu_creator');
   d(null, 'weibo.tool.refilter', true);
@@ -11569,6 +11604,14 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .wbp-import-success-desc { font-size: 14px; }
   .wbp-import-success-body { max-height: 300px; overflow: auto; padding: 0 20px; }
   .yawf-configItem input[type="number"]:not(:focus) ~ .yawf-range-container:not(:hover) > input[type="range"]:not(:focus), .yawf-bubble input[type="range"] { display: none; }
+  // 选择分组
+  #yawf-select-group [node-type="inner"] { width: 400px; }
+  #yawf-select-group ul { margin: 0 20px 20px; }
+  #yawf-select-group li { line-height: 24px; }
+  #yawf-select-group li a { display: block; color: inherit; }
+  #yawf-select-group li a:hover { color: #eb7350; }
+  #yawf-select-group .ico_block { margin-right: 3px; }
+  #yawf-select-group .yawf-select-group-body { height: 200px; overflow: auto; }
   // 自动检查关注列表
   #yawf-following-notice [node-type="inner"] { padding: 10px 0; width: 600px; }
   #yawf-following-notice .yawf-following-notice-body { height: 280px; overflow: auto; }
