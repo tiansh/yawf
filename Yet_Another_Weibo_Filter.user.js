@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.464
+// @version           3.7.465
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -134,6 +134,28 @@ var text = {
   'selectGroupLoading': { 'zh-cn': '正在获取分组信息……', 'zh-hk': '正在擷取分組資訊……', 'zh-tw': '正在擷取分組資訊……', 'en': 'Loading group data ...' },
   'selectedGroup': { 'zh-cn': '选择分组：', 'zh-hk': '選取分組：', 'zh-tw': '選取分組：', 'en': 'Selected: ' },
   'selectGroupButton': { 'zh-cn': '更改', 'zh-hk': '變更', 'zh-tw': '變更', 'en': 'Change' },
+  'loadWeiboByMultiGroup': {
+    'zh-cn': '{{<enabled>}}使用多个分组拼凑首页{{<i>}}||每次展示{{<count>}}条|点击显示更多时{{<clear>}}{{<ii>}}||选择分组{{<iii>}}',
+    'zh-hk': '{{<enabled>}}使用多個分組拼湊首頁{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
+    'zh-tw': '{{<enabled>}}使用多個分組拼湊首頁{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
+    'en': '{{<enabled>}}Generate home page by multiple groups {{<i>}}|| show {{<count>}} feeds per page | when "show more" is clicked {{<clear>}} | {{<ii>}}||Group {{<iii>}}',
+  },
+  'loadWeiboByMultiGroupClear': { 'zh-cn': '清空已展示微博', 'zh-hk': '清空已展示微博', 'zh-tw': '清空已展示微博', 'en': 'clear feeds shown' },
+  'loadWeiboByMultiGroupKeep': { 'zh-cn': '保留已展示微博', 'zh-hk': '保持已展示微博', 'zh-tw': '保持已展示微博', 'en': 'keep feeds shown' },
+  'loadWeiboByMultiGroupDesc': {
+    'zh-cn': '打开本功能并配置多个分组后，脚本会自动打开每个分组的页面，根据时间顺序排列，拼凑出一个“首页”。<br />如果您关注的账号不多，可以放在一个分组内，建议使用单个分组代替首页的功能以获得更好的效果。',
+  },
+  'loadWeiboByMultiGroupDesc2': {
+    'zh-cn': '此处配置的每次加载的微博数量为过滤前的数量。建议启用显示更多时自动隐藏前面的微博，在页面上展示过多微博可能会导致您的浏览器运行缓慢。',
+  },
+  'loadWeiboByMultiGroupDesc3': {
+    'zh-cn': '由于要先一次性打开所有分组的页面，可能需要较长的加载时间。而且配置的分组越多，生成首页的速度越慢。',
+  },
+  'loadWeiboByMultiGroupMore': { 'zh-cn': '查看更多微博', 'zh-hk': '查閱更多微博', 'zh-tw': '查閱更多微博', 'en': 'View more Weibo' },
+  'loadWeiboByMultiGroupDoneAll': { 'zh-cn': '所有分组的最近微博已全部展示', 'zh-hk': '所有分組的最近微博已全部展示', 'zh-tw': '所有分組的最近微博已全部展示', 'en': 'All recent weibo in each group had been read' },
+  'loadWeiboByMultiGroupDoneGroupLeft': { 'zh-cn': '分组', 'zh-hk': '分組', 'zh-tw': '分組', 'en': 'All recent weibo in group ' },
+  'loadWeiboByMultiGroupDoneGroupRight': { 'zh-cn': '的最近微博已全部展示', 'zh-hk': '的最近微博已全部展示', 'zh-tw': '的最近微博已全部展示', 'en': ' had been read' },
+  'loadWeiboByMultiGroupLoading': { 'zh-cn': '正在加载中，请稍候...', 'zh-hk': '正在加載中，請稍候...' /* as is */, 'zh-tw': '正在載入中，請稍候...', 'en': 'Loading, please wait...' },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器{{<i>}}', 'zh-hk': '使用拖放快速創建篩選器{{<i>}}', 'zh-tw': '使用拖放快速創建篩選器{{<i>}}', 'en': 'Use drag and drop to create filters{{<i>}}' },
@@ -1145,6 +1167,11 @@ var html = {
   'selectGroupItem': '<li><a href="javascript:;"><span class="ico_block"></span><span gid="{{id}}">{{name}}</span></a></li>',
   'selectGroupItemDot': '<em node-type="left_item" class="W_ficon ficon_dot S_ficon">D</em>',
   'selectGroupItemChosed': '<em node-type="left_item" class="W_ficon ficon_dot S_ficon">B</em>',
+  // 使用多个分组代替首页
+  'loadWeiboByMultiGroupMore': '<div class="WB_cardwrap S_bg2 yawf-multiGroupMore"><a class="WB_cardmore WB_cardmore_noborder clearfix" href="javascript:;"><span class="more_txt W_f14">{{loadWeiboByMultiGroupMore}}<em class="W_ficon ficon_arrow_down">c</em></span></a></div>',
+  'loadWeiboByMultiGroupDoneAll': '<div class="WB_cardwrap S_bg2 yawf-multiGroupDone"><div class="WB_cardtitle_a W_tc">{{loadWeiboByMultiGroupDoneAll}}</div></div>',
+  'loadWeiboByMultiGroupDoneGroup': '<div class="WB_cardwrap S_bg2 yawf-multiGroupDone"><div class="WB_cardtitle_a W_tc">{{loadWeiboByMultiGroupDoneGroupLeft}}<span gid="{{id}}"></span>{{loadWeiboByMultiGroupDoneGroupRight}}</div></div>',
+  'loadWeiboByMultiGroupLoading': '<div class="WB_cardwrap S_bg2"><div class="WB_empty WB_empty_narrow"><div class="WB_innerwrap"><div class="empty_con clearfix"><p class="text"><i class="W_loading"></i>{{loadWeiboByMultiGroupLoading}}</p></div></div></div></div>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-groupRemark">{{configImportWbpWarning}}</div></div>',
@@ -1243,6 +1270,7 @@ var url = {
   'stock': '{{domainURL}}/p/230677{{stockid}}',
   'topic': '{{domainURL}}/k/{{topic}}',
   'list_group': '{{domainURL}}/aj/f/group/list',
+  'group_feeds': '{{domainURL}}/aj/mblog/fsearch?{{param}}',
 };
 
 var font = {
@@ -2680,7 +2708,7 @@ network.buffered = (function () {
 
 // 获取用户的关注分组情况
 network.group = function (callback) {
-  util.xhr({
+  return util.xhr({
     'method': 'GET',
     'url': util.str.fill(url.list_group),
     'onload': function (resp) {
@@ -2948,6 +2976,14 @@ network.suggest.user = network.suggest.base(function (query, callback) {
   };
 }, function (x) { return x.replace(/^@/, ''); }, []);
 
+network.suggest.group = network.suggest.base(function (query, callback) {
+  return network.group(function (groups) {
+    var names = groups.map(function (group) { return group.name; });
+    var matches = names.filter(function (group) { return group.indexOf(query.trim()) !== -1; })
+    callback(matches);
+  });
+}, function (x) { return x; });
+
 // 推荐话题
 network.suggest.topic = network.suggest.base(function (query, callback) {
   return util.xhr({
@@ -3180,6 +3216,54 @@ network.following = (function () {
       var busy = !xhr;
       if (busy) setTimeout(getNextPage, 10e3);
     }());
+  };
+}());
+
+network.feed = {};
+network.feed.group = (function () {
+  var nomore = function empty(callback) { callback([], empty); };
+  var getFeeds = function (data, callback) {
+    if (data.loading) return void callback([], nomore);
+    data.loading = true;
+    var param = JSON.parse(JSON.stringify(data.param)), lastPage = null;
+    param.gid = data.gid;
+    if (data.pages.length) {
+      lastPage = data.pages[data.pages.length - 1];
+      if (lastPage.length === 0) {
+        return void callback([], nomore);
+      }
+      param.min_id = lastPage[0].mid;
+      param.end_id = lastPage[lastPage.length - 1].mid;
+    }
+    util.xhr({
+      method: 'GET',
+      url: util.str.fill(url.group_feeds, { param: util.str.toquery(param) }),
+      onload: function (resp) {
+        data.loading = false;
+        var response = JSON.parse(resp.responseText);
+        var list = util.dom.create('div', response.data);
+        var items = Array.from(list.querySelectorAll('.WB_feed_type[mid]'));
+        var feeds = items.map(function (item) {
+          var dateitem = item.querySelector('[node-type="feed_list_item_date"][date]');
+          if (!dateitem) return null;
+          var date = Number(dateitem.getAttribute('date'));
+          var mid = item.getAttribute('mid');
+          return { date: date, mid: mid, dom: item.cloneNode(true), }
+        }).filter(util.func.identity);
+        util.debug('home feed generate: fetch feeds for %o, got %o', param, feeds);
+        data.pages.push(feeds);
+        callback(feeds.slice(0), function (callback) { getFeeds(data, callback); });
+      },
+      onerror: function () {
+        data.loading = false;
+        util.debug('home feed generate: error while fetching feeds for %o', param);
+        callback([], nomore);
+      }
+    });
+  };
+  return function (gid, param, callback) {
+    var data = { gid: gid, param: param, pages: [], feeds: {}, loading: false };
+    getFeeds(data, callback);
   };
 }());
 
@@ -3737,6 +3821,7 @@ filter.typed.config = (function () {
     'strings': itemsConfig,
     'boolean': baseConfig(Boolean),
     'users': itemsConfig,
+    'groups': itemsConfig,
     'number': baseConfig(Number),
     'range': baseConfig(Number),
     'select': baseConfig(String),
@@ -3753,6 +3838,7 @@ util.complete = (function () {
   var enable = function () { enabled = true; };
   var types = {
     'user': network.suggest.user,
+    'group': network.suggest.group,
     'topic': network.suggest.topic,
   };
   var timeout = null, shown = '';
@@ -4045,7 +4131,7 @@ filter.typed.dom = (function () {
       'outer': outer,
       'binder': function (dom, item) {
         var form = dom.querySelector('form');
-        var input = dom.querySelector('input');
+        var input = dom.querySelector('input[type="text"]');
         var ul = dom.querySelector('ul.yawf-configItems');
         var shown = {};
         // 将某个已经有的字符串显示到末尾
@@ -4096,23 +4182,23 @@ filter.typed.dom = (function () {
     else callback(str, util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': item.display ? item.display(str) : str })).firstChild);
   });
 
+  // 提示用户不存在的对话框
+  var showUserNotExistError = function (str) {
+    util.ui.alert('yawf-user-not-exist', {
+      'title': util.str.fill('{{accountNotExistErrorTitle}}'),
+      'text': util.str.fill('{{{accountNotExistError}}}', { 'name': util.str.escape.xml(str) }),
+      'icon': 'error'
+    });
+  };
   // 用户列表的设置项
   var users = items(html.configUsers, function (item, userinput, str, callback) {
-    var showUserNotExistError = function () {
-      util.ui.alert('yawf-user-not-exist', {
-        'title': util.str.fill('{{accountNotExistErrorTitle}}'),
-        'text': util.str.fill('{{{accountNotExistError}}}', { 'name': util.str.escape.xml(str) }),
-        'icon': 'error'
-      });
-      callback();
-    };
     if (userinput) {
       if (!(str = str.trim().replace(/^@/, ''))) return callback();
       network.account.name(str, function (info) {
-        if (!info) showUserNotExistError();
+        if (!info) { showUserNotExistError(str); callback(); }
         else if (item.add && !item.add(info)) callback();
         else callback(info.id, util.dom.create('ul', util.str.fill(html.configUsersItem, info)).firstChild);
-      }, showUserNotExistError);
+      }, function () { showUserNotExistError(str); });
     } else {
       var emptyInfo = { 'id': str, 'name': ' ', 'avatar': ' ' };
       var li = util.dom.create('ul', util.str.fill(html.configUsersItem, emptyInfo)).firstChild;
@@ -4122,6 +4208,36 @@ filter.typed.dom = (function () {
         u.setAttribute('uid', info.id); u.setAttribute('title', info.name); u.textContent = info.name;
         var p = li.querySelector('.pic img');
         p.src = info.avatar;
+      });
+    }
+  });
+
+  // 提示分组不存在的对话框
+  var showGroupNotExistError = function (str) {
+    util.ui.alert('yawf-group-not-exist', {
+      'title': util.str.fill('{{groupNotExistErrorTitle}}'),
+      'text': util.str.fill('{{{groupNotExistError}}}', { 'name': util.str.escape.xml(str) }),
+      'icon': 'error'
+    });
+    callback();
+  };
+  // 添加多个用户组
+  var groups = items(html.configStrings, function (item, userinput, str, callback) {
+    if (userinput) {
+      network.group(function (groups) {
+        var group = groups.filter(function (group) { return group.name === str; })[0];
+        if (!group) { showGroupNotExistError(str); callback(); }
+        else if (item.add && !item.add(info)) callback();
+        else callback(group.id, util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': item.display ? item.display(str) : str })).firstChild);
+      }, function () { showUserNotExistError(str); });
+    } else {
+      var emptyInfo = { 'id': str, 'name': ' ' };
+      var li = util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': '' })).firstChild;
+      callback(str, li);
+      network.group(function (groups) {
+        var group = groups.filter(function (group) { return group.id === str; })[0];
+        li.title = group.name;
+        li.appendChild(document.createTextNode(group.name));
       });
     }
   });
@@ -4206,6 +4322,7 @@ filter.typed.dom = (function () {
     'strings': strings,
     'boolean': bool,
     'users': users,
+    'groups': groups,
     'range': range,
     'key': key,
     'noui': noui,
@@ -5080,6 +5197,10 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByGroupDesc}}' },
     'group': { 'type': 'noui', 'default': {} },
   },
+  'deactive': function () {
+    this.putconf(false);
+    this.ref.group.putconf({});
+  },
   'shown': function (dom) {
     var that = this;
     var chose = function (group) { that.ref.group.putconf(group); };
@@ -5100,6 +5221,7 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
             li.addEventListener('click', function () {
               chose(group); dialog.hide();
               that.putconf(true); show();
+              filter.items.base.loadweibo.load_weibo_by_multi_group.deactive();
             });
             ul.appendChild(li);
           });
@@ -5131,24 +5253,22 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
     show();
     button.addEventListener('click', askGroup);
   },
-  'ainit': function () {
-    var group = this.ref.group.conf;
-    if (!group || !group.id) { this.putconf(false); return; }
+  'gogroup': function (gid) {
     // 发现当前不是搜索，就跳转到搜索去
     var updateLocation = function redirectHomeWeiboUseGroup() {
       // 首页才需要 gid ，其他有些页面可能是因为从首页点过去的时候误带参数，需要特殊处理
       var homefeed = document.getElementById('v6_pl_content_homefeed');
       var nothomefeed = document.getElementById('v6_pl_content_commentlist') ||
         document.querySelector('[id^="Pl_Official_MyProfileFeed__"]');
-      if (!homefeed && !nothomefeed && !ismessage) return;
+      if (!homefeed && !nothomefeed) return;
       var a = util.dom.create('a', ''); a.href = location.href;
       // 检查是否添加了 gid 分组信息
       var query = util.str.parsequery(location.search.slice(1));
-      var has_gid = 'gid' in query && query.gid > 0;
+      var has_gid = 'gid' in query && Number(query.gid);
       var gid_needed = homefeed;
       if (!has_gid && gid_needed) {
         // 如果没有添加 gid 那么自动添上
-        query.gid = group.id;
+        query.gid = gid;
         a.search = '?' + util.str.toquery(query);
         location.replace(a.href);
       }
@@ -5163,11 +5283,229 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
       ].map(function (x) { return x + ':not([href*="is_search"])'; }).join(',')));
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
-        s.gid = group.id;
+        s.gid = gid;
         l.search = util.str.toquery(s);
       });
     };
     observer.dom.add(updateHomeLinksWithGid);
+  },
+  'ainit': function () {
+    var group = this.ref.group.conf;
+    if (!group || !group.id) { this.putconf(false); return; }
+    this.gogroup(group.id);
+  },
+}).addto(filter.groups.base);
+
+// 使用分组代替首页
+filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
+  'group': 'loadweibo',
+  'version': 465,
+  'type': 'groups',
+  'complete': 'group',
+  'key': 'weibo.tool.load_weibo_by_multi_group',
+  'text': '{{{loadWeiboByMultiGroup}}}',
+  'ref': {
+    'count': { 'type': 'range', 'default': 50, 'min': 20, 'max': 200 },
+    'enabled': { 'type': 'boolean', 'default': false, },
+    'clear': {
+      'type': 'select',
+      'default': 'clear',
+      'select': [
+        { 'value': 'clear', 'text': '{{loadWeiboByMultiGroupClear}}' },
+        { 'value': 'keep', 'text': '{{loadWeiboByMultiGroupKeep}}' },
+      ],
+    },
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByMultiGroupDesc}}' },
+    'ii': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByMultiGroupDesc2}}' },
+    'iii': { 'type': 'sicon', 'icon': 'warn', 'text': '{{loadWeiboByMultiGroupDesc3}}' },
+  },
+  'deactive': function () { this.ref.enabled.putconf(false); },
+  'init': function () {
+    const that = this;
+    // 和单分组替换功能互斥
+    util.config.onput(that.key, function (value) {
+      if (!value) return;
+      filter.items.base.loadweibo.load_weibo_by_group.deactive();
+    });
+    if (!that.ref.enabled.conf) return;
+    if (!that.conf || !that.conf.length) return;
+    var groups = that.conf, count = that.ref.count.conf, clear = that.ref.clear.conf;
+    var loadingTip = null;
+    // 先跳转到空白页面
+    filter.items.base.loadweibo.load_weibo_by_group.gogroup('-1');
+    // 自动检查当前是不是特定的基础界面，是的话开始这段××的逻辑
+    observer.dom.add(function checkMultiGroupPage() {
+      var query = util.str.parsequery(location.search.slice(1));
+      var gid = 'gid' in query && Number(query.gid);
+      if (gid !== -1) return;
+      if (!groups || !groups.length) return;
+      var placeholder = document.querySelector('.WB_feed > .WB_result_null');
+      if (!placeholder) return;
+      var feedlist = placeholder.parentNode;
+      feedlist.removeChild(placeholder);
+      feedlist.classList.add('WB_feed_v3');
+      feedlist.classList.add('WB_feed_v4');
+      loadingTip = util.dom.create(util.str.fill(html.loadWeiboByMultiGroupLoading));
+      feedlist.appendChild(loadingTip);
+      var param = Object.assign({}, query); delete param.gid;
+      showFeeds(feedlist, groups, param);
+    });
+    // ××的逻辑
+    var showFeeds = function (feedlist, groups, param) {
+      var loading = groups.length;
+      util.debug('home feed generate: start');
+      // 初始化数据获取
+      var feedByGroup = Array(groups.length).fill(null);
+      groups.forEach(function (gid, index) {
+        util.debug('home feed generate: get data for %o', gid);
+        network.feed.group(gid, param, function (feeds, more) {
+          var info = feedByGroup[index] = {
+            gid: gid,
+            feeds: feeds.map(function (feed) {
+              return Object.assign(feed, { error: false });
+            }),
+            more: feeds.length ? more : null,
+            errors: Math.ceil(feeds.length / 2), // 对分组内能容忍的最大乱序微博数量
+            empty: false,
+          };
+          checkOrder(info);
+          util.debug('home feed generate: got data for %o %o', gid, info);
+          if (!--loading) nextFeed(count);
+        });
+      });
+      // 检查拿到的数据是否是正常顺序的
+      // 如果顺序不正确，就试着多拿一些数据
+      var checkOrder = function (info) {
+        info.feeds.forEach(function (feed, index) {
+          if (feed.error) return;
+          var newer = info.feeds.slice(index + 1).filter(function (next) {
+            return +feed.date < +next.date;
+          });
+          if (!newer.length) return;
+          util.debug('home feed generate: feeds by group wrong order %o [ %o ]', info, feed);
+          feed.error = true;
+          info.errors++;
+        });
+      };
+      // 把每个分组的数据都补充到足够多的水平
+      var moreFeed = function (callback) {
+        feedByGroup.forEach(function (info, index) {
+          if (info.feeds.length > info.errors) return; // 数据还比较多，就不补充了
+          if (!info.more) return; // 不会再有更多的数据了
+          util.debug('home feed generate: get more data for %o', info.gid);
+          loading++;
+          util.func.call(function () {
+            info.more(function (feeds, more) {
+              Array.prototype.push.apply(info.feeds, feeds);
+              checkOrder(info);
+              info.more = feeds.length ? more : null;
+              util.debug('home feed generate: got more data for %o %o', info.gid, info);
+              if (--loading === 0) {
+                util.debug('home feed generate: collected more data');
+                callback();
+              }
+            });
+          });
+        });
+        if (loading === 0) {
+          util.debug('home feed generate: no need get more data');
+          callback();
+        }
+      };
+      // 从所有现有的数据里面，找一条最新的消息并显示
+      var choseFeed = function () {
+        // 找到最新的微博
+        var max = -Infinity, chosen = null;
+        util.debug('home feed generate: chose feed from %o', feedByGroup);
+        feedByGroup.forEach(function (info) {
+          info.feeds.forEach(function (feed) {
+            if (+feed.date < max) return;
+            max = +feed.date;
+            chosen = feed;
+          });
+        });
+        // 如果没找到，那么直接完成
+        if (max === -Infinity) {
+          util.debug('home feed generate: no more feed');
+          return null;
+        }
+        // 首先从现在的候选项里面把找到的微博删掉
+        util.debug('home feed generate: chosen feed', chosen);
+        var emptyGroups = [];
+        feedByGroup.forEach(function (info) {
+          if (info.empty) return;
+          info.feeds = info.feeds.filter(function (feed) {
+            return feed.mid !== chosen.mid;
+          });
+          if (info.feeds.length) return;
+          info.empty = true;
+          emptyGroups.push(info);
+        });
+        render(chosen.dom, 'feed');
+        emptyGroups.forEach(function (info) {
+          render(null, 'done', info);
+        });
+        return chosen;
+      };
+      // 逐条获取
+      var nextFeed = function nextFeed(remaind) {
+        util.debug('home feed generate: get next feed ... %o remaining', remaind);
+        if (remaind === 0) {
+          render(null, 'more');
+          return;
+        }
+        moreFeed(function () {
+          var feed = choseFeed();
+          // 加一个小延迟，不然会卡得要死
+          if (feed) setTimeout(function () {
+            nextFeed(remaind - 1);
+          }, 100); else render(null, 'done');
+        });
+      };
+      var render = function (element, type, detail) {
+        if (type === 'feed') {
+          // 最后把找到的微博添加到网页中
+          feedlist.insertBefore(element, loadingTip);
+          util.debug('home feed generate: instered feed', element);
+        } else if (type === 'more') (function () {
+          // 当达到指定条数时，暂停加载，并显示加载更多的按钮
+          var more = util.dom.create(util.str.fill(html.loadWeiboByMultiGroupMore));
+          var clicked = false;
+          feedlist.insertBefore(more, loadingTip);
+          loadingTip.style.display = 'none';
+          more.addEventListener('click', function () {
+            if (clicked) return; clicked = true;
+            more.parentNode.removeChild(more);
+            loadingTip.style.display = '';
+            if (clear) {
+              feedlist.innerHTML = '';
+              feedlist.appendChild(loadingTip);
+              window.scrollTo(null, 0);
+            }
+            nextFeed(count);
+          });
+        }()); else if (type === 'done') {
+          // 当某个分组或全部加载完成或所有微博加载完成时，给出提示信息
+          var gid = detail && detail.gid;
+          var line = gid ? html.loadWeiboByMultiGroupDoneGroup : html.loadWeiboByMultiGroupDoneAll;
+          var done = util.dom.create(util.str.fill(line, { id: gid }));
+          if (loadingTip) feedlist.insertBefore(done, loadingTip);
+          if (gid) network.group(function (groups) {
+            var group = groups.filter(function (group) {
+              return group.id === gid;
+            })[0];
+            if (!group || !group.name) {
+              feedlist.removeChild(done);
+              return;
+            }
+            var span = done.querySelector('span[gid]');
+            span.textContent = group.name;
+          }); else {
+            feedlist.removeChild(loadingTip);
+          }
+        }
+      }
+    };
   },
 }).addto(filter.groups.base);
 
@@ -10821,6 +11159,7 @@ wbp.converter.table = function () {
   var r = wbp.converter.rules; // 特殊转换规则
 
   n(null, 'weibo.tool.load_weibo_by_group');
+  n(null, 'weibo.tool.load_weibo_by_multi_group');
   n(null, 'weibo.tool.use_fast_creator');
   n(null, 'weibo.tool.use_context_menu_creator');
   d(null, 'weibo.tool.refilter', true);
@@ -11631,7 +11970,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]>*:first-child:not(.WB_screen):not(.WB_feed_detail) { display: none !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail { top: 10px; min-height: 0; max-height: 0; transition: max-height 0.1s; overflow: hidden; cursor: pointer; position: relative; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail,
-  [node-type="feed_list"].WB_feed.WB_feed_v3 .WB_feed_type[yawf-display$="-fold"] .WB_feed_vipcover .WB_feed_detail { padding-top: 0; padding-bottom: 0; }
+  [node-type="feed_list"].WB_feed.WB_feed_v3 .WB_feed_type[yawf-display$="-fold"] .WB_feed_vipcover .WB_feed_detail { padding-top: 0 !important; padding-bottom: 0 !important; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] .WB_feed_detail + .WB_feed_handle { display: none; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"] { padding: 10px 15px; }
   [node-type="feed_list"] .WB_feed_type[yawf-display$="-fold"]::before { display: block; line-height: 1em; padding: 1em 20px; border: 1px solid; border-color: transparent; margin: 0 1em; width: calc(100% - 6em - 2px); cursor: pointer; opacity: 0.8; }
