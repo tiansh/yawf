@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.465
+// @version           3.7.466
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1797,12 +1797,17 @@ util.page.valid = function () {
 
 // 当前是否是首页
 util.page.home = function () {
-  return location.pathname.slice(-5) === '/home';
+  var ishome = location.pathname.slice(-5) === '/home';
+  var gid = util.str.parsequery(location.search.slice(1)).gid;
+  return ishome && (!gid || gid <= 0);
 };
 
 // 当前是查看分组的页面吗
 util.page.group = function () {
-  return location.pathname.slice(-9) === '/mygroups';
+  var isgroup = location.pathname.slice(-9) === '/mygroups';
+  var ishome = location.pathname.slice(-5) === '/home';
+  var gid = util.str.parsequery(location.search.slice(1)).gid;
+  return isgroup || (ishome && gid > 0);
 };
 
 // 当前是搜索页面吗
@@ -5322,18 +5327,19 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
   },
   'deactive': function () { this.ref.enabled.putconf(false); },
   'init': function () {
-    const that = this;
+    var that = this;
     // 和单分组替换功能互斥
-    util.config.onput(that.key, function (value) {
+    util.config.onput(that.ref.enabled.key, function (value) {
       if (!value) return;
       filter.items.base.loadweibo.load_weibo_by_group.deactive();
     });
-    if (!that.ref.enabled.conf) return;
+    if (that.ref.enabled.conf) {
+      filter.items.base.loadweibo.load_weibo_by_group.gogroup('-1');
+    }
     if (!that.conf || !that.conf.length) return;
-    var groups = that.conf, count = that.ref.count.conf, clear = that.ref.clear.conf;
+    var groups = that.conf, count = that.ref.count.conf, clear = that.ref.clear.conf === 'clear';
     var loadingTip = null;
     // 先跳转到空白页面
-    filter.items.base.loadweibo.load_weibo_by_group.gogroup('-1');
     // 自动检查当前是不是特定的基础界面，是的话开始这段××的逻辑
     observer.dom.add(function checkMultiGroupPage() {
       var query = util.str.parsequery(location.search.slice(1));
