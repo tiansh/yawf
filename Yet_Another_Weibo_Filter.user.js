@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.466
+// @version           3.7.467
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -157,6 +157,8 @@ var text = {
   'loadWeiboByMultiGroupDoneGroupLeft': { 'zh-cn': '分组', 'zh-hk': '分組', 'zh-tw': '分組', 'en': 'All recent weibo in group ' },
   'loadWeiboByMultiGroupDoneGroupRight': { 'zh-cn': '的最近微博已全部展示', 'zh-hk': '的最近微博已全部展示', 'zh-tw': '的最近微博已全部展示', 'en': ' had been read' },
   'loadWeiboByMultiGroupLoading': { 'zh-cn': '正在加载中，请稍候...', 'zh-hk': '正在加載中，請稍候...' /* as is */, 'zh-tw': '正在載入中，請稍候...', 'en': 'Loading, please wait...' },
+  'groupNotExistErrorTitle': { 'zh-cn': '分组不存在', 'zh-hk': '分組不存在', 'zh-tw': '分組不存在', 'en': 'Group does not exist' },
+  'groupNotExistError': { 'zh-cn': '不存在名为“{{name}}”的分组', 'zh-hk': '不存在名為「{{name}}」的分組', 'zh-tw': '不存在名為「{{name}}」的分組', 'en': 'Group named "{{name}}" does not exist' },
   // 脚本
   'scriptToolsTitle': { 'zh-cn': '脚本', 'zh-hk': '腳本', 'zh-tw': '腳本', 'en': 'Script' },
   'useFastCreator': { 'zh-cn': '使用拖放快速创建过滤器{{<i>}}', 'zh-hk': '使用拖放快速創建篩選器{{<i>}}', 'zh-tw': '使用拖放快速創建篩選器{{<i>}}', 'en': 'Use drag and drop to create filters{{<i>}}' },
@@ -2713,15 +2715,18 @@ network.buffered = (function () {
 }());
 
 // 获取用户的关注分组情况
-network.group = function (callback) {
+network.group = function (onsucc, onerror) {
   return util.xhr({
     'method': 'GET',
     'url': util.str.fill(url.list_group),
     'onload': function (resp) {
       var groups = JSON.parse(resp.responseText).data;
-      callback(groups.map(function (group) {
+      onsucc(groups.map(function (group) {
         return { id: group.gid, name: group.gname };
       }));
+    },
+    'onerror': function () {
+      onerror();
     },
   });
 };
@@ -2987,7 +2992,7 @@ network.suggest.group = network.suggest.base(function (query, callback) {
     var names = groups.map(function (group) { return group.name; });
     var matches = names.filter(function (group) { return group.indexOf(query.trim()) !== -1; })
     callback(matches);
-  });
+  }, function () { callback([]); });
 }, function (x) { return x; });
 
 // 推荐话题
@@ -3868,7 +3873,7 @@ util.complete = (function () {
   };
   // 检查文本录入，等用户输入间隙的时候再联网推荐候选词
   var checkText = function (input, suggest) {
-    var currentCheck = '';
+    var currentCheck = null;
     return function () {
       if (input.value === currentCheck) return; currentCheck = input.value;
       if (timeout !== null) clearTimeout(timeout);
@@ -4204,7 +4209,7 @@ filter.typed.dom = (function () {
         if (!info) { showUserNotExistError(str); callback(); }
         else if (item.add && !item.add(info)) callback();
         else callback(info.id, util.dom.create('ul', util.str.fill(html.configUsersItem, info)).firstChild);
-      }, function () { showUserNotExistError(str); });
+      }, function () { showUserNotExistError(str); callback(); });
     } else {
       var emptyInfo = { 'id': str, 'name': ' ', 'avatar': ' ' };
       var li = util.dom.create('ul', util.str.fill(html.configUsersItem, emptyInfo)).firstChild;
@@ -4220,22 +4225,22 @@ filter.typed.dom = (function () {
 
   // 提示分组不存在的对话框
   var showGroupNotExistError = function (str) {
+    if (!str.trim()) return;
     util.ui.alert('yawf-group-not-exist', {
       'title': util.str.fill('{{groupNotExistErrorTitle}}'),
       'text': util.str.fill('{{{groupNotExistError}}}', { 'name': util.str.escape.xml(str) }),
       'icon': 'error'
     });
-    callback();
   };
   // 添加多个用户组
   var groups = items(html.configStrings, function (item, userinput, str, callback) {
     if (userinput) {
       network.group(function (groups) {
-        var group = groups.filter(function (group) { return group.name === str; })[0];
+        var group = groups.filter(function (group) { return group.name.trim() === str.trim(); })[0];
         if (!group) { showGroupNotExistError(str); callback(); }
         else if (item.add && !item.add(info)) callback();
         else callback(group.id, util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': item.display ? item.display(str) : str })).firstChild);
-      }, function () { showUserNotExistError(str); });
+      }, function () { showUserNotExistError(str); callback(); });
     } else {
       var emptyInfo = { 'id': str, 'name': ' ' };
       var li = util.dom.create('ul', util.str.fill(html.configStringsItem, { 'item': '' })).firstChild;
@@ -5388,10 +5393,12 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
           var newer = info.feeds.slice(index + 1).filter(function (next) {
             return +feed.date < +next.date;
           });
-          if (!newer.length) return;
           util.debug('home feed generate: feeds by group wrong order %o [ %o ]', info, feed);
+          if (!newer.length) return;
           feed.error = true;
-          info.errors++;
+          // 如果发现一两次连续就象征性地加几个容错，如果发现多了直接读到空为止
+          info.errors = Math.min(Math.max(info.errors + 5, Math.ceil(info.errors * 1.1)), 1000);
+          util.debug('home feed generate: increase buffer to %o for %o', info.errors, info);
         });
       };
       // 把每个分组的数据都补充到足够多的水平
