@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.467
+// @version           3.7.468
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -2715,21 +2715,44 @@ network.buffered = (function () {
 }());
 
 // 获取用户的关注分组情况
-network.group = function (onsucc, onerror) {
-  return util.xhr({
-    'method': 'GET',
-    'url': util.str.fill(url.list_group),
-    'onload': function (resp) {
-      var groups = JSON.parse(resp.responseText).data;
-      onsucc(groups.map(function (group) {
-        return { id: group.gid, name: group.gname };
-      }));
-    },
-    'onerror': function () {
-      onerror();
-    },
-  });
-};
+network.group = (function () {
+  var pending = [], cache = null, busy = false;
+  var request = function (onsucc, onerror) {
+    pending.push({ 'onsucc': onsucc, 'onerror': onerror });
+    console.log('pending: %o, busy: %o, cache: %o', pending, busy, cache);
+    if (cache) { util.func.call(response); return; }
+    if (busy) return; busy = true;
+    return util.xhr({
+      'method': 'GET',
+      'url': util.str.fill(url.list_group),
+      'headers': network.headers(),
+      'onload': function (resp) {
+        var groups = JSON.parse(resp.responseText).data;
+        cache = groups.map(function (group) {
+          return { id: group.gid, name: group.gname };
+        });
+        busy = false;
+        util.debug('got group info: %o', cache);
+        response();
+      },
+      'onerror': function () {
+        busy = false;
+        util.debug('got group info fail');
+        response();
+      },
+    });
+  };
+  var response = function () {
+    var callbacks = pending.splice(0);
+    callbacks.forEach(function (callbacks) {
+      if (cache) callbacks.onsucc(cache);
+      else callbacks.onerror(cache);
+    });
+  };
+  return function (onsucc, onerror) {
+    request(onsucc, onerror);
+  };
+}());
 
 network.headers = function () {
   return {
@@ -3249,17 +3272,17 @@ network.feed.group = (function () {
     util.xhr({
       method: 'GET',
       url: util.str.fill(url.group_feeds, { param: util.str.toquery(param) }),
+      headers: network.headers(),
       onload: function (resp) {
         data.loading = false;
         var response = JSON.parse(resp.responseText);
         var list = util.dom.create('div', response.data);
         var items = Array.from(list.querySelectorAll('.WB_feed_type[mid]'));
         var feeds = items.map(function (item) {
-          var dateitem = item.querySelector('[node-type="feed_list_item_date"][date]');
-          if (!dateitem) return null;
-          var date = Number(dateitem.getAttribute('date'));
-          var mid = item.getAttribute('mid');
-          return { date: date, mid: mid, dom: item.cloneNode(true), }
+          var dateitem = item.querySelector('[node-type="feed_list_item_date"][date]'); if (!dateitem) return null;
+          var date = Number(dateitem.getAttribute('date')); if (!date) return null;
+          var mid = item.getAttribute('mid'); if (!mid) return null;
+          return { date: date, mid: mid, dom: item.cloneNode(true) };
         }).filter(util.func.identity);
         util.debug('home feed generate: fetch feeds for %o, got %o', param, feeds);
         data.pages.push(feeds);
@@ -5393,8 +5416,8 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
           var newer = info.feeds.slice(index + 1).filter(function (next) {
             return +feed.date < +next.date;
           });
-          util.debug('home feed generate: feeds by group wrong order %o [ %o ]', info, feed);
           if (!newer.length) return;
+          util.debug('home feed generate: feeds by group wrong order %o [ %o ]', info, feed);
           feed.error = true;
           // 如果发现一两次连续就象征性地加几个容错，如果发现多了直接读到空为止
           info.errors = Math.min(Math.max(info.errors + 5, Math.ceil(info.errors * 1.1)), 1000);
@@ -10580,7 +10603,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_view, .WB_feed.WB_feed_v3 .WB_media_view .media_show_box li { width: 440px; }
       .WB_feed.WB_feed_v3 .WB_media_view .media_show_box ul { margin-left: -32px; padding-left: 32px; }
       .WB_feed.WB_feed_v3 .artwork_box { width: 440px; }
-      .WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto; }
+      .WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto !important; }
       .WB_feed.WB_feed_v3 .layer_view_morepic .view_pic { padding: 0 40px 20px; }
       .WB_feed.WB_feed_v3 .WB_media_view .pic_choose_box .stage_box { width: 440px; }
     */ noop(); }).replace(/\/\/.*\n/g, '\n'));
