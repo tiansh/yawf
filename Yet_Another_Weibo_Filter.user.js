@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.469
+// @version           3.7.470
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -154,8 +154,8 @@ var text = {
   },
   'loadWeiboByMultiGroupMore': { 'zh-cn': '查看更多微博', 'zh-hk': '查閱更多微博', 'zh-tw': '查閱更多微博', 'en': 'View more Weibo' },
   'loadWeiboByMultiGroupDoneAll': { 'zh-cn': '所有分组的最近微博已全部展示', 'zh-hk': '所有分組的最近微博已全部展示', 'zh-tw': '所有分組的最近微博已全部展示', 'en': 'All recent weibo in each group had been read' },
-  'loadWeiboByMultiGroupDoneGroupLeft': { 'zh-cn': '分组', 'zh-hk': '分組', 'zh-tw': '分組', 'en': 'All recent weibo in group ' },
-  'loadWeiboByMultiGroupDoneGroupRight': { 'zh-cn': '的最近微博已全部展示', 'zh-hk': '的最近微博已全部展示', 'zh-tw': '的最近微博已全部展示', 'en': ' had been read' },
+  'loadWeiboByMultiGroupDoneGroupLeft': { 'zh-cn': '分组“', 'zh-hk': '分組「', 'zh-tw': '分組「', 'en': 'All recent weibo in group "' },
+  'loadWeiboByMultiGroupDoneGroupRight': { 'zh-cn': '”的最近微博已全部展示', 'zh-hk': '」的最近微博已全部展示', 'zh-tw': '」的最近微博已全部展示', 'en': '" had been read' },
   'loadWeiboByMultiGroupLoading': { 'zh-cn': '正在加载中，请稍候...', 'zh-hk': '正在加載中，請稍候...' /* as is */, 'zh-tw': '正在載入中，請稍候...', 'en': 'Loading, please wait...' },
   'groupNotExistErrorTitle': { 'zh-cn': '分组不存在', 'zh-hk': '分組不存在', 'zh-tw': '分組不存在', 'en': 'Group does not exist' },
   'groupNotExistError': { 'zh-cn': '不存在名为“{{name}}”的分组', 'zh-hk': '不存在名為「{{name}}」的分組', 'zh-tw': '不存在名為「{{name}}」的分組', 'en': 'Group named "{{name}}" does not exist' },
@@ -548,6 +548,7 @@ var text = {
   'layoutHideIconFoolsDay': { 'zh-cn': '愚人节', 'zh-hk': '愚人节', 'zh-tw': '愚人节', 'en': "Fools' Day" },
   'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': 'Internet celebrity' },
   'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
+  'layoutHideIconPanda': { 'zh-cn': '熊猫', 'zh-hk': '熊貓', 'zh-tw': '貓熊', 'en': 'Panda' },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
@@ -5296,7 +5297,8 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
       // 检查是否添加了 gid 分组信息
       var query = util.str.parsequery(location.search.slice(1));
       var has_gid = 'gid' in query && Number(query.gid);
-      var gid_needed = homefeed;
+      var is_search = 'is_search' in query && Number(query.is_search);
+      var gid_needed = homefeed && !(+gid === -1 && is_search);
       if (!has_gid && gid_needed) {
         // 如果没有添加 gid 那么自动添上
         query.gid = gid;
@@ -5366,22 +5368,45 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
     var loadingTip = null;
     // 先跳转到空白页面
     // 自动检查当前是不是特定的基础界面，是的话开始这段××的逻辑
-    observer.dom.add(function checkMultiGroupPage() {
+    var checkPage = function checkMultiGroupPage() {
       var query = util.str.parsequery(location.search.slice(1));
       var gid = 'gid' in query && Number(query.gid);
       if (gid !== -1) return;
       if (!groups || !groups.length) return;
-      var placeholder = document.querySelector('.WB_feed > .WB_result_null');
-      if (!placeholder) return;
-      var feedlist = placeholder.parentNode;
-      feedlist.removeChild(placeholder);
+      var param = Object.assign({}, query); delete param.gid;
+      watchFeedList(param);
+      watchMembers();
+    }
+    // 检查如果是要生成的页面，那么开始生成内容
+    var watchFeedList = function (param) {
+      var feedlist;
+      do {
+        var placeholder = document.querySelector('.WB_feed > .WB_result_null');
+        if (placeholder) {
+          feedlist = placeholder.parentNode;
+          feedlist.removeChild(placeholder);
+          break;
+        }
+        var is_search = 'is_search' in param;
+        if (is_search) {
+          var a = util.dom.create('a', ''); a.href = location.href;
+          param.gid = 0; a.search = '?' + util.str.toquery(param);
+          location.replace(a.href);
+        }
+        return;
+      } while (false);
       feedlist.classList.add('WB_feed_v3');
       feedlist.classList.add('WB_feed_v4');
       loadingTip = util.dom.create(util.str.fill(html.loadWeiboByMultiGroupLoading));
       feedlist.appendChild(loadingTip);
-      var param = Object.assign({}, query); delete param.gid;
       showFeeds(feedlist, groups, param);
-    });
+    };
+    // 去掉侧栏“未分组”那个鬼
+    var watchMembers = function () {
+      var members = document.getElementById('v6_pl_rightmod_groups');
+      if (members) members.parentNode.removeChild(members);
+    };
+    observer.dom.add(checkPage);
     // ××的逻辑
     var showFeeds = function (feedlist, groups, param) {
       var loading = groups.length;
@@ -5398,8 +5423,9 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
             }),
             more: feeds.length ? more : null,
             errors: Math.ceil(feeds.length / 2), // 对分组内能容忍的最大乱序微博数量
-            empty: false,
+            empty: feeds.length === 0,
           };
+          if (info.empty) render(null, 'done', info);
           checkOrder(info);
           util.debug('home feed generate: got data for %o %o', gid, info);
           if (!--loading) nextFeed(count);
@@ -7372,6 +7398,7 @@ filter.predef.group('layout');
   item('FoolsDay', 372, '.icon_foolsday { display: none !important; }', { 'extt': '<i class="W_icon icon_foolsday" style="display:inline-block!important"></i>' });
   item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
+  item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
   subtitle('Nav', true);
@@ -10630,6 +10657,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
     util.css.add(util.str.cmt(function () { /*!CSS
 
       .WB_feed .WB_cardwrap { padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+      .WB_feed .WB_cardwrap.WB_result { padding: 0 20px !important; }
       .WB_feed .WB_feed_type { border-top: 1px solid rgba(128, 128, 128, 0.3) !important; padding: 0 0 10px 0 !important; margin: -1px 0 1px !important; box-shadow: none !important; border-radius: 0 !important; }
       .WB_feed { box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important; }
 
