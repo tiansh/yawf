@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.470
+// @version           3.7.471
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -812,9 +812,9 @@ var text = {
   'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
   // 关注
   'followingToolsTitle': { 'zh-cn': '关注', 'zh-hk': '關注', 'zh-tw': '關注', 'en': 'Following' },
-  'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化（试验性）|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化（試驗性）|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list (Experimental) | {{<frequency>}}{{<i>}}' },
+  'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list | {{<frequency>}}{{<i>}}' },
   'autoCheckFollowingDesc': {
-    'zh-cn': '开启本功能后脚本会每隔一段时间，检查您的关注列表，并和上一次得到的结果比较，将不同之处展示出来。脚本检查关注列表只能像您在网页中检查关注列表一样，一页一页的翻看，因此检查可能需要较长的时间，如果您关注了大量的帐号，请考虑降低自动检查的频率。<br /><strong>该功能目前为试验性功能，可能出现任何问题。</strong>'
+    'zh-cn': '开启本功能后脚本会每隔一段时间，检查您的关注列表，并和上一次得到的结果比较，将不同之处展示出来。脚本检查关注列表只能像您在网页中检查关注列表一样，一页一页的翻看，因此检查可能需要较长的时间，如果您关注了大量的帐号，请考虑降低自动检查的频率。'
   },
   'autoCheckFollowing1': { 'zh-cn': '每天', 'zh-hk': '每天', 'zh-tw': '每天', 'en': 'every day' },
   'autoCheckFollowing3': { 'zh-cn': '每三天', 'zh-hk': '每三天', 'zh-tw': '每三天', 'en': 'every 3 days' },
@@ -823,6 +823,7 @@ var text = {
   'autoCheckFollowingNever': { 'zh-cn': '尚未检查', 'zh-hk': '尚未檢查', 'zh-tw': '尚未檢查', 'en': 'Never' },
   'autoCheckFollowingNow': { 'zh-cn': '立即检查', 'zh-hk': '立即檢查', 'zh-tw': '立即檢查', 'en': 'Check Now' },
   'autoCheckFollowingRunning': { 'zh-cn': '（正在检查）', 'zh-hk': '（正在檢查）', 'zh-tw': '正在檢查', 'en': '(Checking)' },
+  'autoCheckFollowingDownload': { 'zh-cn': '导出关注列表', 'zh-hk': '匯出關注清單', 'zh-tw': '匯出關注清單', 'en': 'Export Follow List' },
   'autoCheckFollowingClean': { 'zh-cn': '清除本地数据', 'zh-hk': '清除本機資料', 'zh-tw': '清除本機資料', 'en': 'Clear Local data' },
   'autoCheckFollowingDialogTitle': { 'zh-cn': '关注列表变化', 'zh-hk': '關注清單變化', 'zh-tw': '關注清單變化', 'en': 'Following List Changes' },
   'autoCheckFollowingTitle': { 'zh-cn': '关注列表变化', 'zh-hk': '關注清單變化', 'zh-tw': '關注清單變化', 'en': 'Following List Changes' },
@@ -1225,7 +1226,7 @@ var html = {
   'autoCheckFollowingBody': '<div><div class="yawf-following-notice-header yawf-window-header">{{autoCheckFollowingTitle}}</div><div class="yawf-following-notice-body yawf-window-body"><div class="yawf-following-notice-desc yawf-window-desc">{{autoCheckFollowingTip}}</div><div class="yawf-following-notice-text" style="margin-top:5px;">{{autoCheckFollowingTipDetail}}</div><div class="yawf-following-add" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingAdd}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-items-title">{{autoCheckFollowingLost}}</div><div class="yawf-following-items-container"><ul class="yawf-configUsersItems yawf-configItems"></ul></div></div></div><div node-type="confirmBox" class="yawf-following-notice-buttons yawf-window-buttons W_layer_btn S_bg1"><a class="yawf-following-notice-confirm W_btn_a btn_34px" node-type="confirm" href="javascript:void(0)">{{okButtonTitle}}</a></div></div>',
   'autoCheckFollowingItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{domainURL}}/u/{{id}}" target="_blank"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" usercard="id={{id}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{domainURL}}/u/{{id}}" target="_blank" usercard="id={{id}}" class="object_name S_txt1" uid="{{id}}" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
   'autoCheckFollowingOtherItem': '<li class="yawf-configUsersItem"><div class="shield_object_card"><div class="card_bg clearfix"><div class="card_pic"><span class="pic"><a href="{{href}}" target="_blank"><img class="W_face_radius" width="50" height="50" alt="" src="{{avatar}}" /></a></span></div><div class="card_content"><div class="object_info clearfix"><p class="W_fl"><a href="{{href}}" target="_blank" class="object_name S_txt1" title="{{name}}">{{name}}</a></p><p class="W_fr"></p></div><div class="other_info"></div></div></div></div></li>',
-  'autoCheckFollowingConfig': '<div style="margin: 0 0 0 4em;">{{autoCheckFollowingLastTime}}<span class="yawf-following-last"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingNow}}</span></a><span class="yawf-following-checking" style="display:none; margin-left:1em;">{{autoCheckFollowingRunning}}</span><a href="javascript:;" class="W_btn_b yawf-following-clear" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingClean}}</span></a></div>',
+  'autoCheckFollowingConfig': '<div style="margin: 0 0 0 4em;">{{autoCheckFollowingLastTime}}<span class="yawf-following-last"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingNow}}</span></a><span class="yawf-following-checking" style="display:none; margin-left:1em;">{{autoCheckFollowingRunning}}</span><a href="javascript:;" class="W_btn_b yawf-following-download" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingDownload}}</span></a><a href="javascript:;" class="W_btn_b yawf-following-clear" style="display:none; margin-left:1em;"><span class="W_f14">{{autoCheckFollowingClean}}</span></a></div>',
   // 表情输入
   'fastEmojiInput': '<div class="faces_list yawf-faces_list" node-type="scrollView"><div yawf-face="top" node-type="list"><span>{{fastEmojiInputTop}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><span id="yawf-face-drop-area">{{fastEmojiInputTopNotice}}</span></div><div yawf-face="recent" node-type="list"><span>{{fastEmojiInputRecent}}</span><ul><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>',
   'fastEmojiListItem': '<li title="{{title}}" action-data="insert={{text}}" action-type="select"><img src="{{img}}"></li>',
@@ -3171,9 +3172,11 @@ network.following = (function () {
         'description': '#' + description + '#',
       };
     })()) || (util.func.catched(function () {
+      var link = util.dom.closest(img, '[href]');
+      var href = link && link.getAttribute('href') || avatar;
       // 未知关注内容
       return {
-        'id': '#' + img.parentNode.href, // 向前兼容
+        'id': '#' + href, // 向前兼容
         'type': 'unknown',
         'href': href,
         'avatar': avatar,
@@ -9506,6 +9509,41 @@ filter.items.tool.followingtool.auto_check_following = filter.item({
     GM_deleteValue('following_info_' + uid);
     this.updateinfo();
   },
+  'download': function () {
+    var uid = util.info.uid;
+    var data = this.get_last();
+    var timestamp = data.timestamp;
+    var following = data.following;
+    var csvItem = function (string) {
+      if (!/[",\s]/.test(string)) return string;
+      return '"' + string.replace(/"/g, '""') + '"';
+    };
+    var link = util.dom.create('a', '');
+    var formatUrl = function (url) {
+      link.href = 'https://weibo.com/';
+      link.href = url;
+      return link.href;
+    };
+    // 这里我们用上 BOM 可以获得更好的兼容性
+    // 在前面放一列序号，这样即便不能处理 BOM ，也可以躲开最前面一行的序数，不会出什么问题
+    var content = '\ufeff#,name,homepage,avatar\r\n' + following.map(function (item, index) {
+      var name = csvItem(item.name);
+      var homepage = csvItem(formatUrl(item.href));
+      var avatar = csvItem(formatUrl(item.avatar));
+      return [index + 1, name, homepage, avatar].join(',');
+    }).join('\r\n') + '\r\n'; // CRLF 换行符支持效果最好，而且也更合乎规范
+    var blob = new Blob([content], { 'type': 'text/csv' });
+    var url = URL.createObjectURL(blob);
+    var date = new Date(timestamp).toISOString().replace(/[-]|T.*/g, '');
+    var filename = 'following-' + util.info.uid + '-' + date + '.csv';
+    var a = util.dom.create('a', '');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    util.func.call(function () {
+      URL.revokeObjectURL(url);
+      a.parentNode.removeChild(a);
+    });
+  },
   'compare': function (ori, now, notice) {
     if (!ori || !now) return {};
     var add = [], lost = [];
@@ -9546,6 +9584,8 @@ filter.items.tool.followingtool.auto_check_following = filter.item({
     dom.appendChild(util.dom.create(util.str.fill(html.autoCheckFollowingConfig)));
     dom.querySelector('.yawf-following-check-now')
       .addEventListener('click', this.checknow.bind(this, true));
+    dom.querySelector('.yawf-following-download')
+      .addEventListener('click', this.download.bind(this, true));
     dom.querySelector('.yawf-following-clear')
       .addEventListener('click', this.cleanup.bind(this, true));
     this.updateinfo = function () {
@@ -9556,6 +9596,7 @@ filter.items.tool.followingtool.auto_check_following = filter.item({
       dom.querySelector('.yawf-following-checking').style.display = status === 2 ? '' : 'none';
       dom.querySelector('.yawf-following-last').textContent = formatTime(last.timestamp);
       dom.querySelector('.yawf-following-clear').style.display = Number(last.timestamp) ? '' : 'none';
+      dom.querySelector('.yawf-following-download').style.display = Number(last.timestamp) ? '' : 'none';
     };
     this.updateinfo();
   },
