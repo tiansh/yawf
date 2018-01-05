@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.471
+// @version           3.7.472
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -442,6 +442,10 @@ var text = {
   'stockWeiboDesc': {
     'zh-cn': '股票链接和话题相似，在发布框输入“$”即可添加股票链接。勾选以隐藏所有包含此类链接的微博。',
   },
+  'paidWeibo': { 'zh-cn': '需要付费查看的微博{{<i>}}', 'zh-hk': '需要付費查看的微博{{<i>}}', 'zh-tw': '需要付費查看的微博{{<i>}}', 'en': 'Weibo require paid to view {{<i>}}' },
+  'paidWeiboDesc': {
+    'zh-cn': '博主在发布微博时，可以选择指定内容需要付费才能查看。在您向单条内容或博主付费后，才可查看相关内容。所付费用除博主的收益外，还可能包含部分渠道商分成和税金。',
+  },
   'otherBlacklistTitleSource': { 'zh-cn': '隐藏以下微博 - 特定来源', 'zh-hk': '隱藏以下內容 - 特定來源', 'zh-tw': '隱藏以下內容 - 特定來源', 'en': 'Hide following content - Source ' },
   'huatiSourceWeibo': { 'zh-cn': '来自微话题的微博{{<i>}}', 'zh-hk': '來自微話題的微博{{<i>}}', 'zh-tw': '來自微話題的微博{{<i>}}', 'en': 'Weibo comes from 微话题 (micro Topic){{<i>}}' },
   'huatiSourceWeiboDesc': {
@@ -576,6 +580,7 @@ var text = {
   'layoutHideLeftGroupToMe': { 'zh-cn': '群微博', 'zh-hk': '群微博', 'zh-tw': '群微博', 'en': '群微博 (Group)' },
   'layoutHideLeftSpecial': { 'zh-cn': '特别关注', 'zh-hk': '特别關注', 'zh-tw': '特别關注', 'en': 'Special Focus' },
   'layoutHideLeftWhisper': { 'zh-cn': '悄悄关注', 'zh-hk': '悄悄關注', 'zh-tw': '悄悄關注', 'en': 'Secret Following' },
+  'layoutHideLeftVPlus': { 'zh-cn': '付费订阅（V+）', 'zh-hk': '付費訂閱（V+）', 'zh-tw': '付費訂閱（V+）', 'en': 'Paid Subscrib (V+)' },
   'layoutHideLeftNew': { 'zh-cn': '新微博提示红点', 'zh-hk': '新微博提示紅點', 'zh-tw': '新微博提示紅點', 'en': 'Red dot for new Weibo' },
   'layoutHideLeftNews': { 'zh-cn': '新消息计数', 'zh-hk': '新消息計數', 'zh-tw': '新消息計數', 'en': 'Counts for News' },
   'layoutHideLeftCount': { 'zh-cn': '新分组微博计数', 'zh-hk': '新分組微博計數', 'zh-tw': '新分組微博計數', 'en': 'Counts for Weibo by Group' },
@@ -778,8 +783,6 @@ var text = {
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
   'fastEmojiClear': { 'zh-cn': '清空列表', 'zh-hk': '清除清單', 'zh-tw': '清除清單', 'en': 'Clear List' },
   'personalRedirectWeibo': { 'zh-cn': '用户主页默认显示全部微博而非热门微博', 'zh-hk': '用戶主頁默認顯示全部微博而非热门微博', 'zh-tw': '用戶主頁默認顯示全部微博而非热门微博', 'en': 'Personal page show all Weibo instead of hot by default' },
-  'publishToPublicDefault': { 'zh-cn': '分组浏览时默认发布公开微博', 'zh-hk': '分組流覽時默認發佈公開微博', 'zh-tw': '分組流覽時默認發佈公開微博', 'en': 'Publish to public by default when browsing by group' },
-  'publishToPublicText': { 'zh-cn': '公开', 'zh-hk': '公開', 'zh-tw': '公開', 'en': 'Public' },
   'cardButton': { 'zh-cn': '使用微博卡片的按钮替换对应链接{{<i>}}', 'zh-hk': '使用微博卡片的按鈕替換對應連結{{<i>}}', 'zh-tw': '使用微博卡片的按鈕替換對應連結{{<i>}}', 'en': 'Replace the corresponding links by buttons in Weibo cards' },
   'cardButtonDesc': {
     'zh-cn': '默认情况下只有点击卡片中的按钮才会在当前页显示长微博或分享的视频，点击链接则会直接在新页打开。启用该功能可以使点击链接时的反应与点击按钮时相同。启用后您还可以在模块选项卡中选择隐藏微博内的“[[layout.weibo.card]]”隐藏掉整个卡片。',
@@ -789,7 +792,7 @@ var text = {
   'replaceLinkByUrl': { 'zh-cn': '将微博中的网页链接替换为短网址', 'zh-hk': '將微博中的网页链接替換為短網址', 'zh-tw': '將微博中的网页链接替換為短網址', 'en': 'Replace 网页链接 in Weibo by shortened URL' },
   'replaceImageEmoji': { 'zh-cn': '将微博中图片表示的 Unicode 表情符号替换为文本{{<i>}}', 'zh-hk': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'zh-tw': '將微博中圖片表示的 Unicode Emoji 替換為文本{{<i>}}', 'en': 'Use text for unicode emoji instead of image {{<i>}}' },
   'replaceImageEmojiDesc': {
-    'zh-cn': '使用文本替换对应图片。表情会随您使用的操作系统、浏览器、安装的字体的不同而显示成不的样子。Firefox 和 Safari 可以得到较好的效果。<hr />替换前 <span style="font-size: 20px"><img width="20px" height="20px" src="//img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8192.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8098.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee84b2.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8cac.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee8992.png"><img width="20px" height="20px" src="img.t.sinajs.cn/t4/appstyle/expression/emimage/ee888b.png"><img width="20px" height="20px" src="//img.t.sinajs.cn/t4/appstyle/expression/emimage/ee84ad.png"><img width="20px" height="20px" src="//img.t.sinajs.cn/t4/appstyle/expression/emimage/ee9493.png"></span><br />替换后 <span style="font-size: 20px">🐶⚽️🏁💛⚠️📶🀄️🇨🇳</span>'
+    'zh-cn': '使用文本替换对应图片。表情会随您使用的操作系统、浏览器、安装的字体的不同而显示成不的样子。Firefox 和 Safari 可以得到较好的效果。<hr />替换前 <span style="font-size: 20px"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8192.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8098.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84b2.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8cac.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee8992.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee888b.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee84ad.png"><img width="20px" height="20px" src="//img.t.sinajs.cn//t4/appstyle/expression/emimage/ee9493.png"></span><br />替换后 <span style="font-size: 20px">🐶⚽️🏁💛⚠️📶🀄️🇨🇳</span>'
   },
   'customizeSourceWeibo': { 'zh-cn': '自定义来源微博仅显示“来自微博 weibo.com”', 'zh-hk': '自訂來源微博僅顯示「來自微博 weibo.com」', 'zh-tw': '自訂來源微博僅顯示「來自微博 weibo.com」', 'en': 'Weibo with customize source show "come from 微博 weibo.com" only' },
   'weiboViaText': { 'zh-cn': '来自', 'zh-hk': '来自', 'zh-tw': '来自', 'en': '来自'/* as is */ },
@@ -3013,7 +3016,7 @@ network.suggest.user = network.suggest.base(function (query, callback) {
 network.suggest.group = network.suggest.base(function (query, callback) {
   return network.group(function (groups) {
     var names = groups.map(function (group) { return group.name; });
-    var matches = names.filter(function (group) { return group.indexOf(query.trim()) !== -1; })
+    var matches = names.filter(function (group) { return group.indexOf(query.trim()) !== -1; });
     callback(matches);
   }, function () { callback([]); });
 }, function (x) { return x; });
@@ -5300,7 +5303,8 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
       // 检查是否添加了 gid 分组信息
       var query = util.str.parsequery(location.search.slice(1));
       var has_gid = 'gid' in query && Number(query.gid);
-      var is_search = 'is_search' in query && Number(query.is_search);
+      var is_search = 'is_search' in query && Number(query.is_search) ||
+        'vplus' in query && Number(query.vplus);
       var gid_needed = homefeed && !(+gid === -1 && is_search);
       if (!has_gid && gid_needed) {
         // 如果没有添加 gid 那么自动添上
@@ -5379,7 +5383,7 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
       var param = Object.assign({}, query); delete param.gid;
       watchFeedList(param);
       watchMembers();
-    }
+    };
     // 检查如果是要生成的页面，那么开始生成内容
     var watchFeedList = function (param) {
       var feedlist;
@@ -5567,7 +5571,7 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
             feedlist.removeChild(loadingTip);
           }
         }
-      }
+      };
     };
   },
 }).addto(filter.groups.base);
@@ -6843,6 +6847,27 @@ filter.items.other.hidethese_content.stock = filter.item({
   },
 }).addto(filter.groups.other);
 
+// 付费内容
+filter.items.other.hidethese_content.paid = filter.item({
+  'group': 'hidethese_content',
+  'version': 472,
+  'type': 'boolean',
+  'key': 'weibo.other.paid',
+  'text': '{{paidWeibo}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{paidWeiboDesc}}' } },
+  'rule': function stockFilterRule(feed) {
+    if (!this.conf) return null;
+    // 如果用户当前仅查看付费内容，则不生效这条规则
+    var query = util.str.parsequery(location.search.slice(1));
+    var paidOnly = 'vplus' in query && Number(query.vplus) ||
+    'is_vclub' in query && Number(query.is_vclub);
+    if (paidOnly) return null;
+    if (feed.querySelector('.icon_vplus'))
+      return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
 // 含有过多话题的微博
 filter.items.other.hidethese_content.multi_topic = filter.item({
   'group': 'hidethese_content',
@@ -7541,6 +7566,7 @@ filter.predef.group('layout');
   item('GroupToMe', 333, levHidden('groupsfeed'));
   item('Special', 333, levHidden('special'));
   item('Whisper', 333, levHidden('whisper'));
+  item('VPlus', 472, levHidden('vplus'));
   item('New', 106, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
   item('News', 106, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
   item('Count', 106, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
@@ -7839,6 +7865,7 @@ filter.predef.group('layout');
     'a[href*="krcom.cn"]': 'leftnav_tv',
     'a[href^="/mygroups"][href*="isspecialgroup=1"]': 'leftnav_special',
     'a[href^="/mygroups"][href*="whisper=1"]': 'leftnav_whisper',
+    'a[href^="/mygroups"][href*="vplus=1"]': 'leftnav_vplus',
   });
   observer.dom.add(tagLeftNavMods);
   tagLeftNavMods();
@@ -8796,23 +8823,6 @@ filter.items.tool.weibotool.redirect_weibo = filter.item({
   },
 }).addto(filter.groups.tool);
 
-// 分组浏览时默认发布方式为公开
-filter.items.tool.weibotool.public_by_default = filter.item({
-  'group': 'weibotool',
-  'version': 74,
-  'type': 'boolean',
-  'key': 'weibo.tool.public_by_default',
-  'text': '{{publishToPublicDefault}}',
-  'ainit': function () {
-    observer.dom.add(function publishToPublicDefault() {
-      var publish = document.querySelector('a[action-type="showPublishTo"]:not([yawf-publish])');
-      if (!publish) return; publish.setAttribute('yawf-publish', 'yawf-publish');
-      var text = publish.querySelector('[node-type="publishTotext"]');
-      publish.setAttribute('action-data', 'rank=0');
-      text.textContent = util.str.fill('{{publishToPublicText}}');
-    });
-  },
-}).addto(filter.groups.tool);
 
 // 使用卡片按钮替换对应链接
 filter.items.tool.weibotool.card_button = filter.item({
@@ -9023,7 +9033,7 @@ filter.items.tool.weibotool.view_original = filter.item({
           url: 'data:text/html;charset=utf-8;base64,' + util.str.base64(content),
           content: content,
         };
-      };
+      }
       return {
         url: location.protocol + '//' + info.host + '/large/' + info.filenames[info.current],
         content: null
@@ -11351,6 +11361,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.other.wenwodr');
   n(null, 'weibo.other.yizhibo');
   n(null, 'weibo.other.stock');
+  n(null, 'weibo.other.other');
   n(null, 'weibo.other.multi_topic.num');
   n(null, 'weibo.other.multi_topic');
   n(null, 'weibo.other.too_long');
@@ -11420,6 +11431,9 @@ wbp.converter.table = function () {
   n('HotWeibo', 'weibo.layoutHideLeftTV');
   m('Friends', 'weibo.layoutHideLeftFriends'); // 好友圈
   m('ToMe', 'weibo.layoutHideLeftGroupToMe'); // 群微博
+  n(null, 'weibo.layoutHideLeftSpecial');
+  n(null, 'weibo.layoutHideLeftWhisper');
+  n(null, 'weibo.layoutHideLeftVPlus');
   n(null, 'weibo.layoutHideLeftNew');
   n(null, 'weibo.layoutHideLeftNews');
   n(null, 'weibo.layoutHideLeftCount');
@@ -11530,7 +11544,6 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.fast_emoji');
   d('directAllFeeds', 'weibo.tool.redirectWeibo'); // 进入未关注人主页时默认查看全部微博
   n(null, 'weibo.tool.uncheck_follow_presenter');
-  n('noDefaultGroupPub', 'weibo.tool.public_by_default');
   n(null, 'weibo.tool.cardButton');
   d('directBigImg', 'weibo.tool.viewOriginal'); // 点击“查看大图”直接打开大图
   n(null, 'weibo.tool.html5Video');
