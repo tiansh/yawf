@@ -5305,7 +5305,9 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
       var has_gid = 'gid' in query && Number(query.gid);
       var is_search = 'is_search' in query && Number(query.is_search) ||
         'vplus' in query && Number(query.vplus);
-      var gid_needed = homefeed && !(+gid === -1 && is_search);
+      var is_special = ['isfriends', 'vplus', 'isfriends', 'isgroupsfeed', 'whisper']
+        .some(function (key) { return key in query; });
+      var gid_needed = homefeed && !(+gid === -1 && is_search) && !is_special;
       if (!has_gid && gid_needed) {
         // 如果没有添加 gid 那么自动添上
         query.gid = gid;
@@ -9195,7 +9197,6 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
 filter.predef.subtitle('tool', 'mediatool', '{{mediaToolsTitle}}');
 
 // 动图保持静止
-// FIXME 如果微博完全切换到使用视频代替 gif，这里的逻辑要有很大变化
 filter.items.tool.weibotool.pause_animated_image = filter.item({
   'group': 'mediatool',
   'version': 448,
