@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.473
+// @version           3.7.474
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -696,6 +696,7 @@ var text = {
   'layoutHideOtherIMDesc': {
     'zh-cn': '隐藏后您还可以在私信页面收发私信：鼠标指向右上角消息图标在下拉菜单中选择“私信”即可打开私信页面。',
   },
+  'layoutHideOtherIMNews': { 'zh-cn': '热点提醒（右下）', 'zh-hk': '热点提醒（右下）', 'zh-tw': '热点提醒（右下）', 'en': '热点提醒 (News, bottom right)' },
   'layoutHideOtherTip': { 'zh-cn': '功能提示框', 'zh-hk': '功能提示框', 'zh-tw': '功能提示框', 'en': 'Function Tips' },
   'layoutHideOtherTipDesc': {
     'zh-cn': '偶尔会出现的新功能推荐的弹框，如果隐藏了对应功能的界面可能弹框会显示到奇怪的地方。',
@@ -3137,6 +3138,8 @@ network.following = (function () {
       // 关注了一个用户
       var id = util.str.parsequery(img.getAttribute('usercard') || '').id; if (!id) return;
       var href = util.str.fill(url.user, { 'uid': id });
+      var name = img.getAttribute('alt');
+      if (name !== description) description = name + ' (' + description + ')';
       return {
         'id': id, // 向前兼容的id，后面的版本要使用href代替id作为唯一标识
         'type': 'user',
@@ -7832,6 +7835,7 @@ filter.predef.group('layout');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href*="//desktop.weibo.com/download.php"] { display: none !important; }');
   item('IM', 189, '#WB_webim { display: none !important; }');
+  item('IMNews', 474, '.webim_news { display: none !important; }');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
   item('RelatedArtical', 411, '.WB_artical [node-type="recommend"] { display: none !important; }');
@@ -11510,7 +11514,7 @@ wbp.converter.table = function () {
   m('FeedRecom', 'weibo.layoutHideOtherRelatedWB'); // 相关推荐：单条微博右边栏
   n(null, 'weibo.layoutHideOtherRelatedArtical');
   n(null, 'weibo.layoutHideOtherSendWeibo');
-  c('IMNews', '.webim_news { display: none !important }', '右下角新闻快讯'); // 因为可以在微博的设置中关闭该快讯，所以YAWF未提供该功能；关闭方法：打开聊天框，点击左下角查看全部私信右侧齿轮图标，点击“关闭新闻提醒”菜单项
+  c('IMNews', 'weibo.layoutHideOtherIMNews');
   c('Stats', '#v6_pl_rightmod_myinfo .W_person_info { height: auto !important } #v6_pl_rightmod_myinfo .user_atten { display: none !important; }', '关注/粉丝/微博数'); // 未提供该功能；因为隐藏后会导致用户信息比发布框小
   d(null, 'weibo.tool.showAllMsgNav.atme', true);
   d(null, 'weibo.tool.showAllMsgNav.cmt', true);
