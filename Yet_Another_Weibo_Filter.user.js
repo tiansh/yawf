@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.474
+// @version           3.7.475
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -126,7 +126,7 @@ var text = {
   'baseFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博篩選', 'zh-tw': '微博篩選', 'en': 'Weibo Filter' },
   // 微博
   'loadWeiboTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
-  'loadWeiboByGroup': { 'zh-cn': '使用分组代替首页 {{<i>}}', 'zh-hk': '使用分組代替首頁 {{<i>}}', 'zh-tw': '使用分組代替首頁 {{<i>}}', 'en': 'View by group on home page {{<i>}}' },
+  'loadWeiboByGroup': { 'zh-cn': '使用分组代替首页（微博按发布时间排列） {{<i>}}', 'zh-hk': '使用分組代替首頁（微博按發佈時間排列） {{<i>}}', 'zh-tw': '使用分組代替首頁（微博按發佈時間排列） {{<i>}}', 'en': 'View by group on home page (ordered by timestamp) {{<i>}}' },
   'loadWeiboByGroupDesc': {
     'zh-cn': '使用分组代替首页可以部分解决排序混乱和微博丢失的问题，但请注意分组有人数限制。'
   },
@@ -136,10 +136,10 @@ var text = {
   'selectedGroup': { 'zh-cn': '选择分组：', 'zh-hk': '選取分組：', 'zh-tw': '選取分組：', 'en': 'Selected: ' },
   'selectGroupButton': { 'zh-cn': '更改', 'zh-hk': '變更', 'zh-tw': '變更', 'en': 'Change' },
   'loadWeiboByMultiGroup': {
-    'zh-cn': '{{<enabled>}}使用多个分组拼凑首页{{<i>}}||每次展示{{<count>}}条|点击显示更多时{{<clear>}}{{<ii>}}||选择分组{{<iii>}}',
-    'zh-hk': '{{<enabled>}}使用多個分組拼湊首頁{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
-    'zh-tw': '{{<enabled>}}使用多個分組拼湊首頁{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
-    'en': '{{<enabled>}}Generate home page by multiple groups {{<i>}}|| show {{<count>}} feeds per page | when "show more" is clicked {{<clear>}} | {{<ii>}}||Group {{<iii>}}',
+    'zh-cn': '{{<enabled>}}使用多个分组拼凑首页（微博按发布时间排列）{{<i>}}||每次展示{{<count>}}条|点击显示更多时{{<clear>}}{{<ii>}}||选择分组{{<iii>}}',
+    'zh-hk': '{{<enabled>}}使用多個分組拼湊首頁（微博按發佈時間排列）{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
+    'zh-tw': '{{<enabled>}}使用多個分組拼湊首頁（微博按發佈時間排列）{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
+    'en': '{{<enabled>}}Generate home page by multiple groups (ordered by timestamp) {{<i>}}|| show {{<count>}} feeds per page | when "show more" is clicked {{<clear>}} | {{<ii>}}||Group {{<iii>}}',
   },
   'loadWeiboByMultiGroupClear': { 'zh-cn': '清空已展示微博', 'zh-hk': '清空已展示微博', 'zh-tw': '清空已展示微博', 'en': 'clear feeds shown' },
   'loadWeiboByMultiGroupKeep': { 'zh-cn': '保留已展示微博', 'zh-hk': '保持已展示微博', 'zh-tw': '保持已展示微博', 'en': 'keep feeds shown' },
@@ -225,12 +225,6 @@ var text = {
     'zh-hk': '您的流覽器阻止了桌面提示。請按照如下步驟解除阻止：<br />右擊網頁—檢視頁面資訊—權限—顯示通知—允許<br />此外，如果您安裝了 Tab notifier 等擴充套件，請到擴充套件的設置中允許顯示桌面提示。',
     'zh-tw': '您的流覽器阻止了桌面提示。請按照如下步驟解除阻止：<br />右擊網頁—檢視頁面資訊—權限—顯示通知—允許<br />此外，如果您安裝了 Tab notifier 等擴充套件，請到擴充套件的設置中允許顯示桌面提示。',
     'en': 'Your browser blocked desktop notifications. Please follow the instruction to unblock: <br />Right click webpage - View Page Info - Permission - Notifications - Allow. You should also check settings of extensions, if you installed extensions like Tab notifier.',
-  },
-  'autoCloseWarning': {
-    'zh-cn': '43版以前的火狐浏览器提供的 Notification 会强制显示 4 秒后关闭，如果您希望显示较长时间，请考虑使用 Tab notifier 等扩展提供的 webkitNotifications。',
-    'zh-hk': '43版以前的火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
-    'zh-tw': '43版以前的火狐流覽器提供的 Notification 會強制顯示 4 秒後關閉，如果您希望顯示較長時間，請考慮使用 Tab notifier 等擴充套件提供的 webkitNotifications。',
-    'en': 'Notification provided by Firefox (version <= 43) will be mandatorily closed with 4 seconds delay after shown. You may need to use webkitNotifications provided by add-ons like Tab notifier for longer notification display.',
   },
   // 搜索
   'searchNotFound': { 'zh-cn': '未找到与您输入匹配的设置项', 'zh-hk': '未找到與您輸入匹配的設置項', 'zh-tw': '未找到與您輸入匹配的設置項', 'en': 'No Matched Settings' },
@@ -554,6 +548,12 @@ var text = {
   'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
   'layoutHideIconPanda': { 'zh-cn': '熊猫', 'zh-hk': '熊貓', 'zh-tw': '貓熊', 'en': 'Panda' },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
+  // 关注
+  'layoutHideFollow': { 'zh-cn': '隐藏模块 - 关注按钮', 'zh-hk': '隱藏模組 - 關注按鈕', 'zh-tw': '隱藏模組 - 關注按鈕', 'en': 'Hide modules - Follow Button' },
+  'layoutHideFollowSingle': { 'zh-cn': '微博详情页', 'zh-hk': '微博詳情頁', 'zh-tw': '微博詳情頁', 'en': 'Weibo detail' },
+  'layoutHideFollowAtMe': { 'zh-cn': '提到我的微博', 'zh-hk': '提到我的微博', 'zh-tw': '提到我的微博', 'en': 'Weibo at me' },
+  'layoutHideFollowDiscover': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
+  'layoutHideFollowVideo': { 'zh-cn': '视频弹层', 'zh-hk': '視頻彈層', 'zh-tw': '影片快顯層', 'en': 'Video pop-up layer' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -804,12 +804,29 @@ var text = {
   'commentShowAll': { 'zh-cn': '查看评论时自动切换到全部评论', 'zh-hk': '查閱評論時自動切換到全部評論', 'zh-tw': '查閱評論時自動切換到全部評論', 'en': 'Automatically switch view of comments to all' },
   // 图片和视频
   'mediaToolsTitle': { 'zh-cn': '图片与视频', 'zh-hk': '圖片與視頻', 'zh-tw': '圖片與視頻', 'en': 'Images &amp; Videos' },
-  'viewOriginal': { 'zh-cn': '添加“查看原图”链接|打开{{<open>}}||{{<direct>}}点击缩略图时直接查看原图', 'zh-hk': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮圖時直接查看原圖', 'zh-tw': '添加「查看原圖」連結|打開{{<open>}}||{{<direct>}}點擊縮圖時直接查看原圖', 'en': 'add "Original Picture" link | which target to {{<open>}} || {{<direct>}} View orignal picture by clicking on thumbnail' },
+  'viewOriginal': {
+    'zh-cn': '查看图片添加“查看原图”链接|打开{{<open>}} {{<i>}}||{{<direct>}}点击缩略图时直接查看原图',
+    'zh-hk': '查看圖片添加「查看原圖」連結|打開{{<open>}} {{<i>}}||{{<direct>}}點擊縮圖時直接查看原圖',
+    'zh-tw': '查看圖片添加「查看原圖」連結|打開{{<open>}} {{<i>}}||{{<direct>}}點擊縮圖時直接查看原圖',
+    'en': 'add "Original Picture" link for images | which target to {{<open>}} {{<i>}} || {{<direct>}} View orignal picture by clicking on thumbnail'
+  },
   'viewOriginalPage': { 'zh-cn': '包含原图的网页', 'zh-hk': '包含原圖的網頁', 'zh-tw': '包含原圖的網頁', 'en': 'page with original picture' },
   'viewOriginalImage': { 'zh-cn': '原图', 'zh-hk': '原圖', 'zh-tw': '原圖', 'en': 'original picture' },
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
+  'viewOriginalDesc': { 'zh-cn': '选择打开包含原图的网页时，脚本会生成一个一次性的查看当前图片的网页。如果您启用了各类广告屏蔽插件，该页面可能会被误杀拦截。' },
+  'downloadImage': {
+    'zh-cn': '查看图片添加“打包下载”链接（试验性） {{<i>}}||{{<direct>}}点击缩略图时直接开始下载',
+    'zh-hk': '查看圖片添加「全部下載」連結（試驗性） {{<i>}}||{{<direct>}}點擊縮圖時直接開始下載',
+    'zh-tw': '查看圖片添加「全部下載」連結（試驗性） {{<i>}}||{{<direct>}}點擊縮圖時直接開始下載',
+    'en': 'add "Download All" link for images (Experimental) {{<i>}} || {{<direct>}} Trigger download by clicking on thumbnail'
+  },
+  'downloadImageText': { 'zh-cn': '打包下载', 'zh-hk': '全部下載', 'zh-tw': '全部下載', 'en': 'Download All' },
+  'downloadImageDesc': { 'zh-cn': '脚本会将所有图片打包成 tar 包下载，各类压缩工具都可查看该类型的文件。Windows 用户可以安装 7-zip 打开 tar 包。这种文件格式仅用于将文件打包，但不会压缩，因此体积较大，如需保存请再行压缩。' },
+  'downloadImageDownloading': { 'zh-cn': '正在下载', 'zh-hk': '正在下載', 'zh-tw': '正在下載', 'en': 'Downloading...' },
+  'downloadImagesFailTitle': { 'zh-cn': '下载失败', 'zh-hk': '下載失敗', 'zh-tw': '下載失敗', 'en': 'Download Failed' },
+  'downloadImagesFailText': { 'zh-cn': '下载图片时发生错误，下载失败', 'zh-hk': '下載圖片時發生錯誤，下載失敗', 'zh-tw': '下載圖片時發生錯誤，下載失敗', 'en': 'Images downloading failed.' },
   'pauseAnimatedImage': { 'zh-cn': '动画图像(GIF)在缩略图显示时保持静止{{<i>}}', 'zh-hk': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'zh-tw': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'en': 'Pause thumbnail animated image (GIF) {{<i>}}' },
   'pauseAnimatedImageDesc': { 'zh-cn': '该功能仅影响显示效果，并不会降低网络数据用量。' },
   'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
@@ -1213,6 +1230,8 @@ var html = {
   // 查看原图
   'viewOriginalLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i>{{viewOriginalText}}</a></span></li>',
   'viewOriginalFCLink': '<a imagecard="pid={{pid}}" href="javascript:void(0);"><i class="W_ficon ficon_cd_img WBficon">¡</i>{{viewOriginalFCText}}</a>',
+  // 下载图片
+  'downloadImageLink': '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">|</i><span class="yawf-text">{{downloadImageText}}</span></a></span></li>',
   // 视频位置标记符
   'videoFakePlaceholderContainer': '<div class="yawf-video-fake-placeholder-container" style="height: 0; width: 100%; overflow: hidden; position: relative;"></div>',
   'videoFakePlaceholder': '<div class="yawf-video-fake-placeholder" yawf-fake-placeholder="yawf-fake-placeholder" style="width: 1px; height: 2000000px; position: absolute; top: -1000000px; z-index: -1;" node-type="fl_h5_video"></div>',
@@ -1686,6 +1705,57 @@ util.str.rgba = function (color, transparency) {
 // 字符串 base64 编码
 util.str.base64 = function (str) {
   return btoa(unescape(encodeURIComponent(str)));
+};
+
+// 打包工具
+util.tarball = {};
+
+// 将一个文件转为 tarball
+util.tarball.file = function (fileInfo, buffer) {
+  var filename = fileInfo.filename, content = fileInfo.content, mtime = fileInfo.mtime;
+  var checksum = { value: ' '.repeat(8), size: 8 };
+  var fields = [
+    // 文件名限制不超过 100 个字符
+    { value: unescape(encodeURIComponent(filename)), size: 100 }, // filename
+    { value: '0000644', size: 8 }, // mode
+    { value: '0000000', size: 8 }, // uid
+    { value: '0000000', size: 8 }, // gid
+    // 文件大小不超过 8GiB
+    { value: content.byteLength.toString(8).padStart(11, '0'), size: 12 }, // size
+    // 修改时间直接用当前时间
+    { value: Math.floor(+mtime / 1000).toString(8).padStart(11, '0'), size: 12 }, // mtime
+    checksum, // chksum
+    { value: '0', size: 1 }, // type
+    { value: '', size: 100 }, // line filename
+    { value: 'ustar', size: 6 }, // ustar
+    { value: '00', size: 2 }, // ustar version
+  ];
+  buffer.fill(0);
+  var writeField = function (field) {
+    var data = Array.from(field.value).map(function (char) { return char.charCodeAt(); });
+    buffer.set(data, field.offset);
+  };
+  fields.reduce(function (offset, field) { field.offset = offset; return offset + field.size; }, 0);
+  fields.forEach(writeField);
+  checksum.value = Array.from(buffer.slice(0, 512)).reduce(function (x, y) { return x + y; }).toString(8).padStart(6, '0') + '\0';
+  writeField(checksum);
+  buffer.set(new Uint8Array(content), 512);
+  return buffer;
+};
+
+// 将一组文件打包
+util.tarball.files = function (files) {
+  var tarSize = files.reduce(function (offset, file) {
+    var size = file.content.byteLength;
+    file.tarSize = (size >> 9 << 9) + (size % 512 ? 512 : 0) + 512;
+    file.offset = offset;
+    return offset + file.tarSize;
+  }, 0) + 1024;
+  var buffer = new ArrayBuffer(tarSize);
+  files.forEach(function (file) {
+    util.tarball.file(file, new Uint8Array(buffer, file.offset, file.tarSize));
+  });
+  return buffer;
 };
 
 // 文档相关工具
@@ -6071,17 +6141,6 @@ if (util.notify.avaliableNotification().length) filter.items.base.autoload.deskt
   },
 }).addto(filter.groups.base);
 
-// 提示火狐用户桌面提示问题
-if (util.notify.avaliableNotification().length &&
-  util.browser.fx.avaliable &&
-  util.browser.fx.mainversion < 44) {
-  filter.items.base.autoload.remark = filter.item({
-    'group': 'autoload',
-    'type': 'remark',
-    'text': '{{autoCloseWarning}}',
-  }).addto(filter.groups.base);
-}
-
 // 按内容过滤
 filter.predef.group('content').addto(filter.groups.base);
 
@@ -7433,6 +7492,12 @@ filter.predef.group('layout');
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
+
+  subtitle('Follow', true);
+  item('Single', 475, '[id^="Pl_Official_WeiboDetail__"] [node-type="feed_recommend_follow"] { display: none !important; }');
+  item('AtMe', 475, '#v6_pl_content_atmeweibo [node-type="feed_recommend_follow"] { display: none !important; }');
+  item('Discover', 475, '#plc_discover [node-type="feed_recommend_follow"] { display: none !important; }');
+  item('Video', 475, '.WB_h5video .con-11 { display: none !important; }');
 
   subtitle('Nav', true);
   item('LogoImg', 256, function replaceLogo() {
@@ -8893,30 +8958,10 @@ filter.items.tool.weibotool.card_button = filter.item({
 }).addto(filter.groups.tool);
 
 // 查看大图旁添加查看原图链接
-filter.items.tool.weibotool.view_original = filter.item({
-  'group': 'mediatool',
-  'version': 357,
-  'type': 'boolean',
-  'key': 'weibo.tool.viewOriginal',
-  'text': '{{viewOriginal}}',
-  'ref': {
-    'open': {
-      'type': 'select',
-      'default': 'page',
-      'select': [
-        { 'value': 'page', 'text': '{{viewOriginalPage}}' },
-        { 'value': 'image', 'text': '{{viewOriginalImage}}' },
-      ],
-    },
-    'direct': { 'type': 'boolean' },
-  },
-  'ainit': function () {
-    var openPage = this.ref.open.conf === 'page';
-    // chrome 不能处理带 hash 的 data uri
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=123004
-    // chrome (60+) 的 data uri 网页不能改 hash
-    // https://bugs.chromium.org/p/chromium/issues/detail?id=594215
-    var imgPage = util.str.cmt(function () { /*!HTML
+; (function () {
+
+  var imgPage = function (info) {
+    var html = util.str.cmt(function () { /*!HTML
       <!DOCTYPE html>
       <html>
       <head><meta charset="UTF-8" /><title>{{viewOriginalTitle}}</title><style>
@@ -8934,21 +8979,17 @@ filter.items.tool.weibotool.view_original = filter.item({
         #chose { position: fixed; clear: both; width: 100%; bottom: 0; height: 100px; overflow: auto; overflow-x: hidden; border-top: 1px solid #aaa; }
         .single #chose { display: none; }
         #chose a { display: block; height: 80px; text-align: center; width: 80px; float: left; margin: 10px; }
-        #chose a:target { outline: 2px solid red; }
+        #chose a.current { outline: 2px solid red; }
         #chose img { max-height: 80px; max-width: 80px; }
         @-moz-document url-prefix() {
           body { background-image: url("chrome://global/skin/media/imagedoc-darknoise.png");  }
           #viewer { background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png") repeat scroll 0 0; }
         }
-      </style><script>
-        var info = {{info}};
-        var url = function (filename, large) {
-          return info.protocol + '//' + info.host + '/' + (large ? 'large' : 'square') + '/' + filename;
-        };
-      </script></head>
-      <body><div id="container"><div id="imgarea"><img id="viewer" class="large" /></div></div><div id="chose"><script>
-        info.filenames.forEach(function (filename, i) {
-          document.write('<a onclick="return goto(this.id) && false" href="#' + i + '" id="' + i + '"><img src="' + url(filename, false) + '"></a>');
+      </style><script>var info = {{info}};</script></head>
+      <body><div id="container" tabindex="1"><div id="imgarea" tabindex="-1"><img id="viewer" class="large" /></div></div><div id="chose" tabindex="-1"><script>
+        info.images.forEach(function (image, i) {
+          var url = image.replace(/large/, 'square');
+          document.write('<a id="img' + i + '" href="javascript:;" onclick="return goto(' + i + ') && false"><img src="' + url + '"></a>');
         });
       </script></div><script>
         function resize() {
@@ -8956,54 +8997,47 @@ filter.items.tool.weibotool.view_original = filter.item({
           var height = viewer.naturalHeight;
           if (width > container.clientWidth || height > container.clientHeight) imgarea.className = 'over';
           else imgarea.className = 'normal';
-        }
-        function checkHash(n) {
-          if (location.protocol !== 'data:') return true;
-          var hash = '#' + n, href = location.href;
-          try { location.hash = hash; } catch (_ignore) {}
-          if (top !== self) return true;
-          if (location.hash === hash) return true;
-          var iframe = document.createElement('iframe');
-          iframe.src = href.replace(/#.*$/, '');
-          iframe.style = 'position: absolute; top: 0; bottom: 0; left: 0; right: 0; width: 100%; height: 100%; padding: 0; margin: 0; border: 0;';
-          document.body.innerHTML = '';
-          document.body.appendChild(iframe);
-          return false;
-        }
-        function readHash() {
-          var hashVal = Number(location.hash.slice(1)) || 0;
-          var count = info.filenames.length;
-          hashVal = ((parseInt(hashVal, 10) % count) + count) % count;
-          if ('#' + hashVal !== location.hash) goto(hashVal);
-          return hashVal;
+          focus();
         }
         function show() {
-          current = readHash();
+          var url = info.images[info.current];
+          if (viewer.src === url) return;
           viewer.src = '';
-          viewer.src = url(info.filenames[current], true);
+          viewer.src = url;
           container.scrollTop = 0;
           container.scrollLeft = 0;
+          Array.from(document.querySelectorAll('#chose a')).forEach(function (a) {
+            if (a.id === 'img' + info.current) a.className = 'current';
+            else a.className = '';
+          });
+          focus();
         }
         function focus() { container.focus(); }
-        if (info.filenames.length === 1) document.body.className = 'single';
-        function prevImg() { goto(Number(location.hash.slice(1)) - 1); }
-        function nextImg() { goto(Number(location.hash.slice(1)) + 1); }
-        function goto(n) { location.hash = '#' + n; }
+        if (info.images.length === 1) document.body.className = 'single';
+        function prevImg() { goto(info.current - 1); }
+        function nextImg() { goto(info.current + 1); }
+        function goto(n) {
+          while (n < 0) n += info.images.length;
+          n = n % info.images.length;
+          info.current = n;
+          show();
+        }
         function checkLR(x) {
-          if (info.filenames.length === 1) return 'mid';
+          if (info.images.length === 1) return 'mid';
           var pos = 'mid', w = container.clientWidth;
           if (x < 100 && x < w * 0.2) pos = 'left';
           if (x > w - 100 && x > w * 0.8) pos = 'right';
           if (container.className !== pos) container.className = pos;
           return pos;
         }
-        function addEvents() {
-          viewer.onload = function () { setTimeout(resize, 0); };
+        function initEvents() {
+          viewer.onload = function () { show(); setTimeout(resize, 0); };
           imgarea.onmousemove = function (e) { checkLR(e.clientX); };
           imgarea.addEventListener('click', function (e) {
             var pos = checkLR(e.clientX);
             if (pos === 'left') prevImg(); else if (pos === 'right') nextImg(); else return true;
             e.stopPropagation();
+            focus();
           }, true);
           viewer.addEventListener('click', function () {
             if (imgarea.className === 'normal') return;
@@ -9014,171 +9048,318 @@ filter.items.tool.weibotool.view_original = filter.item({
           window.onkeydown = function (e) {
             var key = e.keyCode, n = key & 15;
             if (key === 33) prevImg(); else if (key === 34) nextImg();
-            if ([48, 96].indexOf(key & -16) !== -1) {
-              if (n > 0 && n <= info.filenames.length) goto(n - 1);
-            }
+            else if ([48, 96].indexOf(key & -16) !== -1) {
+              if (n > 0 && n <= info.images.length) goto(n - 1);
+            } else return;
+            e.preventDefault();
           };
-          window.onhashchange = show;
-          window.onload = function () {
-            show();
-            focus();
-          };
+          window.onload = function () { show(); focus(); };
           container.onblur = function () { setTimeout(focus, 0); };
         }
-        if (checkHash(info.current)) addEvents();
+        initEvents();
       </script></body>
       </html>
     */ noop(); }).split('\n').map(function (x) { return x.trim(); }).join('\n');
-    // 获取图片信息
-    var getImgFilename = function (url) { return url.match(/\/([^\/]*)$/)[1]; };
-    var imageUrl = function (info, single) {
-      if (typeof info === 'string') info = { 'host': util.str.host(info), 'filename': [getImgFilename(info)], 'current': 0, 'protocol': location.protocol };
-      if (openPage && !single) {
-        var content = util.str.fill(imgPage, { 'info': JSON.stringify(info) });
-        return {
-          url: 'data:text/html;charset=utf-8;base64,' + util.str.base64(content),
-          content: content,
-        };
-      }
-      return {
-        url: location.protocol + '//' + info.host + '/large/' + info.filenames[info.current],
-        content: null
-      };
+    return util.str.fill(html, { 'info': JSON.stringify(info) });
+  };
+
+  var forEachElementAttr = function (attr) {
+    return function (selectors, callback) {
+      var selector = selectors.map(function (s) { return s + ':not([' + attr + '])'; }).join(',');
+      var elements = document.querySelectorAll(selector);
+      elements.forEach(function (element) {
+        element.setAttribute(attr, '');
+        callback(element);
+      });
     };
-    var tabCreate = function (page) {
-      var isFirefox = !!util.browser.fx.version;
-      var isGM3OrOlder = GM_info && !('scriptHandler' in GM_info) && parseInt(GM_info.version) < 4;
-      var isFirefoxWebExtension = isFirefox && !isGM3OrOlder;
-      if (!page.content || !isFirefoxWebExtension) {
-        GM_openInTab(page.url, false);
-        return;
-      }
-      // FIXME 这都在干嘛
-      var tempPage = window.open('about:blank');
-      tempPage.document.open();
-      tempPage.document.write(page.content);
-      tempPage.document.close();
-      tempPage.location.replace(page.url);
-    };
-    var getImages = function (ref) {
-      var container = ref; while (!util.dom.matches(container, '.WB_expand_media')) container = container.parentNode;
-      var imgs = Array.from(container.querySelectorAll('.choose_box img'));
-      if (!imgs.length) imgs = [container.querySelector('.artwork_box img')];
-      return imgs.map(function (img) { return img.src; });
-    };
-    var genInfo = function (imgs) {
-      return {
-        'host': util.str.host(imgs[0]),
-        'filenames': imgs.map(function (img) { return img.match(/\/([^\/]*)$/)[1]; })
-      };
-    };
-    var getPid = function (a) {
-      try {
-        var action_data = util.str.parsequery(a.getAttribute('action-data'));
-        return action_data.pid || action_data.pic_id || null;
-      } catch (e) { return null; }
-    };
-    // 添加查看原图的链接
-    var addLink = function (ref) {
-      var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
-      var link = vol.querySelector('a');
-      for (; ref.tagName.toLocaleLowerCase() !== 'li'; ref = ref.parentNode);
-      while (vol.firstChild) ref.parentNode.insertBefore(vol.firstChild, ref);
-      return link;
-    };
-    var pageHandler = (function () {
-      try { return new WeakMap(); } catch (e) {}
-      // 这样理论上会有内存泄露，不过老浏览器随他去吧
-      var map = [], count = 0;
-      return {
-        set: function (link, page) {
-          var index = link.getAttribute('yawf-view-ori-index');
-          if (!index) link.setAttribute('yawf-view-ori-index', (index = count++));
-          map[index] = page;
-        },
-        get: function (link) {
-          var index = link.getAttribute('yawf-view-ori-index');
-          return index && map[index];
-        },
-        has: function (link) {
-          return !!this.get(link);
+  };
+
+  var getOriginalUrl = function (src) {
+    var host = util.str.host(src), filename = src.match(/\/([^\/]*)$/)[1];
+    var url = [location.protocol, '//', host, '/large/', filename].join('');
+    return url;
+  };
+
+  var getInfo = function (ref) {
+    var container, imgs, img;
+    if (util.dom.matches(ref, '.WB_expand_media *')) {
+      // 已经展开详情的图片
+      container = util.dom.closest(ref, '.WB_detail');
+      imgs = Array.from(container.querySelectorAll('.WB_media_wrap .WB_pic img'));
+      img = container.querySelector('.WB_media_view img') ||
+        container.querySelector('.current img');
+      // fallthrough
+    } else if (util.dom.matches(ref, '.WB_media_wrap .WB_pic')) {
+      // 没有展开详情的图片
+      container = util.dom.closest(ref, '.WB_media_wrap');
+      imgs = Array.from(container.querySelectorAll('.WB_pic img'));
+      img = ref.querySelector('img');
+      // fallthrough
+    } else if (ref.getAttribute('imagecard')) {
+      var pid = util.str.parsequery(ref.getAttribute('imagecard')).pid;
+      return { images: ['https://wx1.sinaimg.cn/large/' + pid + '.jpg'], current: 0 };
+    } else if (ref.href && ref.href.indexOf('javascript:') === -1) {
+      return { images: [ref.href], current: 0 };
+    } else if (ref.src) {
+      return { images: [ref.href], current: 0 };
+    } else return null;
+    var images = imgs.map(function (img) { return getOriginalUrl(img.src); });
+    var pid = img && img.src.match(/[^/.]*(?=(?:\.[^/.]*)?$)/)[0];
+    var current;
+    for (current = 0; current < images.length; current++) {
+      if (images[current].indexOf(pid) !== -1) break;
+    }
+    return { images: images, current: current % images.length };
+  };
+
+  var getId = function (item) {
+    var container = util.dom.closest(item, '[mid], [omid], [comment_id]');
+    return container.getAttribute('comment_id') ||
+      util.dom.closest(item, '.WB_feed_expand') && container.getAttribute('omid') ||
+      container.getAttribute('mid') || 0;
+  };
+
+  filter.items.tool.weibotool.view_original = filter.item({
+    'group': 'mediatool',
+    'version': 475,
+    'type': 'boolean',
+    'key': 'weibo.tool.viewOriginal',
+    'text': '{{viewOriginal}}',
+    'ref': {
+      'open': {
+        'type': 'select',
+        'default': 'page',
+        'select': [
+          { 'value': 'page', 'text': '{{viewOriginalPage}}' },
+          { 'value': 'image', 'text': '{{viewOriginalImage}}' },
+        ],
+      },
+      'direct': { 'type': 'boolean' },
+      'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{viewOriginalDesc}}' },
+      // 隐藏设置项（没有界面）
+      // default 默认（=open）
+      // open 使用 window.open
+      // gmbg, gmfg 使用 GM_openInTab
+      // openbr 使用 window.open('about:blank').location
+      'method': {
+        'type': 'select',
+        'default': 'default',
+        'select': ['default', 'open', 'gmbg', 'gmfg', 'openbr'].map(function (text) {
+          return { 'value': text, 'text': text };
+        }),
+      },
+      // 隐藏设置项（没有界面）
+      // default 默认（=blob）
+      // data, blob 使用哪种协议
+      'url': {
+        'type': 'select',
+        'default': 'default',
+        'select': ['default', 'data', 'blob'].map(function (text) {
+          return { 'value': text, 'text': text };
+        }),
+      },
+    },
+    'init': function () {
+      util.config.onput(this.ref.direct.key, function (value) {
+        if (!value) return;
+        filter.items.tool.weibotool.download_image.ref.direct.putconf(false);
+      });
+    },
+  }).addto(filter.groups.tool);
+
+  filter.items.tool.weibotool.download_image = filter.item({
+    'group': 'mediatool',
+    'version': 475,
+    'type': 'boolean',
+    'key': 'weibo.tool.downloadImage',
+    'text': '{{downloadImage}}',
+    'ref': {
+      'direct': { 'type': 'boolean' },
+      'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{downloadImageDesc}}' },
+    },
+    'init': function () {
+      util.config.onput(this.ref.direct.key, function (value) {
+        if (!value) return;
+        filter.items.tool.weibotool.view_original.ref.direct.putconf(false);
+      });
+
+      var download = filter.items.tool.weibotool.download_image;
+      var original = filter.items.tool.weibotool.view_original;
+
+      var hasDownload = download.conf;
+      var hasOriginal = original.conf;
+      if (!hasDownload && !hasOriginal) return;
+
+      var originalDirect = original.ref.direct.conf;
+      var downloadDirect = download.ref.direct.conf;
+      var usePage = original.ref.open.conf === 'page';
+      var method = original.ref.method.conf;
+      var urlType = original.ref.url.conf;
+      if (method === 'default') method = 'open';
+      if (urlType === 'default') urlType = 'blob';
+
+      var showPage = function (info) {
+        if (!info) return;
+        var url;
+        if (usePage) {
+          var html = imgPage(info);
+          if (urlType === 'blob') {
+            var blob = new Blob([html], { type: 'text/html' });
+            url = URL.createObjectURL(blob);
+          } else {
+            url = 'data:text/html;base64,' + btoa(unescape(encodeURIComponent(html)));
+          }
+        } else {
+          url = info.images[info.current];
+        }
+        ({
+          'openbr': function (url) {
+            var win = window.open('about:blank');
+            setTimeout(function () { win.location = url; }, 0);
+          },
+          'open': function (url) { window.open(url); },
+          'gmbg': function (url) { GM_openInTab(url, true); },
+          'gmfg': function (url) { GM_openInTab(url, false); },
+        }[method](url));
+        if (urlType === 'blob') {
+          setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
         }
       };
-    }());
-    var addHandler = function (link, page) {
-      pageHandler.set(link, page);
-    };
-    window.addEventListener('click', function (e) {
-      if (e.button !== 0) return;
-      var link = util.dom.closest(e.target, 'a');
-      if (!link || !pageHandler.has(link)) return;
-      var page = pageHandler.get(link);
-      tabCreate(page);
-      e.preventDefault();
-      e.stopPropagation();
-    }, true);
-    var updateLink = function (link, info, ref) {
-      var current = info.current || 0, pid = getPid(ref);
-      if (pid) info.filenames.forEach(function (filename, i) { if (filename.indexOf(pid) === 0) current = i; });
-      if (!link) link = addLink(ref);
-      var full = { 'host': info.host, 'filenames': info.filenames, 'current': current, 'protocol': location.protocol };
-      var page = imageUrl(full);
-      addHandler(link, page);
-      return link;
-    };
-    var markLink = function (selector) {
-      var a = document.querySelector(selector);
-      if (a) a.setAttribute('yawf-viewori', 'yawf-viewori');
-      return a;
-    };
-    // 处理微博的配图
-    var addOriLinkViewImage = function addOriLinkViewImage() {
-      var a = markLink('.WB_expand_media [action-type="widget_photoview"]:not([yawf-viewori])'); if (!a) return;
-      var link, info = genInfo(getImages(a)), update = function () { link = updateLink(link, info, a); };
-      if (info.filenames.length > 1) (new MutationObserver(update)).observe(a, { 'attributes': true });
-      update();
-    };
-    // 评论的图片
-    var addOriLinkViewCommentImage = function addOriLinkViewCommentImage() {
-      var a = markLink(
-        '[node-type="feed_list_commentList"] [action-type="widget_commentPhotoView"]:not([yawf-viewori]), ' +
-        '[node-type="comment_list"] [action-type="widget_commentPhotoView"]:not([yawf-viewori])'
-      ); if (!a) return;
-      updateLink(null, genInfo(getImages(a)), a);
-    };
-    // 转发的评论的图片
-    var addOriLinkViewForwardCommentImage = function addOriLinkViewForwardCommentImage() {
-      var a = markLink([
-        '.WB_detail .WB_text a[action-type="widget_photoview"]:not([yawf-viewori])',
-        '.WB_detail .WB_text a[action-type="widget_commentPhotoView"]:not([yawf-viewori])'
-      ].join(',')); if (!a) return;
-      var pid = getPid(a), info = { 'host': 'ww2.sinaimg.cn', 'filenames': [pid]};
-      a.target = '_blank'; updateLink(a, info);
-      if (!a.hasAttribute('imagecard')) a.setAttribute('imagecard', 'pid=' + pid);
-      a.setAttribute('yawf-action-type', a.getAttribute('action-type')); a.removeAttribute('action-type');
-    };
-    // 点击缩略图时
-    if (this.ref.direct.conf) document.addEventListener('click', util.func.catched(function (e) {
-      if (util.page.search) return;
-      if (e.button !== 0) return; // 只响应左键操作
-      if (e.shiftKey) return; // 按下 Shift 时不响应
-      var selector = '[action-type="feed_list_media_img"], [action-type="fl_pics"]';
-      var thumbnail = util.dom.closest(e.target, selector); if (!thumbnail) return;
-      var imgs = Array.from(util.dom.closest(thumbnail, 'ul').querySelectorAll(selector));
-      var info = {
-        'protocol': location.protocol,
-        'host': 'ww2.sinaimg.cn',
-        'filenames': imgs.map(function (i) { return getPid(i); }),
-        'current': imgs.indexOf(thumbnail),
+
+      var downloadImages = function (id, info, link) {
+        if (!info) return;
+        if (link && link.hasAttribute('yawf-downloading')) return;
+        if (link) {
+          link.querySelector('.yawf-text').textContent = text.downloadImageDownloading;
+          link.setAttribute('yawf-downloading', '');
+        }
+        var urls = info.images, count = urls.length;
+        var files = Array(count);
+        urls.forEach(function (url, index) {
+          util.xhr({
+            'method': 'GET',
+            'url': url,
+            'responseType': 'arraybuffer',
+            'onload': function (resp) {
+              var mtime = (resp.responseHeaders.match(/^Last-Modified: (.*)$/mi) || [])[1];
+              var extension = url.match(/(\.[^.]*)$/)[1];
+              files[index] = {
+                filename: (index + 1) + extension,
+                content: resp.response,
+                mtime: new Date(mtime || Date.now()),
+              };
+              if (--count) return;
+              downloadSuccess(id);
+            },
+            'onerror': function () {
+              downloadFail();
+            },
+          });
+        });
+        var downloadDone = function () {
+          if (link) {
+            link.querySelector('.yawf-text').textContent = text.downloadImageText;
+            link.removeAttribute('yawf-downloading');
+          }
+        };
+        var fail = false;
+        var downloadFail = function () {
+          if (fail) return;
+          fail = true;
+          util.ui.alert('yawf-download-images-fail', {
+            'title': util.str.fill('{{downloadImagesFailTitle}}'),
+            'text': util.str.fill('{{downloadImagesFailText}}'),
+            'icon': 'error'
+          });
+          downloadDone();
+        };
+        var downloadSuccess = function (id) {
+          var tarball = util.tarball.files(files);
+          var blob = new Blob([tarball], { type: 'application/x-tar' });
+          var url = URL.createObjectURL(blob);
+          var a = util.dom.create('a', '');
+          a.href = url;
+          a.setAttribute('download', 'weibo-' + id + '-images.tar');
+          document.body.appendChild(a);
+          a.click();
+          util.func.call(function () {
+            URL.revokeObjectURL(url);
+            downloadDone();
+          });
+        };
       };
-      tabCreate(imageUrl(info));
-      e.preventDefault(); e.stopPropagation();
-    }), true);
-    observer.dom.add(addOriLinkViewImage);
-    observer.dom.add(addOriLinkViewCommentImage);
-    observer.dom.add(addOriLinkViewForwardCommentImage);
-  },
-}).addto(filter.groups.tool);
+
+      var forEachElement = forEachElementAttr('yawf-view-ori');
+
+      // 添加查看原图的链接
+      var addViewOriginalLink = function (ref) {
+        if (!hasOriginal) return;
+        var vol = util.dom.create('ul', util.str.fill(html.viewOriginalLink));
+        var link = vol.querySelector('a');
+        var li = util.dom.closest(ref, 'li');
+        while (vol.firstChild) li.parentNode.insertBefore(vol.firstChild, li);
+        return link;
+      };
+
+      // 添加下载图片的链接
+      var addDownloadImageLink = function (ref) {
+        if (!hasDownload) return;
+        var vol = util.dom.create('ul', util.str.fill(html.downloadImageLink));
+        var link = vol.querySelector('a');
+        var li = util.dom.closest(ref, 'li');
+        while (vol.firstChild) li.parentNode.appendChild(vol.firstChild);
+        return link;
+      };
+
+      var addImageHandlerLink = function addImageHandlerLink() {
+        forEachElement([
+          // 微博配图
+          'li a[action-type="widget_photoview"]',
+          // 评论配图
+          'li a[action-type="widget_commentPhotoView"]',
+        ], function (viewLargeLink) {
+          var viewOriginalLink = addViewOriginalLink(viewLargeLink);
+          var downloadImageLink = addDownloadImageLink(viewLargeLink);
+          var update = function () {
+            var info = getInfo(viewLargeLink);
+            var url = info.images[info.current];
+            if (viewOriginalLink) viewOriginalLink.href = getOriginalUrl(url);
+            if (downloadImageLink) downloadImageLink.href = getOriginalUrl(url);
+          };
+          if (viewOriginalLink) viewOriginalLink.addEventListener('click', function (event) {
+            showPage(getInfo(viewOriginalLink));
+            event.preventDefault();
+          });
+          if (downloadImageLink) downloadImageLink.addEventListener('click', function (event) {
+            downloadImages(getId(viewOriginalLink), getInfo(viewOriginalLink), downloadImageLink);
+            event.preventDefault();
+          });
+          (new MutationObserver(update)).observe(viewLargeLink, { 'attributes': true });
+          update();
+        });
+      };
+      observer.dom.add(addImageHandlerLink);
+
+      if (originalDirect || downloadDirect) {
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+          if (event.button !== 0) return; // 只响应左键操作
+          if (event.shiftKey) return; // 按下 Shift 时不响应
+          var pic = (
+            util.dom.closest(target, '.WB_media_wrap .WB_pic') ||
+            util.dom.closest(target, 'a[imagecard]')
+          );
+          if (!pic) return;
+          event.stopPropagation();
+          var info = getInfo(pic);
+          if (originalDirect) showPage(info);
+          else downloadImages(getId(pic), info);
+        }, true);
+      }
+    },
+  }).addto(filter.groups.tool);
+
+}());
 
 // 将添加标签的对话框换成气球
 filter.items.tool.weibotool.no_tag_dialog = filter.item({
@@ -9244,6 +9425,7 @@ filter.items.tool.weibotool.pause_animated_image = filter.item({
       .WB_pic img[src$=".gif"]:not([yawf-pause-animate]),
       .WB_gif_video_box
       { display: none !important; }
+      .WB_gif_box { visibility: visiable !important; }
     */ noop();
     })));
   }
@@ -10586,6 +10768,7 @@ filter.items.style.sweibo.no_weibo_space = filter.item({
       .WB_feed_type .WB_detail > .WB_info ~ .WB_text + .WB_from { margin-top: 1em; }
 
       .WB_feed.WB_feed_v3 .WB_face .opt { margin: 10px 0 0 0; position: static; right: auto; top: auto; }
+      .WB_feed.WB_feed_v3 .WB_face .opt .W_btn_b { width: 48px; }
 
       [id^="Pl_Core_WendaList__"] .WB_feed_type .WB_detail > .WB_info ~ .WB_text::before { width: 68px; }
     */ noop(); }));
@@ -10665,6 +10848,7 @@ filter.items.style.sweibo.image_size = filter.item({
 
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video.WB_video_h5 { width: auto; height: auto; display: table; }
       .WB_h5video.hv-s1, .WB_h5video.hv-s3-2, .WB_h5video.hv-s3-5 { width: 120px; height: 80px; max-width: 120px; max-height: 80px; min-width: 36px; }
+      .WB_h5video.hv-s1 .con-11, .WB_h5video.hv-s3-2 .con-11, .WB_h5video.hv-s3-5 .con-11 { display: none; }
       .WB_h5video.hv-s1 video, .WB_h5video.hv-s3-2 video, .WB_h5video.hv-s3-5 video { max-width: 100%; max-height: 100%; }
       .WB_h5video.hv-s3.hv-s3-2 .con-4,
       .WB_h5video.hv-s3.hv-s3-5 .con-4 { opacity: 1; z-index: 1; }
