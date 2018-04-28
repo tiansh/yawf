@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.475
+// @version           3.7.476
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -9082,7 +9082,13 @@ filter.items.tool.weibotool.card_button = filter.item({
 
   var getInfo = function (ref) {
     var container, imgs, img;
-    if (util.dom.matches(ref, '.WB_expand_media *')) {
+    if (util.dom.matches(ref, '.WB_expand_media .tab_feed_a *')) {
+      // 评论配图详情
+      container = util.dom.closest(ref, '.WB_expand_media');
+      img = container.querySelector('.artwork_box img');
+      imgs = [img];
+      // fallthrough
+    } else if (util.dom.matches(ref, '.WB_expand_media *')) {
       // 已经展开详情的图片
       container = util.dom.closest(ref, '.WB_detail');
       imgs = Array.from(container.querySelectorAll('.WB_media_wrap .WB_pic img'));
@@ -9314,9 +9320,9 @@ filter.items.tool.weibotool.card_button = filter.item({
       var addImageHandlerLink = function addImageHandlerLink() {
         forEachElement([
           // 微博配图
-          'li a[action-type="widget_photoview"]',
+          '.WB_feed li a[action-type="widget_photoview"]',
           // 评论配图
-          'li a[action-type="widget_commentPhotoView"]',
+          '.WB_feed li a[action-type="widget_commentPhotoView"]',
         ], function (viewLargeLink) {
           var viewOriginalLink = addViewOriginalLink(viewLargeLink);
           var downloadImageLink = addDownloadImageLink(viewLargeLink);
