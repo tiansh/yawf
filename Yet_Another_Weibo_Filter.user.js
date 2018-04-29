@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.476
+// @version           3.7.477
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -9082,18 +9082,18 @@ filter.items.tool.weibotool.card_button = filter.item({
 
   var getInfo = function (ref) {
     var container, imgs, img;
-    if (util.dom.matches(ref, '.WB_expand_media .tab_feed_a *')) {
-      // 评论配图详情
-      container = util.dom.closest(ref, '.WB_expand_media');
-      img = container.querySelector('.artwork_box img');
-      imgs = [img];
-      // fallthrough
-    } else if (util.dom.matches(ref, '.WB_expand_media *')) {
+    if (util.dom.matches(ref, '.WB_detail .WB_expand_media *')) {
       // 已经展开详情的图片
       container = util.dom.closest(ref, '.WB_detail');
       imgs = Array.from(container.querySelectorAll('.WB_media_wrap .WB_pic img'));
       img = container.querySelector('.WB_media_view img') ||
         container.querySelector('.current img');
+      // fallthrough
+    } else if (util.dom.matches(ref, '.WB_expand_media .tab_feed_a *')) {
+      // 已经展开详情的评论配图
+      container = util.dom.closest(ref, '.WB_expand_media');
+      img = container.querySelector('.artwork_box img');
+      imgs = [img];
       // fallthrough
     } else if (util.dom.matches(ref, '.WB_media_wrap .WB_pic')) {
       // 没有展开详情的图片
@@ -11612,6 +11612,10 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideIconFoolsDay');
   m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
   n('NetstarIcon', 'weibo.layoutHideIconWedding');
+  n(null, 'weibo.layoutHideFollowSingle');
+  n(null, 'weibo.layoutHideFollowAtMe');
+  n(null, 'weibo.layoutHideFollowDiscover');
+  n(null, 'weibo.layoutHideFollowVideo');
   n(null, 'weibo.layoutHideNavLogoImg');
   n(null, 'weibo.layoutHideNavMain');
   n(null, 'weibo.layoutHideNavTV');
@@ -11743,6 +11747,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.uncheck_follow_presenter');
   n(null, 'weibo.tool.cardButton');
   d('directBigImg', 'weibo.tool.viewOriginal'); // 点击“查看大图”直接打开大图
+  n(null, 'weibo.tool.downloadImage');
   n(null, 'weibo.tool.html5Video');
   n(null, 'weibo.tool.disable_video_menu');
   n(null, 'weibo.tool.pause_animated_image');
