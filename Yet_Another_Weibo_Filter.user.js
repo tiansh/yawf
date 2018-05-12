@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.477
+// @version           3.7.478
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -396,6 +396,11 @@ var text = {
   'weiboPayGiftDesc': {
     'zh-cn': '微博支付积分指通过在微博中消费（如购买会员）产生的积分，并非微博等级经验值，可以用于兑换礼品（礼品一般是优惠券或抽奖）。勾选本选项以隐藏带有此类兑换信息的卡片的微博。',
   },
+  'otherBlacklistTitleRecommend': { 'zh-cn': '隐藏以下微博 - 推荐', 'zh-hk': '隱藏以下內容 - 推薦', 'zh-tw': '隱藏以下內容 - 推薦', 'en': 'Hide following content - Recommend' },
+  'weiboUserLike': { 'zh-cn': '混入个人主页的赞过的微博', 'zh-hk': '混入個人主頁的贊過的微博', 'zh-tw': '混入個人主頁的贊過的微博', 'en': 'Weibo Liked in Personal page' },
+  'weiboUserLikeDesc': {
+    'zh-cn': '个人主页消息流中混入的微博。如果您开启了 [[weibo.tool.user_page_no_author]] 则本规则会默认生效。',
+  },
   'fakeWeiboFilter': { 'zh-cn': '混入微博列表的推荐内容（好友推荐、热门话题）{{<i>}}', 'zh-hk': '混入微博列表的推薦內容（好友推薦、熱門話題）{{<i>}}', 'zh-tw': '混入微博列表的推薦內容（好友推薦、熱門話題）{{<i>}}', 'en': 'Other contents in Weibo list{{<i>}}' },
   'fakeWeiboFilterDesc': {
     'zh-cn': '所有在微博与微博之间混入的其他内容，这些内容往往不是微博消息，比如“好友推荐”“热门话题”等。',
@@ -554,6 +559,7 @@ var text = {
   'layoutHideFollowAtMe': { 'zh-cn': '提到我的微博', 'zh-hk': '提到我的微博', 'zh-tw': '提到我的微博', 'en': 'Weibo at me' },
   'layoutHideFollowDiscover': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   'layoutHideFollowVideo': { 'zh-cn': '视频弹层', 'zh-hk': '視頻彈層', 'zh-tw': '影片快顯層', 'en': 'Video pop-up layer' },
+  'layoutHideFollowRecommend': { 'zh-cn': '关注推荐', 'zh-hk': '關注推薦', 'zh-tw': '關注推薦', 'en': 'Follow Recommend' },
   // 导航栏
   'layoutHideNav': { 'zh-cn': '隐藏模块 - 导航栏', 'zh-hk': '隱藏模組 - 導覽列', 'zh-tw': '隱藏模組 - 導覽列', 'en': 'Hide modules - Navigation Bar' },
   'layoutHideNavLogoImg': { 'zh-cn': '节日徽标', 'zh-hk': '節日徽標', 'zh-tw': '節日徽標', 'en': 'Holiday logo' },
@@ -6717,9 +6723,34 @@ filter.items.other.hidethese_ad.weibo_pay_gift= filter.item({
   },
 }).addto(filter.groups.other);
 
+// 含有特定内容的微博
+filter.predef.subtitle('other', 'hidethese_recommend', '{{otherBlacklistTitleRecommend}}');
+
+// 用户个人主页上不是这个用户发的微博
+filter.items.other.hidethese_ad.user_liked = filter.item({
+  'group': 'hidethese_recommend',
+  'version': 478,
+  'type': 'boolean',
+  'key': 'weibo.other.user_like',
+  'text': '{{weiboUserLike}}',
+  'priority': 1e6, // 最高优先级
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{weiboUserLikeDesc}}' } },
+  'rule': function userLikedWeibo(feed) {
+    var enabled = this.conf;
+    var needed = filter.items.style.sweibo.user_page_no_author.conf &&
+      filter.items.style.sweibo.user_page_no_author.ref.who.conf === 'all';
+    if (!enabled && !needed) return null;
+    if (!util.page.user()) return null;
+    var oid = util.info.oid();
+    var id = weibo.feed.author.id(feed);
+    if (id !== oid) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
 // 混入新鲜事流的其他东西
 filter.items.other.hidethese_ad.fake_weibo = filter.item({
-  'group': 'hidethese_ad',
+  'group': 'hidethese_recommend',
   'version': 13,
   'type': 'boolean',
   'key': 'weibo.other.fake_weibo',
@@ -7494,10 +7525,11 @@ filter.predef.group('layout');
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
   subtitle('Follow', true);
-  item('Single', 475, '[id^="Pl_Official_WeiboDetail__"] [node-type="feed_recommend_follow"] { display: none !important; }');
-  item('AtMe', 475, '#v6_pl_content_atmeweibo [node-type="feed_recommend_follow"] { display: none !important; }');
-  item('Discover', 475, '#plc_discover [node-type="feed_recommend_follow"] { display: none !important; }');
+  item('Single', 475, '[id^="Pl_Official_WeiboDetail__"] [node-type*="feed_recommend_follow"] { display: none !important; }');
+  item('AtMe', 475, '#v6_pl_content_atmeweibo [node-type*="feed_recommend_follow"] { display: none !important; }');
+  item('Discover', 475, '#plc_discover [node-type*="feed_recommend_follow"] { display: none !important; }');
   item('Video', 475, '.WB_h5video .con-11 { display: none !important; }');
+  item('Recommend', 478, '[action-type="follow_recommend_arr"], [node-type="follow_recommend_box"] { display: none !important; }');
 
   subtitle('Nav', true);
   item('LogoImg', 256, function replaceLogo() {
@@ -9074,6 +9106,11 @@ filter.items.tool.weibotool.card_button = filter.item({
     };
   };
 
+  var getImageSrc = function (img) {
+    if (img.hasAttribute('yawf-pause-animate')) return img.getAttribute('ori-src');
+    return img.src;
+  };
+
   var getOriginalUrl = function (src) {
     var host = util.str.host(src), filename = src.match(/\/([^\/]*)$/)[1];
     var url = [location.protocol, '//', host, '/large/', filename].join('');
@@ -9109,7 +9146,10 @@ filter.items.tool.weibotool.card_button = filter.item({
     } else if (ref.src) {
       return { images: [ref.href], current: 0 };
     } else return null;
-    var images = imgs.map(function (img) { return getOriginalUrl(img.src); });
+    var images = imgs.map(function (img) {
+      var src = getImageSrc(img);
+      return getOriginalUrl(src);
+    });
     var pid = img && img.src.match(/[^/.]*(?=(?:\.[^/.]*)?$)/)[0];
     var current;
     for (current = 0; current < images.length; current++) {
