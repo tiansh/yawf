@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.478
+// @version           3.7.479
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -136,10 +136,10 @@ var text = {
   'selectedGroup': { 'zh-cn': '选择分组：', 'zh-hk': '選取分組：', 'zh-tw': '選取分組：', 'en': 'Selected: ' },
   'selectGroupButton': { 'zh-cn': '更改', 'zh-hk': '變更', 'zh-tw': '變更', 'en': 'Change' },
   'loadWeiboByMultiGroup': {
-    'zh-cn': '{{<enabled>}}使用多个分组拼凑首页（微博按发布时间排列）{{<i>}}||每次展示{{<count>}}条|点击显示更多时{{<clear>}}{{<ii>}}||选择分组{{<iii>}}',
-    'zh-hk': '{{<enabled>}}使用多個分組拼湊首頁（微博按發佈時間排列）{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
-    'zh-tw': '{{<enabled>}}使用多個分組拼湊首頁（微博按發佈時間排列）{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||選取分組{{<iii>}}',
-    'en': '{{<enabled>}}Generate home page by multiple groups (ordered by timestamp) {{<i>}}|| show {{<count>}} feeds per page | when "show more" is clicked {{<clear>}} | {{<ii>}}||Group {{<iii>}}',
+    'zh-cn': '{{<enabled>}}使用多个分组拼凑首页（微博按发布时间排列）{{<i>}}||每次展示{{<count>}}条|点击显示更多时{{<clear>}}{{<ii>}}||{{<whisper>}}包括悄悄关注分组{{<iv>}}||选择分组{{<iii>}}',
+    'zh-hk': '{{<enabled>}}使用多個分組拼湊首頁（微博按發佈時間排列）{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||{{<whisper>}}包括悄悄關注分組{{<iv>}}||選取分組{{<iii>}}',
+    'zh-tw': '{{<enabled>}}使用多個分組拼湊首頁（微博按發佈時間排列）{{<i>}}||每次展示{{<count>}}條|點擊顯示更多時{{<clear>}}{{<ii>}}||{{<whisper>}}包括悄悄關注分組{{<iv>}}||選取分組{{<iii>}}',
+    'en': '{{<enabled>}}Generate home page by multiple groups (ordered by timestamp) {{<i>}}|| show {{<count>}} feeds per page | when "show more" is clicked {{<clear>}} | {{<ii>}}||{{<whisper>}} including Secret Following group {{<iv>}}||Group {{<iii>}}',
   },
   'loadWeiboByMultiGroupClear': { 'zh-cn': '清空已展示微博', 'zh-hk': '清空已展示微博', 'zh-tw': '清空已展示微博', 'en': 'clear feeds shown' },
   'loadWeiboByMultiGroupKeep': { 'zh-cn': '保留已展示微博', 'zh-hk': '保持已展示微博', 'zh-tw': '保持已展示微博', 'en': 'keep feeds shown' },
@@ -151,6 +151,9 @@ var text = {
   },
   'loadWeiboByMultiGroupDesc3': {
     'zh-cn': '由于要先一次性打开所有分组的页面，可能需要较长的加载时间。而且配置的分组越多，生成首页的速度越慢。',
+  },
+  'loadWeiboByMultiGroupDesc4': {
+    'zh-cn': '来自悄悄关注分组的微博会额外显示“添加关注”按钮，使用版面清理隐藏关注按钮中的“[[layout.follow.whisper]]”以隐藏该按钮。',
   },
   'loadWeiboByMultiGroupMore': { 'zh-cn': '查看更多微博', 'zh-hk': '查閱更多微博', 'zh-tw': '查閱更多微博', 'en': 'View more Weibo' },
   'loadWeiboByMultiGroupDoneAll': { 'zh-cn': '所有分组的最近微博已全部展示', 'zh-hk': '所有分組的最近微博已全部展示', 'zh-tw': '所有分組的最近微博已全部展示', 'en': 'All recent weibo in each group had been read' },
@@ -552,12 +555,14 @@ var text = {
   'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': 'Internet celebrity' },
   'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
   'layoutHideIconPanda': { 'zh-cn': '熊猫', 'zh-hk': '熊貓', 'zh-tw': '貓熊', 'en': 'Panda' },
+  'layoutHideIconWenda': { 'zh-cn': '问答', 'zh-hk': '問答', 'zh-tw': '問答', 'en': 'Q&amp;A' },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 关注
   'layoutHideFollow': { 'zh-cn': '隐藏模块 - 关注按钮', 'zh-hk': '隱藏模組 - 關注按鈕', 'zh-tw': '隱藏模組 - 關注按鈕', 'en': 'Hide modules - Follow Button' },
   'layoutHideFollowSingle': { 'zh-cn': '微博详情页', 'zh-hk': '微博詳情頁', 'zh-tw': '微博詳情頁', 'en': 'Weibo detail' },
   'layoutHideFollowAtMe': { 'zh-cn': '提到我的微博', 'zh-hk': '提到我的微博', 'zh-tw': '提到我的微博', 'en': 'Weibo at me' },
   'layoutHideFollowDiscover': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
+  'layoutHideFollowWhisper': { 'zh-cn': '悄悄关注', 'zh-hk': '悄悄關注', 'zh-tw': '悄悄關注', 'en': 'Secret Following' },
   'layoutHideFollowVideo': { 'zh-cn': '视频弹层', 'zh-hk': '視頻彈層', 'zh-tw': '影片快顯層', 'en': 'Video pop-up layer' },
   'layoutHideFollowRecommend': { 'zh-cn': '关注推荐', 'zh-hk': '關注推薦', 'zh-tw': '關注推薦', 'en': 'Follow Recommend' },
   // 导航栏
@@ -3337,14 +3342,15 @@ network.following = (function () {
   };
 }());
 
-network.feed = {};
-network.feed.group = (function () {
+network.feed = (function () {
   var nomore = function empty(callback) { callback([], empty); };
   var getFeeds = function (data, callback) {
+    util.debug('home feed generate: fetch feeds for %o', data);
     if (data.loading) return void callback([], nomore);
     data.loading = true;
     var param = JSON.parse(JSON.stringify(data.param)), lastPage = null;
-    param.gid = data.gid;
+    if (data.gid) param.gid = data.gid;
+    else if (data.whisper) param.whisper = '1';
     if (data.pages.length) {
       lastPage = data.pages[data.pages.length - 1];
       if (lastPage.length === 0) {
@@ -3378,10 +3384,18 @@ network.feed.group = (function () {
       }
     });
   };
-  return function (gid, param, callback) {
+  var group = function (gid, param, callback) {
     var data = { gid: gid, param: param, pages: [], feeds: {}, loading: false };
     getFeeds(data, callback);
   };
+  var whisper = function (param, callback) {
+    var data = { whisper: true, param: param, pages: [], feeds: {}, loading: false };
+    getFeeds(data, callback);
+  };
+  return {
+    'whisper': whisper,
+    'group': group,
+  }
 }());
 
 // 过滤器
@@ -5420,7 +5434,7 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
 // 使用分组代替首页
 filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
   'group': 'loadweibo',
-  'version': 465,
+  'version': 479,
   'type': 'groups',
   'complete': 'group',
   'key': 'weibo.tool.load_weibo_by_multi_group',
@@ -5436,9 +5450,11 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
         { 'value': 'keep', 'text': '{{loadWeiboByMultiGroupKeep}}' },
       ],
     },
+    'whisper': { 'type': 'boolean', 'default': false },
     'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByMultiGroupDesc}}' },
     'ii': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByMultiGroupDesc2}}' },
     'iii': { 'type': 'sicon', 'icon': 'warn', 'text': '{{loadWeiboByMultiGroupDesc3}}' },
+    'iv': { 'type': 'sicon', 'icon': 'ask', 'text': '{{loadWeiboByMultiGroupDesc4}}' },
   },
   'deactive': function () { this.ref.enabled.putconf(false); },
   'init': function () {
@@ -5452,7 +5468,10 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
       filter.items.base.loadweibo.load_weibo_by_group.gogroup('-1');
     }
     if (!that.conf || !that.conf.length) return;
-    var groups = that.conf, count = that.ref.count.conf, clear = that.ref.clear.conf === 'clear';
+    var groups = that.conf;
+    var count = that.ref.count.conf;
+    var clear = that.ref.clear.conf === 'clear';
+    var whisper = that.ref.whisper.conf;
     var loadingTip = null;
     // 先跳转到空白页面
     // 自动检查当前是不是特定的基础界面，是的话开始这段××的逻辑
@@ -5460,7 +5479,9 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
       var query = util.str.parsequery(location.search.slice(1));
       var gid = 'gid' in query && Number(query.gid);
       if (gid !== -1) return;
-      if (!groups || !groups.length) return;
+      if (!Array.isArray(groups)) return;
+      if (whisper) groups.push('whisper');
+      if (!groups.length) return;
       var param = Object.assign({}, query); delete param.gid;
       watchFeedList(param);
       watchMembers();
@@ -5499,13 +5520,11 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
     var showFeeds = function (feedlist, groups, param) {
       var loading = groups.length;
       util.debug('home feed generate: start');
-      // 初始化数据获取
-      var feedByGroup = Array(groups.length).fill(null);
-      groups.forEach(function (gid, index) {
-        util.debug('home feed generate: get data for %o', gid);
-        network.feed.group(gid, param, function (feeds, more) {
+      // 完成某个分组的初次加载时的逻辑
+      var initialGroup = function (index, group) {
+        return function (feeds, more) {
           var info = feedByGroup[index] = {
-            gid: gid,
+            gid: group,
             feeds: feeds.map(function (feed) {
               return Object.assign(feed, { error: false });
             }),
@@ -5515,9 +5534,17 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
           };
           if (info.empty) render(null, 'done', info);
           checkOrder(info);
-          util.debug('home feed generate: got data for %o %o', gid, info);
+          util.debug('home feed generate: got data for %o %o', group, info);
           if (!--loading) nextFeed(count);
-        });
+        };
+      };
+      // 初始化数据获取
+      var feedByGroup = Array(groups.length).fill(null);
+      util.debug('home feed generate: groups: %o', groups);
+      groups.forEach(function (group, index) {
+        util.debug('home feed generate: get data for %o', group);
+        if (group === 'whisper') network.feed.whisper(param, initialGroup(index, group));
+        else network.feed.group(group, param, initialGroup(index, group));
       });
       // 检查拿到的数据是否是正常顺序的
       // 如果顺序不正确，就试着多拿一些数据
@@ -7522,12 +7549,14 @@ filter.predef.group('layout');
   item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
+  item('Wenda', 479, '.icon_wenda { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda" style="display:inline-block!important"></i>' });
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
   subtitle('Follow', true);
   item('Single', 475, '[id^="Pl_Official_WeiboDetail__"] [node-type*="feed_recommend_follow"] { display: none !important; }');
   item('AtMe', 475, '#v6_pl_content_atmeweibo [node-type*="feed_recommend_follow"] { display: none !important; }');
   item('Discover', 475, '#plc_discover [node-type*="feed_recommend_follow"] { display: none !important; }');
+  item('Whisper', 479, '#v6_pl_content_homefeed [node-type*="feed_recommend_follow"] { display: none !important; }');
   item('Video', 475, '.WB_h5video .con-11 { display: none !important; }');
   item('Recommend', 478, '[action-type="follow_recommend_arr"], [node-type="follow_recommend_box"] { display: none !important; }');
 
@@ -11651,10 +11680,13 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideIconRun');
   n(null, 'weibo.layoutHideIconFoolsDay');
   m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
-  n('NetstarIcon', 'weibo.layoutHideIconWedding');
+  n(null, 'weibo.layoutHideIconWedding');
+  n(null, 'weibo.layoutHideIconPanda');
+  n(null, 'weibo.layoutHideIconWenda');
   n(null, 'weibo.layoutHideFollowSingle');
   n(null, 'weibo.layoutHideFollowAtMe');
   n(null, 'weibo.layoutHideFollowDiscover');
+  n(null, 'weibo.layoutHideFollowWhisper');
   n(null, 'weibo.layoutHideFollowVideo');
   n(null, 'weibo.layoutHideNavLogoImg');
   n(null, 'weibo.layoutHideNavMain');
