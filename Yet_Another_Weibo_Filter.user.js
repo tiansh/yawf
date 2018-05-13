@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.479
+// @version           3.7.480
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -143,6 +143,7 @@ var text = {
   },
   'loadWeiboByMultiGroupClear': { 'zh-cn': '清空已展示微博', 'zh-hk': '清空已展示微博', 'zh-tw': '清空已展示微博', 'en': 'clear feeds shown' },
   'loadWeiboByMultiGroupKeep': { 'zh-cn': '保留已展示微博', 'zh-hk': '保持已展示微博', 'zh-tw': '保持已展示微博', 'en': 'keep feeds shown' },
+  'loadWeiboByMultiGroupWhisperGroup': { 'zh-cn': '悄悄关注', 'zh-hk': '悄悄關注', 'zh-tw': '悄悄關注', 'en': 'Secret Following' },
   'loadWeiboByMultiGroupDesc': {
     'zh-cn': '打开本功能并配置多个分组后，脚本会自动打开每个分组的页面，根据时间顺序排列，拼凑出一个“首页”。<br />如果您关注的账号不多，可以放在一个分组内，建议使用单个分组代替首页的功能以获得更好的效果。',
   },
@@ -1209,6 +1210,7 @@ var html = {
   'loadWeiboByMultiGroupDoneAll': '<div class="WB_cardwrap S_bg2 yawf-multiGroupDone"><div class="WB_cardtitle_a W_tc">{{loadWeiboByMultiGroupDoneAll}}</div></div>',
   'loadWeiboByMultiGroupDoneGroup': '<div class="WB_cardwrap S_bg2 yawf-multiGroupDone"><div class="WB_cardtitle_a W_tc">{{loadWeiboByMultiGroupDoneGroupLeft}}<span gid="{{id}}"></span>{{loadWeiboByMultiGroupDoneGroupRight}}</div></div>',
   'loadWeiboByMultiGroupLoading': '<div class="WB_cardwrap S_bg2"><div class="WB_empty WB_empty_narrow"><div class="WB_innerwrap"><div class="empty_con clearfix"><p class="text"><i class="W_loading"></i>{{loadWeiboByMultiGroupLoading}}</p></div></div></div></div>',
+  'loadWeiboByMultiGroupWhisperIcon': '<em class="W_ficon ficon_p_quietfollow S_ficon">â</em>',
   // 导入导出
   'configImportExport': '<div class="yawf-configImportExport yawf-configItem"><label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import"><span class="W_f14">{{configImportButton}}</span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14">{{configExportButton}}</span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14">{{configResetButton}}</span></a></div>',
   'configImportWbp': '<div class="yawf-configImportWbp yawf-configItem"><a class="W_btn_b" href="javascript:;"><span class="W_f14">{{configImportWbpButton}}</span></a><br /><div class="yawf-groupRemark">{{configImportWbpWarning}}</div></div>',
@@ -5468,10 +5470,11 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
       filter.items.base.loadweibo.load_weibo_by_group.gogroup('-1');
     }
     if (!that.conf || !that.conf.length) return;
-    var groups = that.conf;
+    var groups = that.conf.slice(0);
     var count = that.ref.count.conf;
     var clear = that.ref.clear.conf === 'clear';
     var whisper = that.ref.whisper.conf;
+    if (whisper) groups.push('whisper');
     var loadingTip = null;
     // 先跳转到空白页面
     // 自动检查当前是不是特定的基础界面，是的话开始这段××的逻辑
@@ -5480,7 +5483,6 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
       var gid = 'gid' in query && Number(query.gid);
       if (gid !== -1) return;
       if (!Array.isArray(groups)) return;
-      if (whisper) groups.push('whisper');
       if (!groups.length) return;
       var param = Object.assign({}, query); delete param.gid;
       watchFeedList(param);
@@ -5665,7 +5667,12 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
           var line = gid ? html.loadWeiboByMultiGroupDoneGroup : html.loadWeiboByMultiGroupDoneAll;
           var done = util.dom.create(util.str.fill(line, { id: gid }));
           if (loadingTip) feedlist.insertBefore(done, loadingTip);
-          if (gid) network.group(function (groups) {
+          if (gid === 'whisper') {
+            var span = done.querySelector('span[gid]');
+            span.textContent = util.str.fill('{{loadWeiboByMultiGroupWhisperGroup}}');
+            var icon = util.dom.create(html.loadWeiboByMultiGroupWhisperIcon);
+            span.insertBefore(icon, span.firstChild);
+          } else if (gid) network.group(function (groups) {
             var group = groups.filter(function (group) {
               return group.id === gid;
             })[0];
