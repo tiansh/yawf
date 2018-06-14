@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.481
+// @version           3.7.482
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -57,16 +57,7 @@
 // ==/UserScript==
 
 // 解决 GM_addStyle 的一些兼容问题
-if (!function testAddStyle() {
-  try {
-    var style = GM_addStyle(':root{}');
-    if (!style) return false;
-    if (style.parentNode) style.parentNode.removeChild(style);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}()) GM_addStyle = (function () {
+window.GM_addStyle = (function () {
   var addStyleQueue = [];
   (function addStyles() {
     if (!document.head) return setTimeout(addStyles, 16);
@@ -3372,18 +3363,25 @@ network.feed = (function () {
       url: util.str.fill(url.group_feeds, { param: util.str.toquery(param) }),
       onload: function (resp) {
         data.loading = false;
-        var response = JSON.parse(resp.responseText);
-        var list = util.dom.create('div', response.data);
-        var items = Array.from(list.querySelectorAll('.WB_feed_type[mid]'));
-        var feeds = items.map(function (item) {
-          var dateitem = item.querySelector('[node-type="feed_list_item_date"][date]'); if (!dateitem) return null;
-          var date = Number(dateitem.getAttribute('date')); if (!date) return null;
-          var mid = item.getAttribute('mid'); if (!mid) return null;
-          return { date: date, mid: mid, dom: item.cloneNode(true) };
-        }).filter(util.func.identity);
-        util.debug('home feed generate: fetch feeds for %o, got %o', param, feeds);
-        data.pages.push(feeds);
-        callback(feeds.slice(0), function (callback) { getFeeds(data, callback); });
+        var result = [], next = nomore;
+        try {
+          var response = JSON.parse(resp.responseText);
+          var list = util.dom.create('div', response.data);
+          var items = Array.from(list.querySelectorAll('.WB_feed_type[mid]'));
+          var feeds = items.map(function (item) {
+            var dateitem = item.querySelector('[node-type="feed_list_item_date"][date]'); if (!dateitem) return null;
+            var date = Number(dateitem.getAttribute('date')); if (!date) return null;
+            var mid = item.getAttribute('mid'); if (!mid) return null;
+            return { date: date, mid: mid, dom: item.cloneNode(true) };
+          }).filter(util.func.identity);
+          util.debug('home feed generate: fetch feeds for %o, got %o', param, feeds);
+          data.pages.push(feeds);
+          result = feeds.slice(0);
+          next = function (callback) { getFeeds(data, callback); };
+        } catch (e) {
+          util.debug('home feed generate: exception while fetching feeds for %o - %o', param, e);
+        }
+        callback(result, next);
       },
       onerror: function () {
         data.loading = false;
@@ -6881,6 +6879,7 @@ filter.items.other.hidethese_content.redpack = filter.item({
     if (!this.conf) return null;
     if (feed.querySelector('.PCD_event_red2014')) return 'hidden';
     if (feed.querySelector('.WB_feed_spec_red2015')) return 'hidden';
+    if (feed.querySelector('.WB_feed_spec_red16')) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -7563,7 +7562,7 @@ filter.predef.group('layout');
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
   item('Wenda', 479, '.icon_wenda { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda" style="display:inline-block!important"></i>' });
-  item('WorldCup', 479, '.W_icon_worldcup { display: none !important; }');
+  item('WorldCup', 481, '.W_icon_worldcup { display: none !important; }');
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
   subtitle('Follow', true);
