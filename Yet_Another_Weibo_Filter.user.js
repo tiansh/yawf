@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.480
+// @version           3.7.481
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -557,6 +557,12 @@ var text = {
   'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
   'layoutHideIconPanda': { 'zh-cn': '熊猫', 'zh-hk': '熊貓', 'zh-tw': '貓熊', 'en': 'Panda' },
   'layoutHideIconWenda': { 'zh-cn': '问答', 'zh-hk': '問答', 'zh-tw': '問答', 'en': 'Q&amp;A' },
+  'layoutHideIconWorldCup': { 'zh-cn': '世界杯', 'zh-hk': '世界盃', 'zh-tw': '世界盃', 'en': 'World Cup' },
+  'layoutHideIconWorldCupDesc': {
+    'zh-cn': Array(35).join().replace(/,/g, function (_, i) {
+      return '<i class="icon_worldcup_' + (i + 1) + ' W_icon_worldcup " style="display:inline-block!important"></i>' + (i % 8 === 7 ? '<br />' : '');
+    }),
+  },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 关注
   'layoutHideFollow': { 'zh-cn': '隐藏模块 - 关注按钮', 'zh-hk': '隱藏模組 - 關注按鈕', 'zh-tw': '隱藏模組 - 關注按鈕', 'en': 'Hide modules - Follow Button' },
@@ -7557,6 +7563,7 @@ filter.predef.group('layout');
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
   item('Wenda', 479, '.icon_wenda { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda" style="display:inline-block!important"></i>' });
+  item('WorldCup', 479, '.W_icon_worldcup { display: none !important; }');
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
   subtitle('Follow', true);
@@ -9507,7 +9514,7 @@ filter.items.tool.weibotool.pause_animated_image = filter.item({
       .WB_pic img[src$=".gif"]:not([yawf-pause-animate]),
       .WB_gif_video_box
       { display: none !important; }
-      .WB_gif_box { visibility: visiable !important; }
+      .WB_gif_box { visibility: visible !important; }
     */ noop();
     })));
   }
@@ -11690,6 +11697,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideIconWedding');
   n(null, 'weibo.layoutHideIconPanda');
   n(null, 'weibo.layoutHideIconWenda');
+  n(null, 'weibo.layoutHideIconWorldCup');
   n(null, 'weibo.layoutHideFollowSingle');
   n(null, 'weibo.layoutHideFollowAtMe');
   n(null, 'weibo.layoutHideFollowDiscover');
@@ -12479,4 +12487,3 @@ util.init(function () {
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 脚本项目地址 https://github.com/tiansh/yawf
  */
-
