@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.482
+// @version           3.7.483
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -824,7 +824,7 @@ var text = {
   'viewOriginalTitle': { 'zh-cn': '查看原图 - YAWF', 'zh-hk': '查看原圖 - YAWF', 'zh-tw': '查看原圖 - YAWF', 'en': 'View Original Picture - YAWF' },
   'viewOriginalText': { 'zh-cn': '查看原图', 'zh-hk': '查看原圖', 'zh-tw': '查看原圖', 'en': 'Original Picture' },
   'viewOriginalFCText': { 'zh-cn': '查看图片', 'zh-hk': '查看圖片', 'zh-tw': '查看圖片', 'en': 'View Picture' },
-  'viewOriginalDesc': { 'zh-cn': '选择打开包含原图的网页时，脚本会生成一个一次性的查看当前图片的网页。如果您启用了各类广告屏蔽插件，该页面可能会被误杀拦截。' },
+  'viewOriginalDesc': { 'zh-cn': '选择打开包含原图的网页时，脚本会生成一个一次性的查看当前图片的网页。如果您启用了各类广告屏蔽插件，该页面可能会被误杀拦截。对于兼容 EasyList 的广告屏蔽插件，请在白名单中添加 <code>@@|blob:https://weibo.com$popup</code> 和 <code>@@|blob:https://d.weibo.com$popup</code> 以允许该弹窗。' },
   'downloadImage': {
     'zh-cn': '查看图片添加“打包下载”链接（试验性） {{<i>}}||{{<direct>}}点击缩略图时直接开始下载',
     'zh-hk': '查看圖片添加「全部下載」連結（試驗性） {{<i>}}||{{<direct>}}點擊縮圖時直接開始下載',
@@ -4888,6 +4888,8 @@ filter.fast.topic.recognizer.topic = function (element, callback) {
   if (topic) return callback({ 'topic': topic.textContent.trim().replace(/#/g, '') });
   var topic_rs = c.querySelector('a[suda-uatrack*="hottopic_r"]');
   if (topic_rs) return callback({ 'topic': (topic_rs.title || topic_rs.textContent).trim().replace(/#/g, '') });
+  var topicLink = c.querySelector('a[href^="http://huati.weibo.com/k/"], a[href^="https://huati.weibo.com/k/"]');
+  if (topicLink) return callback({ 'topic': decodeURIComponent(topicLink.pathname.split('/').pop()) });
   return callback();
 };
 filter.fast.topic.recognizer.rtopic = function (element, callback) {
@@ -5162,11 +5164,26 @@ weibo.common.topics = function (feed) {
   return Array.from(feed.querySelectorAll('.a_topic'));
 };
 weibo.feed.topics.dom = function (feed) {
-  return weibo.feed.content(feed, weibo.common.topics);
+  var topics = weibo.feed.content(feed, weibo.common.topics);
+  var topicCard = Array.from(feed.querySelectorAll([    
+    '.WB_feed_spec[action-data*="url=http://huati.weibo.com/k/"]',
+    '.WB_feed_spec[action-data*="url=https://huati.weibo.com/k/"]'
+  ].join(',')));
+  topicCard.forEach(function (topic) {
+    var url = util.str.parsequery(topic.getAttribute('action-data')).url;
+    var a = util.dom.create('a', ''); a.href = url;
+    var text = decodeURIComponent(a.pathname.split('/')[2]);
+    topic.setAttribute('yawf-topic', text);
+  });
+  return topics.concat(topicCard);
 };
 weibo.feed.topics.text = function (feed) {
-  return weibo.feed.topics.dom(feed)
-    .map(function (topic) { return topic.textContent; });
+  return weibo.feed.topics.dom(feed).map(function (topic) {
+    if (topic.hasAttribute('yawf-topic')) {
+      return topic.getAttribute('yawf-topic');
+    }
+    return topic.textContent;
+  });
 };
 
 weibo.comment.topics = {};
@@ -6470,7 +6487,8 @@ filter.predef.wbfc({
     'contextmenu': weibo.feed.topics.dom,
     'menugrouped': '{{topicFilterContextMenuGroup}}',
     'menudesc': function (topic) {
-      return util.str.fill(text.topicFilterContextMenu, { 'topic': topic.textContent.trim().replace(/#/g, '') });
+      var topicText = (topic.hasAttribute('yawf-topic') ? topic.getAttribute('yawf-topic') : topic.textContent).trim().replace(/#/g, '');
+      return util.str.fill(text.topicFilterContextMenu, { 'topic': topicText });
     },
   }
 }, filter.groups.topic);
