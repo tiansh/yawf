@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.483
+// @version           3.7.484
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7579,7 +7579,7 @@ filter.predef.group('layout');
   item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
-  item('Wenda', 479, '.icon_wenda { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda" style="display:inline-block!important"></i>' });
+  item('Wenda', 479, '.icon_wenda, .icon_wenda_v2_v1, .icon_wenda_v2_v2 { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda_v2_v1" style="display:inline-block!important"></i><i class="W_icon icon_wenda_v2_v2" style="display:inline-block!important"></i>' });
   item('WorldCup', 481, '.W_icon_worldcup { display: none !important; }');
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
@@ -7588,7 +7588,7 @@ filter.predef.group('layout');
   item('AtMe', 475, '#v6_pl_content_atmeweibo [node-type*="feed_recommend_follow"] { display: none !important; }');
   item('Discover', 475, '#plc_discover [node-type*="feed_recommend_follow"] { display: none !important; }');
   item('Whisper', 479, '#v6_pl_content_homefeed [node-type*="feed_recommend_follow"] { display: none !important; }');
-  item('Video', 475, '.WB_h5video .con-11 { display: none !important; }');
+  item('Video', 475, '.WB_h5video .con-11, .wbv-add-box { display: none !important; }');
   item('Recommend', 478, '[action-type="follow_recommend_arr"], [node-type="follow_recommend_box"] { display: none !important; }');
 
   subtitle('Nav', true);
@@ -9546,13 +9546,16 @@ filter.items.tool.weibotool.disable_video_menu = filter.item({
   'text': '{{disableVideoContextMenu}}',
   'ainit': function () {
     observer.dom.add(function disableVideoContextMenu() {
-      var videoes = Array.from(document.querySelectorAll('.WB_video video:not([yawf-disable-menu])'));
+      var videoes = Array.from(document.querySelectorAll('.WB_video video:not([yawf-disable-menu]), .WB_video_h5_v2:not([yawf-disable-menu])'));
       videoes.forEach(function (video) {
         video.setAttribute('yawf-disable-menu', 'yawf-disable-menu');
         video.addEventListener('contextmenu', function (event) { event.stopPropagation(); }, true);
       });
     });
-    util.css.add('.WB_video .con-7 { display: none !important; }');
+    util.css.add([
+      '.WB_video .con-7 { display: none !important; }',
+      '.WB_video.WB_h5video_v2 .wbv-pop-layer { position: static; width: 0; height: 0; }',
+    ].join(''));
   }
 }).addto(filter.groups.tool);
 
@@ -10935,7 +10938,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic { width: 80px !important; height: 80px !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto !important; width: auto !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto; height: auto; position: static; -webkit-transform: none; transform: none; }
-      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video { width: 120px; height: 80px; min-width: 36px; }
+      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not(.WB_video_h5_v2) { width: 120px; height: 80px; min-width: 36px; }
       .WB_feed.WB_feed_v3 .WB_media_a_m4 { width: 172px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid rgba(127,127,127,0.3); box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_pic { height: 100px; width: 100px; }
@@ -10962,8 +10965,28 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_h5video.hv-s3.hv-s3-5:hover .con-6,
       .WB_h5video.hv-s3.hv-s3-5 .con-3 .box-2 em,
       .WB_h5video .con-3.hv-s3-3 .box-3 { opacity: 0; z-index: 0; }
+      
+      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) { width: 120px; height: 80px; min-width: 36px; }
+      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) .wbv-control-bar { display: none !important; }
 
     */ noop(); }).replace(/\/\/.*\n/g, '\n'));
+    observer.dom.add(function () {
+      var videos = Array.from(document.querySelectorAll('.WB_video_h5_v2 .WB_h5video_v2:not([yawf-watch-pouse])'));
+      videos.forEach(function (video) {
+        video.setAttribute('yawf-watch-pause', '');
+        var container = util.dom.closest(video, '.WB_video_h5_v2');
+        var setPlayAttribute = function setPlayAttribute() {
+          var playing = video.classList.contains('wbv-playing');
+          if (playing) {
+            container.setAttribute('yawf-video-play', '');
+            observer.disconnect();
+          }
+        };
+        setPlayAttribute();
+        var observer = new MutationObserver(setPlayAttribute);
+        observer.observe(video, { attributes: true, attributeFilter: ['class'], childList: false, characterData: false });
+      });
+    });
     if (this.ref.repost.conf) util.css.add(util.str.cmt(function () { /*!CSS
       .WB_feed.WB_feed_v3 .WB_feed_expand .W_arrow_bor { display: block; }
       .WB_feed.WB_feed_v3 .WB_expand_media { margin: 2px 0 8px; padding: 12px 16px 16px; }
