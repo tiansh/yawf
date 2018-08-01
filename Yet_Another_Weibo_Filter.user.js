@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.484
+// @version           3.7.485
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -548,12 +548,6 @@ var text = {
   'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
   'layoutHideIconPanda': { 'zh-cn': '熊猫', 'zh-hk': '熊貓', 'zh-tw': '貓熊', 'en': 'Panda' },
   'layoutHideIconWenda': { 'zh-cn': '问答', 'zh-hk': '問答', 'zh-tw': '問答', 'en': 'Q&amp;A' },
-  'layoutHideIconWorldCup': { 'zh-cn': '世界杯', 'zh-hk': '世界盃', 'zh-tw': '世界盃', 'en': 'World Cup' },
-  'layoutHideIconWorldCupDesc': {
-    'zh-cn': Array(35).join().replace(/,/g, function (_, i) {
-      return '<i class="icon_worldcup_' + (i + 1) + ' W_icon_worldcup " style="display:inline-block!important"></i>' + (i % 8 === 7 ? '<br />' : '');
-    }),
-  },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 关注
   'layoutHideFollow': { 'zh-cn': '隐藏模块 - 关注按钮', 'zh-hk': '隱藏模組 - 關注按鈕', 'zh-tw': '隱藏模組 - 關注按鈕', 'en': 'Hide modules - Follow Button' },
@@ -714,6 +708,7 @@ var text = {
   'layoutHideOtherRelatedWBDesc': {
     'zh-cn': '在单条微博页面可以看到的相关微博推荐',
   },
+  'layoutHideOtherRelatedVideo': { 'zh-cn': '相关视频推荐', 'zh-hk': '相關視頻推薦', 'zh-tw': '相關視頻推薦', 'en': 'Related Videos' },
   'layoutHideOtherRelatedArtical': { 'zh-cn': '头条文章页推荐阅读', 'zh-hk': '頭條文章頁推薦閱讀', 'zh-tw': '頭條文章頁推薦閱讀', 'en': '推荐阅读 (Suggested Artical)' },
   'layoutHideOtherSendWeibo': { 'zh-cn': '首页外的微博发布框', 'zh-hk': '首頁外的微博發佈框', 'zh-tw': '首頁外的微博發佈框', 'en': 'All other Weibo publishers' },
   'layoutHideOtherSendWeiboDesc': {
@@ -840,6 +835,9 @@ var text = {
   'pauseAnimatedImageDesc': { 'zh-cn': '该功能仅影响显示效果，并不会降低网络数据用量。' },
   'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
   'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
+  'disableVideoClickPop': { 'zh-cn': '点击视频时不显示弹出框', 'zh-hk': '點擊視頻時不顯示快顯方塊', 'zh-tw': '點擊視頻時不顯示快顯方塊', 'en': 'Avoid showing pop-up dialog by clicking videos' },
+  'videoFullScreenNotPop': { 'zh-cn': '视频不显示弹出框按钮', 'zh-hk': '視頻不顯示快顯方塊按鈕', 'zh-tw': '視頻不顯示快顯方塊按鈕', 'en': 'No pop-up button on videos' },
+  'videoNoAutoNext': { 'zh-cn': '禁止视频弹出框自动播放推荐视频', 'zh-hk': '禁止視頻快顯方塊自動播放推薦視頻', 'zh-tw': '禁止視頻快顯方塊自動播放推薦視頻', 'en': 'Prevent pop-up automatically playing next suggested videos' },
   // 关注
   'followingToolsTitle': { 'zh-cn': '关注', 'zh-hk': '關注', 'zh-tw': '關注', 'en': 'Following' },
   'autoCheckFollowing': { 'zh-cn': '自动检查关注列表并提示变化|{{<frequency>}}{{<i>}}', 'zh-hk': '自動檢查關注清單並提示變化|{{<frequency>}}{{<i>}}', 'zh-tw': '自動檢查關注清單並提示變化|{{<frequency>}}{{<i>}}', 'en': 'Automatically checks and prompt any changes about following list | {{<frequency>}}{{<i>}}' },
@@ -7580,7 +7578,6 @@ filter.predef.group('layout');
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
   item('Wenda', 479, '.icon_wenda, .icon_wenda_v2_v1, .icon_wenda_v2_v2 { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda_v2_v1" style="display:inline-block!important"></i><i class="W_icon icon_wenda_v2_v2" style="display:inline-block!important"></i>' });
-  item('WorldCup', 481, '.W_icon_worldcup { display: none !important; }');
   item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
 
   subtitle('Follow', true);
@@ -7995,6 +7992,7 @@ filter.predef.group('layout');
   item('IMNews', 474, '.webim_news { display: none !important; }');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
+  item('RelatedVideo', 485, '.video_box_more { display: none !important; }');
   item('RelatedArtical', 411, '.WB_artical [node-type="recommend"] { display: none !important; }');
   item('SendWeibo', 220, '.send_weibo_simple { display: none !important; }');
 
@@ -10317,6 +10315,43 @@ if (function livePhotoSupported() {
   }).addto(filter.groups.tool);
 }
 
+filter.items.tool.weibotool.disable_video_click_pop = filter.item({
+  'group': 'mediatool',
+  'version': 485,
+  'type': 'boolean',
+  'key': 'weibo.tool.disable_video_click_pop',
+  'text': '{{disableVideoClickPop}}',
+  'ainit': function () {
+    util.css.add('.wbv-pop-layer { display: none !important; }');
+  },
+}).addto(filter.groups.tool);
+
+filter.items.tool.weibotool.no_pop_but_full_screen = filter.item({
+  'group': 'mediatool',
+  'version': 485,
+  'type': 'boolean',
+  'key': 'weibo.tool.no_pop_but_full_screen',
+  'text': '{{videoFullScreenNotPop}}',
+  'ainit': function () {
+    util.css.add('.wbv-pop-control { display: none !important; } .wbv-fullscreen-control { display: block !important; }');
+  },
+}).addto(filter.groups.tool);
+
+filter.items.tool.weibotool.video_no_auto_next = filter.item({
+  'group': 'mediatool',
+  'version': 485,
+  'type': 'boolean',
+  'key': 'weibo.tool.video_no_auto_next',
+  'text': '{{videoNoAutoNext}}',
+  'ainit': function () {
+    observer.dom.add(function autoNextClose() {
+      var close = document.querySelector('.video_box_next [action-type="next_close"]:not([yawf-no-auto-next])');
+      close.setAttribute('yawf-no-auto-next', '');
+      close.click();
+    });
+  },
+}).addto(filter.groups.tool);
+
 // 样式
 // 由于历史原因，样式下键值归属 tool
 filter.predef.group('style');
@@ -11737,7 +11772,6 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideIconWedding');
   n(null, 'weibo.layoutHideIconPanda');
   n(null, 'weibo.layoutHideIconWenda');
-  n(null, 'weibo.layoutHideIconWorldCup');
   n(null, 'weibo.layoutHideFollowSingle');
   n(null, 'weibo.layoutHideFollowAtMe');
   n(null, 'weibo.layoutHideFollowDiscover');
@@ -11833,6 +11867,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideOtherIM');
   n(null, 'weibo.layoutHideOtherTip');
   m('FeedRecom', 'weibo.layoutHideOtherRelatedWB'); // 相关推荐：单条微博右边栏
+  m('FeedRecom', 'weibo.layoutHideOtherRelatedVideo');
   n(null, 'weibo.layoutHideOtherRelatedArtical');
   n(null, 'weibo.layoutHideOtherSendWeibo');
   c('IMNews', 'weibo.layoutHideOtherIMNews');
@@ -11889,6 +11924,9 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.show_local_time');
   n(null, 'weibo.tool.disable_desktop_notification');
   n(null, 'weibo.tool.disable_live_photo');
+  n(null, 'weibo.tool.disable_video_click_pop');
+  n(null, 'weibo.tool.no_pop_but_full_screen');
+  n(null, 'weibo.tool.video_no_auto_next');
   d('showAllSonFeeds', null, function (enabled) {
     if (!enabled) return;
     style('/*展开所有子微博（“还有?条对原微博的转发”） */\n.WB_feed_together [node-type="feed_list_wrapForward"] { display: block !important } .WB_feed_together>a[action-type="feed_list_seeAll"], .WB_feed_together>a[action-type="feed_list_foldForward"] { display: none }');
