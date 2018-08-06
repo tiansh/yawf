@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.485
+// @version           3.7.486
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -5509,14 +5509,10 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
     };
     // 检查如果是要生成的页面，那么开始生成内容
     var watchFeedList = function (param) {
-      var feedlist;
+      var placeholder;
       do {
-        var placeholder = document.querySelector('.WB_feed > .WB_result_null');
-        if (placeholder) {
-          feedlist = placeholder.parentNode;
-          feedlist.removeChild(placeholder);
-          break;
-        }
+        placeholder = document.querySelector('.WB_feed > .WB_result_null');
+        if (placeholder) break;
         var is_search = 'is_search' in param;
         if (is_search) {
           var a = util.dom.create('a', ''); a.href = location.href;
@@ -5525,10 +5521,39 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
         }
         return;
       } while (false);
+      
+      // 2018 年 7 月底，微博为点赞增加表情选项，并为此添加了一个新手导引
+      // 新手导引会引用页面上的点赞按钮 [action-type="fl_like"]，当找不到点赞按钮时会异常
+      // 异常导致转发等功能没有正常初始化
+      // 这里塞一个假的点赞按钮进去，重新走初始化流程以希望解决问题
+      var v6_pl_content_homefeed = document.getElementById('v6_pl_content_homefeed');
+      var like = v6_pl_content_homefeed.querySelector('[action-type="fl_like"]');
+      if (!like) {
+        v6_pl_content_homefeed.style.display = 'none';
+        util.func.page(function () {
+          var v6_pl_content_homefeed = document.getElementById('v6_pl_content_homefeed');
+          var like = document.createElement('span'); like.style.display = 'none';
+          like.innerHTML = '<ul><li><span action-type="fl_like"></span></li></ul>';
+          v6_pl_content_homefeed.querySelector('[node-type="feed_list"]').appendChild(like);
+          var html = v6_pl_content_homefeed.innerHTML; v6_pl_content_homefeed.innerHTML = '';
+          FM.view({
+            ns: 'pl.content.homefeed.index',
+            domid: 'v6_pl_content_homefeed',
+            js: ['home/js/pl/content/homefeed/index.js?version=' + $CONFIG.version],
+            html: html,
+          });
+        });
+        return;
+      }
+      v6_pl_content_homefeed.style.display = '';
+
+      var feedlist = placeholder.parentNode;
+      feedlist.removeChild(placeholder);
       feedlist.classList.add('WB_feed_v3');
       feedlist.classList.add('WB_feed_v4');
       loadingTip = util.dom.create(util.str.fill(html.loadWeiboByMultiGroupLoading));
       feedlist.appendChild(loadingTip);
+      
       showFeeds(feedlist, groups, param);
     };
     // 去掉侧栏“未分组”那个鬼
@@ -10346,6 +10371,7 @@ filter.items.tool.weibotool.video_no_auto_next = filter.item({
   'ainit': function () {
     observer.dom.add(function autoNextClose() {
       var close = document.querySelector('.video_box_next [action-type="next_close"]:not([yawf-no-auto-next])');
+      if (!close) return;
       close.setAttribute('yawf-no-auto-next', '');
       close.click();
     });
@@ -12565,3 +12591,4 @@ util.init(function () {
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 脚本项目地址 https://github.com/tiansh/yawf
  */
+
