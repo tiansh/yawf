@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.486
+// @version           3.7.487
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -4882,12 +4882,18 @@ filter.fast.topic.recognizer = {};
 filter.fast.topic.recognizer.topic = function (element, callback) {
   if (element.nodeType === Node.TEXT_NODE) return callback();
   var c = util.dom.create('body', element.outerHTML);
+  var supertopic = c.querySelector('a > .ficon_supertopic');
+  if (supertopic) return callback({ 'topic': supertopic.parentNode.title.trim().replace(/#/g, '') });
   var topic = c.querySelector('a.a_topic, a[suda-uatrack*="1022-topic"]');
   if (topic) return callback({ 'topic': topic.textContent.trim().replace(/#/g, '') });
   var topic_rs = c.querySelector('a[suda-uatrack*="hottopic_r"]');
   if (topic_rs) return callback({ 'topic': (topic_rs.title || topic_rs.textContent).trim().replace(/#/g, '') });
   var topicLink = c.querySelector('a[href^="http://huati.weibo.com/k/"], a[href^="https://huati.weibo.com/k/"]');
   if (topicLink) return callback({ 'topic': decodeURIComponent(topicLink.pathname.split('/').pop()) });
+  var superTopicSource = c.querySelector('[action-type="app_source"][href*="weibo.com/p/"]');
+  if (superTopicSource && /超话$/.test(superTopicSource.textContent.trim())) {
+    return callback({ 'topic': superTopicSource.textContent.trim().replace(/超话$/, '') });
+  }
   return callback();
 };
 filter.fast.topic.recognizer.rtopic = function (element, callback) {
@@ -5016,7 +5022,8 @@ weibo.common.text = function (content, preclt) {
     if (util.dom.matches(node, 'a[usercard]')) return node.textContent.trim();
   };
   types.topic = function (node) {
-    if (util.dom.matches(node, 'a.a_topic')) return node.textContent.trim();
+    if (util.dom.matches(node, 'a[suda-uatrack*="1022-topic"]') && node.title) return node.title;
+    if (util.dom.matches(node, 'a.a_topic, a[suda-uatrack*="1022-topic"]')) return node.textContent.trim();
   };
   types.stock = function (node) {
     if (util.dom.matches(node, 'a[suda-uatrack*="1022-stock"]')) return node.textContent.trim();
@@ -5159,7 +5166,17 @@ weibo.comment.users.name = function (comment) {
 // 找到在一条微博里面提到的所有话题
 weibo.feed.topics = {};
 weibo.common.topics = function (feed) {
-  return Array.from(feed.querySelectorAll('.a_topic'));
+  Array.from(feed.querySelectorAll('a:not([yawf-topic]) > .ficon_supertopic')).forEach(function (icon) {
+    var link = icon.parentNode;
+    link.setAttribute('yawf-topic', link.title);
+    return link;
+  });
+  var topics = Array.from(feed.querySelectorAll('.a_topic:not([yawf-topic])'));
+  topics.forEach(function (topic) {
+    var title = topic.textContent.replace(/#/g, '').trim();
+    topic.setAttribute('yawf-topic', title);
+  });
+  return Array.from(feed.querySelectorAll('a[yawf-topic]'));
 };
 weibo.feed.topics.dom = function (feed) {
   var topics = weibo.feed.content(feed, weibo.common.topics);
@@ -5172,25 +5189,31 @@ weibo.feed.topics.dom = function (feed) {
     var a = util.dom.create('a', ''); a.href = url;
     var text = decodeURIComponent(a.pathname.split('/')[2]);
     topic.setAttribute('yawf-topic', text);
+    topics.push(topic);
   });
-  return topics.concat(topicCard);
+  var superTopicSource = feed.querySelector('[action-type="app_source"][href*="weibo.com/p/"]');
+  if (superTopicSource && /超话$/.test(superTopicSource.textContent.trim())) {
+    var superTopicSourceTitle = superTopicSource.textContent.trim().replace(/超话$/, '');
+    superTopicSource.setAttribute('yawf-topic', superTopicSourceTitle);
+    topics.push(superTopicSource);
+  }
+  return topics;
 };
 weibo.feed.topics.text = function (feed) {
   return weibo.feed.topics.dom(feed).map(function (topic) {
     if (topic.hasAttribute('yawf-topic')) {
       return topic.getAttribute('yawf-topic');
     }
-    return topic.textContent;
+    return topic.textContent.replace(/#/g, '').trim();
   });
 };
 
 weibo.comment.topics = {};
 weibo.comment.topics.dom = function (feed) {
-  return weibo.comment.content(feed, weibo.common.topics);
+  return weibo.feed.topics.dom(feed);
 };
 weibo.comment.topics.text = function (feed) {
-  return weibo.comment.topics.dom(feed)
-    .map(function (topic) { return topic.textContent; });
+  return weibo.feed.topics.text(feed);
 };
 
 // 获取一条微博的所有来源（包括转发）
@@ -6485,7 +6508,7 @@ filter.predef.group('topic').addto(filter.groups.base);
 filter.predef.wbfc({
   'name': 'topic',
   'version': 2,
-  'add': function (s) { return s.trim().replace(/#/g, '') || null; },
+  'add': function (s) { return s.trim().replace(/[#\ue627]/g, '') || null; },
   'display': function (s) { return '#' + s + '#'; },
   'rule': function topicMatch(action, feed) {
     var topics = this.conf.concat(this.extent);
