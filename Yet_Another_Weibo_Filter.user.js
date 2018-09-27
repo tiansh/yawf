@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.488
+// @version           3.7.489
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -285,6 +285,15 @@ var text = {
   'accountfFilterReason': { 'zh-cn': '因来自 @{{detail}} ', 'zh-hk': '因來自 @{{detail}} ', 'zh-tw': '因來自 @{{detail}} ', 'en': 'because it is posted by @{{detail}} ' },
   // 原创
   'originalFilterGroupTitle': { 'zh-cn': '原创', 'zh-hk': '原創', 'zh-tw': '原創', 'en': 'Original' },
+  'originalFollowerFilter': {
+    'zh-cn': '{{<enabled>}}隐藏原创博主|粉丝数超过{{<fans>}}万的转发微博{{<i>}}|<br>例外帐号',
+    'zh-hk': '{{<enabled>}}隱藏原創博主|粉絲數超過{{<fans>}}萬的轉發微博{{<i>}}|<br>例外賬號',
+    'zh-tw': '{{<enabled>}}隱藏原創博主|粉絲數超過{{<fans>}}萬的轉發微博{{<i>}}|<br>例外賬號',
+    'en': '{{<enabled>}} Hide weibo from forwarded from | accounts with more than {{<fans>}}0k followers{{<i>}}|<br>Exception accounts',
+  },
+  'originalFollowerFilterDesc': {
+    'zh-cn': '为了庆祝微博试运行评论拉黑系列功能，特提供此功能。难免有误伤，谨慎使用。',
+  },
   'originalFilterDesc': { 'zh-cn': '帐号', 'zh-hk': '帳號', 'zh-tw': '帳號', 'en': 'Account' },
   'originalFilterDetails': { 'zh-cn': '原创是以下帐号的微博', 'zh-hk': '原創是以下帳號的微博', 'zh-tw': '原創是以下帳號的微博', 'en': 'Weibo Originally from these accounts' },
   'originalFilterDetailsDesc': {
@@ -1715,6 +1724,11 @@ util.str.base64 = function (str) {
   return btoa(unescape(encodeURIComponent(str)));
 };
 
+// 读数
+util.str.parseint = function (str) {
+  return +str.replace('万', 'e4').replace('亿', 'e8');
+};
+
 // 打包工具
 util.tarball = {};
 
@@ -2761,7 +2775,10 @@ network.account = (function () {
         var avatar = namecard.querySelector('.name dt img').getAttribute('src');
         var name = namecard.querySelector('.name dd a[uid]').getAttribute('title');
         var uid = namecard.querySelector('.name dd a[uid]').getAttribute('uid');
-        var data = { 'avatar': avatar, 'id': uid, 'name': name };
+        var follow = util.str.parseint(namecard.querySelector('a[href*="/follow?"]').nextSibling.textContent);
+        var fans = util.str.parseint(namecard.querySelector('a[href*="/fans?"]').nextSibling.textContent);
+        var data = { 'avatar': avatar, 'id': uid, 'name': name, 'follower': fans, 'followee': follow };
+        util.debug('Got user data: %o', data);
         nameCache[name] = idCache[uid] = data;
         done(true, data);
       }, function () { done(false); }),
@@ -6466,6 +6483,64 @@ filter.groups.original = filter.predef.wbfc({
     },
   }
 });
+
+// 根据原作者粉丝数过滤
+filter.groups.original.by_follower = filter.item({
+  'group': 'original',
+  'version': 489,
+  'type': 'users',
+  'key': 'weibo.original.by_follower',
+  'text': '{{originalFollowerFilter}}',
+  'ref': {
+    'enabled': {
+      'type': 'boolean',
+      'default': false,
+    },
+    'fans': {
+      'type': 'range',
+      'min': 1,
+      'max': 100,
+      'default': 10,
+    },
+    'i': {
+      'type': 'sicon',
+      'icon': 'ask',
+      'text': '{{originalFollowerFilterDesc}}',
+    }
+  },
+  'init': function () {
+    var rule = this;
+    observer.weibo.onload(function (feed) {
+      if (!rule.ref.enabled.conf) return;
+      var whitelist = rule.conf.concat(filter.items.original.whitelist.conf);
+      var id = [weibo.feed.original.id(feed)];
+      if (filter.items.original.blacklist_d.conf && util.page.discovery) id.push(weibo.feed.author.id(feed));
+      id = id.filter(function (id) { return id && whitelist.indexOf(id) === -1; });
+      if (!id.length) return null;
+      feed.setAttribute('yawf-feed-follower', '');
+      var count = 0, done = false;
+      var fail = function () {
+        if (done) return; done = true;
+        filter.fix.hidden.done(feed);
+        util.debug('Weibo hidden by follower number: %o', feed);
+      };
+      var target = rule.ref.fans.conf * 1e4;
+      var pass = function () {
+        if (done) return;
+        if (++count !== id.length) return;
+        done = true;
+        feed.removeAttribute('yawf-feed-follower');
+      };
+      id.forEach(function (id) {
+        network.account.id(id, function (account) {
+          if (account.follower < target) pass();
+          else fail();
+        }, fail);
+      });
+    });
+    util.css.add('.WB_feed_type[yawf-feed-follower] { visibility: hidden; }');
+  },
+}).addto(filter.groups.original);
 
 // 提到某人的微博
 filter.groups.mention = filter.predef.wbfc({
@@ -12616,7 +12691,7 @@ util.init(function () {
 /*!
  * 本脚本使用 MIT 协议
  * The MIT License (MIT)
- * Copyright (c) 2014-2016 田生
+ * Copyright (c) 2014-2018 田生
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
