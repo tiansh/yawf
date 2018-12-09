@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.489
+// @version           3.7.490
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -555,8 +555,6 @@ var text = {
   'layoutHideIconFoolsDay': { 'zh-cn': '愚人节', 'zh-hk': '愚人节', 'zh-tw': '愚人节', 'en': "Fools' Day" },
   'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': 'Internet celebrity' },
   'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
-  'layoutHideIconPanda': { 'zh-cn': '熊猫', 'zh-hk': '熊貓', 'zh-tw': '貓熊', 'en': 'Panda' },
-  'layoutHideIconWenda': { 'zh-cn': '问答', 'zh-hk': '問答', 'zh-tw': '問答', 'en': 'Q&amp;A' },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 关注
   'layoutHideFollow': { 'zh-cn': '隐藏模块 - 关注按钮', 'zh-hk': '隱藏模組 - 關注按鈕', 'zh-tw': '隱藏模組 - 關注按鈕', 'en': 'Hide modules - Follow Button' },
@@ -842,6 +840,9 @@ var text = {
   'downloadImagesFailText': { 'zh-cn': '下载图片时发生错误，下载失败', 'zh-hk': '下載圖片時發生錯誤，下載失敗', 'zh-tw': '下載圖片時發生錯誤，下載失敗', 'en': 'Images downloading failed.' },
   'pauseAnimatedImage': { 'zh-cn': '动画图像(GIF)在缩略图显示时保持静止{{<i>}}', 'zh-hk': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'zh-tw': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'en': 'Pause thumbnail animated image (GIF) {{<i>}}' },
   'pauseAnimatedImageDesc': { 'zh-cn': '该功能仅影响显示效果，并不会降低网络数据用量。' },
+  'useBuiltInVideoPlayer': { 'zh-cn': '使用浏览器原生视频播放器{{<i>}}', 'zh-hk': '使用瀏覽器內建影片播放器{{<i>}}', 'zh-tw': '使用瀏覽器內建影片播放器{{<i>}}', 'en': 'Use browser built-in video player {{<i>}}' },
+  'useBuiltInVideoPlayerDesc': { 'zh-cn': '一次性解决自动播放和交互逻辑的各种问题，开启时其他视频相关的改造功能不再生效。不支持直播视频。播放可能不会被微博正确计入播放数。' },
+  'mediaVideoType': { 'zh-cn': '视频', 'zh-hk': '影片', 'zh-tw': '影片', 'en': 'Video' },
   'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
   'disableLivePhoto': { 'zh-cn': '禁用微博 Live Photo 播放', 'zh-hk': '阻止微博播放 Live Photo', 'zh-tw': '阻止微博播放 Live Photo', 'en': 'Disable playing live photo' },
   'disableVideoClickPop': { 'zh-cn': '点击视频时不显示弹出框', 'zh-hk': '點擊視頻時不顯示快顯方塊', 'zh-tw': '點擊視頻時不顯示快顯方塊', 'en': 'Avoid showing pop-up dialog by clicking videos' },
@@ -1253,6 +1254,8 @@ var html = {
   'videoFakePlaceholderContainer': '<div class="yawf-video-fake-placeholder-container" style="height: 0; width: 100%; overflow: hidden; position: relative;"></div>',
   'videoFakePlaceholder': '<div class="yawf-video-fake-placeholder" yawf-fake-placeholder="yawf-fake-placeholder" style="width: 1px; height: 2000000px; position: absolute; top: -1000000px; z-index: -1;" node-type="fl_h5_video"></div>',
   'videoDocumentHeightNotifier': '<div style="width: 100%; height: 10px; display: table; clear: both; overflow: hidden; position: relative;"></div>',
+  // 视频小提示
+  'videoTip': '<i class="W_icon_tag_v2">{{mediaVideoType}}</i>',
   // 视频播放
   'videoFold': '<div class="tab_feed_a clearfix"><div class="tab"><ul class="clearfix"><li><span class="line S_line1"><a action-type="feed_list_media_toSmall" href="javascript:;" class="S_txt1" yawf-link-type="k"><i class="W_ficon ficon_arrow_fold S_ficon">k</i>{{foldDetails}}</a></span></li></ul></div></div>',
   // 拖拽
@@ -3866,6 +3869,7 @@ filter.fix.hidden = function (feed) {
   setTimeout(function () {filter.fix.hidden.done(feed); }, 100);
 };
 filter.fix.hidden.done = function (feed) {
+  if (!feed.parentNode) return;
   feed.parentNode.removeChild(feed);
 };
 
@@ -7707,9 +7711,15 @@ filter.predef.group('layout');
   item('FoolsDay', 372, '.icon_foolsday { display: none !important; }', { 'extt': '<i class="W_icon icon_foolsday" style="display:inline-block!important"></i>' });
   item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
   item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
-  item('Panda', 470, '.icon_panda { display: none !important; }', { 'extt': '<i class="W_icon icon_panda" style="display:inline-block!important"></i>' });
-  item('Wenda', 479, '.icon_wenda, .icon_wenda_v2_v1, .icon_wenda_v2_v2 { display: none !important; }', { 'extt': '<i class="W_icon icon_wenda_v2_v1" style="display:inline-block!important"></i><i class="W_icon icon_wenda_v2_v2" style="display:inline-block!important"></i>' });
-  item('Other', 443, '.W_icon_yy { display: none !important; }', { 'extt': '<i class="W_icon_yy icon_yy_ssp1" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_gqt" style="display:inline-block!important"></i><i class="W_icon_yy icon_yy_lol" style="display:inline-block!important"></i>' });
+  item('Other', 443, function () {
+    observer.dom.add(function () {
+      var icons = document.querySelectorAll('a > .W_icon_yystyle');
+      Array.from(icons).forEach(function (icon) {
+        icon.parentNode.parentNode.removeChild(icon.parentNode);
+      });
+    });
+    util.css.add('.W_icon_yystyle, .W_icon_yy { display: none !important; }');
+  });
 
   subtitle('Follow', true);
   item('Single', 475, '[id^="Pl_Official_WeiboDetail__"] [node-type*="feed_recommend_follow"] { display: none !important; }');
@@ -9616,6 +9626,80 @@ filter.items.tool.weibotool.no_tag_dialog = filter.item({
 // 多媒体类（视频和图片）
 filter.predef.subtitle('tool', 'mediatool', '{{mediaToolsTitle}}');
 
+filter.items.tool.weibotool.use_built_in_video_player = filter.item({
+  'group': 'mediatool',
+  'version': 490,
+  'type': 'boolean',
+  'key': 'weibo.tool.use_built_in_video_player',
+  'text': '{{useBuiltInVideoPlayer}}',
+  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{useBuiltInVideoPlayerDesc}}' } },
+  'ainit': function () {
+    var replaceWeiboVideoPlayer = function replaceWeiboVideoPlayer() {
+      var containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
+      containers.forEach(function (container) {
+        var smallImage = filter.items.style.sweibo.image_size.conf;
+        
+        var cover = container.querySelector('[node-type="fl_h5_video_pre"] img'); if (!cover) return;
+        var video = container.querySelector('video');
+        if (video) video.src = 'data:text/plain,42';
+        var videoSourceData = util.str.parsequery(container.getAttribute('video-sources'));
+        var videoSource = videoSourceData[videoSourceData.qType]; if (!videoSource) return;
+        var newContainer = document.createElement('li');
+        newContainer.className = container.className + ' yawf-WB_video';
+        var newVideo = document.createElement('video');
+        newVideo.poster = cover.src;
+        newVideo.src = videoSource;
+        newVideo.preload = 'none';
+        newVideo.controls = !smallImage;
+        newVideo.autoplay = false;
+        var updatePlayState = function () {
+          var isPlaying = !newVideo.paused || newVideo.seeking;
+          if (isPlaying) newContainer.setAttribute('yawf-video-play', '');
+          else newContainer.removeAttribute('yawf-video-play');
+          if (smallImage) newVideo.controls = isPlaying;
+        };
+        newVideo.addEventListener('play', updatePlayState);
+        newVideo.addEventListener('pause', updatePlayState);
+        if (smallImage) {
+          newContainer.addEventListener('click', function (event) {
+            if (!newContainer.hasAttribute('yawf-video-play')) newVideo.play();
+          });
+          newContainer.appendChild(util.dom.create(util.str.fill(html.videoTip)));
+        }
+        newContainer.appendChild(newVideo);
+        container.parentNode.replaceChild(newContainer, container);
+      });
+    };
+    observer.dom.add(replaceWeiboVideoPlayer);
+    replaceWeiboVideoPlayer();
+    util.css.add(util.str.cmt(function () { /*!CSS
+      li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video_pre"],
+      li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video_disp"] { display: none !important; }
+      .yawf-WB_video { transition: width, height 0.2s; }
+      .yawf-WB_video video { width: 100%; height: 100%; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; }
+      .WB_media_a .WB_video.yawf-WB_video { cursor: unset; }
+      .yawf-WB_video .W_icon_tag_v2 { z-index: 1; }
+      .WB_video[yawf-video-play] .W_icon_tag_v2 { display: none; }
+    */ noop(); }));
+    util.func.page(function () {
+      var FakeVideoPlayer = function e() {};
+      FakeVideoPlayer.prototype.thumbnail = function () {};
+      FakeVideoPlayer.prototype.playStatus = function () {};
+      if (window.VideoPlayer) {
+        window.VideoPlayer = FakeVideoPlayer;
+        return;
+      }
+      var globalVideoPlayer = void 0;
+      Object.defineProperty(window, 'VideoPlayer', {
+        get() { return globalVideoPlayer; },
+        set() { globalVideoPlayer = FakeVideoPlayer; },
+        enumerable: true,
+        configurable: false,
+      });
+    });
+  },
+}).addto(filter.groups.tool);
+
 // 动图保持静止
 filter.items.tool.weibotool.pause_animated_image = filter.item({
   'group': 'mediatool',
@@ -11105,7 +11189,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic { width: 80px !important; height: 80px !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto !important; width: auto !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto; height: auto; position: static; -webkit-transform: none; transform: none; }
-      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not(.WB_video_h5_v2) { width: 120px; height: 80px; min-width: 36px; }
+      .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not(.yawf-WB_video):not(.WB_video_h5_v2) { width: 120px; height: 80px; min-width: 36px; }
       .WB_feed.WB_feed_v3 .WB_media_a_m4 { width: 172px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid rgba(127,127,127,0.3); box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_pic { height: 100px; width: 100px; }
@@ -12044,6 +12128,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.tool.downloadImage');
   n(null, 'weibo.tool.html5Video');
   n(null, 'weibo.tool.disable_video_menu');
+  n(null, 'weibo.tool.weibo.tool.use_built_in_video_player');
   n(null, 'weibo.tool.pause_animated_image');
   n(null, 'weibo.tool.replace_link.url');
   n(null, 'weibo.tool.replace_link');
