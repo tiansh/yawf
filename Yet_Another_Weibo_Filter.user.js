@@ -8803,7 +8803,7 @@ filter.items.tool.fixed.hide_nav_bar = filter.item({
         var y = window.scrollY, f = nav.hasAttribute(attr), r = 42;
         if (y < r && f) nav.removeAttribute(attr);
         if (y >= r && !f) nav.setAttribute(attr, '');
-      }
+      })
     };
     document.addEventListener('scroll', updateNavFloat);
     updateNavFloat();
