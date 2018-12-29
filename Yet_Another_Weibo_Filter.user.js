@@ -8797,10 +8797,13 @@ filter.items.tool.fixed.hide_nav_bar = filter.item({
   'ainit': function () {
     var attr = 'yawf-float';
     var updateNavFloat = function () {
-      var nav = document.querySelector('.WB_global_nav'); if (!nav) return;
-      var y = window.scrollY, f = nav.hasAttribute(attr), r = 42;
-      if (y < r && f) nav.removeAttribute(attr);
-      if (y >= r && !f) nav.setAttribute(attr, '');
+      var navs = document.querySelectorAll('.WB_global_nav');
+      if (!navs.length) return;
+      for (let nav of navs) {
+        var y = window.scrollY, f = nav.hasAttribute(attr), r = 42;
+        if (y < r && f) nav.removeAttribute(attr);
+        if (y >= r && !f) nav.setAttribute(attr, '');
+      }
     };
     document.addEventListener('scroll', updateNavFloat);
     updateNavFloat();
