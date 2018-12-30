@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.491
+// @version           3.7.492
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -8123,6 +8123,14 @@ filter.predef.group('layout');
       });
     };
     observer.dom.add(removeClassName);
+
+    var removeAdIframes = function removeAdIframes() {
+      const iframes = Array.from(document.querySelectorAll('iframe[src*="s.alitui.weibo.com"]'));
+      iframes.forEach(function (iframe) {
+        iframe.parentNode.removeChild(iframe);
+      });
+    };
+    observer.dom.add(removeAdIframes);
   }, { 'default': true });
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('Template', 279, '.icon_setskin { display: none !important; }');
@@ -8797,15 +8805,20 @@ filter.items.tool.fixed.hide_nav_bar = filter.item({
   'ainit': function () {
     var attr = 'yawf-float';
     var updateNavFloat = function () {
-      var nav = document.querySelector('.WB_global_nav'); if (!nav) return;
-      var y = window.scrollY, f = nav.hasAttribute(attr), r = 42;
-      if (y < r && f) nav.removeAttribute(attr);
-      if (y >= r && !f) nav.setAttribute(attr, '');
+      var navs = document.querySelectorAll('.WB_global_nav');
+      if (!navs.length) return;
+      // 你能相信吗？导航栏不一定有一个。很神奇的呢
+      var y = window.scrollY;
+      Array.from(navs).forEach(function (nav) {
+        var f = nav.hasAttribute(attr), r = 42;
+        if (y < r && f) nav.removeAttribute(attr);
+        if (y >= r && !f) nav.setAttribute(attr, '');
+      });
     };
     document.addEventListener('scroll', updateNavFloat);
     updateNavFloat();
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-      .WB_global_nav { margin-top: -50px; top: 50px; box-shadow: none; }
+      .WB_global_nav:not([{{attr}}]), .WB_global_nav[{{attr}}] { margin-top: -50px; top: 50px; box-shadow: none; }
       .WB_global_nav[{{attr}}] { top: 0; transition: top ease-in-out 0.1s 0.33s; }
       .WB_global_nav[{{attr}}]:hover { top: 50px; transition: top ease-in-out 0.1s 0s; }
       .WB_global_nav[{{attr}}]::after { content: " "; width: 100%; height: 8px; clear: both; float: left; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 75%, transparent 100%); }
