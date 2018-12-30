@@ -8807,16 +8807,18 @@ filter.items.tool.fixed.hide_nav_bar = filter.item({
     var updateNavFloat = function () {
       var navs = document.querySelectorAll('.WB_global_nav');
       if (!navs.length) return;
+      // 你能相信吗？导航栏不一定有一个。很神奇的呢
+      var y = window.scrollY;
       Array.from(navs).forEach(function (nav) {
-        var y = window.scrollY, f = nav.hasAttribute(attr), r = 42;
+        var f = nav.hasAttribute(attr), r = 42;
         if (y < r && f) nav.removeAttribute(attr);
         if (y >= r && !f) nav.setAttribute(attr, '');
-      })
+      });
     };
     document.addEventListener('scroll', updateNavFloat);
     updateNavFloat();
     util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
-      .WB_global_nav { margin-top: -50px; top: 50px; box-shadow: none; }
+      .WB_global_nav:not([{{attr}}]), .WB_global_nav[{{attr}}] { margin-top: -50px; top: 50px; box-shadow: none; }
       .WB_global_nav[{{attr}}] { top: 0; transition: top ease-in-out 0.1s 0.33s; }
       .WB_global_nav[{{attr}}]:hover { top: 50px; transition: top ease-in-out 0.1s 0s; }
       .WB_global_nav[{{attr}}]::after { content: " "; width: 100%; height: 8px; clear: both; float: left; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 75%, transparent 100%); }
