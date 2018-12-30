@@ -8123,6 +8123,14 @@ filter.predef.group('layout');
       });
     };
     observer.dom.add(removeClassName);
+
+    var removeAdIframes = function removeAdIframes() {
+      const iframes = Array.from(document.querySelectorAll('iframe[src*="s.alitui.weibo.com"]'));
+      iframes.forEach(function (iframe) {
+        iframe.parentNode.removeChild(iframe);
+      });
+    };
+    observer.dom.add(removeAdIframes);
   }, { 'default': true });
   item('Music', 110, '.PCD_mplayer { display: none !important; }');
   item('Template', 279, '.icon_setskin { display: none !important; }');
