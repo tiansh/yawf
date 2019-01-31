@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.492
+// @version           3.7.493
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -426,6 +426,7 @@ var text = {
   'redPackWeiboDesc': {
     'zh-cn': '抢红包活动自动发布的微博'
   },
+  'jinliForwardWeibo': { 'zh-cn': '转发图标是锦鲤的微博（转发抽奖的微博？）', 'zh-hk': '轉發圖示是錦鯉的微博（轉發抽獎的微博？）', 'zh-tw': '轉發圖示是錦鯉的微博（轉發抽獎的微博？）', 'en': 'Forward icon as a koi (forward this weibo for draw?)' },
   'appItemWeibo': { 'zh-cn': '介绍微博应用的微博{{<i>}}', 'zh-hk': '介紹微博應用的微博{{<i>}}', 'zh-tw': '介紹微博應用的微博{{<i>}}', 'en': 'Weibo with app item {{<i>}}' },
   'appItemWeiboDesc': {
     'zh-cn': '介绍微博应用的微博，包括含有微博应用的链接或含有微博应用的卡片的情况。微博应用的链接会以应用图标标记。勾选此项以隐藏此类微博。',
@@ -7035,6 +7036,20 @@ filter.items.other.hidethese_content.redpack = filter.item({
   },
 }).addto(filter.groups.other);
 
+// 转发抽奖微博（转发图标是锦鲤图案）
+filter.items.other.hidethese_content.redpack = filter.item({
+  'group': 'hidethese_content',
+  'version': 493,
+  'type': 'boolean',
+  'key': 'weibo.other.jinli_forward',
+  'text': '{{jinliForwardWeibo}}',
+  'rule': function jinliForwardWeibo(feed) {
+    if (!this.conf) return null;
+    if (feed.querySelector('a[action-type="fl_forward"] .icon_jinli')) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
 // 微博应用介绍
 filter.items.other.hidethese_content.appitem = filter.item({
   'group': 'hidethese_content',
@@ -8137,7 +8152,7 @@ filter.predef.group('layout');
   item('HomeTip', 124, '#v6_pl_content_hometip { display: none !important }');
   item('Footer', 5, '.global_footer, .WB_footer { display: none !important; }');
   item('WbIm', 5, '.WBIM_news, .sendbox_btn_l a[href*="//desktop.weibo.com/download.php"] { display: none !important; }');
-  item('IM', 189, '#WB_webim { display: none !important; }');
+  item('IM', 189, '#WB_webim, .WB_webim { display: none !important; }');
   item('IMNews', 474, '.webim_news { display: none !important; }');
   item('Tip', 8, '.W_layer_tips { display: none !important; }');
   item('RelatedWB', 134, '[yawf-obj-name="相关推荐"] { display: none !important; } #WB_webim .wbim_chat_box, #WB_webim .wbim_min_chat  { right: 20px !important; }');
@@ -9049,6 +9064,7 @@ filter.items.tool.weibotool.auto_unfold_weibo = filter.item({
     var resetWeibo = function (feed) {
       markUnfolded(feed);
       var placeholder = util.dom.create('div', ''), parent = feed.parentNode;
+      if (!parent) return;
       parent.replaceChild(placeholder, feed);
       feed.removeAttribute('yawf-display');
       feed.removeAttribute('yawf-weibo'); // FIXME 这样会让过滤器重新走，但是也会让无关的东西走两遍
@@ -11941,6 +11957,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.other.comment_and_reply');
   n(null, 'weibo.other.vote_weibo');
   n(null, 'weibo.other.red2014');
+  n(null, 'weibo.other.jinli_forward');
   n(null, 'weibo.other.appitem');
   n(null, 'weibo.other.wenda');
   n(null, 'weibo.other.wenwodr');
