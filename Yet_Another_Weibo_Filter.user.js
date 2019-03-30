@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.495
+// @version           3.7.496
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -792,6 +792,7 @@ var text = {
   'disableNotificationDesc': {
     'zh-cn': '勾选以禁用微博的桌面提示，您也可以直接在浏览器的权限管理中禁用微博的桌面提示功能，但这样做您将同样无法使用脚本提供的桌面提示功能。'
   },
+  'messageCurrentPage': { 'zh-cn': '在当前页面打开黄签的消息提醒', 'zh-hk': '在當前頁面打開黃簽的消息提醒', 'zh-tw': '在當前頁面打開黃簽的消息提醒', 'en': 'Open yellow tip notices in current page' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
@@ -842,7 +843,12 @@ var text = {
   'downloadImagesFailText': { 'zh-cn': '下载图片时发生错误，下载失败', 'zh-hk': '下載圖片時發生錯誤，下載失敗', 'zh-tw': '下載圖片時發生錯誤，下載失敗', 'en': 'Images downloading failed.' },
   'pauseAnimatedImage': { 'zh-cn': '动画图像(GIF)在缩略图显示时保持静止{{<i>}}', 'zh-hk': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'zh-tw': '動畫圖像(GIF)在所圖顯示時保持靜止{{<i>}}', 'en': 'Pause thumbnail animated image (GIF) {{<i>}}' },
   'pauseAnimatedImageDesc': { 'zh-cn': '该功能仅影响显示效果，并不会降低网络数据用量。' },
-  'useBuiltInVideoPlayer': { 'zh-cn': '使用浏览器原生视频播放器{{<i>}}', 'zh-hk': '使用瀏覽器內建影片播放器{{<i>}}', 'zh-tw': '使用瀏覽器內建影片播放器{{<i>}}', 'en': 'Use browser built-in video player {{<i>}}' },
+  'useBuiltInVideoPlayer': {
+    'zh-cn': '使用浏览器原生视频播放器{{<i>}}||音量{{<volume>}}|{{<memorize>}}记住上次设置的音量',
+    'zh-hk': '使用瀏覽器內建影片播放器{{<i>}}||音量{{<volume>}}|{{<memorize>}}記住上次設定的音量',
+    'zh-tw': '使用瀏覽器內建影片播放器{{<i>}}||音量{{<volume>}}|{{<memorize>}}記住上次設定的音量',
+    'en': 'Use browser built-in video player{{<i>}}||Volume {{<volume>}}%|{{<memorize>}} memorize last volume',
+  },
   'useBuiltInVideoPlayerDesc': { 'zh-cn': '一次性解决自动播放和交互逻辑的各种问题，开启时其他视频相关的改造功能不再生效。不支持直播视频。播放可能不会被微博正确计入播放数。' },
   'mediaVideoType': { 'zh-cn': '视频', 'zh-hk': '影片', 'zh-tw': '影片', 'en': 'Video' },
   'disableVideoContextMenu': { 'zh-cn': '在视频上使用原生右键菜单（方便下载视频）', 'zh-hk': '在影片上使用原生右鍵功能表（方便影片下載）', 'zh-tw': '在影片上使用原生右鍵功能表（方便影片下載）', 'en': 'Use native right-click menu on video (for video downloading)' },
@@ -9659,12 +9665,17 @@ filter.predef.subtitle('tool', 'mediatool', '{{mediaToolsTitle}}');
 
 filter.items.tool.weibotool.use_built_in_video_player = filter.item({
   'group': 'mediatool',
-  'version': 490,
+  'version': 496,
   'type': 'boolean',
   'key': 'weibo.tool.use_built_in_video_player',
   'text': '{{useBuiltInVideoPlayer}}',
-  'ref': { 'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{useBuiltInVideoPlayerDesc}}' } },
+  'ref': {
+    'i': { 'type': 'sicon', 'icon': 'ask', 'text': '{{useBuiltInVideoPlayerDesc}}' },
+    'volume': { 'type': 'range', 'min': 0, 'max': 100, 'default': 100 },
+    'memorize': { 'type': 'boolean' },
+  },
   'ainit': function () {
+    var rule = this;
     var replaceWeiboVideoPlayer = function replaceWeiboVideoPlayer() {
       var containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
       containers.forEach(function (container) {
@@ -9698,6 +9709,15 @@ filter.items.tool.weibotool.use_built_in_video_player = filter.item({
           });
           newContainer.appendChild(util.dom.create(util.str.fill(html.videoTip)));
         }
+        newVideo.volume = rule.ref.volume.conf / 100;
+        if (rule.ref.memorize.conf) {
+          newVideo.addEventListener('volumechange', function () {
+            rule.ref.volume.putconf(Math.round(newVideo.volume * 100));
+          });
+          newVideo.addEventListener('play', function () {
+            newVideo.volume = rule.ref.volume.conf / 100;
+          });
+        }
         newContainer.appendChild(newVideo);
         container.parentNode.replaceChild(newContainer, container);
       });
@@ -9711,7 +9731,7 @@ filter.items.tool.weibotool.use_built_in_video_player = filter.item({
       .yawf-WB_video video { width: 100%; height: 100%; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; }
       .WB_media_a .WB_video.yawf-WB_video { cursor: unset; }
       .yawf-WB_video .W_icon_tag_v2 { z-index: 1; }
-      .WB_video[yawf-video-play] .W_icon_tag_v2 { display: none; }
+      .WB_video[yawf-video-play] .W_icon_tag_v2 { display: none !important; }
     */ noop(); }));
     util.func.page(function () {
       var FakeVideoPlayer = function e() {};
@@ -10534,6 +10554,25 @@ if (function desktopNotificationSupport() {
     },
   }).addto(filter.groups.tool);
 }
+
+filter.items.tool.weibotool.message_current_page = filter.item({
+  'group': 'othertool',
+  'version': 496,
+  'type': 'boolean',
+  'key': 'weibo.tool.message_current_page',
+  'text': '{{messageCurrentPage}}',
+  'ainit': function () {
+    observer.dom.add(function () {
+      var links = Array.from(document.querySelectorAll('.gn_topmenulist_tips a:not([yawf-tip-current-page])'));
+      links.forEach(function (link) {
+        link.setAttribute('yawf-tip-current-page', '');
+        link.removeAttribute('target');
+      });
+      util.css.add('.gn_topmenulist_tips a:not([yawf-tip-current-page]) { display: none !important; }');
+    });
+  },
+}).addto(filter.groups.tool);
+
 
 // 禁用微博的Live Photo
 if (function livePhotoSupported() {
