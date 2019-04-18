@@ -1,16 +1,16 @@
+火狐扩展版请见： https://github.com/tiansh/yaofang
+
 <img src="https://tiansh.github.io/yawf/img/yawf.png" />
 
-* [脚本主页] （简单地安装使用教程见此）
-* [安装脚本] （已安装 Greasemonkey 的点此直接安装）
-* [常见问题] （详细使用说明见此）
+* [脚本主页] 
+* [安装脚本] 
+* [常见问题] 
 * [问题汇报]
 * [联系作者][@tsh90]
 
 # 看真正想看的微博 Yet Another Weibo Filter #
 
-建议使用 Violent Monkey （暴力猴）安装脚本。
-
-脚本目前不支持 GM4 ，且暂无支持 GM4 的计划，但欢迎相关 PR 。
+脚本不支持 GM4，火狐用户建议安装扩展版。
 
 ## 主要功能 ##
 
