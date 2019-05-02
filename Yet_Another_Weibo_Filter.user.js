@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.497
+// @version           3.7.498
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -548,14 +548,6 @@ var text = {
   'layoutHideIconCheng': { 'zh-cn': '阿里诚信通', 'zh-hk': '阿里誠信通', 'zh-tw': '阿里誠信通', 'en': 'Alibaba 诚信通' },
   'layoutHideIconGongyi': { 'zh-cn': '公益', 'zh-hk': '公益', 'zh-tw': '公益', 'en': 'public Interest' },
   'layoutHideIconZongyika': { 'zh-cn': '综艺', 'zh-hk': '综艺', 'zh-tw': '综艺', 'en': 'Variety' },
-  'layoutHideIconYouji': { 'zh-cn': '旅行', 'zh-hk': '旅行', 'zh-tw': '旅行', 'en': 'Travel' },
-  'layoutHideIconDouble11': { 'zh-cn': '双11', 'zh-hk': '双11', 'zh-tw': '双11', 'en': 'Nov. 11<sup>th</sup>' },
-  'layoutHideIconNight': { 'zh-cn': '微博之夜', 'zh-hk': '微博之夜', 'zh-tw': '微博之夜', 'en': 'Weibo Night' },
-  'layoutHideIconRedPack': { 'zh-cn': '红包', 'zh-hk': '红包', 'zh-tw': '红包', 'en': 'Red Pack' },
-  'layoutHideIconRun': { 'zh-cn': '跑步', 'zh-hk': '跑步', 'zh-tw': '跑步', 'en': 'Run' },
-  'layoutHideIconFoolsDay': { 'zh-cn': '愚人节', 'zh-hk': '愚人节', 'zh-tw': '愚人节', 'en': "Fools' Day" },
-  'layoutHideIconHong': { 'zh-cn': '网红', 'zh-hk': '網紅', 'zh-tw': '網紅', 'en': 'Internet celebrity' },
-  'layoutHideIconWedding': { 'zh-cn': '婚礼', 'zh-hk': '婚禮', 'zh-tw': '婚禮', 'en': 'Wedding' },
   'layoutHideIconOther': { 'zh-cn': '更多', 'zh-hk': '其他', 'zh-tw': '其他', 'en': 'More' },
   // 关注
   'layoutHideFollow': { 'zh-cn': '隐藏模块 - 关注按钮', 'zh-hk': '隱藏模組 - 關注按鈕', 'zh-tw': '隱藏模組 - 關注按鈕', 'en': 'Hide modules - Follow Button' },
@@ -6841,14 +6833,6 @@ filter.items.other.hidethese_ad.ad_feed = filter.item({
     if (feed.querySelector('[diss-data*="feedad"]')) return 'hidden';
     if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hidden';
     if (feed.querySelector('[suda-uatrack*="negativefeedback]')) return 'hidden';
-    if (function testRid() {
-      var mrid = feed.getAttribute('mrid');
-      if (!mrid) return false;
-      var params = util.str.parsequery(mrid);
-      var rid = params.rid;
-      if (/^\d+_(?!0)[\d_]+/.test(rid)) return true;
-      return false;
-    }()) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -7725,14 +7709,6 @@ filter.predef.group('layout');
   item('Cheng', 373, '.icon_cheng { display: none !important; }', { 'extt': '<i class="W_icon icon_cheng" style="display:inline-block!important"></i>' });
   item('Gongyi', 93, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }', { 'extt': '<i class="W_icon icon_gongyi" style="display:inline-block!important"></i>' });
   item('Zongyika', 29, '.zongyika2014, .icon_zongyika2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_zongyika2014" style="display:inline-block!important"></i>' });
-  item('Youji', 35, '.lvxing2014, .icon_airball, a[href*="//huodong.weibo.com/travel2014"] { display: none !important; }', { 'extt': '<i class="W_icon icon_airball" style="display:inline-block!important"></i>' });
-  item('Double11', 123, '.ico_double11, .icon_double11 { display: none !important; }', { 'extt': '<i class="W_icon icon_double11" style="display:inline-block!important"></i>' });
-  item('Night', 185, '.icon_wbnight2014 { display: none !important; }', { 'extt': '<i class="W_icon icon_wbnight2014" style="display:inline-block!important"></i>' });
-  item('RedPack', 434, '.icon_redpack, .icon_wealth { display: none !important; }', { 'extt': '<i class="W_icon icon_redpack" style="display:inline-block!important"></i><i class="W_icon icon_wealth" style="display:inline-block!important"></i>' });
-  item('Run', 247, '.icon_run2015 { display: none !important; }', { 'extt': '<i class="W_icon icon_run2015" style="display:inline-block!important"></i>' });
-  item('FoolsDay', 372, '.icon_foolsday { display: none !important; }', { 'extt': '<i class="W_icon icon_foolsday" style="display:inline-block!important"></i>' });
-  item('Hong', 383, '.icon_hong { display: none !important; }', { 'extt': '<i class="W_icon icon_hong" style="display:inline-block!important"></i>' });
-  item('Wedding', 412, '.icon_wedding { display: none !important; }', { 'extt': '<i class="W_icon icon_wedding" style="display:inline-block!important"></i>' });
   item('Other', 443, function () {
     observer.dom.add(function () {
       var icons = document.querySelectorAll('a > .W_icon_yystyle');
@@ -12051,16 +12027,6 @@ wbp.converter.table = function () {
   m('GongyiIcon', 'weibo.layoutHideIconGongyi'); // 微公益
   m('PaiIcon', 'weibo.layoutHideIconOther'); // 随手拍2016 // ⚠️ YAWF已将随手拍和其他活动使用的图标统一为一个选项
   n(null, 'weibo.layoutHideIconZongyika');
-  n(null, 'weibo.layoutHideIconYouji');
-  n(null, 'weibo.layoutHideIconDouble11');
-  n(null, 'weibo.layoutHideIconNight');
-  m('HongbaoIcon', 'weibo.layoutHideIconRedPack'); // 让红包飞
-  n(null, 'weibo.layoutHideIconRun');
-  n(null, 'weibo.layoutHideIconFoolsDay');
-  m('NetstarIcon', 'weibo.layoutHideIconHong'); // 超级红人节
-  n(null, 'weibo.layoutHideIconWedding');
-  n(null, 'weibo.layoutHideIconPanda');
-  n(null, 'weibo.layoutHideIconWenda');
   n(null, 'weibo.layoutHideFollowSingle');
   n(null, 'weibo.layoutHideFollowAtMe');
   n(null, 'weibo.layoutHideFollowDiscover');
