@@ -24,7 +24,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.498
+// @version           3.7.499
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -784,7 +784,6 @@ var text = {
   'disableNotificationDesc': {
     'zh-cn': '勾选以禁用微博的桌面提示，您也可以直接在浏览器的权限管理中禁用微博的桌面提示功能，但这样做您将同样无法使用脚本提供的桌面提示功能。'
   },
-  'messageCurrentPage': { 'zh-cn': '在当前页面打开黄签的消息提醒', 'zh-hk': '在當前頁面打開黃簽的消息提醒', 'zh-tw': '在當前頁面打開黃簽的消息提醒', 'en': 'Open yellow tip notices in current page' },
   'fastEmojiInputTop': { 'zh-cn': '置顶', 'zh-hk': '置頂', 'zh-tw': '置頂', 'en': 'Top' },
   'fastEmojiInputTopNotice': { 'zh-cn': '将下方表情拖放至此置顶', 'zh-hk': '將下方表情拖放至此置頂', 'zh-tw': '將下方表情拖放至此置頂', 'en': 'Drag emoji and drop here to sticky' },
   'fastEmojiInputRecent': { 'zh-cn': '最近', 'zh-hk': '最近', 'zh-tw': '最近', 'en': 'Recent' },
@@ -9335,7 +9334,7 @@ filter.items.tool.weibotool.card_button = filter.item({
       // 已经展开详情的图片
       container = util.dom.closest(ref, '.WB_detail');
       imgs = Array.from(container.querySelectorAll('.WB_media_wrap .WB_pic img'));
-      img = container.querySelector('.WB_media_view img') ||
+      img = container.querySelector('.media_show_box img') ||
         container.querySelector('.current img');
       // fallthrough
     } else if (util.dom.matches(ref, '.WB_expand_media .tab_feed_a *')) {
@@ -9362,7 +9361,7 @@ filter.items.tool.weibotool.card_button = filter.item({
       var src = getImageSrc(img);
       return getOriginalUrl(src);
     });
-    var pid = img && img.src.match(/[^/.]*(?=(?:\.[^/.]*)?$)/)[0];
+    var pid = img && getImageSrc(img).match(/[^/.]*(?=(?:\.[^/.]*)?$)/)[0];
     var current;
     for (current = 0; current < images.length; current++) {
       if (images[current].indexOf(pid) !== -1) break;
@@ -10530,25 +10529,6 @@ if (function desktopNotificationSupport() {
     },
   }).addto(filter.groups.tool);
 }
-
-filter.items.tool.weibotool.message_current_page = filter.item({
-  'group': 'othertool',
-  'version': 496,
-  'type': 'boolean',
-  'key': 'weibo.tool.message_current_page',
-  'text': '{{messageCurrentPage}}',
-  'ainit': function () {
-    observer.dom.add(function () {
-      var links = Array.from(document.querySelectorAll('.gn_topmenulist_tips a:not([yawf-tip-current-page])'));
-      links.forEach(function (link) {
-        link.setAttribute('yawf-tip-current-page', '');
-        link.removeAttribute('target');
-      });
-    });
-    util.css.add('.gn_topmenulist_tips a:not([yawf-tip-current-page]) { display: none !important; }');
-  },
-}).addto(filter.groups.tool);
-
 
 // 禁用微博的Live Photo
 if (function livePhotoSupported() {
