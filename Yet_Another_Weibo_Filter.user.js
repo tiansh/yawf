@@ -10,21 +10,14 @@
 // @description:zh-HK 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。
 // @description:zh-TW 新浪微博根據關鍵字、作者、話題、來源等篩選微博；修改版面。
 // @description:en    filter Sina Weibo by keywords, authors, topics, sources, etc.; modify layout
-// @include           http://www.weibo.com/*
-// @include           http://weibo.com/*
-// @include           http://d.weibo.com/*
-// @include           http://s.weibo.com/*
 // @include           https://www.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://d.weibo.com/*
 // @include           https://s.weibo.com/*
-// @exclude           http://weibo.com/a/bind/*
-// @exclude           http://weibo.com/nguide/*
-// @exclude           http://weibo.com/
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.499
+// @version           3.7.500
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -117,6 +110,7 @@ var text = {
   'baseFilterGroupTitle': { 'zh-cn': '微博过滤', 'zh-hk': '微博篩選', 'zh-tw': '微博篩選', 'en': 'Weibo Filter' },
   // 微博
   'loadWeiboTitle': { 'zh-cn': '微博', 'zh-hk': '微博', 'zh-tw': '微博', 'en': 'Weibo' },
+  'loadWeiboByNewest': { 'zh-cn': '使用最新微博代替首页（微博按发布时间排列）（推荐）', 'zh-hk': '使用最新微博代替首頁（微博按發佈時間排列）（推薦）', 'zh-tw': '使用最新微博代替首頁（微博按發佈時間排列）（推薦）', 'en': 'View by newest on home page (ordered by timestamp) (suggested)' },
   'loadWeiboByGroup': { 'zh-cn': '使用分组代替首页（微博按发布时间排列） {{<i>}}', 'zh-hk': '使用分組代替首頁（微博按發佈時間排列） {{<i>}}', 'zh-tw': '使用分組代替首頁（微博按發佈時間排列） {{<i>}}', 'en': 'View by group on home page (ordered by timestamp) {{<i>}}' },
   'loadWeiboByGroupDesc': {
     'zh-cn': '使用分组代替首页可以部分解决排序混乱和微博丢失的问题，但请注意分组有人数限制。'
@@ -579,6 +573,7 @@ var text = {
   'layoutHideLeftLike': { 'zh-cn': '我的赞', 'zh-hk': '我的讚', 'zh-tw': '我的讚', 'en': 'Like' },
   'layoutHideLeftHot': { 'zh-cn': '热门微博', 'zh-hk': '熱門微博', 'zh-tw': '熱門微博', 'en': 'Hot Weibo' },
   'layoutHideLeftTV': { 'zh-cn': '热门视频', 'zh-hk': '熱門視頻', 'zh-tw': '熱門視頻', 'en': 'Hot Video' },
+  'layoutHideLeftNewFeed': { 'zh-cn': '最新微博', 'zh-hk': '最新微博', 'zh-tw': '最新微博', 'en': '最新微博 (Newest)' },
   'layoutHideLeftFriends': { 'zh-cn': '好友圈', 'zh-hk': '好友圈', 'zh-tw': '好友圈', 'en': 'Friends' },
   'layoutHideLeftGroupToMe': { 'zh-cn': '群微博', 'zh-hk': '群微博', 'zh-tw': '群微博', 'en': '群微博 (Group)' },
   'layoutHideLeftSpecial': { 'zh-cn': '特别关注', 'zh-hk': '特别關注', 'zh-tw': '特别關注', 'en': 'Special Focus' },
@@ -5382,6 +5377,28 @@ filter.predef.group('base');
 filter.predef.subtitle('base', 'loadweibo', '{{loadWeiboTitle}}');
 
 // 使用分组代替首页
+filter.items.base.loadweibo.load_weibo_by_newest = filter.item({
+  'group': 'loadweibo',
+  'version': 500,
+  'type': 'boolean',
+  'key': 'weibo.tool.load_weibo_by_newest',
+  'text': '{{loadWeiboByNewest}}',
+  'deactive': function () { this.putconf(false); },
+  'init': function () {
+    var that = this;
+    util.config.onput(that.key, function (value) {
+      if (!value) return;
+      filter.items.base.loadweibo.load_weibo_by_group.deactive();
+      filter.items.base.loadweibo.load_weibo_by_multi_group.deactive();
+    });
+    if (that.conf) {
+      filter.items.base.loadweibo.load_weibo_by_group.gogroup('new');
+    }
+  },
+}).addto(filter.groups.base);
+
+
+// 使用分组代替首页
 filter.items.base.loadweibo.load_weibo_by_group = filter.item({
   'group': 'loadweibo',
   'version': 463,
@@ -5417,6 +5434,7 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
               chose(group); dialog.hide();
               that.putconf(true); show();
               filter.items.base.loadweibo.load_weibo_by_multi_group.deactive();
+              filter.items.base.loadweibo.load_weibo_by_newest.deactive();
             });
             ul.appendChild(li);
           });
@@ -5448,6 +5466,7 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
     show();
     button.addEventListener('click', askGroup);
   },
+  // 虽然参数是gid，不过其实不一定是gid，也可能是-1（拼凑首页）或者new（is_new）
   'gogroup': function (gid) {
     // 发现当前不是搜索，就跳转到搜索去
     var updateLocation = function redirectHomeWeiboUseGroup() {
@@ -5460,16 +5479,24 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
       // 检查是否添加了 gid 分组信息
       var query = util.str.parsequery(location.search.slice(1));
       var has_gid = 'gid' in query && Number(query.gid);
+      var is_new = 'is_new' in query && Number(query.is_new);
       var is_search = 'is_search' in query && Number(query.is_search) ||
         'vplus' in query && Number(query.vplus);
       var is_special = ['isfriends', 'vplus', 'isfriends', 'isgroupsfeed', 'whisper']
         .some(function (key) { return key in query; });
-      var gid_needed = homefeed && !(+gid === -1 && is_search) && !is_special;
+      var gid_needed = homefeed && !(+gid === -1 && is_search) && !is_special && !is_new;
       if (!has_gid && gid_needed) {
-        // 如果没有添加 gid 那么自动添上
-        query.gid = gid;
-        a.search = '?' + util.str.toquery(query);
-        location.replace(a.href);
+        if (Number(gid)) {
+          // 如果没有添加 gid 那么自动添上
+          query.gid = gid;
+          a.search = '?' + util.str.toquery(query);
+          location.replace(a.href);
+        } else if (gid === 'new') {
+          delete query.gid;
+          query.is_new = 1;
+          a.search = '?' + util.str.toquery(query);
+          location.replace(a.href);
+        }
       }
     };
     observer.dom.add(updateLocation);
@@ -5482,7 +5509,8 @@ filter.items.base.loadweibo.load_weibo_by_group = filter.item({
       ].map(function (x) { return x + ':not([href*="is_search"])'; }).join(',')));
       links.forEach(function (l) {
         var s = util.str.parsequery(l.search.slice(1));
-        s.gid = gid;
+        if (Number(gid)) s.gid = gid;
+        else if (gid === 'newest') s.is_new = 1;
         l.search = util.str.toquery(s);
       });
     };
@@ -5526,6 +5554,7 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
     // 和单分组替换功能互斥
     util.config.onput(that.ref.enabled.key, function (value) {
       if (!value) return;
+      filter.items.base.loadweibo.load_weibo_by_group.deactive();
       filter.items.base.loadweibo.load_weibo_by_group.deactive();
     });
     if (that.ref.enabled.conf) {
@@ -7859,6 +7888,7 @@ filter.predef.group('layout');
   item('Like', 390, levHidden('like'));
   item('Hot', 390, levHidden('hot'));
   item('TV', 423, levHidden('tv'));
+  item('NewFeed', 500, levHidden('new'));
   item('Friends', 5, levHidden('friends'));
   item('GroupToMe', 333, levHidden('groupsfeed'));
   item('Special', 333, levHidden('special'));
@@ -8162,6 +8192,7 @@ filter.predef.group('layout');
     '#v6_pl_leftnav_group .lev:not([yawf-id])',
   ].join(','), {
     'a[href*="/home?"]': 'leftnav_home',
+    'a[href*="is_new=1"]': 'leftnav_new',
     'a[href^="/at/"]': 'leftnav_message',
     'a[href^="/fav"]': 'leftnav_fav',
     'a[href^="/like"]': 'leftnav_like',
@@ -11870,6 +11901,7 @@ wbp.converter.table = function () {
   };
   var r = wbp.converter.rules; // 特殊转换规则
 
+  n(null, 'weibo.tool.load_weibo_by_newest');
   n(null, 'weibo.tool.load_weibo_by_group');
   n(null, 'weibo.tool.load_weibo_by_multi_group');
   n(null, 'weibo.tool.use_fast_creator');
@@ -12021,6 +12053,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layoutHideNavNoticeNew');
   n(null, 'weibo.layoutHideNavSettingNew');
   d('noHotYellowTags', 'weibo.layoutHideNavHotTip');
+  n(null, 'weibo.layoutHideLeftNewFeed');
   n(null, 'weibo.layoutHideLeftHome');
   n(null, 'weibo.layoutHideLeftFav');
   n(null, 'weibo.layoutHideLeftLike');
