@@ -17,7 +17,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.501
+// @version           3.7.502
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -1016,6 +1016,12 @@ var text = {
   'layoutCommentReorderConversition': { 'zh-cn': '查看对话', 'zh-hk': '查看對話', 'zh-tw': '查看對話', 'en': 'View Conversation' },
   'layoutCommentReorderReply': { 'zh-cn': '回复', 'zh-hk': '回覆', 'zh-tw': '回覆', 'en': 'Reply' },
   'layoutCommentReorderLike': { 'zh-cn': '赞', 'zh-hk': '讚', 'zh-tw': '讚', 'en': 'Like' },
+  'lowReadingWarn': {
+    'zh-cn': '在自己个人主页高亮显示阅读数量|不超过{{<count>}}的微博',
+    'zh-hk': '在自己個人主頁高亮顯示閱讀數量|不超過{{<count>}}的微博',
+    'zh-tw': '在自己個人主頁高亮顯示閱讀數量|不超過{{<count>}}的微博',
+    'en': 'Highlight weibo on my profile page which has | no more than {{<count>}} views',
+  },
   // 颜色
   'colorStyleTitle': { 'zh-cn': '颜色', 'zh-hk': '顏色', 'zh-tw': '顏色', 'en': 'Color' },
   'whitelistHighlightDesc': { 'zh-cn': '高亮显示白名单的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-hk': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'zh-tw': '高亮顯示白名單的微博|背景色{{<color>}}|透明度{{<transparency>}}%', 'en': 'Highlight Weibo in whitelist with | background color {{<color>}} | transparency {{<transparency>}}%' },
@@ -11248,6 +11254,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_a { margin: -2px 0 0 6px; width: 258px; }
       .WB_feed.WB_feed_v3 .WB_media_a_mn .WB_pic { width: 80px; height: 80px; }
       .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic { width: 80px !important; height: 80px !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img { width: 100% !important; height: 100% !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto !important; width: auto !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto !important; height: auto !important; position: static; -webkit-transform: none; transform: none; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not(.yawf-WB_video):not(.WB_video_h5_v2) { width: 120px; height: 80px; min-width: 36px; }
@@ -11561,6 +11568,39 @@ if (function () {
   }()).addto(filter.groups.style);
 
 }());
+
+filter.items.style.sweibo.highlight_low_reading = filter.item({
+  'group': 'sweibo',
+  'version': 502,
+  'type': 'boolean',
+  'key': 'weibo.tool.highlight_low_reading',
+  'ref': {
+    count: {
+      type: 'range',
+      'min': 10,
+      'max': 1000,
+      'default': 100,
+      'step': 10,
+    },
+  },
+  'text': '{{lowReadingWarn}}',
+  'ainit': function () {
+    var that = this;
+    observer.weibo.after(function (feed) {
+      var container = util.dom.closest(feed, '[id^="Pl_Official_MyProfileFeed__"]');
+      if (!container) return;
+      var popText = feed.querySelector('.WB_feed_handle [action-type="fl_pop"] i');
+      if (!popText) return;
+      var count = parseInt(popText.title.match(/\d+/)[0], 10);
+      var limit = that.ref.count.getconf();
+      if (count > limit) return;
+      feed.setAttribute('yawf-low-reading', count);
+    });
+    util.css.add('.WB_feed .WB_cardwrap[yawf-low-reading] { box-shadow: 0 0 4px red inset !important; }');
+  },
+}).addto(filter.groups.style);
+
+
 
 // 颜色相关样式
 filter.predef.subtitle('style', 'color', '{{colorStyleTitle}}');
@@ -12247,6 +12287,7 @@ wbp.converter.table = function () {
   n(null, 'weibo.layout.cmtorder.4');
   n(null, 'weibo.layout.cmtorder.5');
   n(null, 'weibo.layout.cmtorder');
+  n(null, 'weibo.tool.highlight_low_reading')
   n(null, 'weibo.tool.whitelist_highlight.color');
   n(null, 'weibo.tool.whitelist_highlight.transparency');
   n(null, 'weibo.tool.whitelist_highlight');
