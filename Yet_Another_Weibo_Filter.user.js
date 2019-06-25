@@ -17,7 +17,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.503
+// @version           3.7.504
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -535,6 +535,7 @@ var text = {
   'layoutHideIconApprove': { 'zh-cn': '个人认证', 'zh-hk': '個人認證', 'zh-tw': '個人認證', 'en': 'Personal Authentication / 個人認證' },
   'layoutHideIconApproveCo': { 'zh-cn': '机构认证', 'zh-hk': '企業認證', 'zh-tw': '企業認證', 'en': 'Weibo Verification / 企業認證' },
   'layoutHideIconApproveDead': { 'zh-cn': '失效认证', 'zh-hk': '失效認證', 'zh-tw': '失效認證', 'en': 'Failed verification' },
+  'layoutHideIconBigFun': { 'zh-cn': '铁粉', 'zh-hk': '铁粉', 'zh-tw': '铁粉', 'en': '铁粉 (big fun?)' },
   'layoutHideIconClub': { 'zh-cn': '微博达人', 'zh-hk': '微博達人', 'zh-tw': '微博達人', 'en': 'Pioneer' },
   'layoutHideIconVGirl': { 'zh-cn': '微博女郎', 'zh-hk': '微博女郎', 'zh-tw': '微博女郎', 'en': 'Weibo girl' },
   'layoutHideIconSupervisor': { 'zh-cn': '微博监督员', 'zh-hk': '微博監督員', 'zh-tw': '微博監督員', 'en': 'Weibo Supervisor' },
@@ -7738,6 +7739,7 @@ filter.predef.group('layout');
   item('Approve', 5, '.approve, .icon_approve, .icon_pf_approve, .icon_approve_gold, .icon_pf_approve_gold { display: none !important; }', { 'extt': '<i class="W_icon icon_approve" style="display:inline-block!important"></i><i class="W_icon icon_approve_gold" style="display:inline-block!important"></i>' });
   item('ApproveCo', 5, '.approve_co, .icon_approve_co, .icon_pf_approve_co, [class^="W_icon_co"], [class^=".icon_approve_co_"], [class^=".icon_pf_approve_co_"] { display: none !important; }', { 'extt': '<i class="W_icon icon_approve_co" style="display:inline-block!important"></i>' });
   item('ApproveDead', 107, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }', { 'extt': '<i class="W_icon icon_approve_dead" style="display:inline-block!important"></i>' });
+  item('BigFun', 504, '.W_icon_bf { display: none !important; }', { 'extt': '<i class="W_icon_bf icon_bigfuns" style="display:inline-block!important"></i>' });
   item('Club', 5, '.ico_club, .icon_pf_club, .icon_club { display: none !important; }', { 'extt': '<i class="W_icon icon_club" style="display:inline-block!important"></i>' });
   item('VGirl', 5, '.ico_vlady, .icon_pf_vlady, .icon_vlady { display: none !important; }', { 'extt': '<i class="W_icon icon_vlady" style="display:inline-block!important"></i>' });
   item('Supervisor', 457, '.icon_supervisor { display: none !important; }', { 'extt': '<i class="W_icon icon_supervisor" style="display:inline-block!important"></i>' });
@@ -12076,6 +12078,7 @@ wbp.converter.table = function () {
   m('VerifyIcon', 'weibo.layoutHideIconApprove'); // 个人/机构认证标识
   m('VerifyIcon', 'weibo.layoutHideIconApproveCo'); // 个人/机构认证标识
   m('VerifyIcon', 'weibo.layoutHideIconApproveDead'); // 个人/机构认证标识
+  n(null, 'weibo.layoutHideIconBigFun');
   m('DarenIcon', 'weibo.layoutHideIconClub'); // 微博达人标识
   m('VgirlIcon', 'weibo.layoutHideIconVGirl'); // 微博女郎标识
   n(null, 'weibo.layoutHideIconSupervisor');
