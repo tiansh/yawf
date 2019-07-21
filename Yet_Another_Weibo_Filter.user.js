@@ -17,7 +17,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.504
+// @version           3.7.505
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -7039,6 +7039,8 @@ filter.items.other.hidethese_content.vote_weibo = filter.item({
       return 'hidden';
     if (feed.querySelector('a[suda-uatrack*="1022-vote"]'))
       return 'hidden';
+    if (feed.querySelector('a[suda-uatrack*="1022-hudongvote"]'))
+      return 'hidden';
     if (feed.querySelector('.icon_sw_vote'))
       return 'hidden';
     if (weibo.feed.sources.text(feed).indexOf('投票') !== -1)
@@ -11256,14 +11258,19 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_feed.WB_feed_v3 .WB_media_a { margin: -2px 0 0 6px; width: 258px; }
       .WB_feed.WB_feed_v3 .WB_media_a_mn .WB_pic { width: 80px; height: 80px; }
       .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic { width: 80px !important; height: 80px !important; }
-      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img { top: 50% !important; left: 50% !important; transform: translate(-50%, -50%); width: auto !important; height: auto !important; position: relative !important; }
-      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="left:0"] { width: 100% !important; }
-      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"] { height: 100% !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img { top: 40px !important; left: 40px !important; transform: translate(-50%, -50%); position: relative !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="left:0"][style*="width:110px"] { width: 100% !important; height: auto !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"][style*="height:110px"] { height: 100% !important; width: auto !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"] { top: 0 !important; transform: translateX(-50%) !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="left:0"] { left: 0 !important; transform: translateY(-50%) !important; }
+      .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"][style*="left:0"] { left: 0 !important; top: 0 !important; transform: none !important; }
       .WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img:not([style*="top"]) { max-width; 100%; max-height: 100%; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto !important; width: auto !important; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto !important; height: auto !important; position: static; -webkit-transform: none; transform: none; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not(.yawf-WB_video):not(.WB_video_h5_v2) { width: 120px; height: 80px; min-width: 36px; }
       .WB_feed.WB_feed_v3 .WB_media_a_m4 { width: 172px; }
+      .WB_feed.WB_feed_v3 .WB_feed_repeat .WB_media_a_m1 .WB_pic::before { display: none; }
+      .WB_feed.WB_feed_v3 .WB_feed_repeat .WB_media_a_m1 .WB_pic img { max-width: 120px; max-height: 120px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid rgba(127,127,127,0.3); box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_pic { height: 100px; width: 100px; }
       .WB_feed.WB_feed_v3 .WB_feed_spec_info { height: 88px; width: 202px; padding: 7px 4px 5px 10px; }
@@ -12651,8 +12658,8 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .WB_global_nav .ficon_send.ficon_send { background-image: linear-gradient(to bottom, #fa7d3c, #f56010) !important; }
   .WB_global_nav .ficon_send.ficon_send:hover { background: linear-gradient(to bottom, #f4712c,#f15909) !important; }
   // 设置框相关样式
-  #yawf-config [node-type="inner"] { padding: 0; width: 800px; height: 480px; }
-  #yawf-config .yawf-config-header { float: left; width: 160px; height: 480px; }
+  #yawf-config [node-type="inner"] { padding: 0; width: 800px; height: 480px; position: relative; }
+  #yawf-config .yawf-config-header { position: absolute; left: 0; top: 0; width: 160px; height: 480px; }
   #yawf-config .yawf-config-header .minitb_ul { height: 450px; width: 120px; overflow: hidden; padding: 20px 0 10px 40px; box-shadow: -4px 0 2px -2px rgba(64, 64, 64, 0.15) inset, 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; }
   #yawf-config .yawf-config-header .minitb_item { display: block; width: 120px; height: 25px; border-style: solid none; }
   #yawf-config .yawf-config-header .minitb_lk { width: 100px; padding: 0 10px; position: relative; z-index: 1; }
@@ -12662,7 +12669,7 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   .yawf-config-search-logo { clear: both; display: block; float: left; left: 45px; position: relative; top: -27px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
   .yawf-config-header .current .yawf-config-search-logo, .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }
   #yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; box-shadow: 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; }
-  .yawf-window-body { position: relative; }
+  .yawf-window-body { position: absolute; left: 160px; top: 0; }
   #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   .yawf-Layer.yawf-drag { opacity: 0.67; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
