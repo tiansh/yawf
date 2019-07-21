@@ -17,7 +17,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.505
+// @version           3.7.506
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -469,6 +469,7 @@ var text = {
   'multiTopicDesc': {
     'zh-cn': '由于新浪热门话题和话题主持人的相关政策，存在一些帐号通过罗列若干热门话题以使自己的广告可以显示在热门话题页面。您可以隐藏一次性提到了太多话题的微博以避免看到他们。',
   },
+  'containTopic': { 'zh-cn': '包含超话的微博', 'zh-hk': '包含超話的微博', 'zh-tw': '包含超話的微博', 'en': 'Weibo contains choahua' },
   'tooLongNeedUnfold': { 'zh-cn': '篇幅过长需要展开全文的微博{{<i>}}', 'zh-hk': '篇幅過長需要展開全文的微博{{<i>}}', 'zh-tw': '篇幅過長需要展開全文的微博{{<i>}}', 'en': 'Lengthy Weibo needs unfold to view{{<i>}}' },
   'tooLongNeedUnfoldDesc': {
     'zh-cn': '如果您打开了[[tool.weibotool.auto_unfold_weibo]]，脚本会先试图展开不是很长的微博。',
@@ -5202,7 +5203,7 @@ weibo.common.topics = function (feed) {
 };
 weibo.feed.topics.dom = function (feed) {
   var topics = weibo.feed.content(feed, weibo.common.topics);
-  var topicCard = Array.from(feed.querySelectorAll([    
+  var topicCard = Array.from(feed.querySelectorAll([
     '.WB_feed_spec[action-data*="url=http://huati.weibo.com/k/"]',
     '.WB_feed_spec[action-data*="url=https://huati.weibo.com/k/"]'
   ].join(',')));
@@ -5602,7 +5603,7 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
         }
         return;
       } while (false);
-      
+
       // 2018 年 7 月底，微博为点赞增加表情选项，并为此添加了一个新手导引
       // 新手导引会引用页面上的点赞按钮 [action-type="fl_like"]，当找不到点赞按钮时会异常
       // 异常导致转发等功能没有正常初始化
@@ -5634,7 +5635,7 @@ filter.items.base.loadweibo.load_weibo_by_multi_group = filter.item({
       feedlist.classList.add('WB_feed_v4');
       loadingTip = util.dom.create(util.str.fill(html.loadWeiboByMultiGroupLoading));
       feedlist.appendChild(loadingTip);
-      
+
       showFeeds(feedlist, groups, param);
     };
     // 去掉侧栏“未分组”那个鬼
@@ -7218,6 +7219,21 @@ filter.items.other.hidethese_content.multi_topic = filter.item({
     if (!this.conf) return null;
     var topics = weibo.feed.topics.dom(feed);
     if (topics.length >= this.ref.num.conf) return 'hidden';
+    return null;
+  },
+}).addto(filter.groups.other);
+
+// 含有超话的微博
+filter.items.other.hidethese_content.contain_topic = filter.item({
+  'group': 'hidethese_content',
+  'version': 506,
+  'type': 'boolean',
+  'key': 'weibo.other.multi_topic',
+  'text': '{{containTopic}}',
+  'rule': function containTopicRule(feed) {
+    if (!this.conf) return null;
+    var topic = feed.querySelector('a[suda-uatrack*="1022-topic"]');
+    if (topic) return 'hidden';
     return null;
   },
 }).addto(filter.groups.other);
@@ -9698,7 +9714,7 @@ filter.items.tool.weibotool.use_built_in_video_player = filter.item({
       var containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
       containers.forEach(function (container) {
         var smallImage = filter.items.style.sweibo.image_size.conf;
-        
+
         var cover = container.querySelector('[node-type="fl_h5_video_pre"] img'); if (!cover) return;
         var video = container.querySelector('video');
         if (video) video.src = 'data:text/plain,42';
@@ -11296,7 +11312,7 @@ filter.items.style.sweibo.image_size = filter.item({
       .WB_h5video.hv-s3.hv-s3-5:hover .con-6,
       .WB_h5video.hv-s3.hv-s3-5 .con-3 .box-2 em,
       .WB_h5video .con-3.hv-s3-3 .box-3 { opacity: 0; z-index: 0; }
-      
+
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) { width: 120px; height: 80px; min-width: 36px; }
       .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) .wbv-control-bar { display: none !important; }
 
@@ -12668,8 +12684,8 @@ var mainStyle = GM_addStyle(util.str.fill((util.str.cmt(function () { /*!CSS
   #yawf-config .current .yawf-cur_block { display: block; position: relative; index: 0; }
   .yawf-config-search-logo { clear: both; display: block; float: left; left: 45px; position: relative; top: -27px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
   .yawf-config-header .current .yawf-config-search-logo, .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }
-  #yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; box-shadow: 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; }
-  .yawf-window-body { position: absolute; left: 160px; top: 0; }
+  #yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; box-shadow: 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; position: absolute;  left: 160px; top: 0; }
+  .yawf-window-body { position: relative; }
   #yawf-config .W_layer_title { padding-top: 8px; line-height: 30px; }
   .yawf-Layer.yawf-drag { opacity: 0.67; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
   #yawf-config .profile_tab { font-size: 12px; margin: -20px -20px 20px; width: 800px; }
