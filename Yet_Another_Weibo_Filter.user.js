@@ -14706,12 +14706,13 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 
 }());
 //#endregion
-//#region @require yaofang://content/rule/about/whatsnew.js
+//#region replacement of yaofang://content/rule/about/whatsnew.js
 ; (function () {
 
   const yawf = window.yawf;
   const util = yawf.util;
   const rule = yawf.rule;
+  const importer = yawf.importer;
 
   const ui = util.ui;
   const css = util.css;
@@ -14734,13 +14735,23 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
     showWhatsNew: { cn: '更新后显示新功能提示', tw: '更新後顯示新功能提示', en: 'Show new features after update' },
     installSuccessTitle: { cn: '药方 (YAWF) 安装成功', tw: '藥方 (YAWF) 安裝成功', en: 'YAWF Installation successed' },
     installSuccessText: {
-      cn: '感谢您安装药方 (YAWF) 扩展。您可以点击右上角的漏斗图标打开设置。此外您还可以选中并拖拽关键词、帐号、话题、来源等内容到网页右上角，快速创建规则。',
-      tw: '感謝您安裝藥方 (YAWF) 擴充套件。您可以點擊右上角的漏斗圖示打開設定。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建規則。',
+      cn: '感谢您安装药方 (YAWF) 脚本。您可以点击右上角的漏斗图标打开设置。此外您还可以选中并拖拽关键词、帐号、话题、来源等内容到网页右上角，快速创建规则。',
+      tw: '感謝您安裝藥方 (YAWF) 腳本。您可以點擊右上角的漏斗圖示打開設定。此外您還可以選中並拖拽關鍵字、帳號、話題、來源等內容到網頁右上角，快速創建規則。',
       en: 'Thank you for installing YAWF. You can click on the funnel icon at the top-right corner to open up filter setting menu. You may also quickly create filters by dragging and dropping keywords, accounts, topics and sources to the top-right corner.',
     },
     updateSuccessTitle: { cn: '药方 (YAWF) 新功能提示', tw: '藥方 (YAWF) 新功能提示', en: "YAWF What's New" },
     updateSuccessHeader: { cn: '药方 (YAWF) 扩展已更新', tw: '藥方 (YAWF) 擴充套件已更新', en: 'Your YAWF extension has been updated' },
     updateSuccessDetail: { cn: '当前版本添加或更新了以下 {{count}} 项功能', tw: '當前版本添加或更新了以下 {{count}} 項功能', en: 'The current version has added or updated the following {{count}} feature(s)' },
+    importV3SuccessTitle: {
+      cn: 'Yet Another Weibo Filter (药方) 已升级至新版',
+      tw: 'Yet Another Weibo Filter (藥方) 已升級至新版',
+      en: 'Yet Another Weibo Filter (YAWF) Updated',
+    },
+    importV3SuccessText: {
+      cn: 'Yet Another Weibo Filter (药方) 已升级至 4.0 版。为了适应这一段时间浏览器和猴子的升级，脚本已更新。这一版相比之前改动较大，绝大多数功能是完全重写的。因此使用上可能会有一些不同。建议您打开设置确认一下。如果您发现任何问题，欢迎向作者反馈。',
+      tw: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為了適應這一段時間瀏覽器和猴子的升級，腳本已更新。這一版相比之前改動較大，絕大多數功能是完全重做的。因此使用上可能會有一些不同。建議您打開設定窗口進行確認。如果您發現任何問題，歡迎向作者回饋。',
+      en: 'Yet Another Weifo Filter (YAWF) had been upgraded to version 4.0. The script is update to fit the changes of browsers and monkeys. Many thing had been modified or completed rewritten. You may experience some difference to the previous version. You may open the settings dialog to check it out. Any feed backs are welcomed.',
+    },
   });
 
   update.whatsNew = rule.Rule({
@@ -14758,14 +14769,31 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       const lastVersion = this.ref.last.getConfig();
       const updateDone = () => { this.ref.last.setConfig(currentVersion); };
       if (!lastVersion) {
-        // 初次运行
-        ui.alert({
-          id: 'yawf-first-seen',
-          title: i18n.installSuccessTitle,
-          text: i18n.installSuccessText,
-        }).then(() => {
-          this.ref.last.setConfig(currentVersion);
-        });
+        // 初次运行，也可能是从 v3 升级上来的
+        let importOldConfig = null;
+        try {
+          const v3Config = JSON.parse(await GM.getValue(`user${yawf.init.page.$CONFIG.uid}config`));
+          const fileContent = new TextEncoder().encode(JSON.stringify({ yawf: 'Yet Another Weibo Filter', ver: '3', conf: v3Config })).buffer;
+          const { config, source } = importer.parse(fileContent);
+          if (config) await this.configPool.import(config);
+          else throw new Error('Import from v3 failed.');
+          await ui.alert({
+            id: 'yawf-upgrade-from-3',
+            title: i18n.importV3SuccessTitle,
+            text: i18n.importV3SuccessText,
+          }).then(() => {
+            updateDone();
+          });
+          setTimeout(() => { location.reload(); }, 0);
+        } catch (e) {
+          await ui.alert({
+            id: 'yawf-first-seen',
+            title: i18n.installSuccessTitle,
+            text: i18n.installSuccessText,
+          }).then(() => {
+            updateDone();
+          });
+        }
         return;
       } else if (currentVersion < lastVersion) {
         // 当前版本比历史版本更旧，可能是回退了版本，直接更新版本号
