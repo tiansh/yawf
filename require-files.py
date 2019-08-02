@@ -6,16 +6,16 @@ import os
 import urllib.request
 
 def get_file_content(path, requires):
-    if path.startswith('yaofang://'):
+    if path.startswith('yaofang:'):
         filename = os.path.join(requires['yaofang'], 'extension', path[len('yaofang://'):])
         with open(filename, 'r', encoding='utf-8') as file:
             return file.read()
-    if path.startswith('https://'):
+    if path.startswith('https:'):
         with urllib.request.urlopen(path) as req:
             return req.read().decode('utf-8')
     return ''
 
-def inline_required_files(yawf, requires):
+def inline_required_files(yawf, configs):
     with open(yawf, 'r', encoding='utf-8') as source_file:  
         source = source_file.readlines()
 
@@ -30,8 +30,11 @@ def inline_required_files(yawf, requires):
         if not in_require:
             result.append(line)
         if match:
+            uri = str(match.group(1))
+            if uri.startswith('https:') and not configs['remote']:
+                continue
             in_require = True
-            content = get_file_content(str(match.group(1)), requires)
+            content = get_file_content(uri, configs)
             result.append(content.rstrip() + '\n')
 
     output = ''.join(result)
@@ -51,6 +54,11 @@ parser.add_argument(
     default='../yaofang',
     help='path to yaofang repo, a extension folder should be there (default: "../yaofang")'
 )
+parser.add_argument(
+    '--remote',
+    default=False,
+    help='enable script fetching and updating remote resources'
+)
 args = vars(parser.parse_args())
-inline_required_files(args['yawf'], { 'yaofang': args['yaofang'] })
+inline_required_files(args['yawf'], { 'yaofang': args['yaofang'], 'remote': args['remote'] })
 

@@ -1,15 +1,22 @@
 // ==UserScript==
 // @name              Yet Another Weibo Filter
-// @description       Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifing webpage layout
+// @description       Yet Another Weibo Filter (YAWF), Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifing webpage layout
+// @name:zh           药方 (YAWF)
+// @description:zh    Yet Another Weibo Filter (YAWF) 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面
+// @name:zh-CN        药方 (YAWF)
+// @description:zh-CN Yet Another Weibo Filter (YAWF) 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面
+// @name:zh-HK        藥方 (YAWF)
+// @description:zh-HK Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
+// @name:zh-TW        藥方 (YAWF)
+// @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @namespace         https://github.com/tiansh
-// @version           4.0.1
-// @include           https://www.weibo.com/*
+// @version           4.0.1.32
+// @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
-// @include           https://d.weibo.com/*
-// @include           https://s.weibo.com/*
+// @include           https://*.weibo.com/*
 // @exclude           https://weibo.com/a/bind/*
-// @exclude           https://weibo.com/nguide/*
-// @exclude           https://weibo.com/
+// @exclude           https://api.weibo.com/chat*
+// @noframes
 // @run-at            document-start
 // @grant             GM.info
 // @grant             GM.xmlHttpRequest
@@ -18,14 +25,17 @@
 // @grant             GM.getValue
 // @grant             GM.setValue
 // @grant             GM.deleteValue
+// @grant             GM.notification
 // @grant             GM_info
-// @grant             GM_xmlHttpRequest
+// @grant             GM_xmlhttpRequest
 // @grant             GM_addValueChangeListener
 // @grant             GM_listValues
 // @grant             GM_getValue
 // @grant             GM_setValue
 // @grant             GM_deleteValue
+// @grant             GM_notification
 // @grant             unsafeWindow
+// @nocompat
 // @connect           miaopai.com
 // @connect           sina.cn
 // @connect           sina.com.cn
@@ -38,7 +48,40 @@
 // @license           MPL-2.0
 // ==/UserScript==
 
+/*!
+  This Source Code Form is subject to the terms of the Mozilla Public
+  License, v. 2.0. If a copy of the MPL was not distributed with this
+  file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
 /* eslint-disable */
+/*!
+GM4 ployfill is embeded here. GM4 polyfill is authored by Anthony Lieuallen, licensed under the MIT License.
+License may be available from https://raw.githubusercontent.com/greasemonkey/gm4-polyfill/a834d46afcc7d6f6297829876423f58bb14a0d97/LICENSE
+//#region @require https://raw.githubusercontent.com/greasemonkey/gm4-polyfill/a834d46afcc7d6f6297829876423f58bb14a0d97/LICENSE
+MIT License
+
+Copyright (c) 2017 Anthony Lieuallen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+//#endregion
+*/
 //#region @require https://github.com/greasemonkey/gm4-polyfill/raw/a834d46afcc7d6f6297829876423f58bb14a0d97/gm4-polyfill.js
 /*
 This helper script bridges compatibility between the Greasemonkey 4 APIs and
@@ -173,6 +216,31 @@ Object.entries({
 });
 //#endregion
 /* eslint-enable */
+//#region custom implementation interests
+/**
+ * 基本上没有用户会对兴趣推荐感兴趣
+ * 而且兴趣推荐会在没有明确提示用户的情况下关注一批账号
+ * 用户在操作时甚至不会被提示将会关注账号，以及会关注哪些账号
+ * 因此这个脚本试图屏蔽该页面，且不会提供任何设置
+ */
+; (function () {
+
+  if ([
+    'https://weibo.com/nguide/',
+    'https://www.weibo.com/nguide/',
+  ].some(prefix => location.href.startsWith(prefix))) {
+    location.href = '/home';
+    throw new Error('YAWF | nguide page found, skip following executions');
+  }
+
+}());
+//#endregion
+//#region custom implementation noframes
+; (function () {
+  // 不是每个猴子都支持 noframes，所以额外检查一下
+  if (top !== self) throw new Error('YAWF | Not in top frame, stop.');
+}());
+//#endregion
 //#region replacement of yaofang://common/global/env.js
 ; (function () {
 
@@ -189,6 +257,8 @@ Object.entries({
   config.contextMenuSupported = false;
   config.requestBlockingSupported = false;
   config.chatInPageSupported = false;
+
+  config.consolePrefix = 'YAWF';
 
 }());
 //#endregion
@@ -290,15 +360,17 @@ Object.entries({
 ; (function () {
 
   const yawf = window.yawf = window.yawf || {};
+  const env = yawf.env;
   const util = yawf.util = yawf.util || {};
 
+  const prefix = env.config.consolePrefix;
   const pending = [];
   const pendingOutput = (...args) => { pending.push(args); };
   const output = (message, ...args) => {
     if (typeof message === 'string') {
-      console.log(`Yaofang | ${message}`, ...args);
+      console.log(`${prefix} | ${message}`, ...args);
     } else if (message !== void 0) {
-      console.log(`Yaofang |`, message, ...args);
+      console.log(`${prefix} |`, message, ...args);
     }
   };
   const noop = () => { };
@@ -1009,7 +1081,8 @@ Object.entries({
   network.fetchText = async function (url) {
     return new Promise((resolve, reject) => {
       GM.xmlHttpRequest({
-        url,
+        method: 'GET',
+        url: new URL(url, location.href).href,
         onload: function (resp) {
           resolve(resp.responseText);
         },
@@ -1638,14 +1711,17 @@ Object.entries({
   const storage = {};
   browser.storage = storage;
 
-  const addValueChangeListener = GM.addValueChangeListener || GM_addValueChangeListener; // eslint-disable-line
+  let addValueChangeListener = null;
+  try {
+    addValueChangeListener = GM.addValueChangeListener || GM_addValueChangeListener; // eslint-disable-line
+  } catch (addValueChangeListenerException) { /* ignore */ }
   const supportOnChanged = Boolean(addValueChangeListener);
 
   const onChangeListeners = [];
   const triggerOnChange = function ({ changes, areaName }) {
     onChangeListeners.forEach(listener => {
       try {
-        listener(changes, areaName);
+        listener(JSON.parse(JSON.stringify(changes)), areaName);
       } catch (e) { /* ignore */ }
     });
   };
@@ -1660,7 +1736,10 @@ Object.entries({
       const key = gmkey.slice(gmkey.indexOf('::') + 2);
       triggerOnChange({
         changes: {
-          [key]: { oldValue, newValue },
+          [key]: {
+            oldValue: JSON.parse(oldValue),
+            newValue: JSON.parse(newValue),
+          },
         },
         areaName,
       });
@@ -1695,6 +1774,7 @@ Object.entries({
         });
       }
       const allGet = keyList.map(async ({ key, defaultValue }) => {
+        collectValues(prefix + key);
         try {
           const value = await GM.getValue(prefix + key);
           if (value == null) return defaultValue;
@@ -1715,6 +1795,7 @@ Object.entries({
         serialized.push({ key, value: JSON.stringify(keys[key]) });
       });
       const allSet = serialized.map(({ key, value }) => {
+        collectValues(prefix + key);
         return GM.setValue(prefix + key, value);
       });
       await Promise.all(allSet);
@@ -1735,6 +1816,23 @@ Object.entries({
       const keys = await GM.listValues();
       return remove(keys.filter(key => key.startsWith(prefix)));
     };
+    /*
+    const logInvoke = function (f) {
+      return async function (...args) {
+        const input = JSON.parse(JSON.stringify(args));
+        const result = await f(...args);
+        console.log('Debug storage: %o(%o) -> %o', f.name, input, result);
+        return result;
+      };
+    };
+    return {
+      get: logInvoke(get),
+      getBytesInUse: logInvoke(getBytesInUse),
+      set: logInvoke(set),
+      remove: logInvoke(remove),
+      clear: logInvoke(clear),
+    };
+    */
     return {
       get,
       getBytesInUse,
@@ -2390,7 +2488,7 @@ Object.entries({
 
     const tarball = util.tarball.files(content);
     let blob = new Blob([tarball], { type: 'application/x-tar' });
-    download.blob(blob, content[0].filename + '.tar');
+    download.blob({ blob, filename: content[0].filename + '.tar' });
 
   };
 
@@ -2405,27 +2503,20 @@ Object.entries({
 
   const util = yawf.util;
 
-  notifications.init = function () {
-    if (Notification.permission !== 'granted') {
-      Notification.requestPermission();
-    }
-  };
-
-  notifications.show = async function ({ title, content, icon = null, duration = Infinity }) {
-    return new Promise(resolve => {
-      util.debug('show notification: %s - %s', title, content);
-      let notify = new Notification(title, { body: content, icon, requireInteraction: !duration });
-      if (duration && duration > 0 && Number.isFinite(duration)) {
-        notify.addEventListener('show', function () {
-          setTimeout(function () {
-            notify.close();
-            resolve(false);
-          }, duration);
-        });
-      }
-      notify.addEventListener('click', function () {
-        notify.close();
-        resolve(true);
+  notifications.show = function ({ title, content, icon = null, duration = Infinity }) {
+    return new Promise((resolve, reject) => {
+      GM.notification({
+        title,
+        text: content,
+        image: icon,
+        onclick: function () {
+          resolve(true);
+        },
+        ondone: function () {
+          resolve(false);
+        },
+      }, function () {
+        resolve(false);
       });
     });
   };
@@ -2537,15 +2628,23 @@ Object.entries({
 ; (function () {
 
   const yawf = window.yawf = window.yawf || {};
-
+  const util = yawf.util;
   const message = yawf.message;
 
+  const i18n = util.i18n;
+
   const imageViewer = yawf.imageViewer = {};
+
+  i18n.viewOriginalTitle = {
+    cn: '查看图片 - YAWF',
+    tw: '檢視圖片 - YAWF',
+    en: 'View Images - YAWF',
+  };
 
   const page = info => `
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8" /><title>{{viewOriginalTitle}}</title><style>
+<head><meta charset="UTF-8" /><title>${i18n.viewOriginalTitle}</title><style>
   body, #chose { background: #222; }
   body, body * { -moz-user-select: none; -webkit-user-select: none; user-select: none; margin: 0; padding: 0; }
   #viewer { background: hsl(0, 0%, 90%); }
@@ -2605,7 +2704,7 @@ Object.entries({
   }
   function checkLR(x) {
     if (info.images.length === 1) return 'mid';
-    const pos = 'mid', w = container.clientWidth;
+    let pos = 'mid', w = container.clientWidth;
     if (x < 100 && x < w * 0.2) pos = 'left';
     if (x > w - 100 && x > w * 0.8) pos = 'right';
     if (container.className !== pos) container.className = pos;
@@ -2642,8 +2741,8 @@ Object.entries({
 </html>
 `;
 
-  imageViewer.open = function (info) {
-    const html = page(info);
+  imageViewer.open = function ({ images, current }) {
+    const html = page({ images, current: current - 1 });
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     window.open(url);
@@ -3177,12 +3276,12 @@ Object.entries({
       const renderOptions = items => {
         items.forEach(({ text, value, style = null }) => {
           const option = document.createElement('option');
-          option.value = value;
+          option.value = JSON.stringify(value);
           option.text = typeof text === 'function' ? text() : text;
           if (style) option.style += ';' + style;
           select.add(option);
         });
-        select.value = this.getConfig();
+        select.value = JSON.stringify(this.getConfig());
       };
       if (Array.isArray(this.select)) renderOptions(this.select);
       else Promise.resolve(this.select).then(items => {
@@ -3192,7 +3291,7 @@ Object.entries({
       select.addEventListener('change', event => {
         if (!event.isTrusted) {
           this.renderValue(container);
-        } else this.setConfig(select.value);
+        } else this.setConfig(JSON.parse(select.value));
       });
       container.appendChild(select);
       return container;
@@ -3202,8 +3301,9 @@ Object.entries({
       const selector = `select[yawf-config-input="${this.configId}"]`;
       const select = container.querySelector(selector);
       const config = this.getConfig();
-      if (select && select.value !== config) {
-        select.value = config;
+      const configStr = JSON.stringify(config);
+      if (select && select.value !== configStr) {
+        select.value = configStr;
       }
       return container;
     }
@@ -4530,7 +4630,7 @@ Object.entries({
   };
   configDom.layer = () => {
     const container = document.createElement('div');
-    container.innerHTML = '<div class="yawf-config-layer" node-type="searchFilterGroupLayer"></div>';
+    container.innerHTML = '<div class="yawf-config-layer"></div>';
     return container.removeChild(container.firstChild);
   };
 
@@ -4582,26 +4682,46 @@ Object.entries({
     const tablist = left.querySelector('ul');
     const search = tablist.appendChild(configDom.search());
     const searchInput = search.querySelector('input');
-    const layer = right.appendChild(configDom.layer());
     /** @type {Element?} */
     let current = null;
     /** @type {WeakMap<Element, Function>} */
     const tabInit = new WeakMap();
-    const tabLeft = tabs.map(tab => {
+    const tabLayer = tabs.map(tab => {
+      const layer = right.appendChild(configDom.layer());
+      return layer;
+    });
+    const hideAllLayer = function () {
+      [...tabLayer, searchLayer].forEach(layer => {
+        if (layer.style.display !== 'none') {
+          layer.style.display = 'none';
+        }
+      });
+    };
+    const tabLeft = tabs.map((tab, index) => {
+      const layer = tabLayer[index];
       const tabLeft = tablist.appendChild(configDom.item(tab.getRenderResult()));
       tabInit.set(tabLeft, () => {
+        hideAllLayer();
+        layer.innerHTML = '';
         render(layer, rule.query({ base: [tab] }));
+        layer.style.display = 'block';
       });
       return tabLeft;
     });
-    tabInit.set(search, () => { renderSearch(layer, searchInput.value); });
+    const searchLayer = right.appendChild(configDom.layer());
+    searchLayer.classList.add('.yawf-config-layer-search');
+    tabInit.set(search, () => {
+      hideAllLayer();
+      searchLayer.innerHTML = '';
+      renderSearch(searchLayer, searchInput.value);
+      searchLayer.style.display = 'block';
+    });
     const setCurrent = tabLeft => {
       if (current === tabLeft) return;
       if (current) current.classList.remove('current');
       current = tabLeft;
       tabLeft.classList.add('current');
       if (search !== tabLeft && searchInput.value) searchInput.value = '';
-      layer.innerHTML = '';
       tabInit.get(tabLeft)();
     };
     // 自动选中第一个选项卡
@@ -4616,7 +4736,7 @@ Object.entries({
     searchInput.addEventListener('input', event => {
       if (!searchInput.value && current !== search) return;
       if (current !== search) setCurrent(search);
-      else renderSearch(layer, searchInput.value);
+      else tabInit.get(search)();
     });
   };
 
@@ -7344,7 +7464,6 @@ Object.entries({
     template: () => i18n.feedsDesktopNotify,
     ref: { whitelist: { type: 'boolean' } },
     ainit() {
-      notifications.init();
       const whitelist = this.ref.whitelist.getConfig();
 
       // 完成过滤后再提示有未读消息
@@ -7377,7 +7496,6 @@ Object.entries({
           }, 0);
         });
       });
-
 
     },
   });
@@ -9952,7 +10070,7 @@ Object.entries({
 .yawf-clean-group + .yawf-config-group-items { display: grid; grid-template-columns: repeat(${i18n.cleanConfigColumnCount}, 1fr); grid-gap: 5px 10px; margin: 5px 20px; }
 .yawf-clean-group + .yawf-config-group-items > .yawf-config-rule { margin: 0; }
 .yawf-clean-group-all { float: right; font-weight: normal; cursor: pointer; }
-.yawf-whatsnew-dialog .yawf-clean-group-all, [node-type="searchFilterGroupLayer"] .yawf-clean-group-all { display: none; }
+.yawf-whatsnew-dialog .yawf-clean-group-all, .yawf-config-layer-search .yawf-clean-group-all { display: none; }
 `);
   }, { priority: priority.DEFAULT });
 
@@ -10123,7 +10241,7 @@ Object.entries({
   clean.CleanRule('tv', () => i18n.cleanNavTV, 1, '.gn_nav_list>li:nth-child(2) { display: none !important; }');
   clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '.gn_nav_list>li:nth-child(3) { display: none !important; }');
   clean.CleanRule('game', () => i18n.cleanNavGame, 1, '.gn_nav_list>li:nth-child(4) { display: none !important; }');
-  if (env.requestBlockingSupported) {
+  if (env.config.requestBlockingSupported) {
     clean.CleanRule('hot_search', () => i18n.cleanNavHotSearch, 1, {
       init: function () {
         backend.onRequest('hotSearch', details => {
@@ -10685,7 +10803,8 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     },
     cleanOtherIM: { cn: '私信聊天（右下） {{i}}', en: 'Chat (bottom right) {{i}}' },
     cleanOtherIMDetail: {
-      cn: '隐藏后您还可以在私信页面收发私信：鼠标指向右上角消息图标在下拉菜单中选择“私信”即可打开私信页面。配合“[[layout_chat_in_page]]”使用时只隐藏在新标签页打开聊天页面的按钮。',
+      cn: '隐藏后您还可以在私信页面收发私信：鼠标指向右上角消息图标在下拉菜单中选择“私信”即可打开私信页面。' +
+        (env.config.chatInPageSupported ? '配合“[[layout_chat_in_page]]”使用时只隐藏在新标签页打开聊天页面的按钮。' : ''),
     },
     cleanOtherIMNews: { cn: '热点提醒（右下）', tw: '熱點提醒（右下）', en: 'News, bottom right' },
     cleanOtherBackTop: { cn: '返回顶部', tw: '返回頂部', en: 'Back to Top' },
@@ -10767,7 +10886,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 
     },
   });
-  if (env.requestBlockingSupported) {
+  if (env.config.requestBlockingSupported) {
     clean.CleanRule('tracker', () => i18n.cleanOtherTracker, 1, {
       init: function () {
         backend.onRequest('tracker', details => {
@@ -14574,7 +14693,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 .yawf-export, .yawf-reset, .yawf-import-wbp { margin-left: 10px; }
 `);
 
-  (function () {
+  ; (function () {
     document.addEventListener('wbpPost', function getData(event) {
       try {
         const data = JSON.parse(event.detail.slice(event.detail.indexOf('=') + 1));
@@ -14739,6 +14858,117 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 
 }());
 //#endregion
+//#region replacement of yaofang://content/rule/about/script.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+
+  const about = yawf.rules.about;
+
+  const i18n = util.i18n;
+  i18n.aboutScriptGroupTitle = {
+    cn: '关于',
+    hk: '關於',
+    tw: '關於',
+    en: 'About',
+  };
+
+  const script = about.script = {};
+  script.script = rule.Group({
+    parent: about.about,
+    template: () => i18n.aboutScriptGroupTitle,
+  });
+
+  Object.assign(i18n, {
+    aboutText: {
+      cn: '{{logo}}Yet Another Weibo Filter (药方) {{version}} - 脚本版{{br}}作者{{author}}，您可以关注 {{scriptWeibo}} 了解用户脚本的最新变化。{{br}}如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，欢迎到 {{issuePage}} 反馈，或私信 {{scriptWeibo}}。{{br}}脚本使用 MPL-2.0 协议开放源代码，您可以在 {{github}} 上查阅。欢迎贡献代码。',
+      tw: '{{logo}}Yet Another Weibo Filter (藥方) {{version}} - 腳本版{{br}}作者{{author}}，您可以關注 {{scriptWeibo}} 了解使用者腳本的最新變化。{{br}}如果您在使用過程中遇到任何腳本的錯誤，或對其有任何建議，歡迎到 {{issuePage}} 回饋，或聯繫 {{scriptWeibo}}。{{br}}腳本以 MPL-2.0 協定開放原始碼，您可以在 {{github}} 上查閱。歡迎貢獻原始碼。',
+      en: '{{logo}}Yet Another Weibo Filter (YAWF) {{version}} - Script{{br}}Created by {{author}}. You may follow {{scriptWeibo}} for last updates info.{{br}}You may report errors and give suggestions on {{issuePage}}, or send private message to {{scriptWeibo}}.{{br}}This extension is released under MPL-2.0 license. You may get its source from {{github}}. Contributions are welcomed.',
+    },
+    aboutIssueTracker: {
+      cn: '议题跟踪器',
+      tw: '議題追踪器',
+      en: 'issue tracker',
+    },
+    aboutGithubRepo: {
+      cn: 'GitHub 仓库',
+      tw: 'GitHub 存放庫',
+      en: 'GitHub repository',
+    },
+  });
+
+  script.text = rule.Text({
+    parent: script.script,
+    template: () => i18n.aboutText,
+    ref: {
+      br: {
+        render() {
+          return document.createElement('br');
+        },
+      },
+      version: {
+        render() {
+          const version = browser.runtime.getManifest().version;
+          return document.createTextNode(version);
+        },
+      },
+      author: {
+        render() {
+          const link = document.createElement('a');
+          link.href = 'https://weibo.com/tsh90';
+          link.title = 'tsh90';
+          link.textContent = '@tsh90';
+          link.setAttribute('usercard', 'id=3921589057');
+          return link;
+        },
+      },
+      scriptWeibo: {
+        render() {
+          const link = document.createElement('a');
+          link.href = 'https://weibo.com/yawfscript';
+          link.title = 'YAWF脚本';
+          link.textContent = '@YAWF脚本';
+          link.setAttribute('usercard', 'id=5601033111');
+          return link;
+        },
+      },
+      logo: {
+        render() {
+          const container = document.createElement('span');
+          container.style.cssFloat = 'right';
+          const image = new Image(64, 64);
+          image.src = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgOTYgOTYiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiI+CiAgPHBhdGggZmlsbD0iI0Q5MkQzQSIgZD0iTTEyLDU0YzExLjY4Ny0wLjU3NiwyMS4xOTctMC4xNDMsMjQuNzUsNy41YzMuMzk4LDUuNzAxLDAuMTkxLDEzLjA3NS0xLjUsMThjMy45MzYsMC43MDUsNi4xNjQsMi4wMTIsOC4yNSw0LjVjLTEwLjQ5OSwwLTIxLjAwMSwwLTMxLjUsMEMxMiw3NC4wMDEsMTIsNjMuOTk5LDEyLDU0eiIvPgogIDxwYXRoIGZpbGw9IiNFOThENDkiIGQ9Ik03MS4zNjYsMjguOTExYy0xMS4yMDQtMTMuMjYtMjcuNzMtMTguMzE1LTQyLjk4NC0xNC44NTNoLTAuMDA2Yy0zLjUzLDAuODA3LTUuNzgsNC41MTMtNS4wMjQsOC4yNzRjMC43NTIsMy43NjQsNC4yMjQsNi4xNjksNy43NTMsNS4zNjZjMTAuODUyLTIuNDYsMjIuNTk1LDEuMTM4LDMwLjU2LDEwLjU1OGM3Ljk1Nyw5LjQxOSwxMC4xMTksMjIuMjY2LDYuNzExLDMzLjUyOGwwLjAwMiwwLjAwMmMtMS4xMTEsMy42NjksMC43NjksNy41OTMsNC4yMSw4Ljc3OWMzLjQyNywxLjE4NSw3LjExMS0wLjgxOSw4LjIyMy00LjQ3OWMwLTAuMDA3LDAtMC4wMjEsMC4wMDItMC4wMjdDODUuNTk1LDYwLjIxNyw4Mi41NzQsNDIuMTU4LDcxLjM2NiwyOC45MTFNNTQuMTYxLDQ1LjQ4NmMtNS40NTMtNi40NTgtMTMuNTA1LTguOTExLTIwLjkzOC03LjIyNGMtMy4wMzgsMC42OTEtNC45NzQsMy44ODMtNC4zMjIsNy4xMjhjMC42NSwzLjIzMiwzLjYzNyw1LjMwOSw2LjY2OCw0LjYwNXYwLjAwN2MzLjYzMy0wLjgyLDcuNTczLDAuMzc2LDEwLjIzOSwzLjUyN2MyLjY2OSwzLjE1OCwzLjM4Niw3LjQ2LDIuMjQxLDExLjIzNWgwLjAwNmMtMC45NTIsMy4xNTEsMC42NjQsNi41MzksMy42MTgsNy41NmMyLjk1NSwxLjAxLDYuMTI1LTAuNzEsNy4wNzktMy44NjlDNjEuMDg2LDYwLjczOSw1OS42MjUsNTEuOTQzLDU0LjE2MSw0NS40ODYiLz4KPC9zdmc+Cg==';
+          container.appendChild(image);
+          return container;
+        },
+      },
+      issuePage: {
+        render() {
+          const url = 'https://github.com/tiansh/yaofang/issues';
+          const link = document.createElement('a');
+          link.href = url;
+          link.textContent = i18n.aboutIssueTracker;
+          link.target = '_blank';
+          return link;
+        },
+      },
+      github: {
+        render() {
+          const url = 'https://github.com/tiansh/yaofang';
+          const link = document.createElement('a');
+          link.href = url;
+          link.textContent = i18n.aboutGithubRepo;
+          link.target = '_blank';
+          return link;
+        },
+      },
+    },
+  });
+
+}());
+//#endregion
 //#region @require yaofang://content/main/entry.js
 // 这个文件用于向界面上添加漏斗图标和菜单项
 
@@ -14834,384 +15064,5 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   });
 
 }());
-//#endregion
-//#region LICENSE
-/*!
-
-Mozilla Public License Version 2.0
-==================================
-
-1. Definitions
---------------
-
-1.1. "Contributor"
-    means each individual or legal entity that creates, contributes to
-    the creation of, or owns Covered Software.
-
-1.2. "Contributor Version"
-    means the combination of the Contributions of others (if any) used
-    by a Contributor and that particular Contributor's Contribution.
-
-1.3. "Contribution"
-    means Covered Software of a particular Contributor.
-
-1.4. "Covered Software"
-    means Source Code Form to which the initial Contributor has attached
-    the notice in Exhibit A, the Executable Form of such Source Code
-    Form, and Modifications of such Source Code Form, in each case
-    including portions thereof.
-
-1.5. "Incompatible With Secondary Licenses"
-    means
-
-    (a) that the initial Contributor has attached the notice described
-        in Exhibit B to the Covered Software; or
-
-    (b) that the Covered Software was made available under the terms of
-        version 1.1 or earlier of the License, but not also under the
-        terms of a Secondary License.
-
-1.6. "Executable Form"
-    means any form of the work other than Source Code Form.
-
-1.7. "Larger Work"
-    means a work that combines Covered Software with other material, in
-    a separate file or files, that is not Covered Software.
-
-1.8. "License"
-    means this document.
-
-1.9. "Licensable"
-    means having the right to grant, to the maximum extent possible,
-    whether at the time of the initial grant or subsequently, any and
-    all of the rights conveyed by this License.
-
-1.10. "Modifications"
-    means any of the following:
-
-    (a) any file in Source Code Form that results from an addition to,
-        deletion from, or modification of the contents of Covered
-        Software; or
-
-    (b) any new file in Source Code Form that contains any Covered
-        Software.
-
-1.11. "Patent Claims" of a Contributor
-    means any patent claim(s), including without limitation, method,
-    process, and apparatus claims, in any patent Licensable by such
-    Contributor that would be infringed, but for the grant of the
-    License, by the making, using, selling, offering for sale, having
-    made, import, or transfer of either its Contributions or its
-    Contributor Version.
-
-1.12. "Secondary License"
-    means either the GNU General Public License, Version 2.0, the GNU
-    Lesser General Public License, Version 2.1, the GNU Affero General
-    Public License, Version 3.0, or any later versions of those
-    licenses.
-
-1.13. "Source Code Form"
-    means the form of the work preferred for making modifications.
-
-1.14. "You" (or "Your")
-    means an individual or a legal entity exercising rights under this
-    License. For legal entities, "You" includes any entity that
-    controls, is controlled by, or is under common control with You. For
-    purposes of this definition, "control" means (a) the power, direct
-    or indirect, to cause the direction or management of such entity,
-    whether by contract or otherwise, or (b) ownership of more than
-    fifty percent (50%) of the outstanding shares or beneficial
-    ownership of such entity.
-
-2. License Grants and Conditions
---------------------------------
-
-2.1. Grants
-
-Each Contributor hereby grants You a world-wide, royalty-free,
-non-exclusive license:
-
-(a) under intellectual property rights (other than patent or trademark)
-    Licensable by such Contributor to use, reproduce, make available,
-    modify, display, perform, distribute, and otherwise exploit its
-    Contributions, either on an unmodified basis, with Modifications, or
-    as part of a Larger Work; and
-
-(b) under Patent Claims of such Contributor to make, use, sell, offer
-    for sale, have made, import, and otherwise transfer either its
-    Contributions or its Contributor Version.
-
-2.2. Effective Date
-
-The licenses granted in Section 2.1 with respect to any Contribution
-become effective for each Contribution on the date the Contributor first
-distributes such Contribution.
-
-2.3. Limitations on Grant Scope
-
-The licenses granted in this Section 2 are the only rights granted under
-this License. No additional rights or licenses will be implied from the
-distribution or licensing of Covered Software under this License.
-Notwithstanding Section 2.1(b) above, no patent license is granted by a
-Contributor:
-
-(a) for any code that a Contributor has removed from Covered Software;
-    or
-
-(b) for infringements caused by: (i) Your and any other third party's
-    modifications of Covered Software, or (ii) the combination of its
-    Contributions with other software (except as part of its Contributor
-    Version); or
-
-(c) under Patent Claims infringed by Covered Software in the absence of
-    its Contributions.
-
-This License does not grant any rights in the trademarks, service marks,
-or logos of any Contributor (except as may be necessary to comply with
-the notice requirements in Section 3.4).
-
-2.4. Subsequent Licenses
-
-No Contributor makes additional grants as a result of Your choice to
-distribute the Covered Software under a subsequent version of this
-License (see Section 10.2) or under the terms of a Secondary License (if
-permitted under the terms of Section 3.3).
-
-2.5. Representation
-
-Each Contributor represents that the Contributor believes its
-Contributions are its original creation(s) or it has sufficient rights
-to grant the rights to its Contributions conveyed by this License.
-
-2.6. Fair Use
-
-This License is not intended to limit any rights You have under
-applicable copyright doctrines of fair use, fair dealing, or other
-equivalents.
-
-2.7. Conditions
-
-Sections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted
-in Section 2.1.
-
-3. Responsibilities
--------------------
-
-3.1. Distribution of Source Form
-
-All distribution of Covered Software in Source Code Form, including any
-Modifications that You create or to which You contribute, must be under
-the terms of this License. You must inform recipients that the Source
-Code Form of the Covered Software is governed by the terms of this
-License, and how they can obtain a copy of this License. You may not
-attempt to alter or restrict the recipients' rights in the Source Code
-Form.
-
-3.2. Distribution of Executable Form
-
-If You distribute Covered Software in Executable Form then:
-
-(a) such Covered Software must also be made available in Source Code
-    Form, as described in Section 3.1, and You must inform recipients of
-    the Executable Form how they can obtain a copy of such Source Code
-    Form by reasonable means in a timely manner, at a charge no more
-    than the cost of distribution to the recipient; and
-
-(b) You may distribute such Executable Form under the terms of this
-    License, or sublicense it under different terms, provided that the
-    license for the Executable Form does not attempt to limit or alter
-    the recipients' rights in the Source Code Form under this License.
-
-3.3. Distribution of a Larger Work
-
-You may create and distribute a Larger Work under terms of Your choice,
-provided that You also comply with the requirements of this License for
-the Covered Software. If the Larger Work is a combination of Covered
-Software with a work governed by one or more Secondary Licenses, and the
-Covered Software is not Incompatible With Secondary Licenses, this
-License permits You to additionally distribute such Covered Software
-under the terms of such Secondary License(s), so that the recipient of
-the Larger Work may, at their option, further distribute the Covered
-Software under the terms of either this License or such Secondary
-License(s).
-
-3.4. Notices
-
-You may not remove or alter the substance of any license notices
-(including copyright notices, patent notices, disclaimers of warranty,
-or limitations of liability) contained within the Source Code Form of
-the Covered Software, except that You may alter any license notices to
-the extent required to remedy known factual inaccuracies.
-
-3.5. Application of Additional Terms
-
-You may choose to offer, and to charge a fee for, warranty, support,
-indemnity or liability obligations to one or more recipients of Covered
-Software. However, You may do so only on Your own behalf, and not on
-behalf of any Contributor. You must make it absolutely clear that any
-such warranty, support, indemnity, or liability obligation is offered by
-You alone, and You hereby agree to indemnify every Contributor for any
-liability incurred by such Contributor as a result of warranty, support,
-indemnity or liability terms You offer. You may include additional
-disclaimers of warranty and limitations of liability specific to any
-jurisdiction.
-
-4. Inability to Comply Due to Statute or Regulation
----------------------------------------------------
-
-If it is impossible for You to comply with any of the terms of this
-License with respect to some or all of the Covered Software due to
-statute, judicial order, or regulation then You must: (a) comply with
-the terms of this License to the maximum extent possible; and (b)
-describe the limitations and the code they affect. Such description must
-be placed in a text file included with all distributions of the Covered
-Software under this License. Except to the extent prohibited by statute
-or regulation, such description must be sufficiently detailed for a
-recipient of ordinary skill to be able to understand it.
-
-5. Termination
---------------
-
-5.1. The rights granted under this License will terminate automatically
-if You fail to comply with any of its terms. However, if You become
-compliant, then the rights granted under this License from a particular
-Contributor are reinstated (a) provisionally, unless and until such
-Contributor explicitly and finally terminates Your grants, and (b) on an
-ongoing basis, if such Contributor fails to notify You of the
-non-compliance by some reasonable means prior to 60 days after You have
-come back into compliance. Moreover, Your grants from a particular
-Contributor are reinstated on an ongoing basis if such Contributor
-notifies You of the non-compliance by some reasonable means, this is the
-first time You have received notice of non-compliance with this License
-from such Contributor, and You become compliant prior to 30 days after
-Your receipt of the notice.
-
-5.2. If You initiate litigation against any entity by asserting a patent
-infringement claim (excluding declaratory judgment actions,
-counter-claims, and cross-claims) alleging that a Contributor Version
-directly or indirectly infringes any patent, then the rights granted to
-You by any and all Contributors for the Covered Software under Section
-2.1 of this License shall terminate.
-
-5.3. In the event of termination under Sections 5.1 or 5.2 above, all
-end user license agreements (excluding distributors and resellers) which
-have been validly granted by You or Your distributors under this License
-prior to termination shall survive termination.
-
-************************************************************************
-*                                                                      *
-*  6. Disclaimer of Warranty                                           *
-*  -------------------------                                           *
-*                                                                      *
-*  Covered Software is provided under this License on an "as is"       *
-*  basis, without warranty of any kind, either expressed, implied, or  *
-*  statutory, including, without limitation, warranties that the       *
-*  Covered Software is free of defects, merchantable, fit for a        *
-*  particular purpose or non-infringing. The entire risk as to the     *
-*  quality and performance of the Covered Software is with You.        *
-*  Should any Covered Software prove defective in any respect, You     *
-*  (not any Contributor) assume the cost of any necessary servicing,   *
-*  repair, or correction. This disclaimer of warranty constitutes an   *
-*  essential part of this License. No use of any Covered Software is   *
-*  authorized under this License except under this disclaimer.         *
-*                                                                      *
-************************************************************************
-
-************************************************************************
-*                                                                      *
-*  7. Limitation of Liability                                          *
-*  --------------------------                                          *
-*                                                                      *
-*  Under no circumstances and under no legal theory, whether tort      *
-*  (including negligence), contract, or otherwise, shall any           *
-*  Contributor, or anyone who distributes Covered Software as          *
-*  permitted above, be liable to You for any direct, indirect,         *
-*  special, incidental, or consequential damages of any character      *
-*  including, without limitation, damages for lost profits, loss of    *
-*  goodwill, work stoppage, computer failure or malfunction, or any    *
-*  and all other commercial damages or losses, even if such party      *
-*  shall have been informed of the possibility of such damages. This   *
-*  limitation of liability shall not apply to liability for death or   *
-*  personal injury resulting from such party's negligence to the       *
-*  extent applicable law prohibits such limitation. Some               *
-*  jurisdictions do not allow the exclusion or limitation of           *
-*  incidental or consequential damages, so this exclusion and          *
-*  limitation may not apply to You.                                    *
-*                                                                      *
-************************************************************************
-
-8. Litigation
--------------
-
-Any litigation relating to this License may be brought only in the
-courts of a jurisdiction where the defendant maintains its principal
-place of business and such litigation shall be governed by laws of that
-jurisdiction, without reference to its conflict-of-law provisions.
-Nothing in this Section shall prevent a party's ability to bring
-cross-claims or counter-claims.
-
-9. Miscellaneous
-----------------
-
-This License represents the complete agreement concerning the subject
-matter hereof. If any provision of this License is held to be
-unenforceable, such provision shall be reformed only to the extent
-necessary to make it enforceable. Any law or regulation which provides
-that the language of a contract shall be construed against the drafter
-shall not be used to construe this License against a Contributor.
-
-10. Versions of the License
----------------------------
-
-10.1. New Versions
-
-Mozilla Foundation is the license steward. Except as provided in Section
-10.3, no one other than the license steward has the right to modify or
-publish new versions of this License. Each version will be given a
-distinguishing version number.
-
-10.2. Effect of New Versions
-
-You may distribute the Covered Software under the terms of the version
-of the License under which You originally received the Covered Software,
-or under the terms of any subsequent version published by the license
-steward.
-
-10.3. Modified Versions
-
-If you create software not governed by this License, and you want to
-create a new license for such software, you may create and use a
-modified version of this License if you rename the license and remove
-any references to the name of the license steward (except to note that
-such modified license differs from this License).
-
-10.4. Distributing Source Code Form that is Incompatible With Secondary
-Licenses
-
-If You choose to distribute Source Code Form that is Incompatible With
-Secondary Licenses under the terms of this version of the License, the
-notice described in Exhibit B of this License must be attached.
-
-Exhibit A - Source Code Form License Notice
--------------------------------------------
-
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
-If it is not possible or desirable to put the notice in a particular
-file, then You may include the notice in a location (such as a LICENSE
-file in a relevant directory) where a recipient would be likely to look
-for such a notice.
-
-You may add additional accurate notices of copyright ownership.
-
-Exhibit B - "Incompatible With Secondary Licenses" Notice
----------------------------------------------------------
-
-  This Source Code Form is "Incompatible With Secondary Licenses", as
-  defined by the Mozilla Public License, v. 2.0.
-
-*/
 //#endregion
 
