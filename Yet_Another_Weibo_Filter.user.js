@@ -10,7 +10,7 @@
 // @name:zh-TW        藥方 (YAWF)
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @namespace         https://github.com/tiansh
-// @version           4.0.1.32
+// @version           4.0.32
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -26,6 +26,7 @@
 // @grant             GM.setValue
 // @grant             GM.deleteValue
 // @grant             GM.notification
+// @grant             GM.registerMenuCommand
 // @grant             GM_info
 // @grant             GM_xmlhttpRequest
 // @grant             GM_addValueChangeListener
@@ -34,7 +35,7 @@
 // @grant             GM_setValue
 // @grant             GM_deleteValue
 // @grant             GM_notification
-// @grant             unsafeWindow
+// @grant             GM_registerMenuCommand
 // @nocompat
 // @connect           miaopai.com
 // @connect           sina.cn
@@ -53,173 +54,102 @@
 // ==/UserScript==
 
 /*!
-  This Source Code Form is subject to the terms of the Mozilla Public
-  License, v. 2.0. If a copy of the MPL was not distributed with this
-  file, You can obtain one at http://mozilla.org/MPL/2.0/.
-*/
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 
-/* eslint-disable */
-/*!
-GM4 ployfill is embeded here. GM4 polyfill is authored by Anthony Lieuallen, licensed under the MIT License.
-License may be available from https://raw.githubusercontent.com/greasemonkey/gm4-polyfill/a834d46afcc7d6f6297829876423f58bb14a0d97/LICENSE
-//#region @require https://raw.githubusercontent.com/greasemonkey/gm4-polyfill/a834d46afcc7d6f6297829876423f58bb14a0d97/LICENSE
-MIT License
+//#region custom implementation GM4 polyfill
+/* global GM */
+/* global GM_getValue, GM_setValue, GM_listValues, GM_deleteValue GM_addValueChangeListener */
+/* global GM_info GM_xmlhttpRequest, GM_notification, GM_registerMenuCommand */
+; (function () {
 
-Copyright (c) 2017 Anthony Lieuallen
+  try {
+    if (GM.info) return;
+  } catch (e) { /* GM not ready */ }
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+  const base = {};
+  window.GM = base;
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-//#endregion
-*/
-//#region @require https://github.com/greasemonkey/gm4-polyfill/raw/a834d46afcc7d6f6297829876423f58bb14a0d97/gm4-polyfill.js
-/*
-This helper script bridges compatibility between the Greasemonkey 4 APIs and
-existing/legacy APIs.  Say for example your user script includes
-
-    // @grant GM_getValue
-
-And you'd like to be compatible with both Greasemonkey 3 and Greasemonkey 4
-(and for that matter all versions of Violentmonkey, Tampermonkey, and any other
-user script engine).  Add:
-
-    // @grant GM.getValue
-    // @require https://greasemonkey.github.io/gm4-polyfill/gm4-polyfill.js
-
-And switch to the new (GM-dot) APIs, which return promises.  If your script
-is running in an engine that does not provide the new asynchronous APIs, this
-helper will add them, based on the old APIs.
-
-If you use `await` at the top level, you'll need to wrap your script in an
-`async` function to be compatible with any user script engine besides
-Greasemonkey 4.
-
-    (async () => {
-    let x = await GM.getValue('x');
-    })();
-*/
-
-if (typeof GM == 'undefined') {
-  this.GM = {};
-}
-
-
-if (typeof GM_addStyle == 'undefined') {
-  this.GM_addStyle = (aCss) => {
-    'use strict';
-    let head = document.getElementsByTagName('head')[0];
-    if (head) {
-      let style = document.createElement('style');
-      style.setAttribute('type', 'text/css');
-      style.textContent = aCss;
-      head.appendChild(style);
-      return style;
-    }
-    return null;
-  };
-}
-
-
-if (typeof GM_registerMenuCommand == 'undefined') {
-  this.GM_registerMenuCommand = (caption, commandFunc, accessKey) => {
-    if (!document.body) {
-      if (document.readyState === 'loading'
-        && document.documentElement && document.documentElement.localName === 'html') {
-        new MutationObserver((mutations, observer) => {
-          if (document.body) {
-            observer.disconnect();
-            GM_registerMenuCommand(caption, commandFunc, accessKey);
-          }
-        }).observe(document.documentElement, {childList: true});
-      } else {
-        console.error('GM_registerMenuCommand got no body.');
-      }
-      return;
-    }
-    let contextMenu = document.body.getAttribute('contextmenu');
-    let menu = (contextMenu ? document.querySelector('menu#' + contextMenu) : null);
-    if (!menu) {
-      menu = document.createElement('menu');
-      menu.setAttribute('id', 'gm-registered-menu');
-      menu.setAttribute('type', 'context');
-      document.body.appendChild(menu);
-      document.body.setAttribute('contextmenu', 'gm-registered-menu');
-    }
-    let menuItem = document.createElement('menuitem');
-    menuItem.textContent = caption;
-    menuItem.addEventListener('click', commandFunc, true);
-    menu.appendChild(menuItem);
-  };
-}
-
-
-if (typeof GM_getResourceText == 'undefined') {
-  this.GM_getResourceText = (aRes) => {
-    'use strict';
-    return GM.getResourceUrl(aRes)
-      .then(url => fetch(url))
-      .then(resp => resp.text())
-      .catch(function(error) {
-        GM.log('Request failed', error);
-        return null;
-      });
-  };
-}
-
-
-Object.entries({
-  'log': console.log.bind(console),  // Pale Moon compatibility.  See #13.
-  'info': GM_info,
-}).forEach(([newKey, old]) => {
-  if (old && (typeof GM[newKey] == 'undefined')) {
-    GM[newKey] = old;
+  try {
+    base.info = GM_info;
+  } catch (infoException) {
+    throw new Error('GM_info is not available.');
   }
-});
 
+  if (typeof GM_getValue !== 'function') {
+    throw new Error('GM_getValue is not available.');
+  }
+  base.getValue = async function getValue(name, defaultValue) {
+    return GM_getValue(name, defaultValue);
+  };
 
-Object.entries({
-  'GM_addStyle': 'addStyle',
-  'GM_deleteValue': 'deleteValue',
-  'GM_getResourceURL': 'getResourceUrl',
-  'GM_getValue': 'getValue',
-  'GM_listValues': 'listValues',
-  'GM_notification': 'notification',
-  'GM_openInTab': 'openInTab',
-  'GM_registerMenuCommand': 'registerMenuCommand',
-  'GM_setClipboard': 'setClipboard',
-  'GM_setValue': 'setValue',
-  'GM_xmlhttpRequest': 'xmlHttpRequest',
-  'GM_getResourceText': 'getResourceText',
-}).forEach(([oldKey, newKey]) => {
-  let old = this[oldKey];
-  if (old && (typeof GM[newKey] == 'undefined')) {
-    GM[newKey] = function(...args) {
-      return new Promise((resolve, reject) => {
-        try {
-          resolve(old.apply(this, args));
-        } catch (e) {
-          reject(e);
-        }
-      });
+  if (typeof GM_setValue !== 'function') {
+    throw new Error('GM_setValue is not available.');
+  }
+  base.setValue = async function setValue(name, value) {
+    return GM_setValue(name, value);
+  };
+
+  if (typeof GM_listValues !== 'function') {
+    throw new Error('GM_listValues is not available.');
+  }
+  base.listValues = async function listValues() {
+    return GM_listValues();
+  };
+
+  if (typeof GM_deleteValue !== 'function') {
+    throw new Error('GM_deleteValue is not available.');
+  }
+  base.deleteValue = async function deleteValue(name) {
+    return GM_deleteValue(name);
+  };
+
+  if (typeof GM_addValueChangeListener === 'function') {
+    GM.addValueChangeListener = function addValueChangeListener(name, callback) {
+      GM_addValueChangeListener(name, callback);
     };
   }
-});
+
+  if (typeof GM_xmlhttpRequest !== 'function') {
+    throw new Error('GM_xmlhttpRequest is not available.');
+  }
+  GM.xmlHttpRequest = function xmlHttpRequest(details) {
+    return GM_xmlhttpRequest(details);
+  };
+
+  if (typeof GM_notification === 'function') {
+    GM.notification = function notification(details, ondone) {
+      return GM_notification(details, ondone);
+    };
+  } else if (typeof Notification === 'function') {
+    GM.notification = function notification(details, ondone) {
+      const notification = new Notification(details.title, {
+        body: details.text,
+        icon: details.image,
+      });
+      if (details.onclick) {
+        notification.addEventListener('click', function () {
+          details.onclick();
+        });
+      }
+      if (details.ondone) {
+        notification.addEventListener('close', function () {
+          details.ondone();
+        });
+      }
+    };
+  }
+
+  if (typeof GM_registerMenuCommand === 'function') {
+    GM.registerMenuCommand = function registerMenuCommand(caption, commandFunc, accessKey) {
+      return GM_registerMenuCommand(caption, commandFunc, accessKey);
+    };
+  }
+
+}());
 //#endregion
-/* eslint-enable */
 //#region custom implementation interests
 /**
  * 基本上没有用户会对兴趣推荐感兴趣
@@ -261,6 +191,8 @@ Object.entries({
   config.contextMenuSupported = false;
   config.requestBlockingSupported = false;
   config.chatInPageSupported = false;
+
+  config.externalMenuSupported = Boolean(GM.registerMenuCommand);
 
   config.consolePrefix = 'YAWF';
 
@@ -1041,7 +973,7 @@ Object.entries({
     const info = GM.info;
     return {
       name: info.script.name,
-      version: info.script.version,
+      version: info.script.version.split('.').slice(0, 3).join('.'),
     };
   };
 }());
@@ -1715,11 +1647,7 @@ Object.entries({
   const storage = {};
   browser.storage = storage;
 
-  let addValueChangeListener = null;
-  try {
-    addValueChangeListener = GM.addValueChangeListener || GM_addValueChangeListener; // eslint-disable-line
-  } catch (addValueChangeListenerException) { /* ignore */ }
-  const supportOnChanged = Boolean(addValueChangeListener);
+  const supportOnChanged = Boolean(GM.addValueChangeListener);
 
   const onChangeListeners = [];
   const triggerOnChange = function ({ changes, areaName }) {
@@ -1735,7 +1663,7 @@ Object.entries({
     if (!supportOnChanged) return;
     if (collectedKeys.has(gmkey)) return;
     collectedKeys.add(gmkey);
-    addValueChangeListener(gmkey, function (gmkey, oldValue, newValue) {
+    GM.addValueChangeListener(gmkey, function (gmkey, oldValue, newValue) {
       const areaName = gmkey.slice(0, gmkey.indexOf('::'));
       const key = gmkey.slice(gmkey.indexOf('::') + 2);
       triggerOnChange({
@@ -2254,8 +2182,10 @@ Object.entries({
  *   当出错时调用，此时应当消除之前行为的各种副作用
  *   Deinit 可能不触发 Ready，也可能在 Ready 之后
  *   Deinit 与 Load 互斥
+ *
+ * 如果注册的回调返回一个 thenable 对象，那么会等它解决再继续后续的回调
+ * 如果不希望让后面的逻辑异步进行，请不要直接用 async 函数，而是在普通函数里再写一个 async
  */
-
 ; (function () {
 
   const yawf = window.yawf;
@@ -2281,26 +2211,28 @@ Object.entries({
 
   /** @type {boolean?} */
   let status = null;
-  /** @type {Set<{ callback: Function, priority: number, async: boolean? }>} */
+  /** @type {Set<{ callback: Function, priority: number }>} */
   const onReadyCallback = new Set();
-  /** @type {Set<{ callback: Function, priority: number, async: boolean? }>} */
+  /** @type {Set<{ callback: Function, priority: number }>} */
   const onLoadCallback = new Set();
-  /** @type {Set<{ callback: Function, priority: number, async: boolean? }>} */
+  /** @type {Set<{ callback: Function, priority: number }>} */
   const onConfigChangeCallback = new Set();
-  /** @type {Set<{ callback: Function, priority: number, async: boolean? }>} */
+  /** @type {Set<{ callback: Function, priority: number }>} */
   const onDeinitCallback = new Set();
 
   const noop = () => { };
 
   /**
-   * @param {Set<{ callback: Function, priority: number, async: boolean? }>} set
+   * @param {Set<{ callback: Function, priority: number }>} set
    */
   const runSet = async set => {
     const list = [...set.values()].sort((p, q) => q.priority - p.priority);
-    for (const { callback, async } of list) {
+    for (const { callback } of list) {
       try {
         const result = callback();
-        if (async) await result;
+        if (result && typeof result.then === 'function') {
+          await Promise.resolve(result);
+        }
       } catch (e) {
         util.debug('Error while initializing:\n%o', e);
       }
@@ -2353,9 +2285,9 @@ Object.entries({
   };
 
   const register = callbackCollection => (
-    (callback, { priority = util.priority.DEFAULT, async = false } = {}) => {
+    (callback, { priority = util.priority.DEFAULT } = {}) => {
       if (status === null) {
-        callbackCollection.add({ callback, priority, async });
+        callbackCollection.add({ callback, priority });
       } else if (status) {
         Promise.resolve().then(callback);
       }
@@ -2373,15 +2305,39 @@ Object.entries({
 ; (function () {
   const yawf = window.yawf;
   const init = yawf.init;
+  const util = yawf.util;
 
-  const onDomContentLoaded = function () {
-    init.configChange(JSON.parse(JSON.stringify(unsafeWindow.$CONFIG)));
-  };
-  if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
-    onDomContentLoaded();
-  } else {
-    document.addEventListener('DOMContentLoaded', onDomContentLoaded);
-  }
+  const strings = util.strings;
+
+  const randStr = strings.randKey();
+  const key = `yawf_${randStr}`;
+
+  /*
+   * 用户脚本不能保证 document-start
+   * 所以这里没办法靠提前给 window.$CONFIG 设置 getter / setter 的方式及早获得 $CONFIG 的值
+   * 这里直接等 DOMContentLoaded 来获取
+   */
+  util.inject(function (key) {
+    const onDomContentLoaded = function () {
+      const event = new CustomEvent(key, {
+        detail: { $CONFIG: JSON.stringify(window.$CONFIG) },
+      });
+      window.dispatchEvent(event);
+
+    };
+    if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
+      onDomContentLoaded();
+    } else {
+      document.addEventListener('DOMContentLoaded', onDomContentLoaded);
+    }
+  }, key);
+
+  window.addEventListener(key, function (event) {
+    event.stopPropagation();
+    if (!event.detail.$CONFIG) return;
+    const $CONFIG = JSON.parse(event.detail.$CONFIG);
+    init.configChange($CONFIG);
+  }, true);
 
 }());
 //#endregion
@@ -2402,7 +2358,7 @@ Object.entries({
     const $CONFIG = init.page.$CONFIG;
     await config.init($CONFIG.uid);
     util.i18n = $CONFIG.lang;
-  }, { priority: priority.FIRST, async: true });
+  }, { priority: priority.FIRST });
 
   util.debug('yawf loading, hide all');
   const hideAll = css.add('.WB_miniblog { visibility: hidden; opacity: 0; }');
@@ -2753,6 +2709,16 @@ Object.entries({
     setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
   };
 
+}());
+//#endregion
+//#region custom implementation backend/externalMenu
+; (function () {
+  const yawf = window.yawf;
+  const externalMenu = yawf.externalMenu = {};
+
+  externalMenu.add = function ({ title, callback }) {
+    GM.registerMenuCommand(title, callback);
+  };
 }());
 //#endregion
 //#region @require yaofang://content/ruleset/rule.js
@@ -3482,6 +3448,50 @@ Object.entries({
   rule.class.ColorConfigItem = ColorConfigItem;
 
   /**
+   * 一个文本输入框
+   * 对应一个 textarea 输入框
+   */
+  class TextConfigItem extends ConfigItem {
+    constructor(item, parent) {
+      super(item, parent);
+    }
+    get initial() { return ''; }
+    normalize(value) {
+      if (typeof value !== 'string') return this.initial;
+      return value;
+    }
+    render() {
+      const container = document.createElement('span');
+      container.setAttribute('yawf-config-item', this.configId);
+      container.classList.add('yawf-config-text');
+      const textarea = document.createElement('textarea');
+      textarea.classList.add('yawf-config-textarea', 'W_input');
+      textarea.value = this.getConfig();
+      textarea.addEventListener('input', event => {
+        if (!event.isTrusted) textarea.value = this.getConfig();
+        else this.setConfig(textarea.value);
+      });
+      textarea.addEventListener('blur', event => {
+        this.renderValue(container);
+      });
+      textarea.setAttribute('yawf-config-input', this.configId);
+      container.appendChild(textarea);
+      return container;
+    }
+    renderValue(container) {
+      container = super.renderValue(container);
+      const selector = `textarea[yawf-config-input="${this.configId}"]`;
+      const textarea = container.querySelector(selector);
+      const config = this.getConfig();
+      if (textarea && textarea.value !== config) {
+        textarea.value = config;
+      }
+      return container;
+    }
+  }
+  rule.class.ColorConfigItem = ColorConfigItem;
+
+  /**
    * 显示一个小图标，鼠标划上去可以显示弹出起泡
    * 这个项目不对应设置值
    */
@@ -4003,6 +4013,7 @@ Object.entries({
     if (item.type === 'number') return new NumberConfigItem(item, parent);
     if (item.type === 'range') return new RangeConfigItem(item, parent);
     if (item.type === 'color') return new ColorConfigItem(item, parent);
+    if (item.type === 'text') return new TextConfigItem(item, parent);
     if (item.type === 'bubble') return new BubbleConfigItem(item, parent);
     if (item.type === 'strings') return new StringCollectionConfigItem(item, parent);
     if (item.type === 'regexen') return new RegExpCollectionConfigItem(item, parent);
@@ -4175,9 +4186,9 @@ Object.entries({
     rule.query().forEach(rule => rule.execute());
   };
 
-  init.onReady(async () => {
+  init.onReady(() => {
     rule.init();
-  }, { priority: priority.DEFAULT, async: true });
+  }, { priority: priority.DEFAULT });
 
   css.append(`
 .yawf-config-group { display: block; font-weight: bold; margin: 15px 10px 5px; }
@@ -4186,12 +4197,14 @@ Object.entries({
 .yawf-config-rule > label + label { margin-left: 8px; }
 .yawf-config-rule > br + label { margin-left: 20px; }
 .yawf-bubble-icon { vertical-align: middle; margin-left: 2px; margin-right: 2px; }
+.yawf-config-select { height: 20px; }
 .yawf-config-number input[type="number"] { width: 45px; box-sizing: border-box; }
 .yawf-config-range { position: relative; }
 .yawf-config-range-wrap { display: none; position: absolute; left: 0; right: 0; margin: 0; bottom: calc(100% + 2px); height: 80px; background: #f0f0f0; background: Menu; }
 .yawf-config-range:focus-within .yawf-config-range-wrap { display: block; }
 .yawf-config-range input[type="range"] { position: absolute; top: 0; bottom: 0; margin: auto; width: 75px; right: -20px; left: -20px; transform: rotate(-90deg); }
 .yawf-config-color input[type="color"] { width: 45px; box-sizing: border-box; height: 20px; vertical-align: middle; }
+.yawf-config-text textarea { width: calc(100% - 20px); padding-left: 10px; padding-right: 10px; min-height: 120px; resize: vertical; }
 .yawf-config-collection-input { margin: 5px; }
 .yawf-config-collection-list { display: block; margin: 5px; }
 .yawf-config-collection-list .yawf-config-collection-item { padding: 0 5px 0 20px; min-width: 0; height: 20px; overflow: hidden; text-overflow: ellipsis; cursor: default; }
@@ -6429,7 +6442,7 @@ Object.entries({
   let followingContext = null;
   init.onReady(async function () {
     followingContext = await getContext();
-  }, { priority: util.priority.BEFORE, async: true });
+  }, { priority: util.priority.BEFORE });
 
   // 获取第一页的数据
   const fetchInitialize = async function () {
@@ -7657,7 +7670,7 @@ Object.entries({
   let hideList = null;
   init.onReady(async function () {
     hideList = await hideListPromise();
-  }, { priority: util.priority.BEFORE, async: true });
+  }, { priority: util.priority.BEFORE });
 
   manually.manuallyHideFeed = rule.Rule({
     id: 'filter_manually_hide',
@@ -10254,6 +10267,27 @@ Object.entries({
         });
       },
     });
+  } else if (function supportMutationEvent() {
+    const placeholder = document.createElement('div');
+    let supported = false;
+    placeholder.addEventListener('DOMNodeInserted', () => { supported = true; });
+    placeholder.appendChild(document.createElement('span'));
+    return supported;
+  }()) {
+    clean.CleanRule('hot_search', () => i18n.cleanNavHotSearch, 1, {
+      init: function () {
+        document.documentElement.addEventListener('DOMNodeInserted', event => {
+          const script = event.target;
+          if (!script || (script.tagName || '').toLowerCase() !== 'script') return;
+          const pattern = /^https?:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?(?:.*&)?_cb=(STK_\d+)/;
+          const match = script.src.match(pattern);
+          if (!match || !match[1]) return;
+          const callback = match[1];
+          util.inject(function (callback) { delete window[callback]; }, callback);
+          script.parentNode.removeChild(script);
+        });
+      },
+    });
   }
   clean.CleanRule('notice_new', () => i18n.cleanNavNoticeNew, 1, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   clean.CleanRule('new', () => i18n.cleanNavNew, 1, '.WB_global_nav .W_new { display: none !important; }');
@@ -12271,7 +12305,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
     });
   }
 
-  if (env.chatInPageSupported) {
+  if (env.config.chatInPageSupported) {
 
     i18n.chatInPage = {
       cn: '在微博页面内整合聊天窗口',
@@ -12668,6 +12702,101 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 
 }());
 //#endregion
+//#region @require yaofang://content/rule/layout/usercss.js
+; (function () {
+
+  const yawf = window.yawf;
+  const env = yawf.env;
+  const util = yawf.util;
+  const rule = yawf.rule;
+  const externalMenu = yawf.externalMenu;
+
+  const layout = yawf.rules.layout;
+
+  const i18n = util.i18n;
+  const css = util.css;
+  const ui = util.ui;
+
+  const userCss = layout.userCss = {};
+
+  i18n.userCssGroupTitle = {
+    cn: '自定义 CSS 样式',
+    tw: '自訂 CSS 式樣',
+    en: 'Custom CSS',
+  };
+
+  userCss.userCss = rule.Group({
+    parent: layout.layout,
+    template: () => i18n.userCssGroupTitle,
+  });
+
+  Object.assign(i18n, {
+    userCss: {
+      cn: '使用自定义 CSS 样式 {{i}}||{{css}}',
+      tw: '使用自訂 CSS 式樣 {{i}}||{{css}}',
+      en: 'Apply Custom CSS {{i}}||{{css}}',
+    },
+    userCssDetail: {
+      cn: '错误配置的自定义样式可能导致您的网页显示不正常，使用来源不明的 CSS 代码可能危害您的隐私安全。建议您仅添加您信任的 CSS 样式。如果您使用的样式导致设置窗口无法正常显示，您可以在猴子的菜单中找到禁用自定义 CSS 的选项。',
+    },
+    disableUserCss: {
+      cn: '禁用自定义 CSS 样式',
+      tw: '停用自訂 CSS 式樣',
+      en: 'Disable Custom CSS',
+    },
+    disableUserCssText: {
+      cn: '已禁用自定义 CSS 样式。如果您配置的自定义 CSS 样式导致界面出现任何问题，您可以在设置中选择启用后，删除导致问题的规则。',
+    },
+  });
+
+  if (env.config.externalMenuSupported) {
+    userCss.css = rule.Rule({
+      id: 'custom_css',
+      version: 1,
+      parent: userCss.userCss,
+      template: () => i18n.userCss,
+      ref: {
+        css: { type: 'text' },
+        i: { type: 'bubble', icon: 'warn', template: () => i18n.userCssDetail },
+      },
+      afterRender(node) {
+        const textarea = node.querySelector('textarea');
+        const label = textarea.closest('label');
+        if (!this.isEnabled()) label.style.display = 'none';
+        this.addConfigListener(enabled => {
+          if (enabled) {
+            label.style.display = 'block';
+            label.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            textarea.focus();
+          } else {
+            label.style.display = 'none';
+          }
+        });
+        return node;
+      },
+      ainit() {
+        const style = document.createElement('style');
+        style.textContent = this.ref.css.getConfig();
+        document.body.appendChild(style);
+        // 我们添加一个可以禁用这个功能的方式以防有用户把设置对话框给隐藏了或者弄乱了改不回去
+        externalMenu.add({
+          title: i18n.disableUserCss,
+          callback: () => {
+            this.setConfig(false);
+            ui.alert({
+              id: 'yawf-disable-user-css',
+              icon: 'succ',
+              title: i18n.disableUserCss,
+              text: i18n.disableUserCssText,
+            });
+          },
+        });
+      },
+    });
+  }
+
+}());
+//#endregion
 //#region @require yaofang://content/rule/feeds/feeds.js
 ; (function () {
 
@@ -12889,10 +13018,12 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
             const playing = video.classList.contains('wbv-playing');
             if (playing) {
               container.setAttribute('yawf-video-play', '');
-              videoObserver.disconnect();
+              if (videoObserver) videoObserver.disconnect();
+              return true;
             }
+            return false;
           };
-          setPlayAttribute();
+          if (setPlayAttribute()) return;
           videoObserver = new MutationObserver(setPlayAttribute);
           videoObserver.observe(video, { attributes: true, attributeFilter: ['class'], childList: false, characterData: false });
         });
@@ -15015,9 +15146,9 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   const rule = yawf.rule;
 
   i18n.filterMenuItem = {
-    cn: '过滤器设置',
-    tw: '篩選器設定',
-    en: 'Filter Settings',
+    cn: '药方设置',
+    tw: '藥方設定',
+    en: 'YAWF Settings',
   };
 
   // 缩小搜索框宽度以留出漏斗按钮的位置

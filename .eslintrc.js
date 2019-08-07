@@ -12,10 +12,6 @@ module.exports = {
     browser: true,
     worker: true,
     webextensions: true,
-    greasemonkey: true,
-  },
-  globals: {
-    GM: true,
   },
 	"rules": {
     'linebreak-style': ['warn', 'unix'],
