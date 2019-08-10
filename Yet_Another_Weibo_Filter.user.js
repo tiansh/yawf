@@ -1,16 +1,18 @@
 // ==UserScript==
 // @name              Yet Another Weibo Filter
-// @description       Yet Another Weibo Filter (YAWF), Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifing webpage layout
 // @name:zh           药方 (YAWF)
-// @description:zh    Yet Another Weibo Filter (YAWF) 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面
 // @name:zh-CN        药方 (YAWF)
-// @description:zh-CN Yet Another Weibo Filter (YAWF) 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面
 // @name:zh-HK        藥方 (YAWF)
-// @description:zh-HK Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @name:zh-TW        藥方 (YAWF)
+// @name:en           Yet Another Weibo Filter (YAWF)
+// @description       Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
+// @description:zh    Yet Another Weibo Filter (YAWF) 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面
+// @description:zh-CN Yet Another Weibo Filter (YAWF) 新浪微博根据关键词、作者、话题、来源等过滤微博；修改版面
+// @description:zh-HK Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
+// @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.32
+// @version           4.0.33
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1637,6 +1639,32 @@
     return { allPages, followInPage };
   };
   request.getFollowingPage = getFollowingPage;
+
+}());
+//#endregion
+//#region @require yaofang://content/request/votedetail.js
+/**
+ * 获取投票的详情
+ */
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const network = yawf.network;
+  const request = yawf.request = yawf.request || {};
+
+  const voteDetail = async function (voteId) {
+    const url = new URL('https://vote.weibo.com/h5/index/index');
+    url.searchParams.set('vote_id', voteId);
+    util.debug('fetch url %s', url);
+    const resp = await network.fetchText(url);
+    const dom = (new DOMParser()).parseFromString(resp, 'text/html');
+    const script = dom.querySelector('head script').textContent;
+    const data = JSON.parse(script.match(/\{[\s\S]*\}/)[0]);
+    return data;
+  };
+
+  request.voteDetail = voteDetail;
 
 }());
 //#endregion
@@ -4726,7 +4754,7 @@
       return tabLeft;
     });
     const searchLayer = right.appendChild(configDom.layer());
-    searchLayer.classList.add('.yawf-config-layer-search');
+    searchLayer.classList.add('yawf-config-layer-search');
     tabInit.set(search, () => {
       hideAllLayer();
       searchLayer.innerHTML = '';
@@ -5098,7 +5126,7 @@
       dropAreaContent: {
         cn: '您可以将文本、帐号名、头像、话题、来源等拖放至此处以创建过滤规则',
         tw: '您可以將文本、帳號名、頭像、話題、來源等拖放至此處以創建過濾規則',
-        en: 'by draging text, account names, avatars, topics, sources, etc.',
+        en: 'by dragging text, account names, avatars, topics, sources, etc.',
       },
     });
 
@@ -5428,7 +5456,7 @@
         topic = node.textContent.replace(/^[\s$]+|[\s$]+$/g, '');
       }
       if (topic) {
-        const [_, superTopic, text] = topic.match(/^(?=(\ue627?|.*\[超话\]))[\ue627\s]*(.*?)(?:\[超话\])?$/);
+        const [_, superTopic, fullText] = topic.match(/^(?=(\ue627?|.*\[超话\]|.*超话$))[\ue627\s]*(.*?)(?:\[超话\]|超话)?$/);
         if (superTopic && detail) return ` #${text}[超话]# `;
         if (detail) return ` #${text}# `;
         return `#${text}#`;
@@ -6052,6 +6080,7 @@
       'a[action-type="fl_url_addparams"][title]',
     ].join(','));
     if (!link) return [];
+    if (link.matches('[suda-uatrack*="1022-topic"]')) return [];
     const text = link.title.trim();
     if (text.match(/^https?:/) || text === '网页链接') return [];
     const template = i18n.contentTextContextTitle;
@@ -6117,9 +6146,10 @@
       topic = target.title.replace(/^[\s#]+|[\s#]+$/g, '');
     }
     if (!topic) return [];
+    const text = topic.replace(/^\ue627|\[超话\]$|超话$/g, '');
     const template = i18n.topicContextTitle;
-    const title = template.replace('{1}', () => topic);
-    return [{ title, type: 'topic', value: topic }];
+    const title = template.replace('{1}', () => text);
+    return [{ title, type: 'topic', value: text }];
   };
   rule.addFastListener(recognize.topic);
 
@@ -6290,7 +6320,7 @@
     textCount: {
       cn: '（约{1}字）',
       tw: '（約{1}字）',
-      en: ' (about {1} charactors)',
+      en: ' (about {1} characters)',
     },
   });
 
@@ -6845,6 +6875,7 @@
     version: 1,
     parent: following.following,
     template: () => i18n.uncheckFollowPresenter,
+    initial: true,
     ainit() {
       observer.dom.add(function uncheckFollowPresenter() {
         const inputs = Array.from(document.querySelectorAll('input[type="checkbox"][checked][action-data*="follow"]:not([yawf-uncheck-follow])'));
@@ -6856,17 +6887,18 @@
     },
   });
 
-  i18n.showArticalWithoutFollow = {
+  i18n.showArticleWithoutFollow = {
     cn: '头条文章不关注作者直接显示全文',
     tw: '頭條文章不關注作者直接顯示全文',
-    en: 'Show whole artical without follow the author',
+    en: 'Show whole article without follow the author',
   };
 
-  following.showArticalWithoutFollow = rule.Rule({
-    id: 'show_artical_without_follow',
+  following.showArticleWithoutFollow = rule.Rule({
+    id: 'show_article_without_follow',
     version: 1,
     parent: following.following,
-    template: () => i18n.showArticalWithoutFollow,
+    template: () => i18n.showArticleWithoutFollow,
+    initial: true,
     ainit() {
       css.append(`
 .WB_editor_iframe, .WB_editor_iframe_new { height: auto !important; }
@@ -7634,7 +7666,7 @@
     manuallyHideFeedDialogTitle: {
       cn: '重置隐藏',
       tw: '重設隱藏',
-      en: 'Reset Hadding',
+      en: 'Reset Hiding',
     },
     manuallyHideFeedDialogText: {
       cn: '确定清除隐藏微博的历史记录吗，清除后之前隐藏的微博会重新显示。',
@@ -8764,7 +8796,7 @@
   i18n.adFeedFilter = {
     cn: '推广微博/粉丝通微博/品牌速递/好友赞过的微博 {{i}}',
     tw: '推廣微博/粉絲通微博/品牌速遞/好友贊過的微博 {{i}}',
-    en: 'Ad Weibo / Instered not followed Weibo {{i}}',
+    en: 'Ad Weibo / Inserted not followed Weibo {{i}}',
   };
   i18n.adFeedFilterDetail = {
     cn: '这些微博一般出现在您的首页，带有“推荐”“好友赞过”等标记，但大多来自您并未关注的人。',
@@ -9254,7 +9286,7 @@
   i18n.wenwoDrFeedFilter = {
     cn: '含有爱问医生健康科普文章的微博{{i}}',
     tw: '含有愛問醫生健康科普文章的微博{{i}}',
-    en: 'Weibo with 爱问医生 (iask medical) artical {{i}}',
+    en: 'Weibo with 爱问医生 (iask medical) article {{i}}',
   };
   i18n.wenwoDrFeedFilterDetail = {
     cn: '爱问医生健康科普文章是一些来自 wenwo.com 的健康、医疗相关文章。打开爱问医生健康科普文章的网站时，您可能会自动关注文章作者或相应帐号。开启以隐藏包含此类文章的微博。',
@@ -9416,7 +9448,7 @@
   });
 
   Object.assign(i18n, {
-    feedWithLink: { cn: '带有{}的微博', tw: '帶有{}的微博', en: 'Feeds contains {}' },
+    feedWithLink: { cn: '带有{}的微博', tw: '帶有{}的微博', en: 'Feeds contain {}' },
     feedWithLinkPlace: { cn: '位置链接', tw: '位置連結', en: 'links of places' },
     feedWithLinkMovie: { cn: '电影链接', tw: '電影連結', en: 'links of movies' },
     feedWithLinkBook: { cn: '图书链接', tw: '圖書連結', en: 'links of books' },
@@ -9518,7 +9550,7 @@
   i18n.commentLayoutGroupTitle = {
     cn: '评论展示',
     tw: '評論展示',
-    en: 'Commets Layout',
+    en: 'Comments Layout',
   };
 
   const layout = comment.layout = {};
@@ -9973,7 +10005,7 @@
   i18n.commentWithForward = {
     cn: '隐藏含有转发消息的微博',
     tw: '隱藏含有轉發消息的微博',
-    en: 'Comments contains forwarded messages',
+    en: 'Comments contain forwarded messages',
   };
 
   more.commentWithForward = rule.Rule({
@@ -10268,6 +10300,12 @@
       },
     });
   } else if (function supportMutationEvent() {
+    // 用户脚本版无法用 background 脚本拦截网络请求
+    // Mutation Event 会在节点插入之前触发，阻止插入就可以阻止脚本运行
+    // MutationObserver 会在节点插入之后触发，并不能保证阻止 JSONP 请求成功进行
+    // 此外除了 GM3 意外的猴子，用户脚本无法保证 document-start，所以也不能靠拦截 STK 注册来实现这个功能
+    // 我们应该也没有几个 GM3 的用户，所以不打算为 GM3 做特殊处理
+    // Mutation Event 为待废弃功能，如果某天浏览器停止支持这个功能，这里只能删掉
     const placeholder = document.createElement('div');
     let supported = false;
     placeholder.addEventListener('DOMNodeInserted', () => { supported = true; });
@@ -10284,7 +10322,8 @@
           if (!match || !match[1]) return;
           const callback = match[1];
           util.inject(function (callback) { delete window[callback]; }, callback);
-          script.parentNode.removeChild(script);
+          event.preventDefault();
+          if (script.parentNode) script.parentNode.removeChild(script);
         });
       },
     });
@@ -10320,7 +10359,7 @@
     cleanLeftGroupToMe: { cn: '群微博', tw: '群微博', en: '群微博 (Group)' },
     cleanLeftSpecial: { cn: '特别关注', tw: '特别關注', en: 'Special Focus' },
     cleanLeftWhisper: { cn: '悄悄关注', tw: '悄悄關注', en: 'Secret Following' },
-    cleanLeftVPlus: { cn: '付费订阅（V+）', tw: '付費訂閱（V+）', en: 'Paid Subscrib (V+)' },
+    cleanLeftVPlus: { cn: '付费订阅（V+）', tw: '付費訂閱（V+）', en: 'Paid Subscribe (V+)' },
     cleanLeftNew: { cn: '新微博提示红点', tw: '新微博提示紅點', en: 'Red dot for new Feeds' },
     cleanLeftNews: { cn: '新消息计数', tw: '新消息計數', en: 'Counts for News' },
     cleanLeftCount: { cn: '新分组微博计数', tw: '新分組微博計數', en: 'Counts of Feeds by Group' },
@@ -10436,13 +10475,13 @@
   Object.assign(i18n, {
     cleanMiddleGroupTitle: { cn: '隐藏模块 - 中栏', tw: '隱藏模組 - 中欄', en: 'Hide modules - Middle Column' },
     cleanMiddleRecommendedTopic: { cn: '热门微博（发布框上方）', hk: '热门微博（發布框上方）', tw: '熱門微博（發布框上方）', en: 'Hot feeds, on top of publisher' },
-    cleanMiddleFeedRecommand: { cn: '微博兴趣推荐（顶部）', tw: '微博興趣推薦（頂部）', en: 'Feed Recommendation, top' },
+    cleanMiddleFeedRecommend: { cn: '微博兴趣推荐（顶部）', tw: '微博興趣推薦（頂部）', en: 'Feed Recommendation, top' },
     cleanMiddleMemberTip: { cn: '开通会员提示（底部）', tw: '開通會員提示（底部）', en: 'Tip of Joining Weibo VIP, bottom' },
   });
 
   clean.CleanGroup('middle', () => i18n.cleanMiddleGroupTitle);
   clean.CleanRule('recommended_topic', () => i18n.cleanMiddleRecommendedTopic, 1, '#v6_pl_content_publishertop div[node-type="recommendTopic"] { display: none !important; }');
-  clean.CleanRule('feed_recommand', () => i18n.cleanMiddleFeedRecommand, 1, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]), .WB_feed_newuser[node-type="recommfeed"] { display: none !important; }');
+  clean.CleanRule('feed_recommend', () => i18n.cleanMiddleFeedRecommend, 1, 'a.notes[node-type="feed_list_newBar"][href^="http"]:not([action-type="feed_list_newBar"]), .WB_feed_newuser[node-type="recommfeed"] { display: none !important; }');
   clean.CleanRule('member_tip', () => i18n.cleanMiddleMemberTip, 1, '[node-type="feed_list_shieldKeyword"] { display: none !important; }');
 
 }());
@@ -10519,7 +10558,7 @@
 
   Object.assign(i18n, {
     cleanFeedGroupTitle: { cn: '隐藏模块 - 微博内', tw: '隱藏模組 - 微博內', en: 'Hide modules - Weibo' },
-    cleanFeedRecommand: { cn: '精彩微博推荐', tw: '精彩微博推薦', en: 'Feed you may interested in' },
+    cleanFeedRecommend: { cn: '精彩微博推荐', tw: '精彩微博推薦', en: 'Feed you may interested in' },
     cleanFeedOuterTip: { cn: '消息流提示横幅 {{i}}', tw: '消息流提示橫幅 {{i}}', en: 'Tips for feed {{i}}' },
     cleanFeedOuterTipDetail: {
       cn: '消息流内部的提示横幅，如“ 系统提示：根据你的屏蔽设置，系统已过滤掉部分微博。”等内容。',
@@ -10537,7 +10576,7 @@
     cleanFeedCardDetail: {
       cn: '微博内对分享内容的摘要描述，如话题卡片、长微博卡片、分享内容卡片等。',
     },
-    cleanFeedArticalPay: { cn: '微博打赏', tw: '微博打赏', en: 'Feed Actical Pay' },
+    cleanFeedArticlePay: { cn: '微博打赏', tw: '微博打赏', en: 'Feed Acticle Pay' },
     cleanFeedTag: { cn: '微博标签', tw: '微博標籤', en: 'Tags for Feed' },
     cleanFeedRelatedLink: { cn: '相关微博链接 {{i}}', tw: '相關微博連結 {{i}}', en: 'Related feeds Link {{i}}' },
     cleanFeedRelatedLinkDetail: { cn: '位于微博底部的根据微博正文内容的关键字自动生成的话题、电影等的链接。' },
@@ -10557,7 +10596,7 @@
   });
 
   clean.CleanGroup('feed', () => i18n.cleanFeedGroupTitle);
-  clean.CleanRule('recommand', () => i18n.cleanFeedRecommand, 1, '[node-type="recommfeed"] { display: none !important; }');
+  clean.CleanRule('recommend', () => i18n.cleanFeedRecommend, 1, '[node-type="recommfeed"] { display: none !important; }');
   clean.CleanRule('feed_outer_tip', () => i18n.cleanFeedOuterTip, 1, {
     acss: '.WB_feed > .W_tips { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'ask', template: () => i18n.cleanFeedOuterTip } },
@@ -10591,8 +10630,8 @@
     acss: '.WB_pic_app, .WB_feed_spec, .WB_music { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'ask', template: () => i18n.cleanFeedCardDetail } },
   });
-  clean.CleanRule('artical_pay', () => i18n.cleanFeedArticalPay, 1, function () {
-    observer.dom.add(function hideArticalPay() {
+  clean.CleanRule('article_pay', () => i18n.cleanFeedArticlePay, 1, function () {
+    observer.dom.add(function hideArticlePay() {
       const element1 = document.querySelector('.feed_app_btn_a a[action-data*="px.e.weibo.com"]');
       if (element1) element1.closest('.feed_app_btn_a').remove();
       const element2 = document.querySelector('.WB_cardwrap #pl_article_articlePay');
@@ -10715,7 +10754,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     cleanProfileAlbum: { cn: '相册', tw: '相冊', en: 'Album' },
     cleanProfileHotTopic: { cn: '话题', tw: '話題', en: 'Topic' },
     cleanProfileHotWeibo: { cn: '热门微博', tw: '熱門微博', en: 'Hot Feeds' },
-    cleanProfileRecommandFeed: { cn: '相关推荐', tw: '相關推薦', en: 'Recommand Feeds' },
+    cleanProfileRecommendFeed: { cn: '相关推荐', tw: '相關推薦', en: 'Recommend Feeds' },
     cleanProfileUserList: { cn: '与他/她相似的人', tw: '與他/她相似的人', en: 'Similar People' },
     cleanProfileHongbao: { cn: '微博红包', tw: '微博紅包', en: 'Red pack' },
     cleanProfileWenwoDr: { cn: '爱问医生', tw: '愛問醫生', en: 'Iask medical' },
@@ -10754,7 +10793,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   clean.CleanRule('album', () => i18n.cleanProfileAlbum, 1, '[id^="Pl_Core_RightPicMulti__"], .WB_frame_b [id^="Pl_Core_RightPicMulti__"], [yawf-obj-name="相冊"], [yawf-obj-name="相册"], [yawf-id="yawf-core-right-pic-multi"] { display: none !important; }');
   clean.CleanRule('hot_topic', () => i18n.cleanProfileHotTopic, 1, '[id^="Pl_Core_RightTextSingle__"], .WB_frame_b [id^="Pl_Core_RightTextSingle__"] { display: none !important; }');
   clean.CleanRule('hot_weibo', () => i18n.cleanProfileHotWeibo, 1, '[id^="Pl_Core_RightPicText__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
-  clean.CleanRule('recommand_feed', () => i18n.cleanProfileRecommandFeed, 1, '.WB_frame_b [id^="Pl_Core_RecommendFeed__"] { display: none !important; }');
+  clean.CleanRule('recommend_feed', () => i18n.cleanProfileRecommendFeed, 1, '.WB_frame_b [id^="Pl_Core_RecommendFeed__"] { display: none !important; }');
   clean.CleanRule('user_list', () => i18n.cleanProfileUserList, 1, '[id^="Pl_Core_Ut1UserList__"], .WB_frame_b [id^="Pl_Core_RightPicText__"] { display: none !important; }');
   clean.CleanRule('hongbao', () => i18n.cleanProfileHongbao, 1, '[yawf-id="yawf-pr-hongbao"], .WB_red2017 { display: none !important; }');
   clean.CleanRule('wenwo_dr', () => i18n.cleanProfileWenwoDr, 1, '[yawf-obj-name="爱问医生"] { display: none !important; }'); // 对应模块没有繁体或英文翻译
@@ -10855,7 +10894,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
       cn: '在单条微博页面可以看到的相关微博推荐',
     },
     cleanOtherRelatedVideo: { cn: '相关视频推荐', tw: '相關視頻推薦', en: 'Related Videos' },
-    cleanOtherRelatedArtical: { cn: '头条文章页推荐阅读', tw: '頭條文章頁推薦閱讀', en: 'Suggested Artical' },
+    cleanOtherRelatedArticle: { cn: '头条文章页推荐阅读', tw: '頭條文章頁推薦閱讀', en: 'Suggested Article' },
     cleanOtherSendWeibo: { cn: '首页外的微博发布框 {{i}}', tw: '首頁外的微博發佈框 {{i}}', en: 'All other Weibo publishers {{i}}' },
     cleanOtherSendWeiboDetail: {
       cn: '除了首页的微博发布框，右上角按钮弹出的快速发布框外；其他的各种发布框。如微博文章下方转发用的发布框等。',
@@ -10956,7 +10995,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanOtherRelatedFeedsDetail } },
   });
   clean.CleanRule('related_video', () => i18n.cleanOtherRelatedVideo, 1, '.video_box_more { display: none !important; }');
-  clean.CleanRule('related_artical', () => i18n.cleanOtherRelatedArtical, 1, '.WB_artical [node-type="recommend"] { display: none !important; }');
+  clean.CleanRule('related_article', () => i18n.cleanOtherRelatedArticle, 1, '.WB_artical [node-type="recommend"] { display: none !important; }');
   clean.CleanRule('send_weibo', () => i18n.cleanOtherSendWeibo, 1, {
     acss: '.send_weibo_simple { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanOtherSendWeiboDetail } },
@@ -11191,7 +11230,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     sidebarShowMessages: {
       cn: '在首页左栏显示消息分组，包括以下链接{{i}}||{{atme}}|{{cmt}}|{{like}}|{{dm}}|{{msgbox}}|{{group}}|{{dmsub}}',
       tw: '在首頁左欄顯示消息分組，包括以下連結{{i}}||{{atme}}|{{cmt}}|{{like}}|{{dm}}|{{msgbox}}|{{group}}|{{dmsub}}',
-      en: 'Show an link to new messages in left column of home page with following items {{i}}||{{atme}}|{{cmt}}|{{like}}||{{dm}}|{{msgbox}}|{{group}}|{{dmsub}}',
+      en: 'Show a link to new messages in left column of home page with following items {{i}}||{{atme}}|{{cmt}}|{{like}}||{{dm}}|{{msgbox}}|{{group}}|{{dmsub}}',
     },
     sidebarShowMessagesWarning: {
       cn: '在分辨率较小的屏幕上添加过多项目可能导致显示不完全。',
@@ -12946,7 +12985,7 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
   i18n.smallImage = {
     cn: '缩小缩略图尺寸 {{i}}||{{repost}}缩小转发原文宽度',
     tw: '縮小縮略圖尺寸 {{i}}||{{repost}}縮小轉發原文寬度',
-    en: 'Decrease the size of image寸 {{i}}||{{repost}} Decrease the width of original feeds',
+    en: 'Decrease the size of image {{i}}||{{repost}} Decrease the width of original feeds',
   };
   i18n.smallImageDetail = {
     cn: '缩小图片尺寸仅影响图片在您的网页上的显示效果，不能降低网络数据流量用量。',
@@ -13331,7 +13370,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
-  const commentParser = yawf.comment;
+  const request = yawf.request;
 
   const feeds = yawf.rules.feeds;
 
@@ -13512,6 +13551,127 @@ ${[0, 1, 2, 3, 4].map(index => `
         });
       };
       observer.dom.add(useTextEmoji);
+    },
+  });
+
+  Object.assign(i18n, {
+    showVoteResult: {
+      cn: '投票微博显示投票情况{{i}}',
+      tw: '投票微博顯示投票情況{{i}}',
+      en: 'Show votes for feeds with voting {{i}}',
+    },
+    showVoteResultDetail: {
+      cn: '在当前页面展示投票结果而无需打开新页。展示仅供查看，如需投票仍需要在新页面打开。另请注意，无论是否开启本功能，微博投票会导致您自动点赞该微博。',
+      tw: '在當前頁面展示投票結果而無需打開新頁。展示僅供查看，如需投票仍需要在新頁面打開。另請注意，無論是否開啟本功能，微博投票會導致您自動點贊該微博。',
+      en: "View other's votes without open a new page. You are still required to open the new page to vote. Please be noticed that, voting will automatically like the feed regardless whether this option is enabled or not.",
+    },
+    followVoteLink: {
+      cn: '点赞微博并参与投票',
+      tw: '點贊微博並參與投票',
+      en: 'Like this feed and vote',
+    },
+  });
+
+  content.showVoteResult = rule.Rule({
+    id: 'show_vote_result',
+    version: 33,
+    parent: content.content,
+    template: () => i18n.showVoteResult,
+    ref: {
+      i: { type: 'bubble', icon: 'warn', template: () => i18n.showVoteResultDetail },
+    },
+    ainit() {
+      observer.feed.onAfter(async function (/** @type {Element} */feed) {
+        const voteCard = feed.querySelector('.WB_feed_spec[action-type="fl_jumpurl"][action-data*="vote.weibo.com"]');
+        if (!voteCard) return;
+        const url = new URL(new URLSearchParams(voteCard.getAttribute('action-data')).get('url'));
+        if (!url.href.startsWith('https://vote.weibo.com/h5/index/index?')) return;
+        const voteId = url.searchParams.get('vote_id');
+        if (!voteId) return;
+        const placeholder = document.createElement('div');
+        voteCard.parentNode.parentNode.replaceChild(placeholder, voteCard.parentNode);
+        const voteResult = await request.voteDetail(voteId);
+        const template = document.createElement('div');
+        template.innerHTML = '<div class="yawf-vote-detail S_txt1 S_bg2 "><div class="yawf-vote-title"></div><div class="yawf-vote-subtitle S_txt2"></div><div class="yawf-vote-option-list"></div><div class="yawf-vote-footer"></div></div>';
+
+        const container = template.firstChild;
+        const title = container.querySelector('.yawf-vote-title');
+        const subtitle = container.querySelector('.yawf-vote-subtitle');
+        const optionList = container.querySelector('.yawf-vote-option-list');
+        const footer = container.querySelector('.yawf-vote-footer');
+        const voteInfo = voteResult.vote_info;
+        const withImage = voteInfo.option_list.some(option => option.pic);
+        if (withImage) {
+          optionList.classList.add('yawf-vote-with-image');
+        }
+
+        title.textContent = voteInfo.title;
+        // 未截至的投票会出现形如“截止日期 x年x月x日 xx::xx”格式的字串
+        // 此时识别后面的日期以方便“使用本机时区”功能将其修正为本机时间
+        if (/^.*\d+年\d+月\d+日 \d+:\d+$/.test(voteInfo.show_str)) {
+          const [_i, text, dateStr] = voteInfo.show_str.match(/^(.*?)(\d+年\d+月\d+日 \d+:\d+)$/);
+          const [_j, year, month, date, hour, min] = dateStr.match(/(\d+)年(\d+)月(\d+)日 (\d+):(\d+)/);
+          const timestamp = Date.UTC(year, month - 1, date, hour - 8, min);
+          subtitle.appendChild(document.createTextNode(text));
+          const dateText = subtitle.appendChild(document.createElement('span'));
+          dateText.textContent = dateStr;
+          dateText.setAttribute('date', timestamp);
+        } else {
+          subtitle.textContent = voteInfo.show_str;
+        }
+        voteInfo.option_list.forEach(option => {
+          const wrap = document.createElement('div');
+          wrap.innerHTML = '<div class="yawf-vote-option-item"><div class="yawf-vote-option-text"><span class="yawf-vote-option-title"></span><span class="yawf-vote-option-count"></span></div><div class="yawf-vote-option-bar S_bg1"></div></div>';
+          const container = wrap.firstChild;
+          const text = container.firstChild.firstChild;
+          text.textContent = option.title;
+          const count = text.nextSibling;
+          count.textContent = option.part_num;
+          container.style.setProperty('--yawf-vote-ratio', option.part_ratio / 100);
+          if (withImage) {
+            const wrap = document.createElement('div');
+            wrap.innerHTML = '<div class="yawf-vote-option-image"><img /></div>';
+            const img = wrap.firstChild.firstChild;
+            img.src = option.pic;
+            img.alt = option.text;
+            container.insertBefore(wrap.firstChild, container.firstChild);
+          }
+          if (option.selected === '1') {
+            container.classList.add('yawf-vote-selected');
+          }
+          optionList.appendChild(container);
+        });
+        if (voteInfo.status === '1') {
+          const link = document.createElement('div');
+          link.setAttribute('action-type', voteCard.getAttribute('action-type'));
+          link.setAttribute('action-data', voteCard.getAttribute('action-data'));
+          link.textContent = i18n.followVoteLink;
+          footer.appendChild(link);
+        }
+        placeholder.replaceWith(container);
+      });
+
+      const fontRatio = content.fontSize.isEnabled() ? content.fontSize.ref.ratio.getConfig() : 100;
+      const fontSize = { 120: 16, 150: 21, 200: 28, 300: 42 }[fontRatio] || 12;
+      const smallImage = yawf.rules.feeds.layout.smallImage.isEnabled();
+      css.append(`
+.yawf-vote-detail { font-size: ${fontSize}px; }
+.yawf-vote-detail { margin-left: 10px; padding: 10px; box-shadow: 0 0 2px #777; border-radius: 3px; }
+.yawf-vote-title { font-weight: bold; } 
+.yawf-vote-option-item { border: 1px solid #ebebeb; margin: 5px 0; line-height: 2; padding: 0 5px; position: relative; }
+.yawf-vote-option-text { display: flex; position: relative; z-index: 1; }
+.yawf-vote-option-title { flex: 1 1 auto; } 
+.yawf-vote-option-count { flex: 0 0 auto; }
+.yawf-vote-option-count::before { content: "("; }
+.yawf-vote-option-count::after { content: ")"; }
+.yawf-vote-option-bar { content: " "; width: calc(100% * var(--yawf-vote-ratio)); height:100%; position: absolute; top: 0; left: 0; z-index: 0; }
+.yawf-vote-selected { font-weight: bold; }
+.yawf-vote-with-image { display: grid; grid-template-columns: repeat(auto-fill, ${smallImage ? '120px' : '225px'}); grid-gap: 10px; }
+.yawf-vote-option-image { position: relative; z-index: 2; margin: 0 -5px -5px;}
+.yawf-vote-option-image img { max-width: 100%; max-height: 225px; }
+.yawf-vote-footer:empty { display: none; }
+.yawf-vote-footer { margin-top: 10px; cursor: pointer; }
+`);
     },
   });
 
@@ -14279,7 +14439,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.layoutHideLeftNews', 'clean_left_news');
       rule('weibo.layoutHideLeftCount', 'clean_left_count');
       rule('weibo.layoutHideMiddleRecommendedTopic', 'clean_middle_recommended_topic');
-      rule('weibo.layoutHideMiddleFeedRecommand', 'clean_middle_feed_recommand');
+      rule('weibo.layoutHideMiddleFeedRecommand', 'clean_middle_feed_recommend');
       rule('weibo.layoutHideMiddleMemberTip', 'clean_middle_member_tip');
       rule('weibo.layoutHideRightInfo', 'clean_right_info');
       rule('weibo.layoutHideRightRecomMusicRank', 'clean_right_ranks');
@@ -14291,7 +14451,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.layoutHideRightHongbaoRank', 'clean_right_hongbao_rank');
       rule('weibo.layoutHideRightAttFeed', 'clean_right_att_feed');
       rule('weibo.layoutHideRightNotice', 'clean_right_notice');
-      rule('weibo.layoutHideWeiboRecomFeed', 'clean_feed_recommand');
+      rule('weibo.layoutHideWeiboRecomFeed', 'clean_feed_recommend');
       rule('weibo.layoutHideWeiboFeedOuterTip', 'clean_feed_feed_outer_tip');
       rule('weibo.layoutHideWeiboFeedTip', 'clean_feed_feed_tip');
       rule('weibo.layoutHideWeiboGroupTip', 'clean_feed_group_tip');
@@ -14300,7 +14460,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.layoutHideWeiboPicTag', 'clean_feed_pic_tag');
       rule('weibo.layoutHideWeiboSonTitle', 'clean_feed_son_title');
       rule('weibo.layoutHideWeiboCard', 'clean_feed_card');
-      rule('weibo.layoutHideWeiboArticalPay', 'clean_feed_artical_pay');
+      rule('weibo.layoutHideWeiboArticalPay', 'clean_feed_article_pay');
       rule('weibo.layoutHideWeiboTag', 'clean_feed_tag');
       rule('weibo.layoutHideWeiboMovieTag', 'clean_feed_related_link');
       rule('weibo.layoutHideWeiboSource', 'clean_feed_source');
@@ -14327,7 +14487,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.layoutHidePersonAlbum', 'clean_profile_album');
       rule('weibo.layoutHidePersonHotTopic', 'clean_profile_hot_topic');
       rule('weibo.layoutHidePersonHotWeibo', 'clean_profile_hot_weibo');
-      rule('weibo.layoutHidePersonUserList', 'clean_profile_recommand_feed');
+      rule('weibo.layoutHidePersonUserList', 'clean_profile_recommend_feed');
       rule('weibo.layoutHidePersonHongbao', 'clean_profile_user_list');
       rule('weibo.layoutHidePersonWenwoDr', 'clean_profile_hongbao');
       rule('weibo.layoutHidePersonTimeline', 'clean_profile_wenwo_dr');
@@ -14385,6 +14545,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.tool.color_override.transparency2', 'layout_theme_color.transparency2');
       rule('weibo.tool.color_override.color3', 'layout_theme_color.color3');
       rule('weibo.tool.color_override.transparency3', 'layout_theme_color.transparency3');
+      rule('weibo.tool.userstyle', 'custom_css');
       // 微博展示
       rule('weibo.tool.no_weibo_space', 'feed_no_space');
       rule('weibo.tool.from_in_bottom', 'feed_source_at_bottom');
@@ -14416,6 +14577,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.tool.unwrapContent.text', 'feed_content_line_break.text');
       rule('weibo.tool.replace_link', 'feed_link_use_url');
       rule('weibo.tool.replace_image_emoji', 'feed_unicode_emoji');
+      rule('weibo.tool.show_vote_result', 'show_vote_result');
       rule('weibo.other.customize_source', 'feed_no_custom_source');
       rule('weibo.tool.viewOriginal', 'feed_view_original');
       rule('weibo.tool.viewOriginal.open', 'feed_view_original.open');
@@ -14557,7 +14719,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('showAllGroups', 'layout_side_show_all_groups');
       rule('noHomeMargins', 'layout_side_merge');
       rule('showAllText', 'feed_long_expand');
-      rule('showAllArticleText', 'show_artical_without_follow');
+      rule('showAllArticleText', 'show_article_without_follow');
       rule('directAllFeeds', 'filter_profile_show_all');
       rule('directBigImg', 'feed_view_original');
       rule('squareAvatar', 'layout_avatar_shape');
@@ -14569,6 +14731,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('noHomeMargins', 'feed_no_space');
       rule('moveSrcToBtm', 'feed_source_at_bottom');
       rule('unwrapText', 'feed_author_content_nowrap');
+      rule('customStyles', 'custom_css');
 
       clean('TimelineMods', 'filter_fake_weibo');
       clean('Level', 'clean_icons_level');
@@ -14586,7 +14749,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       clean('Friends', 'clean_left_friends');
       clean('ToMe', 'clean_left_group_to_me');
       clean('RecommendedTopic', 'clean_middle_recommended_topic');
-      clean('RecomFeed', 'clean_middle_feed_recommand');
+      clean('RecomFeed', 'clean_middle_feed_recommend');
       clean('MemberTip', 'clean_middle_member_tip');
       clean('MusicRecom', 'clean_right_ranks');
       clean('Topic', 'clean_right_hot_topic');
@@ -14595,7 +14758,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       clean('MovieRecom', 'clean_right_member');
       clean('AttFeed', 'clean_right_att_feed');
       clean('Notice', 'clean_right_notice');
-      clean('RecomFeed', 'clean_feed_recommand');
+      clean('RecomFeed', 'clean_feed_recommend');
       clean('CommentTip', 'clean_feed_feed_tip');
       clean('MemberCover', 'clean_feed_vip_background');
       clean('TopicCard', 'clean_feed_card');
@@ -14678,7 +14841,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
     configImportWarningExternal: {
       cn: '您正在导入来自“{}”的设置，导入工具会尽量将您的设置转换为本扩展支持的功能，但实际效果仍会有所不同。导入后建议您打开扩展的设置复查各项设置。导入的设置会覆盖您当前已有的设置，确实要导入设置吗？',
       tw: '您正試圖匯入來自於「{}」的設定，匯入工具會盡可能將您的設定轉換為本擴充套件支援的功能，但實際效果仍會有所不同。執行匯入後，建議您打開設定方塊手工複查。匯入的設定會覆蓋您當前已有的設定，您確定要匯入設定嗎？',
-      en: 'You are trying to import settings from "{}". Importing tool will try its best to convert your settings to what this extension supported. And due to the limitation, some features may not work as your expect. Remeber to recheck the settings after importing. The imported settings may replace your current settings. Are you sure you want to import this file?',
+      en: 'You are trying to import settings from "{}". Importing tool will try its best to convert your settings to what this extension supported. And due to the limitation, some features may not work as your expect. Remember to recheck the settings after importing. The imported settings may replace your current settings. Are you sure you want to import this file?',
     },
     configImportSuccessTitle: { cn: '设置导入完成', tw: '設定匯入完成', en: 'Import settings completed' },
     configImportSuccess: { cn: '已经成功地导入了设置', tw: '已经成功地匯入了設定', en: 'Successfully imported settings' },
@@ -14686,7 +14849,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
     configImportFail: {
       cn: '导入设置文件时出现错误，可能是使用了错误的文件，文件已损坏或文件的版本不支持',
       tw: '匯入設定檔案時出現錯誤，可能是使用了錯誤的檔案，檔案已損壞或為不支援的版本',
-      en: 'Error occurred during importing process. Wrong file may be used, the file may be broken, or the version of setting file is not supported.',
+      en: 'Error occurred during importing process. Wrong file may be used, the file may be broken, or the version of setting file may not be supported.',
     },
     configExportButton: { cn: '导出', tw: '匯出', en: 'Export' },
     configResetButton: { cn: '重置', tw: '重設', en: 'Reset' },
@@ -14841,12 +15004,79 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 
 }());
 //#endregion
+//#region custom implementation clean old
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+
+  const ui = util.ui;
+
+  const about = yawf.rules.about;
+
+  const i18n = util.i18n;
+
+  const backup = about.backup;
+
+  Object.assign(i18n, {
+    configCleanV3Button: {
+      cn: '清理旧版数据',
+      tw: '清理舊版資料',
+      en: 'Old version data clean up',
+    },
+    configCleanV3Title: {
+      cn: '清理旧版数据',
+      tw: '清理舊版資料',
+      en: 'Old version data clean up',
+    },
+    configCleanV3Text: {
+      cn: '您将要删除所有旧版数据，该操作无法撤消。确定要删除吗？',
+      tw: '您將要刪除所有舊版資料，該動作無法復原。您確定要刪除嗎？',
+      en: 'You are going to delete all old data. This action cannot be undo. Are you sure you want to delete?',
+    },
+  });
+
+  ; (async function () {
+    const keys = (await GM.listValues()).filter(key => !/sync::|local::/.test(key));
+    if (!keys.length) return;
+    backup.cleanV3 = rule.Rule({
+      id: 'script_clean_v3',
+      version: 1,
+      parent: backup.backup,
+      render() {
+        const rule = this;
+        const container = document.createElement('span');
+        container.className = 'yawf-config-item yawf-config-rule';
+        container.innerHTML = '<a class="W_btn_b yawf-clean-v3" href="javascript:;"><span class="W_f14"></span></a>';
+        const cleanButton = container.querySelector('.yawf-clean-v3');
+        cleanButton.querySelector('.W_f14').textContent = i18n.configCleanV3Button;
+        cleanButton.addEventListener('click', async function () {
+          const answer = await ui.confirm({
+            id: 'yawf-clean-v3',
+            icon: 'ask',
+            title: i18n.configCleanV3Title,
+            text: i18n.configCleanV3Text,
+          });
+          if (!answer) return;
+          keys.forEach(key => { GM.deleteValue(key); });
+          container.style.display = 'none';
+        });
+        return container;
+      },
+    });
+  }());
+
+}());
+//#endregion
 //#region replacement of yaofang://content/rule/about/whatsnew.js
 ; (function () {
 
   const yawf = window.yawf;
   const util = yawf.util;
   const rule = yawf.rule;
+  const init = yawf.init;
+  const config = yawf.config;
   const importer = yawf.importer;
 
   const ui = util.ui;
@@ -14883,9 +15113,10 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       en: 'Yet Another Weibo Filter (YAWF) Updated',
     },
     importV3SuccessText: {
-      cn: 'Yet Another Weibo Filter (药方) 已升级至 4.0 版。为了适应这一段时间浏览器和猴子的升级，脚本已更新。这一版相比之前改动较大，绝大多数功能是完全重写的。因此使用上可能会有一些不同。建议您打开设置确认一下。如果您发现任何问题，欢迎向作者反馈。',
-      tw: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為了適應這一段時間瀏覽器和猴子的升級，腳本已更新。這一版相比之前改動較大，絕大多數功能是完全重做的。因此使用上可能會有一些不同。建議您打開設定窗口進行確認。如果您發現任何問題，歡迎向作者回饋。',
-      en: 'Yet Another Weifo Filter (YAWF) had been upgraded to version 4.0. The script is update to fit the changes of browsers and monkeys. Many thing had been modified or completed rewritten. You may experience some difference to the previous version. You may open the settings dialog to check it out. Any feed backs are welcomed.',
+      cn: 'Yet Another Weibo Filter (药方) 已升级至 4.0 版。为使您获得更好的使用效果，这版脚本经过完全重写。由于这一版改动较大，少数功能（如正则表达式）和之前不尽相同。脚本已从旧版导入设置，但我们仍建议您打开设置复查一下。',
+      hk: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為使您獲得更好的使用效果，這版腳本經過完全重做。由於這一版改動較大，少數功能（如正則表達式）和之前不盡相同。腳本已從舊版導入設置，但我們仍建議您打開設定以複查。',
+      tw: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為使您獲得更好的使用效果，這版腳本經過完全重做。由於這一版改動較大，少數功能（如正規表示式）和之前不盡相同。腳本已從舊版導入設置，但我們仍建議您打開設定以複查。',
+      en: 'Yet Another Weibo Filter (YAWF) The script had been upgraded to version 4.0. For better user experience, the script is completely rewritten. Some features (e.g. regexp matching) is slightly different from previous version. Most settings are imported from old version. And you are still welcomed to check out the setting panel.',
     },
   });
 
@@ -14907,11 +15138,81 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
         // 初次运行，也可能是从 v3 升级上来的
         let importOldConfig = null;
         try {
+          // 导入设置
           const v3Config = JSON.parse(await GM.getValue(`user${yawf.init.page.$CONFIG.uid}config`));
           const fileContent = new TextEncoder().encode(JSON.stringify({ yawf: 'Yet Another Weibo Filter', ver: '3', conf: v3Config })).buffer;
-          const { config, source } = importer.parse(fileContent);
-          if (config) await this.configPool.import(config);
+          const { config: newConfig, source } = importer.parse(fileContent);
+          if (newConfig) await this.configPool.import(newConfig);
           else throw new Error('Import from v3 failed.');
+          // 导入关注信息
+
+          try {
+            const uid = init.page.$CONFIG.uid;
+            const [last, notice] = (await Promise.all([
+              GM.getValue(`following_info_${uid}`, '{}'),
+              GM.getValue(`following_notice_${uid}`, '{}'),
+            ])).map(data => {
+              try { return JSON.parse(data); } catch (e) { return {}; }
+            });
+            /** @type {Array} */
+            const list = last.following;
+            ((notice || {}).add || []).forEach(u => {
+              const pos = list.find(v => v.id === u.id);
+              if (pos !== -1) list.splice(pos, 1);
+            });
+            ((notice || {}).lost || []).forEach(u => {
+              const pos = list.find(v => v.id === u.id);
+              if (pos === -1) list.append(u);
+            });
+            const timestamp = last.timestamp;
+
+            const newList = list.map(item => (({
+              user: old => ({
+                id: `user-${old.user}`,
+                type: 'user',
+                user: old.user,
+                url: old.href,
+                avatar: old.avatar,
+                name: old.name.replace(/ \(.*\)$/g, ''),
+                description: old.description,
+              }),
+              stock: old => ({
+                id: `stock-${old.stock}`,
+                type: 'stock',
+                stock: old.stock,
+                url: old.href,
+                avatar: old.avatar,
+                name: `$${old.stock}$`,
+                description: `$${old.stock}$`,
+              }),
+              topic: old => ({
+                id: `topic-${old.topic}`,
+                type: 'topic',
+                topic: old.topic,
+                url: old.href,
+                avatar: old.avatar,
+                name: `#${old.topic}#`,
+                description: `#${old.topic}#`,
+              }),
+            }[item.type] || (old => ({
+              id: 'unknown-' + old.href,
+              type: 'unknown',
+              url: old.href,
+              avatar: old.avatar,
+              description: old.description.slice(1),
+              name: old.description.slice(1),
+            })))(item)));
+            const followConfig = await config.pool('Follow', { uid });
+            const lastList = new rule.class.OffscreenConfigItem({ id: 'lastList', configPool: followConfig });
+            const lastChange = new rule.class.OffscreenConfigItem({ id: 'lastChange', configPool: followConfig });
+            lastList.setConfig({ timestamp, list: newList });
+            lastChange.setConfig(null);
+          } catch (followException) {
+            alert(followException);
+            console.log(followException);
+          }
+
+          // 导入成功
           await ui.alert({
             id: 'yawf-upgrade-from-3',
             title: i18n.importV3SuccessTitle,
@@ -15046,9 +15347,9 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 
   Object.assign(i18n, {
     aboutText: {
-      cn: '{{logo}}Yet Another Weibo Filter (药方) {{version}} - 脚本版{{br}}作者{{author}}，您可以关注 {{scriptWeibo}} 了解用户脚本的最新变化。{{br}}如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，欢迎到 {{issuePage}} 反馈，或私信 {{scriptWeibo}}。{{br}}脚本使用 MPL-2.0 协议开放源代码，您可以在 {{github}} 上查阅。欢迎贡献代码。',
-      tw: '{{logo}}Yet Another Weibo Filter (藥方) {{version}} - 腳本版{{br}}作者{{author}}，您可以關注 {{scriptWeibo}} 了解使用者腳本的最新變化。{{br}}如果您在使用過程中遇到任何腳本的錯誤，或對其有任何建議，歡迎到 {{issuePage}} 回饋，或聯繫 {{scriptWeibo}}。{{br}}腳本以 MPL-2.0 協定開放原始碼，您可以在 {{github}} 上查閱。歡迎貢獻原始碼。',
-      en: '{{logo}}Yet Another Weibo Filter (YAWF) {{version}} - Script{{br}}Created by {{author}}. You may follow {{scriptWeibo}} for last updates info.{{br}}You may report errors and give suggestions on {{issuePage}}, or send private message to {{scriptWeibo}}.{{br}}This extension is released under MPL-2.0 license. You may get its source from {{github}}. Contributions are welcomed.',
+      cn: '{{logo}}Yet Another Weibo Filter (药方) {{version}}{{br}}作者{{author}}，您可以关注 {{scriptWeibo}} 了解用户脚本的最新变化。{{br}}如果您在使用过程中遇到任何脚本的错误，或对脚本有任何建议，欢迎到 {{issuePage}} 反馈，或私信 {{scriptWeibo}}。{{br}}脚本使用 MPL-2.0 协议开放源代码，您可以在 {{github}} 上查阅。欢迎贡献代码。',
+      tw: '{{logo}}Yet Another Weibo Filter (藥方) {{version}}{{br}}作者{{author}}，您可以關注 {{scriptWeibo}} 了解使用者腳本的最新變化。{{br}}如果您在使用過程中遇到任何腳本的錯誤，或對其有任何建議，歡迎到 {{issuePage}} 回饋，或聯繫 {{scriptWeibo}}。{{br}}腳本以 MPL-2.0 協定開放原始碼，您可以在 {{github}} 上查閱。歡迎貢獻原始碼。',
+      en: '{{logo}}Yet Another Weibo Filter (YAWF) {{version}}{{br}}Created by {{author}}. You may follow {{scriptWeibo}} for last updates info.{{br}}You may report errors and give suggestions on {{issuePage}}, or send private message to {{scriptWeibo}}.{{br}}This extension is released under MPL-2.0 license. You may get its source from {{github}}. Contributions are welcomed.',
     },
     aboutIssueTracker: {
       cn: '议题跟踪器',
@@ -15059,6 +15360,11 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       cn: 'GitHub 仓库',
       tw: 'GitHub 存放庫',
       en: 'GitHub repository',
+    },
+    userScriptVersion: {
+      cn: '{1} （用户脚本）',
+      tw: '{1} （使用者腳本）',
+      en: '{1} （User Script）',
     },
   });
 
@@ -15073,8 +15379,8 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       },
       version: {
         render() {
-          const version = browser.runtime.getManifest().version;
-          return document.createTextNode(version);
+          const version = GM.info.script.version;
+          return document.createTextNode(i18n.userScriptVersion.replace('{1}', version));
         },
       },
       author: {
