@@ -17,7 +17,7 @@
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://weibo.com/nguide/*
 // @exclude           https://weibo.com/
-// @version           3.7.507
+// @version           3.7.508
 // @icon              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABdUExURUxpcemNSemNSemNSemNSemNSemNSemNSemNSemNSdktOumNSemNSemNSemNSemNSemNSdktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOtktOumNSdktOsZoAhUAAAAddFJOUwAgkIAQ4MBAYPBA0KAwcLBQ0BBgIHDggDCw8JDAT2c6pQAAAiFJREFUWMPNl9lywyAMRcMOMQa7SdMV//9nNk4nqRcJhOvOVI9+OJbE5UocDn8VrBNRp3so7YWRGzBWJSAa3lZyfMLCVbF4ykVjye1JhVB2j4S+UR0FpBMhNCuDEilcKIIcjZSi3KO0W6cKUghUUHL5nktHJqW8EGz6fyTmr7dW82DGK8+MEb7ZSALYNiIkU20uMoDu4tq9jKrZYnlSACS/zYSBvnfb/HztM05uI611FjfOmNb9XgMIqSk01phgDTTR2gqBm/j4rfJdqU+K2lHHWf7ssJTM+ozFvMSG1iVV9FbmKAfXEjxDUC6KQTyDZ7KWNaAZyRLabUiOqAj3BB8lLZoSWJvA56LEUuoqty2BqZLDShJodQzZpdCba8ytH53HrXUu77K9RqyrvNaV5ptFQGRy/X78CQKpQday6zEM0+jfXl5XpAjXNmuSXoDGuHycM9tOB/Mh0DVecCcTiHBh0NA/Yfu3Rk4BAS1ICgIZEmjokS3V1YKGZ+QeV4MuTzuBpin5X4F6sEdNPWh41CbB4+/IoCP0b14nSBwUYB9R1aAWfgJpEoiBq4dbWCcBNPm5QEa7IJ3az9YwWazD0mpRzvt64Zsu6HE5XlDQ2/wREbW36EAeW0e5IsWXdMyBzhWgkAH1NU9ydqD5UWlDuKlrY2UzudsMqC+OYL5wBAT0eSql9ChOyxxoTOpUqm4Upb6ra8jE5bXiuTNk47QXiE76AnacIlJf1W5ZAAAAAElFTkSuQmCC
 // @updateURL         https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.meta.js
 // @downloadURL       https://tiansh.github.io/yawf/Yet_Another_Weibo_Filter.user.js
@@ -50,7 +50,7 @@
 // ==/UserScript==
 
 // 解决 GM_addStyle 的一些兼容问题
-window.GM_addStyle = (function () {
+GM_addStyle = (function () {
   var addStyleQueue = [];
   (function addStyles() {
     if (!document.head) return setTimeout(addStyles, 16);
@@ -804,6 +804,9 @@ var text = {
   },
   'foldChildComment': { 'zh-cn': '默认折叠二级评论', 'zh-hk': '預設折疊二級評論', 'zh-tw': '預設折疊二級評論', 'en': 'Fold child comments by default' },
   'commentShowAll': { 'zh-cn': '查看评论时自动切换到全部评论', 'zh-hk': '查閱評論時自動切換到全部評論', 'zh-tw': '查閱評論時自動切換到全部評論', 'en': 'Automatically switch view of comments to all' },
+  'showVoteResult': { 'zh-cn': '投票微博显示投票情况{{<i>}}', 'zh-hk': '投票微博顯示投票情況{{<i>}}', 'zh-tw': '投票微博顯示投票情況{{<i>}}', 'en': 'Show votes for feeds with voting {{<i>}}' },
+  'showVoteResultDetail': { 'zh-cn': '在当前页面展示投票结果而无需打开新页。展示仅供查看，如需投票仍需要在新页面打开。另请注意，无论是否开启本功能，微博投票会导致您自动点赞该微博。' },
+  'followVoteLink': { 'zh-cn': '点赞微博并参与投票', 'zh-hk': '點贊微博並參與投票', 'zh-tw': '點贊微博並參與投票', en: 'Like this feed and vote' },
   // 图片和视频
   'mediaToolsTitle': { 'zh-cn': '图片与视频', 'zh-hk': '圖片與視頻', 'zh-tw': '圖片與視頻', 'en': 'Images &amp; Videos' },
   'viewOriginal': {
@@ -1321,6 +1324,7 @@ var url = {
   'topic': '{{domainURL}}/k/{{topic}}',
   'list_group': '{{domainURL}}/aj/f/group/list',
   'group_feeds': '{{domainURL}}/aj/mblog/fsearch?{{param}}',
+  'vote': '//vote.weibo.com/h5/index/index?vote_id={{voteId}}',
 };
 
 var font = {
@@ -2921,6 +2925,19 @@ network.comment.del = (function () {
     network.buffered(function (callback) { del(info, callback); });
   };
 }());
+
+network.vote = function (voteId, callback) {
+  util.xhr({
+    'method': 'GET',
+    'url': util.str.fill(url.vote, { 'voteId': voteId }),
+    'onload': function (resp) {
+      var dom = (new DOMParser()).parseFromString(resp.responseText, 'text/html');
+      var script = dom.querySelector('head script').textContent;
+      var data = JSON.parse(script.match(/\{[\s\S]*\}/)[0]);
+      callback(data);
+    },
+  });
+};
 
 network.ua = {};
 network.ua.android = 'Mozilla/5.0 (Linux; Android 4.4.2; zh-cn; YAWF) AppleWebKit/537.16 (KHTML, like Gecko) Version/4.0 Mobile Safari/537.16';
@@ -8192,7 +8209,7 @@ filter.predef.group('layout');
     observer.dom.add(removeClassName);
 
     var removeAdIframes = function removeAdIframes() {
-      const iframes = Array.from(document.querySelectorAll('iframe[src*="s.alitui.weibo.com"]'));
+      var iframes = Array.from(document.querySelectorAll('iframe[src*="s.alitui.weibo.com"]'));
       iframes.forEach(function (iframe) {
         iframe.parentNode.removeChild(iframe);
       });
@@ -10034,6 +10051,126 @@ filter.items.tool.weibotool.comment_show_all = filter.item({
   }
 }).addto(filter.groups.tool);
 
+// 投票内嵌
+filter.items.tool.weibotool.show_vote_result = filter.item({
+  'group': 'weibotool',
+  'version': 508,
+  'type': 'boolean',
+  'key': 'weibo.other.show_vote_result',
+  'text': '{{{showVoteResult}}}',
+  'ref': {
+    'i': { 'type': 'sicon', 'icon': 'warn', 'text': '{{showVoteResultDetail}}' },
+  },
+  'ainit': function () {
+
+    var renderResult = function (voteResult, placeholder, voteCard) {
+      var template = document.createElement('div');
+      template.innerHTML = '<div class="yawf-vote-detail S_txt1 S_bg2 "><div class="yawf-vote-title"></div><div class="yawf-vote-subtitle S_txt2"></div><div class="yawf-vote-option-list"></div><div class="yawf-vote-footer"></div></div>';
+
+      var container = template.firstChild;
+      var title = container.querySelector('.yawf-vote-title');
+      var subtitle = container.querySelector('.yawf-vote-subtitle');
+      var optionList = container.querySelector('.yawf-vote-option-list');
+      var footer = container.querySelector('.yawf-vote-footer');
+      var voteInfo = voteResult.vote_info;
+      var withImage = voteInfo.option_list.some(option => option.pic);
+      if (withImage) {
+        optionList.classList.add('yawf-vote-with-image');
+      }
+
+      title.textContent = voteInfo.title;
+      // 未截至的投票会出现形如“截止日期 x年x月x日 xx::xx”格式的字串
+      // 此时识别后面的日期以方便“使用本机时区”功能将其修正为本机时间
+      if (/^.*\d+年\d+月\d+日 \d+:\d+$/.test(voteInfo.show_str)) {
+        var [_i, text, dateStr] = voteInfo.show_str.match(/^(.*?)(\d+年\d+月\d+日 \d+:\d+)$/);
+        var [_j, year, month, date, hour, min] = dateStr.match(/(\d+)年(\d+)月(\d+)日 (\d+):(\d+)/);
+        var timestamp = Date.UTC(year, month - 1, date, hour - 8, min);
+        subtitle.appendChild(document.createTextNode(text));
+        var dateText = subtitle.appendChild(document.createElement('span'));
+        dateText.textContent = dateStr;
+        dateText.setAttribute('yawf-date', timestamp);
+      } else {
+        subtitle.textContent = voteInfo.show_str;
+      }
+      voteInfo.option_list.forEach(function (option) {
+        var wrap = document.createElement('div');
+        wrap.innerHTML = '<div class="yawf-vote-option-item"><div class="yawf-vote-option-text"><span class="yawf-vote-option-title"></span><span class="yawf-vote-option-count"></span></div><div class="yawf-vote-option-bar S_bg1"></div></div>';
+        var container = wrap.firstChild;
+        var text = container.firstChild.firstChild;
+        text.textContent = option.title;
+        var count = text.nextSibling;
+        count.textContent = option.part_num;
+        container.style.setProperty('--yawf-vote-ratio', option.part_ratio / 100);
+        if (withImage) {
+          var wrap = document.createElement('div');
+          wrap.innerHTML = '<div class="yawf-vote-option-image"><img /></div>';
+          var img = wrap.firstChild.firstChild;
+          img.src = option.pic;
+          img.alt = option.text;
+          container.insertBefore(wrap.firstChild, container.firstChild);
+        }
+        if (option.selected === '1') {
+          container.classList.add('yawf-vote-selected');
+        }
+        optionList.appendChild(container);
+      });
+      if (voteInfo.status === '1') {
+        var link = document.createElement('div');
+        link.setAttribute('action-type', voteCard.getAttribute('action-type'));
+        link.setAttribute('action-data', voteCard.getAttribute('action-data'));
+        link.textContent = util.str.fill('{{followVoteLink}}');
+        footer.appendChild(link);
+      }
+      placeholder.replaceWith(container);
+    };
+
+    observer.weibo.after(function (feed) {
+      var voteCard = feed.querySelector('.WB_feed_spec[action-type="fl_jumpurl"][action-data*="vote.weibo.com"]');
+      if (!voteCard) return;
+      var url = util.str.parsequery(voteCard.getAttribute('action-data')).url;
+      if (url.indexOf('https://vote.weibo.com/h5/index/index?') !== 0) return;
+      var voteId = util.str.parsequery(url.slice(url.indexOf('?') + 1)).vote_id;
+      if (!voteId) return;
+      var placeholder = util.dom.create('div', '');
+      voteCard.parentNode.parentNode.replaceChild(placeholder, voteCard.parentNode);
+
+      network.vote(voteId, function (voteResult) {
+        renderResult(voteResult, placeholder, voteCard);
+      });
+    });
+
+    setTimeout(function () {
+      var weibo_large_font = filter.items.style.text.weibo_large_font;
+      var fontRatio = weibo_large_font.conf ? weibo_large_font.ref.ratio.conf : 100;
+      var fontSize = { '120': 16, '150': 21, '200': 28, '300': 42 }[fontRatio] || 12;
+      var smallImage = filter.items.style.sweibo.image_size.conf;
+      var imageSize = smallImage && fontSize <= 16 ? 120 : 225;
+      util.css.add(util.str.fill(util.str.cmt(function () { /*!CSS
+        .yawf-vote-detail { font-size: {{fontSize}}px; }
+        .yawf-vote-detail { margin-left: 10px; padding: 10px; box-shadow: 0 0 2px #777; border-radius: 3px; }
+        .yawf-vote-title { font-weight: bold; } 
+        .yawf-vote-option-item { border: 1px solid #ebebeb; margin: 5px 0; line-height: 2; padding: 0 5px; position: relative; }
+        .yawf-vote-option-text { display: flex; position: relative; z-index: 1; }
+        .yawf-vote-option-title { flex: 1 1 auto; } 
+        .yawf-vote-option-count { flex: 0 0 auto; }
+        .yawf-vote-option-count::before { content: "("; }
+        .yawf-vote-option-count::after { content: ")"; }
+        .yawf-vote-option-bar { content: " "; width: calc(100% * var(--yawf-vote-ratio)); height:100%; position: absolute; top: 0; left: 0; z-index: 0; }
+        .yawf-vote-selected { font-weight: bold; }
+        .yawf-vote-with-image { display: grid; grid-template-columns: 1fr 1fr; grid-template-columns: repeat(auto-fill, {{imageSize}}); grid-gap: 10px; }
+        .yawf-vote-with-image .yawf-vote-option-item { max-width: {{imageSize}}; }
+        .yawf-vote-option-image { position: relative; z-index: 2; margin: 0 -5px -5px;}
+        .yawf-vote-option-image img { max-width: 100%; max-height: 225px; }
+        .yawf-vote-footer:empty { display: none; }
+        .yawf-vote-footer { margin-top: 10px; cursor: pointer; }
+      */ noop(); }), {
+        'imageSize': imageSize,
+        'fontSize': fontSize,
+      }));
+    }, 0);
+  }
+}).addto(filter.groups.tool);
+
 // 关注相关工具
 filter.predef.subtitle('tool', 'followingtool', '{{followingToolsTitle}}');
 
@@ -10244,7 +10381,7 @@ filter.items.tool.followingtool.uncheck_follow_presenter = filter.item({
   'text': '{{uncheckFollowPresenter}}',
   'ainit': function () {
     var uncheckFollowPresenter = function uncheckFollowPresenter() {
-      const inputs = Array.from(document.querySelectorAll('input[type="checkbox"][checked][action-data*="follow"]:not([yawf-uncheck-follow])'));
+      var inputs = Array.from(document.querySelectorAll('input[type="checkbox"][checked][action-data*="follow"]:not([yawf-uncheck-follow])'));
       inputs.forEach(checkbox => {
         checkbox.setAttribute('yawf-uncheck', '');
         if (checkbox.checked) checkbox.click();
