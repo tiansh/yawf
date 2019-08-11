@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.33
+// @version           4.0.34
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -13643,6 +13643,7 @@ ${[0, 1, 2, 3, 4].map(index => `
         });
         if (voteInfo.status === '1') {
           const link = document.createElement('div');
+          link.classList.add('yawf-vote-link');
           link.setAttribute('action-type', voteCard.getAttribute('action-type'));
           link.setAttribute('action-data', voteCard.getAttribute('action-data'));
           link.textContent = i18n.followVoteLink;
@@ -13652,25 +13653,25 @@ ${[0, 1, 2, 3, 4].map(index => `
       });
 
       const fontRatio = content.fontSize.isEnabled() ? content.fontSize.ref.ratio.getConfig() : 100;
-      const fontSize = { 120: 16, 150: 21, 200: 28, 300: 42 }[fontRatio] || 12;
+      const fontSize = { 120: 14, 150: 14, 200: 16, 300: 20 }[fontRatio] || 12;
       const smallImage = yawf.rules.feeds.layout.smallImage.isEnabled();
       css.append(`
 .yawf-vote-detail { font-size: ${fontSize}px; }
 .yawf-vote-detail { margin-left: 10px; padding: 10px; box-shadow: 0 0 2px #777; border-radius: 3px; }
-.yawf-vote-title { font-weight: bold; } 
+.yawf-vote-title { font-weight: bold; line-height: 1.5; }
 .yawf-vote-option-item { border: 1px solid #ebebeb; margin: 5px 0; line-height: 2; padding: 0 5px; position: relative; }
-.yawf-vote-option-text { display: flex; position: relative; z-index: 1; }
-.yawf-vote-option-title { flex: 1 1 auto; } 
-.yawf-vote-option-count { flex: 0 0 auto; }
+.yawf-vote-option-text { overflow: hidden; position: relative; z-index: 1; }
+.yawf-vote-option-count { float: right; }
 .yawf-vote-option-count::before { content: "("; }
 .yawf-vote-option-count::after { content: ")"; }
 .yawf-vote-option-bar { content: " "; width: calc(100% * var(--yawf-vote-ratio)); height:100%; position: absolute; top: 0; left: 0; z-index: 0; }
 .yawf-vote-selected { font-weight: bold; }
-.yawf-vote-with-image { display: grid; grid-template-columns: repeat(auto-fill, ${smallImage ? '120px' : '225px'}); grid-gap: 10px; }
+.yawf-vote-with-image { display: grid; grid-template-columns: 1fr 1fr; grid-template-columns: repeat(auto-fill, ${smallImage ? '120px' : '225px'}); grid-gap: 10px; }
 .yawf-vote-option-image { position: relative; z-index: 2; margin: 0 -5px -5px;}
 .yawf-vote-option-image img { max-width: 100%; max-height: 225px; }
 .yawf-vote-footer:empty { display: none; }
 .yawf-vote-footer { margin-top: 10px; cursor: pointer; }
+.yawf-vote-link { display: inline-block; }
 `);
     },
   });
