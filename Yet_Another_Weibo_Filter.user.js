@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.34.2
+// @version           4.0.35
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -65,89 +65,113 @@
 /* global GM */
 /* global GM_getValue, GM_setValue, GM_listValues, GM_deleteValue GM_addValueChangeListener */
 /* global GM_info GM_xmlhttpRequest, GM_notification, GM_registerMenuCommand */
-; (function () {
+; (function () { // eslint-disable-line
 
+  let base = {};
   try {
-    if (GM.info) return;
+    if (typeof GM === 'object') {
+      base = GM; // eslint-disable-line
+    } else {
+      GM = base; // eslint-disable-line
+    }
   } catch (e) { /* GM not ready */ }
 
-  const base = {};
-  window.GM = base;
 
-  try {
-    base.info = GM_info;
-  } catch (infoException) {
-    throw new Error('GM_info is not available.');
+  if (typeof base.info !== 'object') {
+    try {
+      base.info = GM_info;
+      const version = base.info.script.version;
+      const number = Number(version.split('.')[2]);
+      if (!number) throw new Error();
+    } catch (infoException) {
+      throw new Error('GM_info is not available.');
+    }
   }
 
-  if (typeof GM_getValue !== 'function') {
-    throw new Error('GM_getValue is not available.');
-  }
-  base.getValue = async function getValue(name, defaultValue) {
-    return GM_getValue(name, defaultValue);
-  };
-
-  if (typeof GM_setValue !== 'function') {
-    throw new Error('GM_setValue is not available.');
-  }
-  base.setValue = async function setValue(name, value) {
-    return GM_setValue(name, value);
-  };
-
-  if (typeof GM_listValues !== 'function') {
-    throw new Error('GM_listValues is not available.');
-  }
-  base.listValues = async function listValues() {
-    return GM_listValues();
-  };
-
-  if (typeof GM_deleteValue !== 'function') {
-    throw new Error('GM_deleteValue is not available.');
-  }
-  base.deleteValue = async function deleteValue(name) {
-    return GM_deleteValue(name);
-  };
-
-  if (typeof GM_addValueChangeListener === 'function') {
-    GM.addValueChangeListener = function addValueChangeListener(name, callback) {
-      GM_addValueChangeListener(name, callback);
+  if (typeof base.getValue !== 'function') {
+    if (typeof GM_getValue !== 'function') {
+      throw new Error('GM_getValue is not available.');
+    }
+    base.getValue = async function getValue(name, defaultValue) {
+      return GM_getValue(name, defaultValue);
     };
   }
 
-  if (typeof GM_xmlhttpRequest !== 'function') {
-    throw new Error('GM_xmlhttpRequest is not available.');
-  }
-  GM.xmlHttpRequest = function xmlHttpRequest(details) {
-    return GM_xmlhttpRequest(details);
-  };
-
-  if (typeof GM_notification === 'function') {
-    GM.notification = function notification(details, ondone) {
-      return GM_notification(details, ondone);
+  if (typeof base.setValue !== 'function') {
+    if (typeof GM_setValue !== 'function') {
+      throw new Error('GM_setValue is not available.');
+    }
+    base.setValue = async function setValue(name, value) {
+      return GM_setValue(name, value);
     };
-  } else if (typeof Notification === 'function') {
-    GM.notification = function notification(details, ondone) {
-      const notification = new Notification(details.title, {
-        body: details.text,
-        icon: details.image,
-      });
-      if (details.onclick) {
-        notification.addEventListener('click', function () {
-          details.onclick();
+  }
+
+  if (typeof base.listValues !== 'function') {
+    if (typeof GM_listValues !== 'function') {
+      throw new Error('GM_listValues is not available.');
+    }
+    base.listValues = async function listValues() {
+      return GM_listValues();
+    };
+  }
+
+  if (typeof base.deleteValue !== 'function') {
+    if (typeof GM_deleteValue !== 'function') {
+      throw new Error('GM_deleteValue is not available.');
+    }
+    base.deleteValue = async function deleteValue(name) {
+      return GM_deleteValue(name);
+    };
+  }
+
+  if (typeof base.addValueChangeListener !== 'function') {
+    if (typeof GM_addValueChangeListener === 'function') {
+      GM.addValueChangeListener = function addValueChangeListener(name, callback) {
+        GM_addValueChangeListener(name, callback);
+      };
+    }
+  }
+
+  if (typeof base.xmlHttpRequest !== 'function') {
+    if (typeof GM_xmlhttpRequest !== 'function') {
+      throw new Error('GM_xmlhttpRequest is not available.');
+    }
+    GM.xmlHttpRequest = function xmlHttpRequest(details) {
+      return GM_xmlhttpRequest(details);
+    };
+  }
+
+  if (typeof GM.notification !== 'function') {
+    if (typeof GM_notification === 'function') {
+      GM.notification = function notification(details, ondone) {
+        return GM_notification(details, ondone);
+      };
+    } else if (typeof Notification === 'function') {
+      GM.notification = function notification(details, ondone) {
+        const notification = new Notification(details.title, {
+          body: details.text,
+          icon: details.image,
         });
-      }
-      if (details.ondone) {
-        notification.addEventListener('close', function () {
-          details.ondone();
-        });
-      }
-    };
+        if (details.onclick) {
+          notification.addEventListener('click', function () {
+            details.onclick();
+          });
+        }
+        if (details.ondone) {
+          notification.addEventListener('close', function () {
+            details.ondone();
+          });
+        }
+      };
+    }
   }
 
-  if (typeof GM_registerMenuCommand === 'function') {
-    GM.registerMenuCommand = function registerMenuCommand(caption, commandFunc, accessKey) {
-      return GM_registerMenuCommand(caption, commandFunc, accessKey);
-    };
+  if (typeof GM.registerMenuCommand !== 'function') {
+    if (typeof GM_registerMenuCommand === 'function') {
+      GM.registerMenuCommand = function registerMenuCommand(caption, commandFunc, accessKey) {
+        return GM_registerMenuCommand(caption, commandFunc, accessKey);
+      };
+    }
   }
 
 }());
@@ -183,7 +207,7 @@
   const yawf = window.yawf = window.yawf || {};
   const env = yawf.env = {};
 
-  env.name = 'WebExtension';
+  env.name = 'UserScript';
 
   const config = env.config = {};
 
@@ -207,6 +231,7 @@
   const browserInfo = yawf.browserInfo = {};
 
   const browserName = ['Firefox', 'Chrome'].find(name => navigator.userAgent.includes(name));
+  browserInfo.name = browserName || 'Unknown';
 
   if (browserName === 'Firefox') {
     try {
@@ -5456,7 +5481,7 @@
         topic = node.textContent.replace(/^[\s$]+|[\s$]+$/g, '');
       }
       if (topic) {
-        const [_, superTopic, fullText] = topic.match(/^(?=(\ue627?|.*\[超话\]|.*超话$))[\ue627\s]*(.*?)(?:\[超话\]|超话)?$/);
+        const [_, superTopic, text] = topic.match(/^(?=(\ue627?|.*\[超话\]|.*超话$))[\ue627\s]*(.*?)(?:\[超话\]|超话)?$/);
         if (superTopic && detail) return ` #${text}[超话]# `;
         if (detail) return ` #${text}# `;
         return `#${text}#`;
@@ -6092,7 +6117,16 @@
   // 识别用户的头像、链接等
   recognize.account = async function (target) {
     if (!(target instanceof Element)) return [];
-    const find = selector => target.querySelector(selector) || target.closest(selector);
+    const find = selector => {
+      const parent = target.closest(selector);
+      if (parent) return parent;
+      const content = target.querySelector(selector);
+      if (!content) return null;
+      const container = content.closest('[comment_id], [mid]');
+      if (!container) return null;
+      if (target === container || container.contains(target)) return content;
+      return null;
+    };
     const user = { id: null, name: null, type: 'account' };
     // 用户链接
     ; (function (userlink) {
@@ -7494,8 +7528,9 @@
       // 自动载入新内容
       observer.dom.add(function watchNewFeedTip() {
         const tip = document.querySelector('#home_new_feed_tip');
+        if (!tip) return;
         // 微博自己把提示的状态和数量写在了提示横幅那个对象上
-        const $tip = tip && browserInfo.name === 'Firefox' ? tip.wrappedJSObject : tip;
+        const $tip = tip && browserInfo.name === 'Firefox' && tip.wrappedJSObject || tip;
         // status 不是 followHot 而且 count > 0 就说明有新消息
         if (!$tip || $tip.status === 'followHot') return;
         if (!$tip.count) return;
@@ -10065,7 +10100,6 @@
     button.appendChild(content);
     button.addEventListener('click', event => {
       if (!event.isTrusted) return;
-      if (event.buttons !== 1) return;
       const group = clean[id];
       Object.keys(group).forEach(key => {
         const item = group[key];
@@ -12776,7 +12810,9 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       en: 'Apply Custom CSS {{i}}||{{css}}',
     },
     userCssDetail: {
-      cn: '错误配置的自定义样式可能导致您的网页显示不正常，使用来源不明的 CSS 代码可能危害您的隐私安全。建议您仅添加您信任的 CSS 样式。如果您使用的样式导致设置窗口无法正常显示，您可以在猴子的菜单中找到禁用自定义 CSS 的选项。',
+      cn: '错误配置的自定义样式可能导致您的网页显示不正常，使用来源不明的 CSS 代码可能危害您的隐私安全。建议您仅添加您信任的 CSS 样式。如果您使用的样式导致设置窗口无法正常显示，' + (env.name === 'WebExtension' ? '您可以在标签页上右键找到禁用功能' : '您可以在“猴子”扩展的菜单中找到禁用功能') + '。',
+      tw: '錯誤設定的自訂式樣可導致您的網頁不能正常顯示，使用來源不明的 CSS 程式碼可能威脅您的隱私安全。建議您僅添加您信任的 CSS 式樣。如果您使用的式樣導致設定方框無法正常顯示，' + (env.name === 'WebExtension' ? '您可以在索引標籤上按右鍵找到停用功能' : '您可以在「猴子」擴展的功能列中找到停用功能') + '。',
+      en: 'Misconfigured custom CSS may make your web page being rendered incorrectly. Using CSS from untrusted source may harm your privacy. Make sure only adding CSS from you trusted source. In case custom CSS breaks this setting dialog, ' + (env.name === 'WebExtension' ? 'you may disable it from context menu of browser tab' : 'you may disable it from the menu item in "monkey" extension') + '.',
     },
     disableUserCss: {
       cn: '禁用自定义 CSS 样式',
@@ -12785,6 +12821,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
     },
     disableUserCssText: {
       cn: '已禁用自定义 CSS 样式。如果您配置的自定义 CSS 样式导致界面出现任何问题，您可以在设置中选择启用后，删除导致问题的规则。',
+      tw: '已停用自訂 CSS 式樣。如果您設定的自訂 CSS 式樣導致介面出現任何問題，您可以在這定中選擇啟用後，刪除導致問題的規則。',
+      en: 'Custom CSS had been disabled. In case any custom CSS break the webpage, you may enable and then edit it in the setting dialog.',
     },
   });
 
@@ -12820,14 +12858,16 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         // 我们添加一个可以禁用这个功能的方式以防有用户把设置对话框给隐藏了或者弄乱了改不回去
         externalMenu.add({
           title: i18n.disableUserCss,
-          callback: () => {
+          callback: async () => {
             this.setConfig(false);
-            ui.alert({
+            style.textContent = '';
+            await ui.alert({
               id: 'yawf-disable-user-css',
               icon: 'succ',
               title: i18n.disableUserCss,
               text: i18n.disableUserCssText,
             });
+            location.reload();
           },
         });
       },
@@ -14954,10 +14994,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
         const blob = new Blob([text], { type: 'application/json' });
         const username = init.page.$CONFIG.nick;
         const date = new Date();
-        const year = date.getFullYear() + '';
-        const month = ('0' + date.getMonth()).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-        const dateStr = year + month + day;
+        const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
         const filename = download.filename(`${username}-${i18n.configFilename}-${dateStr}.json`);
         download.blob({ blob, filename });
       });
@@ -15114,10 +15151,10 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       en: 'Yet Another Weibo Filter (YAWF) Updated',
     },
     importV3SuccessText: {
-      cn: 'Yet Another Weibo Filter (药方) 已升级至 4.0 版。为使您获得更好的使用效果，这版脚本经过完全重写。由于这一版改动较大，少数功能（如正则表达式）和之前不尽相同。脚本已从旧版导入设置，但我们仍建议您打开设置复查一下。',
-      hk: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為使您獲得更好的使用效果，這版腳本經過完全重做。由於這一版改動較大，少數功能（如正則表達式）和之前不盡相同。腳本已從舊版導入設置，但我們仍建議您打開設定以複查。',
-      tw: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為使您獲得更好的使用效果，這版腳本經過完全重做。由於這一版改動較大，少數功能（如正規表示式）和之前不盡相同。腳本已從舊版導入設置，但我們仍建議您打開設定以複查。',
-      en: 'Yet Another Weibo Filter (YAWF) The script had been upgraded to version 4.0. For better user experience, the script is completely rewritten. Some features (e.g. regexp matching) is slightly different from previous version. Most settings are imported from old version. And you are still welcomed to check out the setting panel.',
+      cn: 'Yet Another Weibo Filter (药方) 已升级至 4.0 版。为使您获得更好的使用效果，这版脚本经过完全重写。由于这一版改动较大，少数功能（如正则表达式）和之前不尽相同。脚本已从旧版导入设置，但我们仍建议您打开设置复查一下。如果您使用 Firefox 浏览器，现在还可选择药方扩展版，在扩展网站（AMO）搜索 YAWF 即可找到。',
+      hk: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為使您獲得更好的使用效果，這版腳本經過完全重做。由於這一版改動較大，少數功能（如正則表達式）和之前不盡相同。腳本已從舊版導入設置，但我們仍建議您打開設定以複查。如果您使用  Firefox 瀏覽器，現在還可選擇藥方擴展版，在擴展網站（AMO）搜尋 YAWF 即可找到。',
+      tw: 'Yet Another Weibo Filter (藥方) 已升級至 4.0 版。為使您獲得更好的使用效果，這版腳本經過完全重做。由於這一版改動較大，少數功能（如正規表示式）和之前不盡相同。腳本已從舊版導入設置，但我們仍建議您打開設定以複查。如果您使用  Firefox 瀏覽器，現在還可選擇藥方擴展版，在擴展網站（AMO）搜尋 YAWF 即可找到。',
+      en: 'Yet Another Weibo Filter (YAWF) The script had been upgraded to version 4.0. For better user experience, the script is completely rewritten. Some features (e.g. regexp matching) is slightly different from previous version. Most settings are imported from old version. And you are still welcomed to check out the setting panel. Firefox users may try our new extension version by searching YAWF on AMO.',
     },
   });
 
@@ -15209,8 +15246,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
             lastList.setConfig({ timestamp, list: newList });
             lastChange.setConfig(null);
           } catch (followException) {
-            alert(followException);
-            console.log(followException);
+            util.debug('Failed to import following info.', followException);
           }
 
           // 导入成功
