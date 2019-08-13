@@ -1,23 +1,173 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="zh-Hans">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-  <title>Yet Another Weibo Filter 看真正想看的微博</title>
-  <link rel="canonical" href="https://tiansh.github.io/yawf/">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <title>药方 - Yet Another Weibo Filter</title>
+  <meta name="keywords" content="YAWF, Yet Another Weibo Filter, 药方, Weibo, Sina Weibo, 微博, 新浪微博, 过滤, Filter, 筛选" />
+  <meta name="description" content="药方 (Yet Another Weibo Filter) 用户脚本，新浪微博根据关键词、作者、话题、来源等过滤微博，清理版面，以及其他改造功能。" />
+  <link rel="icon" href="https://tiansh.github.io/yawf/yawf.ico" />
+  <style>
+    @font-face { font-family: "yawf-iconfont"; font-style: normal; font-weight: normal; src: url("data:image/woff;base64,d09GRk9UVE8AAAPIAAoAAAAABbQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAAA9AAAANUAAADot8EQFkZGVE0AAAHMAAAAGgAAABxtAw0mT1MvMgAAAegAAABJAAAAYFmdYldjbWFwAAACNAAAADgAAAFCAA0DAGhlYWQAAAJsAAAAMAAAADYD5a1oaGhlYQAAApwAAAAdAAAAJAaAA4BobXR4AAACvAAAAAgAAAAICAAAd21heHAAAALEAAAABgAAAAYAAlAAbmFtZQAAAswAAADkAAAB1Hh5OPRwb3N0AAADsAAAABYAAAAg/4YAM3icVY2xagJBFADfO+9O1GNNJBcLFwWxPLUXAumvDekPQUmjTYjYCNbP0sLO+Ak2NsLWfkN+ZN/ebiTaBG6qqWYQfB8QUSyzxaT/MZ7PJvPZJ6AHCC/c8liWuOlvImxXofL1PiT6l6isa7aZt00SSFjVJcCDhPWjBCHhpwHePSGgVQgXLzdG4CF230hxqlApc1El9ZwP+HgdhMqtYk7NxaVlkVdMEn+T3bkeuY7dE3HH7rgX8PD3NT7oc6gzfXJT0pk9kT0HIt8+UbzYm4RCiqp/hZJWXgAAAHicY2BgYGQAgjO2i86D6AtJW7VhNABKVQagAAB4nGNgZmFg/MLAysDBNJPpDAMDQz+EZnzNYMzIycDAxMAGJKGAkQEJBKS5pjA4MEQyRDLr/NdhiGGawdCMUAPkKQAhIwBYTwumAAAAeJxjYGBgZoBgGQZGBhCwAfIYwXwWBgUgzQKEIH7k//8Q8v8KqEoGRjYGGJP6gGYGUxcAAJgrBwx4nGNgZGBgAOK+F//94vltvjJwszCAwIWkrdpwuvx/LXMX0wwgl4OBCSQKAFMCC7x4nGNgZGBgmvG/liGGhQEEmLsYGBlQARMAU6MDCAAAAAQAAAAEAAB3AABQAAACAAB4nJWPwWoCMRCGv+gqihV6KB7EQ85ClmTxJL12n0C8i+zKXjawCuKLeOn79EH6BH2ETnSglFJoA0m+mf+fzAR44IohLcOUhXKPEc/KfZa8KmfieVceMDEj5SFT48VpsrFk5reqxD0epfrOfTa8KGfieVMeMONDecjcPHFhx5kaR8OeSCuczhNcdufaNfvY1rGV8If+JZWaSnfHgQpLQY6Xey379yZ3PbASLYjfSZ2/xZTydBm7Q2WL3Nu1/TaOxGHlgneFD+L9+y+2MlzHUXxJT63TmGyr7tjE1obc/+O1T5RwTOJ4nGNgZgCD/80MRkCKkQENAAAoVQG5AAA=") format("woff"); }
+    .yawf-iconfont { font-family: "yawf-iconfont"; }
+
+    body { margin: 0; padding: 0; font-size: 16px; background: #f7f7f7; color: black; line-height: 20px; }
+    a { color: #c74200; }
+    .extension-tip { display: none; width: 100%; text-align: center; background: #333; background: #d4552f; color: white; text-shadow: 0 0 2px #c36043; font-size: 120%; font-weight: 700; margin-bottom: 10px; line-height: 30px; }
+    .extension-tip a { color: white; text-decoration: none; display: block; padding: 10px; }
+    @-moz-document url-prefix() { .extension-tip { display: block; } }
+    .hentry { width: 960px; margin: 0 auto 40px; }
+    @media screen and (max-width: 1000px) { .hentry { width: calc(100% - 40px); } }
+    header { height: 100px; padding-left: 120px; position: relative; }
+    #icon { width: 96px; height: 96px; padding: 2px; position: absolute; top: 0; left: 0; }
+    h1 { font-size: 180%; line-height: 60px; margin: 0; height: 60px; padding: 10px 0 0; }
+    p { margin: 10px 0 0; }
+    .subtitle { height: 20px; line-height: 20px; padding: 0 0 10px; }
+    .description { width: 100%; padding: 0 10px; margin-top: 20px; }
+    nav { height: 170px; margin-top: 20px; margin-bottom: -170px; width: 280px; padding: 0 10px; }
+    @media screen and (max-width: 800px) { nav { width: 180px; } }
+    nav a { width: 100%; background: #ccc; color: black; display: block; line-height: 30px; height: 30px; margin-top: 5px; text-align: center; text-decoration: none; }
+    nav a.install { height: 60px; line-height: 60px; font-size: 180%; color: white; background: #e2510a; margin-top: 0; margin-bottom: 10px; font-weight: 700; }
+    nav a:hover, nav a.install:hover { background: #eb5911; color: white; }
+    .entry-content { display: contents; }
+    h2 { font-size: 140%; line-height: 40px; margin: 10px 0 0; height: 40px; }
+    .feature-list { margin-left: 300px; }
+    @media screen and (max-width: 800px) { .feature-list { margin-left: 200px; } }
+    .feature-list ul { padding: 0 0 0 10px; margin: 0; list-style: none; }
+    .feature-list li { margin: 0; padding: 0 0 0 5px; }
+    .feature-list li::before { content: "\2714"; margin-right: 5px; }
+    .browser { border-bottom: 1px solid #ccc; padding: 0 0 10px; }
+    .firefox, .chrome { padding-left: 80px; min-height: 80px; position: relative; }
+    .browser-icon { position: absolute; display: block; width: 64px; height: 64px; padding: 3px; left: 0; top: calc(50% - 40px); }
+    .screenshots { --screenshot-size: 320px; }
+    .screenshot-wrap { height: auto; width: 100%; margin: 10px 0; position: relative; overflow: hidden; padding: 0 10px; }
+    .screenshot-height, .screenshot-width { overflow: scroll; visibility: hidden; }
+    .screenshot-height::before, .screenshot-width::before { content: " "; display: block; width: var(--screenshot-size); height: var(--screenshot-size); }
+    .screenshot-square { width: 100%; height: 0; padding: 0 0 100%; position: absolute; top: 0; left: 0; }
+    .screenshot-list { left: 0; top: 0; bottom: 0; transform: rotate(90deg) scaleY(-1); transform-origin: left top; position: absolute; overflow: hidden auto; }
+    .screenshot-list-inner { display: block; transform: rotate(-90deg) scaleX(-1); transform-origin: left top; position: absolute; top: 0; left: 0; }
+    .screenshot-list ul { padding: 0; margin: 0; list-style: none; display: flex; flex-wrap: nowrap; }
+    .screenshot-list li:not(:last-child) { margin-right: 10px; }
+    .screenshot-list img { max-height: var(--screenshot-size); float: left; }
+  </style>
 </head>
-<body>
-  <script>
-    var lang = 'zh-cn';
-    if (navigator.language === 'zh-HK') lang = 'zh-hk';
-    if (navigator.language === 'zh-TW') lang = 'zh-tw';
-    if (navigator.language.match(/en(-.+)?/)) lang = 'en';
-    location.href = 'https://tiansh.github.io/yawf/' + lang + '.html';
-  </script>
-  Language: <br />
-  <a href="zh-cn.html">中文(简体)</a><br />
-  <a href="zh-tw.html">中文(臺灣)</a><br />
-  <a href="zh-hk.html">中文(香港)</a><br />
-  <a href="en.html">English</a><br />
+<body itemscope itemtype="http://schema.org/SoftwareApplication">
+  <div class="extension-tip">
+    <a href="https://addons.mozilla.org/zh-CN/firefox/addon/yawf/?src=external-script-home">
+      如果您使用火狐浏览器，您可以安装扩展版以获得更好的效果<br />
+      点此进入 AMO 获取药方（YAWF）的扩展版
+    </a>
+  </div>
+  <article class="hentry">
+    <header>
+      <div id="icon">
+        <svg id="yawf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+          <path fill="#D92D3A" d="M12,54c11.687-0.576,21.197-0.143,24.75,7.5c3.398,5.701,0.191,13.075-1.5,18c3.936,0.705,6.164,2.012,8.25,4.5c-10.499,0-21.001,0-31.5,0C12,74.001,12,63.999,12,54z" />
+          <path fill="#E98D49" d="M71.366,28.911c-11.204-13.26-27.73-18.315-42.984-14.853h-0.006c-3.53,0.807-5.78,4.513-5.024,8.274c0.752,3.764,4.224,6.169,7.753,5.366c10.852-2.46,22.595,1.138,30.56,10.558c7.957,9.419,10.119,22.266,6.711,33.528l0.002,0.002c-1.111,3.669,0.769,7.593,4.21,8.779c3.427,1.185,7.111-0.819,8.223-4.479c0-0.007,0-0.021,0.002-0.027C85.595,60.217,82.574,42.158,71.366,28.911M54.161,45.486c-5.453-6.458-13.505-8.911-20.938-7.224c-3.038,0.691-4.974,3.883-4.322,7.128c0.65,3.232,3.637,5.309,6.668,4.605v0.007c3.633-0.82,7.573,0.376,10.239,3.527c2.669,3.158,3.386,7.46,2.241,11.235h0.006c-0.952,3.151,0.664,6.539,3.618,7.56c2.955,1.01,6.125-0.71,7.079-3.869C61.086,60.739,59.625,51.943,54.161,45.486" />
+        </svg>
+      </div>
+      <h1 itemprop="name" class="entry-title">YAWF 药方</h1>
+      <div class="subtitle">
+        Yet Another Weibo Filter
+        <span itemprop="softwareVersion" id="version"><!-- VER -->4.0.35<!-- /VER --></span>
+      </div>
+    </header>
+    <div class="description">
+      <p itemprop="description" class="entry-summary">新浪微博根据关键词、作者、话题、来源等过滤微博，清理版面，以及其他改造功能</p>
+    </div>
+    <nav>
+      <a itemprop="installUrl" class="install" href="./Yet_Another_Weibo_Filter.user.js">安装脚本</a>
+      <a class="view-project" target="_blank" href="https://github.com/tiansh/yawf/">查阅项目</a>
+      <a class="github-issue" target="_blank" href="https://github.com/tiansh/yawf/issues">问题反馈</a>
+      <a class="author-weibo" target="_blank" href="https://weibo.com/yawfscript?is_all=1">联系作者</a>
+    </nav>
+    <div class="entry-content">
+      <div class="feature-list">
+        <div itemprop="featureList" class="in">
+          <ul>
+            <li>跳过微博的兴趣导引，避免误关注大量“垃圾帐号”（该功能默认开启，无设置项）；</li>
+            <li>根据关键字、作者、来源等隐藏、折叠或高亮微博；使用拖拽轻松定义过滤规则；</li>
+            <li>屏蔽推广、粉丝头条、投票、好友赞过、抢红包、爱问医生等各种微博；</li>
+            <li>清理版面上的各种模块、图标、小红点，去广告；过滤热门话题；</li>
+            <li>合并左右边栏的双栏模式，加宽微博宽度和加大微博字号，自定义字体；</li>
+            <li>去除微博间的空白，调整微博版式，重新安排微博下方按钮顺序</li>
+            <li>自动检查您的关注列表并告诉您发生的变化，帮您保持关注列表的干净整洁；</li>
+            <li>设置网页模板，自定义半透明背景色，深色导航栏，经典导航栏布局；</li>
+            <li>正常大小的微博缩略图尺寸，原生视频播放器；</li>
+            <li>以及更多功能……</li>
+          </ul>
+        </div>
+      </div>
+      <div class="install-guide">
+        <h2>如何安装</h2>
+        <div class="browser firefox">
+          <a href="https://www.mozilla.org/en-US/firefox/all/" target="_blank" class="browser-icon"><img src="./img/browser/firefox.svg" alt="Mozilla Firefox" width="64" height="64" /></a>
+          <p>
+            使用 Mozilla Firefox 浏览器的用户，推荐您<a href="https://addons.mozilla.org/zh-CN/firefox/addon/yawf/?src=external-script-home" target="_blank">安装扩展版</a>以获得更好的效果。扩展版包括一些脚本版无法提供的功能，部分功能效果也会更好。<br />
+            如需安装脚本版，您可以安装 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/greasemonkey/" target="_blank">Greasemonkey 油猴子</a> 、 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/violentmonkey/" target="_blank">Violentmonkey 暴力猴</a> 或 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/tampermonkey/" target="_blank">Tampermonkey</a> 任一以使用脚本。<br />
+            如果您已经安装了以上附加组件，<a href="./Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>，在弹出的页面中确认脚本安装。
+          </p>
+        </div>
+        <div class="browser chrome">
+          <a href="https://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html?standalone=1" target="_blank" class="browser-icon"><img src="./img/browser/chrome.svg" alt="Google Chrome" width="64" height="64" /></a>
+          <p>
+            使用 Google Chrome 的用户，您可以安裝 <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=zh-CN" target="_blank">Tampermonkey 扩展程序</a> 或 <a href="https://chrome.google.com/webstore/detail/violent-monkey/jinjaccalgkegednnccohejagnlnfdag?hl=zh-CN" target="_blank">暴力猴 扩展程序</a> 运行本脚本。<br />
+            如果您已经安装了以上任一扩展程序，<a href="./Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>，在打开的页面中确认脚本安装。<br />
+            脚本从未推出过 Chrome 扩展版本， Chrome 网上应用商店或其他来源的类似扩展与本脚本作者无关。这些扩展可能存在恶意行为，请多加小心。
+          </p>
+        </div>
+        <div class="browser other">
+          <p>如果您使用的是其他浏览器，您可以在您的浏览器的扩展中搜索 Greasemonkey 、 Tampermonkey 或 Violentmonkey （暴力猴）。安装对应的“猴子”后，<a href="./Yet_Another_Weibo_Filter.user.js">点此安装本脚本</a>。</p>
+          <p>脚本大部分功能应当可以在兼容 Chrome 扩展的浏览器配合 TM 或 VM ，兼容旧版 Firefox 扩展的浏览器配合 GM3，以及傲游浏览器配合 VM 等平台使用。但作者没有做过测试，且不会保证脚本今后的支持。使用时可能会遇到各类问题。</p>
+        </div>
+        <div class="monkey-clairify">
+          <p>
+            上述安装教程列出的浏览器“猴子”插件均为第三方的软件，与脚本作者没有任何关系。介绍这些插件仅为方便您安装和使用，脚本作者无法保证这些扩展的安全性与适用性，且不对这些插件的行为负责。每个扩展有自己的使用协议和隐私条款，安装前请分别确认。如果您不希望安装这些扩展，您还可以考虑安装 <a href="https://addons.mozilla.org/zh-CN/firefox/addon/yawf/?src=external-script-home" target="_blank">Firefox 扩展版</a>。
+          </p>
+        </div>
+      </div>
+      <div class="using-guide">
+        <h2>如何使用</h2>
+        <p>安装成功后，到新浪微博的页面点击右上角的漏斗图标 <span class="yawf-iconfont">Y</span> 即可进入脚本设置。您也可以在右上角的设置菜单中找到“药方设置”菜单项，点击进入脚本设置。</p>
+        <p>您可以在“微博过滤”选项卡根据需要调整展示哪些微博，此外可以切换到“微博过滤 - 更多”隐藏掉各类您不想看到的微博。“界面清理”、“版面展示”、“微博展示”三个选项卡提供了对页面绝大多数元素的清理和自定义功能。</p>
+        <p>在浏览过程中，如果遇到某些您不喜欢的内容，选中并拖拽到右上角的拖放区域，即可快速创建规则，以免您今后再看到对应的内容。</p>
+      </div>
+      <div class="screenshots">
+        <h2>脚本截图</h2>
+        <div class="screenshot-wrap">
+          <div class="screenshot-height"></div>
+          <div class="screenshot-square">
+            <div class="screenshot-list">
+              <div class="screenshot-width"></div>
+              <div class="screenshot-list-inner">
+                <ul>
+                  <li><img itemprop="screenshot" src="./img/screenshot/with-script.png" alt="安装后的效果图（具体效果因设置而异）" /></li>
+                  <li><img itemprop="screenshot" src="./img/screenshot/setting-filter.png" alt="微博过滤设置" /></li>
+                  <li><img itemprop="screenshot" src="./img/screenshot/setting-filter-more.png" alt="按各种类型过滤微博的设置" /></li>
+                  <li><img itemprop="screenshot" src="./img/screenshot/following-change.png" alt="关注列表变化时的提示功能" /></li>
+                  <li><img itemprop="screenshot" src="./img/screenshot/setting-about.png" alt="脚本的关于页" /></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="privacy-notice">
+        <h2>隐私与安全</h2>
+        <ul>
+          <li>脚本不会收集您的任何信息；脚本在使用过程中会根据需要访问微博服务器上的相关资源，此外不会进行其他网络访问；</li>
+          <li>脚本不会以您的名义发布微博，不会自动操作关注或取消关注，不会操作点赞或转发，也不会加入相关功能；</li>
+        </ul>
+      </div>
+      <div class="about">
+        <h2>关于</h2>
+        <p>
+          药方 (YAWF) 4.x 版使用 <a rel="license" href="https://opensource.org/licenses/MPL-2.0" target="_blank">MPL-2.0</a> 协议授权。<br />
+          脚本作者 <a href="https://weibo.com/tsh90?is_all=1" target="_blank">@tsh90</a>，同时感谢其他<a href="https://github.com/tiansh/yawf/graphs/contributors" target="_blank">为脚本贡献代码的人</a>。您可以关注 <a href="https://weibo.com/yawfscript?is_all=1" target="_blank">@YAWF脚本</a> 了解最新的脚本更新和功能介绍，遇到任何使用上的问题，也欢迎私信或在微博中提到 <a href="https://weibo.com/yawfscript?is_all=1" target="_blank">@YAWF脚本</a> 询问。<br />
+          您也可以访问<a href="https://github.com/tiansh/yawf" target="_blank">GitHub项目主页</a>获取脚本的源代码和历史版本，查看议题追踪器并反馈遇到的问题。<br />
+        </p>
+      </div>
+    </div>
+  </article>
 </body>
 </html>
