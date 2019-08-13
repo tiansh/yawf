@@ -40,12 +40,7 @@ const updateMetaFile = function (targetFile, meta) {
       Promise.all([
         writeFile(`${outputFolder}/${scriptName}.user.js`, script),
         writeFile(`${outputFolder}/${scriptName}.meta.js`, meta.full),
-        ...([
-          'en',
-          'zh-cn',
-          'zh-hk',
-          'zh-tw',
-        ].map(lang => updateHTMLVersion(`${outputFolder}/${lang}.html`, version)))
+        updateHTMLVersion(`${outputFolder}/index.html`, version),
       ]).then(resolve).catch(reject);
     }).catch(reject);
   }).catch(error => { console.error(error); process.exit(1); });
