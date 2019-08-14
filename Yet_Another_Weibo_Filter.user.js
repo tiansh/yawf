@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.35
+// @version           4.0.35.1
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -12832,6 +12832,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       version: 1,
       parent: userCss.userCss,
       template: () => i18n.userCss,
+      initial: true,
       ref: {
         css: { type: 'text' },
         i: { type: 'bubble', icon: 'warn', template: () => i18n.userCssDetail },
@@ -13204,7 +13205,7 @@ body .WB_tab_a .tab_box::after { order: 1; flex: 1 0 0; height: auto; }
 body .WB_tab_a .tab_box_a .fr_box { flex: 1 0 0; }
 body .WB_tab_a .tab_box_a::after { content: none; }
 body .WB_feed_v3 .WB_face .opt { right: calc(132px - var(--yawf-feed-width)); }
-body .W_gotop { margin-left: calc(calc(var(--yawf-feed-width) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
+body a.W_gotop.W_gotop { margin-left: calc(calc(var(--yawf-feed-width) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
 body .WB_timeline { margin-left: calc(calc(calc(20px + var(--yawf-feed-width)) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
 html .WB_artical .WB_feed_repeat .WB_feed_publish, html .WB_artical .WB_feed_repeat .repeat_list { padding: 0 20px; }
 html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_minitab { margin: 0 16px 10px; }
@@ -14586,7 +14587,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.tool.color_override.transparency2', 'layout_theme_color.transparency2');
       rule('weibo.tool.color_override.color3', 'layout_theme_color.color3');
       rule('weibo.tool.color_override.transparency3', 'layout_theme_color.transparency3');
-      rule('weibo.tool.userstyle', 'custom_css');
+      rule('weibo.tool.userstyle', 'custom_css.css');
       // 微博展示
       rule('weibo.tool.no_weibo_space', 'feed_no_space');
       rule('weibo.tool.from_in_bottom', 'feed_source_at_bottom');
@@ -14994,7 +14995,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
         const blob = new Blob([text], { type: 'application/json' });
         const username = init.page.$CONFIG.nick;
         const date = new Date();
-        const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
+        const dateStr = date.toISOString().replace(/-|T.*/g, '');
         const filename = download.filename(`${username}-${i18n.configFilename}-${dateStr}.json`);
         download.blob({ blob, filename });
       });
