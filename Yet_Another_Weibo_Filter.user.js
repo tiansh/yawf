@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.35.1
+// @version           4.0.36
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -2252,7 +2252,7 @@
     if (!$CONFIG) return false;
     if (!$CONFIG.uid) return false;
     if (!$CONFIG.nick) return false;
-    if (!Number($CONFIG.islogin)) return false;
+    if ($CONFIG.islogin === '0') return false;
     return true;
   };
 
@@ -12939,7 +12939,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
     template: () => i18n.feedFoldSpace,
     acss: `
 .WB_feed.WB_feed { border-radius: 3px; box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); }
-.WB_feed.WB_feed .WB_cardwrap { border-radius: 0; box-shadow: 0; border-top: 1px solid rgba(0, 0, 0, 0.3); margin: -1px 0 1px; }
+.WB_feed.WB_feed .WB_cardwrap { border-radius: 0; box-shadow: none; border-top: 1px solid rgba(0, 0, 0, 0.3); margin: -1px 0 1px; }
 .WB_feed .WB_feed_handle { height: 20px; margin-top: 20px; display: block; position: relative; }
 .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
 .WB_feed .WB_feed_handle .WB_handle { float: right; margin-right: 10px; height: 20px; padding: 0; position: relative; top: -20px; }
@@ -15484,6 +15484,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   const yawf = window.yawf;
   const util = yawf.util;
   const init = yawf.init;
+  const observer = yawf.observer;
 
   const i18n = util.i18n;
 
@@ -15568,6 +15569,14 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
     };
     if (['search', 'ttarticle'].includes(init.page.type())) return;
     icon(); menuitem();
+  });
+
+  init.onLoad(() => {
+    observer.dom.add(function fixNavBarUS() {
+      // 统一海外版导航栏
+      const navUs = document.querySelector('.WB_global_nav_us');
+      if (navUs) navUs.classList.remove('WB_global_nav_us');
+    });
   });
 
 }());
