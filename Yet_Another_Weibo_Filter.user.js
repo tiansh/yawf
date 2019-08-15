@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.36
+// @version           4.0.37
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -10347,7 +10347,7 @@
     return supported;
   }()) {
     clean.CleanRule('hot_search', () => i18n.cleanNavHotSearch, 1, {
-      init: function () {
+      ainit: function () {
         document.documentElement.addEventListener('DOMNodeInserted', event => {
           const script = event.target;
           if (!script || (script.tagName || '').toLowerCase() !== 'script') return;
@@ -13385,7 +13385,7 @@ ${[0, 1, 2, 3, 4].map(index => `
         initial: 100,
       },
     },
-    init() {
+    ainit() {
       const rule = this;
       observer.feed.onAfter(function (/** @type {Element} */feed) {
         const container = feed.closest('[id^="Pl_Official_MyProfileFeed__"]');
@@ -13818,6 +13818,10 @@ ${[0, 1, 2, 3, 4].map(index => `
       imgs = Array.from(container.querySelectorAll('.WB_media_wrap .WB_pic img'));
       img = container.querySelector('.media_show_box img') ||
         container.querySelector('.current img');
+      if (ref.matches('[action-type="widget_photoview"]')) {
+        img = document.createElement('image');
+        img.src = 'https://wx1.sinaimg.cn/large/' + new URLSearchParams(ref.getAttribute('action-data')).get('pid') + '.jpg';
+      }
       // fallthrough
     } else if (ref.matches('.WB_expand_media .tab_feed_a *')) {
       // 已经展开详情的评论配图
@@ -13897,7 +13901,7 @@ ${[0, 1, 2, 3, 4].map(index => `
         let images, current;
         const update = function () {
           ({ images, current } = getImagesInfo(viewLargeLink));
-          viewOriginalLink.href = images[current];
+          viewOriginalLink.href = images[current - 1];
         };
         viewOriginalLink.addEventListener('click', event => {
           if (viewType === 'page') {
@@ -14541,9 +14545,8 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.layoutHideOtherTemplate', 'clean_other_template');
       rule('weibo.layoutHideOtherHomeTip', 'clean_other_home_tip');
       rule('weibo.layoutHideOtherFooter', 'clean_other_footer');
-      rule('weibo.layoutHideOtherWbIm', 'clean_other_im');
-      rule('weibo.layoutHideOtherIM', 'clean_other_im_news');
-      rule('weibo.layoutHideOtherIMNews', 'clean_other_back_top');
+      rule('weibo.layoutHideOtherIM', 'clean_other_im');
+      rule('weibo.layoutHideOtherIMNews', 'clean_other_im_news');
       rule('weibo.layoutHideOtherTip', 'clean_other_tip');
       rule('weibo.layoutHideOtherRelatedWB', 'clean_other_related_feeds');
       rule('weibo.layoutHideOtherRelatedVideo', 'clean_other_related_video');
@@ -14814,7 +14817,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       clean('Footer', 'clean_other_footer');
       clean('FeedRecom', 'clean_other_related_feeds');
       clean('FeedRecom', 'clean_other_related_video');
-      clean('IMNews', 'clean_other_back_top');
+      clean('IMNews', 'clean_other_im_news');
     }
   }
 
