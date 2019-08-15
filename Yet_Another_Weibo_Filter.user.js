@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.37
+// @version           4.0.38
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -4618,7 +4618,8 @@
 [yawf-feed-display="fold"] { position: relative; }
 [yawf-feed-display="fold"] > * { display: none; }
 [yawf-feed-display="fold"]::before { text-align: center; padding: 10px 20px; display: block; opacity: 0.6; }
-.WB_feed_type[yawf-feed-display="fold"] .WB_feed_detail { display: block; max-height: 0; transition: max-height, padding 0.1s; overflow: hidden; padding: 0 20px; }
+.WB_feed_type[yawf-feed-display="fold"] .WB_feed_detail { display: none; }
+.WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail { display: block; max-height: 0; transition: max-height, padding 0.1s; overflow: hidden; padding: 0 20px; }
 .WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; padding: 0 20px 27px; }
 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_handle { display: none; }
 `);
@@ -5986,6 +5987,9 @@
   feedParser.isFeed = feed => isFeedElement(feed);
   feedParser.isSearchFeed = feed => isSearchFeedElement(feed);
   feedParser.isForward = feed => isForwardFeedElement(feed);
+
+  feedParser.mid = feed => feed.getAttribute('mid');
+  feedParser.omid = feed => feed.getAttribute('omid');
 
   // 评论内容
   commentParser.text = target => {
@@ -9545,6 +9549,145 @@
       name: () => i18n.feedWithLinkStock,
     },
   }));
+
+}());
+//#endregion
+//#region @require yaofang://content/rule/filter/more/toomany.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+  const observer = yawf.observer;
+  const feedParser = yawf.feed;
+  const init = yawf.init;
+
+  const more = yawf.rules.more;
+
+  const i18n = util.i18n;
+  i18n.otherFloodingTitle = {
+    cn: '刷屏',
+    tw: '洗版',
+    en: 'Flooding',
+  };
+
+  const flooding = more.flooding = {};
+  flooding.flooding = rule.Group({
+    parent: more.more,
+    template: () => i18n.otherFloodingTitle,
+  });
+
+  Object.assign(i18n, {
+    floodingFeedHide: { cn: '隐藏', tw: '隱藏', en: 'hidden' },
+    floodingFeedFold: { cn: '折叠', tw: '折疊', en: 'folded' },
+    floodingAuthor: {
+      cn: '相同作者|超过{{number}}条微博|时超出的{{action}}',
+      tw: '相同作者|超過{{number}}條微博|時超出的{{action}}',
+      en: 'Feeds by same author will | be {{action}} | when more than {{number}} seen',
+    },
+    floodingAuthorReason: {
+      cn: '刷屏',
+      tw: '洗版',
+      en: 'flooding',
+    },
+    floodingForward: {
+      cn: '相同微博的转发|超过{{number}}条|时超出的{{action}}',
+      tw: '相同微博的轉發|超過{{number}}條|時超出的{{action}}',
+      en: 'Feeds forwarded form same one will | be {{action}} | when more than {{number}} seen',
+    },
+    floodingForwardReason: {
+      cn: '频繁转发',
+      tw: '頻繁轉發',
+      en: 'forwarded frequently',
+    },
+  });
+
+  flooding.floodingAuthor = rule.Rule({
+    id: 'flooding_author',
+    version: 1,
+    parent: flooding.flooding,
+    template: () => i18n.floodingAuthor,
+    ref: {
+      number: {
+        type: 'range',
+        min: 1,
+        max: 20,
+        initial: 3,
+      },
+      action: {
+        type: 'select',
+        initial: 'hide',
+        select: [
+          { value: 'hide', text: () => i18n.floodingFeedHide },
+          { value: 'fold', text: () => i18n.floodingFeedFold },
+        ],
+      },
+    },
+    init() {
+      const rule = this;
+      /** @type {WeakMap<Element, string>} */
+      const parsed = new WeakMap();
+      observer.feed.filter(function floodingAuthor(feed) {
+        if (!rule.isEnabled()) return null;
+        // 如果是因为修改规则导致的重新计算，那么我们不再做一次处理
+        if (parsed.has(feed)) return null;
+        const me = init.page.$CONFIG.uid;
+        const [author] = feedParser.author.id(feed);
+        // 自己的微博发多少也不触发这个规则
+        if (String(me) === String(author)) return null;
+        parsed.set(feed, author);
+        const feeds = [...document.querySelectorAll('[mid]')];
+        const count = feeds.filter(feed => parsed.get(feed) === author).length;
+        if (count <= rule.ref.number.getConfig()) return null;
+        const result = rule.ref.action.getConfig();
+        const reason = i18n.floodingAuthorReason;
+        return { result, reason };
+      }, { priority: -1e6 });
+      this.addConfigListener(() => { observer.feed.rerun(); });
+    },
+  });
+
+  flooding.floodingForward = rule.Rule({
+    id: 'flooding_forward',
+    version: 1,
+    parent: flooding.flooding,
+    template: () => i18n.floodingForward,
+    ref: {
+      number: {
+        type: 'range',
+        min: 1,
+        max: 20,
+        initial: 5,
+      },
+      action: {
+        type: 'select',
+        initial: 'hide',
+        select: [
+          { value: 'hide', text: () => i18n.floodingFeedHide },
+          { value: 'fold', text: () => i18n.floodingFeedFold },
+        ],
+      },
+    },
+    init() {
+      const rule = this;
+      /** @type {WeakMap<Element, string>} */
+      const parsed = new WeakMap();
+      observer.feed.filter(function floodingAuthor(feed) {
+        if (!rule.isEnabled()) return null;
+        if (parsed.has(feed)) return null;
+        const omid = feedParser.omid(feed) || null;
+        parsed.set(feed, omid);
+        if (!omid) return null;
+        const feeds = [...document.querySelectorAll('[mid]')];
+        const count = feeds.filter(feed => parsed.get(feed) === omid).length;
+        if (count <= rule.ref.number.getConfig()) return null;
+        const result = rule.ref.action.getConfig();
+        const reason = i18n.floodingForwardReason;
+        return { result, reason };
+      }, { priority: -1e6 });
+      this.addConfigListener(() => { observer.feed.rerun(); });
+    },
+  });
 
 }());
 //#endregion
@@ -13158,10 +13301,11 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
     init() {
       const width = this.isEnabled() ? this.ref.width.getConfig() : 600;
       css.append(`
-:root { --yawf-feed-width: ${width}px; }
+:root { --yawf-feed-width: ${width}px; --yawf-left-padding: 0px; }
 .B_index, .B_discover, .B_message { --yawf-left-width: 150px; --yawf-right-width: 250px; }
 .B_page { --yawf-left-width: 0px; --yawf-right-width: 320px; }
-.B_index[yawf-merge-left], .B_message[yawf-merge-left] { --yawf-left-width: 0px; }
+.B_index[yawf-merge-left], .B_message[yawf-merge-left] { --yawf-left-width: 0px; --yawf-left-padding: 10px; }
+.B_artical { --yawf-feed-width: 1000px; --yawf-left-width: 0px; --yawf-right-width: 0px; }
 
 html .B_index .WB_frame,
 html .B_message .WB_frame,
@@ -13205,7 +13349,7 @@ body .WB_tab_a .tab_box::after { order: 1; flex: 1 0 0; height: auto; }
 body .WB_tab_a .tab_box_a .fr_box { flex: 1 0 0; }
 body .WB_tab_a .tab_box_a::after { content: none; }
 body .WB_feed_v3 .WB_face .opt { right: calc(132px - var(--yawf-feed-width)); }
-body a.W_gotop.W_gotop { margin-left: calc(calc(var(--yawf-feed-width) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
+body a.W_gotop.W_gotop { margin-left: calc(calc(calc(var(--yawf-feed-width) + var(--yawf-left-padding)) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
 body .WB_timeline { margin-left: calc(calc(calc(20px + var(--yawf-feed-width)) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
 html .WB_artical .WB_feed_repeat .WB_feed_publish, html .WB_artical .WB_feed_repeat .repeat_list { padding: 0 20px; }
 html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_minitab { margin: 0 16px 10px; }
@@ -14424,6 +14568,12 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.other.paid', 'filter_paid');
       rule('weibo.other.multi_topic', 'filter_multiple_topics_feed');
       rule('weibo.other.multi_topic.num', 'filter_multiple_topics_feed.num');
+      rule('weibo.other.same_account', 'flooding_author');
+      rule('weibo.other.same_account.number', 'flooding_author.number');
+      rule('weibo.other.same_account.action', 'flooding_author.number.action', action => ({ fold: 'fold', hidden: 'hide' }[action]));
+      rule('weibo.other.same_forward', 'flooding_forward');
+      rule('weibo.other.same_forward.number', 'flooding_forward.number');
+      rule('weibo.other.same_forward.action', 'flooding_forward.number.action', action => ({ fold: 'fold', hidden: 'hide' }[action]));
       // 评论过滤
       rule('weibo.other.comment_show_all', 'comment_layout_by_time');
       rule('weibo.other.fold_child_comment', 'comment_layout_hide_sub');
@@ -14469,7 +14619,6 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('weibo.layoutHideNavHotSearch', 'clean_nav_hot_search');
       rule('weibo.layoutHideNavNoticeNew', 'clean_nav_notice_new');
       rule('weibo.layoutHideNavNew', 'clean_nav_new');
-      rule('weibo.layoutHideNavHotTip', 'clean_left_level');
       rule('weibo.layoutHideLeftNewFeed', 'clean_left_new_feed');
       rule('weibo.layoutHideLeftHome', 'clean_left_home');
       rule('weibo.layoutHideLeftFav', 'clean_left_fav');
@@ -14760,6 +14909,8 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       rule('filterHot', 'filter_fans_top');
       rule('filterTaobao', 'filter_tb_tm_feed');
       rule('filterDeleted', 'filter_deleted_forward');
+      rule('filterFlood', 'weibo.other.same_account');
+      rule('maxFlood', 'weibo.other.same_account.number', Number);
       rule('showAllMsgNav', 'layout_left_messages');
       rule('showAllGroups', 'layout_side_show_all_groups');
       rule('noHomeMargins', 'layout_side_merge');
