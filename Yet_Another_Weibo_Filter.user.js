@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.38
+// @version           4.0.39
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -5301,6 +5301,7 @@
    * @return {boolean}
    */
   const contains = function (parent, child) {
+    if (!parent || !child) return false;
     if (!(child instanceof Node)) {
       const children = Array.from(child);
       return children.every(child => contains(parent, child));
@@ -5517,6 +5518,24 @@
       return null;
     };
     parsers.push(emotion);
+
+    /**
+     * 如果我们拿到一个作者或者原作者的链接，我们还可以拿到他的那些小图标
+     * @param {Element} node
+     */
+    const userIcons = function (node) {
+      const isSearch = isSearchFeedElement(feedContainer(node));
+      const items = [];
+      if (isSearch) {
+        const sibling = [...node.parentNode.children];
+        items.push(...sibling.filter(item => item.matches('a[title]')));
+      } else {
+        items.push(...node.parentNode.querySelectorAll('[title]'));
+      }
+      const icons = items.filter(item => item !== node && item.title.trim());
+      return icons.map(icon => `[${icon.title.trim()}]`);
+    };
+
     /**
      * @作者（文本✗，正则✓）
      * @param {Element} node
@@ -5524,7 +5543,9 @@
     const author = node => {
       if (!node.matches('.WB_detail > .WB_info > .W_fb[usercard]')) return null;
       if (!detail) return '';
-      return '@' + node.textContent.trim();
+      const name = '@' + node.textContent.trim();
+      const icons = userIcons(node);
+      return [name, ...icons].join(' ');
     };
     parsers.push(author);
     /**
@@ -5534,7 +5555,9 @@
     const original = node => {
       if (!node.matches('.WB_expand > .WB_info > .W_fb[usercard]')) return null;
       if (!detail) return '';
-      return node.textContent.trim().replace(/^@?/, '@');
+      const name = node.textContent.trim().replace(/^@?/, '@');
+      const icons = userIcons(node);
+      return [name, ...icons].join(' ');
     };
     parsers.push(original);
     /**
@@ -5829,9 +5852,10 @@
   mention.dom = (feed, { short = false, long = true } = {}) => {
     const contents = feedContentElements(feed, { short, long });
     if (!isSearchFeedElement(feed)) {
-      const domList = contents.map(content => content ? Array.from(content.querySelectorAll(
-        'a[href*="loc=at"][usercard*="name"]',
-      )) : []).reduce((x, y) => x.concat(y));
+      const domList = contents.map(content => {
+        if (!content) return [];
+        return Array.from(content.querySelectorAll('a[href*="loc=at"][usercard*="name"]'));
+      }).reduce((x, y) => x.concat(y));
       return domList;
     } else {
       const linkList = contents.map(content => (
@@ -7533,11 +7557,17 @@
       observer.dom.add(function watchNewFeedTip() {
         const tip = document.querySelector('#home_new_feed_tip');
         if (!tip) return;
+        // 如果不在第一页或者有特殊的过滤条件那么没法自动载入
+        const search = new URLSearchParams(location.search);
+        const cannotLoad = search.get('page') > 1 || ['is_ori', 'is_pic', 'is_video', 'is_music', 'is_search'].some(key => search.get(key));
+        if (cannotLoad) return;
         // 微博自己把提示的状态和数量写在了提示横幅那个对象上
         const $tip = tip && browserInfo.name === 'Firefox' && tip.wrappedJSObject || tip;
         // status 不是 followHot 而且 count > 0 就说明有新消息
         if (!$tip || $tip.status === 'followHot') return;
         if (!$tip.count) return;
+        // 如果超过 50 条他会自动重新加载，我们骗他一下
+        if ($tip.count > 50) $tip.count = 50;
         tip.click();
         if (tip.parentNode) tip.parentNode.removeChild(tip);
       });
@@ -9612,7 +9642,7 @@
         type: 'range',
         min: 1,
         max: 20,
-        initial: 3,
+        initial: 5,
       },
       action: {
         type: 'select',
@@ -9657,7 +9687,7 @@
         type: 'range',
         min: 1,
         max: 20,
-        initial: 5,
+        initial: 3,
       },
       action: {
         type: 'select',
@@ -10384,7 +10414,10 @@
     observer.dom.add(function () {
       const icons = Array.from(document.querySelectorAll('a > .W_icon_yystyle'));
       icons.forEach(function (icon) {
-        icon.parentNode.remove();
+        const link = icon.parentNode;
+        const replacement = document.createElement('span');
+        replacement.title = link.title;
+        link.parentNode.replaceChild(replacement, link);
       });
     });
     css.append('.W_icon_yystyle, .W_icon_yy { display: none !important; }');
@@ -11356,7 +11389,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 .WB_global_nav .gn_nav_list li .gn_name .S_txt1 { height: 26px; display: inline-block; width: 4em; }
 `);
         } else {
-          css.append('.WB_global_nav .gn_nav_list li.gn_name.S_txt1 { display: none; }');
+          css.append('.WB_global_nav .gn_nav_list li a.gn_name .S_txt1 { display: none; }');
         }
       }
       hideNavName.remove();
@@ -12673,14 +12706,15 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
           if (!showChatWindow) return;
           const target = event.target;
           if (!(target instanceof Element)) return;
-          const chatTo = target.closest('[action-type="webim.conversation"]');
+          const chatTo = target.closest('a[href*="api.weibo.com/chat"]');
           if (!chatTo) return;
-          const data = chatTo.getAttribute('action-data');
-          const uid = Number(new URLSearchParams(data).get('uid'));
+          const data = new URL(chatTo.hash.slice(1), location.href);
+          const uid = Number(data.searchParams.get('to_uid'));
           if (!uid) return;
           showChatWindow();
           chatToUid(uid);
           event.stopPropagation();
+          event.preventDefault();
         }, true);
 
       },
@@ -15480,6 +15514,8 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   const yawf = window.yawf;
   const util = yawf.util;
   const rule = yawf.rule;
+  const observer = yawf.observer;
+  const feedParser = yawf.feed;
 
   const about = yawf.rules.about;
 
@@ -15509,6 +15545,27 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
     template: () => i18n.debugText,
     ainit: function () {
       util.debug.setEnabled(this.isEnabled());
+    },
+  });
+
+  i18n.debugRegex = {
+    cn: '在控制台打印每条微博用于正则表达式匹配时识别的文字',
+    hk: '在控制台列印每條微博用於正則表達式匹配時識別的文字',
+    tw: '在控制台列印每條微博用於正規表示式匹配時識別的文字',
+    en: 'Show recognized texts for regex rules of each feeds in console',
+  };
+
+  debug.regex = rule.Rule({
+    id: 'script_debug_regex',
+    version: 1,
+    parent: debug.debug,
+    template: () => i18n.debugRegex,
+    ainit: function () {
+      observer.feed.onBefore(function (feed) {
+        const text = feedParser.text.detail(feed);
+        const json = JSON.stringify(text).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+        console.log('%o\n%o', feed, json);
+      });
     },
   });
 
