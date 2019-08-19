@@ -531,31 +531,31 @@
   const util = yawf.util = yawf.util || {};
   const keyboard = util.keyboard = {};
 
-  const CTRL = 2 ** 32, SHIFT = CTRL * 2, ALT = SHIFT * 2, META = ALT * 2, KEY = CTRL - 1;
+  const CTRL = 2 ** 32, SHIFT = CTRL * 2, ALT = SHIFT * 2, META = ALT * 2, KEY = CTRL - 1, MAX = META * 2 - 1;
   const namelist = '#0;#1;#2;Cancel;#4;#5;Help;#7;BackSpace;TAB;#10;#11;Clear;Enter;EnterSpecial;#15;;;;Pause;CapsLock;Kana;Eisu;Junja;Final;Hanja;#26;Esc;Convert;Nonconvert;Accept;ModeChange;Space;PageUp;PageDown;End;Home;Left;Up;Right;Down;Select;Print;Execute;PrintScreen;Insert;Delete;#47;0;1;2;3;4;5;6;7;8;9;Colon;Semicolon;LessThan;Equals;GreaterThan;QuestionMark;At;A;B;C;D;E;F;G;H;I;J;K;L;M;N;O;P;Q;R;S;T;U;V;W;X;Y;Z;Win;#92;ContextMenu;#94;Sleep;NumPad0;NumPad1;NumPad2;NumPad3;NumPad4;NumPad5;NumPad6;NumPad7;NumPad8;NumPad9;Multiply;Add;Separator;Subtract;Decimal;Divide;F1;F2;F3;F4;F5;F6;F7;F8;F9;F10;F11;F12;F13;F14;F15;F16;F17;F18;F19;F20;F21;F22;F23;F24;#136;#137;#138;#139;#140;#141;#142;#143;NumLock;ScrollLocK;WIN_OEM_FJ_JISHO;WIN_OEM_FJ_MASSHOU;WIN_OEM_FJ_TOUROKU;WIN_OEM_FJ_LOYA;WIN_OEM_FJ_ROYA;#151;#152;#153;#154;#155;#156;#157;#158;#159;Circumflex;Exclamation;DoubleQuote;Hash;Dollar;Percent;Ampersand;Underscore;OpenParen;CloseParen;Asterisk;Plus;Pipe;HyphenMinus;OpenCurlyBracket;CloseCurlyBracket;Tilde;#177;#178;#179;#180;VolumeMute;VolumeDown;VolumeUp;#184;#185;#186;#187;Comma;#189;Period;Slash;BackQuote;#193;#194;#195;#196;#197;#198;#199;#200;#201;#202;#203;#204;#205;#206;#207;#208;#209;#210;#211;#212;#213;#214;#215;#216;#217;#218;OpenBracket;BackSlash;CloseBracket;Quote;#223;;AltGr;#226;WIN_ICO_HELP;WIN_ICO_00;#229;WIN_ICO_CLEAR;#231;#232;WIN_OEM_RESET;WIN_OEM_JUMP;WIN_OEM_PA1;WIN_OEM_PA2;WIN_OEM_PA3;WIN_OEM_WSCTRL;WIN_OEM_CUSEL;WIN_OEM_ATTN;WIN_OEM_FINISH;WIN_OEM_COPY;WIN_OEM_AUTO;WIN_OEM_ENLW;WIN_OEM_BACKTAB;Attn;Crsel;Exsel;Ereof;Play;Zoom;#252;PA1;WIN_OEM_CLEAR;#255'.split(';');
 
   // 一些常用常量
   keyboard.code = Object.assign(...namelist.map((name, index) => ({ [name.toUpperCase()]: index })));
-  keyboard.alter = { CTRL, SHIFT, ALT, META, KEY };
+  keyboard.alter = { CTRL, SHIFT, ALT, META, KEY, MAX };
 
   // 对一个按键事件做编号
   keyboard.event = function (e) {
     if (!e || !e.keyCode) return null;
-    return e.keyCode & KEY |
-      (e.ctrlKey * CTRL) |
-      (e.shiftKey * SHIFT) |
-      (e.altKey * ALT) |
-      (e.metaKey * META);
+    return (e.keyCode >>> 0) +
+      e.ctrlKey * CTRL +
+      e.shiftKey * SHIFT +
+      e.altKey * ALT +
+      e.metaKey * META;
   };
   // 给一个编号，转换为键名
   keyboard.name = function (n) {
     return [
-      n & CTRL ? 'Ctrl' : '',
-      n & SHIFT ? 'Shift' : '',
-      n & ALT ? 'Alt' : '',
-      n & META ? 'Meta' : '',
-      namelist[n & KEY] || `#${+n}`,
-    ].filter(x => x).join('-');
+      n / CTRL & 1 ? 'Ctrl' : '',
+      n / SHIFT & 1 ? 'Shift' : '',
+      n / ALT & 1 ? 'Alt' : '',
+      n / META & 1 ? 'Meta' : '',
+      (n >>> 0) < 256 ? namelist[n >>> 0] : `#${n >>> 0}`,
+    ].filter(x => x).join('-').replace(/-$/g, '');
   };
 
 }());
@@ -1693,6 +1693,63 @@
 
 }());
 //#endregion
+//#region @require yaofang://content/request/feedfavorite.js
+/**
+ * 收藏一条微博
+ */
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const network = yawf.network;
+  const request = yawf.request = yawf.request || {};
+
+  const strings = util.strings;
+
+  const feedFavorite = function (feed, { $CONFIG }) {
+    const mid = feed.getAttribute('mid');
+    const url = String(new URL('/aj/fav/mblog/add?ajwvr=6', location.href));
+    const body = String(new URLSearchParams([
+      ['mid', mid],
+      ...new URLSearchParams(feed.getAttribute('data-mark')),
+      ['location', $CONFIG.location],
+      ...new URLSearchParams(feed.getAttribute('diss-data')),
+    ]));
+    util.debug('fetch url %s\nPOST\n%s', url, body);
+    return new Promise(resolve => {
+      const key = 'feed_favorite_' + strings.randKey();
+      const listener = function (event) {
+        event.stopPropagation();
+        const success = event.detail.success === 'true';
+        window.removeEventListener(key, listener, true);
+        resolve(success);
+      };
+      window.addEventListener(key, listener, true);
+      util.inject(function ({ url, body }, key) {
+        let success = false;
+        ; (async function () {
+          try {
+            const resp = await fetch(url, {
+              method: 'POST',
+              body,
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            }).then(resp => resp.json());
+            success = resp.code === '100000';
+          } catch (e) { alert(e); console.log(e); }
+          const event = new CustomEvent(key, {
+            detail: { success: JSON.stringify(success) },
+          });
+          window.dispatchEvent(event);
+        }());
+      }, { url, body }, key);
+    });
+  };
+  request.feedFavorite = feedFavorite;
+
+}());
+//#endregion
 //#region ployfill of browser.storage
 ; (function () {
   const browser = window.browser = window.browser || {};
@@ -2802,6 +2859,7 @@
  *   users: 多个用户（id）
  *   usernames: 多个用户名
  *   topics: 多个话题
+ *   key: 一个键盘按键
  *
  * ConfigItem 的属性和方法包括：
  * 显示相关
@@ -3500,6 +3558,61 @@
   }
   rule.class.ColorConfigItem = ColorConfigItem;
 
+  i18n.keyboardDisabled = {
+    cn: '（已禁用）',
+    tw: '（已停用）',
+    en: '(Disabled)',
+  };
+
+  /**
+   * 一个设置按键的设置项
+   */
+  class KeyboardConfigItem extends ConfigItem {
+    constructor(item, parent) {
+      super(item, parent);
+    }
+    get initial() { return null; }
+    normalize(value) {
+      if (typeof value !== 'number') return this.initial;
+      if (value < 0 || value > keyboard.alter.MAX) return this.initial;
+      return value;
+    }
+    render() {
+      const container = document.createElement('span');
+      container.setAttribute('yawf-config-item', this.configId);
+      container.classList.add('yawf-config-key');
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = keyboard.name(this.getConfig());
+      button.addEventListener('keydown', event => {
+        if (!event.isTrusted) return;
+        const code = keyboard.event(event);
+        if (code === keyboard.code.TAB) return;
+        if (code === keyboard.code.TAB + keyboard.alter.SHIFT) return;
+        if (code === keyboard.code.ESC) {
+          this.setConfig(null);
+        } else {
+          this.setConfig(code);
+        }
+      });
+      button.setAttribute('yawf-config-input', this.configId);
+      container.appendChild(button);
+      return container;
+    }
+    renderValue(container) {
+      container = super.renderValue(container);
+      const selector = `button[type="button"][yawf-config-input="${this.configId}"]`;
+      const button = container.querySelector(selector);
+      const config = this.getConfig();
+      const text = config ? keyboard.name(config) : i18n.keyboardDisabled;
+      if (button && button.textContent !== text) {
+        button.textContent = text;
+      }
+      return container;
+    }
+  }
+  rule.class.KeyboardConfigItem = KeyboardConfigItem;
+
   /**
    * 一个文本输入框
    * 对应一个 textarea 输入框
@@ -4074,6 +4187,7 @@
     if (item.type === 'usernames') return new UserNameCollectionConfigItem(item, parent);
     if (item.type === 'topics') return new TopicCollectionConfigItem(item, parent);
     if (item.type === 'groups') return new GroupIdCollectionConfigItem(item, parent);
+    if (item.type === 'key') return new KeyboardConfigItem(item, parent);
     if (item.type === 'offscreen') return new OffscreenConfigItem(item, parent);
     return new ConfigItem(item, parent);
   };
@@ -5417,6 +5531,7 @@
     }
     return node.closest('[mid]');
   };
+  feedParser.feedNode = node => feedContainer(node);
 
   /**
    * 获取节点所在的评论
@@ -5430,6 +5545,7 @@
     }
     return node.closest('[comment_id]');
   };
+  feedParser.commentNode = node => feedContainer(node);
 
   const textParser = function (detail, containerType) {
     const parsers = [];
@@ -6012,8 +6128,8 @@
   feedParser.isSearchFeed = feed => isSearchFeedElement(feed);
   feedParser.isForward = feed => isForwardFeedElement(feed);
 
-  feedParser.mid = feed => feed.getAttribute('mid');
-  feedParser.omid = feed => feed.getAttribute('omid');
+  feedParser.mid = node => feedContainer(node).getAttribute('mid');
+  feedParser.omid = node => feedContainer(node).getAttribute('omid');
 
   // 评论内容
   commentParser.text = target => {
@@ -13079,16 +13195,19 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 ; (function () {
 
   const yawf = window.yawf;
-  const env = yawf.env;
+  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
+  const request = yawf.request;
+  const feedParser = yawf.feed;
 
   const feeds = yawf.rules.feeds;
 
   const i18n = util.i18n;
   const css = util.css;
   const strings = util.strings;
+  const dialog = util.dialog;
 
   const layout = feeds.layout = {};
 
@@ -13335,10 +13454,10 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
     init() {
       const width = this.isEnabled() ? this.ref.width.getConfig() : 600;
       css.append(`
-:root { --yawf-feed-width: ${width}px; --yawf-left-padding: 0px; }
+:root { --yawf-feed-width: ${width}px; --yawf-extra-padding: 0px; }
 .B_index, .B_discover, .B_message { --yawf-left-width: 150px; --yawf-right-width: 250px; }
 .B_page { --yawf-left-width: 0px; --yawf-right-width: 320px; }
-.B_index[yawf-merge-left], .B_message[yawf-merge-left] { --yawf-left-width: 0px; --yawf-left-padding: 10px; }
+.B_index[yawf-merge-left], .B_message[yawf-merge-left] { --yawf-left-width: 0px; --yawf-extra-padding: 10px; }
 .B_artical { --yawf-feed-width: 1000px; --yawf-left-width: 0px; --yawf-right-width: 0px; }
 
 html .B_index .WB_frame,
@@ -13383,7 +13502,7 @@ body .WB_tab_a .tab_box::after { order: 1; flex: 1 0 0; height: auto; }
 body .WB_tab_a .tab_box_a .fr_box { flex: 1 0 0; }
 body .WB_tab_a .tab_box_a::after { content: none; }
 body .WB_feed_v3 .WB_face .opt { right: calc(132px - var(--yawf-feed-width)); }
-body a.W_gotop.W_gotop { margin-left: calc(calc(calc(var(--yawf-feed-width) + var(--yawf-left-padding)) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
+body a.W_gotop.W_gotop { margin-left: calc(calc(calc(var(--yawf-feed-width) + var(--yawf-extra-padding)) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
 body .WB_timeline { margin-left: calc(calc(calc(20px + var(--yawf-feed-width)) + calc(var(--yawf-left-width) + var(--yawf-right-width))) / 2); }
 html .WB_artical .WB_feed_repeat .WB_feed_publish, html .WB_artical .WB_feed_repeat .repeat_list { padding: 0 20px; }
 html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_minitab { margin: 0 16px 10px; }
@@ -13498,50 +13617,62 @@ ${[0, 1, 2, 3, 4].map(index => `
     },
   });
 
-  if (env.config.stkWrapSupported) {
-    i18n.disableTagDialog = {
+  Object.assign(i18n, {
+    disableTagDialog: {
       cn: '屏蔽收藏微博时的添加标签对话框',
       tw: '阻擋收藏微博時的添加標籤對話方塊',
       en: 'Block the dialog after marking weibo favorite',
-    };
+    },
+    favoriteFailTitle: {
+      cn: '收藏微博',
+      en: 'Feed Favorite',
+    },
+    favoriteFailText: {
+      cn: '收藏时发生错误',
+      en: 'Error while adding favorite feeds',
+    },
+    favoritedFeed: {
+      cn: '已收藏',
+      en: 'Favorite Added',
+    },
+  });
 
-    const tagDialog = 'yawf_tag_dialog_' + strings.randKey();
-    yawf.stk.wrap('lib.feed.plugins.favorite.tagDialog', function (tagDialog) {
-      let enable = null, trueInnerGetter = null;
-      let inner = function () { };
-      const initialize = function () {
-        if (enable === null || trueInnerGetter === null) return;
-        if (enable) inner = trueInnerGetter();
-      };
-      Object.defineProperty(window, tagDialog, {
-        get() { return void 0; },
-        set(value) { enable = value; initialize(); },
-        enumerable: false,
-      });
-      return function (regFunc) {
-        return function (stk) {
-          trueInnerGetter = () => regFunc.call(this, stk);
-          initialize();
-          return function (...params) {
-            if (!inner) return null;
-            return inner.call(this, ...params);
-          };
-        };
-      };
-    }, tagDialog);
-
-    layout.disableTagDialog = rule.Rule({
-      id: 'feed_disable_tag_dialog',
-      version: 1,
-      parent: layout.layout,
-      template: () => i18n.disableTagDialog,
-      init() {
-        util.inject(function (tagDialog, enableDialog) {
-          window[tagDialog] = enableDialog;
-        }, tagDialog, !this.isEnabled());
-      },
-    });
-  }
+  layout.disableTagDialog = rule.Rule({
+    id: 'feed_disable_tag_dialog',
+    version: 1,
+    parent: layout.layout,
+    template: () => i18n.disableTagDialog,
+    init() {
+      document.addEventListener('click', async event => {
+        if (!event.isTrusted) return;
+        if (!['www.weibo.com', 'weibo.com'].includes(location.host)) return;
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const button = target.closest('[action-type="fl_favorite"]');
+        if (!button) return;
+        const isFavorite = button.getAttribute('favorite');
+        if (isFavorite) return; // 不处理取消收藏的逻辑
+        event.stopPropagation();
+        event.preventDefault();
+        const feed = feedParser.feedNode(button);
+        const $CONFIG = init.page.$CONFIG;
+        const success = await request.feedFavorite(feed, { $CONFIG });
+        if (!success) {
+          dialog.alert({
+            id: 'yawf-favorite-fail',
+            icon: 'warn',
+            title: i18n.favoriteFailTitle,
+            text: i18n.favoriteFailText,
+          });
+        } else {
+          button.setAttribute('favorite', '1');
+          const text = button.querySelector('[node-type="favorite_btn_text"]') || button;
+          text.innerHTML = '<span><em class="W_ficon ficon_favorite S_spetxt">\xFB</em><em></em></span>';
+          text.querySelector('em + em').textContent = i18n.favoritedFeed;
+        }
+      }, true);
+    },
+  });
 
   i18n.lowReadingCountWarn = {
     cn: '在自己个人主页高亮显示阅读数量|不超过{{count}}的微博',
@@ -14398,6 +14529,126 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 .wbv-fullscreen-control { display: block !important; }
 .wbv-pop-layer { display: none !important; }
 `);
+    },
+  });
+
+}());
+//#endregion
+//#region @require yaofang://content/rule/feeds/reading.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+  const observer = yawf.observer;
+
+  const feeds = yawf.rules.feeds;
+
+  const i18n = util.i18n;
+  const keyboard = util.keyboard;
+  const css = util.css;
+
+  const reading = feeds.reading = {};
+
+  i18n.feedReadingGroupTitle = {
+    cn: '阅读视图',
+    tw: '閱讀視圖',
+    en: 'Reading View',
+  };
+
+  reading.reading = rule.Group({
+    parent: feeds.feeds,
+    template: () => i18n.feedReadingGroupTitle,
+  });
+
+  i18n.feedOnlyMode = {
+    cn: '阅读视图|宽度{{width}}像素||快捷键{{key}}||{{button}}在微博列表顶部显示快捷开关按钮',
+    tw: '閱讀視圖|寬度{{width}}圖元||快速鍵{{key}}||{{button}}在微博清單頂部顯示快速開關按鈕',
+    en: 'Reading Mode | width {{width}}px || shortcut {{key}} || {{button}} show switch button at top of Weibo list',
+  };
+  i18n.feedOnlySwitch = {
+    cn: '切换阅读视图',
+    tw: '切換閱讀視圖',
+    en: 'Toggle Reading Mode',
+  };
+
+  reading.feedOnlyMode = rule.Rule({
+    id: 'feed_only_mode',
+    version: 1,
+    parent: reading.reading,
+    template: () => i18n.feedOnlyMode,
+    ref: {
+      width: { type: 'range', min: 480, max: 1280, initial: 600, step: 10 },
+      key: { type: 'key', initial: keyboard.code.F8 },
+      button: { type: 'boolean', default: false },
+      _enabled: { type: 'boolean', initial: false },
+    },
+    ainit() {
+      const rule = this;
+
+      if (rule.ref.button.getConfig()) {
+        const showButton = function showReaderSwitch() {
+          const tabFirst = document.querySelector([
+            '#v6_pl_content_homefeed .WB_tab_a:not([yawf-feed-only-added])',
+            'div[id^="Pl_Official_ProfileFeedNav__"] .WB_tab_a:not([yawf-feed-only-added])',
+          ].join(','));
+          if (!tabFirst) return;
+          tabFirst.setAttribute('yawf-feed-only-added', '');
+          const wrap = document.createElement('div');
+          wrap.innerHTML = '<div class="yawf-feed-only-button S_bg2"><a class="S_txt1"></a></div>';
+          const line = wrap.firstChild;
+          const button = line.querySelector('a');
+          button.textContent = i18n.feedOnlySwitch;
+          tabFirst.parentNode.insertBefore(line, tabFirst);
+          button.addEventListener('click', event => {
+            if (!event.isTrusted) return;
+            rule.ref._enabled.setConfig(!rule.ref._enabled.getConfig());
+          });
+        };
+        observer.dom.add(showButton);
+      }
+
+      document.addEventListener('keydown', event => {
+        if (!event.isTrusted) return;
+        if (event.target.matches('input, textarea, select')) return;
+        const code = keyboard.event(event);
+        if (code !== rule.ref.key.getConfig()) return;
+        rule.ref._enabled.setConfig(!rule.ref._enabled.getConfig());
+      });
+
+      const width = rule.ref.width.getConfig();
+      css.append(`
+.yawf-feed-only-button { text-align: center; line-height: 31px; margin-bottom: 10px; border-radius: 3px; }
+body[yawf-feed-only][yawf-feed-only] { --yawf-left-width: 0px; --yawf-right-width: 0px; --yawf-feed-width: ${+width}px; --yawf-extra-padding: 20px;}
+body[yawf-feed-only] .WB_miniblog { padding-top: 50px; }
+body[yawf-feed-only] #WB_webchat,
+body[yawf-feed-only] [i-am-music-player],
+body[yawf-feed-only] .WB_frame>*:not(#plc_main),
+body[yawf-feed-only] #plc_main>*:not(.WB_main_c):not(.WB_frame_c):not(.WB_main_r):not(.WB_frame_b),
+body[yawf-feed-only] .WB_main_c>*:not(#v6_pl_content_homefeed),
+body[yawf-feed-only] #plc_bot .WB_footer,
+body[yawf-feed-only] #plc_bot .W_fold,
+body[yawf-feed-only] .WB_footer { display: none !important; }
+body[yawf-feed-only] .WB_frame { width: calc(var(--yawf-feed-width) + 20px) !important; }
+body[yawf-feed-only] #plc_main { display: block; margin-left: auto; margin-right: auto; }
+body[yawf-feed-only] .WB_frame,
+body[yawf-feed-only] #plc_main,
+body[yawf-feed-only] .WB_global_nav,
+body[yawf-feed-only] .WB_main_c { max-width: 100%; margin: 0 auto; }
+body[yawf-feed-only] #plc_main { padding-bottom: 10px; }
+body[yawf-feed-only] #plc_main::after { content: " "; display: table; clear: both; }
+body[yawf-feed-only] .WB_global_nav { position: static; margin-top: -50px; }
+body[yawf-feed-only] #plc_main>.WB_main_r { visibility: hidden; margin-right: -230px; }
+body[yawf-feed-only] #plc_main>.WB_frame_b { visibility: hidden; margin-right: -300px; }
+body[yawf-feed-only] .WB_frame { padding-left: 0; }
+`);
+
+      const updateEnable = function (enabled) {
+        if (enabled) document.body.setAttribute('yawf-feed-only', 'yawf-feed-only');
+        else document.body.removeAttribute('yawf-feed-only');
+      };
+      rule.ref._enabled.addConfigListener(updateEnable);
+      updateEnable(rule.ref._enabled.getConfig());
     },
   });
 
