@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.39
+// @version           4.0.40.1
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1060,6 +1060,22 @@
     return JSON.parse(await network.fetchText(url));
   };
 
+  network.fetchBlob = async function (url) {
+    return new Promise((resolve, reject) => {
+      GM.xmlHttpRequest({
+        method: 'GET',
+        url: new URL(url, location.href).href,
+        responseType: 'blob',
+        onload: function (resp) {
+          resolve(resp.response);
+        },
+        onerror: function (resp) {
+          reject(resp.statusText);
+        },
+      });
+    });
+  };
+
 }());
 //#endregion
 //#region @require yaofang://content/request/userinfo.js
@@ -1393,9 +1409,10 @@
         search.set('min_id', lastPage[0].mid);
         search.set('end_id', lastPage[lastPage.length - 1].mid);
       }
-      const url = 'https://weibo.com/aj/mblog/fsearch?' + search;
+      const hostname = (location.hostname === 'www.weibo.com' ? 'www.' : '') + 'weibo.com';
+      const url = `https://${hostname}/aj/mblog/fsearch?` + search;
       util.debug('fetch url %s', url);
-      const result = await fetch(url, { credentials: 'include' }).then(r => r.json());
+      const result = await network.fetchJson(url);
       const container = document.createElement('div');
       dom.content(container, result.data);
       const feedElements = Array.from(container.querySelectorAll('.WB_feed_type[mid]'));
@@ -1747,6 +1764,23 @@
     });
   };
   request.feedFavorite = feedFavorite;
+
+}());
+//#endregion
+//#region @require yaofang://content/request/image.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const network = yawf.network;
+
+  const request = yawf.request = yawf.request || {};
+
+  const getImage = function (url) {
+    util.debug('fetch url %s', url);
+    return network.fetchBlob(url, { credentials: 'omit' });
+  };
+  request.getImage = getImage;
 
 }());
 //#endregion
@@ -3573,6 +3607,7 @@
     }
     get initial() { return null; }
     normalize(value) {
+      if (value === null) return null;
       if (typeof value !== 'number') return this.initial;
       if (value < 0 || value > keyboard.alter.MAX) return this.initial;
       return value;
@@ -3594,7 +3629,9 @@
         } else {
           this.setConfig(code);
         }
-      });
+        event.preventDefault();
+        event.stopPropagation();
+      }, true);
       button.setAttribute('yawf-config-input', this.configId);
       container.appendChild(button);
       return container;
@@ -14074,6 +14111,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
+  const request = yawf.request;
   const download = yawf.download;
   const contextmenu = yawf.contextmenu;
   const imageViewer = yawf.imageViewer;
@@ -14405,8 +14443,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           image.setAttribute('ori-src', url);
           image.setAttribute('yawf-ori-src', url);
           image.setAttribute('yawf-pause-animate', 'yawf-pause-animate');
-          util.debug('fetch url %s', url);
-          const dataUrl = await fetch(url).then(resp => resp.blob()).then(blob => urls.blobToDataUrl(blob));
+          const dataUrl = await request.getImage(url).then(blob => urls.blobToDataUrl(blob));
           const img = new Image();
           img.addEventListener('load', () => {
             const width = img.naturalWidth, height = img.naturalHeight;
