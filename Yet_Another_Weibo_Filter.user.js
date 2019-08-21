@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.40.1
+// @version           4.0.41
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1748,13 +1748,14 @@
           try {
             const resp = await fetch(url, {
               method: 'POST',
-              body,
+              body: new URLSearchParams(body),
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
               },
+              credentials: 'include',
             }).then(resp => resp.json());
             success = resp.code === '100000';
-          } catch (e) { alert(e); console.log(e); }
+          } catch (e) { console.error(e); }
           const event = new CustomEvent(key, {
             detail: { success: JSON.stringify(success) },
           });
@@ -9764,9 +9765,9 @@
     floodingFeedHide: { cn: '隐藏', tw: '隱藏', en: 'hidden' },
     floodingFeedFold: { cn: '折叠', tw: '折疊', en: 'folded' },
     floodingAuthor: {
-      cn: '相同作者|超过{{number}}条微博|时超出的{{action}}',
-      tw: '相同作者|超過{{number}}條微博|時超出的{{action}}',
-      en: 'Feeds by same author will | be {{action}} | when more than {{number}} seen',
+      cn: '相同作者|超过{{number}}条微博|时超出的{{action}}||{{group}}在分组页面同样生效',
+      tw: '相同作者|超過{{number}}條微博|時超出的{{action}}||{{group}}在分組頁面同樣生效',
+      en: 'Feeds by same author will | be {{action}} | when more than {{number}} seen||{{group}} Also apply to grouping pages',
     },
     floodingAuthorReason: {
       cn: '刷屏',
@@ -9805,6 +9806,7 @@
           { value: 'fold', text: () => i18n.floodingFeedFold },
         ],
       },
+      group: { type: 'boolean' },
     },
     init() {
       const rule = this;
@@ -9818,6 +9820,12 @@
         const [author] = feedParser.author.id(feed);
         // 自己的微博发多少也不触发这个规则
         if (String(me) === String(author)) return null;
+        // 个人主页不工作
+        if (init.page.type() === 'profile') return null;
+        // 分组页面根据设置决定是否生效
+        if (init.page.type() === 'group') {
+          if (rule.ref.group.getConfig()) return null;
+        }
         parsed.set(feed, author);
         const feeds = [...document.querySelectorAll('[mid]')];
         const count = feeds.filter(feed => parsed.get(feed) === author).length;
@@ -10215,7 +10223,7 @@
     },
     fast: {
       types: [['commentuser', 'account'], ['original', 'author', 'mention']],
-      radioGroup: 'original',
+      radioGroup: 'commentuser',
       render: commentParser.fast.render.user,
     },
   });
@@ -10485,7 +10493,7 @@
 
 
   clean.tagElements = function (name, selector, identifiers) {
-    const tagElements = function () {
+    const tagElements = function tagElements() {
       const elements = Array.from(document.querySelectorAll(selector));
       if (!elements.length) return;
       elements.forEach(function (element) {
@@ -12922,9 +12930,9 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
       cn: 'Yet Another Weibo Filter 模板设置',
     },
     setSkinByPreview: {
-      cn: '您要在药方扩展中使用“{{name}}”模板吗？启用后您访问各种页面时都将使用当前的模板。在脚本中使用皮肤不会影响其他用户查看您个人主页时的模板样式。',
-      tw: '您要在藥方擴展中使用「{{name}}」模板嗎？啟用後您訪問各種頁面時都將使用當前的模板。在腳本中使用皮膚不會影響其他用戶查看您個人主頁時的模板樣式。',
-      en: 'Do you want to enable the template "{{name}}" in YAWF? All pages will show current template if you choose enable it. The template only applied on your browser.',
+      cn: '您要在药方扩展中使用“{1}”模板吗？启用后您访问各种页面时都将使用当前的模板。在脚本中使用皮肤不会影响其他用户查看您个人主页时的模板样式。',
+      tw: '您要在藥方擴展中使用「{1}」模板嗎？啟用後您訪問各種頁面時都將使用當前的模板。在腳本中使用皮膚不會影響其他用戶查看您個人主頁時的模板樣式。',
+      en: 'Do you want to enable the template "{1}" in YAWF? All pages will show current template if you choose enable it. The template only applied on your browser.',
     },
   });
 
@@ -13003,10 +13011,11 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         const answer = await ui.confirm({
           id: 'yawf-use-skin',
           title: i18n.setSkinByPreviewTitle,
-          text: i18n.setSkinByPreview,
+          text: i18n.setSkinByPreview.replace('{1}', () => name),
         });
         if (answer) {
           rule.ref.skin.setConfig(skinId);
+          rule.setConfig(true);
           search.delete('skinId');
           location.search = search;
         }
@@ -13679,7 +13688,7 @@ ${[0, 1, 2, 3, 4].map(index => `
     version: 1,
     parent: layout.layout,
     template: () => i18n.disableTagDialog,
-    init() {
+    ainit() {
       document.addEventListener('click', async event => {
         if (!event.isTrusted) return;
         if (!['www.weibo.com', 'weibo.com'].includes(location.host)) return;
