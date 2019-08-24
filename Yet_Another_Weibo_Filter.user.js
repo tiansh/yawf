@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.41
+// @version           4.0.42
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -4062,7 +4062,7 @@
       const index = values.findIndex((item, index) => this.track(item, index) === track);
       if (index !== -1) {
         values.splice(index, 1);
-        if (!this.configCacheDirty) {
+        if (!this.configCacheDirty && Array.isArray(this.configCache)) {
           this.configCache.splice(index, 1);
         }
       }
@@ -6912,8 +6912,8 @@
       title: i18n.autoCheckFollowingDialogTitle,
       /** @param {Element} container */
       render(container) {
-        container.innerHTML = '<div class="yawf-following-notice-body"><div class="yawf-following-notice-detail"></div><div class="yawf-following-add" style="display: none;"><div class="yawf-following-add-title"></div><div class="yawf-following-add-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-lost-title"></div><div class="yawf-following-lost-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div><div class="yawf-following-rename" style="display: none;"><div class="yawf-following-rename-title"></div><div class="yawf-following-rename-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div></div><div class="yawf-following-notice-footer"><span class="yawf-following-notice-last-time-text"></span><span class="yawf-following-notice-last-time"></span></div>';
-        container.querySelector('.yawf-following-notice-detail').textContent = i18n.autoCheckFollowingTip;
+        container.innerHTML = '<div class="yawf-following-notice-header"></div><div class="yawf-following-notice-body"><div class="yawf-following-add" style="display: none;"><div class="yawf-following-add-title"></div><div class="yawf-following-add-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-lost-title"></div><div class="yawf-following-lost-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div><div class="yawf-following-rename" style="display: none;"><div class="yawf-following-rename-title"></div><div class="yawf-following-rename-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div></div><div class="yawf-following-notice-footer"><span class="yawf-following-notice-last-time-text"></span><span class="yawf-following-notice-last-time"></span></div>';
+        container.querySelector('.yawf-following-notice-header').textContent = i18n.autoCheckFollowingTip;
         container.querySelector('.yawf-following-add-title').textContent = i18n.autoCheckFollowingAdd;
         container.querySelector('.yawf-following-lost-title').textContent = i18n.autoCheckFollowingLost;
         container.querySelector('.yawf-following-rename-title').textContent = i18n.autoCheckFollowingRename;
@@ -7074,7 +7074,8 @@
 
   css.append(`
 .yawf-following-add-title, .yawf-following-lost-title, .yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
-.yawf-following-notice-body { padding: 20px 20px 0; width: 600px; } 
+.yawf-following-notice-header { padding: 20px; }
+.yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
 .yawf-following-notice-footer { padding: 20px; } 
 .yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
 .yawf-following-rename .yawf-config-user-name, .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
