@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.42
+// @version           4.0.44
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -480,18 +480,36 @@
   const css = util.css = util.css || {};
 
   css.add = function (css) {
+    const target = document.head || document.body || document.documentElement;
     const style = document.createElement('style');
     style.textContent = css;
-    (document.head || document.body || document.documentElement).appendChild(style);
+    let removed = false;
+    let ready = Promise.resolve();
+    if (target) target.appendChild(style);
+    else {
+      ready = new Promise(resolve => {
+        setTimeout(function addStyle() {
+          if (removed) {
+            resolve();
+            return;
+          }
+          const target = document.head || document.body || document.documentElement;
+          if (!target) setTimeout(addStyle, 10);
+          else {
+            target.appendChild(style);
+            resolve();
+          }
+        }, 10);
+      });
+    }
     const remove = () => {
       if (!style.parentNode) return;
       style.parentNode.removeChild(style);
+      removed = true;
     };
     const append = css => {
       style.textContent += '\n' + css;
     };
-    // 预留修改为异步添加时使用
-    const ready = Promise.resolve();
     return { append, remove, ready };
   };
 
@@ -512,13 +530,18 @@
     const executeScript = `void(${func}(${args.map(value => JSON.stringify(value))}));`;
     const script = document.createElement('script');
     script.textContent = executeScript;
-    const target = document.head || document.body || document.documentElement || document.getElementsByTagName('*')[0];
+    const target = document.head || document.body || document.documentElement;
     return new Promise(resolve => {
       script.addEventListener('load', () => {
         resolve();
         script.parentElement.removeChild(script);
       });
-      target.appendChild(script);
+      if (target) target.appendChild(script);
+      else setTimeout(function injectScript() {
+        const target = document.head || document.body || document.documentElement;
+        if (!target) setTimeout(injectScript, 10);
+        else target.appendChild(script);
+      }, 10);
     });
   };
 
@@ -932,6 +955,94 @@
     return element;
   };
   dom.content = stupidInnerHtmlAssign;
+
+}());
+//#endregion
+//#region @require yaofang://content/util/time.js
+; (function () {
+
+  const yawf = window.yawf = window.yawf || {};
+  const util = yawf.util = yawf.util || {};
+
+  const i18n = util.i18n;
+  const time = util.time = {};
+
+  Object.assign(i18n, {
+    timeMonthDay: { cn: '{1}月{2}日 {3}:{4}', en: '{1}-{2} {3}:{4}' },
+    timeToday: { cn: '今天', tw: '今天', en: 'Today' },
+    timeMinuteBefore: { cn: '分钟前', tw: '分鐘前', en: ' mins ago' },
+    timeSecondBefore: { cn: '秒前', tw: '秒前', en: ' secs ago' },
+  });
+
+  const timeToParts = (time, locale = true) => (
+    new Date(time - new Date(time).getTimezoneOffset() * 6e4 * locale)
+      .toISOString().match(/\d+/g)
+  );
+
+  time.parse = function (text) {
+    let parseDate = null;
+    const now = Date.now();
+    const [cy, cm, cd] = timeToParts(now);
+    if (/^\d+-\d+-\d+ \d+:\d+$/.test(text)) {
+      const [y, m, d, h, u] = text.match(/\d+/g);
+      parseDate = Date.UTC(y, m - 1, d, h, u) - 288e5;
+    } else if (/^(?:\d+-\d+|\d+月\d+日)\s*\d+:\d+$/.test(text)) {
+      const [m, d, h, u] = text.match(/\d+/g);
+      parseDate = Date.UTC(cy, m - 1, d, h, u) - 288e5;
+    } else if (/^(?:今天|today)\s*\d+:\d+$/i.test(text)) {
+      const [h, u] = text.match(/\d+/g);
+      parseDate = Date.UTC(cy, cm - 1, cd, h, u) - 288e5;
+    } else if (/^\s*\d+\s*(?:分钟前|分鐘前|mins ago)/.test(text)) {
+      const min = text.match(/\d+/g);
+      parseDate = now - min * 6e4;
+    } else if (/^\s*\d+\s*(?:秒前|secs ago)/.test(text)) {
+      const sec = text.match(/\d+/g);
+      parseDate = now - sec * 1e3;
+    }
+    return parseDate ? new Date(parseDate) : null;
+  };
+
+  const formatter = Intl.DateTimeFormat(
+    { cn: 'zh-CN', hk: 'zh-HK', tw: 'zh-TW', en: 'en-US' }[util.language],
+    {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      weekday: 'long',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'long',
+    }
+  );
+
+  const now = time.now = function () {
+    return new Date(Date.now() - time.diff);
+  };
+
+  time.format = function (time, format) {
+    const ref = now();
+    const [iy, im, id, ih, iu] = timeToParts(time);
+    const [ny, nm, nd, nh, nu] = timeToParts(ref);
+    const diff = (ref - time) / 1e3;
+    if (format === 'full') {
+      return formatter.format(time);
+    } else if (iy !== ny || format === 'year') {
+      return `${iy}-${im}-${id} ${ih}:${iu}`;
+    } else if (im !== nm || id !== nd || format === 'month') {
+      return i18n.timeMonthDay.replace(/\{\d\}/g, n => [+im, +id, ih, iu][n[1] - 1]);
+    } else if (ih !== nh && diff > 3600 || format === 'today') {
+      return `${i18n.timeToday} ${ih}:${iu}`;
+    } else if (diff > 50 || format === 'minute') {
+      return Math.ceil(diff / 60) + i18n.timeMinuteBefore;
+    } else {
+      return Math.max(Math.ceil(diff / 10), 1) * 10 + i18n.timeSecondBefore;
+    }
+  };
+
+  time.diff = 0;
+  time.setDiff = function (diff) {
+    time.diff = +diff || 0;
+  };
 
 }());
 //#endregion
@@ -1785,6 +1896,78 @@
 
 }());
 //#endregion
+//#region @require yaofang://content/request/feedhistory.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const network = yawf.network;
+  const request = yawf.request = yawf.request || {};
+
+  const time = util.time;
+
+  const pageSize = 10;
+  const feedHistoryPage = async function (mid, page) {
+    const host = location.hostname === 'www.weibo.com' ? 'www.weibo.com' : 'weibo.com';
+    const url = new URL(`https://${host}/p/aj/v6/history?ajwvr=6&domain=100505`);
+    url.searchParams.set('mid', mid);
+    url.searchParams.set('page', page);
+    url.searchParams.set('page_size', pageSize);
+    url.searchParams.set('__rnd', Date.now());
+    util.debug('fetch url %s', url + '');
+    const resp = await network.fetchJson(url + '');
+    const data = resp.data;
+    const count = data.total_num;
+    const dom = new DOMParser().parseFromString(data.html, 'text/html');
+    const historyList = [...dom.querySelectorAll('.WB_feed_detail')].map(history => {
+      const from = history.querySelector('.WB_from');
+      const date = time.parse(from.querySelector('a').textContent.trim());
+      from.remove();
+      const text = history.querySelector('.WB_text');
+      // 我也不知道为什么末尾有一个零宽空格，而且零宽空格前还可能有空格
+      const source = text.textContent.replace(/^[\s]*|[\s\u200b]*$/g, '');
+      text.textContent = source;
+      const imgs = Array.from(history.querySelectorAll('.WB_pic img'));
+      if (imgs.length) {
+        const old = history.querySelector('.WB_media_wrap');
+        const media = document.createElement('div');
+        media.innerHTML = '<div class="WB_media_wrap clearfix"><div class="media_box"><ul class="WB_media_a clearfix"><li class="WB_pic S_bg1 S_line2" action-type="fl_pics"></li></ul></div></div>';
+        const ul = media.querySelector('ul');
+        const li = ul.removeChild(ul.firstChild);
+        ul.classList.add('WB_media_a_m' + imgs.length);
+        if (imgs.length > 1) ul.classList.add('WB_media_a_mn');
+        imgs.forEach((img, index) => {
+          const container = li.cloneNode(true);
+          container.classList.add('li_' + (index + 1));
+          container.appendChild(img);
+          const actionData = new URLSearchParams('isPrivate=0&relation=0');
+          actionData.set('pic_id', img.src.replace(/^.*\/|\..*$/g, ''));
+          container.setAttribute('action-data', actionData);
+          ul.appendChild(container);
+        });
+        old.replaceWith(media.firstChild);
+      }
+      return { date, dom: history, text: source, imgs };
+    });
+    return { count, list: historyList };
+  };
+
+  const feedHistory = async function (mid) {
+    const { count, list } = await feedHistoryPage(mid, 1);
+    const pages = Math.ceil(count / pageSize);
+    for (let i = 2; i <= pages; i++) {
+      const data = await feedHistoryPage(mid, i);
+      list.push(...data.list);
+    }
+    list.forEach((item, index) => {
+      item.index = list.length - index;
+    });
+    return list;
+  };
+  request.feedHistory = feedHistory;
+
+}());
+//#endregion
 //#region ployfill of browser.storage
 ; (function () {
   const browser = window.browser = window.browser || {};
@@ -2503,6 +2686,7 @@
     const $CONFIG = init.page.$CONFIG;
     await config.init($CONFIG.uid);
     util.i18n = $CONFIG.lang;
+    util.time.setDiff($CONFIG.timeDiff || 0);
   }, { priority: priority.FIRST });
 
   util.debug('yawf loading, hide all');
@@ -2591,9 +2775,16 @@
       });
     }));
 
+    const prefix = content[0].filename.split('/').reduce((result, part) => {
+      if (content.some(item => !item.filename.startsWith(result + '/' + part))) return result;
+      return result + '/' + part;
+    });
+    content.forEach(item => {
+      item.filename = item.filename.slice(prefix.length).replace(/^\//, '');
+    });
     const tarball = util.tarball.files(content);
     let blob = new Blob([tarball], { type: 'application/x-tar' });
-    download.blob({ blob, filename: content[0].filename + '.tar' });
+    download.blob({ blob, filename: (prefix || content[0].filename) + '.tar' });
 
   };
 
@@ -4415,6 +4606,7 @@
 .yawf-config-collection-list .yawf-config-collection-item { padding: 0 5px 0 20px; min-width: 0; height: 20px; overflow: hidden; text-overflow: ellipsis; cursor: default; }
 .yawf-config-collection-remove { display: block; position: absolute; top: 0; left: 0; display: flow-root; width: 20px; height: 20px; line-height: 20px; }
 .yawf-config-collection-item-content { max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+.yawf-config-collection-user-id .yawf-config-collection-list { margin-left: -5px; }
 .yawf-config-collection-user-id .yawf-config-collection-item { width: 90px; height: 50px; padding: 1px 20px 1px 56px; text-align: left; }
 .yawf-config-collection-user-id .yawf-config-collection-remove { right: 0; left: auto; text-align: center; }
 .yawf-config-collection-user-id .yawf-config-collection-remove a { position: static; margin: 0; }
@@ -4898,7 +5090,7 @@
    * @param {Element} inner
    * @param {Array<Tab>} tabs
    */
-  const renderTabs = function (inner, tabs) {
+  const renderTabs = function (inner, tabs, { initial = null } = {}) {
     inner.classList.add('yawf-config-inner');
     const left = inner.appendChild(configDom.left());
     const right = inner.appendChild(configDom.right());
@@ -4946,9 +5138,10 @@
       tabLeft.classList.add('current');
       if (search !== tabLeft && searchInput.value) searchInput.value = '';
       tabInit.get(tabLeft)();
+      right.scrollTo(0, 0);
     };
-    // 自动选中第一个选项卡
-    setCurrent(tabLeft[0]);
+    // 自动选中目标选项卡，或第一个选项卡
+    setCurrent(tabLeft[(initial && tabs.indexOf(initial) + 1 || 1) - 1]);
     left.addEventListener('click', event => {
       const tabLeft = event.target.closest('.yawf-config-tab');
       if (!tabLeft) return;
@@ -4988,13 +5181,13 @@
   };
   rule.render = render;
 
-  rule.dialog = function (rules = null) {
+  rule.dialog = function (tab) {
     try {
       ui.dialog({
         id: 'yawf-config',
         title: i18n.configDialogTitle,
         render: inner => {
-          if (!rules) renderTabs(inner, tabs);
+          renderTabs(inner, tabs, { initial: tab });
         },
       }).show();
     } catch (e) { util.debug('Error while showing rule dialog %o', e); }
@@ -5017,6 +5210,68 @@
 #yawf-config .yawf-config-layer.current { display: block; }
 `);
 
+
+}());
+//#endregion
+//#region @require yaofang://content/ruleset/menu.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const init = yawf.init;
+
+  const ui = util.ui;
+  const i18n = util.i18n;
+  const css = util.css;
+
+  const rule = yawf.rule;
+  const tabs = rule.tabs;
+
+  const pagemenu = yawf.pagemenu = {};
+
+  let containerResolve;
+  const containerPromise = new Promise(resolve => {
+    containerResolve = resolve;
+  });
+
+  let items = [];
+
+  const line = function () {
+    const ul = document.createElement('ul');
+    ul.innerHTML = '<li class="line S_line1 yawf-config-menuline"></li>';
+    return ul.firstChild;
+  };
+
+  pagemenu.add = async function ({ title, href = null, onClick, order = Infinity, section = 0 }) {
+    const ul = await containerPromise;
+    const li = document.createElement('li');
+    li.innerHTML = '<a target="_top"></a>';
+    const a = li.firstChild;
+    a.href = href || 'javascript:void(0);';
+    a.textContent = typeof title === 'function' ? title() : title;
+    li.addEventListener('click', event => {
+      if (!event.isTrusted) return;
+      onClick(event);
+    });
+    const index = items.findIndex(item => item.section > section || item.section === section && item.order > order);
+    if (index !== -1) ul.insertBefore(li, items[index].li);
+    else ul.appendChild(li);
+    if (index > 0 && items[index - 1].section === section) {
+      if (li.previousSibling.matches('.line')) ul.removeChild(li.previousSibling);
+    }
+    if (index !== -1 && items[index].section !== section) {
+      if (!li.nextSibling.matches('.line')) ul.insertBefore(line(), li.nextSibling);
+    }
+    items.splice(index, 0, { li, order, section });
+    const setText = function (newText) {
+      li.firstChild.textContent = typeof newText === 'function' ? newText() : newText;
+    };
+    return { dom: li, text: setText };
+  };
+
+  pagemenu.ready = function (ul) {
+    containerResolve(ul);
+  };
 
 }());
 //#endregion
@@ -6595,6 +6850,7 @@
   const filter = yawf.rules.filter = {};
   filter.filter = rule.Tab({
     template: () => i18n.filterTabTitle,
+    pagemenu: true,
   });
 
 }());
@@ -7117,10 +7373,24 @@
     template: () => i18n.showArticleWithoutFollow,
     initial: true,
     ainit() {
-      css.append(`
+      const showArticalCss = `
 .WB_editor_iframe, .WB_editor_iframe_new { height: auto !important; }
 .artical_add_box [node-type="maskContent"] { display: none; }
-`);
+`;
+      css.append(showArticalCss);
+      observer.dom.add(function articalFrameStyle() {
+        /** @type{NodeListOf<HTMLIFrameElement>} */
+        const frames = document.querySelectorAll('iframe[src*="ttarticle/p/show"]');
+        if (!frames.length) return;
+        Array.from(frames).forEach(function injectStyle(frame) {
+          const document = frame.contentDocument;
+          if (!document) setTimeout(injectStyle, 10, frame);
+          const target = document.head || document.body || document.documentElement;
+          const style = document.createElement('style');
+          style.textContent = showArticalCss;
+          target.appendChild(style);
+        });
+      });
     },
   });
 
@@ -8023,6 +8293,177 @@
         if (midList.includes(omid)) return 'hide';
         return null;
       }, { priority: 1e4 });
+    },
+  });
+
+}());
+//#endregion
+//#region @require yaofang://content/rule/filter/filter/pause.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+  const observer = yawf.observer;
+  const pagemenu = yawf.pagemenu;
+
+  const filter = yawf.rules.filter;
+
+  const i18n = util.i18n;
+  const css = util.css;
+
+  i18n.feedsManuallyGroupTitle = {
+    cn: '暂停过滤',
+    tw: '暫停篩選',
+    en: 'Pause Filter',
+  };
+
+  const pause = filter.pause = {};
+  pause.pause = rule.Group({
+    parent: filter.filter,
+    template: () => i18n.feedsManuallyGroupTitle,
+  });
+
+  Object.assign(i18n, {
+    pauseFilter: {
+      cn: '临时禁用所有微博过滤规则|{{i}}',
+      tw: '暫時停用所有微博篩選規則|{{i}}',
+      en: 'Disable all feed filters temporarily|{{i}}',
+    },
+    pauseFilterDetail: {
+      cn: '选择后将会暂停所有微博过滤相关的功能，要查看已被隐藏的规则需要刷新页面。其他功能不受影响。',
+    },
+    pauseFilterMenu: {
+      cn: '暂停微博过滤',
+      tw: '暫停微博篩選',
+      en: 'Pause Filter',
+    },
+    pauseFilterConfigWarning: {
+      cn: '您已禁用微博过滤功能，部分设置将不生效',
+      tw: '您已停用微博篩選功能，部分設定將不生效',
+      en: 'Filters has been paused. Some settings may not take effect.',
+    },
+    pauseFilterConfigEnable: {
+      cn: '启用过滤规则',
+      tw: '啟用過濾規則',
+      en: 'Enable Filters',
+    },
+    pauseFilterMenuEnabled: {
+      cn: '启用微博过滤',
+      tw: '啟用微博過濾',
+      en: 'Enable Filters',
+    },
+    pauseFilterMenuDisabled: {
+      cn: '暂停微博过滤',
+      tw: '暫停微博篩選',
+      en: 'Pause Filters',
+    },
+    pauseFilterFeedWarning: {
+      cn: '微博过滤规则已暂停，以下微博可能未经过滤，点此启用过滤规则',
+      tw: '微博篩選規則已暫停，以下微博可能未經篩選，按此啟用篩選規則',
+      en: 'Feed filters has been disabled. Click here to enable filters.',
+    },
+  });
+
+
+  pause.pauseFilter = rule.Rule({
+    id: 'pause_filter',
+    version: 1,
+    parent: pause.pause,
+    template: () => i18n.pauseFilter,
+    ref: {
+      i: { type: 'bubble', icon: 'ask', template: () => i18n.pauseFilterDetail },
+    },
+    init() {
+      const rule = this;
+
+      // 其实实现逻辑很简单，就是声明一个优先级很高的过滤规则，无论看到什么，都说不用继续过滤了
+      observer.feed.filter(function pauseFilterFilter(/** @type {Element} */feed) {
+        if (!rule.isEnabled()) return null;
+        return 'unset'; // 既不是白名单，也不隐藏
+      }, { priority: 1e6 });
+      this.addConfigListener(() => { observer.feed.rerun(); });
+
+      // 在设置窗口上显示大大的提示文字，说明过滤功能被暂停了
+      const addNoticeInConfig = function () {
+        if (!rule.isEnabled()) {
+          const body = document.querySelector('.yawf-config-body.yawf-config-filter-pause');
+          if (!body) return;
+          body.classList.remove('yawf-config-filter-pause');
+          const notice = document.querySelector('.yawf-config-filter-pause-notice');
+          notice.parentNode.removeChild(notice);
+          return;
+        }
+        const body = document.querySelector('.yawf-config-body:not(.yawf-config-filter-pause)');
+        if (!body) return;
+        body.classList.add('yawf-config-filter-pause');
+        const container = document.createElement('div');
+        container.innerHTML = '<div class="yawf-config-filter-pause-notice S_link1_br"><span></span><a href="javascript:;" class="W_btn_b yawf-config-filter-enable"><span class="W_f14"></span></a></div>';
+        container.querySelector('span').textContent = i18n.pauseFilterConfigWarning;
+        const button = container.querySelector('a');
+        button.querySelector('span').textContent = i18n.pauseFilterConfigEnable;
+        button.addEventListener('click', event => {
+          if (!event.isTrusted) return;
+          rule.setConfig(false);
+        });
+        body.insertBefore(container.firstChild, body.firstChild);
+      };
+
+      observer.dom.add(function configNotice() {
+        addNoticeInConfig();
+      });
+      this.addConfigListener(() => { addNoticeInConfig(); });
+
+      // 在漏斗图标下面的菜单里面，也放上这个
+      const menuText = function () {
+        if (rule.isEnabled()) return i18n.pauseFilterMenuEnabled;
+        return i18n.pauseFilterMenuDisabled;
+      };
+      const menuitem = pagemenu.add({
+        title: menuText,
+        onClick: function () {
+          const oldConfig = rule.getConfig();
+          rule.setConfig(!oldConfig);
+        },
+        section: 10,
+        order: 1,
+      });
+      ; (async function () {
+        const item = await menuitem;
+        rule.addConfigListener(() => { item.text(menuText); });
+        item.text(menuText);
+      }());
+
+      // 在消息流顶端，再放上这个
+      observer.feed.onBefore(function (feed) {
+        if (!rule.isEnabled()) return;
+        const list = feed.closest('.WB_feed');
+        const container = list.parentNode;
+        const sibling = container.previousSibling;
+        if (sibling && sibling.nodeType === Node.ELEMENT_NODE) {
+          if (sibling.matches('.yawf-feed-filter-pause-notice')) return;
+        }
+        const wrap = document.createElement('div');
+        wrap.innerHTML = '<div class="yawf-feed-filter-pause-notice S_bg2"><a class="S_txt1"></a></div>';
+        const button = wrap.querySelector('a');
+        button.textContent = i18n.pauseFilterFeedWarning;
+        button.addEventListener('click', event => {
+          if (!event.isTrusted) return;
+          rule.setConfig(false);
+        });
+        container.parentNode.insertBefore(wrap.firstChild, container);
+      });
+      this.addConfigListener(() => {
+        if (rule.isEnabled()) return;
+        const notice = document.querySelector('.yawf-feed-filter-pause-notice');
+        if (notice) notice.parentNode.removeChild(notice);
+      });
+
+      css.append(`
+.yawf-config-filter-pause-notice { border-width: 5px; border-style: solid; padding: 10px; font-size: 115%; }
+.yawf-config-filter-enable { float: right; margin: -2px; }
+.yawf-feed-filter-pause-notice { text-align: center; line-height: 31px; margin-bottom: 10px; border-radius: 3px; font-size: 115%; }
+`);
     },
   });
 
@@ -9901,6 +10342,7 @@
   const comment = yawf.rules.comment = {};
   comment.comment = rule.Tab({
     template: () => i18n.commentTabTitle,
+    pagemenu: true,
   });
 
 }());
@@ -10425,6 +10867,7 @@
   const clean = yawf.rules.clean = {};
   clean.clean = rule.Tab({
     template: () => i18n.cleanTabTitle,
+    pagemenu: true,
   });
 
   const selectAllButton = id => {
@@ -11019,9 +11462,12 @@
   });
   clean.CleanRule('source', () => i18n.cleanFeedSource, 1, {
     acss: `
-.WB_time+.S_txt2, .WB_time+.S_txt2+.S_link2, .WB_time+.S_txt2+.S_func2 { display: none !important; }
-.WB_feed_detail .WB_from a[date]::after, .WB_feed_detail .WB_from a[yawf-date]::after { content: " "; display: block; }
-.WB_feed_detail .WB_from { height: 16px; overflow: hidden; }`,
+.WB_feed_detail .WB_from { height: 16px; overflow: hidden; }
+.WB_feed_detail .WB_from::before { content: " "; display: block; float: left; width: 100%; height: 30px; }
+.WB_feed_detail .WB_from a[date],
+.WB_feed_detail .WB_from a[yawf-date],
+.WB_feed_detail .WB_from span[title],
+.WB_feed_detail .WB_from .yawf-edited { float: left; position: relative; top: -30px; }`,
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanFeedSourceDetail } },
   });
   clean.CleanRule('pop', () => i18n.cleanFeedPop, 1, `
@@ -11392,6 +11838,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   const layout = yawf.rules.layout = {};
   layout.layout = rule.Tab({
     template: () => i18n.layoutTabTitle,
+    pagemenu: true,
   });
 
 }());
@@ -12161,6 +12608,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 
   const i18n = util.i18n;
   const css = util.css;
+  const time = util.time;
 
   const details = layout.details = {};
 
@@ -12551,10 +12999,6 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         tw: '使用本機時區',
         en: 'Use locale timezone',
       },
-      timeToday: { cn: '今天', tw: '今天', en: 'Today' },
-      timeSecondBefore: { cn: '秒前', tw: '秒前', en: ' secs ago' },
-      timeMinuteBefore: { cn: '分钟前', tw: '分鐘前', en: ' mins ago' },
-      timeMonthDay: { cn: '{1}月{2}日 {3}:{4}', en: '{1}-{2} {3}:{4}' },
       feedsRead: { cn: '你看到这里', tw: '你看到這裡', en: 'you got here' },
     });
 
@@ -12565,60 +13009,14 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
       parent: details.details,
       template: () => i18n.useLocaleTimezone,
       ainit() {
-        // $CONFIG.timeDiff 保存了本机时间与服务器时间的差，减去这个差值可得到服务器时间的近似值
-        const now = () => new Date(Date.now() - ((init.page.$CONFIG || {}).timeDiff || 0));
-
-        /**
-         * @param {Date|number} time
-         * @param {boolean?} locale
-         * @returns {[string, string, string, string, string, string, string]}
-         */
-        const timeToParts = (time, locale = true) => (
-          new Date(time - new Date(time).getTimezoneOffset() * 6e4 * locale)
-            .toISOString().match(/\d+/g)
-        );
-
-        const formatTime = function (time) {
-          const ref = now();
-          const [iy, im, id, ih, iu] = timeToParts(time);
-          const [ny, nm, nd, nh, nu] = timeToParts(ref);
-          const diff = (ref - time) / 1e3;
-          if (iy !== ny) {
-            return `${iy}-${im}-${id} ${ih}:${iu}`;
-          } else if (im !== nm || id !== nd) {
-            return i18n.timeMonthDay.replace(/\{\d\}/g, n => [im, id, ih, iu][n[1] - 1]);
-          } else if (ih !== nh && diff > 3600) {
-            return `${i18n.timeToday} ${ih}:${iu}`;
-          } else if (diff > 50) {
-            return Math.ceil(diff / 60) + i18n.timeMinuteBefore;
-          } else {
-            return Math.max(Math.ceil(diff / 10), 1) * 10 + i18n.timeSecondBefore;
-          }
-        };
-
-        const formatter = Intl.DateTimeFormat(
-          { cn: 'zh-CN', hk: 'zh-HK', tw: 'zh-TW', en: 'en-US' }[util.language],
-          {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            weekday: 'long',
-            hour: '2-digit',
-            minute: '2-digit',
-            timeZoneName: 'long',
-          }
-        );
-        const formatTimeDetail = function (date) {
-          return formatter.format(date);
-        };
 
         const updateDate = function (element) {
           const date = parseInt(element.getAttribute('yawf-date'), 10);
-          const formatTimeResult = formatTime(date);
+          const formatTimeResult = util.time.format(date);
           if (element.textContent !== formatTimeResult) {
             element.textContent = formatTimeResult;
           }
-          const formatTimeDetailResult = formatTimeDetail(date);
+          const formatTimeDetailResult = util.time.format(date, 'full');
           if (element.title !== formatTimeDetailResult) {
             element.title = formatTimeDetailResult;
           }
@@ -12660,28 +13058,6 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         observer.dom.add(handleDateElements);
         setInterval(updateAllDate, 1e3);
 
-        const parseTextTime = function (text) {
-          let parseDate = null;
-          const now = Date.now();
-          const [cy, cm, cd] = timeToParts(now);
-          if (/^\d+-\d+-\d+ \d+:\d+$/.test(text)) {
-            const [y, m, d, h, u] = text.match(/\d+/g);
-            parseDate = Date.UTC(y, m - 1, d, h, u) - 288e5;
-          } else if (/^(?:\d+-\d+|\d+月\d+日) \d+:\d+$/.test(text)) {
-            const [m, d, h, u] = text.match(/\d+/g);
-            parseDate = Date.UTC(cy, m - 1, d, h, u) - 288e5;
-          } else if (/^(?:今天|today)\s*\d+:\d+$/i.test(text)) {
-            const [h, u] = text.match(/\d+/g);
-            parseDate = Date.UTC(cy, cm - 1, cd, h, u) - 288e5;
-          } else if (/^\s*\d+\s*(?:分钟前|分鐘前|mins ago)/.test(text)) {
-            const min = text.match(/\d+/g);
-            parseDate = now - min * 6e4;
-          } else if (/^\s*\d+\s*(?:秒前|secs ago)/.test(text)) {
-            const sec = text.match(/\d+/g);
-            parseDate = now - sec * 1e3;
-          }
-          return parseDate ? new Date(parseDate) : null;
-        };
 
         // 处理文本显示的时间
         const handleTextDateElements = function changeDateText() {
@@ -12689,6 +13065,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
             '.WB_from:not([yawf-localtime])',
             '.cont_top .data:not([yawf-localtime])',
             'legend:not([yawf-localtime])',
+            '.layer_dialogue_v5 .time_s p',
           ].join(',');
           const elements = Array.from(document.querySelectorAll(selectors));
           elements.forEach(element => {
@@ -12700,7 +13077,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
             const text = textNode.textContent.trim();
             if (text === '') return;
             const [_full, match, tail] = text.match(/^(.*?)\s*(来自|來自|come from|)$/);
-            const time = parseTextTime(match);
+            const time = util.time.parse(match);
             if (!time) return;
             util.debug('parse time %o(%s) to %o(%s)', textNode, text, time, time);
             textNode.textContent = tail ? ` ${tail} ` : '';
@@ -13234,6 +13611,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
   const feeds = yawf.rules.feeds = {};
   feeds.feeds = rule.Tab({
     template: () => i18n.feedsTabTitle,
+    pagemenu: true,
   });
 
 }());
@@ -13768,11 +14146,13 @@ ${[0, 1, 2, 3, 4].map(index => `
   const rule = yawf.rule;
   const observer = yawf.observer;
   const request = yawf.request;
+  const feedParser = yawf.feed;
 
   const feeds = yawf.rules.feeds;
 
   const i18n = util.i18n;
   const css = util.css;
+  const ui = util.ui;
 
   const content = feeds.content = {};
 
@@ -13877,7 +14257,7 @@ ${[0, 1, 2, 3, 4].map(index => `
         const brList = Array.from(document.querySelectorAll('.WB_text br'));
         brList.forEach(br => {
           const placeholder = document.createElement('span');
-          placeholder.className = 'yawf-linebreak';
+          placeholder.className = 'yawf-linebreak S_txt2';
           br.replaceWith(placeholder);
         });
       });
@@ -14110,6 +14490,304 @@ ${[0, 1, 2, 3, 4].map(index => `
       observer.dom.add(customizeSource);
     },
   });
+
+  Object.assign(i18n, {
+    viewEditInfo: {
+      cn: '点击“已编辑”字样查看编辑历史',
+      tw: '點擊「已編輯」字樣查閱編輯歷史',
+      en: 'Click "Edited" ',
+    },
+    viewEditInfoDetail: {
+      cn: '查看编辑历史的弹框和原版不同，点击微博右上角菜单看到的微博编辑记录仍是原版。点左侧列表可以查看指定的版本，点右侧列表可以和当前显示的版本对比。',
+    },
+    viewEditInfoEdited: {
+      cn: '已编辑',
+      tw: '已編輯',
+      en: 'Edited',
+    },
+    viewEditTitle: {
+      cn: '微博编辑记录',
+      tw: '微博編輯記錄',
+      en: 'Edit History',
+    },
+    selectFeedVersion: {
+      cn: '选择版本以查看',
+      tw: '选择版本以查阅',
+      en: 'Select Version',
+    },
+    diffFeedVersion: {
+      cn: '与选定版本比对',
+      tw: '與選定版本比對',
+      en: 'Compare With',
+    },
+    viewEditLoading: {
+      cn: '正在加载编辑记录……',
+      tw: '正在載入編輯記錄……',
+      en: 'Loading edit history...',
+    },
+  });
+
+  content.viewEditInfo = rule.Rule({
+    id: 'view_edit_info',
+    version: 44,
+    parent: content.content,
+    template: () => i18n.viewEditInfo,
+    ref: {
+      i: { type: 'bubble', icon: 'info', template: () => i18n.viewEditInfoDetail },
+    },
+    ainit() {
+      /**
+       * @param {string} sourceStr
+       * @param {string} targetStr
+       */
+      const compare = function (sourceStr, targetStr) {
+        const matchReg = /\n|\[.{1,8}\]|#(?=.{1,31}#)[^#\n]*#|http:\S+|[a-zA-Z-]+|\s|\S/ug;
+        const source = sourceStr.trim().match(matchReg);
+        const target = targetStr.trim().match(matchReg);
+        const sl = source.length, tl = target.length;
+        /** @type {number[][]} */
+        const size = [...Array(sl)].map(_ => Array(tl));
+        /** @type {[number, number][][]} */
+        const from = [...Array(sl)].map(_ => Array(tl));
+        for (let si = 0; si < sl; si++) {
+          for (let ti = 0; ti < tl; ti++) {
+            if (source[si] === target[ti]) {
+              const d = si && ti ? size[si - 1][ti - 1] : 0;
+              from[si][ti] = [si - 1, ti - 1];
+              size[si][ti] = d + source[si].length;
+            } else {
+              const sd = si ? size[si - 1][ti] : 0;
+              const td = ti ? size[si][ti - 1] : 0;
+              if (sd > td) {
+                from[si][ti] = [si - 1, ti];
+                size[si][ti] = sd;
+              } else {
+                from[si][ti] = [si, ti - 1];
+                size[si][ti] = td;
+              }
+            }
+          }
+        }
+        const output = [];
+        for (let si = sl - 1, ti = tl - 1; si >= 0 || ti >= 0;) {
+          const [fs, ft] = si >= 0 && ti >= 0 ? from[si][ti] : [-1, -1];
+          if (fs !== si && ft !== ti) {
+            output.push({ type: 'same', chars: source.slice(fs + 1, si + 1) });
+          } else if (fs !== si) {
+            output.push({ type: 'delete', chars: source.slice(fs + 1, si + 1) });
+          } else if (ft !== ti) {
+            output.push({ type: 'insert', chars: target.slice(ft + 1, ti + 1) });
+          }
+          [si, ti] = [fs, ft];
+        }
+        let last = { type: 'same', str: '' };
+        const result = [last, ...output.reverse().map(({ type, chars }) => {
+          const str = chars.join('');
+          if (type === last.type) {
+            last.str += str;
+            return null;
+          }
+          last = { type, str };
+          return last;
+        })].filter(content => content && content.str);
+        return result;
+      };
+      const renderTextDiff = function (container, source, target) {
+        const diff = compare(source, target);
+        const fragement = document.createDocumentFragment();
+        diff.forEach(function ({ type, str }) {
+          str.split(/(\n)/g).forEach(part => {
+            const span = document.createElement('span');
+            span.classList.add('yawf-diff-' + type);
+            fragement.appendChild(span);
+            if (part === '\n') {
+              span.classList.add('S_txt2', 'yawf-diff-line-break');
+              fragement.appendChild(document.createElement('br'));
+            } else {
+              span.textContent = part;
+            }
+          });
+        });
+        container.innerHTML = '';
+        container.appendChild(fragement);
+      };
+      /**
+       * @param {HTMLElement} text
+       * @param {HTMLElement} source
+       * @param {HTMLElement} target
+       */
+      const renderImageDiff = function (ref, source, target) {
+        while (ref.nextSibling) ref.parentNode.removeChild(ref.nextSibling);
+        /** @returns {string} */
+        const getId = li => li.getAttribute('action-data');
+        /** @returns {[HTMLElement, string, HTMLElement[], Set<string>]} */
+        const getImages = function (dom) {
+          const wrap = dom.querySelector('.WB_media_wrap');
+          if (!wrap) return [null, '', [], new Set()];
+          const container = wrap.cloneNode(true);
+          const html = container.innerHTML;
+          const items = Array.from(container.querySelectorAll('li'));
+          const actionDatas = new Set(items.map(getId));
+          return [container, html, items, actionDatas];
+        };
+        const renderImages = function (images) {
+          ref.parentNode.appendChild(images);
+        };
+        const [sourceImg, sourceHtml, sourceItems, sourceActionDatas] = getImages(source);
+        const [targetImg, targetHtml, targetItems, targetActionDatas] = getImages(target);
+        // 如果压根没有图片，就什么都不用做
+        if (!sourceImg && !targetImg) return;
+        // 如果图片没变，那么展示一份就行了
+        if (sourceHtml === targetHtml) {
+          renderImages(sourceImg);
+          return;
+        }
+        // 标记修改
+        const sourceFilteredItems = sourceItems.map(item => {
+          if (targetActionDatas.has(getId(item))) return item;
+          item.classList.add('yawf-img-delete');
+          return null;
+        }).filter(item => item);
+        const targetFilteredItems = targetItems.map(item => {
+          if (sourceActionDatas.has(getId(item))) return item;
+          item.classList.add('yawf-img-insert');
+          return null;
+        }).filter(item => item);
+        sourceFilteredItems.forEach((sourceItem, index) => {
+          const targetItem = targetFilteredItems[index];
+          if (getId(sourceItem) === getId(targetItem)) return;
+          sourceItem.classList.add('yawf-img-reorder');
+          targetItem.classList.add('yawf-img-reorder');
+        });
+        // 最后把他们显示出来
+        if (sourceImg) renderImages(sourceImg);
+        if (targetImg) renderImages(targetImg);
+      };
+      const renderDiff = function (container, version1, version2) {
+        const [source, target] = [version1, version2].sort((v1, v2) => v1.index - v2.index);
+        const text = container.querySelector('.WB_text');
+        renderTextDiff(text, source.text, target.text);
+        renderImageDiff(text, source.dom, target.dom);
+      };
+      const showContent = function (container, version, diff) {
+        container.innerHTML = '';
+        container.appendChild(version.dom.cloneNode(true));
+        if (!diff || diff === version) return;
+        renderDiff(container, version, diff);
+      };
+      const dialogRender = async function (container, feedHistoryPromise) {
+        container.classList.add('yawf-feed-edit-dialog-content');
+        container.innerHTML = `<div class="yawf-feed-edit-select S_bg1 S_line1"><div class="yawf-feed-edit-select-title S_line1"></div><ol class="yawf-feed-edit-list yawf-feed-edit-select-list S_line1"></ol></div><div class="yawf-feed-edit-view"><div class="yawf-feed-edit-view-content"><div class="yawf-feed-edit-loading"><div class="WB_empty"><div class="WB_innerwrap"><div class="empty_con clearfix"><p class="icon_bed"><i class="W_icon icon_warnB"></i></p><p class="text"></p></div></div></div></div></div></div><div class="yawf-feed-edit-diff S_bg1 S_line1"><div class="yawf-feed-edit-diff-title S_line1"></div><ol class="yawf-feed-edit-list yawf-feed-edit-diff-list S_line1"></ol></div>`;
+        const loadingText = container.querySelector('.yawf-feed-edit-loading .text');
+        loadingText.textContent = i18n.viewEditLoading;
+        const selectTitle = container.querySelector('.yawf-feed-edit-select-title');
+        const diffTitle = container.querySelector('.yawf-feed-edit-diff-title');
+        const selectList = container.querySelector('.yawf-feed-edit-select-list');
+        const diffList = container.querySelector('.yawf-feed-edit-diff-list');
+        const content = container.querySelector('.yawf-feed-edit-view-content');
+        selectTitle.textContent = i18n.selectFeedVersion;
+        diffTitle.textContent = i18n.diffFeedVersion;
+        const versions = await feedHistoryPromise;
+        const selectVersions = new WeakMap();
+        const diffVersions = new WeakMap();
+        let currentVersion = null;
+        const highlightVersion = function (version, list) {
+          const current = list.querySelector('.current');
+          if (current) current.classList.remove('current', 'S_bg2');
+          if (version) {
+            version.classList.add('current', 'S_bg2');
+            version.scrollIntoView({ block: 'nearest' });
+          }
+        };
+        const setSelectVersion = function (version) {
+          currentVersion = version;
+          highlightVersion(selectVersions.get(version), selectList);
+          highlightVersion(diffVersions.get(version), diffList);
+          showContent(content, version, null);
+        };
+        const setDiffVersion = function (version) {
+          highlightVersion(diffVersions.get(version), diffList);
+          showContent(content, currentVersion, version);
+        };
+        [
+          { timeList: selectList, onClick: setSelectVersion, versionMap: selectVersions },
+          { timeList: diffList, onClick: setDiffVersion, versionMap: diffVersions },
+        ].forEach(({ timeList, onClick, versionMap }) => {
+          versions.forEach(version => {
+            const li = document.createElement('li');
+            li.classList.add('S_line1');
+            li.innerHTML = '<a href="javascript:;" class="S_txt1"></a>';
+            const a = li.firstChild;
+            a.textContent = util.time.format(version.date, 'month');
+            a.addEventListener('click', function (event) {
+              if (!event.isTrusted) return;
+              onClick(version);
+            });
+            timeList.appendChild(li);
+            versionMap.set(version, li);
+          });
+        });
+        setSelectVersion(versions[0]);
+        setDiffVersion(versions[versions.length - 1]);
+      };
+      const showEditInfo = function (mid) {
+        const feedHistoryPromise = request.feedHistory(mid);
+        const historyDialog = ui.dialog({
+          id: 'yawf-feed-edit',
+          title: i18n.viewEditTitle,
+          render(container) {
+            dialogRender(container, feedHistoryPromise);
+          },
+        });
+        historyDialog.show();
+      };
+      observer.feed.onAfter(function (feed) {
+        const edited = feed.querySelector('.WB_feed_detail .WB_from span[title]');
+        if (!edited) return;
+        const feedNode = feedParser.feedNode(edited);
+        const isForward = edited.closest('.WB_feed_expand');
+        const mid = feedNode.getAttribute(isForward ? 'omid' : 'mid');
+        const button = document.createElement('a');
+        button.href = 'javascript:;';
+        button.textContent = i18n.viewEditInfoEdited;
+        button.classList.add('yawf-edited', 'S_txt2');
+        edited.replaceWith(button);
+        button.addEventListener('click', function () {
+          showEditInfo(mid);
+        });
+      });
+
+      css.append(`
+.yawf-feed-edit-dialog-content { width: 860px; height: 480px; display: flex; }
+.yawf-feed-edit-select, .yawf-feed-edit-diff { width: 180px; text-align: center; padding-top: 40px; position: relative;}
+.yawf-feed-edit-view { width: 500px; border: 0 solid; }
+.yawf-feed-edit-select-list { direction: rtl; }
+.yawf-feed-edit-select-title, .yawf-feed-edit-diff-title { font-weight: bold; padding: 10px 0; line-height: 19px; position: absolute; top: 0; width: calc(100% - 1px); border-bottom: 1px solid; }
+.yawf-feed-edit-select-title, .yawf-feed-edit-select li { border-right: 1px solid; }
+.yawf-feed-edit-diff-title, .yawf-feed-edit-diff li { border-left: 1px solid; }
+.yawf-feed-edit-list { height: 100%; overflow: auto; }
+.yawf-feed-edit-list::before { content: " "; border-right: 1px solid; border-right-color: inherit; position: absolute; top: 0; bottom: 0; }
+.yawf-diff-same.yawf-diff-line-break::before { display: none; }
+.yawf-feed-edit-select-list::before { right: 0; }
+.yawf-feed-edit-diff-list::before { left: 0; }
+.yawf-feed-edit-list li { line-height: 29px; direction: ltr; border-bottom: 1px solid; position: relative; }
+.yawf-feed-edit-list li a { display: block; }
+.yawf-feed-edit-list li a:hover, .yawf-feed-edit-list li.current a { font-weight: bold; }
+.yawf-feed-edit-select-list li.current { border-right: 0; }
+.yawf-feed-edit-diff-list li.current { border-left: 0; }
+.yawf-feed-edit-view { overflow: auto; }
+.yawf-feed-edit-view .WB_text { white-space: pre-wrap; }
+.yawf-feed-edit-view .WB_media_wrap { margin-top: 10px; }
+.yawf-diff-insert { text-decoration: underline; background: linear-gradient(to bottom, rgba(0, 255, 0, 0.15) 0, rgba(0, 255, 0, 0.15) calc(94% - 1px), currentColor 94%, currentColor 100%) }
+.yawf-diff-delete { text-decoration: line-through; background: linear-gradient(to bottom, rgba(255, 0, 0, 0.15) 0, rgba(255, 0, 0, 0.15) calc(53% - 1px), currentColor 53%, currentColor 59%, rgba(255, 0, 0, 0.15) calc(59% + 1px), rgba(255, 0, 0, 0.15) 100%); }
+.yawf-diff-line-break::before { content: "↵"; user-select: none; }
+.yawf-img-insert { outline: 3px solid #3c3; }
+.yawf-img-delete { outline: 3px dashed #c33; }
+.yawf-img-reorder { outline: 3px dotted #36f; }
+`);
+    },
+  });
+
 
 }());
 //#endregion
@@ -14440,7 +15118,8 @@ ${[0, 1, 2, 3, 4].map(index => `
       i: { type: 'bubble', icon: 'warn', template: () => i18n.pauseAnimatedImageDetail },
     },
     ainit() {
-      const emptyImage = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+      // 其实不写 encodeURI 效果上也没问题，但是微博转发文字生成看到 > 就会出错
+      const emptyImage = encodeURI('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"></svg>');
       observer.dom.add(function pauseAnimatedImage() {
         const images = Array.from(document.querySelectorAll([
           '.PCD_photolist img[src$=".gif"]:not([yawf-pause-animate])',
@@ -14588,6 +15267,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
+  const pagemenu = yawf.pagemenu;
 
   const feeds = yawf.rules.feeds;
 
@@ -14655,6 +15335,15 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
         observer.dom.add(showButton);
       }
 
+      pagemenu.add({
+        title: i18n.feedOnlySwitch,
+        onClick: function () {
+          rule.ref._enabled.setConfig(!rule.ref._enabled.getConfig());
+        },
+        section: 10,
+        order: 0,
+      });
+
       document.addEventListener('keydown', event => {
         if (!event.isTrusted) return;
         if (event.target.matches('input, textarea, select')) return;
@@ -14719,6 +15408,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   const about = yawf.rules.about = {};
   about.about = rule.Tab({
     template: () => i18n.aboutTabTitle,
+    pagemenu: true,
   });
 
 }());
@@ -15994,6 +16684,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   const util = yawf.util;
   const init = yawf.init;
   const observer = yawf.observer;
+  const pagemenu = yawf.pagemenu;
 
   const i18n = util.i18n;
 
@@ -16026,6 +16717,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   const iconCss = `
 .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
 @font-face { font-family: "yawf-iconfont"; font-style: normal; font-weight: normal; src: url("data:image/woff;base64,d09GRk9UVE8AAAPIAAoAAAAABbQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAAA9AAAANUAAADot8EQFkZGVE0AAAHMAAAAGgAAABxtAw0mT1MvMgAAAegAAABJAAAAYFmdYldjbWFwAAACNAAAADgAAAFCAA0DAGhlYWQAAAJsAAAAMAAAADYD5a1oaGhlYQAAApwAAAAdAAAAJAaAA4BobXR4AAACvAAAAAgAAAAICAAAd21heHAAAALEAAAABgAAAAYAAlAAbmFtZQAAAswAAADkAAAB1Hh5OPRwb3N0AAADsAAAABYAAAAg/4YAM3icVY2xagJBFADfO+9O1GNNJBcLFwWxPLUXAumvDekPQUmjTYjYCNbP0sLO+Ak2NsLWfkN+ZN/ebiTaBG6qqWYQfB8QUSyzxaT/MZ7PJvPZJ6AHCC/c8liWuOlvImxXofL1PiT6l6isa7aZt00SSFjVJcCDhPWjBCHhpwHePSGgVQgXLzdG4CF230hxqlApc1El9ZwP+HgdhMqtYk7NxaVlkVdMEn+T3bkeuY7dE3HH7rgX8PD3NT7oc6gzfXJT0pk9kT0HIt8+UbzYm4RCiqp/hZJWXgAAAHicY2BgYGQAgjO2i86D6AtJW7VhNABKVQagAAB4nGNgZmFg/MLAysDBNJPpDAMDQz+EZnzNYMzIycDAxMAGJKGAkQEJBKS5pjA4MEQyRDLr/NdhiGGawdCMUAPkKQAhIwBYTwumAAAAeJxjYGBgZoBgGQZGBhCwAfIYwXwWBgUgzQKEIH7k//8Q8v8KqEoGRjYGGJP6gGYGUxcAAJgrBwx4nGNgZGBgAOK+F//94vltvjJwszCAwIWkrdpwuvx/LXMX0wwgl4OBCSQKAFMCC7x4nGNgZGBgmvG/liGGhQEEmLsYGBlQARMAU6MDCAAAAAQAAAAEAAB3AABQAAACAAB4nJWPwWoCMRCGv+gqihV6KB7EQ85ClmTxJL12n0C8i+zKXjawCuKLeOn79EH6BH2ETnSglFJoA0m+mf+fzAR44IohLcOUhXKPEc/KfZa8KmfieVceMDEj5SFT48VpsrFk5reqxD0epfrOfTa8KGfieVMeMONDecjcPHFhx5kaR8OeSCuczhNcdufaNfvY1rGV8If+JZWaSnfHgQpLQY6Xey379yZ3PbASLYjfSZ2/xZTydBm7Q2WL3Nu1/TaOxGHlgneFD+L9+y+2MlzHUXxJT63TmGyr7tjE1obc/+O1T5RwTOJ4nGNgZgCD/80MRkCKkQENAAAoVQG5AAA=") format("woff"); }
+.gn_topmenulist_yawf { top: 34px; right: -17px; width: 134px; }
 `;
 
   const searchStyle = util.css.add(searchCss);
@@ -16035,11 +16727,72 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
     iconStyle.remove();
   });
 
-  const onClick = function (e) {
+  const onClick = function (event, tab = null) {
     try {
-      rule.dialog();
+      rule.dialog(tab);
     } catch (e) { util.debug('Error while prompting dialog: %o', e); }
-    e.preventDefault();
+    event.preventDefault();
+  };
+
+  // 给漏斗图标添加一个菜单
+  const addScriptMenu = function (container) {
+    const menuList = document.createElement('div');
+    menuList.innerHTML = '<div class="gn_topmenulist gn_topmenulist_yawf" node-type="msgLayer" style="display: none;"><ul></ul><div class="W_layer_arrow"><span class="W_arrow_bor W_arrow_bor_t"><i class="S_line3"></i><em class="S_bg2_br"></em></span></div></div>';
+    container.appendChild(menuList.firstChild);
+    const dropdown = container.querySelector('.gn_topmenulist_yawf');
+    const ul = dropdown.querySelector('ul');
+    // 允许其他功能向菜单里面塞东西
+    pagemenu.ready(ul);
+    // 在鼠标移入或获得焦点时展示下拉菜单
+    const addTempClassName = async function (classNames, delay) {
+      await new Promise(resolve => setTimeout(resolve, 0));
+      dropdown.classList.add(...classNames);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      dropdown.classList.remove(...classNames);
+    };
+    let mouseInCount = 0, shown = false;
+    const showDropdown = function () {
+      mouseInCount++;
+      if (!shown) {
+        shown = true;
+        dropdown.style.display = 'block';
+        addTempClassName('UI_speed_fast', 'UI_ani_fadeInDown', 200);
+      }
+    };
+    const hideDropdown = async function () {
+      const lastInCount = mouseInCount;
+      await new Promise(resolve => setTimeout(resolve, 200));
+      if (lastInCount !== mouseInCount) return;
+      if (shown) {
+        shown = false;
+        await addTempClassName('UI_speed_fast', 'UI_ani_fadeOutUp', 200);
+        if (lastInCount !== mouseInCount) return;
+        dropdown.style.display = 'none';
+      }
+    };
+    container.addEventListener('mouseenter', showDropdown);
+    container.addEventListener('mouseleave', hideDropdown);
+    container.addEventListener('focusin', showDropdown);
+    container.addEventListener('focusout', hideDropdown);
+
+    // 添加菜单项，跳转到设置页面的各标签页
+    rule.tabs.forEach((tab, index) => {
+      if (!tab.pagemenu) return;
+      pagemenu.add({
+        title: tab.template,
+        onClick: event => onClick(event, tab),
+        order: index,
+      });
+    });
+
+    // 如果点击了漏斗图标，我们会直接显示设置窗口，但如果是触摸点击的，我们先显示下拉菜单
+    const onTouch = function (event) {
+      if (shown) return;
+      showDropdown();
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    container.addEventListener('touchstart', onTouch, true);
   };
   init.onLoad(() => {
     const icon = function () {
@@ -16049,9 +16802,9 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       template.innerHTML = `<div class="gn_set_list yawf-gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">Y</em></a></div>`;
       const container = document.importNode(template.content.firstElementChild, true);
       const button = container.querySelector('.gn_filter');
-      reference.before(container);
       button.setAttribute('title', i18n.filterMenuItem);
       button.addEventListener('click', onClick);
+      reference.before(container);
       setTimeout(async () => {
         await searchStyle.ready;
         const [{ width, height }] = button.getClientRects();
@@ -16075,6 +16828,9 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       item.addEventListener('click', onClick);
       item.textContent = i18n.filterMenuItem;
       reference.before(...container.children);
+
+      const iconContainer = document.querySelector('.yawf-gn_set_list');
+      addScriptMenu(iconContainer);
     };
     if (['search', 'ttarticle'].includes(init.page.type())) return;
     icon(); menuitem();
