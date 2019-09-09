@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.44
+// @version           4.0.45
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -642,10 +642,14 @@
     const contentNode = dialog.querySelector('.yawf-dialog-content');
     // 填入内容
     titleNode.textContent = title;
-    render(contentNode);
     okButton.textContent = i18n.okButtonTitle;
     cancelButton.textContent = i18n.cancelButtonTitle;
     closeButton.title = i18n.closeButtonTitle;
+    render(contentNode, Object.assign(...[
+      { close: closeButton },
+      button && button.ok ? { ok: okButton } : {},
+      button && button.cancel ? { cancel: cancelButton } : {},
+    ]));
     // 定位对话框的位置
     const lastPos = { x: 0, y: 0 };
     const setPos = function ({ x, y }) {
@@ -7146,14 +7150,14 @@
     autoCheckFollowingRunning: { cn: '（正在更新）', en: '(Updating)' },
     autoCheckFollowingDialogTitle: { cn: '关注列表变化 - 药方 (YAWF)', tw: '關注清單變化 - 藥方 (YAWF)', en: 'Following List Changes - YAWF' },
     autoCheckFollowingTip: {
-      cn: '您的关注列表自从上次检查并确认至今发生了如下变化，请您复查：',
-      hk: '您的關注清單自從上次檢查並確認至今發生了如下變化，請您複查：',
-      tw: '您的關注清單自從上次檢查並確認至今發生了如下變化，請您複查：',
-      en: 'Your following list had been changed since last checking, please review: ',
+      cn: '您的关注列表自从上次检查并确认至今发生了如下变化，请您复查并确认：',
+      tw: '您的關注清單自從上次檢查並確認至今發生了如下變化，請您複查並確認：',
+      en: 'Your following list had been changed since last checking, please review and confirm: ',
     },
     autoCheckFollowingAdd: { cn: '新增如下关注', tw: '新增如下關注', en: 'Recent Following' },
     autoCheckFollowingLost: { cn: '减少如下关注', tw: '減少如下關注', en: 'Recent Unfollowed' },
     autoCheckFollowingRename: { cn: '如下关注修改了昵称', tw: '如下關注修改了暱稱', en: 'Recent Renamed' },
+    autoCheckFollowingConfirmed: { cn: '已确认', tw: '已確認', en: 'Confirmed' },
   });
 
   /**
@@ -7167,7 +7171,8 @@
       id: 'yawf-follow-change',
       title: i18n.autoCheckFollowingDialogTitle,
       /** @param {Element} container */
-      render(container) {
+      render(container, { ok: okButton }) {
+        okButton.textContent = i18n.autoCheckFollowingConfirmed;
         container.innerHTML = '<div class="yawf-following-notice-header"></div><div class="yawf-following-notice-body"><div class="yawf-following-add" style="display: none;"><div class="yawf-following-add-title"></div><div class="yawf-following-add-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div><div class="yawf-following-lost" style="display: none;"><div class="yawf-following-lost-title"></div><div class="yawf-following-lost-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div><div class="yawf-following-rename" style="display: none;"><div class="yawf-following-rename-title"></div><div class="yawf-following-rename-items"><ul class="yawf-config-collection-list yawf-config-collection-user-id"></ul></div></div></div><div class="yawf-following-notice-footer"><span class="yawf-following-notice-last-time-text"></span><span class="yawf-following-notice-last-time"></span></div>';
         container.querySelector('.yawf-following-notice-header').textContent = i18n.autoCheckFollowingTip;
         container.querySelector('.yawf-following-add-title').textContent = i18n.autoCheckFollowingAdd;
@@ -7202,7 +7207,7 @@
       },
       button: {
         ok() { resolve(true); followChangeDialog.hide(); },
-        close() { resolve(null); followChangeDialog.hide(); },
+        cancel() { resolve(null); followChangeDialog.hide(); },
       },
     });
     followChangeDialog.show();
@@ -11467,7 +11472,10 @@
 .WB_feed_detail .WB_from a[date],
 .WB_feed_detail .WB_from a[yawf-date],
 .WB_feed_detail .WB_from span[title],
-.WB_feed_detail .WB_from .yawf-edited { float: left; position: relative; top: -30px; }`,
+.WB_feed_detail .WB_from .yawf-edited { float: left; position: relative; top: -30px; }
+.WB_feed_detail .WB_from a[date]::after,
+.WB_feed_detail .WB_from a[yawf-date]::after { content: " "; }
+`,
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanFeedSourceDetail } },
   });
   clean.CleanRule('pop', () => i18n.cleanFeedPop, 1, `
@@ -13088,7 +13096,10 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
           });
         };
         observer.dom.add(handleTextDateElements);
-        css.append('.WB_feed_v3 .WB_from span[yawf-date] { margin-left: 0; }');
+        css.append(`
+.WB_feed_v3 .WB_from span[yawf-date] { margin-left: 0; }
+[yawf-date]::after { content: " "; }
+`);
       },
     });
   }
@@ -13664,13 +13675,16 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 .WB_feed .WB_feed_handle { height: 20px; margin-top: 20px; display: block; position: relative; }
 .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
 .WB_feed .WB_feed_handle .WB_handle { float: right; margin-right: 10px; height: 20px; padding: 0; position: relative; top: -20px; }
-.WB_feed .WB_feed_handle .WB_row_line { border: none; overflow: hidden; }
+.WB_feed .WB_feed_handle .WB_row_line { border: none; overflow: hidden; line-height: 26px; }
 .WB_feed .WB_feed_handle .WB_row_line::after { content: " "; display: block; margin-left: -1px; flex: 0 0 0; order: 10; }
 .WB_feed .WB_feed_handle .WB_row_line li { padding: 0 11px 0 10px; height: auto; margin-right: -1px; }
 .WB_feed .WB_row_line .line { display: inline; border-width: 0; position: relative; }
 .WB_feed .WB_row_line .line::before { content: " "; display: block; width: 0; height: 100%; position: absolute; right: -10px; top: 0; border-right: 1px solid; border-color: inherit; }
 .WB_feed_handle .WB_row_line .arrow { display: none; }
 .WB_feed_repeat { margin-top: -10px; }
+.WB_feed_comment .WB_feed_detail { position: relative; padding-bottom: 4px; }
+.WB_feed_comment .WB_feed_detail::after { display: none; }
+.WB_feed_comment .WB_expand { margin-bottom: 0; }
 `,
   });
 
@@ -13686,19 +13700,23 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
     parent: layout.layout,
     template: () => i18n.sourceAtBottom,
     ainit() {
-      observer.feed.onBefore(function (feed) {
-        const from = feed.querySelector('.WB_detail > .WB_info + .WB_from');
-        if (!from) return;
-        from.parentNode.appendChild(from);
-        from.classList.add('yawf-bottom-WB_from');
+      observer.dom.add(function () {
+        const fromList = Array.from(document.querySelectorAll('.WB_detail > .WB_info + .WB_from'));
+        if (!fromList.length) return;
+        fromList.forEach(from => {
+          from.parentNode.appendChild(from);
+          from.classList.add('yawf-bottom-WB_from');
+        });
       });
       const foldSpace = layout.foldSpace.getConfig();
       if (foldSpace) {
-        css.append('.WB_feed_v3 .WB_from.yawf-bottom-WB_from { position: absolute; bottom: -6px; transform: translate(0, 100%); }');
+        css.append(`
+.WB_from.WB_from.yawf-bottom-WB_from { position: absolute; bottom: 0; margin: 0; transform: translate(0, 100%); line-height: 26px; }
+`);
       } else {
-        css.append('.WB_feed_v3 .WB_from.yawf-bottom-WB_from { margin: 10px 0 7px; }');
+        css.append('.WB_from.WB_from.yawf-bottom-WB_from { margin: 10px 0 7px; }');
       }
-      css.append('.WB_feed.WB_feed_v3 .WB_expand_media_box { margin-bottom: 10px; }');
+      css.append('.WB_feed.WB_feed .WB_expand_media_box { margin-bottom: 10px; }');
     },
   });
 
@@ -14204,6 +14222,7 @@ ${[0, 1, 2, 3, 4].map(index => `
 .WB_feed_expand .WB_text .W_btn_b, .WB_text .W_btn_c, .WB_empty .W_btn_c { height: ${h2}px !important; line-height: ${h2}px !important; }
 .WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b *, .WB_text .W_btn_c *, .WB_empty .W_btn_c * { line-height: ${h2}px !important; font-size: ${fs3}px !important; }
 .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
+.WB_info { margin-bottom: 2px !important; padding-top: 0 !important; line-height: ${fs <= 28 ? 28 : 50}px !important; }
 `;
       css.append(style);
     },
@@ -14495,7 +14514,7 @@ ${[0, 1, 2, 3, 4].map(index => `
     viewEditInfo: {
       cn: '点击“已编辑”字样查看编辑历史',
       tw: '點擊「已編輯」字樣查閱編輯歷史',
-      en: 'Click "Edited" ',
+      en: 'View edit history by clicking "Edited"',
     },
     viewEditInfoDetail: {
       cn: '查看编辑历史的弹框和原版不同，点击微博右上角菜单看到的微博编辑记录仍是原版。点左侧列表可以查看指定的版本，点右侧列表可以和当前显示的版本对比。',
@@ -14568,6 +14587,7 @@ ${[0, 1, 2, 3, 4].map(index => `
             }
           }
         }
+        /** @type {{ type: 'same'|'delete'|'insert', chars: string }[]} */
         const output = [];
         for (let si = sl - 1, ti = tl - 1; si >= 0 || ti >= 0;) {
           const [fs, ft] = si >= 0 && ti >= 0 ? from[si][ti] : [-1, -1];
@@ -14580,8 +14600,9 @@ ${[0, 1, 2, 3, 4].map(index => `
           }
           [si, ti] = [fs, ft];
         }
+        /** @type {{ type: 'same'|'delete'|'insert', str: string }} */
         let last = { type: 'same', str: '' };
-        const result = [last, ...output.reverse().map(({ type, chars }) => {
+        const connected = [last, ...output.reverse().map(({ type, chars }) => {
           const str = chars.join('');
           if (type === last.type) {
             last.str += str;
@@ -14590,6 +14611,29 @@ ${[0, 1, 2, 3, 4].map(index => `
           last = { type, str };
           return last;
         })].filter(content => content && content.str);
+        /** @type {{ delete: { type: 'delete', str: string }, insert: { type: 'insert', str: string } }} */
+        let prevPart = { delete: null, insert: null, same: null };
+        const result = connected.filter(part => {
+          const { str, type } = part;
+          if (['delete', 'insert'].includes(type)) {
+            if (prevPart[type]) {
+              prevPart[type].str += str;
+              return false;
+            } else {
+              prevPart[type] = part;
+              return true;
+            }
+          } else {
+            if (str.length < 4 && prevPart.delete && prevPart.insert) {
+              prevPart.delete.str += str;
+              prevPart.insert.str += str;
+              return false;
+            } else {
+              prevPart.delete = prevPart.insert = null;
+              return true;
+            }
+          }
+        });
         return result;
       };
       const renderTextDiff = function (container, source, target) {
@@ -14599,12 +14643,15 @@ ${[0, 1, 2, 3, 4].map(index => `
           str.split(/(\n)/g).forEach(part => {
             const span = document.createElement('span');
             span.classList.add('yawf-diff-' + type);
+            span.textContent = part;
             fragement.appendChild(span);
             if (part === '\n') {
-              span.classList.add('S_txt2', 'yawf-diff-line-break');
-              fragement.appendChild(document.createElement('br'));
-            } else {
-              span.textContent = part;
+              const breakToken = document.createElement('span');
+              breakToken.classList.add('yawf-diff-' + type);
+              const breakChar = document.createElement('span');
+              breakChar.classList.add('S_txt2', 'yawf-diff-line-break');
+              breakToken.appendChild(breakChar);
+              fragement.insertBefore(breakToken, span);
             }
           });
         });
@@ -14767,7 +14814,7 @@ ${[0, 1, 2, 3, 4].map(index => `
 .yawf-feed-edit-diff-title, .yawf-feed-edit-diff li { border-left: 1px solid; }
 .yawf-feed-edit-list { height: 100%; overflow: auto; }
 .yawf-feed-edit-list::before { content: " "; border-right: 1px solid; border-right-color: inherit; position: absolute; top: 0; bottom: 0; }
-.yawf-diff-same.yawf-diff-line-break::before { display: none; }
+.yawf-diff-same .yawf-diff-line-break { display: none; }
 .yawf-feed-edit-select-list::before { right: 0; }
 .yawf-feed-edit-diff-list::before { left: 0; }
 .yawf-feed-edit-list li { line-height: 29px; direction: ltr; border-bottom: 1px solid; position: relative; }
