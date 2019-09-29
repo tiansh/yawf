@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.46
+// @version           4.0.47
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -5574,12 +5574,14 @@
       dragIndex++;
       if (!dropArea) return;
       dropArea.classList.add('yawf-drag');
+      dropArea.parentNode.classList.add('yawf-drop-area-active');
     };
     const hideDropArea = function () {
       dragIndex++;
       inArea = false;
       if (!dropArea) return;
       dropArea.classList.remove('yawf-drag', 'yawf-drag-in');
+      dropArea.parentNode.classList.remove('yawf-drop-area-active');
     };
     const enterDropArea = function () {
       inArea = true;
@@ -5667,6 +5669,7 @@
 .WB_global_nav .gn_topmenulist.yawf-drop-area .W_layer_arrow .W_arrow_bor_t { right: 122px; }
 .yawf-drop-content { margin: 20px; border: 5px dashed #666; border-radius: 20px; text-align: center; white-space: wrap; width: 134px; height: 134px; padding: 20px; margin: 20px; line-height: 1.5; }
 .yawf-drop-title { font-size: 16px; font-weight: bold; white-space: pre-wrap; margin: 0 0 20px; -moz-user-select: none; -webkit-user-select: none; user-select: none; }
+.yawf-drop-area-active .gn_topmenulist_yawf { display: none; }
 `);
 
 }());
@@ -6306,6 +6309,10 @@
           'a.a_topic',
         ].join(','));
         domList.push(...topics);
+        const sources = source.dom(feed);
+        sources.forEach(source => {
+          if (/^https:\/\/huati.weibo.com\/k\/[^/?#]+$/.test(source.href)) domList.push(source);
+        });
       } else {
         const links = Array.from(content.querySelectorAll('a'));
         links.forEach(link => {
@@ -6325,6 +6332,11 @@
   topic.text = (feed, { short = false, long = true } = {}) => {
     const domList = topic.dom(feed, { short, long });
     return domList.map(dom => {
+      if (dom instanceof HTMLAnchorElement) {
+        if (/^https:\/\/huati.weibo.com\/k\/[^/?#]+$/.test(dom.href)) {
+          return decodeURIComponent(dom.href.split('/').pop()).trim();
+        }
+      }
       const text = dom.title || dom.textContent;
       return text.replace(/[#\ue627]|\[超话\]$/g, '').trim();
     });
@@ -6619,6 +6631,11 @@
     }
     if (!topic && target.matches('.hot_topic a[title][suda-uatrack*="key=hottopic_r2"]')) {
       topic = target.title.replace(/^[\s#]+|[\s#]+$/g, '');
+    }
+    if (!topic && target.matches('.WB_from a[href^="https://huati.weibo.com/k/"]')) {
+      if (/^https:\/\/huati.weibo.com\/k\/[^/?#]+$/.test(target.href)) {
+        topic = decodeURIComponent(target.href.split('/').pop()).trim();
+      }
     }
     if (!topic) return [];
     const text = topic.replace(/^\ue627|\[超话\]$|超话$/g, '');
@@ -8317,7 +8334,7 @@
   const i18n = util.i18n;
   const css = util.css;
 
-  i18n.feedsManuallyGroupTitle = {
+  i18n.feedsPauseGroupTitle = {
     cn: '暂停过滤',
     tw: '暫停篩選',
     en: 'Pause Filter',
@@ -8326,7 +8343,7 @@
   const pause = filter.pause = {};
   pause.pause = rule.Group({
     parent: filter.filter,
-    template: () => i18n.feedsManuallyGroupTitle,
+    template: () => i18n.feedsPauseGroupTitle,
   });
 
   Object.assign(i18n, {
@@ -9867,6 +9884,43 @@
     },
   });
 
+  i18n.imageTagFeedFilter = {
+    cn: '配图带有标签的微博{{i}}',
+    tw: '配圖帶有標記的微博{{i}}',
+    en: 'Feeds with tags on images {{i}}',
+  };
+  i18n.imageTagFeedFilterDetail = {
+    cn: '微博允许给配图添加标签，标签可以是文本、话题、用户以及商品链接。选择这条规则后将不会看到对应的微博，另外您可以只隐藏[[clean_feed_pic_tag]]。',
+  };
+  content.imageTag = rule.Rule({
+    id: 'filter_image_tag',
+    version: 47,
+    parent: content.content,
+    template: () => i18n.imageTagFeedFilter,
+    ref: {
+      i: { type: 'bubble', icon: 'ask', template: () => i18n.imageTagFeedFilterDetail },
+    },
+    init() {
+      const rule = this;
+      observer.feed.filter(function imageTagFeedFilter(feed) {
+        if (!rule.isEnabled()) return null;
+        const list = feed.querySelector('.WB_media_a[action-data*="photo_tag_pids"]');
+        if (!list) return null;
+        const tagPidsStr = new URLSearchParams(list.getAttribute('action-data')).get('photo_tag_pids');
+        if (!tagPidsStr) return null;
+        const tagPids = tagPidsStr.split(',');
+        const items = feed.querySelectorAll('[action-type="fl_pics"][action-data*="pic_id"]');
+        const hasTag = Array.from(items).some(item => {
+          const id = new URLSearchParams(item.getAttribute('action-data')).get('pic_id');
+          return tagPids.includes(id);
+        });
+        if (!hasTag) return null;
+        return 'hide';
+      });
+      this.addConfigListener(() => { observer.feed.rerun(); });
+    },
+  });
+
   i18n.koiForwardFeedFilter = {
     cn: '转发图标是锦鲤的微博（转发抽奖的微博？）',
     tw: '轉發圖示是錦鯉的微博（轉發抽獎的微博？）',
@@ -10138,7 +10192,7 @@
         template: () => i18n.feedWithLink.replace('{}', name),
         init() {
           const rule = this;
-          observer.feed.filter(function feedWithPlaceFilter(feed) {
+          observer.feed.filter(function feedWithSpecialLinkFilter(feed) {
             if (!rule.isEnabled()) return null;
             if (init.page.type() === type) return null;
             if (feed.querySelector(`a[suda-uatrack*="1022-${type}"]`)) return 'hide';
@@ -10166,7 +10220,7 @@
       type: 'topic',
       name: () => i18n.feedWithLinkTopic,
       recognizer: feed => {
-        const source = feed.querySelector('a[action-type="app_source"][href^="https://weibo.com/p/100808"]');
+        const source = feed.querySelector('.WB_from a[href^="https://huati.weibo.com/k/"]');
         if (source) return true;
         return false;
       },
@@ -11468,6 +11522,7 @@
   clean.CleanRule('source', () => i18n.cleanFeedSource, 1, {
     acss: `
 .WB_feed_detail .WB_from { height: 26px; overflow: hidden; }
+.WB_feed_detail .WB_feed_expand .WB_from { height: 16px; }
 .WB_feed_detail .WB_from::before { content: " "; display: block; float: left; width: 100%; height: 30px; }
 .WB_feed_detail .WB_from a[date],
 .WB_feed_detail .WB_from a[yawf-date],
@@ -13106,11 +13161,18 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 
   if (env.config.chatInPageSupported) {
 
-    i18n.chatInPage = {
-      cn: '在微博页面内整合聊天窗口',
-      tw: '在微博頁面內整合聊天窗口',
-      en: 'Use chat in pages of feeds',
-    };
+    Object.assign(i18n, {
+      chatInPage: {
+        cn: '在微博页面内整合聊天窗口',
+        tw: '在微博頁面內整合聊天窗口',
+        en: 'Use chat in pages of feeds',
+      },
+      chatButtonText: {
+        // 这个条目没有翻译，因为这个只是在微博的初始化之前用的
+        // 微博初始化之后会用微博自己的，那个就没有翻译
+        cn: '微博聊天',
+      },
+    });
 
     details.chatFrame = rule.Rule({
       id: 'layout_chat_in_page',
@@ -13127,7 +13189,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 #WB_webchat { bottom: -100px !important; display: block !important; }
 #yawf-webchat { position: fixed; bottom: 0px; right: 0px; z-index: 1024; display: block !important; background: #d3d6df; }
 #yawf-webchat .webim_fold { top: -40px; right: 0px; visibility: visible; }
-#yawf-webchat .fold_cont em { background: -moz-element(#WB_webim_num) no-repeat; width: 200px; display: inline-block; height: 40px; }
+#yawf-webchat .fold_cont em { width: 200px; display: inline-block; height: 40px; }
 .yawf-webim-main { position: fixed; bottom: 0; right: 0; z-index: 10000; box-shadow: 0 0 10px black; border-radius: 3px 0 0 0; overflow: hidden; }
 .yawf-webim-main iframe { width: 100%; height: 100%; border: 0 none; }
 .yawf-webim-resizer { position: absolute; width: 12px; height: 12px; left: 0; top: 0; margin: 0; cursor: nwse-resize; opacity: 0.8; }
@@ -13140,9 +13202,9 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         let frameContentResolve;
         /** @type {Promise<Window>} */
         let frameContent = new Promise(resolve => { frameContentResolve = resolve; });
-        const initChatArea = function () {
+        const initChatArea = function (ori) {
           const container = document.createElement('div');
-          container.innerHTML = '<div class="WB_webim" id="yawf-webchat" style=""><div class="webim_fold webim_fold_v2 clearfix"><div class="fold_bg"></div><p class="fold_cont clearfix"><span class="fold_icon W_fl" data-target="minichat"></span><em></em></p></div><div class="yawf-webim-main" style="width: 640px; height: 480px;"><iframe src="https://chat.221edc3f-9e16-4973-a522-4ca21e7c8540.invalid/"></iframe><div class="yawf-webim-resizer"><i></i></div></div></div>';
+          container.innerHTML = '<div class="WB_webim" id="yawf-webchat" style=""><div class="webim_fold webim_fold_v2 clearfix"><div class="fold_bg"></div><p class="fold_cont clearfix"><span class="fold_icon W_fl" data-target="minichat"></span><em class="fold_font W_fl W_f14"></em></p></div><div class="yawf-webim-main" style="width: 640px; height: 480px;"><iframe src="https://chat.221edc3f-9e16-4973-a522-4ca21e7c8540.invalid/"></iframe><div class="yawf-webim-resizer"><i></i></div></div></div>';
           const webim = container.firstElementChild;
           const fold = webim.querySelector('.webim_fold');
           const main = webim.querySelector('.yawf-webim-main');
@@ -13173,6 +13235,15 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
             const contentWindow = frame.contentWindow;
             frameContentResolve(contentWindow);
           });
+
+          // 未读消息数量在原版的聊天按钮上的展示，我们把它拷贝过来
+          const foldText = webim.querySelector('.fold_cont em');
+          const oriText = ori.querySelector('.fold_cont em');
+          const updateText = function () {
+            foldText.textContent = oriText.textContent;
+          };
+          (new MutationObserver(updateText)).observe(oriText, { childList: true });
+          foldText.textContent = i18n.chatButtonText;
 
           /*
            * 接下来允许聊天框缩放
@@ -13239,7 +13310,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
           const webim = document.querySelector('#WB_webchat:not([yawf-web-chat])');
           if (!webim) return;
           webim.setAttribute('yawf-web-chat', '');
-          initChatArea();
+          initChatArea(webim);
         });
 
         /*
@@ -13256,15 +13327,26 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
           if (!showChatWindow) return;
           const target = event.target;
           if (!(target instanceof Element)) return;
-          const chatTo = target.closest('a[href*="api.weibo.com/chat"]');
-          if (!chatTo) return;
-          const data = new URL(chatTo.hash.slice(1), location.href);
-          const uid = Number(data.searchParams.get('to_uid'));
+          const uid = (function () {
+            const chatTo = target.closest('a[href*="api.weibo.com/chat"]');
+            if (!chatTo) return null;
+            const data = new URL(chatTo.hash.slice(1), location.href);
+            const uid = Number(data.searchParams.get('to_uid'));
+            if (!uid) return null;
+            return uid;
+          }()) || (function () {
+            const toDialog = target.closest('[action-type="to_dialog"]');
+            if (!toDialog) return null;
+            const data = new URLSearchParams(toDialog.getAttribute('action-data'));
+            const uid = Number(data.get('uid'));
+            if (!uid) return null;
+            return uid;
+          }());
           if (!uid) return;
-          showChatWindow();
-          chatToUid(uid);
           event.stopPropagation();
           event.preventDefault();
+          showChatWindow();
+          chatToUid(uid);
         }, true);
 
       },
@@ -15359,6 +15441,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
     },
     ainit() {
       const rule = this;
+      if (yawf.init.page.type() === 'ttarticle') return;
 
       if (rule.ref.button.getConfig()) {
         const showButton = function showReaderSwitch() {
@@ -15403,12 +15486,11 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       css.append(`
 .yawf-feed-only-button { text-align: center; line-height: 31px; margin-bottom: 10px; border-radius: 3px; }
 body[yawf-feed-only][yawf-feed-only] { --yawf-left-width: 0px; --yawf-right-width: 0px; --yawf-feed-width: ${+width}px; --yawf-extra-padding: 20px;}
-body[yawf-feed-only] .WB_miniblog { padding-top: 50px; }
 body[yawf-feed-only] #WB_webchat,
 body[yawf-feed-only] [i-am-music-player],
 body[yawf-feed-only] .WB_frame>*:not(#plc_main),
 body[yawf-feed-only] #plc_main>*:not(.WB_main_c):not(.WB_frame_c):not(.WB_main_r):not(.WB_frame_b),
-body[yawf-feed-only] .WB_main_c>*:not(#v6_pl_content_homefeed),
+body[yawf-feed-only] .WB_main_c>*:not(#v6_pl_content_homefeed, #v6_pl_content_commentlist),
 body[yawf-feed-only] #plc_bot .WB_footer,
 body[yawf-feed-only] #plc_bot .W_fold,
 body[yawf-feed-only] .WB_footer { display: none !important; }
@@ -15417,21 +15499,25 @@ body[yawf-feed-only] #plc_main { display: block; margin-left: auto; margin-right
 body[yawf-feed-only] .WB_frame,
 body[yawf-feed-only] #plc_main,
 body[yawf-feed-only] .WB_global_nav,
-body[yawf-feed-only] .WB_main_c { max-width: 100%; margin: 0 auto; }
+body[yawf-feed-only] .WB_main_c { max-width: 100%; margin-left: auto; margin-right: auto; }
 body[yawf-feed-only] #plc_main { padding-bottom: 10px; }
 body[yawf-feed-only] #plc_main::after { content: " "; display: table; clear: both; }
-body[yawf-feed-only] .WB_global_nav { position: static; margin-top: -50px; }
 body[yawf-feed-only] #plc_main>.WB_main_r { visibility: hidden; margin-right: -230px; }
 body[yawf-feed-only] #plc_main>.WB_frame_b { visibility: hidden; margin-right: -300px; }
 body[yawf-feed-only] .WB_frame { padding-left: 0; }
 `);
 
-      const updateEnable = function (enabled) {
-        if (enabled) document.body.setAttribute('yawf-feed-only', 'yawf-feed-only');
-        else document.body.removeAttribute('yawf-feed-only');
+      const updateEnable = function updateEnable() {
+        if (!document || !document.body) setTimeout(updateEnable, 1000);
+        const enabled = rule.ref._enabled.getConfig();
+        if (enabled) {
+          document.body.setAttribute('yawf-feed-only', 'yawf-feed-only');
+        } else {
+          document.body.removeAttribute('yawf-feed-only');
+        }
       };
       rule.ref._enabled.addConfigListener(updateEnable);
-      updateEnable(rule.ref._enabled.getConfig());
+      updateEnable();
     },
   });
 
