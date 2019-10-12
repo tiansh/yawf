@@ -12,11 +12,17 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.47
+// @version           4.0.48
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
 // @exclude           https://weibo.com/a/bind/*
+// @exclude           https://account.weibo.com/*
+// @exclude           https://kefu.weibo.com/*
+// @exclude           https://photo.weibo.com/*
+// @exclude           https://security.weibo.com/*
+// @exclude           https://verified.weibo.com/*
+// @exclude           https://vip.weibo.com/*
 // @exclude           https://api.weibo.com/chat*
 // @noframes
 // @run-at            document-start
@@ -1969,6 +1975,35 @@
     return list;
   };
   request.feedHistory = feedHistory;
+
+}());
+//#endregion
+//#region @require yaofang://content/request/allimage.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const network = yawf.network;
+  const request = yawf.request = yawf.request || {};
+
+  const time = util.time;
+
+  const getAllImages = async function (mid) {
+    const host = location.hostname;
+    const url = new URL(`https://${host}/p/aj/v6/history?ajwvr=6&domain=100505`);
+    url.searchParams.set('mid', mid);
+    url.searchParams.set('page', 1);
+    url.searchParams.set('page_size', 1);
+    url.searchParams.set('__rnd', Date.now());
+    util.debug('fetch url %s', url + '');
+    const resp = await network.fetchJson(url + '');
+    const data = resp.data;
+    const dom = new DOMParser().parseFromString(data.html, 'text/html');
+    const history = dom.querySelector('.WB_feed_detail');
+    const imgs = Array.from(history.querySelectorAll('.WB_pic img'));
+    return imgs.map(img => img.src.replace(/^https:/, ''));
+  };
+  request.getAllImages = getAllImages;
 
 }());
 //#endregion
@@ -6350,7 +6385,7 @@
     const domList = [].concat(...contents.map(content => {
       if (!content) return [];
       if (!isSearch) {
-        return content.querySelectorAll('a[action-type="feed_list_url"]');
+        return Array.from(content.querySelectorAll('a[action-type="feed_list_url"]'));
       } else {
         const links = Array.from(content.querySelectorAll('a'));
         return links.filter(link => (
@@ -7345,6 +7380,7 @@
       if (shouldUpdate) setTimeout(updateFollowList, 10e3);
       const change = lastChange.getConfig();
       if (change && change.timestamp) {
+        if (init.page.type() === 'search') return;
         showChangeList(change).then(confirm => confirm && lastChange.setConfig(null));
       }
     },
@@ -7395,12 +7431,12 @@
     template: () => i18n.showArticleWithoutFollow,
     initial: true,
     ainit() {
-      const showArticalCss = `
+      const showArticleCss = `
 .WB_editor_iframe, .WB_editor_iframe_new { height: auto !important; }
 .artical_add_box [node-type="maskContent"] { display: none; }
 `;
-      css.append(showArticalCss);
-      observer.dom.add(function articalFrameStyle() {
+      css.append(showArticleCss);
+      observer.dom.add(function articleFrameStyle() {
         /** @type{NodeListOf<HTMLIFrameElement>} */
         const frames = document.querySelectorAll('iframe[src*="ttarticle/p/show"]');
         if (!frames.length) return;
@@ -7409,7 +7445,7 @@
           if (!document) setTimeout(injectStyle, 10, frame);
           const target = document.head || document.body || document.documentElement;
           const style = document.createElement('style');
-          style.textContent = showArticalCss;
+          style.textContent = showArticleCss;
           target.appendChild(style);
         });
       });
@@ -8850,13 +8886,14 @@
     init() {
       const rule = this;
       observer.feed.filter(function authorFilterFeedFilter(/** @type {Element} */feed) {
-        if (!feedParser.isForward(feed)) return null;
+        const isForward = feedParser.isForward(feed);
+        if (!isForward) return null;
         const [author] = feedParser.author.id(feed);
         const accounts = rule.ref.items.getConfig();
         const contain = accounts.find(account => account.id === author);
+        if (!contain) return null;
         const reason = i18n.accountAuthorForwardReason.replace('{1}', () => feedParser.author.name(feed));
-        if (contain) return { result: rule.feedAction, reason };
-        return null;
+        return { result: rule.feedAction, reason };
       }, { priority: this.priority });
       this.ref.items.addConfigListener(() => { observer.feed.rerun(); });
     }
@@ -8937,6 +8974,11 @@
       tw: '轉發自 @{1}',
       en: 'forwarded from @{1}',
     },
+    accountOriginalDiscoverReason: {
+      cn: '作者 @{1}',
+      tw: '作者 @{1}',
+      en: 'author @{1}',
+    },
     accountOriginalFollower: {
       cn: '隐藏转发自|粉丝数量超过{{count}}万的博主的微博{{i}}||例外帐号{{account}}',
       tw: '隱藏轉發自|粉絲數量超過{{count}}萬的博主的微博{{i}}||例外帐号{{account}}',
@@ -8963,15 +9005,25 @@
     init() {
       const rule = this;
       observer.feed.filter(function originalFilterFeedFilter(/** @type {Element} */feed) {
-        const original = new Set(feedParser.original.id(feed));
-        if (rules.original.id.discover.isEnabled() && init.page.type() === 'discover') {
-          feedParser.author.id(feed).forEach(id => original.add(id));
-        }
         const accounts = rule.ref.items.getConfig();
-        const contain = accounts.find(account => original.has(account.id));
-        if (!contain) return null;
-        const reason = i18n.accountOriginalReason.replace('{1}', () => feedParser.original.name(feed));
-        return { result: rule.feedAction, reason };
+
+        const original = new Set(feedParser.original.id(feed));
+        if (accounts.find(account => original.has(account.id))) {
+          const name = feedParser.original.name(feed);
+          const reason = i18n.accountOriginalReason.replace('{1}', () => name);
+          return { result: rule.feedAction, reason };
+        }
+
+        if (rules.original.id.discover.isEnabled() && init.page.type() === 'discover') {
+          const [author] = feedParser.author.id(feed);
+          if (accounts.find(account => author === account.id)) {
+            const name = feedParser.author.name(feed);
+            const reason = i18n.accountOriginalDiscoverReason.replace('{1}', () => name);
+            return { result: rule.feedAction, reason };
+          }
+        }
+
+        return null;
       }, { priority: this.priority });
       this.ref.items.addConfigListener(() => { observer.feed.rerun(); });
     }
@@ -13762,11 +13814,12 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 .WB_feed .WB_feed_handle .WB_row_line li { padding: 0 11px 0 10px; height: auto; margin-right: -1px; }
 .WB_feed .WB_row_line .line { display: inline; border-width: 0; position: relative; }
 .WB_feed .WB_row_line .line::before { content: " "; display: block; width: 0; height: 100%; position: absolute; right: -10px; top: 0; border-right: 1px solid; border-color: inherit; }
+.WB_feed .WB_row_line .line span .W_ficon { vertical-align: middle; }
 .WB_feed_handle .WB_row_line .arrow { display: none; }
 .WB_feed_repeat { margin-top: -10px; }
 .WB_feed_comment .WB_feed_detail { position: relative; padding-bottom: 4px; }
 .WB_feed_comment .WB_feed_detail::after { display: none; }
-.WB_feed_comment .WB_expand { margin-bottom: 0; }
+.WB_feed_v3 .WB_expand .WB_empty .WB_innerwrap, .WB_feed_comment .WB_expand { margin-bottom: 0; }
 `,
   });
 
@@ -13883,6 +13936,8 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid rgba(127,127,127,0.3); box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_pic { height: 100px; width: 100px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_info { height: 88px; width: 202px; padding: 7px 4px 5px 10px; }
+.WB_feed.WB_feed_v3 .WB_feed_spec_a .WB_feed_spec_pic { width: 100px; height: 100px; }
+.WB_feed.WB_feed_v3 .WB_feed_spec_a .WB_feed_spec_info { width: 200px; height: 88px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic img, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic img { height: auto; min-height: 100px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_pic { height: 100px; width: 250px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_b, .WB_feed.WB_feed_v3 .WB_feed_spec_c, .WB_feed.WB_feed_v3 .WB_feed_spec2 { width: 250px; height: auto; }
@@ -13891,6 +13946,8 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit { font-size: inherit; font-weight: 700; margin: 0 0 6px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_brieftxt { line-height: 15px; height: 30px; }
 .WB_feed.WB_feed_v3 .WB_feed_spec_user .W_fl { width: 240px; }
+
+.WB_feed .yawf-WB_pic_more { line-height: 80px; }
 
 .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a { margin: 0; width: auto; }
 .layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: none; max-height: none; min-width: auto; }
@@ -14932,6 +14989,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   const download = yawf.download;
   const contextmenu = yawf.contextmenu;
   const imageViewer = yawf.imageViewer;
+  const feedParser = yawf.feed;
 
   const feeds = yawf.rules.feeds;
 
@@ -15232,6 +15290,104 @@ ${[0, 1, 2, 3, 4].map(index => `
     },
   });
 
+  Object.assign(i18n, {
+    allImagesAvailable: { cn: '支持查看超过 9 张的配图{{i}}', tw: '支援查閱超過 9 張的配圖{{i}}', en: 'Support feeds with more than 9 images {{i}}' },
+    allImagesAvailableDetail: { cn: '由于目前网页的支持情况，脚本需要为每个有 9 张或更多图片的微博发送请求检查是否有更多的图片。' },
+  });
+
+  media.allImagesAvailable = rule.Rule({
+    id: 'all_image_available',
+    version: 48,
+    parent: media.media,
+    template: () => i18n.allImagesAvailable,
+    ref: {
+      i: { type: 'bubble', icon: 'warn', template: () => i18n.allImagesAvailableDetail },
+    },
+    init() {
+      this.addConfigListener(config => {
+        if (!config) media.imagePreviewAll.setConfig(false);
+      });
+    },
+    ainit() {
+      observer.feed.onAfter(async function (/** @type {HTMLElement} */feed) {
+        const ul = feed.querySelector('ul[node-type="fl_pic_list"]');
+        if (!ul) return;
+        const image9 = ul.querySelector('.li_9');
+        if (!image9) return; // 有九张图就说明可能有更多
+        const mid = (feedParser.isForward(feed) ? feedParser.omid : feedParser.mid)(feed);
+        const [author] = feedParser.author.id(feed);
+        /** @type {string[]} */
+        const allImages = await request.getAllImages(mid);
+        if (allImages.length < 10) return;
+        const pids = allImages.map(img => img.replace(/^.*\/(.*)\..*$/, '$1'));
+        const imgType = type => img => img.replace(/^(.*\/).*(\/.*)$/, (_, d, n) => d + type + n);
+        allImages.forEach((image, index) => {
+          if (index < 9) return;
+          const pid = pids[index];
+          const li = document.createElement('li');
+          li.className = `WB_pic li_${index + 1} S_bg1 S_line2 bigcursor li_focus yawf-li_more`;
+          li.setAttribute('action-data', `isPrivate=0&relation=0&pic_id=${pid}`)
+          li.setAttribute('action-type', 'fl_pics');
+          // 这个对我没用，所以略
+          li.setAttribute('suda-uatrack', `key=tblog_newimage_feed&value=image_feed_unfold:${mid}:${pid}:${author}:0`);
+          const img = li.appendChild(document.createElement('img'));
+          // 因为不知道总宽比的时候不太方便处理 orj360，所以用 thumb300 代替一下
+          img.src = imgType('thumb300')(image);
+          img.style = 'height:110px;width:110px;top:0;left:0;';
+          ul.appendChild(li);
+        });
+        // 同时保留 WB_media_a_m9
+        ul.classList.add('WB_media_a_m' + allImages.length, 'yawf-WB_media_a_more');
+        const moreNotice = image9.appendChild(document.createElement('span'));
+        moreNotice.classList.add('yawf-WB_pic_more');
+        moreNotice.textContent = (allImages.length - 9) + '+';
+        image9.appendChild(moreNotice);
+        // 不能用 URLSearchParams 来处理 actionData，因为它需要项目间的逗号不被转义才能正常工作
+        const actionData = ul.getAttribute('action-data').split('&');
+        const setActionData = (key, value) => {
+          const newValue = key + '=' + value.map(encodeURIComponent).join(',');
+          const item = actionData.findIndex(item => item.startsWith(key + '='));
+          if (item !== -1) actionData[item] = newValue;
+          else actionData.push(newValue);
+        };
+        setActionData('clear_picSrc', allImages.map(imgType('mw690')));
+        setActionData('thumb_picSrc', allImages.map(imgType('orj360')));
+        setActionData('pic_ids', pids);
+        setActionData('object_ids', pids.map(pid => '1042018:' + pid));
+        ul.setAttribute('action-data', actionData.join('&'));
+      });
+      css.append(`
+.li_9 ~ .WB_pic { display: none; }
+.yawf-WB_pic_more { position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0, 0, 0, 0.4); font-size: 24px; color: white; text-align: center; line-height: 110px; }
+`);
+    }
+  });
+
+  Object.assign(i18n, {
+    imagePreviewAll: { cn: '超过 9 张配图的微博显示全部缩略图', tw: '超過 9 張配圖的微博顯示全部縮略圖', en: 'Show all thumbnails for feeds with more than 9 images' }
+  });
+  media.imagePreviewAll = rule.Rule({
+    id: 'image_preview_all',
+    version: 48,
+    parent: media.media,
+    template: () => i18n.imagePreviewAll,
+    init() {
+      this.addConfigListener(config => {
+        if (config) media.allImagesAvailable.setConfig(true);
+      });
+    },
+    ainit() {
+      css.append(`
+.li_9.li_9 ~ .WB_pic { display: block; }
+.yawf-WB_pic_more.yawf-WB_pic_more { display: none; }
+.WB_feed_v3 .WB_media_a_mn.yawf-WB_media_a_more { width: 456px; }
+`);
+      const smallImage = feeds.layout.smallImage.isEnabled();
+      if (smallImage) {
+        css.append('.WB_feed_v3 .WB_media_a.yawf-WB_media_a_more { width: 345px; }');
+      }
+    },
+  });
 
   Object.assign(i18n, {
     pauseAnimatedImage: { cn: '动画图像(GIF)在缩略图显示时保持静止{{i}}', hk: '動畫圖像(GIF)在所圖顯示時保持靜止{{i}}', tw: '動畫圖像(GIF)在所圖顯示時保持靜止{{i}}', en: 'Pause animated thumbnail (GIF) {{i}}' },
@@ -15490,7 +15646,7 @@ body[yawf-feed-only] #WB_webchat,
 body[yawf-feed-only] [i-am-music-player],
 body[yawf-feed-only] .WB_frame>*:not(#plc_main),
 body[yawf-feed-only] #plc_main>*:not(.WB_main_c):not(.WB_frame_c):not(.WB_main_r):not(.WB_frame_b),
-body[yawf-feed-only] .WB_main_c>*:not(#v6_pl_content_homefeed, #v6_pl_content_commentlist),
+body[yawf-feed-only] .WB_main_c>*:not([id^="v6_pl_content_"]),
 body[yawf-feed-only] #plc_bot .WB_footer,
 body[yawf-feed-only] #plc_bot .W_fold,
 body[yawf-feed-only] .WB_footer { display: none !important; }
