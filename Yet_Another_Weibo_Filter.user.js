@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.48
+// @version           4.0.49
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -14374,6 +14374,8 @@ ${[0, 1, 2, 3, 4].map(index => `
 .WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b *, .WB_text .W_btn_c *, .WB_empty .W_btn_c * { line-height: ${h2}px !important; font-size: ${fs3}px !important; }
 .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
 .WB_info { margin-bottom: 2px !important; padding-top: 0 !important; line-height: ${fs <= 28 ? 28 : 50}px !important; }
+.yawf-WB_text_size_main, .yawf-WB_text_size { font-size: ${fs}px; }
+.yawf-WB_text_size_expand, .WB_feed_expand .yawf-WB_text_size { font-size: ${fs2}px; }
 `;
       css.append(style);
     },
@@ -14810,6 +14812,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           const wrap = dom.querySelector('.WB_media_wrap');
           if (!wrap) return [null, '', [], new Set()];
           const container = wrap.cloneNode(true);
+          container.classList.add('S_line1');
           const html = container.innerHTML;
           const items = Array.from(container.querySelectorAll('li'));
           const actionDatas = new Set(items.map(getId));
@@ -14970,6 +14973,7 @@ ${[0, 1, 2, 3, 4].map(index => `
 .yawf-img-insert { outline: 3px solid #3c3; }
 .yawf-img-delete { outline: 3px dashed #c33; }
 .yawf-img-reorder { outline: 3px dotted #36f; }
+.yawf-feed-edit-view-content .WB_media_wrap ~ .WB_media_wrap { border-top-width: 1px; border-top-style: solid; padding-top: 10px; }
 `);
     },
   });
@@ -15198,6 +15202,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           const target = event.target;
           if (event.button !== 0) return; // 只响应左键操作
           if (event.shiftKey) return; // 按下 Shift 时不响应
+          if (target.closest('.yawf-WB_pic_more')) return; // 展开过多被折叠的图片
           const pic = target.closest('.WB_media_wrap .WB_pic') || target.closest('a[imagecard]');
           if (!pic) return;
           event.stopPropagation();
@@ -15293,8 +15298,12 @@ ${[0, 1, 2, 3, 4].map(index => `
   Object.assign(i18n, {
     allImagesAvailable: { cn: '支持查看超过 9 张的配图{{i}}', tw: '支援查閱超過 9 張的配圖{{i}}', en: 'Support feeds with more than 9 images {{i}}' },
     allImagesAvailableDetail: { cn: '由于目前网页的支持情况，脚本需要为每个有 9 张或更多图片的微博发送请求检查是否有更多的图片。' },
+    animatedImage: { cn: '动图' },
+    previewAllShow: { cn: '查看全部图片（共 {1} 张）', tw: '閱覽全部圖片（共 {1} 張）', en: 'View all ({1} images)' },
+    previewAllFold: { cn: '折叠图片', tw: '折疊圖片', en: 'Fold images' },
   });
 
+  // TODO 等微博官方支持了查看全图之后这段大概要重写
   media.allImagesAvailable = rule.Rule({
     id: 'all_image_available',
     version: 48,
@@ -15309,6 +15318,11 @@ ${[0, 1, 2, 3, 4].map(index => `
       });
     },
     ainit() {
+      const previewSize = media.imagePreviewAll.isEnabled() ? media.imagePreviewAll.ref.count.getConfig() : '3x3';
+      const previewWidth = +previewSize[0];
+      const previewCount = previewSize[0] * previewSize[2] || Infinity;
+      const lastImageMask = media.imagePreviewAll.isEnabled() ? media.imagePreviewAll.ref.more.getConfig() === 'mask' : false;
+
       observer.feed.onAfter(async function (/** @type {HTMLElement} */feed) {
         const ul = feed.querySelector('ul[node-type="fl_pic_list"]');
         if (!ul) return;
@@ -15318,7 +15332,8 @@ ${[0, 1, 2, 3, 4].map(index => `
         const [author] = feedParser.author.id(feed);
         /** @type {string[]} */
         const allImages = await request.getAllImages(mid);
-        if (allImages.length < 10) return;
+        const imageCount = allImages.length;
+        if (imageCount < 10) return;
         const pids = allImages.map(img => img.replace(/^.*\/(.*)\..*$/, '$1'));
         const imgType = type => img => img.replace(/^(.*\/).*(\/.*)$/, (_, d, n) => d + type + n);
         allImages.forEach((image, index) => {
@@ -15328,20 +15343,21 @@ ${[0, 1, 2, 3, 4].map(index => `
           li.className = `WB_pic li_${index + 1} S_bg1 S_line2 bigcursor li_focus yawf-li_more`;
           li.setAttribute('action-data', `isPrivate=0&relation=0&pic_id=${pid}`)
           li.setAttribute('action-type', 'fl_pics');
-          // 这个对我没用，所以略
           li.setAttribute('suda-uatrack', `key=tblog_newimage_feed&value=image_feed_unfold:${mid}:${pid}:${author}:0`);
           const img = li.appendChild(document.createElement('img'));
           // 因为不知道总宽比的时候不太方便处理 orj360，所以用 thumb300 代替一下
           img.src = imgType('thumb300')(image);
           img.style = 'height:110px;width:110px;top:0;left:0;';
           ul.appendChild(li);
+          if (image.endsWith('.gif')) {
+            const tip = document.createElement('i');
+            tip.className = 'W_icon_tag_v2';
+            tip.textContent = i18n.animatedImage;
+            li.appendChild(tip);
+          }
         });
         // 同时保留 WB_media_a_m9
-        ul.classList.add('WB_media_a_m' + allImages.length, 'yawf-WB_media_a_more');
-        const moreNotice = image9.appendChild(document.createElement('span'));
-        moreNotice.classList.add('yawf-WB_pic_more');
-        moreNotice.textContent = (allImages.length - 9) + '+';
-        image9.appendChild(moreNotice);
+        ul.classList.add('WB_media_a_m' + imageCount, 'yawf-WB_media_a_more');
         // 不能用 URLSearchParams 来处理 actionData，因为它需要项目间的逗号不被转义才能正常工作
         const actionData = ul.getAttribute('action-data').split('&');
         const setActionData = (key, value) => {
@@ -15354,38 +15370,133 @@ ${[0, 1, 2, 3, 4].map(index => `
         setActionData('thumb_picSrc', allImages.map(imgType('orj360')));
         setActionData('pic_ids', pids);
         setActionData('object_ids', pids.map(pid => '1042018:' + pid));
+        // GIF 对应的视频 id 拿不到，只能等微博自己支持
         ul.setAttribute('action-data', actionData.join('&'));
+
+        if (imageCount > previewCount) {
+          /** @type {HTMLDivElement} */
+          const mediaWrap = ul.closest('.WB_media_wrap');
+          if (lastImageMask) {
+            const lastImage = ul.querySelectorAll('.WB_pic')[previewCount - 1];
+            const mask = document.createElement('span');
+            mask.className = 'yawf-WB_pic_more';
+            mask.textContent = '+' + (imageCount - previewCount);
+            lastImage.appendChild(mask);
+          } else {
+            // 类似超过 140 字的展开全文一样，我们显示一个查看所有图片的按钮
+            const foldContainer = document.createElement('div');
+            foldContainer.className = 'yawf-WB_media_a_ctrl yawf-WB_text_size';
+            foldContainer.innerHTML = '<a href="javascript:;" class="yawf-WB_media_a_show"><i class="W_ficon ficon_arrow_down">c</i></a><a href="javascript:;" class="yawf-WB_media_a_fold"><i class="W_ficon ficon_arrow_up">d</i></a>';
+            const showButton = foldContainer.querySelector('.yawf-WB_media_a_show');
+            const showText = i18n.previewAllShow.replace('{1}', () => imageCount);
+            showButton.insertBefore(document.createTextNode(showText), showButton.firstChild);
+            const foldButton = foldContainer.querySelector('.yawf-WB_media_a_fold');
+            const foldText = i18n.previewAllFold;
+            foldButton.insertBefore(document.createTextNode(foldText), foldButton.firstChild);
+            showButton.addEventListener('click', () => {
+              mediaWrap.classList.add('yawf-WB_media_a_all');
+            });
+            foldButton.addEventListener('click', () => {
+              const oldHeight = mediaWrap.clientHeight;
+              const oldScrollTop = document.documentElement.scrollTop;
+              mediaWrap.classList.remove('yawf-WB_media_a_all');
+              // 调整滚动条以适应高度变化
+              requestAnimationFrame(function () {
+                const newHeight = mediaWrap.clientHeight;
+                document.documentElement.scrollTop = oldScrollTop - oldHeight + newHeight;
+              });
+            });
+            mediaWrap.appendChild(foldContainer);
+          }
+        }
       });
+
+      if (Number.isFinite(previewCount)) css.append(`.yawf-WB_media_a_more .li_${previewCount} ~ .WB_pic { display: none; }`);
       css.append(`
-.li_9 ~ .WB_pic { display: none; }
-.yawf-WB_pic_more { position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0, 0, 0, 0.4); font-size: 24px; color: white; text-align: center; line-height: 110px; }
+.yawf-WB_pic_more { position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: rgba(0, 0, 0, 0.4); font-size: 24px; color: white; text-align: center; line-height: 110px; text-shadow: 0 0 4px black; z-index: 1; cursor: point; }
+.yawf-WB_media_a_all .yawf-WB_pic_more { display: none; }
+.yawf-WB_media_a_all .yawf-WB_media_a_more .WB_pic { display: block; }
+.yawf-WB_media_a_fold { display: none; }
+.yawf-WB_media_a_show { display: inline; }
+.yawf-WB_media_a_all .yawf-WB_media_a_fold { display: inline; }
+.yawf-WB_media_a_all .yawf-WB_media_a_show { display: none; }
+.yawf-WB_media_a_ctrl { clear: both; margin-left: 10px; padding-top: 4px; }
 `);
-    }
+      if (previewWidth === 4) {
+        const smallImage = feeds.layout.smallImage.isEnabled();
+        if (smallImage) {
+          css.append('.WB_feed_v3 .WB_media_a.yawf-WB_media_a_more { width: 345px; }');
+        } else {
+          css.append('.WB_feed_v3 .WB_media_a.yawf-WB_media_a_more { width: 456px; }');
+        }
+      }
+
+      if (lastImageMask) {
+        document.addEventListener('click', event => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          const mask = target.closest('.yawf-WB_pic_more');
+          if (!mask) return;
+          const mediaWrap = mask.closest('.WB_media_wrap');
+          mediaWrap.classList.add('yawf-WB_media_a_all');
+          event.stopPropagation();
+        }, true);
+      }
+    },
   });
 
   Object.assign(i18n, {
-    imagePreviewAll: { cn: '超过 9 张配图的微博显示全部缩略图', tw: '超過 9 張配圖的微博顯示全部縮略圖', en: 'Show all thumbnails for feeds with more than 9 images' }
+    imagePreviewMore: { cn: '超过 9 张配图的微博|预览{{count}}||有图片未显示时{{more}}', tw: '超過 9 張配圖的微博顯示|預覽{{count}}||有圖片未顯示時{{more}}', en: 'Thumbnails for feeds with more than 9 images | preview {{count}}||with {{more}}' },
+    imagePreviewFirst3x2: { cn: '前 6 张（每行 3 张）', tw: '前 6 張（每列 3 張）', en: 'first 6 (3 each row)' },
+    imagePreviewFirst4x2: { cn: '前 8 张（每行 4 张）', tw: '前 8 張（每列 4 張）', en: 'first 8 (4 each row)' },
+    imagePreviewFirst3x3: { cn: '前 9 张（每行 3 张）', tw: '前 9 張（每列 3 張）', en: 'first 9 (3 each row)' },
+    imagePreviewFirst4x3: { cn: '前 12 张（每行 4 张）', tw: '前 12 張（每列 4 張）', en: 'first 12 (4 each row)' },
+    imagePreviewAll3: { cn: '全部图片（每行 3 张）', tw: '全部圖片（每列 3 張）', en: 'all (3 each row)' },
+    imagePreviewAll4: { cn: '全部图片（每行 4 张）', tw: '全部圖片（每列 4 張）', en: 'all (4 each row)' },
+    imagePreviewUseText: { cn: '在图片后显示展开收起按钮', tw: '在圖片後顯示展開收起按鈕', en: 'show / hide button after images' },
+    imagePreviewUseMask: { cn: '最后一张预览显示剩余图片数量', tw: '最後一張預覽顯示剩餘圖片數量', en: 'number of remaining on last image' },
   });
   media.imagePreviewAll = rule.Rule({
     id: 'image_preview_all',
-    version: 48,
+    version: 49,
     parent: media.media,
-    template: () => i18n.imagePreviewAll,
+    template: () => i18n.imagePreviewMore,
+    ref: {
+      count: {
+        type: 'select',
+        initial: '3x3',
+        select: [
+          { value: '3x2', text: () => i18n.imagePreviewFirst3x2 },
+          { value: '4x2', text: () => i18n.imagePreviewFirst4x2 },
+          { value: '3x3', text: () => i18n.imagePreviewFirst3x3 },
+          { value: '4x3', text: () => i18n.imagePreviewFirst4x3 },
+          { value: '3x0', text: () => i18n.imagePreviewAll3 },
+          { value: '4x0', text: () => i18n.imagePreviewAll4 },
+        ],
+      },
+      more: {
+        type: 'select',
+        initial: 'text',
+        select: [
+          { value: 'text', text: () => i18n.imagePreviewUseText },
+          { value: 'mask', text: () => i18n.imagePreviewUseMask },
+        ],
+      },
+    },
     init() {
       this.addConfigListener(config => {
         if (config) media.allImagesAvailable.setConfig(true);
       });
-    },
-    ainit() {
-      css.append(`
-.li_9.li_9 ~ .WB_pic { display: block; }
-.yawf-WB_pic_more.yawf-WB_pic_more { display: none; }
-.WB_feed_v3 .WB_media_a_mn.yawf-WB_media_a_more { width: 456px; }
-`);
-      const smallImage = feeds.layout.smallImage.isEnabled();
-      if (smallImage) {
-        css.append('.WB_feed_v3 .WB_media_a.yawf-WB_media_a_more { width: 345px; }');
-      }
+      this.ref.count.addConfigListener(count => {
+        const showAll = count.endsWith('0');
+        const items = this.ref.more.getRenderItems();
+        items.forEach(item => {
+          const container = item.parentNode;
+          if (showAll) container.style.display = 'none';
+          else container.style.display = 'inline';
+        });
+      });
+      // 实现在上面
     },
   });
 
