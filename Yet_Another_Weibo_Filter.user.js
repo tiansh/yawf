@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.50
+// @version           4.0.51
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -8496,6 +8496,7 @@
       observer.feed.onBefore(function (feed) {
         if (!rule.isEnabled()) return;
         const list = feed.closest('.WB_feed');
+        if (!list) return; // 搜索页面
         const container = list.parentNode;
         const sibling = container.previousSibling;
         if (sibling && sibling.nodeType === Node.ELEMENT_NODE) {
@@ -10160,8 +10161,8 @@
         const paidOnly = +searchParams.get('vplus') || searchParams.get('is_vclub');
         if (paidOnly) return null;
         if (feed.querySelector('.icon_vplus')) return 'hide';
-        if (feed.querySelector('.WB_media_a:not([action-data*="isPrivate=0"])')) return 'hide';
-        if (feed.querySelector('[action-type="fl_pics"]:not([action-data*="isPrivate=0"])')) return 'hide';
+        if (feed.querySelector('.WB_media_a[action-data*="isPrivate"]:not([action-data*="isPrivate=0"])')) return 'hide';
+        if (feed.querySelector('[action-type="fl_pics"][action-data*="isPrivate"]:not([action-data*="isPrivate=0"])')) return 'hide';
         return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
