@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.51
+// @version           4.0.52
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -4592,11 +4592,10 @@
   /**
    * 从所有设置项中根据条件筛选出一些设置项
    * 之后可用于展示对话框等操作
-   * @param {{ base: Tab[], filter: (rule: Rule) => boolean, includeDisabled: boolean }} base 描述搜索范围
+   * @param {{ base: Tab[], filter: (rule: Rule) => boolean }} base 描述搜索范围
    */
   rule.query = function ({
     base = tabs,
-    includeDisabled = false,
     filter = null,
   } = {}) {
     const result = new Set();
@@ -4606,7 +4605,7 @@
           query(item.children);
         }
         if (!(item instanceof Rule)) return;
-        if (!includeDisabled && item.disabled) return;
+        if (item.disabled) return;
         if (filter && !filter(item)) return;
         result.add(item);
       });
@@ -5093,7 +5092,7 @@
     layer.querySelector('.text').textContent = text;
   };
 
-  const renderSearch = (layer, input) => {
+  const renderSearch = (layer, input, filter) => {
     const searchTexts = (input.match(/\S+/g) || []).filter(x => !x.includes(':')).map(t => t.toUpperCase());
     const [_verMatch, verOp, verNum] = input.match(/\bver(?:sion)?:([><]?=?)(\d+)\b/) || [];
     const versionTest = {
@@ -5110,9 +5109,10 @@
       return;
     }
     const items = rule.query({
-      filter(item) {
+      filter: function (item) {
         if (!item.version) return false;
         if (!versionTest(item.version)) return false;
+        if (typeof filter === 'function' && !filter(item)) return false;
         const text = item.text().toUpperCase();
         if (searchTexts.some(t => !text.includes(t))) return false;
         return true;
@@ -5129,7 +5129,7 @@
    * @param {Element} inner
    * @param {Array<Tab>} tabs
    */
-  const renderTabs = function (inner, tabs, { initial = null } = {}) {
+  const renderTabs = function (inner, tabs, { initial = null, filter = null } = {}) {
     inner.classList.add('yawf-config-inner');
     const left = inner.appendChild(configDom.left());
     const right = inner.appendChild(configDom.right());
@@ -5157,7 +5157,7 @@
       tabInit.set(tabLeft, () => {
         hideAllLayer();
         layer.innerHTML = '';
-        render(layer, rule.query({ base: [tab] }));
+        render(layer, rule.query({ base: [tab], filter }));
         layer.style.display = 'block';
       });
       return tabLeft;
@@ -5167,7 +5167,7 @@
     tabInit.set(search, () => {
       hideAllLayer();
       searchLayer.innerHTML = '';
-      renderSearch(searchLayer, searchInput.value);
+      renderSearch(searchLayer, searchInput.value, filter);
       searchLayer.style.display = 'block';
     });
     const setCurrent = tabLeft => {
@@ -5220,13 +5220,13 @@
   };
   rule.render = render;
 
-  rule.dialog = function (tab) {
+  rule.dialog = function (tab = null, filter = null) {
     try {
       ui.dialog({
         id: 'yawf-config',
         title: i18n.configDialogTitle,
         render: inner => {
-          renderTabs(inner, tabs, { initial: tab });
+          renderTabs(inner, tabs, { initial: tab, filter });
         },
       }).show();
     } catch (e) { util.debug('Error while showing rule dialog %o', e); }
@@ -11913,7 +11913,8 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   clean.CleanRule('template', () => i18n.cleanOtherTemplate, 1, '.icon_setskin { display: none !important; }');
   clean.CleanRule('home_tip', () => i18n.cleanOtherHomeTip, 1, '#v6_pl_content_hometip { display: none !important }');
   clean.CleanRule('footer', () => i18n.cleanOtherFooter, 1, {
-    acss: '.global_footer, .WB_footer { display: none !important; }',
+    // 直接 display: none 的话，发现页面的左边栏会飘走
+    acss: '.global_footer, .WB_footer { height: 0; overflow: hidden; }',
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanOtherFooterDetail } },
   });
   clean.CleanRule('im', () => i18n.cleanOtherIM, 1, {
@@ -13812,7 +13813,9 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
     acss: `
 .WB_feed.WB_feed { border-radius: 3px; box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); }
 .WB_feed.WB_feed .WB_cardwrap { border-radius: 0; box-shadow: none; border-top: 1px solid rgba(0, 0, 0, 0.3); margin: -1px 0 1px; }
-.WB_feed .WB_feed_handle { height: 20px; margin-top: 20px; display: block; position: relative; }
+.WB_feed .WB_detail { margin-bottom: 40px; }
+.WB_feed .WB_feed_handle { height: 20px; margin-top: -20px; display: block; position: relative; }
+.WB_feed .WB_feed_expand { margin-top: 5px; }
 .WB_feed.WB_feed_v3 .WB_expand { margin-bottom: 0; }
 .WB_feed .WB_feed_handle .WB_handle { float: right; margin-right: 10px; height: 20px; padding: 0; position: relative; top: -20px; }
 .WB_feed .WB_feed_handle .WB_row_line { border: none; overflow: hidden; line-height: 26px; }
@@ -13852,7 +13855,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const foldSpace = layout.foldSpace.getConfig();
       if (foldSpace) {
         css.append(`
-.WB_from.WB_from.yawf-bottom-WB_from { position: absolute; bottom: 0; margin: 0; transform: translate(0, 100%); line-height: 26px; }
+.WB_from.WB_from.yawf-bottom-WB_from { position: absolute; bottom: 40px; margin: 0; transform: translate(0, 100%); line-height: 28px; }
 `);
       } else {
         css.append('.WB_from.WB_from.yawf-bottom-WB_from { margin: 10px 0 7px; }');
@@ -15385,7 +15388,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           const pid = pids[index];
           const li = document.createElement('li');
           li.className = `WB_pic li_${index + 1} S_bg1 S_line2 bigcursor li_focus yawf-li_more`;
-          li.setAttribute('action-data', `isPrivate=0&relation=0&pic_id=${pid}`)
+          li.setAttribute('action-data', `isPrivate=0&relation=0&pic_id=${pid}`);
           li.setAttribute('action-type', 'fl_pics');
           li.setAttribute('suda-uatrack', `key=tblog_newimage_feed&value=image_feed_unfold:${mid}:${pid}:${author}:0`);
           const img = li.appendChild(document.createElement('img'));
@@ -15767,8 +15770,13 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 `);
 
       const updateEnable = function updateEnable() {
-        if (!document || !document.body) setTimeout(updateEnable, 1000);
+        if (!document || !document.body) {
+          setTimeout(updateEnable, 1000);
+          return;
+        }
         const enabled = rule.ref._enabled.getConfig();
+        const configured = document.body.hasAttribute('yawf-feed-only');
+        if (enabled === configured) return;
         if (enabled) {
           document.body.setAttribute('yawf-feed-only', 'yawf-feed-only');
         } else {
