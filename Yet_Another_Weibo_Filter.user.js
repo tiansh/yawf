@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.52
+// @version           4.0.53
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1056,6 +1056,44 @@
 
 }());
 //#endregion
+//#region @require yaofang://content/util/mid.js
+; (async function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+
+  const base62 = util.base62 = {};
+
+  const base62Dict = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  base62.decode = function (str) {
+    return [...str].reduce((prev, ch) => {
+      return prev * 62 + base62Dict.indexOf(ch);
+    }, 0);
+  };
+
+  base62.encode = function toString(num) {
+    if (num === 0) return '0';
+    if (num < 62) return base62Dict[num];
+    return toString(Math.floor(num / 62)) + base62Dict[num % 62];
+  };
+
+  const mid = util.mid = {};
+
+  mid.encode = function (base10mid) {
+    return base10mid.match(/.{1,7}(?=(?:.{7})*$)/g)
+      .map(trunc => base62.encode(Number(trunc)).padStart(4, 0))
+      .join('').replace(/^0+/, '');
+  };
+
+  mid.decode = function (base62mid) {
+    return base62mid.match(/.{1,4}(?=(?:.{4})*$)/g)
+      .map(trunc => String(base62.decode(trunc)).padStart(7, 0))
+      .join('').replace(/^0+/, '');
+  };
+
+}());
+//#endregion
 //#region custom implementation util/tarball
 ; (function () {
   const yawf = window.yawf = window.yawf || {};
@@ -1986,21 +2024,23 @@
   const network = yawf.network;
   const request = yawf.request = yawf.request || {};
 
-  const time = util.time;
-
-  const getAllImages = async function (mid) {
-    const host = location.hostname;
-    const url = new URL(`https://${host}/p/aj/v6/history?ajwvr=6&domain=100505`);
-    url.searchParams.set('mid', mid);
-    url.searchParams.set('page', 1);
-    url.searchParams.set('page_size', 1);
-    url.searchParams.set('__rnd', Date.now());
-    util.debug('fetch url %s', url + '');
-    const resp = await network.fetchJson(url + '');
-    const data = resp.data;
-    const dom = new DOMParser().parseFromString(data.html, 'text/html');
-    const history = dom.querySelector('.WB_feed_detail');
-    const imgs = Array.from(history.querySelectorAll('.WB_pic img'));
+  const getAllImages = async function (author, mid) {
+    const url = new URL(`https://weibo.com/${author}/${util.mid.encode(mid)}`);
+    const html = await network.fetchText(url + '');
+    const domParser = new DOMParser();
+    const page = domParser.parseFromString(html, 'text/html');
+    const scripts = Array.from(page.querySelectorAll('script'));
+    const feedModel = scripts.reduce((feedModel, script) => {
+      if (feedModel) return feedModel;
+      const content = script.textContent.match(/^\s*FM\.view\((\{.*\})\);?\s*$/);
+      if (!content) return null;
+      const model = JSON.parse(content[1]);
+      if (model.ns !== 'pl.content.weiboDetail.index') return null;
+      return model;
+    }, null);
+    if (!feedModel) return null;
+    const feed = domParser.parseFromString(feedModel.html, 'text/html').querySelector('[mid]');
+    const imgs = Array.from(feed.querySelectorAll('.WB_pic img'));
     return imgs.map(img => img.src.replace(/^https:/, ''));
   };
   request.getAllImages = getAllImages;
@@ -14790,12 +14830,14 @@ ${[0, 1, 2, 3, 4].map(index => `
         const fragement = document.createDocumentFragment();
         diff.forEach(function ({ type, str }) {
           str.split(/(\n)/g).forEach(part => {
-            const span = document.createElement('span');
+            /** @type {'del'|'ins'|'span'} */
+            const tagName = { delete: 'del', insert: 'ins', same: 'span' }[type];
+            const span = document.createElement(tagName);
             span.classList.add('yawf-diff-' + type);
             span.textContent = part;
             fragement.appendChild(span);
             if (part === '\n') {
-              const breakToken = document.createElement('span');
+              const breakToken = document.createElement(tagName);
               breakToken.classList.add('yawf-diff-' + type);
               const breakChar = document.createElement('span');
               breakChar.classList.add('S_txt2', 'yawf-diff-line-break');
@@ -15373,14 +15415,15 @@ ${[0, 1, 2, 3, 4].map(index => `
         if (!ul || ul.querySelector('.li_10')) return;
         const mid = (feedParser.isForward(feed) ? feedParser.omid : feedParser.mid)(feed);
         const [author] = feedParser.author.id(feed);
+        const original = feedParser.isForward(feed) ? feedParser.original.id(feed) : author;
         ul.classList.add('yawf-WB_media_a_m9p_loading');
         /** @type {string[]} */
-        const allImages = await request.getAllImages(mid);
+        const allImages = await request.getAllImages(original, mid);
+        ul.classList.remove('yawf-WB_media_a_m9p_loading');
+        if (!allImages || !allImages.length) return;
         const imageCount = allImages.length;
-        if (imageCount < 10) return;
         const pids = allImages.map(img => img.replace(/^.*\/(.*)\..*$/, '$1'));
         const imgType = type => img => img.replace(/^(.*\/).*(\/.*)$/, (_, d, n) => d + type + n);
-        ul.classList.remove('yawf-WB_media_a_m9p_loading');
         // 最后一个图片的格式和别人不一样，如果我们要显示的不是9个，就会很奇怪，所以我们删掉再自己加一遍
         ul.removeChild(ul.querySelector('.li_9'));
         allImages.forEach((image, index) => {
@@ -15403,6 +15446,8 @@ ${[0, 1, 2, 3, 4].map(index => `
             li.appendChild(tip);
           }
         });
+
+        if (imageCount < 10) return;
         // 同时保留 WB_media_a_m9
         ul.classList.add('yawf-WB_media_a_m' + imageCount, 'yawf-WB_media_a_m9p');
         // 不能用 URLSearchParams 来处理 actionData，因为它需要项目间的逗号不被转义才能正常工作
