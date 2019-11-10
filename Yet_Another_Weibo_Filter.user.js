@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.53
+// @version           4.0.54
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -2545,11 +2545,6 @@
     if (location.host === 's.weibo.com') return 'search';
     // 发现页面
     if (location.host === 'd.weibo.com') return 'discover';
-    // 首页
-    if (/\/home$/.test(location.pathname)) {
-      if (search.get('gid') > 0) return 'group';
-      return 'home';
-    }
     // 头条文章
     if (/\/ttarticle\//.test(location.pathname)) return 'ttarticle';
     const $CONFIG = page.$CONFIG; if (!$CONFIG) return null;
@@ -2568,6 +2563,19 @@
       if ($CONFIG.domain === '101515') return 'music';
       // 股票
       if ($CONFIG.domain === '230677') return 'stock';
+    }
+    if ($CONFIG.bpType === 'main') {
+      // 赞
+      if (location.pathname.startsWith('/like/outbox')) return 'like';
+      // 收藏
+      if (location.pathname.startsWith('/fav')) return 'fav';
+      // 首页
+      if (/\/home$/.test(location.pathname)) {
+        if (search.get('gid') > 0) return 'group';
+        return 'home';
+      }
+      // 好友圈
+      if (location.pathname.startsWith('/friends')) return 'friends';
     }
     // Unknown
     return null;
@@ -4688,7 +4696,7 @@
 .yawf-config-collection-user-id .yawf-config-collection-item { width: 90px; height: 50px; padding: 1px 20px 1px 56px; text-align: left; }
 .yawf-config-collection-user-id .yawf-config-collection-remove { right: 0; left: auto; text-align: center; }
 .yawf-config-collection-user-id .yawf-config-collection-remove a { position: static; margin: 0; }
-.yawf-config-collection-user-id .yawf-config-user-avatar { position: absolute; left: 1px; top: 1px; }
+.yawf-config-collection-user-id .yawf-config-user-avatar { position: absolute; left: 1px; top: 1px; width: 50px; height: 50px; overflow: hidden; }
 .yawf-config-collection-user-id .yawf-config-user-name { max-width: 100%; word-break: break-all; white-space: normal; max-height: 40px; overflow: hidden; }
 .yawf-collection-suggestion.yawf-collection-suggestion { z-index: 10000; position: fixed; }
 .yawf-list-suggestion-item a { min-height: 15.6px; }
@@ -7282,7 +7290,7 @@
           const ul = area.querySelector('ul');
           list.forEach(item => {
             const wrap = document.createElement('ul');
-            wrap.innerHTML = '<li class="yawf-config-collection-item W_btn_b W_btn_tag"><div class="yawf-config-collection-item-content"><div class="yawf-config-user-item"><div class="yawf-config-user-avatar"><img /></div><div><a class="yawf-config-user-name" target="_blank"></a></div><div><span class="yawf-config-user-detail S_txt2"></span></div></div></div></li>';
+            wrap.innerHTML = '<li class="yawf-config-collection-item W_btn_b W_btn_tag"><div class="yawf-config-collection-item-content"><div class="yawf-config-user-item"><div class="yawf-config-user-avatar"><img class="yawf-config-user-avatar-img" /></div><div><a class="yawf-config-user-name" target="_blank"></a></div><div><span class="yawf-config-user-detail S_txt2"></span></div></div></div></li>';
             if (item.type === 'user') wrap.querySelector('.yawf-config-user-item').setAttribute('usercard', `id=${item.user}`);
             wrap.querySelector('img').setAttribute('src', item.avatar);
             const name = wrap.querySelector('.yawf-config-user-name');
@@ -7433,6 +7441,7 @@
 .yawf-following-notice-footer { padding: 20px; } 
 .yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
 .yawf-following-rename .yawf-config-user-name, .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
+.yawf-config-user-avatar-img { max-width: 50px; max-height: 50px; }
 `);
 
   i18n.uncheckFollowPresenter = {
@@ -8400,6 +8409,7 @@
 ; (function () {
 
   const yawf = window.yawf;
+  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
@@ -8535,6 +8545,8 @@
       // 在消息流顶端，再放上这个
       observer.feed.onBefore(function (feed) {
         if (!rule.isEnabled()) return;
+        const type = init.page.type();
+        if (type === 'fav' || type === 'like') return;
         const list = feed.closest('.WB_feed');
         if (!list) return; // 搜索页面
         const container = list.parentNode;
@@ -9392,7 +9404,7 @@
         const sources = rule.ref.items.getConfig();
         const contain = sources.some(source => text.includes(source));
         if (!contain) return null;
-        const reason = i18n.sourceReason.replace('{1}', () => contain);
+        const reason = i18n.sourceReason.replace('{1}', () => text);
         return { result: rule.feedAction, reason };
       }, { priority: this.priority });
       this.ref.items.addConfigListener(() => { observer.feed.rerun(); });
@@ -9545,6 +9557,12 @@
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
   });
+
+  observer.feed.filter(function showMyFavOrLike(feed) {
+    const type = init.page.type();
+    if (type === 'fav' || type === 'like') return 'showfav';
+    return null;
+  }, { priority: 1e7 });
 
 }());
 //#endregion
@@ -10201,8 +10219,8 @@
         const paidOnly = +searchParams.get('vplus') || searchParams.get('is_vclub');
         if (paidOnly) return null;
         if (feed.querySelector('.icon_vplus')) return 'hide';
-        if (feed.querySelector('.WB_media_a[action-data*="isPrivate"]:not([action-data*="isPrivate=0"])')) return 'hide';
-        if (feed.querySelector('[action-type="fl_pics"][action-data*="isPrivate"]:not([action-data*="isPrivate=0"])')) return 'hide';
+        if (feed.querySelector('.WB_media_a[action-data*="isPrivate=1"]')) return 'hide';
+        if (feed.querySelector('[action-type="fl_pics"][action-data*="isPrivate=1"]')) return 'hide';
         return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -15037,6 +15055,7 @@ ${[0, 1, 2, 3, 4].map(index => `
 
   const yawf = window.yawf;
   const env = yawf.env;
+  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
@@ -15181,6 +15200,10 @@ ${[0, 1, 2, 3, 4].map(index => `
           viewOriginalLink.href = images[current - 1];
         };
         viewOriginalLink.addEventListener('click', event => {
+          if (viewOriginalLink.classList.contains('S_ficon_dis')) {
+            event.preventDefault();
+            return;
+          }
           if (viewType === 'page') {
             showOriginalPage({ images, current });
             event.preventDefault();
@@ -15219,11 +15242,20 @@ ${[0, 1, 2, 3, 4].map(index => `
         downloadLinkContainer.querySelector('i').after(i18n.downloadImageText);
         const downloadLink = downloadLinkContainer.querySelector('a');
         downloadLink.addEventListener('click', event => {
-          const { images } = getImagesInfo(viewLargeLink);
-          downloadImages(images, downloadLink);
+          if (!downloadLink.classList.contains('S_ficon_dis')) {
+            const { images } = getImagesInfo(viewLargeLink);
+            downloadImages(images, downloadLink);
+          }
           event.preventDefault();
         });
         return downloadLinkContainer.firstChild;
+      };
+
+      const disableButton = button => {
+        const link = button.querySelector('a');
+        link.className = 'S_ficon_dis';
+        const icon = link.querySelector('i');
+        icon.classList.add('S_ficon_dis');
       };
 
       // 检查展开的图片，添加查看原图和下载的链接
@@ -15236,12 +15268,17 @@ ${[0, 1, 2, 3, 4].map(index => `
         ].join(',')));
         viewLargeLinks.forEach(viewLargeLink => {
           viewLargeLink.setAttribute('yawf-view-ori', '');
+          const disabled = viewLargeLink.classList.contains('S_ficon_dis');
           const li = viewLargeLink.closest('li');
           if (downloadEnabled) {
-            li.after(downloadButton(viewLargeLink));
+            const button = downloadButton(viewLargeLink);
+            if (disabled) disableButton(button);
+            li.after(button);
           }
           if (viewEnabled) {
-            li.after(viewOriginalButton(viewLargeLink));
+            const button = viewOriginalButton(viewLargeLink);
+            if (disabled) disableButton(button);
+            li.after(button);
           }
         });
       };
@@ -15408,11 +15445,17 @@ ${[0, 1, 2, 3, 4].map(index => `
       const lastImageMask = this.ref.more.getConfig() === 'mask';
 
       observer.feed.onAfter(async function (/** @type {HTMLElement} */feed) {
+        // 收藏页面目前原生不支持，原因不明
+        const officialNotSupport = init.page.type() === 'fav';
         // 单条微博页面已经预先展开了，所以不能再继续操作了
         if (document.querySelector('[id^="Pl_Official_WeiboDetail__"]')) return;
-        const ul = feed.querySelector('ul[node-type="fl_pic_list"][action-data*="over9pic=1"]');
+        const ul = feed.querySelector('ul[node-type="fl_pic_list"]');
         // 如果没有图片，或者已经有第十张图片了，那我们应该不工作
         if (!ul || ul.querySelector('.li_10')) return;
+        // 首页等官方支持的页面，会标记 over9pic，我们用这个属性来判断
+        if (!officialNotSupport && !ul.getAttribute('action-data').includes('over9pic=1')) return;
+        // 目前部分页面没有支持，我们只能看到满 9 张图，就去检查是不是有第十张
+        if (officialNotSupport && !ul.querySelector('.li_9')) return;
         const mid = (feedParser.isForward(feed) ? feedParser.omid : feedParser.mid)(feed);
         const [author] = feedParser.author.id(feed);
         const original = feedParser.isForward(feed) ? feedParser.original.id(feed) : author;
@@ -15422,6 +15465,7 @@ ${[0, 1, 2, 3, 4].map(index => `
         ul.classList.remove('yawf-WB_media_a_m9p_loading');
         if (!allImages || !allImages.length) return;
         const imageCount = allImages.length;
+        if (imageCount === 9 && officialNotSupport) return;
         const pids = allImages.map(img => img.replace(/^.*\/(.*)\..*$/, '$1'));
         const imgType = type => img => img.replace(/^(.*\/).*(\/.*)$/, (_, d, n) => d + type + n);
         // 最后一个图片的格式和别人不一样，如果我们要显示的不是9个，就会很奇怪，所以我们删掉再自己加一遍
@@ -16994,11 +17038,12 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
     parent: debug.debug,
     template: () => i18n.debugRegex,
     ainit: function () {
-      observer.feed.onBefore(function (feed) {
+      observer.feed.filter(function regexDebugger(feed) {
         const text = feedParser.text.detail(feed);
         const json = JSON.stringify(text).replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
         console.log('%o\n%o', feed, json);
-      });
+        return null;
+      }, { priority: 1e7 });
     },
   });
 
