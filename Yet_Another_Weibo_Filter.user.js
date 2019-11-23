@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.54
+// @version           4.0.55
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -2044,6 +2044,306 @@
     return imgs.map(img => img.src.replace(/^https:/, ''));
   };
   request.getAllImages = getAllImages;
+
+}());
+//#endregion
+//#region @require yaofang://content/request/article.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const network = yawf.network;
+  const request = yawf.request = yawf.request || {};
+
+  const i18n = util.i18n;
+
+  const ignoreError = function (callback) {
+    try { return callback(); } catch (e) { /* ignore */ }
+    return null;
+  };
+
+  const feedCard = function (mid) {
+    const iframe = document.createElement('x-iframe');
+    iframe.setAttribute('src', `https://card.weibo.com/article/v3/cardiframe?type=feed&id=${mid}`);
+    iframe.className = 'card feed-card';
+    return iframe;
+  };
+
+  const mediaCard = function (id) {
+    const mediaType = { 100120: 'movie' }[id.slice(0, 6)];
+    if (!mediaType) return null;
+    const iframe = document.createElement('x-iframe');
+    iframe.setAttribute('src', `https://card.weibo.com/article/v3/cardiframe?type=movie&id=1022:${id}`);
+    iframe.className = `card media-card ${mediaType}-media-card`;
+    return iframe;
+  };
+
+  const scriptVideo = function (script) {
+    try {
+      const match = script.match(/krv\.init\(\{(?:(?=.*src['"]?\s*:\s*(".*?(?!\\).")))(?:(?=.*poster['"]?\s*:\s*(".*?(?!\\).")))/);
+      const [_, src, poster] = match;
+      const video = document.createElement('video');
+      video.controls = true;
+      video.src = JSON.parse(src);
+      video.poster = JSON.parse(poster);
+      return video;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const whiteListTags = [
+    'a',
+    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'ol', 'ul', 'li',
+    'sup', 'sub',
+    'img',
+    'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
+    'blockquote', 'quote',
+    'br', 'hr',
+    'span', 'div',
+  ];
+  const whiteListAttribute = tagName => [
+    ...({
+      img: ['src'],
+    }[tagName] || []),
+  ];
+  const whiteListStyle = {
+    'text-align': /^(?:left|right|center|justify)$/,
+    'font-style': /^italic$/,
+    'font-weight': /^bold$/,
+    'text-decoration-line': /^(?:underline|line-through)$/,
+    color: function (color) {
+      try {
+        const [r, g, b] = color.match(/rgba?\((.*)\)/)[1].split(',').map(Number);
+        if (Math.max(r, g, b) < 45) return 'var(--text-color)';
+        return `rgb(${r}, ${g}, ${b})`;
+      } catch (e) {
+        return null;
+      }
+    },
+  };
+  const parseSpecialElements = function (/** @type {HTMLElement} */container) {
+    /** @type {Map<HTMLElement, HTMLElement>} */
+    const placeholders = new Map();
+    const replaceElement = (source, result) => {
+      const placeholder = document.createElement('x-sanitize-placeholder');
+      placeholders.set(placeholder, result);
+      source.replaceWith(placeholder);
+    };
+    Array.from(container.querySelectorAll('.WB_feed[data-mid]')).forEach(element => {
+      // 引用一条微博
+      const card = ignoreError(() => feedCard(element.getAttribute('data-mid')));
+      replaceElement(element, card);
+    });
+    Array.from(container.querySelectorAll('.cardbox')).forEach(element => {
+      // 引用电影简介
+      /** @type {HTMLAnchorElement} */
+      const link = element.querySelector('a[href^="https://weibo.com/p/"]');
+      if (link) {
+        const id = link.href.split('/').pop();
+        const media = id && ignoreError(() => mediaCard(id));
+        replaceElement(element, media);
+      }
+    });
+    Array.from(container.querySelectorAll('script')).forEach(element => {
+      // 插入一段视频
+      if (/krv.init\(\{.*\}\)/.test(element.textContent)) {
+        const video = ignoreError(() => scriptVideo(element.textContent));
+        replaceElement(element, video);
+      }
+      replaceElement(element, null);
+    });
+    return placeholders;
+  };
+  const sanitizeAnchorElement = function (element) {
+    let url;
+    try { url = element.href; } catch (e) { url = null; }
+    if (!url || !['http:', 'https:'].includes(url.protocol)) {
+      const span = document.createElement('span');
+      return span;
+    }
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.referrerPolicy = 'no-referrer';
+    anchor.target = '_blank';
+    return anchor;
+  };
+  const anotherTag = function (tagName, ori) {
+    const result = document.createElement(tagName);
+    if (ori.hasAttribute('style')) result.setAttribute('style', ori.getAttribute('style'));
+    while (ori.firstChild) result.appendChild(ori.firstChild);
+    ori.replaceWith(result);
+    return result;
+  };
+  const sanitizeContent = function (/** @type {HTMLElement} */element) {
+    const container = document.createElement('div');
+    container.appendChild(element);
+    const placeholders = parseSpecialElements(container);
+    // 把属性换成 CSS
+    [{ html: 'color', css: 'color' }, { html: 'align', css: 'textAlign' }].forEach(({ html, css }) => {
+      [...container.querySelectorAll(`[${html}]`)].forEach(e => e.style[css] = e.getAttribute(html));
+    });
+    // 把 font 标签换成 span
+    [...container.querySelectorAll('font')].forEach(e => {
+      anotherTag('span', e);
+    });
+    // 把标签换成 CSS
+    [
+      { tag: 'b', css: { attr: 'font-weight', value: 'bold' } },
+      { tag: 'del', css: { attr: 'text-decoration', value: 'line-through' } },
+      { tag: 'em', css: { attr: 'font-style', value: 'italic' } },
+      { tag: 'i', css: { attr: 'font-style', value: 'italic' } },
+      { tag: 's', css: { attr: 'text-decoration', value: 'line-through' } },
+      { tag: 'strike', css: { attr: 'text-decoration', value: 'line-through' } },
+      { tag: 'strong', css: { attr: 'font-weight', value: 'bold' } },
+      { tag: 'u', css: { attr: 'text-decoration', value: 'underline' } },
+    ].forEach(({ tag, css: { attr, value } }) => {
+      [...container.getElementsByTagName(tag)].forEach(e => {
+        anotherTag('span', e).style.setProperty(attr, value);
+      });
+    });
+    // 把图片配字换成 figure
+    if (element.matches('.picbox')) do {
+      const ori = element.querySelector('img[src]');
+      const description = element.querySelector('.picinfo');
+      if (!ori) break;
+      const figure = document.createElement('figure');
+      const img = figure.appendChild(document.createElement('img'));
+      img.src = ori.src;
+      const descriptionText = description && description.textContent.trim();
+      if (descriptionText) {
+        const figcaption = figure.appendChild(document.createElement('figcaption'));
+        figcaption.textContent = descriptionText;
+      }
+      return [figure];
+    } while (false);
+    // 最后剩下的元素再做一次消毒
+    return [...container.childNodes].map(function sanitize(node) {
+      try {
+        if (placeholders.has(node)) return placeholders.get(node);
+        if (node.nodeType === Node.TEXT_NODE) {
+          return document.createTextNode(node.textContent);
+        }
+        const element = node;
+        if (element.nodeType !== Node.ELEMENT_NODE) return null;
+        if (!(element instanceof HTMLElement)) return null;
+        const oriTagName = element.tagName.toLowerCase();
+        const tagName = whiteListTags.includes(oriTagName) ? oriTagName : 'span';
+        if (tagName === 'a') {
+          const anchor = sanitizeAnchorElement(element);
+          Array.from(element.childNodes).forEach(node => anchor.appendChild(sanitize(node)));
+          return anchor;
+        }
+        const result = document.createElement(tagName);
+        const attributes = whiteListAttribute(tagName);
+        Array.from(element.attributes).forEach(attribute => {
+          if (attributes.includes(attribute.name)) {
+            result.setAttribute(attribute.name, attribute.value);
+          }
+        });
+        const style = element.style;
+        Array.from(style).forEach(prop => {
+          const value = style.getPropertyValue(prop);
+          const testValue = whiteListStyle[prop];
+          if (testValue instanceof RegExp) {
+            if (!testValue.test(value)) return;
+            result.style.setProperty(prop, value);
+          } else if (typeof testValue === 'function') {
+            const parsed = testValue(value);
+            if (parsed === null) return;
+            result.style.setProperty(prop, parsed);
+          }
+        });
+        Array.from(element.childNodes).forEach(node => {
+          const sanitized = sanitize(node);
+          if (sanitized) result.appendChild(sanitized);
+        });
+        return result;
+      } catch (e) {
+        try {
+          const result = document.createElement('span');
+          Array.from(element.childNodes).forEach(node => {
+            const sanitized = sanitize(node);
+            if (sanitized) result.appendChild(sanitized);
+          });
+          return result;
+        } catch (e2) {
+          try {
+            return document.createTextNode(node.textContent);
+          } catch (e3) {
+            return null;
+          }
+        }
+      }
+    }).filter(x => x);
+  };
+
+  const parseContent = function (/** @type {HTMLElement} */content) {
+    const result = document.createElement('div');
+    [...content.children].forEach(element => {
+      sanitizeContent(element).forEach(node => result.appendChild(node));
+    });
+    return result.innerHTML;
+  };
+
+  const parseArticle = function (document) {
+    const article = document.querySelector('[node-type="articleContent"]');
+    const result = {};
+    result.title = ignoreError(() => article.querySelector('[node-type="articleTitle"]').textContent);
+    result.author = ignoreError(() => {
+      const author = {};
+      author.avatar = article.querySelector('.authorinfo img').src;
+      author.name = article.querySelector('.authorinfo a').textContent.trim();
+      author.uid = article.querySelector('.authorinfo a').href.split('/').pop();
+      author.inner = ignoreError(() => {
+        const inner = {};
+        const author2 = article.querySelector('.authorinfo .author2in');
+        if (!author2) return null;
+        const link = author2.querySelector('a[href^="/u/"]');
+        if (link) {
+          inner.name = link.textContent.trim();
+          inner.uid = link.href.split('/').pop();
+        } else {
+          inner.name = author2.textContent.trim().replace(/^\s*\S+\s+/, '');
+        }
+        return inner;
+      });
+      return author;
+    });
+    result.feed = ignoreError(() => {
+      const fakeFeed = document.querySelector('.WB_feed [mid]');
+      const mid = fakeFeed.getAttribute('mid');
+      const comment = document.querySelector('[action-type="fl_comment"]');
+      const ouid = new URLSearchParams(comment.getAttribute('action-data')).get('ouid');
+      return `https://weibo.com/${ouid}/${util.mid.encode(mid)}`;
+    });
+    result.time = ignoreError(() => article.querySelector('.time').textContent);
+    result.lead = ignoreError(() => article.querySelector('.preface').textContent);
+    result.cover = ignoreError(() => document.querySelector('[node-type="articleHeaderPic"]').src);
+    result.source = ignoreError(() => article.querySelector('.authorinfo .del a[suda-uatrack*="headline_pc_trend_ourl_click"]').href);
+    result.createTime = ignoreError(() => article.querySelector('.time').textContent);
+    result.content = ignoreError(() => parseContent(article.querySelector('[node-type="contentBody"]')));
+    return result;
+  };
+
+  const getArticle = async function (id) {
+    const url = 'https://weibo.com/ttarticle/p/show?id=' + id;
+    util.debug('fetch url %s', url);
+    const resp = await network.fetchText(url);
+    /** @type {HTMLDocument} */
+    const dom = new DOMParser().parseFromString(resp, 'text/html');
+    return parseArticle(dom);
+  };
+  request.getArticle = getArticle;
+
+  const getArticleCard = async function (src) {
+    util.debug('fetch url %s', src);
+    const oriHtml = await network.fetchText(src);
+    const html = oriHtml.replace(/<head>/, '<head><base target="_blank" href="https://card.weibo.com/" /><meta name="referrer" content="no-referrer" />');
+    return html;
+  };
+  request.getArticleCard = getArticleCard;
 
 }());
 //#endregion
@@ -6537,7 +6837,8 @@
   // 评论用户
   const commentUser = commentParser.user = {};
   commentUser.dom = comment => {
-    return Array.from(comment.querySelectorAll('a[usercard]'));
+    const content = commentContentElements(comment);
+    return [].concat(...content.map(element => [...element.querySelectorAll('a[usercard]')]));
   };
   commentUser.name = comment => {
     const domList = commentUser.dom(comment);
@@ -12076,6 +12377,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 .WB_global_nav:not([${attr}]), .WB_global_nav[${attr}] { margin-top: -50px; top: 50px; box-shadow: none; }
 .WB_global_nav[${attr}] { top: 0; transition: top ease-in-out 0.1s 0.33s; }
 .WB_global_nav[${attr}]:hover { top: 50px; transition: top ease-in-out 0.1s 0s; }
+.WB_global_nav[${attr}]:focus-within { top: 50px; transition: top ease-in-out 0.1s 0s; }
 .WB_global_nav[${attr}]::after { content: " "; width: 100%; height: 8px; clear: both; float: left; background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 75%, transparent 100%); }
 /* 固定小黄签位置 */
 .WB_global_nav[${attr}] .gn_topmenulist_tips { padding-top: 52px; transition: padding-top ease-in-out 0.1s 0.33s; }
@@ -13081,7 +13383,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
       };
       // 监视新的表情框
       observer.dom.add(function faceFastObserver() {
-        const tab = document.querySelector('.layer_faces .WB_minitab:first-child');
+        const tab = document.querySelector('.layer_faces:not([node-type="huati_tabs"]) .WB_minitab:first-child');
         if (!tab) return;
         const container = tab.parentNode;
         const wrap = document.createElement('div');
@@ -13477,6 +13779,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
+  const init = yawf.init;
 
   const layout = yawf.rules.layout;
 
@@ -13560,6 +13863,8 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         (coverStyle || (coverStyle = document.head.appendChild(document.createElement('style')))).textContent = coverCss;
       };
       const setSkin = function setSkin() {
+        // 头条文章页面设置模板会导致界面混乱
+        if (init.page.type() === 'ttarticle') return;
         if (!skinStyle) {
           const skinCss = document.querySelector('link[href*="//img.t.sinajs.cn/t6/skin/"][href*="/skin.css?"]');
           if (!skinCss) return;
@@ -13884,8 +14189,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 .WB_feed .WB_row_line .line span .W_ficon { vertical-align: middle; }
 .WB_feed_handle .WB_row_line .arrow { display: none; }
 .WB_feed_repeat { margin-top: -10px; }
-.WB_feed_comment .WB_feed_detail { position: relative; padding-bottom: 4px; }
-.WB_feed_comment .WB_feed_detail::after { display: none; }
+.WB_feed_comment.WB_feed_comment .WB_feed_detail { position: relative; padding-bottom: 4px; }
+.WB_feed_comment.WB_feed_comment .WB_feed_detail::after { display: none; }
 .WB_feed_v3 .WB_expand .WB_empty .WB_innerwrap, .WB_feed_comment .WB_expand { margin-bottom: 0; }
 `,
   });
@@ -14383,8 +14688,10 @@ ${[0, 1, 2, 3, 4].map(index => `
   const observer = yawf.observer;
   const request = yawf.request;
   const feedParser = yawf.feed;
+  const network = yawf.network;
 
   const feeds = yawf.rules.feeds;
+  const layout = yawf.rules.layout;
 
   const i18n = util.i18n;
   const css = util.css;
@@ -14441,7 +14748,7 @@ ${[0, 1, 2, 3, 4].map(index => `
 .WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b *, .WB_text .W_btn_c *, .WB_empty .W_btn_c * { line-height: ${h2}px !important; font-size: ${fs3}px !important; }
 .W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
 .WB_info { margin-bottom: 2px !important; padding-top: 0 !important; line-height: ${fs <= 28 ? 28 : 50}px !important; }
-.yawf-WB_text_size_main, .yawf-WB_text_size { font-size: ${fs}px; }
+.yawf-WB_text_size_main, .yawf-WB_text_size { font-size: ${fs}px; line-height: ${lh}px; }
 .yawf-WB_text_size_expand, .WB_feed_expand .yawf-WB_text_size { font-size: ${fs2}px; }
 `;
       css.append(style);
@@ -15047,6 +15354,399 @@ ${[0, 1, 2, 3, 4].map(index => `
     },
   });
 
+  Object.assign(i18n, {
+    viewArticleInline: {
+      cn: '内嵌展示头条文章 {{i}}',
+      tw: '內嵌展示頭條文章 {{i}}',
+      en: 'Show articles inline {{i}}',
+    },
+    viewArticleInlineDetail: {
+      cn: '付费内容可能无法在内嵌模式中正常查看，需要打开文章页浏览。',
+    },
+    foldArticle: { cn: '收起', en: 'View Less' },
+    viewArticle: { cn: '查看文章', en: 'View Article' },
+    feedArticle: { cn: '查看原微博', en: 'View Original Feed' },
+    viewArticleSource: { cn: '查看源网址', tw: '查看源網址', en: 'View Source' },
+    articleLoading: { cn: '正在加载……', tw: '正在載入……', en: 'Loading ...' },
+    articleFail: { cn: '加载失败', tw: '载入失败', en: 'Failed to load article' },
+  });
+
+  // 直接在微博内显示头条文章
+  content.viewArticleInline = rule.Rule({
+    id: 'view_article_inline',
+    version: 55,
+    parent: content.content,
+    template: () => i18n.viewArticleInline,
+    ref: {
+      i: { type: 'bubble', icon: 'warn', template: () => i18n.viewArticleInlineDetail },
+    },
+    ainit() {
+      // 当 iframe 内容的尺寸发生变化时，我们要将变化反馈给上层
+      const resizeSensor = function (target, callback, /** @type {Document} */document, /** @type {Window} */window) {
+        const container = document.createElement('div');
+        container.innerHTML = '<div class="resize-sensor"><div class="resize-sensor-expand"><div class="resize-sensor-child"></div></div><div class="resize-sensor-shrink"><div class="resize-sensor-child"></div></div></div>';
+        /** @type {HTMLDivElement} */
+        const sensor = container.firstChild;
+        /** @type {HTMLDivElement} */
+        const expand = sensor.firstChild;
+        /** @type {HTMLDivElement} */
+        const shrink = expand.nextSibling;
+        target.appendChild(sensor);
+
+        let lastWidth = target.offsetWidth;
+        let lastHeight = target.offsetHeight;
+        let newWidth, newHeight, dirty;
+        const reset = function () {
+          expand.scrollTop = 1e8;
+          expand.scrollLeft = 1e8;
+          shrink.scrollTop = 1e8;
+          shrink.scrollLeft = 1e8;
+        };
+        const onResized = function () {
+          if (lastWidth === newWidth && lastHeight === newHeight) return false;
+          lastWidth = newWidth;
+          lastHeight = newHeight;
+          callback();
+          reset();
+          return true;
+        };
+        const onScroll = function (event) {
+          newWidth = target.offsetWidth;
+          newHeight = target.offsetHeight;
+          if (dirty) return; dirty = true;
+          requestAnimationFrame(function () {
+            dirty = false;
+            if (onResized()) onScroll();
+          });
+        };
+        reset();
+        onScroll();
+        expand.addEventListener('scroll', onScroll);
+        shrink.addEventListener('scroll', onScroll);
+      };
+
+      // 要注入到卡片内的样式
+      const injectStyle = `
+.WB_editor_iframe_new .WB_feed_v3 { max-width: 100%; }
+`;
+
+      // 要注入到文章页的样式
+      const contentStyle = `
+html { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; line-height: 1.5; color: var(--text-color); font-family: var(--font-family); background: transparent; font-size: 16px; line-height: 1.5; word-wrap: break-word; }
+body { margin: 0; overflow: hidden; }
+* { box-sizing: border-box; }
+> *:first-child { margin-top: 0 !important; }
+> *:last-child { margin-bottom: 0 !important; }
+a { background-color: transparent; color: var(--link-color); text-decoration: underline; }
+blockquote { margin: 0 0 10px; padding: 0 1em; background: #80808022; border-left: 0.25em solid #80808044; padding: 20px; }
+blockquote > :first-child { margin-top: 0; }
+blockquote > :last-child { margin-bottom: 0; }
+figure { margin: 0 0 10px; padding: 0 1em; text-align: center; }
+figcaption { text-align: center; }
+h1, h2, h3, h4, h5, h6 { margin-top: 24px; margin-bottom: 16px; font-weight: 600; line-height: 1.25; }
+h1 { margin: 0.67em 0; padding-bottom: 0.3em; font-size: 2em; border-bottom: 1px solid #80808022; }
+h2 { padding-bottom: 0.3em; font-size: 1.5em; border-bottom: 1px solid #80808022; }
+h3 { font-size: 1.25em; }
+h4 { font-size: 1em; }
+h5 { font-size: 0.875em; }
+h6 { font-size: 0.85em; }
+hr { box-sizing: content-box; overflow: hidden; height: 2px; padding: 0; margin: 24px 0; background-color: #80808011; border: 0; }
+hr::after { display: table; clear: both; content: ""; }
+hr::before { display: table; content: ""; }
+img { border-style: none; max-width: 100%; box-sizing: content-box; background-color: var(--background-color); }
+li + li { margin-top: 0.25em; }
+li > p { margin-top: 16px; }
+p { margin-top: 0; margin-bottom: 10px; }
+p, blockquote, ul, ol, table { margin-top: 0; margin-bottom: 16px; }
+table { border-spacing: 0; border-collapse: collapse; }
+table th { font-weight: bold; }
+table th, table td { padding: 6px 13px; border: 1px solid #80808044; }
+table tr { border-top: 1px solid #ccc; }
+table tr:nth-child(2n) { background-color: #80808011; }
+td, th { padding: 0; }
+ul, ol { padding-left: 2em; margin-top: 0; margin-bottom: 0; }
+ul { list-style: outside; }
+ul ul ol, ul ol ol, ol ul ol, ol ol ol { list-style-type: lower-alpha; }
+ul ul, ul ol, ol ol, ol ul { margin-top: 0; margin-bottom: 0; }
+iframe { width: 100%; border: 0 none; max-width: 600px; }
+video { max-width: 100%; max-height: 100vh; }
+
+body { position: relative; }
+.resize-sensor, .resize-sensor-expand, .resize-sensor-shrink { position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; z-index: -1; visibility: hidden; }
+.resize-sensor-expand .resize-sensor-child { width: 100000px; height: 100000px; }
+.resize-sensor-shrink .resize-sensor-child { width: 200%; height: 200%; }
+.resize-sensor-child { position: absolute; top: 0; left: 0; transition: 0s; }
+`;
+
+      // 渲染文章
+      const renderArticle = function (article, style, inForward) {
+        const container = document.createElement('div');
+        container.innerHTML = `
+<div class="WB_expand_media_box clearfix">
+<div class="WB_expand_media">
+<div class="yawf-article S_bg2 S_line1">
+<div class="tab_feed_a clearfix yawf-article-handle S_bg2"><div class="tab"><ul class="clearfix">
+<li><span class="line S_line1"><a class="S_txt1 yawf-article-fold" href="javascript:;"><i class="W_ficon ficon_arrow_fold S_ficon">k</i></a></span></li>
+<li><span class="line S_line1"><a class="S_txt1 yawf-article-view" href="" target="_blank"><i class="W_ficon ficon_search S_ficon">°</i></a></span></li>
+<li><span class="line S_line1"><a class="S_txt1 yawf-article-feed" href="" target="_blank"><i class="W_ficon ficon_search S_ficon">\ue604</i></a></span></li>
+<li><span class="line S_line1"><a class="S_txt1 yawf-article-source" href="" target="_blank" rel="no-referrer"><i class="W_ficon ficon_search S_ficon">l</i></a></span></li>
+</ul></div></div>
+<div class="yawf-article-body">
+<div class="yawf-article-title"></div>
+<div class="yawf-article-meta">
+<span class="yawf-article-author"><a target="_blank"><img class="W_face_radius" /></a></span>
+<span class="yawf-article-author-inner"></span>
+<span class="yawf-article-time"></span>
+</div>
+<div class="yawf-article-lead"></div>
+<div class="yawf-article-cover"><img /></div>
+<div class="yawf-article-loading"><i class="W_loading"></i> </div>
+<div class="yawf-article-content"><iframe title="" style="visibility: hidden; height: 1px;" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin"></iframe></div>
+</div>
+</div>
+</div>
+</div>
+`;
+        if (!article.content) {
+          const body = container.querySelector('.yawf-article-body');
+          body.textContent = i18n.articleFail;
+          return container;
+        }
+        // 标题
+        const title = container.querySelector('.yawf-article-title');
+        title.textContent = article.title || '';
+        // 作者
+        const author = container.querySelector('.yawf-article-author');
+        if (article.author) {
+          author.querySelector('img').src = article.author.avatar;
+          const link = author.querySelector('a');
+          link.appendChild(document.createTextNode(article.author.name));
+          link.href = `https://weibo.com/u/${article.author.uid}`;
+          link.setAttribute('usercard', `id=${article.author.uid}`);
+        } else author.remove();
+        const authorInner = container.querySelector('.yawf-article-author-inner');
+        if (article.author && article.author.inner) {
+          const inner = article.author.inner;
+          if (inner.uid) {
+            const link = document.createElement('a');
+            link.textContent = inner.name;
+            link.href = `https://weibo.com/u/${inner.uid}`;
+            link.setAttribute('usercard', `id=${inner.uid}`);
+            authorInner.appendChild(link);
+          } else {
+            authorInner.appendChild(document.createTextNode(inner.name));
+          }
+        } else authorInner.remove();
+        const time = container.querySelector('.yawf-article-time');
+        if (article.time) {
+          time.textContent = article.time.replace(/\d\d-\d\d \d\d:\d\d/, str => {
+            const year = new Date(Date.now() + 288e5).getUTCFullYear();
+            const date = new Date(Date.UTC(year, ...str.split(/[- :]/).map(x => +x)) - 288e5);
+            return [
+              (date.getMonth() + '').padStart(2, 0), '-', (date.getDate() + '').padStart(2, 0), ' ',
+              (date.getHours() + '').padStart(2, 0), ':', (date.getMinutes() + '').padStart(2, 0),
+            ].join('');
+          });
+        } else time.remove();
+        // 导语
+        const lead = container.querySelector('.yawf-article-lead');
+        if (article.lead) lead.textContent = article.lead;
+        else lead.remove();
+        // 封面图
+        const cover = container.querySelector('.yawf-article-cover');
+        if (article.cover) cover.firstChild.src = article.cover;
+        else cover.remove();
+        // 正在加载
+        const loading = container.querySelector('.yawf-article-loading');
+        loading.appendChild(document.createTextNode(i18n.articleLoading));
+        // 内容
+        /** @type {HTMLIFrameElement} */
+        const iframe = container.querySelector('.yawf-article-content iframe');
+        const html = `<!doctype html><html><head><meta charset="utf-8" /><meta name="referrer" content="no-referrer" /><title></title><style>${style}</style><style>${contentStyle}</style></head><body class="yawf-article-page">${article.content}</body></html>`;
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        iframe.src = url;
+        iframe.addEventListener('load', function () {
+          URL.revokeObjectURL(url);
+          loading.remove();
+          const document = iframe.contentDocument;
+          const window = iframe.contentWindow;
+          const resizeIframe = function () {
+            iframe.style.height = document.body.clientHeight + 'px';
+          };
+          // 处理内容中的卡片
+          Array.from(document.querySelectorAll('x-iframe')).forEach(async xiframe => {
+            const oriUrl = xiframe.getAttribute('src');
+            const html = await request.getArticleCard(oriUrl);
+            const iframe = document.createElement('iframe');
+            const blob = new Blob([html], { type: 'text/html' });
+            const id = new URL(oriUrl).searchParams.get('id');
+            const url = URL.createObjectURL(blob);
+            iframe.src = url;
+            iframe.dataset.cardId = id;
+            iframe.addEventListener('load', () => {
+              URL.revokeObjectURL(url);
+              const document = iframe.contentDocument;
+              const window = iframe.contentWindow;
+              const style = document.body.appendChild(document.createElement('style'));
+              style.textContent = injectStyle;
+              const updateOuterSize = function () {
+                iframe.style.height = document.body.clientHeight + 'px';
+              };
+              resizeSensor(document.body, updateOuterSize, document, window);
+              setTimeout(updateOuterSize, 0);
+            });
+            xiframe.parentElement.replaceChild(iframe, xiframe);
+          });
+          resizeSensor(document.body, resizeIframe, document, window);
+          setTimeout(function () {
+            resizeIframe();
+            iframe.style.visibility = 'visible';
+          }, 0);
+          // 添加自定义样式
+          const userCss = layout.userCss.css;
+          if (userCss.isEnabled()) {
+            const style = document.createElement('style');
+            style.textContent = userCss.ref.css.getConfig();
+            document.body.appendChild(style);
+          }
+        });
+        iframe.addEventListener('error', function () {
+          loading.textContent = i18n.articleFail;
+          iframe.remove();
+        });
+        return container;
+      };
+
+      // 隐藏图片或文章卡片
+      const hideMedia = function (feed) {
+        const mediaList = Array.from(feed.querySelectorAll('.WB_media_wrap, .WB_expand_media_box'));
+        const rollback = [...mediaList].map(media => {
+          if (!(media.clientHeight > 0)) return null;
+          const display = window.getComputedStyle(media).display;
+          media.style.display = 'none';
+          return () => { media.style.display = display; };
+        }).filter(x => x);
+        return function () { rollback.forEach(f => f()); };
+      };
+
+      // 让文章内容适配周围的配色
+      const computeStyle = function (reference) {
+        const text = document.createElement('div');
+        text.style = 'position: fixed; top: -1000px;';
+        text.innerHTML = '<div class="WB_text W_f14">T<a>a</a><span class="S_bg2">B</span></div>';
+        reference.appendChild(text);
+        const link = getComputedStyle(text.querySelector('a'));
+        const bg2 = getComputedStyle(text.querySelector('.S_bg2'));
+        const selection = (function () {
+          try {
+            return getComputedStyle(text, '::selection');
+          } catch (e) {
+            try {
+              return getComputedStyle(text, '::-moz-selection');
+            } catch (e2) {
+              return null;
+            }
+          }
+        }());
+        const css = `
+:root {
+--text-color: ${bg2.color};
+--background-color: ${bg2.backgroundColor};
+--link-color: ${link.color};
+
+--font-family: ${bg2.fontFamily};
+}
+
+${selection ? `
+::selection { background-color: ${selection.backgroundColor}; color: ${selection.color}; }
+::-moz-selection { background-color: ${selection.backgroundColor}; color: ${selection.color}; }
+` : ''}
+`;
+        text.remove();
+        return css;
+      };
+
+      const renderArticleControls = function (article, articleData, { id, feed, text, showMedia }) {
+        const fold = article.querySelector('.yawf-article-fold');
+        fold.addEventListener('click', function () {
+          article.remove();
+          showMedia();
+          feed.removeAttribute('yawf-article-shown');
+          feed.scrollIntoView({ block: 'nearest' });
+        });
+        fold.appendChild(document.createTextNode(i18n.foldArticle));
+
+        const view = article.querySelector('.yawf-article-view');
+        view.href = `https://weibo.com/ttarticle/p/show?id=${id}`;
+        view.appendChild(document.createTextNode(i18n.viewArticle));
+
+        const oriFeed = article.querySelector('.yawf-article-feed');
+        if (articleData.feed && new URL(articleData.feed).pathname !== location.pathname) {
+          oriFeed.href = articleData.feed;
+          oriFeed.appendChild(document.createTextNode(i18n.feedArticle));
+        } else oriFeed.remove();
+
+        const source = article.querySelector('.yawf-article-source');
+        if (articleData.source) source.href = articleData.source;
+        else source.closest('li').remove();
+        source.appendChild(document.createTextNode(i18n.viewArticleSource));
+      };
+
+      // 点击文章链接时触发
+      document.addEventListener('click', async function (event) {
+        if (event.shiftKey || event.ctrlKey || event.metaKey) return;
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const feed = target.closest('[mid]');
+        if (!feed) return;
+        const link = target.closest('[suda-uatrack*="1022-article"]');
+        if (!link) return;
+        const id = link.getAttribute('suda-uatrack').replace(/^.*1022%3A(\d+):.*$/, '$1');
+        if (!id) return;
+        const text = Array.from((/** @returns {Element} */function findText(target) {
+          return target ? target.querySelector('.WB_text') ? target : findText(target.parentElement) : null;
+        }(target)).querySelectorAll('.WB_text')).pop();
+        if (!text) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (feed.hasAttribute('yawf-article-shown')) return;
+
+        const loading = document.createElement('div');
+        loading.className = 'yawf-article-loading';
+        loading.innerHTML = '<i class="W_loading"></i> ';
+        loading.appendChild(document.createTextNode(i18n.articleLoading));
+        feed.setAttribute('yawf-article-shown', '');
+        text.parentElement.insertBefore(loading, text.nextSibling);
+
+        const showMedia = hideMedia(feed);
+        const articleData = await request.getArticle(id);
+        const article = renderArticle(articleData, computeStyle(text), text.matches('.WB_expand *'));
+        renderArticleControls(article, articleData, { id, feed, text, showMedia });
+
+        loading.parentElement.replaceChild(article, loading);
+      }, true);
+
+      css.append(`
+.yawf-article-loading { padding: 10px; text-align: center; }
+.yawf-article-handle { position: sticky; top: 50px; padding: 10px 0; z-index: 1; font-size: 12px; line-height: 15px; }
+.yawf-article { border-width: 1px; border-style: solid; padding: 10px; position: relative; font-size: 16px; line-height: 1.5; }
+.yawf-article-title { margin: 10px 0; font-weight: bold; font-size: 130%; }
+.yawf-article-meta { margin: 10px -10px; display: flex; }
+.yawf-article-meta > span { padding: 0 10px; }
+.yawf-article-meta > span:not(:first-child) { border-left: 1px solid #80808022; }
+.yawf-article-author img { width: 20px; height: 20px; vertical-align: middle; margin: 0.2em; }
+.yawf-article-lead { background: #80808022; padding: 20px; }
+.yawf-article-cover { text-align: center; line-height: 0; }
+.yawf-article-cover img { max-width: 100%; margin: 10px 0; vertical-align: top; }
+.yawf-article-content iframe { border: 0 none; width: 100%; margin: 10px 0; }
+`);
+      if (layout.navbar.autoHide.isEnabled()) {
+        css.append('.yawf-article-handle { top: 0; }');
+      }
+    },
+
+  });
 
 }());
 //#endregion
@@ -17208,6 +17908,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 .gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
 @font-face { font-family: "yawf-iconfont"; font-style: normal; font-weight: normal; src: url("data:image/woff;base64,d09GRk9UVE8AAAPIAAoAAAAABbQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAAA9AAAANUAAADot8EQFkZGVE0AAAHMAAAAGgAAABxtAw0mT1MvMgAAAegAAABJAAAAYFmdYldjbWFwAAACNAAAADgAAAFCAA0DAGhlYWQAAAJsAAAAMAAAADYD5a1oaGhlYQAAApwAAAAdAAAAJAaAA4BobXR4AAACvAAAAAgAAAAICAAAd21heHAAAALEAAAABgAAAAYAAlAAbmFtZQAAAswAAADkAAAB1Hh5OPRwb3N0AAADsAAAABYAAAAg/4YAM3icVY2xagJBFADfO+9O1GNNJBcLFwWxPLUXAumvDekPQUmjTYjYCNbP0sLO+Ak2NsLWfkN+ZN/ebiTaBG6qqWYQfB8QUSyzxaT/MZ7PJvPZJ6AHCC/c8liWuOlvImxXofL1PiT6l6isa7aZt00SSFjVJcCDhPWjBCHhpwHePSGgVQgXLzdG4CF230hxqlApc1El9ZwP+HgdhMqtYk7NxaVlkVdMEn+T3bkeuY7dE3HH7rgX8PD3NT7oc6gzfXJT0pk9kT0HIt8+UbzYm4RCiqp/hZJWXgAAAHicY2BgYGQAgjO2i86D6AtJW7VhNABKVQagAAB4nGNgZmFg/MLAysDBNJPpDAMDQz+EZnzNYMzIycDAxMAGJKGAkQEJBKS5pjA4MEQyRDLr/NdhiGGawdCMUAPkKQAhIwBYTwumAAAAeJxjYGBgZoBgGQZGBhCwAfIYwXwWBgUgzQKEIH7k//8Q8v8KqEoGRjYGGJP6gGYGUxcAAJgrBwx4nGNgZGBgAOK+F//94vltvjJwszCAwIWkrdpwuvx/LXMX0wwgl4OBCSQKAFMCC7x4nGNgZGBgmvG/liGGhQEEmLsYGBlQARMAU6MDCAAAAAQAAAAEAAB3AABQAAACAAB4nJWPwWoCMRCGv+gqihV6KB7EQ85ClmTxJL12n0C8i+zKXjawCuKLeOn79EH6BH2ETnSglFJoA0m+mf+fzAR44IohLcOUhXKPEc/KfZa8KmfieVceMDEj5SFT48VpsrFk5reqxD0epfrOfTa8KGfieVMeMONDecjcPHFhx5kaR8OeSCuczhNcdufaNfvY1rGV8If+JZWaSnfHgQpLQY6Xey379yZ3PbASLYjfSZ2/xZTydBm7Q2WL3Nu1/TaOxGHlgneFD+L9+y+2MlzHUXxJT63TmGyr7tjE1obc/+O1T5RwTOJ4nGNgZgCD/80MRkCKkQENAAAoVQG5AAA=") format("woff"); }
 .gn_topmenulist_yawf { top: 34px; right: -17px; width: 134px; }
+.yawf-drop-area-active .gn_topmenulist_yawf { display: none; }
 `;
 
   const searchStyle = util.css.add(searchCss);
