@@ -23,7 +23,11 @@ module.exports = {
 		'indent': ['warn', 2, { flatTernaryExpressions: true }],
     'semi': ['warn', 'always'],
     'no-extra-semi': ['off'],
-    'comma-dangle': ['warn', 'always-multiline'],
+    'comma-dangle': ['warn', {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "functions": "never"
+    }],
 
     'no-multiple-empty-lines': ['warn', { max: 2 }],
     'quotes': ['warn', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
