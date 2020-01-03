@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.55
+// @version           4.0.57
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -23,7 +23,6 @@
 // @exclude           https://security.weibo.com/*
 // @exclude           https://verified.weibo.com/*
 // @exclude           https://vip.weibo.com/*
-// @exclude           https://api.weibo.com/chat*
 // @noframes
 // @run-at            document-start
 // @grant             GM.info
@@ -617,6 +616,7 @@
     en: 'Close',
   };
 
+  const dialogStack = [];
   /**
    * 显示一个对话框
    * @param {{ id: string, title: string, render: Function, button: { [type: string]: Function? }? }}
@@ -725,6 +725,7 @@
     // 响应按键
     const keys = event => {
       if (!event.isTrusted) return;
+      if (dialogStack[dialogStack.length - 1] !== dialog) return;
       const code = keyboard.event(event);
       if (code === keyboard.code.ENTER && button && button.ok) button.ok(event);
       else if (code === keyboard.code.ESC) {
@@ -741,6 +742,7 @@
       window.removeEventListener('resize', resetPos);
       document.body.removeChild(cover);
       setTimeout(function () { document.body.removeChild(dialog); }, 200);
+      dialogStack.splice(dialogStack.indexOf(dialog), 1);
     };
     // 显示对话框
     const show = function ({ x, y } = {}) {
@@ -758,6 +760,7 @@
       setTimeout(function () {
         dialog.classList.remove('UI_animated', 'UI_speed_fast', 'UI_ani_bounceIn');
       }, 200);
+      dialogStack.push(dialog);
     };
     return { hide, show, dom: dialog };
   };
@@ -3444,6 +3447,111 @@
   };
 }());
 //#endregion
+//#region implementation for chat page
+; (function () {
+/* eslint-disable indent */
+if (!/^https:\/\/api.weibo.com\/chat/.test(location.href)) return;
+//#region @require yaofang://content/chat/init.js
+; (function () {
+
+  const yawf = window.yawf;
+  const config = yawf.config;
+
+  const init = yawf.init = {};
+
+  init.userConfig = new Promise(resolve => {
+    init.setUserData = async function (userData) {
+      const id = userData.id;
+      await config.init(id);
+      resolve(config.user);
+    };
+  });
+
+}());
+//#endregion
+//#region replacement of yaofang://content/chat/inject.js
+; (function () {
+
+  const yawf = window.yawf;
+  const init = yawf.init;
+
+  ; (async function () {
+    const userDataUrl = '/webim/2/account/profile/basic.json?source=209678993&t=' + Date.now();
+    const userData = await fetch(userDataUrl).then(resp => resp.json());
+    init.setUserData(userData);
+  }());
+
+}());
+//#endregion
+//#region @require yaofang://content/chat/rule.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const init = yawf.init;
+
+  const css = util.css;
+
+  ; (async function avatarShape() {
+    const userConfig = await init.userConfig;
+    const isEnabled = userConfig.key('layout_avatar_shape').get();
+    if (!isEnabled) return;
+    const shape = userConfig.key('layout_avatar_shape.shape').get();
+    if (shape === 'square') {
+      // 是的，他们就是有的拼成了 avatar 有的拼成了 avator ；顺便一说，前面一个拼得对
+      css.append(`
+#app .avatar, #app .avator { border-radius: 0; }
+`);
+    }
+  }());
+
+  const disableUnloadPrompt = function () {
+    util.inject(function disableBeforeUnload() {
+      if (!window.onbeforeunload) {
+        setTimeout(disableBeforeUnload, 100);
+      } else {
+        window.onbeforeunload = null;
+        window.onunload = null;
+      }
+    });
+  };
+
+  ; (async function () {
+    const userConfig = await init.userConfig;
+
+    const rules = [{
+      key: 'clean_icons_approve',
+      ainit: () => css.append('.avator-box .m-icon img[src$="gg=="] { display: none; }'),
+    }, {
+      key: 'clean_icons_approve_co',
+      ainit: () => css.append('.avator-box .m-icon img[src$="QmCC"] { display: none; }'),
+    }, {
+      key: 'clean_icons_club',
+      ainit: () => css.append('.avator-box .m-icon img[src$="CYII"] { display: none; }'),
+    }, {
+      key: 'clean_icons_v_girl',
+      ainit: () => css.append('.avator-box .m-icon img[src$="YII="] { display: none; }'),
+    }, {
+      key: 'clean_icons_bigfun',
+      ainit: () => css.append('#app .icon-area > i.tf { display: none; }'),
+    }];
+    rules.forEach(({ key, ainit }) => {
+      const isEnabled = userConfig.key(key).get();
+      if (isEnabled) ainit();
+    });
+
+    if (self !== top || userConfig.key('chat_page_disable_unload_prompt').get()) {
+      disableUnloadPrompt();
+    }
+
+  }());
+
+}());
+//#endregion
+throw new Error('YAWF | chat page found, skip following executions');
+/* eslint-enable indent */
+}());
+//#endregion
 //#region @require yaofang://content/ruleset/rule.js
 /**
  * 这个文件用于描述一条规则
@@ -3548,6 +3656,7 @@
 
   rules.all = new Map();
   rule.class = {};
+  rule.types = {};
 
   /**
    * 这里维护一个基本的设置项
@@ -3878,6 +3987,7 @@
     renderValue() { return null; }
   }
   rule.class.OffscreenConfigItem = OffscreenConfigItem;
+  rule.types.offscreen = OffscreenConfigItem;
 
   /**
    * 一个布尔设置项
@@ -3925,6 +4035,7 @@
     }
   }
   rule.class.BooleanConfigItem = BooleanConfigItem;
+  rule.types.boolean = BooleanConfigItem;
 
   /**
    * 一个多选一设置项
@@ -4003,17 +4114,74 @@
     }
   }
   rule.class.SelectConfigItem = SelectConfigItem;
+  rule.types.select = SelectConfigItem;
+
+  /**
+   * 一个输入框
+   * 不暴露给外面直接使用
+   */
+  class InputConfigItem extends ConfigItem {
+    constructor(item, parent) {
+      super(item, parent);
+    }
+    get initial() { return ''; }
+    get inputType() { return 'text'; }
+    normalize(value) { return '' + value; }
+    stringify(value) { return '' + value; }
+    render() {
+      const container = document.createElement('span');
+      container.setAttribute('yawf-config-item', this.configId);
+      container.classList.add('yawf-config-input');
+      const input = document.createElement('input');
+      input.type = this.inputType;
+      input.value = this.getConfig();
+      input.addEventListener('input', event => {
+        if (!event.isTrusted) {
+          this.renderValue(container);
+        } else {
+          const token = this.setConfigToken = {};
+          setTimeout(() => {
+            if (this.setConfigToken !== token) return;
+            this.setConfig(input.value);
+            if (document.activeElement !== input) {
+              this.renderValue(container);
+            }
+          }, 100);
+        }
+      });
+      input.addEventListener('blur', event => {
+        this.renderValue(container);
+      });
+      input.setAttribute('yawf-config-input', this.configId);
+      container.appendChild(input);
+      return container;
+    }
+    renderValue(container) {
+      container = super.renderValue(container);
+      const selector = `input[yawf-config-input="${this.configId}"]`;
+      const input = container.querySelector(selector);
+      const config = this.getConfig();
+      const hasFocus = input === document.activeElement;
+      if (input && !hasFocus && input.value !== this.stringify(config)) {
+        input.value = this.stringify(config);
+      }
+      return container;
+    }
+  }
+  rule.class.InputConfigItem = InputConfigItem;
+  rule.types.input = InputConfigItem;
 
   /**
    * 一个数字输入框
    * 允许定义 min, max, step 属性
    * 对应一个 number 输入框
    */
-  class NumberConfigItem extends ConfigItem {
+  class NumberConfigItem extends InputConfigItem {
     constructor(item, parent) {
       super(item, parent);
     }
-    get initial() { return this.min; }
+    get inputType() { return 'number'; }
+    get initial() { return Math.min(Math.max(this.min, 0), this.max); }
     get min() { return 0; }
     get max() { return Infinity; }
     get step() { return 1; }
@@ -4028,46 +4196,17 @@
       return number;
     }
     render() {
-      const container = document.createElement('span');
-      container.setAttribute('yawf-config-item', this.configId);
+      const container = super.render();
       container.classList.add('yawf-config-number');
-      const input = document.createElement('input');
-      input.type = 'number';
-      input.value = this.getConfig();
+      const input = container.querySelector('input');
       if (+this.min === this.min && this.min !== -Infinity) input.min = this.min;
       if (+this.max === this.max && this.max !== Infinity) input.max = this.max;
       if (+this.step === this.step && Number.isFinite(this.step)) input.step = this.step;
-      input.addEventListener('input', event => {
-        if (!event.isTrusted) {
-          this.renderValue(container);
-        } else {
-          const token = this.setConfigToken = {};
-          setTimeout(() => {
-            if (this.setConfigToken !== token) return;
-            this.setConfig(+input.value);
-          }, 100);
-        }
-      });
-      input.addEventListener('blur', event => {
-        this.renderValue(container);
-      });
-      input.setAttribute('yawf-config-input', this.configId);
-      container.appendChild(input);
-      return container;
-    }
-    renderValue(container) {
-      container = super.renderValue(container);
-      const selector = `input[type="number"][yawf-config-input="${this.configId}"]`;
-      const number = container.querySelector(selector);
-      const config = this.getConfig();
-      const hasFocus = number === document.activeElement;
-      if (number && !hasFocus && +number.value !== config) {
-        number.value = config;
-      }
       return container;
     }
   }
   rule.class.NumberConfigItem = NumberConfigItem;
+  rule.types.number = NumberConfigItem;
 
   /**
    * 范围输入框
@@ -4125,12 +4264,13 @@
     }
   }
   rule.class.RangeConfigItem = RangeConfigItem;
+  rule.types.range = RangeConfigItem;
 
   /**
    * 一个颜色选择框
    * 对应一个 color 输入框
    */
-  class ColorConfigItem extends ConfigItem {
+  class ColorConfigItem extends InputConfigItem {
     constructor(item, parent) {
       super(item, parent);
     }
@@ -4141,35 +4281,15 @@
       return value;
     }
     render() {
-      const container = document.createElement('span');
-      container.setAttribute('yawf-config-item', this.configId);
+      const container = super.render();
       container.classList.add('yawf-config-color');
-      const input = document.createElement('input');
+      const input = container.querySelector('input');
       input.type = 'color';
-      input.value = this.getConfig();
-      input.addEventListener('input', event => {
-        if (!event.isTrusted) input.value = this.getConfig();
-        else this.setConfig(input.value);
-      });
-      input.addEventListener('blur', event => {
-        this.renderValue(container);
-      });
-      input.setAttribute('yawf-config-input', this.configId);
-      container.appendChild(input);
-      return container;
-    }
-    renderValue(container) {
-      container = super.renderValue(container);
-      const selector = `input[type="color"][yawf-config-input="${this.configId}"]`;
-      const color = container.querySelector(selector);
-      const config = this.getConfig();
-      if (color && color.value !== config) {
-        color.value = config;
-      }
       return container;
     }
   }
   rule.class.ColorConfigItem = ColorConfigItem;
+  rule.types.color = ColorConfigItem;
 
   i18n.keyboardDisabled = {
     cn: '（已禁用）',
@@ -4228,6 +4348,7 @@
     }
   }
   rule.class.KeyboardConfigItem = KeyboardConfigItem;
+  rule.types.key = KeyboardConfigItem;
 
   /**
    * 一个文本输入框
@@ -4271,7 +4392,8 @@
       return container;
     }
   }
-  rule.class.ColorConfigItem = ColorConfigItem;
+  rule.class.TextConfigItem = TextConfigItem;
+  rule.types.text = TextConfigItem;
 
   /**
    * 显示一个小图标，鼠标划上去可以显示弹出起泡
@@ -4295,6 +4417,7 @@
     }
   }
   rule.class.BubbleConfigItem = BubbleConfigItem;
+  rule.types.bubble = BubbleConfigItem;
 
   i18n.collectionAddButton = {
     cn: '添加',
@@ -4363,6 +4486,13 @@
             input.value = '';
           }
           input.disabled = false;
+        });
+        label.addEventListener('keydown', event => {
+          if (!event.isTrusted) return;
+          const code = keyboard.event(event);
+          if (code === keyboard.code.ENTER) {
+            event.stopPropagation();
+          }
         });
         if (typeof this.getSuggestionItems === 'function') {
           this.renderSuggestionItems(input);
@@ -4566,8 +4696,20 @@
     }
   }
   rule.class.StringCollectionConfigItem = StringCollectionConfigItem;
+  rule.types.strings = StringCollectionConfigItem;
 
   class RegExpCollectionConfigItem extends StringCollectionConfigItem {
+    constructor(item, parent) {
+      super(item, parent);
+      this.configCacheDirty = true;
+    }
+    initConfig() {
+      if (this.configInitialized) return;
+      super.initConfig();
+      this.addConfigListener(() => {
+        this.configCacheDirty = true;
+      });
+    }
     normalizeItem(value) {
       if (!value || typeof value !== 'object') return null;
       if (typeof value.source !== 'string') return null;
@@ -4625,24 +4767,15 @@
       const index = values.findIndex((item, index) => this.track(item, index) === track);
       if (index !== -1) {
         values.splice(index, 1);
-        if (!this.configCacheDirty && Array.isArray(this.configCache)) {
-          this.configCache.splice(index, 1);
-        }
       }
       values.push(value);
       super.setConfig(values);
-      if (!this.configCacheDirty) {
-        this.configCache.push(this.compileRegExp(value));
-      }
     }
     removeItem(track) {
       const values = this.getConfig();
       const index = values.findIndex((item, index) => this.track(item, index) === track);
       if (index !== -1) {
         values.splice(index, 1);
-        if (!this.configCacheDirty && Array.isArray(this.configCache)) {
-          this.configCache.splice(index, 1);
-        }
       }
       super.setConfig(values);
     }
@@ -4651,6 +4784,7 @@
     }
   }
   rule.class.RegExpCollectionConfigItem = RegExpCollectionConfigItem;
+  rule.types.regexen = RegExpCollectionConfigItem;
 
   class UserIdCollectionConfigItem extends CollectionConfigItem {
     normalizeItem(value) {
@@ -4705,6 +4839,7 @@
     }
   }
   rule.class.UserIdCollectionConfigItem = UserIdCollectionConfigItem;
+  rule.types.users = UserIdCollectionConfigItem;
 
   class UserNameCollectionConfigItem extends StringCollectionConfigItem {
     async getSuggestionItems(userInput) {
@@ -4724,6 +4859,8 @@
       return [value.name];
     }
   }
+  rule.class.UserNameCollectionConfigItem = UserNameCollectionConfigItem;
+  rule.types.usernames = UserNameCollectionConfigItem;
 
   class TopicCollectionConfigItem extends StringCollectionConfigItem {
     async getSuggestionItems(userInput) {
@@ -4743,6 +4880,8 @@
       return [value];
     }
   }
+  rule.class.TopicCollectionConfigItem = TopicCollectionConfigItem;
+  rule.types.topics = TopicCollectionConfigItem;
 
   class GroupIdCollectionConfigItem extends CollectionConfigItem {
     normalizeItem(value) {
@@ -4787,25 +4926,16 @@
     }
   }
   rule.class.GroupIdCollectionConfigItem = GroupIdCollectionConfigItem;
+  rule.types.groups = GroupIdCollectionConfigItem;
 
   const configItemBuilder = function (item, parent) {
     if (!item) return null;
-    if (item.type === 'boolean') return new BooleanConfigItem(item, parent);
-    if (item.type === 'select') return new SelectConfigItem(item, parent);
-    if (item.type === 'number') return new NumberConfigItem(item, parent);
-    if (item.type === 'range') return new RangeConfigItem(item, parent);
-    if (item.type === 'color') return new ColorConfigItem(item, parent);
-    if (item.type === 'text') return new TextConfigItem(item, parent);
-    if (item.type === 'bubble') return new BubbleConfigItem(item, parent);
-    if (item.type === 'strings') return new StringCollectionConfigItem(item, parent);
-    if (item.type === 'regexen') return new RegExpCollectionConfigItem(item, parent);
-    if (item.type === 'users') return new UserIdCollectionConfigItem(item, parent);
-    if (item.type === 'usernames') return new UserNameCollectionConfigItem(item, parent);
-    if (item.type === 'topics') return new TopicCollectionConfigItem(item, parent);
-    if (item.type === 'groups') return new GroupIdCollectionConfigItem(item, parent);
-    if (item.type === 'key') return new KeyboardConfigItem(item, parent);
-    if (item.type === 'offscreen') return new OffscreenConfigItem(item, parent);
-    return new ConfigItem(item, parent);
+    const constructor = rule.types[item.type];
+    if (!constructor) {
+      return new ConfigItem(item, parent);
+    } else {
+      return new constructor(item, parent);
+    }
   };
 
   /**
@@ -4843,6 +4973,8 @@
     return new Tab(item);
   };
   rule.class.Tab = Tab;
+  // 这个标签页不会在设置窗口中显示，但是会出现在搜索结果里面
+  rule.vtab = rule.Tab({ type: 'vtab' });
 
   /**
    * 描述窗口的一组设置，一组设置有一个加粗文字显示的标题
@@ -5484,11 +5616,12 @@
     const tablist = left.querySelector('ul');
     const search = tablist.appendChild(configDom.search());
     const searchInput = search.querySelector('input');
+    const renderTabs = tabs.filter(tab => tab.type === 'tab');
     /** @type {Element?} */
     let current = null;
     /** @type {WeakMap<Element, Function>} */
     const tabInit = new WeakMap();
-    const tabLayer = tabs.map(tab => {
+    const tabLayer = renderTabs.map(tab => {
       const layer = right.appendChild(configDom.layer());
       return layer;
     });
@@ -5499,7 +5632,7 @@
         }
       });
     };
-    const tabLeft = tabs.map((tab, index) => {
+    const tabLeft = renderTabs.map((tab, index) => {
       const layer = tabLayer[index];
       const tabLeft = tablist.appendChild(configDom.item(tab.getRenderResult()));
       tabInit.set(tabLeft, () => {
@@ -5528,7 +5661,7 @@
       right.scrollTo(0, 0);
     };
     // 自动选中目标选项卡，或第一个选项卡
-    setCurrent(tabLeft[(initial && tabs.indexOf(initial) + 1 || 1) - 1]);
+    setCurrent(tabLeft[(initial && renderTabs.indexOf(initial) + 1 || 1) - 1]);
     left.addEventListener('click', event => {
       const tabLeft = event.target.closest('.yawf-config-tab');
       if (!tabLeft) return;
@@ -13070,6 +13203,44 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 
 }());
 //#endregion
+//#region @require yaofang://content/rule/layout/chat.js
+; (function () {
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+
+  const layout = yawf.rules.layout;
+
+  const i18n = util.i18n;
+
+  const chat = layout.chat = {};
+
+  i18n.chatToolGroupTitle = {
+    cn: '聊天',
+    en: 'Chat',
+  };
+
+  chat.chat = rule.Group({
+    parent: layout.layout,
+    template: () => i18n.chatToolGroupTitle,
+  });
+
+  i18n.chatPageDisableUnloadPrompt = {
+    cn: '关闭聊天页面时无需二次确认',
+    tw: '關閉聊天頁面時無需二次確認',
+    en: 'Prevent promopting when close chat page',
+  };
+
+  chat.chatPageDisableUnloadPrompt = rule.Rule({
+    id: 'chat_page_disable_unload_prompt',
+    version: 57,
+    parent: chat.chat,
+    template: () => i18n.chatPageDisableUnloadPrompt,
+    // 实现在 /content/chat/rule.js
+  });
+
+}());
+//#endregion
 //#region @require yaofang://content/rule/layout/other.js
 ; (function () {
 
@@ -14339,6 +14510,8 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 
 .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) { width: 120px; height: 80px; min-width: 36px; }
 .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) .wbv-control-bar { display: none !important; }
+.WB_feed.WB_feed_v3 .WB_media_a_m1 .html5-video:not([yawf-video-play]) { max-width: 120px; max-height: 80px; }
+.WB_feed.WB_feed_v3 .WB_media_a_m1 .html5-video:not([yawf-video-play]) .box-3 { display: none !important; }
 
 .WB_card_vote.WB_card_vote .vote_con1 .item { font-size: inherit; line-height: 14px; margin-top: -5px; text-align: left; }
 .WB_card_vote.WB_card_vote .vote_con1 .item_rt { font-size: inherit; line-height: 24px; height: 24px; margin-top: -5px; }
@@ -14351,23 +14524,33 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .WB_card_vote.WB_card_vote .vote_share a { line-height: 24px; height: 24px; margin-top: -5px; }
 `);
       observer.dom.add(function smallVideo() {
-        const videos = Array.from(document.querySelectorAll('.WB_video_h5_v2 .WB_h5video_v2:not([yawf-watch-pouse])'));
-        videos.forEach(video => {
-          video.setAttribute('yawf-watch-pause', '');
-          const container = video.closest('.WB_video_h5_v2');
-          let videoObserver;
-          const setPlayAttribute = function setPlayAttribute() {
-            const playing = video.classList.contains('wbv-playing');
-            if (playing) {
-              container.setAttribute('yawf-video-play', '');
-              if (videoObserver) videoObserver.disconnect();
-              return true;
-            }
-            return false;
-          };
-          if (setPlayAttribute()) return;
-          videoObserver = new MutationObserver(setPlayAttribute);
-          videoObserver.observe(video, { attributes: true, attributeFilter: ['class'], childList: false, characterData: false });
+        [{
+          videoSelector: '.WB_video_h5_v2 .WB_h5video_v2:not([yawf-watch-pause])',
+          containerSelector: '.WB_video_h5_v2',
+          isPlaying: video => video.classList.contains('wbv-playing'),
+        }, {
+          videoSelector: '.html5-video .hv-icon:not([yawf-watch-pause])',
+          containerSelector: '.html5-video',
+          isPlaying: video => video.classList.contains('hv-icon-pause'),
+        }].forEach(function ({ videoSelector, containerSelector, isPlaying }) {
+          const videos = Array.from(document.querySelectorAll(videoSelector));
+          videos.forEach(video => {
+            video.setAttribute('yawf-watch-pause', '');
+            const container = video.closest(containerSelector);
+            let videoObserver;
+            const setPlayAttribute = function setPlayAttribute() {
+              const playing = isPlaying(video);
+              if (playing) {
+                container.setAttribute('yawf-video-play', '');
+                if (videoObserver) videoObserver.disconnect();
+                return true;
+              }
+              return false;
+            };
+            if (setPlayAttribute()) return;
+            videoObserver = new MutationObserver(setPlayAttribute);
+            videoObserver.observe(video, { attributes: true, attributeFilter: ['class'], childList: false, characterData: false });
+          });
         });
       });
       const repost = this.ref.repost.getConfig();
@@ -14391,7 +14574,6 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .WB_h5video.hv-s1, .WB_h5video.hv-s3-2, .WB_h5video.hv-s3-5 { margin-left: 0; }
 .yawf-WB_video[yawf-video-play] { margin-left: -22px; }
 `);
-      // FIXME 八图或九图时，展开后图片列表显示不完整
     },
   });
 
@@ -14965,7 +15147,7 @@ ${[0, 1, 2, 3, 4].map(index => `
       css.append(`
 .WB_card_vote.WB_card_vote .vote_con1 .item { position: relative; z-index: 1; overflow: hidden; text-align: left; }
 .WB_card_vote.WB_card_vote .vote_con1 .item::after { content: attr(data-part-num) ; float: right; }
-.WB_card_vote.WB_card_vote .vote_con1 .item::before { content: " "; width: calc(var(--part-ratio) * 100%); background: #f2f2f5; top: 0; left: 0; bottom: 0; margin: 0; position: absolute; z-index: -1; }
+.WB_card_vote.WB_card_vote .vote_con1 .item::before { content: " "; width: calc(var(--part-ratio) * 100%); top: 0; left: 0; bottom: 0; margin: 0; position: absolute; z-index: -1; }
 .WB_card_vote.WB_card_vote .vote_con2 .vote_btn { position: relative; font-size: 14px; }
 .WB_card_vote.WB_card_vote .vote_con2 .vote_btn a { background: currentColor; border-radius: 0; }
 .WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn a { margin-right: -2px; }
@@ -14973,6 +15155,8 @@ ${[0, 1, 2, 3, 4].map(index => `
 .WB_card_vote.WB_card_vote .vote_con2 .vote_btn::after { content: attr(data-part-num); position: absolute; top: 0; bottom: 0; color: white; line-height: 24px; }
 .WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn::after { left: 26px; right: auto; }
 .WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn::after { left: auto; right: 26px; }
+.WB_card_vote.WB_card_vote .vote_con1 .item_rt.S_txt1 .bg,
+.WB_card_vote.WB_card_vote .vote_con1 .item::before { background-color: #80808022; }
 `);
       const smallImage = feeds.layout.smallImage;
       if (smallImage.isEnabled()) {
@@ -15537,13 +15721,14 @@ body { position: relative; }
             authorInner.appendChild(document.createTextNode(inner.name));
           }
         } else authorInner.remove();
+        // 日期
         const time = container.querySelector('.yawf-article-time');
         if (article.time) {
           time.textContent = article.time.replace(/\d\d-\d\d \d\d:\d\d/, str => {
             const year = new Date(Date.now() + 288e5).getUTCFullYear();
-            const date = new Date(Date.UTC(year, ...str.split(/[- :]/).map(x => +x)) - 288e5);
+            const date = new Date(Date.UTC(year, ...str.split(/[- :]/).map((x, i) => i ? +x : x - 1)) - 288e5);
             return [
-              (date.getMonth() + '').padStart(2, 0), '-', (date.getDate() + '').padStart(2, 0), ' ',
+              ((date.getMonth() + 1) + '').padStart(2, 0), '-', (date.getDate() + '').padStart(2, 0), ' ',
               (date.getHours() + '').padStart(2, 0), ':', (date.getMinutes() + '').padStart(2, 0),
             ].join('');
           });
@@ -15685,7 +15870,7 @@ ${selection ? `
         if (articleData.feed && new URL(articleData.feed).pathname !== location.pathname) {
           oriFeed.href = articleData.feed;
           oriFeed.appendChild(document.createTextNode(i18n.feedArticle));
-        } else oriFeed.remove();
+        } else oriFeed.closest('li').remove();
 
         const source = article.querySelector('.yawf-article-source');
         if (articleData.source) source.href = articleData.source;
@@ -16361,13 +16546,24 @@ ${selection ? `
           const video = container.querySelector('video');
           if (video) video.src = 'data:text/plain,42';
           const videoSourceData = new URLSearchParams(container.getAttribute('video-sources'));
-          const videoSource = videoSourceData.get(videoSourceData.get('qType'));
+          let videoSource = videoSourceData.get(videoSourceData.get('qType'));
+          if (!videoSource) {
+            videoSource = Array.from(videoSourceData)
+              .filter(([key, value]) => /^https?(?::|%3A)/i.test(value))
+              .reduce((s1, s2) => +s1[0] > +s2[0] ? s1 : s2)[1];
+          }
+          // 有时候会被转义两次，所以要再额外处理一次，原因不明
+          if (/^https?%3A/i.test(videoSource)) {
+            videoSource = decodeURIComponent(videoSource);
+          }
+          // http 会直接被浏览器拦掉，但是有的历史数据是 http
+          videoSource = videoSource.replace(/^http:/, 'https:');
           const newContainer = document.createElement('li');
           newContainer.className = container.className;
           newContainer.classList.add('yawf-WB_video');
           const newVideo = document.createElement('video');
           newVideo.poster = cover.src;
-          newVideo.src = videoSource.replace(/^http:/, 'https:');
+          newVideo.src = videoSource;
           newVideo.preload = 'none';
           newVideo.controls = !smallImage;
           newVideo.autoplay = false;
