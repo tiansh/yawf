@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.57
+// @version           4.0.58
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -729,7 +729,7 @@
       const code = keyboard.event(event);
       if (code === keyboard.code.ENTER && button && button.ok) button.ok(event);
       else if (code === keyboard.code.ESC) {
-        (button && (button.cancel || button.close) || (() => hide()))(event);
+        (button && (button.cancel || button.close) || hide)(event);
       } else return;
       event.stopPropagation();
       event.preventDefault();
@@ -744,13 +744,16 @@
       setTimeout(function () { document.body.removeChild(dialog); }, 200);
       dialogStack.splice(dialogStack.indexOf(dialog), 1);
     };
+    const resetPosition = function ({ x, y } = {}) {
+      if (x == null) x = (window.innerWidth - dialog.clientWidth) / 2;
+      if (y == null) y = (window.innerHeight - dialog.clientHeight) / 2;
+      setPos({ x, y: y + window.pageYOffset });
+    };
     // 显示对话框
     const show = function ({ x, y } = {}) {
       document.body.appendChild(cover);
       document.body.appendChild(dialog);
-      if (x == null) x = (window.innerWidth - dialog.clientWidth) / 2;
-      if (y == null) y = (window.innerHeight - dialog.clientHeight) / 2;
-      setPos({ x, y: y + window.pageYOffset });
+      resetPosition({ x, y });
       document.addEventListener('keydown', keys);
       document.addEventListener('scroll', resetPos);
       window.addEventListener('resize', resetPos);
@@ -762,7 +765,7 @@
       }, 200);
       dialogStack.push(dialog);
     };
-    return { hide, show, dom: dialog };
+    return { hide, show, resetPosition, dom: dialog };
   };
 
   const predefinedDialog = (buttons, { icon: defaultIcon }) => {
@@ -1060,7 +1063,7 @@
 }());
 //#endregion
 //#region @require yaofang://content/util/mid.js
-; (async function () {
+; (function () {
 
   const yawf = window.yawf;
   const util = yawf.util;
@@ -1093,6 +1096,45 @@
     return base62mid.match(/.{1,4}(?=(?:.{4})*$)/g)
       .map(trunc => String(base62.decode(trunc)).padStart(7, 0))
       .join('').replace(/^0+/, '');
+  };
+
+}());
+//#endregion
+//#region @require yaofang://content/util/crc.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+
+  const crc = util.crc = {};
+
+  const table = new Uint32Array(256);
+  for (let i = 0; i < 256; i++) {
+    let rem = i >>> 0;
+    for (let j = 0; j < 8; j++) {
+      if (rem & 1) rem = ((rem >>> 1) ^ 0xedb88320) >>> 0;
+      else rem >>>= 1;
+    }
+    table[i] = rem;
+  }
+
+  const parseString = function (str) {
+    const encoder = new TextEncoder();
+    return encoder.encode(str);
+  };
+
+  /**
+   * @param {Uint8Array|string} buffer
+   * @param {number} crc
+   */
+  crc.crc32 = function (buffer, crc) {
+    const bytes = buffer instanceof Uint8Array ? buffer : parseString(String(buffer));
+    crc = ~crc >>> 0;
+    bytes.forEach(byte => {
+      crc = (crc >>> 8) ^ table[(crc & 0xff) ^ byte];
+    });
+    crc = ~crc >>> 0;
+    return crc;
   };
 
 }());
@@ -15955,6 +15997,7 @@ ${selection ? `
   const i18n = util.i18n;
   const css = util.css;
   const urls = util.urls;
+  const crc = util.crc;
 
   const media = feeds.media = {};
 
@@ -15991,6 +16034,20 @@ ${selection ? `
     return url;
   };
 
+  const getUrlByPid = function (pid, size = 'large') {
+    if ('wy'.includes(pid[9])) {
+      const index = (crc.crc32(pid) & 3) + 1;
+      const extension = pid[21] === 'g' ? 'gif' : 'jpg';
+      if (pid[9] === 'w') {
+        return new URL(`//ww${index}.sinaimg.cn/${size}/${pid}.${extension}`, location);
+      } else {
+        return new URL(`//wx${index}.sinaimg.cn/${size}/${pid}.${extension}`, location);
+      }
+    } else {
+      return new URL(`//ss1.sinaimg.cn/${size}/${pid}&690`, location);
+    }
+  };
+
   const getImagesInfo = function (ref) {
     let container, imgs, img;
     if (ref.matches('.WB_detail .WB_expand_media *')) {
@@ -16000,8 +16057,8 @@ ${selection ? `
       img = container.querySelector('.media_show_box img') ||
         container.querySelector('.current img');
       if (ref.matches('[action-type="widget_photoview"]')) {
-        img = document.createElement('image');
-        img.src = 'https://wx1.sinaimg.cn/large/' + new URLSearchParams(ref.getAttribute('action-data')).get('pid') + '.jpg';
+        img = document.createElement('img');
+        img.src = getUrlByPid(new URLSearchParams(ref.getAttribute('action-data')).get('pid'));
       }
       // fallthrough
     } else if (ref.matches('.WB_expand_media .tab_feed_a *')) {
@@ -16018,7 +16075,7 @@ ${selection ? `
       // fallthrough
     } else if (ref.getAttribute('imagecard')) {
       const pid = new URLSearchParams(ref.getAttribute('imagecard')).get('pid');
-      return { images: ['https://wx1.sinaimg.cn/large/' + pid + '.jpg'], current: 1 };
+      return { images: [getUrlByPid(pid).href], current: 1 };
     } else if (ref.href && ref.href.indexOf('javascript:') === -1) {
       return { images: [ref.href], current: 1 };
     } else if (ref instanceof HTMLImageElement && ref.src) {
@@ -16074,6 +16131,7 @@ ${selection ? `
         }
       };
 
+      // 添加一个查看原图的按钮（在查看大图旁边）
       const viewOriginalButton = viewLargeLink => {
         const viewOriginalLinkContainer = document.createElement('ul');
         viewOriginalLinkContainer.innerHTML = '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">l</i></a></span></li>';
@@ -16121,6 +16179,7 @@ ${selection ? `
         download.urls(files);
       };
 
+      // 添加一个下载图片的按钮（在查看大图旁边）
       const downloadButton = viewLargeLink => {
         const downloadLinkContainer = document.createElement('ul');
         downloadLinkContainer.innerHTML = '<li><span class="line S_line1"><a class="S_txt1" href="javascript:;" target="_blank"><i class="W_ficon ficon_search S_ficon">|</i></a></span></li>';
@@ -16136,6 +16195,7 @@ ${selection ? `
         return downloadLinkContainer.firstChild;
       };
 
+      // 使按钮不可用
       const disableButton = button => {
         const link = button.querySelector('a');
         link.className = 'S_ficon_dis';
@@ -16169,22 +16229,50 @@ ${selection ? `
       };
       observer.dom.add(addImageHandlerLink);
 
-      // 处理点击时直接查看原图/下载的情况
-      if (directView || directDownload) {
-        document.addEventListener('click', function (event) {
-          const target = event.target;
-          if (event.button !== 0) return; // 只响应左键操作
-          if (event.shiftKey) return; // 按下 Shift 时不响应
-          if (target.closest('.yawf-W_icon_tag_9p')) return; // 展开过多被折叠的图片
-          const pic = target.closest('.WB_media_wrap .WB_pic') || target.closest('a[imagecard]');
-          if (!pic) return;
-          event.stopPropagation();
-          const { images, current } = getImagesInfo(pic);
-          if (directView) showOriginalPage({ images, current });
-          else downloadImages(images, target);
-        }, true);
-      }
+      // 让鼠标浮上显示图片卡片的链接指向图片
+      const imageCardAsLink = function () {
+        const imagecards = document.querySelectorAll('a[imagecard]:not([yawf-imagecard-link])');
+        if (!imagecards.length) return;
+        imagecards.forEach(imagecard => {
+          imagecard.setAttribute('yawf-imagecard-link', 'yawf-imagecard-link');
+          const pid = new URLSearchParams(imagecard.getAttribute('imagecard')).get('pid');
+          const url = getUrlByPid(pid);
+          imagecard.href = url;
+          imagecard.target = '_blank';
+          imagecard.addEventListener('click', event => {
+            event.preventDefault();
+          });
+        });
+      };
+      observer.dom.add(imageCardAsLink);
 
+      // 处理点击时直接查看原图/下载的情况
+      document.addEventListener('click', function (event) {
+        const target = event.target;
+        if (event.button !== 0) return; // 只响应左键操作
+        if (target.closest('.yawf-W_icon_tag_9p')) return; // 展开过多被折叠的图片按钮不响应
+        const pic = target.closest('.WB_media_wrap .WB_pic') || target.closest('a[imagecard]');
+        if (!pic) return;
+        const active = (function () {
+          const shift = event.shiftKey;
+          const ctrl = /mac/i.test(navigator.platform) ? event.metaKey : event.ctrlKey;
+          if (shift) return null;
+          if (!directView && viewEnabled && ctrl) return 'view';
+          if (!directDownload && downloadEnabled && ctrl) return 'download';
+          if (directView) return 'view';
+          if (directDownload) return 'download';
+          return null;
+        }());
+        if (!active) return;
+        event.stopPropagation();
+        event.preventDefault();
+        const { images, current } = getImagesInfo(pic);
+        const isView = directView || !directDownload && viewEnabled;
+        if (isView) showOriginalPage({ images, current });
+        else downloadImages(images, target);
+      }, true);
+
+      // 添加右键菜单支持
       if (env.config.contextMenuSupported && (contextMenuView || contextMenuDownload)) {
         contextmenu.addListener(function (/** @type {MouseEvent} */event) {
           /** @type {Element & EventTarget} */
@@ -17542,6 +17630,8 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
         importData({ config, source });
       });
       exportButton.addEventListener('click', event => {
+        if (exportButton.classList.contains('yawf-export-busy')) return;
+        exportButton.classList.add('yawf-export-busy');
         const config = rule.configPool.export();
         const { name, version } = browser.runtime.getManifest();
         const [major, minor, micro] = version.split('.');
@@ -17558,7 +17648,19 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
         const date = new Date();
         const dateStr = date.toISOString().replace(/-|T.*/g, '');
         const filename = download.filename(`${username}-${i18n.configFilename}-${dateStr}.json`);
-        download.blob({ blob, filename });
+        const finishDownload = function () {
+          exportButton.classList.remove('yawf-export-busy');
+        };
+        download.blob({ blob, filename }).then(download => {
+          if (!download || !download.show) {
+            finishDownload();
+          } else {
+            setTimeout(() => {
+              download.show();
+              finishDownload();
+            }, 500);
+          }
+        }, finishDownload);
       });
       resetButton.addEventListener('click', async event => {
         const confirmAnswer = await ui.confirm({
@@ -17589,6 +17691,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 
   css.append(`
 .yawf-export, .yawf-reset, .yawf-import-wbp { margin-left: 10px; }
+.yawf-export-busy { cursor: progress; }
 `);
 
   ; (function () {
