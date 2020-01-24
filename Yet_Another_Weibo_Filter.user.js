@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.58
+// @version           4.0.59
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1798,8 +1798,18 @@
     util.debug('Fetch Follow: fetch page %s', url);
     util.debug('fetch url %s', url);
     const resp = await network.fetchText(url);
-    const re = /<script>FM\.view\({"ns":"pl\.relation\.myFollow\.index".*"html":(?=.*member_box)(".*")}\)<\/script>\n/;
+    const re = /<script>FM\.view\({"ns":"pl\.relation\.myFollow\.index".*"html":(?=.*(?:member_box|WB_empty))(".*")}\)<\/script>\n/;
     const dom = util.dom.content(document.createElement('div'), JSON.parse(resp.match(re)[1]));
+
+    // 如果在获取过程中用户手动取消了一些关注，可能导致最后几页是空白的
+    // 其实看到这种情况就说明出问题了
+    const empty = dom.querySelector('.WB_empty');
+    if (empty) {
+      return {
+        allPages: [],
+        followInPage: [],
+      };
+    }
 
     const allPages = (function () {
       try {
@@ -3965,8 +3975,10 @@ throw new Error('YAWF | chat page found, skip following executions');
     getConfig() {
       this.initConfig();
       const value = this.config.get();
+      const stringifyValue = value == null ? value : JSON.stringify(value);
       const normalize = this.normalize(value);
-      if (value && normalize && JSON.stringify(value) !== JSON.stringify(normalize)) {
+      const stringifyNormalize = normalize == null ? normalize : JSON.stringify(normalize);
+      if (stringifyValue !== stringifyNormalize) {
         this.config.set(normalize);
       }
       return normalize;
@@ -7464,6 +7476,18 @@ throw new Error('YAWF | chat page found, skip following executions');
         value.timestamp = Date.now();
         return super.setConfig(value);
       },
+      restart() {
+        const value = this.getConfig();
+        value.startTime = Date.now();
+        this.setConfig(value);
+        return value.startTime;
+      },
+      isOutDated() {
+        const value = this.getConfig();
+        if (!value.timestamp) return false;
+        return value.startTime < Date.now() - 864e5 * 3;
+      },
+      // 其实设置读写并不是同步的，但是也没什么更好的办法就是了
       getLock() {
         const value = this.getConfig();
         const lock = Date.now() + [...Array(100)].map(_ => Math.random() * 10 | 0).join('');
@@ -7487,6 +7511,9 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!value.timestamp) return {};
         if (value.timestamp > Date.now() + 60e3) return {};
         if (value.timestamp < Date.now() - 86400e3 * 7) return {};
+        if (value.allPages && !value.startTime) {
+          value.startTime = Date.now();
+        }
         if (value.pendingPages) {
           if (!Array.isArray(value.list)) return {};
         }
@@ -7530,6 +7557,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const fetchInitialize = async function () {
     const { fetchData } = followingContext;
     const lock = fetchData.touchTimestamp();
+    fetchData.restart();
     const { allPages, followInPage } = await request.getFollowingPage(init.page.$CONFIG.uid);
     fetchData.assertLock(lock);
     const fetchContext = fetchData.getConfig();
@@ -7603,7 +7631,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     const { fetchData, lastList, lastChange } = followingContext;
 
     // 如果连续 10 分钟没有更新，那么可能是之前负责更新的那个页面被关闭或者出错了
-    const { timestamp, lock, allPages } = fetchData.getConfig();
+    const { timestamp, lock } = fetchData.getConfig();
     if (timestamp > Date.now() - 600e3 && lock) {
       setTimeout(() => {
         if (fetchData.getConfig().timestamp === timestamp) updateFollowList();
@@ -7612,10 +7640,13 @@ throw new Error('YAWF | chat page found, skip following executions');
     }
 
     try {
+      if (fetchData.isOutDated()) {
+        fetchData.setConfig({});
+      }
       const lock = fetchData.getLock();
       util.debug('Fetch Follow: start follow fetching');
       // 如果之前获取到一半，那么就继续之前的工作，否则开始新工作
-      if (!allPages) {
+      if (!fetchData.getConfig().allPages) {
         util.debug('Fetch Follow: fetch first page');
         fetchData.assertLock(lock);
         await fetchInitialize();
@@ -10509,9 +10540,9 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   i18n.koiForwardFeedFilter = {
-    cn: '转发图标是锦鲤的微博（转发抽奖的微博？）',
-    tw: '轉發圖示是錦鯉的微博（轉發抽獎的微博？）',
-    en: 'Forward icon as a koi (forward this weibo for draw?)',
+    cn: '转发图标是锦鲤的微博（转发抽奖微博）',
+    tw: '轉發圖示是錦鯉的微博（轉發抽獎微博）',
+    en: 'Forward icon as a koi (forward this weibo for draw)',
   };
   i18n.koiForwardFeedFilterDetail = {
     cn: '微博会将转发抽奖的消息的转发按钮显示成一条鱼的图标。这项规则会根据这个图标作为判断依据隐藏对应的微博。',
