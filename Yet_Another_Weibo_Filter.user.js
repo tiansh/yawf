@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.59
+// @version           4.0.60
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -990,10 +990,11 @@
     timeSecondBefore: { cn: '秒前', tw: '秒前', en: ' secs ago' },
   });
 
-  const timeToParts = (time, locale = true) => (
-    new Date(time - new Date(time).getTimezoneOffset() * 6e4 * locale)
-      .toISOString().match(/\d+/g)
-  );
+  const timeToParts = (time, locale = 'current') => {
+    const offset = locale === 'current' ? new Date(time).getTimezoneOffset() :
+      locale === 'cst' ? -480 : 0;
+    return new Date(time - offset * 6e4).toISOString().match(/\d+/g);
+  };
 
   time.parse = function (text) {
     let parseDate = null;
@@ -1035,10 +1036,10 @@
     return new Date(Date.now() - time.diff);
   };
 
-  time.format = function (time, format) {
+  time.format = function (time, { format = 'auto', locale = 'current' } = {}) {
     const ref = now();
-    const [iy, im, id, ih, iu] = timeToParts(time);
-    const [ny, nm, nd, nh, nu] = timeToParts(ref);
+    const [iy, im, id, ih, iu] = timeToParts(time, locale);
+    const [ny, nm, nd, nh, nu] = timeToParts(ref, locale);
     const diff = (ref - time) / 1e3;
     if (format === 'full') {
       return formatter.format(time);
@@ -1058,6 +1059,11 @@
   time.diff = 0;
   time.setDiff = function (diff) {
     time.diff = +diff || 0;
+  };
+
+  time.isCstEquivalent = function () {
+    const year = new Date().getFullYear();
+    return [...Array(366)].every((_, i) => new Date(year, 0, i).getTimezoneOffset() === -480);
   };
 
 }());
@@ -2213,13 +2219,13 @@
   };
   const sanitizeAnchorElement = function (element) {
     let url;
-    try { url = element.href; } catch (e) { url = null; }
+    try { url = new URL(element.href); } catch (e) { url = null; }
     if (!url || !['http:', 'https:'].includes(url.protocol)) {
       const span = document.createElement('span');
       return span;
     }
     const anchor = document.createElement('a');
-    anchor.href = url;
+    anchor.href = url.href;
     anchor.referrerPolicy = 'no-referrer';
     anchor.target = '_blank';
     return anchor;
@@ -2892,6 +2898,7 @@
   const init = yawf.init = yawf.init || {};
   const page = init.page = init.page || {};
 
+  // eslint-disable-next-line complexity
   page.type = function () {
     const search = new URLSearchParams(location.search);
     // 导览页面
@@ -2912,6 +2919,8 @@
       if ($CONFIG.domain === '100202') return 'book';
       // 个人主页
       if ($CONFIG.domain === '100505') return 'profile';
+      // 个人主页（企业认证用户）
+      if ($CONFIG.domain === '100606') return 'profile';
       // 话题页（超话）
       if ($CONFIG.domain === '100808') return 'topic';
       // 音乐
@@ -3964,8 +3973,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     addConfigUiListener() {
       this.initConfig();
       this.config.addListener(newValue => {
-        const items = this.getRenderItems();
-        items.forEach(item => this.renderValue(item));
+        this.renderAllValues();
       });
     }
     /**
@@ -4025,6 +4033,13 @@ throw new Error('YAWF | chat page found, skip following executions');
      */
     renderValue(container) {
       return container;
+    }
+    /**
+     * 更新渲染所有实例
+     */
+    renderAllValues() {
+      const items = this.getRenderItems();
+      items.forEach(item => this.renderValue(item));
     }
   }
   rule.class.ConfigItem = ConfigItem;
@@ -4483,7 +4498,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     get initial() { return []; }
     normalize(value) {
       if (!Array.isArray(value)) return [];
-      return value.map(item => this.normalizeItem(item));
+      return value.map(item => this.normalizeItem(item)).filter(item => item != null);
     }
     normalizeItem(item) { return item; }
     track(item, index = -1) { return '' + index; }
@@ -4690,7 +4705,9 @@ throw new Error('YAWF | chat page found, skip following executions');
       input.addEventListener('blur', updateInputSuggestion);
       const choseSuggestionListItem = listitem => {
         const item = JSON.parse(listitem.dataset.yawfSuggestionData);
-        this.addItem(this.normalizeItem(this.parseSuggestionItem(item)));
+        const normalized = this.normalizeItem(this.parseSuggestionItem(item));
+        if (normalized === null) return;
+        this.addItem(normalized);
         input.value = '';
         updateInputSuggestion();
       };
@@ -5131,15 +5148,17 @@ throw new Error('YAWF | chat page found, skip following executions');
   rule.query = function ({
     base = tabs,
     filter = null,
+    includeHidden = false,
   } = {}) {
     const result = new Set();
     ; (function query(items) {
       items.forEach(item => {
+        if (item.hidden && !includeHidden) return;
+        if (item.disabled) return;
         if (item instanceof Tab || item instanceof Group) {
           query(item.children);
         }
         if (!(item instanceof Rule)) return;
-        if (item.disabled) return;
         if (filter && !filter(item)) return;
         result.add(item);
       });
@@ -5151,7 +5170,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   rule.init = function () {
     rule.style = css.add('');
     rule.inited = true;
-    rule.query().forEach(rule => rule.execute());
+    rule.query({ includeHidden: true }).forEach(rule => rule.execute());
   };
 
   init.onReady(() => {
@@ -6530,8 +6549,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       if (!node.matches('.WB_detail > .WB_info > .W_fb[usercard]')) return null;
       if (!detail) return '';
       const name = '@' + node.textContent.trim();
+      const id = new URLSearchParams(node.getAttribute('usercard')).get('id');
+      const link = 'https://weibo.com/u/' + id;
       const icons = userIcons(node);
-      return [name, ...icons].join(' ');
+      return [name, link, ...icons].join(' ');
     };
     parsers.push(author);
     /**
@@ -6542,8 +6563,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       if (!node.matches('.WB_expand > .WB_info > .W_fb[usercard]')) return null;
       if (!detail) return '';
       const name = node.textContent.trim().replace(/^@?/, '@');
+      const id = new URLSearchParams(node.getAttribute('usercard')).get('id');
+      const link = 'https://weibo.com/u/' + id;
       const icons = userIcons(node);
-      return [name, ...icons].join(' ');
+      return [name, link, ...icons].join(' ');
     };
     parsers.push(original);
     /**
@@ -7553,6 +7576,26 @@ throw new Error('YAWF | chat page found, skip following executions');
     followingContext = await getContext();
   }, { priority: util.priority.BEFORE });
 
+  /** @typedef {'inactive'|'waiting'|'starting'|'pending'|'running'|'running_fail'|'checking'|'checking_fail'} UpdateStatusStatus */
+  /** @type {{ status: UpdateStatusStatus, current: number, total: number, result: number }} */
+  const updateStatus = {
+    status: 'inactive',
+    current: 0,
+    total: 0,
+    result: 0,
+  };
+  const reportUpdateStatus = function (/** @type {UpdateStatusStatus} */status) {
+    const { fetchData } = followingContext;
+    const fetchContext = fetchData.getConfig();
+    Object.assign(updateStatus, {
+      status,
+      current: fetchContext.currentPage || 0,
+      total: (fetchContext.allPages || []).length,
+      result: (fetchContext.list || []).length,
+    });
+    following.autoCheckFollowing.ref.fetching.renderAllValues();
+  };
+
   // 获取第一页的数据
   const fetchInitialize = async function () {
     const { fetchData } = followingContext;
@@ -7566,7 +7609,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     fetchContext.currentPage = 1;
     fetchData.setConfig(fetchContext);
   };
-  // 获取最后一页的数据
+  // 获取后一页的数据
   const fetchNext = async function () {
     const { fetchData } = followingContext;
     const lock = fetchData.touchTimestamp();
@@ -7628,6 +7671,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   // 触发刷新流程，如果此时已经完成则强制重新开始
   const updateFollowList = async function () {
+    reportUpdateStatus('starting');
     const { fetchData, lastList, lastChange } = followingContext;
 
     // 如果连续 10 分钟没有更新，那么可能是之前负责更新的那个页面被关闭或者出错了
@@ -7636,6 +7680,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       setTimeout(() => {
         if (fetchData.getConfig().timestamp === timestamp) updateFollowList();
       }, 600e3);
+      reportUpdateStatus('pending');
       return;
     }
 
@@ -7653,6 +7698,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         util.debug('Fetch Follow: fetch first done');
       }
       while (hasNextPage()) {
+        reportUpdateStatus('running');
         await new Promise(resolve => setTimeout(resolve, 5e3));
         util.debug('Fetch Follow: fetch next page');
         fetchData.assertLock(lock);
@@ -7664,10 +7710,12 @@ throw new Error('YAWF | chat page found, skip following executions');
     } catch (e) {
       util.debug(e);
       util.debug('Fetch Follow: fetching following failed');
+      reportUpdateStatus('running_fail');
       return;
     }
 
     try {
+      reportUpdateStatus('checking');
       const newList = removeDuplicate(fetchData.getConfig().list);
       const oldList = lastList.getConfig();
       const changeList = (lastChange.getConfig() || {});
@@ -7684,7 +7732,9 @@ throw new Error('YAWF | chat page found, skip following executions');
     } catch (e) {
       util.debug('Fetch Follow: error while update result');
       util.debug(e);
+      reportUpdateStatus('checking_fail');
     }
+    reportUpdateStatus('inactive');
   };
 
   const clearFollowList = async function () {
@@ -7754,7 +7804,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     autoCheckFollowingDownload: { cn: '导出关注列表', tw: '匯出關注清單', en: 'Export Follow List' },
     autoCheckFollowingClean: { cn: '清除本地数据', tw: '清除本機資料', en: 'Clear Data' },
     autoCheckFollowingNow: { cn: '立即更新数据', tw: '立即更新資料', en: 'Update Now' },
-    autoCheckFollowingRunning: { cn: '（正在更新）', en: '(Updating)' },
+    autoCheckFollowingRunning: { cn: '（正在更新：{1}）', en: '(Updating: {1})' },
     autoCheckFollowingDialogTitle: { cn: '关注列表变化 - 药方 (YAWF)', tw: '關注清單變化 - 藥方 (YAWF)', en: 'Following List Changes - YAWF' },
     autoCheckFollowingTip: {
       cn: '您的关注列表自从上次检查并确认至今发生了如下变化，请您复查并确认：',
@@ -7765,6 +7815,19 @@ throw new Error('YAWF | chat page found, skip following executions');
     autoCheckFollowingLost: { cn: '减少如下关注', tw: '減少如下關注', en: 'Recent Unfollowed' },
     autoCheckFollowingRename: { cn: '如下关注修改了昵称', tw: '如下關注修改了暱稱', en: 'Recent Renamed' },
     autoCheckFollowingConfirmed: { cn: '已确认', tw: '已確認', en: 'Confirmed' },
+    checkingProgress: {
+      cn: '【{status}】{current}/{total}页，{result}关注',
+      tw: '【{status}】{current}/{total}頁，{result}關注',
+      en: '[{status}] {current}/{total} pages，{result} followings',
+    },
+    checkingProgressInactive: { cn: '尚未启动', tw: '尚未啟動', en: 'Inactive' },
+    checkingProgressWaiting: { cn: '等待开始', tw: '等待開始', en: 'Wait to Start' },
+    checkingProgressStarting: { cn: '正在初始化', tw: '正在初期化', en: 'Initializing' },
+    checkingProgressPending: { cn: '正由其他页面负责更新', tw: '正由其他頁面負責更新', en: 'Updating by Other Pages' },
+    checkingProgressRunning: { cn: '正在获取数据', tw: '正在擷取資料', en: 'Fetching' },
+    checkingProgressChecking: { cn: '正在比对结果', tw: '正在比對結果', en: 'Comparing List' },
+    checkingProgressRunningFail: { cn: '数据获取出错', tw: '資料擷取出錯', en: 'Error While Fetching' },
+    checkingProgressCheckingFail: { cn: '结果比对出错', tw: '結果比對出錯', en: 'Error While Comparing' },
   });
 
   /**
@@ -7848,7 +7911,6 @@ throw new Error('YAWF | chat page found, skip following executions');
           const buttonArea = document.createElement('span');
           buttonArea.setAttribute('yawf-config-item', this.configId);
           buttonArea.innerHTML = '<span class="yawf-following-checking"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now"><span class="W_f14"></span></a>';
-          buttonArea.querySelector('.yawf-following-checking').textContent = i18n.autoCheckFollowingRunning;
           const checkingText = buttonArea.querySelector('.yawf-following-checking');
           const checkNowButton = buttonArea.querySelector('.yawf-following-check-now');
           checkNowButton.addEventListener('click', event => {
@@ -7856,8 +7918,7 @@ throw new Error('YAWF | chat page found, skip following executions');
             updateFollowList();
           });
           checkNowButton.querySelector('span').textContent = i18n.autoCheckFollowingNow;
-          if (fetchData && fetchData.lock) checkNowButton.style.display = 'none';
-          else checkingText.style.display = 'none';
+          this.renderValue(buttonArea);
           return buttonArea;
         },
         renderValue(buttonArea) {
@@ -7867,6 +7928,23 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (fetchData && fetchData.lock) {
             checkNowButton.style.display = 'none';
             checkingText.style.display = '';
+            const progress = {
+              status: {
+                waiting: i18n.checkingProgressWaiting,
+                starting: i18n.checkingProgressStarting,
+                inactive: i18n.checkingProgressInactive,
+                pending: i18n.checkingProgressPending,
+                running: i18n.checkingProgressRunning,
+                running_fail: i18n.checkingProgressRunningFail,
+                checking: i18n.checkingProgressChecking,
+                checking_fail: i18n.checkingProgressCheckingFail,
+              }[updateStatus.status],
+              total: updateStatus.total,
+              current: updateStatus.current,
+              result: updateStatus.result,
+            };
+            const statusText = i18n.checkingProgress.replace(/\{(\w+)\}/g, (_, w) => progress[w]);
+            checkingText.textContent = i18n.autoCheckFollowingRunning.replace(/\{1\}/, () => statusText);
           } else {
             checkingText.style.display = 'none';
             checkNowButton.style.display = '';
@@ -7924,7 +8002,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     },
     init() {
       const enabled = this.isEnabled();
-      const frequency = this.ref.frequency.getConfig();
+      const frequency = this.ref.frequency.getConfig() && 0;
       const { fetchData, lastList, lastChange } = followingContext;
       let shouldUpdate = false;
       const fetchContext = fetchData.getConfig();
@@ -7932,7 +8010,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       if (fetchContext.lock) shouldUpdate = true;
       if (enabled && (!list || !list.list)) shouldUpdate = true;
       if (enabled && list && list.timestamp < Date.now() - frequency) shouldUpdate = true;
-      if (shouldUpdate) setTimeout(updateFollowList, 10e3);
+      if (shouldUpdate) {
+        reportUpdateStatus('waiting');
+        setTimeout(updateFollowList, 10e3);
+      }
       const change = lastChange.getConfig();
       if (change && change.timestamp) {
         if (init.page.type() === 'search') return;
@@ -8083,10 +8164,15 @@ throw new Error('YAWF | chat page found, skip following executions');
       cn: '查看更多微博',
       en: 'Show more feeds',
     },
-    feedsUnreadTip: {
+    feedsUnreadTipWithCount: {
       cn: '有 {1} 条新微博，点击查看',
       tw: '有 {1} 條新微博，點擊查看',
       en: '{1} new feeds',
+    },
+    feedsUnreadTip: {
+      cn: '有新微博，点击查看',
+      tw: '有新微博，點擊查看',
+      en: 'show new feeds',
     },
     feedsUnreadLoading: {
       cn: '正在加载……',
@@ -8472,7 +8558,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           const newfeedtip = document.getElementById('yawf-group-new-feed-tip');
           if (Number(newfeedtip.dataset.status) !== status) {
             newfeedtip.dataset.status = status;
-            newfeedtip.querySelector('a').textContent = i18n.feedsUnreadTip.replace('{1}', status);
+            newfeedtip.querySelector('a').textContent = i18n.feedsUnreadTipWithCount.replace('{1}', status);
           }
         }
       };
@@ -8554,7 +8640,12 @@ throw new Error('YAWF | chat page found, skip following executions');
             feedlist.parentNode.insertBefore(newfeedtip, feedlist);
             newfeedtip.querySelector('a').addEventListener('click', showUnreadFeeds);
           }
-          newfeedtip.querySelector('a').textContent = i18n.feedsUnreadTip.replace('{1}', status);
+          const link = newfeedtip.querySelector('a');
+          if (status > 0 && status < 100) {
+            link.textContent = i18n.feedsUnreadTipWithCount.replace('{1}', status);
+          } else {
+            link.textContent = i18n.feedsUnreadTip;
+          }
         }
       });
 
@@ -13326,6 +13417,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
   const fontList = yawf.fontList;
   const chatframe = yawf.chatframe;
   const backend = yawf.backend;
+  const feedParser = yawf.feed;
 
   const layout = yawf.rules.layout;
 
@@ -13710,48 +13802,53 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
     });
   }
 
-  if (!(function isCst() {
-    // 如果用户使用的是已经是和东八区一致的时区，那么我们就不提供这个功能了
-    const year = new Date().getFullYear();
-    return [...Array(366)].every((_, i) => new Date(year, 0, i).getTimezoneOffset() === -480);
-  }())) {
+  Object.assign(i18n, {
+    useLocaleTimezone: {
+      cn: '使用本机时区',
+      tw: '使用本機時區',
+      en: 'Use locale timezone',
+    },
+    feedsRead: { cn: '你看到这里', tw: '你看到這裡', en: 'you got here' },
+  });
 
-    Object.assign(i18n, {
-      useLocaleTimezone: {
-        cn: '使用本机时区',
-        tw: '使用本機時區',
-        en: 'Use locale timezone',
-      },
-      feedsRead: { cn: '你看到这里', tw: '你看到這裡', en: 'you got here' },
-    });
+  // 使用本地时区
+  details.timezone = rule.Rule({
+    id: 'layout_locale_timezone',
+    version: 1,
+    parent: details.details,
+    template: () => i18n.useLocaleTimezone,
+    hidden: time.isCstEquivalent(),
+    init() {
 
-    // 使用本地时区
-    details.timezone = rule.Rule({
-      id: 'layout_locale_timezone',
-      version: 1,
-      parent: details.details,
-      template: () => i18n.useLocaleTimezone,
-      ainit() {
+      const useLocale = this.isEnabled();
+      const feedUseYear = yawf.rules.feeds.details.feedAbsoluteTime.isEnabled();
 
-        const updateDate = function (element) {
-          const date = parseInt(element.getAttribute('yawf-date'), 10);
-          const formatTimeResult = util.time.format(date);
-          if (element.textContent !== formatTimeResult) {
-            element.textContent = formatTimeResult;
-          }
-          const formatTimeDetailResult = util.time.format(date, 'full');
+      if (!useLocale && !feedUseYear) return;
+
+      const updateDate = function (element) {
+        const date = parseInt(element.getAttribute('yawf-date'), 10);
+        const format = element.getAttribute('yawf-date-format') || null;
+        const locale = useLocale ? 'current' : 'cst';
+        const formatTimeResult = util.time.format(date, { format, locale });
+        if (element.textContent !== formatTimeResult) {
+          element.textContent = formatTimeResult;
+        }
+        if (useLocale) {
+          const formatTimeDetailResult = util.time.format(date, { format: 'full', locale: 'current' });
           if (element.title !== formatTimeDetailResult) {
             element.title = formatTimeDetailResult;
           }
-        };
+        }
+      };
 
-        const updateAllDate = function () {
-          const dates = document.querySelectorAll('[yawf-date]');
-          Array.from(dates).forEach(element => {
-            updateDate(element);
-          });
-        };
+      const updateAllDate = function () {
+        const dates = document.querySelectorAll('[yawf-date]');
+        Array.from(dates).forEach(element => {
+          updateDate(element);
+        });
+      };
 
+      if (useLocale) {
         const handleDateElements = function handleDateElements() {
           const [feedListTimeTip, ...moreFeedListTimeTip] = document.querySelectorAll('[node-type="feed_list_timeTip"][date]');
           moreFeedListTimeTip.forEach(element => element.remove());
@@ -13779,8 +13876,6 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         };
 
         observer.dom.add(handleDateElements);
-        setInterval(updateAllDate, 1e3);
-
 
         // 处理文本显示的时间
         const handleTextDateElements = function changeDateText() {
@@ -13811,13 +13906,31 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
           });
         };
         observer.dom.add(handleTextDateElements);
-        css.append(`
+      }
+
+      if (feedUseYear) {
+        observer.feed.onAfter(function (feed) {
+          const dates = feedParser.date.dom(feed);
+          dates.forEach(element => {
+            if (element.getAttribute('date')) {
+              const date = parseInt(element.getAttribute('date'), 10);
+              element.setAttribute('yawf-date', date);
+              element.removeAttribute('date');
+            }
+            element.setAttribute('yawf-date-format', 'year');
+            updateDate(element);
+          });
+        });
+      }
+
+      setInterval(updateAllDate, 1e3);
+
+      css.append(`
 .WB_feed_v3 .WB_from span[yawf-date] { margin-left: 0; }
 [yawf-date]::after { content: " "; }
 `);
-      },
-    });
-  }
+    },
+  });
 
   if (env.config.chatInPageSupported) {
 
@@ -14838,99 +14951,6 @@ ${[0, 1, 2, 3, 4].map(index => `
     },
   });
 
-  Object.assign(i18n, {
-    disableTagDialog: {
-      cn: '屏蔽收藏微博时的添加标签对话框',
-      tw: '阻擋收藏微博時的添加標籤對話方塊',
-      en: 'Block the dialog after marking weibo favorite',
-    },
-    favoriteFailTitle: {
-      cn: '收藏微博',
-      en: 'Feed Favorite',
-    },
-    favoriteFailText: {
-      cn: '收藏时发生错误',
-      en: 'Error while adding favorite feeds',
-    },
-    favoritedFeed: {
-      cn: '已收藏',
-      en: 'Favorite Added',
-    },
-  });
-
-  layout.disableTagDialog = rule.Rule({
-    id: 'feed_disable_tag_dialog',
-    version: 1,
-    parent: layout.layout,
-    template: () => i18n.disableTagDialog,
-    ainit() {
-      document.addEventListener('click', async event => {
-        if (!event.isTrusted) return;
-        if (!['www.weibo.com', 'weibo.com'].includes(location.host)) return;
-        const target = event.target;
-        if (!(target instanceof Element)) return;
-        const button = target.closest('[action-type="fl_favorite"]');
-        if (!button) return;
-        const isFavorite = button.getAttribute('favorite');
-        if (isFavorite) return; // 不处理取消收藏的逻辑
-        event.stopPropagation();
-        event.preventDefault();
-        const feed = feedParser.feedNode(button);
-        const $CONFIG = init.page.$CONFIG;
-        const success = await request.feedFavorite(feed, { $CONFIG });
-        if (!success) {
-          dialog.alert({
-            id: 'yawf-favorite-fail',
-            icon: 'warn',
-            title: i18n.favoriteFailTitle,
-            text: i18n.favoriteFailText,
-          });
-        } else {
-          button.setAttribute('favorite', '1');
-          const text = button.querySelector('[node-type="favorite_btn_text"]') || button;
-          text.innerHTML = '<span><em class="W_ficon ficon_favorite S_spetxt">\xFB</em><em></em></span>';
-          text.querySelector('em + em').textContent = i18n.favoritedFeed;
-        }
-      }, true);
-    },
-  });
-
-  i18n.lowReadingCountWarn = {
-    cn: '在自己个人主页高亮显示阅读数量|不超过{{count}}的微博',
-    tw: '在自己個人主頁高亮顯示閱讀數量|不超過{{count}}的微博',
-    en: 'Highlight feeds on my profile page which has | no more than {{count}} views',
-  };
-
-  layout.lowReadingCountWarn = rule.Rule({
-    id: 'feed_low_reading_warn',
-    version: 23,
-    parent: layout.layout,
-    template: () => i18n.lowReadingCountWarn,
-    ref: {
-      count: {
-        type: 'range',
-        min: 10,
-        max: 1000,
-        step: 10,
-        initial: 100,
-      },
-    },
-    ainit() {
-      const rule = this;
-      observer.feed.onAfter(function (/** @type {Element} */feed) {
-        const container = feed.closest('[id^="Pl_Official_MyProfileFeed__"]');
-        if (!container) return;
-        const popText = feed.querySelector('.WB_feed_handle [action-type="fl_pop"] i');
-        if (!popText) return;
-        const count = Number.parseInt(popText.title.match(/\d+/)[0], 10);
-        const limit = rule.ref.count.getConfig();
-        if (count > limit) return;
-        feed.setAttribute('yawf-low-reading', count);
-      });
-      css.append('.WB_feed.WB_feed .WB_cardwrap[yawf-low-reading] { box-shadow: 0 0 4px red inset; }');
-    },
-  });
-
 
 }());
 //#endregion
@@ -15326,6 +15346,7 @@ ${[0, 1, 2, 3, 4].map(index => `
       i: { type: 'bubble', icon: 'info', template: () => i18n.viewEditInfoDetail },
     },
     ainit() {
+      const timeLocale = layout.details.timezone.isEnabled() ? 'current' : 'cst';
       /**
        * @param {string} sourceStr
        * @param {string} targetStr
@@ -15539,7 +15560,7 @@ ${[0, 1, 2, 3, 4].map(index => `
             li.classList.add('S_line1');
             li.innerHTML = '<a href="javascript:;" class="S_txt1"></a>';
             const a = li.firstChild;
-            a.textContent = util.time.format(version.date, 'month');
+            a.textContent = util.time.format(version.date, { format: 'month', locale: timeLocale });
             a.addEventListener('click', function (event) {
               if (!event.isTrusted) return;
               onClick(version);
@@ -16639,23 +16660,57 @@ ${selection ? `
   });
 
   Object.assign(i18n, {
-    useBuiltInVideoPlayer: { cn: '使用浏览器原生视频播放器{{i}}||音量{{volume}}%|{{memorize}}记忆上一次设置的音量', hk: '使用瀏覽器內建影片播放器{{i}}||音量{{volume}}%|{{memorize}}記住上一次設置的音量', en: 'Use browser built-in video player {{i}}||Volume {{volume}} | {{memorize}} memorize last volume' },
+    useBuiltInVideoPlayer: {
+      cn: '使用浏览器原生视频播放器{{i}}||音量{{volume}}%|{{memorize}}记忆上一次设置的音量||视频质量{{quality}}',
+      hk: '使用瀏覽器內建影片播放器{{i}}||音量{{volume}}%|{{memorize}}記住上一次設置的音量||影片品質{{quality}}',
+      en: 'Use browser built-in video player {{i}}||Volume {{volume}} | {{memorize}} memorize last volume||Video quality {{quality}}',
+    },
     useBuiltInVideoPlayerDetail: { cn: '一次性解决自动播放和交互逻辑的各种问题，开启时其他视频相关的改造功能不再生效。不支持直播视频。播放可能不会被微博正确计入播放数。' },
     mediaVideoType: { cn: '视频', hk: '影片', tw: '影片', en: 'Video' },
+    useBuiltInVideoPlayerAutoQuality: { cn: '自动', tw: '自動', en: 'Auto' },
+    useBuiltInVideoPlayerBestQuality: { cn: '最佳', en: 'Best' },
   });
 
   media.useBuiltInVideoPlayer = rule.Rule({
     id: 'feed_built_in_video_player',
-    version: 1,
+    version: 60,
     parent: media.media,
     template: () => i18n.useBuiltInVideoPlayer,
     ref: {
       volume: { type: 'range', min: 0, max: 100, initial: 100 },
       memorize: { type: 'boolean' },
+      quality: {
+        type: 'select',
+        initial: 'auto',
+        select: [
+          { value: 'auto', text: () => i18n.useBuiltInVideoPlayerAutoQuality },
+          { value: 'best', text: () => i18n.useBuiltInVideoPlayerBestQuality },
+        ],
+      },
       i: { type: 'bubble', icon: 'warn', template: () => i18n.useBuiltInVideoPlayerDetail },
     },
     ainit() {
       const rule = this;
+      const getVideoSource = function (videoSources) {
+        const videoSourceData = new URLSearchParams(videoSources);
+        const quality = rule.ref.quality.getConfig();
+        const qualityTypes = [];
+        const allKeys = Array.from(videoSourceData).map(([key]) => key);
+        if (quality === 'best') {
+          const available = allKeys.filter(Number).sort((x, y) => y - x);
+          qualityTypes.push(...available.map(q => String(q)));
+        }
+        qualityTypes.push(videoSourceData.get('qType'), ...allKeys);
+        const qualityType = qualityTypes.find(q => /^https?(?::|%3A)/i.test(videoSourceData.get(q)));
+        let videoSource = videoSourceData.get(qualityType);
+        // 有时候会被转义两次，所以要再额外处理一次，原因不明
+        if (/^https?%3A/i.test(videoSource)) {
+          videoSource = decodeURIComponent(videoSource);
+        }
+        // http 会直接被浏览器拦掉，但是有的历史数据是 http
+        videoSource = videoSource.replace(/^http:/, 'https:');
+        return videoSource;
+      };
       const replaceWeiboVideoPlayer = function replaceWeiboVideoPlayer() {
         const containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
         containers.forEach(function (container) {
@@ -16664,19 +16719,7 @@ ${selection ? `
           if (!cover) return;
           const video = container.querySelector('video');
           if (video) video.src = 'data:text/plain,42';
-          const videoSourceData = new URLSearchParams(container.getAttribute('video-sources'));
-          let videoSource = videoSourceData.get(videoSourceData.get('qType'));
-          if (!videoSource) {
-            videoSource = Array.from(videoSourceData)
-              .filter(([key, value]) => /^https?(?::|%3A)/i.test(value))
-              .reduce((s1, s2) => +s1[0] > +s2[0] ? s1 : s2)[1];
-          }
-          // 有时候会被转义两次，所以要再额外处理一次，原因不明
-          if (/^https?%3A/i.test(videoSource)) {
-            videoSource = decodeURIComponent(videoSource);
-          }
-          // http 会直接被浏览器拦掉，但是有的历史数据是 http
-          videoSource = videoSource.replace(/^http:/, 'https:');
+          const videoSource = getVideoSource(container.getAttribute('video-sources'));
           const newContainer = document.createElement('li');
           newContainer.className = container.className;
           newContainer.classList.add('yawf-WB_video');
@@ -16752,6 +16795,161 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 `);
     },
   });
+
+}());
+//#endregion
+//#region @require yaofang://content/rule/feeds/other.js
+; (function () {
+
+  const yawf = window.yawf;
+  const init = yawf.init;
+  const util = yawf.util;
+  const rule = yawf.rule;
+  const observer = yawf.observer;
+  const request = yawf.request;
+  const feedParser = yawf.feed;
+
+  const feeds = yawf.rules.feeds;
+
+  const i18n = util.i18n;
+  const css = util.css;
+  const dialog = util.dialog;
+  const time = util.time;
+
+  const details = feeds.details = {};
+
+  i18n.feedDetailsGroupTitle = {
+    cn: '细节',
+    tw: '細節',
+    en: 'Details',
+  };
+
+  details.details = rule.Group({
+    parent: feeds.feeds,
+    template: () => i18n.feedDetailsGroupTitle,
+  });
+
+  Object.assign(i18n, {
+    disableTagDialog: {
+      cn: '屏蔽收藏微博时的添加标签对话框',
+      tw: '阻擋收藏微博時的添加標籤對話方塊',
+      en: 'Block the dialog after marking weibo favorite',
+    },
+    favoriteFailTitle: {
+      cn: '收藏微博',
+      en: 'Feed Favorite',
+    },
+    favoriteFailText: {
+      cn: '收藏时发生错误',
+      en: 'Error while adding favorite feeds',
+    },
+    favoriteFeed: {
+      cn: '已收藏',
+      en: 'Favorite Added',
+    },
+  });
+
+  details.disableTagDialog = rule.Rule({
+    id: 'feed_disable_tag_dialog',
+    version: 1,
+    parent: details.details,
+    template: () => i18n.disableTagDialog,
+    ainit() {
+      document.addEventListener('click', async event => {
+        if (!event.isTrusted) return;
+        if (!['www.weibo.com', 'weibo.com'].includes(location.host)) return;
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const button = target.closest('[action-type="fl_favorite"]');
+        if (!button) return;
+        const isFavorite = button.getAttribute('favorite');
+        if (isFavorite) return; // 不处理取消收藏的逻辑
+        event.stopPropagation();
+        event.preventDefault();
+        const feed = feedParser.feedNode(button);
+        const $CONFIG = init.page.$CONFIG;
+        const success = await request.feedFavorite(feed, { $CONFIG });
+        if (!success) {
+          dialog.alert({
+            id: 'yawf-favorite-fail',
+            icon: 'warn',
+            title: i18n.favoriteFailTitle,
+            text: i18n.favoriteFailText,
+          });
+        } else {
+          button.setAttribute('favorite', '1');
+          const text = button.querySelector('[node-type="favorite_btn_text"]') || button;
+          text.innerHTML = '<span><em class="W_ficon ficon_favorite S_spetxt">\xFB</em><em></em></span>';
+          text.querySelector('em + em').textContent = i18n.favoriteFeed;
+        }
+      }, true);
+    },
+  });
+
+  i18n.lowReadingCountWarn = {
+    cn: '在自己个人主页高亮显示阅读数量|不超过{{count}}的微博',
+    tw: '在自己個人主頁高亮顯示閱讀數量|不超過{{count}}的微博',
+    en: 'Highlight feeds on my profile page which has | no more than {{count}} views',
+  };
+
+  details.lowReadingCountWarn = rule.Rule({
+    id: 'feed_low_reading_warn',
+    version: 23,
+    parent: details.details,
+    template: () => i18n.lowReadingCountWarn,
+    ref: {
+      count: {
+        type: 'range',
+        min: 10,
+        max: 1000,
+        step: 10,
+        initial: 100,
+      },
+    },
+    ainit() {
+      const rule = this;
+      observer.feed.onAfter(function (/** @type {Element} */feed) {
+        const container = feed.closest('[id^="Pl_Official_MyProfileFeed__"]');
+        if (!container) return;
+        const popText = feed.querySelector('.WB_feed_handle [action-type="fl_pop"] i');
+        if (!popText) return;
+        const count = Number.parseInt(popText.title.match(/\d+/)[0], 10);
+        const limit = rule.ref.count.getConfig();
+        if (count > limit) return;
+        feed.setAttribute('yawf-low-reading', count);
+      });
+      css.append('.WB_feed.WB_feed .WB_cardwrap[yawf-low-reading] { box-shadow: 0 0 4px red inset; }');
+    },
+  });
+
+  Object.assign(i18n, {
+    feedAbsoluteTimeDetail: {
+      cn: '显示的时间受 [[layout_locale_timezone]] 功能影响。',
+    },
+  }, time.isCstEquivalent() ? {
+    feedAbsoluteTime: {
+      cn: '微博发布时间总是使用年月日格式',
+      tw: '微博發布時間總是使用年月日格式',
+      en: 'Use yyyy-mm-dd date format',
+    },
+  } : {
+    feedAbsoluteTime: {
+      cn: '微博发布时间总是使用年月日格式 {{i}}',
+      tw: '微博發布時間總是使用年月日格式 {{i}}',
+      en: 'Use yyyy-mm-dd date format {{i}}',
+    },
+  });
+
+  details.feedAbsoluteTime = rule.Rule({
+    id: 'feed_absolute_time',
+    version: 60,
+    parent: details.details,
+    template: () => i18n.feedAbsoluteTime,
+    ref: {
+      i: { type: 'bubble', icon: 'ask', template: () => i18n.feedAbsoluteTimeDetail },
+    },
+  });
+
 
 }());
 //#endregion
