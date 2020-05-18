@@ -16,7 +16,6 @@
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
-// @exclude           https://open.weibo.com/*
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://account.weibo.com/*
 // @exclude           https://kefu.weibo.com/*
@@ -24,6 +23,7 @@
 // @exclude           https://security.weibo.com/*
 // @exclude           https://verified.weibo.com/*
 // @exclude           https://vip.weibo.com/*
+// @exclude           https://open.weibo.com/*
 // @noframes
 // @run-at            document-start
 // @grant             GM.info
@@ -1820,7 +1820,8 @@
 
     const allPages = (function () {
       try {
-        const urlTemplate = dom.querySelector('.W_pages a.page[href]').href;
+        const pageLink = dom.querySelector('.W_pages a.page[href]');
+        const urlTemplate = new URL(pageLink.getAttribute('href'), url).href;
         const pageLinks = dom.querySelectorAll('.W_pages .page');
         const pageCount = Number(pageLinks[pageLinks.length - 2].textContent) || 1;
 
@@ -18006,6 +18007,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 ; (function () {
 
   const yawf = window.yawf;
+  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const init = yawf.init;
@@ -18202,6 +18204,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
           },
         },
       });
+      if (init.page.type() === 'search') return;
       whatsNewDialog.show();
     },
   });
