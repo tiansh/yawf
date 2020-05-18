@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.61
+// @version           4.0.62
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -18010,7 +18010,6 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
-  const init = yawf.init;
   const config = yawf.config;
   const importer = yawf.importer;
 
