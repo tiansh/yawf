@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.60
+// @version           4.0.61
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -23,6 +23,7 @@
 // @exclude           https://security.weibo.com/*
 // @exclude           https://verified.weibo.com/*
 // @exclude           https://vip.weibo.com/*
+// @exclude           https://open.weibo.com/*
 // @noframes
 // @run-at            document-start
 // @grant             GM.info
@@ -1819,7 +1820,8 @@
 
     const allPages = (function () {
       try {
-        const urlTemplate = dom.querySelector('.W_pages a.page[href]').href;
+        const pageLink = dom.querySelector('.W_pages a.page[href]');
+        const urlTemplate = new URL(pageLink.getAttribute('href'), url).href;
         const pageLinks = dom.querySelectorAll('.W_pages .page');
         const pageCount = Number(pageLinks[pageLinks.length - 2].textContent) || 1;
 
@@ -8002,7 +8004,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     },
     init() {
       const enabled = this.isEnabled();
-      const frequency = this.ref.frequency.getConfig() && 0;
+      const frequency = this.ref.frequency.getConfig();
       const { fetchData, lastList, lastChange } = followingContext;
       let shouldUpdate = false;
       const fetchContext = fetchData.getConfig();
@@ -18005,6 +18007,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 ; (function () {
 
   const yawf = window.yawf;
+  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const init = yawf.init;
@@ -18201,6 +18204,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
           },
         },
       });
+      if (init.page.type() === 'search') return;
       whatsNewDialog.show();
     },
   });
