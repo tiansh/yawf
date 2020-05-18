@@ -12,10 +12,11 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.60
+// @version           4.0.61
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
+// @exclude           https://open.weibo.com/*
 // @exclude           https://weibo.com/a/bind/*
 // @exclude           https://account.weibo.com/*
 // @exclude           https://kefu.weibo.com/*
@@ -8002,7 +8003,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     },
     init() {
       const enabled = this.isEnabled();
-      const frequency = this.ref.frequency.getConfig() && 0;
+      const frequency = this.ref.frequency.getConfig();
       const { fetchData, lastList, lastChange } = followingContext;
       let shouldUpdate = false;
       const fetchContext = fetchData.getConfig();
