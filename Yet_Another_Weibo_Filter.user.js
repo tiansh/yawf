@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.63
+// @version           4.0.64
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1221,6 +1221,7 @@
 
   const yawf = window.yawf = window.yawf || {};
   const network = yawf.network = {};
+  const util = yawf.util;
 
   network.getUniqueKey = (function () {
     let last = 0;
@@ -1241,6 +1242,40 @@
       .replace(/^(?:try\{[^{]*\()?\{/, '{')
       .replace(/}(?:\)\s*;?\s*}catch\(e\)\{\};?)?$/, '}')
     );
+  };
+
+  network.jsonp = function (url, callback) {
+    return new Promise((resolve, reject) => {
+      const key = 'yawf_jsonp_' + callback;
+      window.addEventListener(key, function (event) {
+        if (event.detail.data) {
+          const data = JSON.parse(event.detail.data);
+          resolve(data);
+        } else {
+          reject();
+        }
+      });
+      util.inject(function (url, callback, key) {
+        window[callback] = function (data) {
+          const event = new CustomEvent(key, {
+            detail: { data: JSON.stringify(data) },
+          });
+          window.dispatchEvent(event);
+        };
+        const reject = function () {
+          const event = new CustomEvent(key, { detail: { } });
+          window.dispatchEvent(event);
+        };
+        const script = document.createElement('script');
+        script.src = url;
+        script.addEventListener('load', function () {
+          script.remove();
+          setTimeout(reject, 3000);
+        });
+        script.addEventListener('error', reject);
+        document.body.appendChild(script);
+      }, url, callback, key);
+    });
   };
 
 
@@ -1324,15 +1359,16 @@
       return JSON.parse(JSON.stringify(userInfoCacheByName.get(name)));
     }
     const url = new URL(baseUrl);
-    url.searchParams.set('type', '1');
-    url.searchParams.set('callback', network.fakeCallback());
+    url.searchParams.set('ajwvr', '6');
     if (id) url.searchParams.set('id', id);
     else url.searchParams.set('name', name);
+    url.searchParams.set('type', '1');
+    const callback = network.fakeCallback();
+    url.searchParams.set('callback', callback);
     try {
       util.debug('fetch url %s', url);
-      const resp = await network.fetchText(url);
+      const { data: html } = await network.jsonp(url, callback);
       // 我仍然无法理解一个使用 JSON 包裹 HTML 的 API
-      const html = network.parseJson(resp).data;
       const usercard = new DOMParser().parseFromString(html, 'text/html');
       return (function parseUserInfoResponse() {
         const avatar = usercard.querySelector('.pic_box img').src;
@@ -3024,9 +3060,8 @@
   init.status = () => status;
   // 触发 Ready
   init.ready = async $CONFIG => {
-    page.$CONFIG = $CONFIG;
     status = true;
-    init.ready = noop;
+    init.ready = init.deinit = noop;
     util.debug('yawf onready');
     await runSet(onReadyCallback);
     if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
@@ -3038,6 +3073,7 @@
   // 触发 ConfigChange
   init.configChange = async $CONFIG => {
     util.debug('yawf onconfigchange: %o', $CONFIG);
+    page.$CONFIG = $CONFIG;
     await runSet(onConfigChangeCallback);
     if (validPageReady($CONFIG)) {
       await init.ready($CONFIG);
@@ -3099,12 +3135,21 @@
    * 这里直接等 DOMContentLoaded 来获取
    */
   util.inject(function (key) {
-    const onDomContentLoaded = function () {
+    const onConfigChange = function () {
       const event = new CustomEvent(key, {
         detail: { $CONFIG: JSON.stringify(window.$CONFIG) },
       });
       window.dispatchEvent(event);
-
+    };
+    const onDomContentLoaded = function () {
+      window.$CONFIG = new Proxy(window.$CONFIG, {
+        set: function (self, property, value) {
+          self[property] = value;
+          onConfigChange();
+          return true;
+        },
+      });
+      onConfigChange();
     };
     if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
       setTimeout(() => { onDomContentLoaded(); }, 0);
@@ -4888,6 +4933,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       request.userInfo({ id }).then(({ name, avatar }) => {
         const img = new Image();
         img.src = avatar;
+        img.classList.add('yawf-config-user-avatar-img');
         useravatar.appendChild(img);
         username.textContent = name;
       });
@@ -5204,6 +5250,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 .yawf-config-collection-user-id .yawf-config-collection-remove { right: 0; left: auto; text-align: center; }
 .yawf-config-collection-user-id .yawf-config-collection-remove a { position: static; margin: 0; }
 .yawf-config-collection-user-id .yawf-config-user-avatar { position: absolute; left: 1px; top: 1px; width: 50px; height: 50px; overflow: hidden; }
+.yawf-config-collection-user-id .yawf-config-user-avatar-img { width: 50px; height: 50px; }
 .yawf-config-collection-user-id .yawf-config-user-name { max-width: 100%; word-break: break-all; white-space: normal; max-height: 40px; overflow: hidden; }
 .yawf-collection-suggestion.yawf-collection-suggestion { z-index: 10000; position: fixed; }
 .yawf-list-suggestion-item a { min-height: 15.6px; }
