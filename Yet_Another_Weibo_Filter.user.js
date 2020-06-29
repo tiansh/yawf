@@ -3024,9 +3024,8 @@
   init.status = () => status;
   // 触发 Ready
   init.ready = async $CONFIG => {
-    page.$CONFIG = $CONFIG;
     status = true;
-    init.ready = noop;
+    init.ready = init.deinit = noop;
     util.debug('yawf onready');
     await runSet(onReadyCallback);
     if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
@@ -3038,6 +3037,7 @@
   // 触发 ConfigChange
   init.configChange = async $CONFIG => {
     util.debug('yawf onconfigchange: %o', $CONFIG);
+    page.$CONFIG = $CONFIG;
     await runSet(onConfigChangeCallback);
     if (validPageReady($CONFIG)) {
       await init.ready($CONFIG);
@@ -3099,12 +3099,21 @@
    * 这里直接等 DOMContentLoaded 来获取
    */
   util.inject(function (key) {
-    const onDomContentLoaded = function () {
+    const onConfigChange = function () {
       const event = new CustomEvent(key, {
         detail: { $CONFIG: JSON.stringify(window.$CONFIG) },
       });
       window.dispatchEvent(event);
-
+    };
+    const onDomContentLoaded = function () {
+      window.$CONFIG = new Proxy(window.$CONFIG, {
+        set: function (self, property, value) {
+          self[property] = value;
+          onConfigChange();
+          return true;
+        },
+      });
+      onConfigChange();
     };
     if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
       setTimeout(() => { onDomContentLoaded(); }, 0);
