@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.64
+// @version           4.0.65
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -13473,6 +13473,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
   const i18n = util.i18n;
   const css = util.css;
   const time = util.time;
+  const strings = util.strings;
 
   const details = layout.details = {};
 
@@ -14175,6 +14176,46 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
     });
 
   }
+
+  i18n.hideHotTopicLargeRead = {
+    cn: '隐藏热门话题中|阅读数量超过{{quota}}亿的话题',
+    tw: '隱藏熱門話題中|閱讀數量超過{{quota}}億的話題',
+    en: 'Hide Topics in Hot Topics | with {{quota}}00 million reading counts',
+  };
+
+  layout.hideHotTopicLargeRead = rule.Rule({
+    id: 'hide_hot_topic_large_read',
+    version: 65,
+    parent: details.details,
+    template: () => i18n.hideHotTopicLargeRead,
+    ref: {
+      quota: {
+        type: 'range',
+        min: 1,
+        max: 100,
+        initial: 20,
+      },
+    },
+    async ainit() {
+      util.css.add('.hot_topic li[yawf-rtopic-count="hidden"], #topicAD { display: none !important; }');
+      let that = this;
+      observer.dom.add(function filteRightTopicCount() {
+        let counts = Array.from(document.querySelectorAll('.hot_topic li:not([yawf-rtopic-count]) .total'));
+        counts.forEach(function (count) {
+          // 网站中数字由 xxx万 ， xx.x亿 的方式表示；且没有繁体或英文版本
+          // 注意有时前面的数字会有小数点，所以要替换为 e4, e8 而非 0000, 00000000
+          const number = strings.parseint(count.textContent);
+          const li = count.closest('li');
+          if (Number.isNaN(number) || that.ref.quota.getConfig() * 1e8 <= number) {
+            li.setAttribute('yawf-rtopic-count', 'hidden');
+          } else {
+            li.setAttribute('yawf-rtopic-count', 'show');
+          }
+        });
+      });
+    },
+  });
+
 
 }());
 //#endregion
