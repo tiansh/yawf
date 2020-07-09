@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.65
+// @version           4.0.66
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -11546,7 +11546,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   i18n.commentFaceCount = {
     cn: '隐藏表情|数量超过{{count}}个的评论',
     tw: '隱藏表情|數量超過{{count}}個的評論',
-    en: 'Hide comments | with more than {{count}} face',
+    en: 'Hide comments | with more than {{count}} image emoji',
   };
 
   more.commentFaceCount = rule.Rule({
@@ -11577,7 +11577,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   i18n.commentFaceTypes = {
     cn: '隐藏表情|种类超过{{count}}种的评论',
     tw: '隱藏表情|種類超過{{count}}種的評論',
-    en: 'Hide comments | with more than {{count}} kinds of face',
+    en: 'Hide comments | with more than {{count}} kinds of image emoji',
   };
 
   more.commentFaceTypes = rule.Rule({
@@ -11625,7 +11625,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         const texts = Array.from(comment.querySelector('.WB_text').childNodes)
           .filter(n => !((n instanceof Element) && n.matches('a[usercard]'))) // 提到人不算内容
           .map(n => n.textContent).join('')
-          .replace(/回[复復覆]|Reply|[:/\s：]/ig, ''); // 空格、“回复”和冒号不算内容
+          .replace(/回[复復覆]|Reply|微博|[转轉][发發]|[:/\s：.\u200b]/ig, ''); // 空格、“回复”和冒号不算内容
         if (!texts) return 'hide';
         return null;
       });
@@ -16130,6 +16130,142 @@ ${selection ? `
     },
 
   });
+
+  Object.assign(i18n, {
+    linkWithFace: {
+      cn: '识别微博中包含表情符号的网址（实验性）{{i}}||{{clean}} 删除表情|{{link}} 创建链接',
+      tw: '辨識微博中包含表情符號的（實驗性）{{i}}||{{clean}} 刪除表情|{{link}} 創建連結',
+      en: 'Recognize urls with faces in feeds (experimental) {{i}}||{{clean}} Remove faces|{{link}} Generate link',
+    },
+    linkWithFaceDetail: {
+      cn: '创建的链接可以指向任何第三方网站，请在点击前自行确认安全性。选中并复制时如果复制内容为微博中的网址，脚本会将复制的内容清理为链接本身。表情仅支持微博自带表情，不支持 emoji 表情。',
+    },
+  });
+
+  content.linkWithFace = rule.Rule({
+    id: 'link_with_face',
+    version: 66,
+    parent: content.content,
+    template: () => i18n.linkWithFace,
+    ref: {
+      clean: { type: 'boolean' },
+      link: { type: 'boolean' },
+      i: { type: 'bubble', icon: 'warn', template: () => i18n.linkWithFaceDetail },
+    },
+    ainit() {
+      const urlRegexGen = () => new RegExp([
+        // 协议
+        'https?://',
+        // 不是 t.cn 的短链接
+        '(?!t.cn(?:/|$))',
+        // 主机名或 IP
+        '(?:(?![.-])(?:(?![.-][./:-])[a-zA-Z0-9.-])*|\\d+\\.\\d+\\.\\d+\\.\\d+)',
+        // 端口
+        '(?::\\d+)?',
+        // 路径，查询串，本地部分
+        '(?:/(?:[a-zA-Z0-9$\\-_.+!*\'(),/;:@&=?#]|%[a-fA-F0-9]{2})*)?',
+      ].join(''), 'g');
+      const clean = this.ref.clean.getConfig();
+      const link = this.ref.clean.getConfig();
+
+      observer.feed.onAfter(function (feed) {
+        /** @type {Element[]} */
+        const contentElements = [
+          feedParser.content.dom(feed, false, false),
+          feedParser.content.dom(feed, false, true),
+          feedParser.content.dom(feed, true, false),
+          feedParser.content.dom(feed, true, true),
+        ].filter(element => element instanceof Element);
+
+        contentElements.forEach(element => {
+          const unfold = element.querySelector('[action-type="fl_unfold"]');
+          const nodes = [...element.childNodes];
+          let text = '';
+          /** @type {[number, number, Node][]} */
+          const nodeData = nodes.map(node => {
+            const pos = text.length;
+            if (node.nodeType === Node.TEXT_NODE) {
+              text += node.textContent;
+              return [pos, node.textContent.length, node];
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+              if (node.matches('img.W_img_face')) {
+                return [pos, 0, node];
+              } else {
+                text += '\n';
+                return [pos, 1, node];
+              }
+            } else {
+              return [pos, 0, node];
+            }
+          });
+          let match;
+          const urlRegex = urlRegexGen();
+          while ((match = urlRegex.exec(text)) !== null) {
+            let url;
+            try { url = new URL(match[0]); } catch (e) { continue; }
+            const index = match.index, lastIndex = match.index + match[0].length;
+            // 如果有展开全文按钮，而且链接匹配到了最后面，那么可能链接不完整，此时不识别
+            if (unfold && lastIndex >= text.replace(/[\s.\u200b]*$/, '').length) continue;
+            const start = nodeData.findIndex(([pos, len]) => pos <= index && pos + len > index);
+            const end = nodeData.findIndex(([pos, len]) => pos < lastIndex && pos + len >= lastIndex);
+            if (start === -1 || end === -1 || start === end) continue;
+            const [startNodePos, _startNodeLength, startNode] = nodeData[start];
+            const [endNodePos, _endNodeLength, endNode] = nodeData[end];
+            if (!(startNode instanceof Text)) continue;
+            if (!(endNode instanceof Text)) continue;
+            const container = document.createDocumentFragment();
+            let wrap = container;
+            if (link) {
+              wrap = container.appendChild(document.createElement('a'));
+              wrap.href = url;
+              wrap.setAttribute('rel', 'nofollow noopener');
+              wrap.setAttribute('target', '_blank');
+              wrap.className = 'yawf-face-link';
+            }
+            wrap.appendChild(document.createTextNode(startNode.textContent.slice(index - startNodePos)));
+            startNode.textContent = startNode.textContent.slice(0, index - startNodePos);
+            for (let i = start + 1; i < end; i++) {
+              const node = nodes[i];
+              if (node.nodeType !== Node.TEXT_NODE && clean) {
+                node.parentNode.removeChild(node);
+              } else {
+                wrap.appendChild(nodes[i]);
+              }
+            }
+            wrap.appendChild(document.createTextNode(endNode.textContent.slice(0, lastIndex - endNodePos)));
+            endNode.textContent = endNode.textContent.slice(lastIndex - endNodePos);
+            wrap.normalize();
+            endNode.parentNode.insertBefore(wrap, endNode);
+          }
+        });
+      });
+
+      window.addEventListener('copy', event => {
+        const selection = document.getSelection();
+        if (selection.rangeCount !== 1) return;
+        const range = selection.getRangeAt(0);
+        const container = range.commonAncestorContainer;
+        if (!(container instanceof Element)) return;
+        if (!container.matches('.WB_text')) return;
+        const contents = range.cloneContents();
+        const text = [...contents.childNodes].map(node => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            return node.textContent;
+          } else if (node.nodeType === Node.ELEMENT_NODE && node.nodeName === 'IMG') {
+            return '';
+          } else {
+            return '\n';
+          }
+        }).join('').trim();
+        const urlRegex = urlRegexGen();
+        if (!urlRegex.test(text)) return;
+        event.clipboardData.setData('text/plain', text);
+        event.preventDefault();
+      });
+
+    },
+  });
+
 
 }());
 //#endregion
