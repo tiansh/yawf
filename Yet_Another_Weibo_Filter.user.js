@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.66
+// @version           4.0.67
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1346,11 +1346,14 @@
   // document.domain 基于 STK.lib.card.usercard.basecard 并非笔误
   }[document.domain === 'www.weibo.com' ? 'userCard_abroad' : 'userCard'], location.href);
 
+  let lastRequest = Promise.resolve();
+
   /**
    * @param {{id:number?,name:string?}}
    * @return {UserInfo}
    */
   const userInfo = async function userInfo({ id = null, name = null }) {
+    await lastRequest;
     if (!id && !name) throw TypeError('Request userinfo without id or name.');
     if (id && userInfoCacheById.has(id)) {
       return JSON.parse(JSON.stringify(userInfoCacheById.get(id)));
@@ -1367,7 +1370,9 @@
     url.searchParams.set('callback', callback);
     try {
       util.debug('fetch url %s', url);
-      const { data: html } = await network.jsonp(url, callback);
+      const request = network.jsonp(url, callback);
+      lastRequest = request;
+      const { data: html } = await request;
       // 我仍然无法理解一个使用 JSON 包裹 HTML 的 API
       const usercard = new DOMParser().parseFromString(html, 'text/html');
       return (function parseUserInfoResponse() {
@@ -5601,10 +5606,10 @@ throw new Error('YAWF | chat page found, skip following executions');
 [yawf-comment-display="hide"], [yawf-feed-display="hide"] { display: none; }
 [yawf-feed-display="fold"] { position: relative; }
 [yawf-feed-display="fold"] > * { display: none; }
-[yawf-feed-display="fold"]::before { text-align: center; padding: 10px 20px; display: block; opacity: 0.6; }
+[yawf-feed-display="fold"]::before { text-align: center; padding: 10px 20px; display: block; opacity: 0.6; line-height: 16px; }
 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_detail { display: none; }
-.WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail { display: block; max-height: 0; transition: max-height, padding 0.1s; overflow: hidden; padding: 0 20px; }
-.WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail:not(:hover) { max-height: 1000px; padding: 0 20px 27px; }
+.WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail:not(:hover) { display: block; overflow: hidden; padding: 0 20px 27px; }
+.WB_feed.WB_feed_v3 .WB_feed_type[yawf-feed-display="fold"].WB_feed_vipcover:hover .WB_feed_detail { padding-top: 0; }
 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_handle { display: none; }
 `);
   init.onLoad(function () {
@@ -5623,6 +5628,8 @@ throw new Error('YAWF | chat page found, skip following executions');
     return feed.matches('.WB_artical *') ? 'unset' : null;
   }, { priority: 1e6 });
   // 无论因为何种原因，同一页面上同一条微博不应出现两次
+  // 2020年7月后，上一行注释是错的，因为快转之后他们的 mid 是一样的，需要用 fmid 区分
+  // 不过就算是快转的，展示几次也没有任何意义，所以这段逻辑保持不变
   observer.feed.filter(function hideDuplicate(feed) {
     const mid = feed.getAttribute('mid');
     if (!mid) return null;
@@ -6316,6 +6323,8 @@ throw new Error('YAWF | chat page found, skip following executions');
 ; (function () {
 
   const yawf = window.yawf;
+  const init = yawf.init;
+  const page = init.page;
 
   const feedParser = yawf.feed = {};
   const commentParser = yawf.comment = {};
@@ -6403,7 +6412,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     return true;
   };
 
-
   /**
    * 检查某个元素是否是一条转发的微博
    * @param {Element} element
@@ -6412,6 +6420,17 @@ throw new Error('YAWF | chat page found, skip following executions');
   const isForwardFeedElement = function (element) {
     if (!isFeedElement(element)) return false;
     if (!element.hasAttribute('omid')) return false;
+    return true;
+  };
+
+  /**
+   * 检查某个元素是否是一条简单转发的微博
+   * @param {Element} element
+   * @returns {boolean}
+   */
+  const isFastForwardFeedElement = function (element) {
+    if (!isFeedElement(element)) return false;
+    if (!element.hasAttribute('fmid')) return false;
     return true;
   };
 
@@ -6430,6 +6449,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       const [source] = feedParser.source.dom(feed, true);
       const [date] = feedParser.date.dom(feed, true);
       post = [author, ...post, source, date];
+    }
+    if (feed.hasAttribute('fmid')) {
+      const [fauthor] = feedParser.fauthor.dom(feed);
+      post.unshift(fauthor);
     }
     if (feed.hasAttribute('omid')) {
       const reason = feedParser.content.dom(feed, false, false);
@@ -6584,7 +6607,12 @@ throw new Error('YAWF | chat page found, skip following executions');
         const sibling = [...node.parentNode.children];
         items.push(...sibling.filter(item => item.matches('a[title]')));
       } else {
-        items.push(...node.parentNode.querySelectorAll('[title]'));
+        const sibling = [];
+        for (let next = node; next; next = next.nextElementSibling) {
+          if (next.matches('.sp_kz')) break;
+          if (next.matches('[title]')) sibling.push(next);
+        }
+        items.push(...sibling);
       }
       const icons = items.filter(item => item !== node && item.title.trim());
       return icons.map(icon => `[${icon.title.trim()}]`);
@@ -6839,6 +6867,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   // 作者（这条微博是谁发的）
+  // 对于快转微博，是这条微博转发自的作者
   const author = feedParser.author = {};
   author.dom = feed => {
     if (!(feed instanceof Node)) return [];
@@ -6877,6 +6906,35 @@ throw new Error('YAWF | chat page found, skip following executions');
     }
   };
 
+  // 快转作者
+  const fauthor = feedParser.fauthor = {};
+  fauthor.dom = feed => {
+    if (!(feed instanceof Node)) return [];
+    if (!isSearchFeedElement(feed)) {
+      const fauthor = feed.querySelector('.sp_kz ~ a[usercard]');
+      return fauthor ? [fauthor] : [];
+    } else {
+      return [];
+    }
+  };
+  fauthor.id = feed => {
+    const domList = fauthor.dom(feed);
+    if (!isSearchFeedElement(feed)) {
+      return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('id'));
+    } else {
+      return [];
+    }
+  };
+  fauthor.name = feed => {
+    const domList = fauthor.dom(feed);
+    const $CONFIG = page.$CONFIG;
+    return domList.map(dom => {
+      const id = new URLSearchParams(dom.getAttribute('usercard')).get('id');
+      if (id === $CONFIG.uid) return $CONFIG.nick;
+      return dom.textContent.trim();
+    });
+  };
+
   // 原作者（一条被转发的微博最早来自谁）
   const original = feedParser.original = {};
   original.dom = feed => {
@@ -6902,7 +6960,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
   original.name = feed => {
     const domList = original.dom(feed);
-    return domList.map(dom => dom.textContent.trim());
+    return domList.map(dom => dom.textContent.trim().replace(/^@/, ''));
   };
 
   // 提到（微博中提到的人，转发路径中的人同属于提到）
@@ -7078,9 +7136,11 @@ throw new Error('YAWF | chat page found, skip following executions');
   feedParser.isFeed = feed => isFeedElement(feed);
   feedParser.isSearchFeed = feed => isSearchFeedElement(feed);
   feedParser.isForward = feed => isForwardFeedElement(feed);
+  feedParser.isFastForward = feed => isFastForwardFeedElement(feed);
 
   feedParser.mid = node => feedContainer(node).getAttribute('mid');
   feedParser.omid = node => feedContainer(node).getAttribute('omid');
+  feedParser.fmid = node => feedContainer(node).getAttribute('fmid');
 
   // 评论内容
   commentParser.text = target => {
@@ -8728,7 +8788,9 @@ throw new Error('YAWF | chat page found, skip following executions');
         // 最早出现的几条不算延迟加载的
         if (document.querySelectorAll('.WB_feed_type[yawf-feed-preload]').length < 5) isUnread = false;
         // 如果作者是自己那么不算延迟加载的（发微薄的时候会插入到最前面）
-        if (init.page.$CONFIG.uid === feedParser.author.id(feed)[0]) isUnread = false;
+        const [author] = feedParser.author.id(feed);
+        const [fauthor] = feedParser.fauthor.id(feed);
+        if (init.page.$CONFIG.uid === (fauthor || author)) isUnread = false;
         feed.setAttribute('yawf-feed-preload', isUnread ? 'unread' : 'show');
       });
 
@@ -9005,7 +9067,9 @@ throw new Error('YAWF | chat page found, skip following executions');
         };
       };
       observer.feed.onFinally(function (feed) {
-        const [authorId] = feedParser.author.id(feed);
+        const [author] = feedParser.author.id(feed);
+        const [fauthor] = feedParser.fauthor.id(feed);
+        const authorId = fauthor || author;
         if (!authorId || authorId === init.page.$CONFIG.uid) return; // 自己的微博，不显示按钮
         if (feed.matches('#v6_pl_content_atmeweibo *')) return; // 不在提到页面显示，避免与“屏蔽at”发生歧义
         if (feed.hasAttribute('yawf-hide-box')) return; // 已经有了按钮，不显示按钮
@@ -9501,12 +9565,28 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.filter(function authorFilterFeedFilter(/** @type {Element} */feed) {
         const oid = init.page.$CONFIG.oid;
         const [author] = feedParser.author.id(feed);
+        const [fauthor] = feedParser.fauthor.id(feed);
         // 个人主页不按照作者隐藏（否则就会把所有东西都藏起来……）
-        if (String(author) === String(oid) && rule.feedAction !== 'show') return null;
+        const pageType = init.page.type();
+        const isShowRule = rule.feedAction === 'show';
+        if ((fauthor || author) === oid && !isShowRule && pageType === 'profile') return null;
         const accounts = rule.ref.items.getConfig();
-        const contain = accounts.find(account => account.id === author);
-        const reason = i18n.accountAuthorReason.replace('{1}', () => feedParser.author.name(feed));
-        if (contain) return { result: rule.feedAction, reason };
+        const ignoreFastAuthor = pageType === 'group' && !isShowRule;
+        const ignoreAuthor = ignoreFastAuthor && !feedParser.isFastForward(feed);
+        if (!ignoreAuthor) {
+          const contain = accounts.find(account => account.id === author);
+          if (contain) {
+            const reason = i18n.accountAuthorReason.replace('{1}', () => feedParser.author.name(feed));
+            return { result: rule.feedAction, reason };
+          }
+        }
+        if (!ignoreFastAuthor) {
+          const fcontain = accounts.find(account => account.id === fauthor);
+          if (fcontain) {
+            const reason = i18n.accountAuthorReason.replace('{1}', () => feedParser.fauthor.name(feed));
+            return { result: rule.feedAction, reason };
+          }
+        }
         return null;
       }, { priority: this.priority });
       this.ref.items.addConfigListener(() => { observer.feed.rerun(); });
@@ -9586,13 +9666,25 @@ throw new Error('YAWF | chat page found, skip following executions');
     init() {
       const rule = this;
       observer.feed.filter(function authorFilterFeedFilter(/** @type {Element} */feed) {
-        const isForward = feedParser.isForward(feed);
-        if (!isForward) return null;
-        const [author] = feedParser.author.id(feed);
+        const authors = [];
+        // 如果一条微博是传统的转发微博，转发作者计入在内
+        // 如果一条微博是快转微博，被快转的微博如果是转发微博，被快转的微博的作者同样计入在内
+        if (feedParser.isForward(feed)) {
+          const [id] = feedParser.author.id(feed);
+          const [name] = feedParser.author.name(feed);
+          authors.push({ id, name });
+        }
+        // 如果一条微博是快转微博，快转的作业计入在内
+        if (feedParser.isFastForward(feed)) {
+          const [id] = feedParser.fauthor.id(feed);
+          const [name] = feedParser.fauthor.name(feed);
+          authors.push({ id, name });
+        }
+        if (!authors.length) return null;
         const accounts = rule.ref.items.getConfig();
-        const contain = accounts.find(account => account.id === author);
-        if (!contain) return null;
-        const reason = i18n.accountAuthorForwardReason.replace('{1}', () => feedParser.author.name(feed));
+        const reasonUser = authors.find(author => accounts.some(account => author.id === account.id));
+        if (!reasonUser) return null;
+        const reason = i18n.accountAuthorForwardReason.replace('{1}', () => reasonUser.name);
         return { result: rule.feedAction, reason };
       }, { priority: this.priority });
       this.ref.items.addConfigListener(() => { observer.feed.rerun(); });
@@ -9679,13 +9771,15 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '作者 @{1}',
       en: 'author @{1}',
     },
-    accountOriginalFollower: {
-      cn: '隐藏转发自|粉丝数量超过{{count}}万的博主的微博{{i}}||例外帐号{{account}}',
-      tw: '隱藏轉發自|粉絲數量超過{{count}}萬的博主的微博{{i}}||例外帐号{{account}}',
-      en: 'Hide feeds forwarded from authors with | more than {{count}}0,000 fans{{i}}||Exception {{account}}',
+    accountOriginalFastForwardReason: {
+      cn: '快转自 @{1}',
+      tw: '快轉自 @{1}',
+      en: 'fast forwarded from @{1}',
     },
-    accountOriginalFollowerDetail: {
-      cn: '发现页面作者不计入。',
+    accountOriginalFollower: {
+      cn: '隐藏转发自|粉丝数量超过{{count}}万的博主的微博||例外帐号{{account}}',
+      tw: '隱藏轉發自|粉絲數量超過{{count}}萬的博主的微博||例外帐号{{account}}',
+      en: 'Hide feeds forwarded from authors with | more than {{count}}0,000 fans||Exception {{account}}',
     },
   });
 
@@ -9707,19 +9801,26 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.filter(function originalFilterFeedFilter(/** @type {Element} */feed) {
         const accounts = rule.ref.items.getConfig();
 
-        const original = new Set(feedParser.original.id(feed));
-        if (accounts.find(account => original.has(account.id))) {
+        const [original] = feedParser.original.id(feed);
+        if (accounts.find(account => account.id === original)) {
           const name = feedParser.original.name(feed);
           const reason = i18n.accountOriginalReason.replace('{1}', () => name);
           return { result: rule.feedAction, reason };
         }
 
-        if (rules.original.id.discover.isEnabled() && init.page.type() === 'discover') {
+        const asDiscover = rules.original.id.discover.isEnabled() && init.page.type() === 'discover';
+        const asFastForward = feedParser.isFastForward(feed);
+        if (asDiscover || asFastForward) {
           const [author] = feedParser.author.id(feed);
           if (accounts.find(account => author === account.id)) {
             const name = feedParser.author.name(feed);
-            const reason = i18n.accountOriginalDiscoverReason.replace('{1}', () => name);
-            return { result: rule.feedAction, reason };
+            if (asDiscover) {
+              const reason = i18n.accountOriginalDiscoverReason.replace('{1}', () => name);
+              return { result: rule.feedAction, reason };
+            } else {
+              const reason = i18n.accountOriginalFastForwardReason.replace('{1}', () => name);
+              return { result: rule.feedAction, reason };
+            }
           }
         }
 
@@ -9771,6 +9872,9 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.filter(async function originalFollowerFeedFilter(/** @type {Element} */feed) {
         if (!rule.isEnabled()) return null;
         const original = feedParser.original.id(feed);
+        if (feedParser.isFastForward(feed)) {
+          original.push(feedParser.author.id(feed));
+        }
         const accounts = rule.ref.account.getConfig();
         const filtered = original.filter(id => !accounts.find(user => user.id === id));
         const followers = await Promise.all(filtered
@@ -10150,7 +10254,8 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!rule.isEnabled()) return null;
         const me = init.page.$CONFIG.uid;
         const [author] = feedParser.author.id(feed);
-        if (String(me) === String(author)) return 'showme';
+        const [fauthor] = feedParser.fauthor.id(feed);
+        if (me === author || me === fauthor) return 'showme';
         return null;
       }, { priority: 1e4 });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -10174,7 +10279,8 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!rule.isEnabled()) return null;
         const me = init.page.$CONFIG.uid;
         const [original] = feedParser.original.id(feed);
-        if (String(me) === String(original)) return 'showme';
+        const [author] = feedParser.isFastForward(feed) ? feedParser.author.id(feed) : [];
+        if (me === original || me === author) return 'showme';
         return null;
       }, { priority: 1e4 });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -10260,10 +10366,13 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.filter(function adFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
         // 修改这里时请注意，悄悄关注也会显示关注按钮，但是相关微博不应被隐藏
+        // 快转也可能有关注按钮，但是快转不在这里隐藏
         if (feed.getAttribute('feedtype') === 'ad') return 'hide';
         if (feed.querySelector('[action-type="feed_list_ad"]')) return 'hide';
         if (feed.querySelector('a[href*="//adinside.weibo.cn/"]')) return 'hide';
-        if (feed.querySelector('[diss-data*="feedad"]')) return 'hide';
+        // 这里 !feedParser.isFastForward(feed) 是临时处理
+        // 我认为是微博自己写的有 bug：抄代码忘了改了；总之这地方不该这样
+        if (feed.querySelector('[diss-data*="feedad"]') && !feedParser.isFastForward(feed)) return 'hide';
         if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hide';
         if (feed.querySelector('[suda-uatrack*="negativefeedback"]')) return 'hide';
         if (feed.querySelector('[suda-uatrack*="1022-adFeedEvent"]')) return 'hide';
@@ -10446,8 +10555,9 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (init.page.type() !== 'profile') return null;
         const { oid, onick } = init.page.$CONFIG;
         if (!oid || !onick) return null;
-        const [id] = feedParser.author.id(feed);
-        if (String(id) !== String(oid)) return 'hide';
+        const [author] = feedParser.author.id(feed);
+        const [fauthor] = feedParser.fauthor.id(feed);
+        if ((fauthor || author) !== oid) return 'hide';
         return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -10536,7 +10646,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function deletedForwardFilter(feed) {
         if (!rule.isEnabled()) return null;
-        const isForward = feed.getAttribute('isforward') === '1';
+        const isForward = feedParser.isForward(feed);
         if (!isForward) return null;
         const forwardContent = feed.querySelector('.WB_media_expand .WB_info .WB_name, .WB_expand .WB_info .W_fb');
         if (forwardContent) return null;
@@ -10568,7 +10678,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.filter(function commentAndForwardFilter(feed) {
         if (!rule.isEnabled()) return null;
         const replyText = ['回复', '回復', '回覆', 'Reply', 'reply'];
-        if (feed.getAttribute('isforward') !== '1') return null;
+        if (!feedParser.isForward(feed)) return null;
         const content = feed.querySelector('[node-type="feed_list_content"]'); if (!content) return null;
         if (!content.firstChild || !replyText.includes(content.firstChild.textContent.trim())) return null;
         if (!content.childNodes[1] || !content.childNodes[1].getAttribute('usercard')) return null;
@@ -10905,6 +11015,34 @@ throw new Error('YAWF | chat page found, skip following executions');
     },
   });
 
+  i18n.fastForwardFeedFilter = {
+    cn: '使用快转转发的微博',
+    tw: '使用快轉轉發的微博',
+    en: 'Fast forwarded feeds',
+  };
+  i18n.fastForwardFeedFilterDetail = {
+    cn: '使用快转转发微博时，转发得到的微博的评论和转发不可用，展示时仅显示被转发的那条微博并标注“被××快转了”。任何针对该微博的评论实际上是针对被转发的微博的评论。',
+  };
+
+  content.fastForward = rule.Rule({
+    id: 'filter_fast_forward',
+    version: 67,
+    parent: content.content,
+    template: () => i18n.fastForwardFeedFilter,
+    ref: {
+      i: { type: 'bubble', icon: 'ask', template: () => i18n.fastForwardFeedFilterDetail },
+    },
+    init() {
+      const rule = this;
+      observer.feed.filter(function fastForwardFilter(feed) {
+        if (!rule.isEnabled()) return null;
+        if (feedParser.isFastForward(feed)) return 'hide';
+        return null;
+      });
+      this.addConfigListener(() => { observer.feed.rerun(); });
+    },
+  });
+
 }());
 //#endregion
 //#region @require yaofang://content/rule/filter/more/link.js
@@ -11079,17 +11217,19 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (parsed.has(feed)) return null;
         const me = init.page.$CONFIG.uid;
         const [author] = feedParser.author.id(feed);
+        const [fauthor] = feedParser.fauthor.id(feed);
+        const authorId = fauthor || author;
         // 自己的微博发多少也不触发这个规则
-        if (String(me) === String(author)) return null;
+        if (me === authorId) return null;
         // 个人主页不工作
         if (init.page.type() === 'profile') return null;
         // 分组页面根据设置决定是否生效
         if (init.page.type() === 'group') {
           if (rule.ref.group.getConfig()) return null;
         }
-        parsed.set(feed, author);
-        const feeds = [...document.querySelectorAll('[mid]')];
-        const count = feeds.filter(feed => parsed.get(feed) === author).length;
+        parsed.set(feed, authorId);
+        const feeds = [...document.querySelectorAll('.WB_feed_type')];
+        const count = feeds.filter(feed => parsed.get(feed) === authorId).length;
         if (count <= rule.ref.number.getConfig()) return null;
         const result = rule.ref.action.getConfig();
         const reason = i18n.floodingAuthorReason;
@@ -11865,7 +12005,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanFollowSingle: { cn: '微博详情页', tw: '微博詳情頁', en: 'Weibo detail' },
     cleanFollowAtMe: { cn: '提到我的微博', en: 'Weibo mentioned me' },
     cleanFollowDiscover: { cn: '热门微博', tw: '熱門微博', en: 'Hot Weibo' },
-    cleanFollowWhisper: { cn: '悄悄关注', tw: '悄悄關注', en: 'Secret Following' },
+    cleanFollowFastForward: { cn: '快转', tw: '快轉', en: 'Fast Forward' },
     cleanFollowVideo: { cn: '视频弹层', hk: '視頻彈層', tw: '影片快顯層', en: 'Video pop-up layer' },
     cleanFollowRecommend: { cn: '关注推荐', tw: '關注推薦', en: 'Follow Recommend' },
   });
@@ -11874,7 +12014,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   clean.CleanRule('single', () => i18n.cleanFollowSingle, 1, '[id^="Pl_Official_WeiboDetail__"] [node-type*="feed_recommend_follow"] { display: none !important; }');
   clean.CleanRule('at_me', () => i18n.cleanFollowAtMe, 1, '#v6_pl_content_atmeweibo [node-type*="feed_recommend_follow"] { display: none !important; }');
   clean.CleanRule('discover', () => i18n.cleanFollowDiscover, 1, '#plc_discover [node-type*="feed_recommend_follow"] { display: none !important; }');
-  clean.CleanRule('whisper', () => i18n.cleanFollowWhisper, 1, '#v6_pl_content_homefeed [node-type*="feed_recommend_follow"] { display: none !important; }');
+  clean.CleanRule('fast_forward', () => i18n.cleanFollowFastForward, 1, '#v6_pl_content_homefeed [node-type*="feed_recommend_follow"] { display: none !important; }');
   clean.CleanRule('video', () => i18n.cleanFollowVideo, 1, '.WB_h5video .con-11, .wbv-add-box { display: none !important; }');
   clean.CleanRule('recommend', () => i18n.cleanFollowRecommend, 1, '[action-type="follow_recommend_arr"], [node-type="follow_recommend_box"] { display: none !important; }');
 
@@ -13814,7 +13954,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 .yawf-face-title { float: left; font-weight: bold; line-height: 32px; padding: 0; text-align: center; width: 52px; margin: 0 -8px 0 0; }
 .yawf-face-items { float: right; margin: 0 8px; }
 .yawf-face-items li { color: transparent; }
-.yawf-face-drop-area { background: rgba(255, 255, 127, 0.5); clear: both; float: right; font-weight: bold; height: 32px; line-height: 32px; margin: -32px 8px 0; opacity: 1; padding: 0; width: 306px; text-align: center; }
+.yawf-face-drop-area { background: rgba(255, 255, 127, 0.5); clear: both; float: right; font-weight: bold; height: 36px; line-height: 36px; margin: -36px 8px 0; opacity: 1; padding: 0; width: 348px; text-align: center; }
 .layer_faces .faces_list { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 .layer_faces .faces_list li { overflow: hidden; }
 .layer_faces .faces_list img { border: 10px transparent solid; margin: -10px; }
@@ -14712,6 +14852,9 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 [id^="Pl_Core_WendaList__"] .WB_text::before { width: 68px; }
 
 .WB_feed.WB_feed_v3 .WB_expand_media_box { margin-top: 10px; }
+
+.WB_feed.WB_feed_v3 .WB_info .sp_kz, 
+.WB_feed.WB_feed_v3 .WB_info .W_autocut { vertical-align: top; }
 `);
     },
   });
