@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.67
+// @version           4.0.68
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1671,7 +1671,8 @@
       const feeds = feedElements.map(item => {
         const dateitem = item.querySelector('[node-type="feed_list_item_date"][date]'); if (!dateitem) return null;
         const date = Number(dateitem.getAttribute('date')); if (!date) return null;
-        const mid = item.getAttribute('mid'); if (!mid) return null;
+        const mid = item.getAttribute('fmid') || item.getAttribute('mid');
+        if (!mid) return null;
         return { type: 'feed', date, mid, dom: item.cloneNode(true) };
       }).filter(feed => feed);
       this.feedsByPage.push(feeds);
@@ -2527,7 +2528,9 @@
         }
       });
       const result = await Promise.all(allGet);
-      return Object.assign({}, ...keyList.map(({ key }, index) => ({ [key]: result[index] })));
+      return Object.assign({}, ...keyList.map(({ key }, index) => (
+        result[index] !== (void 0) ? ({ [key]: result[index] }) : {}
+      )));
     };
     const getBytesInUse = function () {
       throw new Error('Method not implemented');
@@ -2559,23 +2562,6 @@
       const keys = await GM.listValues();
       return remove(keys.filter(key => key.startsWith(prefix)));
     };
-    /*
-    const logInvoke = function (f) {
-      return async function (...args) {
-        const input = JSON.parse(JSON.stringify(args));
-        const result = await f(...args);
-        console.log('Debug storage: %o(%o) -> %o', f.name, input, result);
-        return result;
-      };
-    };
-    return {
-      get: logInvoke(get),
-      getBytesInUse: logInvoke(getBytesInUse),
-      set: logInvoke(set),
-      remove: logInvoke(remove),
-      clear: logInvoke(clear),
-    };
-    */
     return {
       get,
       getBytesInUse,
@@ -2672,6 +2658,7 @@
       this.last = Promise.resolve();
       this.processing = false;
       this.dirty = false;
+      this.initialized = false;
       /** @type Array<Function> */
       this.watcher = [];
       watcher.addListener(this, newValue => {
@@ -2736,9 +2723,17 @@
       });
     }
     async get() {
-      const results = await this.run(() => (
+      let results = await this.run(() => (
         browser.storage[this.area].get(this.key)
       ));
+      if (!this.initialized && this.area === 'local' && !Object.hasOwnProperty.call(results, this.key)) {
+        results = await this.run(async () => {
+          const data = await browser.storage.sync.get(this.key);
+          await browser.storage.local.set(data);
+          return data;
+        });
+      }
+      this.initialized = true;
       return results[this.key];
     }
     /** @param {*} value */
@@ -2897,6 +2892,18 @@
   };
 
 }());
+
+// 将数据从 sync 移动到 local
+; (async function () {
+  const [syncStorage, localStorage] = await Promise.all([
+    browser.storage.sync.get(),
+    browser.storage.local.get(),
+  ]);
+  const [syncKeys, localKeys] = [syncStorage, localStorage].map(storage => Object.keys(storage || {}));
+  const syncOnlyKeys = syncKeys.filter(key => !localKeys.includes(key));
+  const updateObject = Object.assign({}, ...syncOnlyKeys.map(key => ({ [key]: syncStorage[key] })));
+  await browser.storage.local.set(updateObject);
+}());
 //#endregion
 //#region @require yaofang://content/storage/config.js
 ; (function () {
@@ -2911,8 +2918,8 @@
   const i18n = util.i18n;
 
   config.init = async function (uid) {
-    const userPromise = config.pool('Config', { uid });
-    const globalPromise = config.pool('Config');
+    const userPromise = config.pool('Config', { uid, isLocal: true });
+    const globalPromise = config.pool('Config', { isLocal: true });
     const [user, global] = await Promise.all([userPromise, globalPromise]);
     Object.assign(config, { user, global });
   };
@@ -6607,12 +6614,14 @@ throw new Error('YAWF | chat page found, skip following executions');
         const sibling = [...node.parentNode.children];
         items.push(...sibling.filter(item => item.matches('a[title]')));
       } else {
-        const sibling = [];
+        const icons = [];
         for (let next = node; next; next = next.nextElementSibling) {
           if (next.matches('.sp_kz')) break;
-          if (next.matches('[title]')) sibling.push(next);
+          if (next.matches('[title]')) icons.push(next);
+          const inner = next.querySelector('.W_icon[title]');
+          if (inner) icons.push(inner);
         }
-        items.push(...sibling);
+        items.push(...icons);
       }
       const icons = items.filter(item => item !== node && item.title.trim());
       return icons.map(icon => `[${icon.title.trim()}]`);
@@ -7599,7 +7608,10 @@ throw new Error('YAWF | chat page found, skip following executions');
   const css = util.css;
 
   const getContext = functools.once(async function () {
-    const followConfig = await config.pool('Follow', { uid: init.page.$CONFIG.uid });
+    const followConfig = await config.pool('Follow', {
+      uid: init.page.$CONFIG.uid,
+      isLocal: true,
+    });
     const fetchData = new rule.class.OffscreenConfigItem({
       id: 'fetchData',
       configPool: followConfig,
@@ -8994,6 +9006,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 
     const manuallyHideConfig = await config.pool('Hide', {
       uid: init.page.$CONFIG.uid,
+      isLocal: true,
     });
 
     return new rule.class.OffscreenConfigItem({
