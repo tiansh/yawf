@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.68
+// @version           4.0.69
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -6431,13 +6431,24 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   /**
-   * 检查某个元素是否是一条简单转发的微博
+   * 检查某个元素是否是一条类似简单转发的微博
+   * @param {Element} element
+   * @returns {boolean}
+   */
+  const isFastFeedElement = function (element) {
+    if (!isFeedElement(element)) return false;
+    if (!element.hasAttribute('fmid')) return false;
+    return true;
+  };
+
+  /**
+   * 检查某个元素是否是一条快转的微博
    * @param {Element} element
    * @returns {boolean}
    */
   const isFastForwardFeedElement = function (element) {
-    if (!isFeedElement(element)) return false;
-    if (!element.hasAttribute('fmid')) return false;
+    if (!isFastFeedElement(element)) return false;
+    if (element.getAttribute('isfastforward') !== '1') return false;
     return true;
   };
 
@@ -7145,6 +7156,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   feedParser.isFeed = feed => isFeedElement(feed);
   feedParser.isSearchFeed = feed => isSearchFeedElement(feed);
   feedParser.isForward = feed => isForwardFeedElement(feed);
+  feedParser.isFast = feed => isFastFeedElement(feed);
   feedParser.isFastForward = feed => isFastForwardFeedElement(feed);
 
   feedParser.mid = node => feedContainer(node).getAttribute('mid');
@@ -9585,7 +9597,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         if ((fauthor || author) === oid && !isShowRule && pageType === 'profile') return null;
         const accounts = rule.ref.items.getConfig();
         const ignoreFastAuthor = pageType === 'group' && !isShowRule;
-        const ignoreAuthor = ignoreFastAuthor && !feedParser.isFastForward(feed);
+        const ignoreAuthor = ignoreFastAuthor && !feedParser.isFast(feed);
         if (!ignoreAuthor) {
           const contain = accounts.find(account => account.id === author);
           if (contain) {
@@ -9688,7 +9700,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           authors.push({ id, name });
         }
         // 如果一条微博是快转微博，快转的作业计入在内
-        if (feedParser.isFastForward(feed)) {
+        if (feedParser.isFast(feed)) {
           const [id] = feedParser.fauthor.id(feed);
           const [name] = feedParser.fauthor.name(feed);
           authors.push({ id, name });
@@ -9822,7 +9834,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         }
 
         const asDiscover = rules.original.id.discover.isEnabled() && init.page.type() === 'discover';
-        const asFastForward = feedParser.isFastForward(feed);
+        const asFastForward = feedParser.isFast(feed);
         if (asDiscover || asFastForward) {
           const [author] = feedParser.author.id(feed);
           if (accounts.find(account => author === account.id)) {
@@ -9885,7 +9897,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.filter(async function originalFollowerFeedFilter(/** @type {Element} */feed) {
         if (!rule.isEnabled()) return null;
         const original = feedParser.original.id(feed);
-        if (feedParser.isFastForward(feed)) {
+        if (feedParser.isFast(feed)) {
           original.push(feedParser.author.id(feed));
         }
         const accounts = rule.ref.account.getConfig();
@@ -10292,7 +10304,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!rule.isEnabled()) return null;
         const me = init.page.$CONFIG.uid;
         const [original] = feedParser.original.id(feed);
-        const [author] = feedParser.isFastForward(feed) ? feedParser.author.id(feed) : [];
+        const [author] = feedParser.isFast(feed) ? feedParser.author.id(feed) : [];
         if (me === original || me === author) return 'showme';
         return null;
       }, { priority: 1e4 });
@@ -10383,8 +10395,6 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (feed.getAttribute('feedtype') === 'ad') return 'hide';
         if (feed.querySelector('[action-type="feed_list_ad"]')) return 'hide';
         if (feed.querySelector('a[href*="//adinside.weibo.cn/"]')) return 'hide';
-        // 这里 !feedParser.isFastForward(feed) 是临时处理
-        // 我认为是微博自己写的有 bug：抄代码忘了改了；总之这地方不该这样
         if (feed.querySelector('[diss-data*="feedad"]') && !feedParser.isFastForward(feed)) return 'hide';
         if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hide';
         if (feed.querySelector('[suda-uatrack*="negativefeedback"]')) return 'hide';
