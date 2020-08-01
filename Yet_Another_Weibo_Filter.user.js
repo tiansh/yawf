@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.69
+// @version           4.0.70
 // @match             https://*.weibo.com/*
 // @include           https://weibo.com/*
 // @include           https://*.weibo.com/*
@@ -1965,8 +1965,17 @@
     util.debug('fetch url %s', url);
     const resp = await network.fetchText(url);
     const dom = (new DOMParser()).parseFromString(resp, 'text/html');
-    const script = dom.querySelector('head script').textContent;
-    const data = JSON.parse(script.match(/\{[\s\S]*\}/)[0]);
+    const scripts = dom.querySelectorAll('script:not([src])');
+    const data = [...scripts].reduce((data, script) => {
+      if (data) return data;
+      try {
+        const data = JSON.parse(script.textContent.match(/\{[\s\S]*\}/)[0]);
+        if (!data.vote_info) return null;
+        return data;
+      } catch (e) {
+        return null;
+      }
+    }, null);
     return data;
   };
 
@@ -2858,7 +2867,7 @@
     key(key) {
       return new ConfigKey(this, key);
     }
-    async import(data) {
+    async importConfig(data) {
       this.value = JSON.parse(JSON.stringify(data));
       await this.storage.set(this.value);
     }
@@ -7227,6 +7236,8 @@ throw new Error('YAWF | chat page found, skip following executions');
     },
   });
 
+  const cleanText = text => text.replace(/^[\s\u200b]+|[\s\u200b]+$/g, '');
+
   const recognize = fast.recognize = {};
   // 识别选中的文本
   recognize.textSimple = function (selection) {
@@ -7234,11 +7245,11 @@ throw new Error('YAWF | chat page found, skip following executions');
     if (!(selection + '')) return [];
     if (selection.rangeCount !== 1) return [];
     let simple, full, type;
-    simple = (feedParser.text.simple(selection) || []).map(t => t.trim());
-    full = (feedParser.text.detail(selection) || []).map(t => t.trim());
+    simple = (feedParser.text.simple(selection) || []).map(cleanText);
+    full = (feedParser.text.detail(selection) || []).map(cleanText);
     type = 'text';
     if (!simple.join('') && !full.join('')) {
-      simple = full = (commentParser.text(selection) || []).map(t => t.trim());
+      simple = full = (commentParser.text(selection) || []).map(cleanText);
       type = 'comment';
     }
     if (!simple.join('') && !full.join('')) {
@@ -7254,10 +7265,10 @@ throw new Error('YAWF | chat page found, skip following executions');
   recognize.textComplex = function (selection) {
     if (!(selection instanceof Selection)) return [];
     if (selection.rangeCount <= 1) return [];
-    let texts = feedParser.text.detail(selection).filter(text => text.trim());
+    let texts = feedParser.text.detail(selection).filter(cleanText);
     let type = 'multitext';
     if (!texts.length) {
-      texts = commentParser.text(selection).filter(text => text.trim());
+      texts = commentParser.text(selection).filter(cleanText);
       type = 'multitextcomment';
     }
     if (!texts.length) {
@@ -15732,6 +15743,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           ref.parentNode.appendChild(images);
         };
         const linkImage = function (container) {
+          if (!container) return;
           const imgs = Array.from(container.querySelectorAll('img'));
           imgs.forEach(img => {
             const link = document.createElement('a');
@@ -18243,7 +18255,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
             i18n.configImportWarning,
         });
         if (!confirmAnswer) return;
-        await rule.configPool.import(config);
+        await rule.configPool.importConfig(config);
         await ui.alert({
           id: 'yawf-import-success',
           icon: 'succ',
