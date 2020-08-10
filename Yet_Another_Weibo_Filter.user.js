@@ -12,10 +12,12 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.71
+// @version           4.0.73
 // @match             *://*.weibo.com/*
+// @match             *://t.cn/*
 // @include           *://weibo.com/*
 // @include           *://*.weibo.com/*
+// @include           *://t.cn/*
 // @exclude           *://weibo.com/a/bind/*
 // @exclude           *://account.weibo.com/*
 // @exclude           *://kefu.weibo.com/*
@@ -24,6 +26,7 @@
 // @exclude           *://verified.weibo.com/*
 // @exclude           *://vip.weibo.com/*
 // @exclude           *://open.weibo.com/*
+// @exclude           *://passport.weibo.com/*
 // @noframes
 // @run-at            document-start
 // @grant             GM.info
@@ -535,6 +538,7 @@
   util.inject = function (func, ...args) {
     const executeScript = `void(${func}(${args.map(value => JSON.stringify(value))}));`;
     const script = document.createElement('script');
+    script.async = false;
     script.textContent = executeScript;
     const target = document.head || document.body || document.documentElement;
     return new Promise(resolve => {
@@ -2927,7 +2931,7 @@
   const i18n = util.i18n;
 
   config.init = async function (uid) {
-    const userPromise = config.pool('Config', { uid, isLocal: true });
+    const userPromise = uid != null ? config.pool('Config', { uid, isLocal: true }) : Promise.resolve(null);
     const globalPromise = config.pool('Config', { isLocal: true });
     const [user, global] = await Promise.all([userPromise, globalPromise]);
     Object.assign(config, { user, global });
@@ -2945,6 +2949,61 @@
     return pool;
   };
 
+}());
+//#endregion
+//#region @require yaofang://content/shorturl/redirect.js
+; (function () {
+
+  // 脚本版需要这行
+  if (location.host !== 't.cn') return;
+
+  const yawf = window.yawf;
+  const config = yawf.config;
+
+  const configPromise = config.init();
+
+  const hideAll = document.createElement('style');
+  hideAll.textConten = 'body { display: none !important; }';
+  document.documentElement.appendChild(hideAll);
+
+  window.addEventListener('DOMContentLoaded', event => {
+    configPromise.then(() => {
+      const useRedirect = config.global.key('short_url_wo_confirm').get();
+      if (!useRedirect) return;
+      let url = [
+        () => document.querySelector('.link').textContent.trim(),
+        () => document.querySelector('.url_view_code').textContent.trim(),
+      ].reduce((url, getter) => {
+        if (url) return url;
+        try {
+          return getter();
+        } catch (e) { return null; }
+      }, null);
+      // 显示的字符编码是错的
+      // 原本 UTF-8 编码的网址用 Latin-1 展示的
+      let fixEncodingUrl = null;
+      try {
+        const codePoints = [...url].map(x => x.charCodeAt());
+        if (codePoints.every(code => code < 256)) {
+          fixEncodingUrl = new TextDecoder().decode(new Uint8Array(codePoints));
+        }
+      } catch (e) {
+        fixEncodingUrl = url;
+      }
+      if (/https?:\/\/.*/i.test(fixEncodingUrl)) {
+        location.replace(fixEncodingUrl);
+      } else {
+        hideAll.remove();
+      }
+    });
+  });
+
+}());
+//#endregion
+//#region custom implementation redirect
+; (function () {
+  if (location.host !== 't.cn') return;
+  throw new Error('YAWF | t.cn page found, skip following executions');
 }());
 //#endregion
 //#region @require yaofang://content/init/page.js
@@ -15227,6 +15286,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   const yawf = window.yawf;
   const util = yawf.util;
   const rule = yawf.rule;
+  const config = yawf.config;
   const observer = yawf.observer;
   const request = yawf.request;
   const feedParser = yawf.feed;
@@ -16444,6 +16504,38 @@ ${selection ? `
     },
   });
 
+  Object.assign(i18n, {
+    shortLinkWithoutConfirm: {
+      cn: '打开短链接时无需二次确认（全局设置） {{i}}',
+      tw: '打開簡短的連接時無需二次確認（全局設定） {{i}}',
+      en: 'Open short URL without another confirmation (Global Option) {{i}}',
+    },
+    shortLinkWithoutConfirmDetail: {
+      cn: '打开短链接时无需二次手动确认。由于短链接网页无法获取登录状态，此设置项无论登录任意用户均会生效',
+    },
+  });
+
+  content.shortLinkWithoutConfirm = rule.Rule({
+    id: 'short_url_wo_confirm',
+    version: 73,
+    get configPool() { return config.global; },
+    parent: content.content,
+    template: () => i18n.shortLinkWithoutConfirm,
+    ref: {
+      i: { type: 'bubble', icon: 'warn', template: () => i18n.shortLinkWithoutConfirmDetail },
+    },
+    // 真正的执行逻辑在单独的文件里
+    // 这段是处理一下奇怪的追踪代码导致链接根本打不开的问题
+    // 建议如果真的想加追踪代码，在 mouseup 时改 href，而不是在 click 的时候 window.open
+    init() {
+      document.addEventListener('click', event => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (!target.matches('[action-type="feed_list_url"]')) return;
+        event.stopPropagation();
+      }, true);
+    },
+  });
 
 }());
 //#endregion
