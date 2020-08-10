@@ -12,10 +12,12 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.71
+// @version           4.0.73
 // @match             *://*.weibo.com/*
+// @match             *://t.cn/*
 // @include           *://weibo.com/*
 // @include           *://*.weibo.com/*
+// @include           *://t.cn/*
 // @exclude           *://weibo.com/a/bind/*
 // @exclude           *://account.weibo.com/*
 // @exclude           *://kefu.weibo.com/*
@@ -24,6 +26,7 @@
 // @exclude           *://verified.weibo.com/*
 // @exclude           *://vip.weibo.com/*
 // @exclude           *://open.weibo.com/*
+// @exclude           *://passport.weibo.com/*
 // @noframes
 // @run-at            document-start
 // @grant             GM.info
