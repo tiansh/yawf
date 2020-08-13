@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.73
+// @version           4.0.74
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -2954,7 +2954,7 @@
 //#region @require yaofang://content/shorturl/redirect.js
 ; (function () {
 
-  // 脚本版需要这行
+  // 脚本版需要这行，所以这里姑且加上
   if (location.host !== 't.cn') return;
 
   const yawf = window.yawf;
@@ -2963,13 +2963,17 @@
   const configPromise = config.init();
 
   const hideAll = document.createElement('style');
-  hideAll.textConten = 'body { display: none !important; }';
+  hideAll.textContent = `
+body { display: none; }
+html { background: #f9f9fa; }
+@media (prefers-color-scheme: dark) { html { background: #2a2a2e; } }
+`;
   document.documentElement.appendChild(hideAll);
 
   window.addEventListener('DOMContentLoaded', event => {
     configPromise.then(() => {
       const useRedirect = config.global.key('short_url_wo_confirm').get();
-      if (!useRedirect) return;
+      if (!useRedirect) return false;
       let url = [
         () => document.querySelector('.link').textContent.trim(),
         () => document.querySelector('.url_view_code').textContent.trim(),
@@ -2990,11 +2994,11 @@
       } catch (e) {
         fixEncodingUrl = url;
       }
-      if (/https?:\/\/.*/i.test(fixEncodingUrl)) {
-        location.replace(fixEncodingUrl);
-      } else {
-        hideAll.remove();
-      }
+      if (!/https?:\/\/.*/i.test(fixEncodingUrl)) return false;
+      location.replace(fixEncodingUrl);
+      return true;
+    }).then(redirect => {
+      if (!redirect) hideAll.remove();
     });
   });
 
