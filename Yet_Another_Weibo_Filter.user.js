@@ -3866,7 +3866,7 @@ html { background: #f9f9fa; }
           url: url,
           responseType: 'arraybuffer',
           onload: function (resp) {
-            const mtime = (resp.responseHeaders.match(/^Last-Modified: (.*)$/mi) || [])[1];
+            const mtime = (resp.responseHeaders.match(/^date: (.*)$/mi) || [])[1];
             const extension = url.match(/(\.[^.]*)$/)[1];
             resolve({
               filename,
