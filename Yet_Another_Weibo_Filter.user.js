@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.76
+// @version           4.0.77
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -543,7 +543,7 @@
     return new Promise(resolve => {
       script.addEventListener('load', () => {
         resolve();
-        // script.parentElement.removeChild(script);
+        script.parentElement.removeChild(script);
       });
       if (target) target.appendChild(script);
       else setTimeout(function injectScript() {
@@ -3365,6 +3365,7 @@ html { background: #f9f9fa; }
         document.documentElement.classList.add('yawf-WBV7');
       }
       if (yawf.WEIBO_VERSION !== 7) return;
+      if (!page.route) return;
       page.config = config;
       page.$CONFIG = genV6LikeConfigByV7Config(config);
       await runSet(onConfigChangeCallback);
@@ -3713,61 +3714,151 @@ html { background: #f9f9fa; }
       return null;
     };
 
-    const childArray = function (element) {
-      return element.children || (element.componentOptions || {}).children;
+    // 下面这一串都没测试过
+    const childArray = function (element, createChildren) {
+      if (element.componentOptions) {
+        if (!element.componentOptions.children && createChildren) {
+          element.componentOptions.children = [];
+        }
+        return element.componentOptions.children;
+      } else {
+        if (!element.children && createChildren) {
+          element.children = [];
+        }
+        return element.children;
+      }
+    };
+    const parseClass = className => {
+      if (className == null) {
+        return '';
+      } else if (typeof className === 'string') {
+        return [...new Set(className.trim().split(/\s+/))].join(' ');
+      } else if (Array.isArray(className)) {
+        return parseClass(className.map(parseClass).join(' '));
+      } else if (typeof className === 'object') {
+        return parseClass(Object.keys(className).filter(key => className[key]).join(' '));
+      }
+      return '';
     };
     const buildResult = function buildResult(vnode) {
       const tag = vnode.componentOptions ? 'x-' + vnode.componentOptions.tag : vnode.tag;
+      if (tag == null && vnode.text) {
+        const node = document.createTextNode(vnode.text);
+        node.__vnode__ = vnode;
+        return node;
+      }
+      if (tag == null) {
+        const node = document.createComment('');
+        node.__vnode__ = vnode;
+        return node;
+      }
       const node = document.createElement(tag);
       node.__vnode__ = vnode;
-      const data = node.data || {};
-      if (typeof data.class === 'string') {
-        node.className = data.class;
-      } else if (Array.isArray(data.class)) {
-        data.class.filter(x => x).forEach(n => node.classList.add(n));
-      }
+      const data = vnode.data || {};
+      const className = parseClass(data.class);
+      if (className) node.className = className;
       const children = childArray(vnode);
       if (children) children.forEach(vnode => {
-        if (vnode.tag == null) return;
         node.appendChild(buildResult(vnode));
       });
       return node;
     };
-    const before = function (newVNode, refNode) {
-      const newNode = buildResult(newVNode);
-      const refVNode = refNode.__vnode__;
-      const parentNode = refNode.parentNode;
-      const parentVNode = parentNode.__vnode__;
+    const vNode = function (node) {
+      return node.__vnode__;
+    };
+    const insertBefore = function (parentNode, newVNode, refNode, newNode) {
+      if (refNode === null) {
+        return appendChild(parentNode, newVNode);
+      }
+      if (newNode == null) newNode = buildResult(newVNode);
+      const refVNode = vNode(refNode);
+      const parentVNode = vNode(parentNode);
       const children = childArray(parentVNode);
       const index = children.indexOf(refVNode);
       children.splice(index, 0, newVNode);
       parentNode.insertBefore(newNode, refNode);
       return newNode;
     };
-    const append = function (newVNode, parentNode) {
-      const parentVNode = parentNode.__vnode__;
-      const children = childArray(parentVNode);
-      const newNode = buildResult(newVNode);
+    const appendChild = function (parentNode, newVNode, newNode) {
+      const parentVNode = vNode(parentNode);
+      const children = childArray(parentVNode, true);
+      if (newNode == null) newNode = buildResult(newVNode);
       children.push(newVNode);
       parentNode.appendChild(newNode);
       return newNode;
     };
-    const remove = function (targetNode) {
-      const targetVNode = targetNode.__vnode__;
-      const parentNode = targetNode.parentNode;
-      const parentVNode = parentNode.__vnode__;
+    const removeChild = function (parentNode, targetNode) {
+      const targetVNode = vNode(targetNode);
+      const parentVNode = vNode(parentNode);
       const children = childArray(parentVNode);
       const index = children.indexOf(targetVNode);
       children.splice(index, 1);
       parentNode.removeChild(targetNode);
-      return targetNode;
+      return targetVNode;
+    };
+    const wrapNode = function (chroot) {
+      return function (refNode, newVNode) {
+        const newNode = buildResult(newVNode);
+        const refVNode = vNode(refNode);
+        const parentNode = refNode.parentNode;
+        if (!parentNode) {
+          chroot(newVNode);
+          appendChild(newNode, refNode);
+        } else {
+          insertBefore(parentNode, newVNode, refNode, newNode);
+          removeChild(parentNode, refNode);
+          appendChild(newNode, refVNode, refNode);
+        }
+        return newNode;
+      };
+    };
+    const changeRoot = function (chroot) {
+      return function (rootNode) {
+        const parentNode = rootNode.parentNode;
+        if (parentNode) {
+          removeChild(parentNode, rootNode);
+        }
+        const rootVNode = vNode(rootNode);
+        chroot(rootVNode);
+        return rootNode;
+      };
+    };
+    const classModify = function (node, add, remove) {
+      const vnode = vNode(node);
+      vnode.data = vnode.data || {};
+      const added = parseClass([node.className, ...add].join(' '));
+      const removed = added.split(/\s+/).filter(c => !remove.includes(c)).join(' ');
+      vnode.data.class = removed;
+      node.className = removed;
+    };
+    const addClass = function (node, ...classNames) {
+      classModify(node, classNames, []);
+    };
+    const removeClass = function (node, ...classNames) {
+      classModify(node, [], classNames);
     };
 
     const transformRender = function (render, transformer) {
       return function (createElement) {
-        const vdom = render.call(this, createElement);
+        let vdom = render.call(this, createElement);
+        const chroot = root => { vdom = root; };
         const nodeStruct = buildResult(vdom);
-        transformer(nodeStruct, { before, remove, append, createElement });
+        try {
+          transformer.call(this, nodeStruct, {
+            vNode,
+            insertBefore,
+            removeChild,
+            appendChild,
+            wrapNode: wrapNode(chroot),
+            unwrapNode: changeRoot(chroot),
+            addClass,
+            removeClass,
+            createElement,
+            h: createElement,
+          });
+        } catch (e) {
+          console.error('YAWF Error while inject render: %o', e);
+        }
         return vdom;
       };
     };
@@ -13318,6 +13409,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     club: club,
     'vip,vipex': member,
   }, function (options) {
+    if (yawf.weiboVersion !== 7) return;
     const hideSymbol = Object.keys(options).filter(key => options[key]).join(',').split(',');
 
     util.inject(function (rootKey, hideSymbol) {
@@ -13421,6 +13513,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     hot: clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '.gn_nav_list>li:nth-child(3) { display: none !important; }', { weiboVersion: [6, 7] }),
     game: clean.CleanRule('game', () => i18n.cleanNavGame, 1, '.gn_nav_list>li:nth-child(4) { display: none !important; }', { weiboVersion: [6, 7] }),
   }, function (options) {
+    if (yawf.weiboVersion !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -13612,6 +13705,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     special,
     friends,
   }, function (options) {
+    if (yawf.weiboVersion !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -13719,6 +13813,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     cardHotSearch: hotSearch,
     cardInterested: interested,
   }, function (options) {
+    if (yawf.weiboVersion !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -16155,6 +16250,182 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
   feeds.feeds = rule.Tab({
     template: () => i18n.feedsTabTitle,
     pagemenu: true,
+  });
+
+}());
+//#endregion
+//#region @require yaofang://content/rule/feeds/render.js
+; (function () {
+
+  const yawf = window.yawf;
+  const util = yawf.util;
+  const rule = yawf.rule;
+
+  const feeds = yawf.rules.feeds;
+
+  const i18n = util.i18n;
+  const css = util.css;
+
+  const render = feeds.render = {};
+
+  i18n.feedRenderGroupTitle = { cn: '渲染' };
+
+  render.render = rule.Group({
+    parent: feeds.feeds,
+    template: () => i18n.feedRenderGroupTitle,
+  });
+
+  Object.assign(i18n, {
+    feedRenderFix: {
+      cn: '允许脚本修改微博显示逻辑以允许相关改造功能 {{i}}',
+    },
+    feedRenderFixDetail: {
+      cn: '如果因为微博的改版导致该功能故障，请停用该选项。只有打开该选项才能使用大部分对微博的改造功能。打开后作者等处会显示为链接，转发原微博会显示来源。此外不会有明显的变化。',
+    },
+  });
+
+  render.feedRenderFix = rule.Rule({
+    weiboVersion: 7,
+    id: 'feed_render',
+    version: 77,
+    parent: render.render,
+    initial: true,
+    template: () => i18n.feedRenderFix,
+    ref: {
+      i: { type: 'bubble', icon: 'warn', template: () => i18n.feedRenderFixDetail },
+    },
+    ainit() {
+      util.inject(function (rootKey, Nodes) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        const muteOnClick = function (vnode) {
+          if (!vnode.data || !vnode.data.on) return;
+          vnode.data.on.click = (function (onclick) {
+            return function (event) {
+              event.preventDefault();
+              return onclick(event);
+            };
+          }(vnode.data.on.click));
+        };
+        vueSetup.transformComponentsRenderByTagName('feed-head', function (nodeStruct, Nodes) {
+
+          const { h, wrapNode, vNode, addClass } = Nodes;
+
+          addClass(nodeStruct, 'yawf-feed-head');
+
+          // 用户头像得是链接
+          const avatar = nodeStruct.querySelector('x-woo-avatar');
+          const userAvatarLinkVNode = h('a', {
+            class: 'yawf-feed-avatar yawf-extra-link',
+            attrs: { href: this.userInfo.profile_url },
+          });
+          const avatarNode = wrapNode(avatar, userAvatarLinkVNode);
+          muteOnClick(vNode(avatar));
+
+          // 用户昵称更得是链接
+          const userSpan = nodeStruct.querySelector('span');
+          const userLinkVNode = h('a', {
+            class: 'yawf-feed-author yawf-extra-link',
+            attrs: { href: this.userInfo.profile_url },
+          });
+          const userNode = wrapNode(userSpan, userLinkVNode);
+          muteOnClick(vNode(userSpan));
+          addClass(userNode.parentNode, 'yawf-feed-author-line');
+
+          // 快转的作者也是链接形式
+          if (this.screen_name_suffix_new) do {
+            const index = this.screen_name_suffix_new.findIndex(item => item.type === 2);
+            const item = this.screen_name_suffix_new[index];
+            const span = userNode.parentNode.children[index];
+            const feed = vueSetup.closest(this, 'feed');
+            if (!index || !span || !feed) break;
+            const fauthorId = feed.data.ori_uid;
+            const linkVNode = h('a', {
+              class: 'yawf-feed-fast-author yawf-extra-link',
+              attrs: { href: `/u/${fauthorId}` },
+            });
+            wrapNode(span, linkVNode);
+            muteOnClick(vNode(span));
+          } while (false);
+
+          // “被”和“快转了”几个字不应该点了跳转到错误页面
+          if (this.screen_name_suffix_new && this.screen_name_suffix_new.length) {
+            Array.from(userNode.parentNode.children).forEach(item => {
+              const vnode = vNode(item);
+              if (vnode && vnode.data && vnode.data.on) {
+                delete vnode.data.on.click;
+              }
+            });
+          }
+
+          // 标记一下时间和来源
+          const headInfo = nodeStruct.querySelector('x-feed-head-info');
+          addClass(headInfo, 'yawf-feed-head-info');
+        });
+
+        vueSetup.transformComponentsRenderByTagName('feed-head-info', function (nodeStruct, Nodes) {
+          const { h, insertBefore, removeChild, addClass } = Nodes;
+
+          // 来源用个 span 套起来
+          const sourceBox = nodeStruct.querySelector('x-woo-box-item x-woo-box');
+          const [source, edited] = sourceBox.childNodes;
+          if (source && source.nodeType !== Node.COMMENT_NODE) {
+            const newSourceVNode = h('div', {
+              class: [this.$style.source, 'yawf-feed-source'],
+            }, ['来自 ', h('span', {
+              attrs: { draggable: 'true' },
+            }, [this.source || '微博 weibo.com'])]);
+            insertBefore(sourceBox, newSourceVNode, source);
+            removeChild(sourceBox, source);
+          }
+
+          if (edited && edited.nodeType !== Node.COMMENT_NODE) {
+            addClass(edited, 'yawf-feed-edited');
+          }
+        });
+
+        vueSetup.transformComponentsRenderByTagName('feed-content', function (nodeStruct, Nodes) {
+          const { vNode, addClass } = Nodes;
+          const headInfo = nodeStruct.querySelector('x-feed-head-info');
+          if (headInfo) {
+            addClass(headInfo, 'yawf-feed-head-info yawf-feed-head-info-retweet');
+            const headInfoVNode = vNode(headInfo);
+            if (headInfoVNode.componentOptions.propsData) {
+              headInfoVNode.componentOptions.propsData.source = this.data.source;
+            }
+          }
+        });
+
+        vueSetup.transformComponentsRenderByTagName('feed-detail', function (nodeStruct, Nodes) {
+          const { h, wrapNode, vNode, addClass } = Nodes;
+          const [author, content] = nodeStruct.childNodes;
+
+          // 原作者也是链接
+          if (author && author.nodeType !== Node.COMMENT_NODE) {
+            const span = author.querySelector('span');
+            const userLinkVNode = h('a', {
+              class: 'yawf-feed-original yawf-extra-link',
+              attrs: { href: this.user.profile_url },
+            });
+            const userNode = wrapNode(span, userLinkVNode);
+            muteOnClick(vNode(span));
+            addClass(userNode.parentNode, 'yawf-feed-original-line');
+          }
+
+          // 内容
+          if (content && content.nodeType !== Node.COMMENT_NODE) {
+            addClass(content, 'yawf-feed-content');
+          }
+        });
+
+      }, util.inject.rootKey);
+
+      css.append(`
+.yawf-extra-link { display: contents; }
+`);
+
+    },
   });
 
 }());
@@ -20019,6 +20290,11 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       lastWeibo: { type: 'number', initial: 0 },
     },
     async init() {
+      // 这个功能需要显示对话框
+      // 对话框需要页面加载完成才能显示
+      if (!['complete', 'loaded', 'interactive'].includes(document.readyState)) {
+        await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
+      }
       const whatsNew = this;
       const currentVersion = Number(browser.runtime.getManifest().version.match(/\d+$/g));
       const lastVersion = this.ref.last.getConfig();
