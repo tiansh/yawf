@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.77
+// @version           4.0.78
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -13409,7 +13409,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     club: club,
     'vip,vipex': member,
   }, function (options) {
-    if (yawf.weiboVersion !== 7) return;
+    if (yawf.WEIBO_VERSION !== 7) return;
     const hideSymbol = Object.keys(options).filter(key => options[key]).join(',').split(',');
 
     util.inject(function (rootKey, hideSymbol) {
@@ -13513,7 +13513,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     hot: clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '.gn_nav_list>li:nth-child(3) { display: none !important; }', { weiboVersion: [6, 7] }),
     game: clean.CleanRule('game', () => i18n.cleanNavGame, 1, '.gn_nav_list>li:nth-child(4) { display: none !important; }', { weiboVersion: [6, 7] }),
   }, function (options) {
-    if (yawf.weiboVersion !== 7) return;
+    if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -13705,7 +13705,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     special,
     friends,
   }, function (options) {
-    if (yawf.weiboVersion !== 7) return;
+    if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -13813,7 +13813,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     cardHotSearch: hotSearch,
     cardInterested: interested,
   }, function (options) {
-    if (yawf.weiboVersion !== 7) return;
+    if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -16303,8 +16303,10 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
           if (!vnode.data || !vnode.data.on) return;
           vnode.data.on.click = (function (onclick) {
             return function (event) {
+              // 按住 Ctrl 或 Shift 的时候不在当前页面打开，所以不走默认的处理逻辑比较好
+              if (event.ctrlKey || event.shiftKey || event.metaKey) return;
               event.preventDefault();
-              return onclick(event);
+              onclick(event);
             };
           }(vnode.data.on.click));
         };
@@ -16416,6 +16418,18 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
           // 内容
           if (content && content.nodeType !== Node.COMMENT_NODE) {
             addClass(content, 'yawf-feed-content');
+          }
+        });
+
+        vueSetup.transformComponentsRenderByTagName('feed-toolbar', function (nodeStruct, Nodes) {
+          const { addClass } = Nodes;
+
+          const buttons = [...nodeStruct.querySelectorAll('x-woo-box-item')];
+          if (buttons.length === 3) {
+            const [retweet, comment, like] = buttons;
+            addClass(retweet, 'yawf-toolbar-retweet');
+            addClass(comment, 'yawf-toolbar-comment');
+            addClass(like, 'yawf-toolbar-like');
           }
         });
 
@@ -16825,6 +16839,7 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
   };
 
   layout.reorderFeedButton = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'feed_button_order',
     version: 1,
     parent: layout.layout,
@@ -16844,7 +16859,8 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
       });
     },
     ainit() {
-      css.append(`
+      if (yawf.WEIBO_VERSION === 6) {
+        css.append(`
 .WB_feed.WB_feed_v3 .WB_func .WB_handle li:last-child .line { border-right-width: 1px; }
 .WB_feed.WB_feed_v3 .WB_func .WB_handle ul { overflow: hidden; }
 .WB_feed.WB_feed_v3 .WB_func .WB_handle ul::after {  content: " "; display: block; margin-left: -1px; flex: 0 0 0; order: 10; }
@@ -16852,7 +16868,20 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
 ${[0, 1, 2, 3, 4].map(index => `
 .WB_handle ul li[yawf-handle-type="fl_${this.ref[index].getConfig()}"] { order: ${index + 1}; }
 `).join('')}
-    `);
+`);
+      } else {
+        [0, 1, 2, 3, 4].forEach(index => {
+          const config = this.ref[index].getConfig();
+          const selector = {
+            pop: '',
+            favorite: '',
+            forward: '.yawf-toolbar-retweet',
+            comment: '.yawf-toolbar-comment',
+            like: '.yawf-toolbar-like',
+          }[config];
+          if (selector) css.append(`${selector} { order: ${index} }`);
+        });
+      }
     },
   });
 
