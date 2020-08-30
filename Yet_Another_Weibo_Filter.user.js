@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.80
+// @version           4.0.81
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -1974,7 +1974,7 @@
     }
   };
 
-  const getFollowingPage = async function (uid, pageUrl) {
+  const getFollowingPageV6 = async function (uid, pageUrl) {
     const url = pageUrl || `https://weibo.com/${uid}/myfollow`;
     util.debug('Fetch Follow: fetch page %s', url);
     util.debug('fetch url %s', url);
@@ -2076,7 +2076,42 @@
 
     return { allPages, followInPage };
   };
-  request.getFollowingPage = getFollowingPage;
+
+  const getFollowingPageV7 = async function (uid, page) {
+    const url = `https://weibo.com/ajax/friendships/friends?page=${page || 1}&uid=${uid}`;
+    util.debug('Fetch Follow: fetch page %s', url);
+    util.debug('fetch url %s', url);
+    const resp = await network.fetchJson(url);
+    if (!resp || !Array.isArray(resp.users) || !resp.users.length) {
+      return {
+        allPages: [],
+        followInPage: [],
+      };
+    }
+    const pages = resp.next_cursor ? Math.ceil(resp.total_number / (resp.next_cursor - resp.previous_cursor)) : page;
+    const allPages = Array.from(Array(pages)).map((_, i) => i + 1);
+    // V7 的关注列表现在只能看到用户
+    const followInPage = resp.users.map(user => {
+      return {
+        id: `user-${user.idstr}`,
+        type: 'user',
+        user: user.idstr,
+        url: new URL(user.profile_url, 'https://weibo.com/').href,
+        avatar: user.avatar_large,
+        name: user.screen_name,
+        description: '@' + user.screen_name,
+      };
+    });
+    return { allPages, followInPage };
+  };
+
+  request.getFollowingPage = function (uid, page = null) {
+    if (yawf.WEIBO_VERSION === 6) {
+      return getFollowingPageV6(uid, page);
+    } else {
+      return getFollowingPageV7(uid, page);
+    }
+  };
 
 }());
 //#endregion
@@ -3889,6 +3924,22 @@ html { background: #f9f9fa; }
       });
     };
 
+    document.documentElement.addEventListener('click', function (event) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const mfsp = target.closest('a.yawf-link-mfsp');
+      if (mfsp) {
+        if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) {
+          event.stopPropagation();
+        }
+      }
+      const nmfpd = target.closest('a.yawf-link-nmfpd');
+      if (nmfpd) {
+        if (!(event.ctrlKey || event.altKey || event.shiftKey || event.metaKey)) {
+          event.preventDefault();
+        }
+      }
+    }, { capture: true });
   }, util.inject.rootKey, key);
 }());
 //#endregion
@@ -7496,14 +7547,16 @@ throw new Error('YAWF | chat page found, skip following executions');
     dropAreaContent.innerHTML = '<div class="yawf-drop-title"></div><div class="yawf-drop-text"></div>';
 
     init.onLoad(function addDropArea() {
-      const reference = document.querySelector('.yawf-gn_set_list');
-      if (!reference) {
-        setTimeout(addDropArea, 100);
-        return;
+      if (yawf.WEIBO_VERSION === 6) {
+        const reference = document.querySelector('.yawf-gn_set_list');
+        if (!reference) {
+          setTimeout(addDropArea, 100);
+          return;
+        }
+        dropAreaContent.querySelector('.yawf-drop-title').textContent = i18n.dropAreaTitle;
+        dropAreaContent.querySelector('.yawf-drop-text').textContent = i18n.dropAreaContent;
+        reference.appendChild(dropArea);
       }
-      dropAreaContent.querySelector('.yawf-drop-title').textContent = i18n.dropAreaTitle;
-      dropAreaContent.querySelector('.yawf-drop-text').textContent = i18n.dropAreaContent;
-      reference.appendChild(dropArea);
     });
 
   }());
@@ -8999,17 +9052,21 @@ throw new Error('YAWF | chat page found, skip following executions');
         return value.lock;
       },
       normalize(value) {
-        if (!value) return {};
-        if (!value.timestamp) return {};
-        if (value.timestamp > Date.now() + 60e3) return {};
-        if (value.timestamp < Date.now() - 86400e3 * 7) return {};
-        if (value.allPages && !value.startTime) {
-          value.startTime = Date.now();
-        }
-        if (value.pendingPages) {
-          if (!Array.isArray(value.list)) return {};
-        }
-        return value;
+        const base = (function () {
+          if (!value) return {};
+          if (!value.timestamp) return {};
+          if (value.timestamp > Date.now() + 60e3) return {};
+          if (value.timestamp < Date.now() - 86400e3 * 7) return {};
+          if (value.allPages && !value.startTime) {
+            value.startTime = Date.now();
+          }
+          if (value.pendingPages) {
+            if (!Array.isArray(value.list)) return {};
+          }
+          return value;
+        }());
+        base.weiboVersion = yawf.WEIBO_VERSION;
+        return base;
       },
     });
     const lastList = new rule.class.OffscreenConfigItem({
@@ -9151,6 +9208,11 @@ throw new Error('YAWF | chat page found, skip following executions');
       }, 600e3);
       reportUpdateStatus('pending');
       return;
+    }
+
+    // 如果之前获取数据使用的微博版本和现在不一样，那么数据要丢弃
+    if (fetchData.getConfig().weiboVersion !== yawf.WEIBO_VERSION) {
+      fetchData.setConfig({});
     }
 
     try {
@@ -9354,6 +9416,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   following.autoCheckFollowing = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'filter_follow_check',
     version: 1,
     parent: following.following,
@@ -9379,14 +9442,22 @@ throw new Error('YAWF | chat page found, skip following executions');
           const fetchData = this.getConfig();
           const buttonArea = document.createElement('span');
           buttonArea.setAttribute('yawf-config-item', this.configId);
-          buttonArea.innerHTML = '<span class="yawf-following-checking"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now"><span class="W_f14"></span></a>';
+          if (yawf.WEIBO_VERSION === 6) {
+            buttonArea.innerHTML = '<span class="yawf-following-checking"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now"><span class="W_f14"></span></a>';
+          } else {
+            buttonArea.innerHTML = '<span class="yawf-following-checking"></span><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-check-now"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
+          }
           const checkingText = buttonArea.querySelector('.yawf-following-checking');
           const checkNowButton = buttonArea.querySelector('.yawf-following-check-now');
           checkNowButton.addEventListener('click', event => {
             if (!event.isTrusted) return;
             updateFollowList();
           });
-          checkNowButton.querySelector('span').textContent = i18n.autoCheckFollowingNow;
+          if (yawf.WEIBO_VERSION === 6) {
+            checkNowButton.querySelector('span').textContent = i18n.autoCheckFollowingNow;
+          } else {
+            checkNowButton.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingNow;
+          }
           this.renderValue(buttonArea);
           return buttonArea;
         },
@@ -9429,13 +9500,22 @@ throw new Error('YAWF | chat page found, skip following executions');
         render() {
           const buttonArea = document.createElement('span');
           buttonArea.setAttribute('yawf-config-item', this.configId);
-          buttonArea.innerHTML = '<span class="yawf-following-last-text"></span><span class="yawf-following-last-time"></span><a href="javascript:;" class="W_btn_b yawf-following-export" style="margin-left:1em;"><span class="W_f14"></span></a><a href="javascript:;" class="W_btn_b yawf-following-clear" style="margin-left:1em;"><span class="W_f14"></span></a>';
+          if (yawf.WEIBO_VERSION === 6) {
+            buttonArea.innerHTML = '<span class="yawf-following-last-text"></span><span class="yawf-following-last-time"></span><a href="javascript:;" class="W_btn_b yawf-following-export" style="margin-left:1em;"><span class="W_f14"></span></a><a href="javascript:;" class="W_btn_b yawf-following-clear" style="margin-left:1em;"><span class="W_f14"></span></a>';
+          } else {
+            buttonArea.innerHTML = '<span class="yawf-following-last-text"></span><span class="yawf-following-last-time"></span><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-export"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-clear"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
+          }
           const lastTimeText = buttonArea.querySelector('.yawf-following-last-text');
           const lastTime = buttonArea.querySelector('.yawf-following-last-time');
           const exportButton = buttonArea.querySelector('.yawf-following-export');
           const clearFollowing = buttonArea.querySelector('.yawf-following-clear');
-          exportButton.querySelector('span').textContent = i18n.autoCheckFollowingDownload;
-          clearFollowing.querySelector('span').textContent = i18n.autoCheckFollowingClean;
+          if (yawf.WEIBO_VERSION === 6) {
+            exportButton.querySelector('span').textContent = i18n.autoCheckFollowingDownload;
+            clearFollowing.querySelector('span').textContent = i18n.autoCheckFollowingClean;
+          } else {
+            exportButton.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingDownload;
+            clearFollowing.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingClean;
+          }
           exportButton.addEventListener('click', event => {
             if (!event.isTrusted) return;
             exportFollowList(this.getConfig());
@@ -9492,13 +9572,30 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   css.append(`
-.yawf-following-add-title, .yawf-following-lost-title, .yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
-.yawf-following-notice-header { padding: 20px; }
-.yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
-.yawf-following-notice-footer { padding: 20px; } 
-.yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
-.yawf-following-rename .yawf-config-user-name, .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
-.yawf-config-user-avatar-img { max-width: 50px; max-height: 50px; }
+.yawf-WBV6 .yawf-following-add-title,
+.yawf-WBV6 .yawf-following-lost-title,
+.yawf-WBV6 .yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
+.yawf-WBV6 .yawf-following-notice-header { padding: 20px; }
+.yawf-WBV6 .yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
+.yawf-WBV6 .yawf-following-notice-footer { padding: 20px; } 
+.yawf-WBV6 .yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
+.yawf-WBV6 .yawf-following-rename .yawf-config-user-name,
+.yawf-WBV6 .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
+.yawf-WBV6 .yawf-config-user-avatar-img { max-width: 50px; max-height: 50px; }
+`);
+
+  css.append(`
+.yawf-WBV7 #yawf-follow-change .woo-dialog-title { margin-bottom: 0; }
+.yawf-WBV7 #yawf-follow-change .woo-dialog-body { padding: 0; }
+.yawf-WBV7 .yawf-following-add-title,
+.yawf-WBV7 .yawf-following-lost-title,
+.yawf-WBV7 .yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
+.yawf-WBV7 .yawf-following-notice-header { padding: 20px; }
+.yawf-WBV7 .yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
+.yawf-WBV7 .yawf-following-notice-footer { padding: 20px; } 
+.yawf-WBV7 .yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
+.yawf-WBV7 .yawf-following-rename .yawf-config-user-name,
+.yawf-WBV7 .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
 `);
 
   i18n.uncheckFollowPresenter = {
@@ -14559,6 +14656,57 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     },
   });
 
+  Object.assign(i18n, {
+    navUseLink: { cn: '导航栏使用链接' },
+  });
+
+  navbar.navUseLink = rule.Rule({
+    weiboVersion: 7,
+    id: 'nav_use_link',
+    version: 81,
+    parent: navbar.navbar,
+    template: () => i18n.navUseLink,
+    ainit() {
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        // 顶部导航栏也叫 nav
+        // 左侧那个玩意儿也叫 nav
+        // 大概是用 compontent 挂出来的，这个没办法
+        vueSetup.transformComponentsRenderByTagName('nav', function (nodeStruct, Nodes) {
+          const { h, wrapNode, vNode } = Nodes;
+
+          if (!nodeStruct.firstChild) return;
+          if (((vNode(nodeStruct.firstChild).data || {}).attrs || {}).role !== 'navigation') return;
+
+          const navIcon = nodeStruct.querySelector('span');
+          if (navIcon) {
+            const linkVNode = h('a', {
+              class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
+              attrs: { href: 'https://weibo.com/' },
+            });
+            wrapNode(navIcon, linkVNode);
+          }
+        });
+
+        vueSetup.transformComponentsRenderByTagName('ctrls', function (nodeStruct, Nodes) {
+          const { h, wrapNode, vNode } = Nodes;
+
+          const items = nodeStruct.querySelectorAll('x-woo-tab-item > x-woo-box ');
+          [...items].forEach((item, index) => {
+            if (!this.navItems[index].link) return;
+            const linkVNode = h('a', {
+              class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
+              attrs: { href: this.navItems[index].link },
+            });
+            wrapNode(item, linkVNode);
+          });
+        });
+      }, util.inject.rootKey);
+    },
+  });
+
 }());
 //#endregion
 //#region @require yaofang://content/rule/layout/sidebar.js
@@ -14955,6 +15103,61 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 `,
   });
 
+
+  Object.assign(i18n, {
+    leftSidebarUseLink: { cn: '导航栏使用链接' },
+  });
+
+  sidebar.leftSidebarUseLink = rule.Rule({
+    weiboVersion: 7,
+    id: 'side_left_use_link',
+    version: 81,
+    parent: sidebar.sidebar,
+    template: () => i18n.leftSidebarUseLink,
+    ainit() {
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        vueSetup.transformComponentsRenderByTagName('home', function (nodeStruct, Nodes) {
+          const { h, wrapNode, vNode } = Nodes;
+
+          const items = nodeStruct.querySelectorAll('x-nav-item');
+
+          const leftTabs = this.leftTabs || [];
+          const customTabs = (this.customTabs || {}).list || [];
+          const tabs = leftTabs.concat(customTabs);
+
+          [...items].forEach((item, index) => {
+            const tab = tabs[index];
+            if (!tab || !tab.gid) return;
+            const href = tab.gid === '10001' + tab.uid ? 'https://weibo.com/' : 'https://weibo.com/mygroups?gid=' + tab.gid;
+            const linkVNode = h('a', {
+              class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
+              attrs: { href },
+            });
+            wrapNode(item, linkVNode);
+          });
+        });
+
+        vueSetup.transformComponentsRenderByTagName('messages', function (nodeStruct, Nodes) {
+          const { h, wrapNode, vNode } = Nodes;
+
+          const items = nodeStruct.querySelectorAll('x-nav-item');
+
+          [...items].forEach((item, index) => {
+            const message = this.messageList[index];
+            if (!message || !message.name) return;
+            const linkVNode = h('a', {
+              class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
+              attrs: { href: this.$router.resolve({ name: message.name }).href },
+            });
+            wrapNode(item, linkVNode);
+          });
+        });
+      }, util.inject.rootKey);
+    },
+  });
 
 }());
 //#endregion
@@ -16370,16 +16573,15 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       if (!vnode.data.on) vnode.data.on = {};
       vnode.data.on.click = onclick;
     };
-    const muteClickHandler = function (vnode, test) {
+    const muteClickHandler = function (vnode) {
       const onclick = removeClickHandler(vnode);
       if (!onclick) return;
       addClickHandler(vnode, function (event) {
-        if (test(event)) return;
+        if (event.ctrlKey || event.shiftKey || event.metaKey || event.altKey) return;
         event.preventDefault();
         onclick(event);
       });
     };
-    const eventWithKeys = event => event.ctrlKey || event.shiftKey || event.metaKey || event.altKey;
     const configClickHandler = function (vnode, link, newTab) {
       if (newTab) {
         removeClickHandler(vnode);
@@ -16387,7 +16589,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         if (!link.data.attrs) link.data.attrs = {};
         link.data.attrs.target = '_blank';
       } else {
-        muteClickHandler(vnode, eventWithKeys);
+        muteClickHandler(vnode);
       }
     };
 
@@ -16397,8 +16599,11 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const link = target.closest('.yawf-feed-content-handler a[href]');
       if (!link) return;
       if (eventWithKeys(event)) event.stopPropagation();
+      const isPicture = link.hasAttribute('data-pid');
       const isMention = link.getAttribute('href').startsWith('/n/');
-      if (isMention ? newTab.mention : newTab.topic) event.stopPropagation();
+      if (isPicture ? newTab.picture : isMention ? newTab.mention : newTab.topic) {
+        event.stopPropagation();
+      }
     }, { capture: true });
 
     // 给提到和话题的链接加上新标签页打开的标记
@@ -16408,8 +16613,11 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const wrap = new DOMParser().parseFromString(`<${tag}>` + content.data.domProps.innerHTML, 'text/html').querySelector(tag);
       [...wrap.querySelectorAll('a')].forEach(link => {
         if (link.target === '_blank') return;
+        const isPicture = link.hasAttribute('data-pid');
         const isMention = link.getAttribute('href').startsWith('/n/');
-        if (isMention ? newTab.mention : newTab.topic) link.target = '_blank';
+        if (isPicture ? newTab.picture : isMention ? newTab.mention : newTab.topic) {
+          link.target = '_blank';
+        }
       });
       Object.assign(content.data.domProps, { innerHTML: wrap.innerHTML });
     };
@@ -16766,7 +16974,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const configs = {};
 
       configs.smallImage = feeds.layout.smallImage.getConfig();
-      configs.newTab = Object.assign(...['author', 'mention', 'topic', 'detail', 'comments'].map(id => ({
+      configs.newTab = Object.assign(...'author,mention,topic,detail,comments,picture'.split(',').map(id => ({
         [id]: feeds.details.feedLinkNewTab.getConfig() && feeds.details.feedLinkNewTab.ref[id].getConfig(),
       })));
       util.debug('render config: %o', configs);
@@ -17375,6 +17583,8 @@ ${[0, 1, 2, 3, 4].map(index => `
 .yawf-feed-original span, .yawf-feed-content-retweet, .yawf-feed-comment-text, .yawf-feed-comment-more, .yawf-feed-repost-text { font-size: ${fs2}px !important; line-height: ${lh2}px !important; }
 .yawf-feed-content img, .yawf-feed-content .icon-link { height: ${fs}px !important; width: ${fs}px !important; }
 .yawf-feed-content-retweet img, .yawf-feed-content-retweet .icon-link { height: ${fs2}px !important; width: ${fs2}px !important; }
+
+.wbpv-big-play-button { z-index: 99; }
 `);
       }
     },
@@ -17430,7 +17640,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           }(vm.$http.get));
           const text = vm.data.longTextContent_raw;
           if (!text) return;
-          const len = Math.ceil(text.length - text.match(/[\u0020-\u00fe]/g).length / 2);
+          const len = Math.ceil(text.length - (text.match(/[\u0020-\u00fe]/g) || []).length / 2);
           const remLen = len + (text.split('\n').length - 1) * (br - 1);
           if (expand && remLen < count) {
             vm.handleExpand();
@@ -19559,7 +19769,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 
   Object.assign(i18n, {
     feedLinkNewTab: {
-      cn: '在新标签页打开以下链接 {{i}}||{{author}}作者/原作者|{{mention}}提到|{{topic}}话题||{{detail}}微博详情（发布时间）|{{comments}}全部评论',
+      cn: '在新标签页打开以下链接 {{i}}||{{author}}作者/原作者|{{mention}}提到|{{topic}}话题|{{picture}}配图||{{detail}}微博详情（发布时间）|{{comments}}全部评论',
     },
     feedLinkNewTabDetail: {
       cn: '按住 Ctrl 也可临时在新标签页打开。此功能依赖于 [[feed_render]]。',
@@ -19569,7 +19779,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   details.feedLinkNewTab = rule.Rule({
     weiboVersion: 7,
     id: 'feed_link_new_tab',
-    version: 80,
+    version: 81,
     parent: details.details,
     template: () => i18n.feedLinkNewTab,
     ref: {
@@ -19579,6 +19789,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
       topic: { type: 'boolean', initial: true },
       detail: { type: 'boolean', initial: true },
       comments: { type: 'boolean', initial: true },
+      picture: { type: 'boolean', initial: true },
     },
     // 实现在 render 里
   });
