@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.82
+// @version           4.0.83
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -1682,7 +1682,7 @@
     cn: '悄悄关注',
   };
 
-  const groupList = functools.once(async function () {
+  const groupListV6 = functools.once(async function () {
     const url = 'https://weibo.com/aj/f/group/list';
     util.debug('fetch url %s', url);
     const resp = await network.fetchJson(url);
@@ -1700,7 +1700,15 @@
     }];
     return [...special, ...groups];
   });
-  request.groupList = groupList;
+  request.groupList = groupListV6;
+
+  const groupListV7 = functools.once(async function () {
+    const url = new URL('/ajax/feed/allGroups?is_new_segment=1&fetch_hot=1', location.href).href;
+    util.debug('fetch url %s', url);
+    const resp = await fetch(url).then(resp => resp.json());
+    return resp.groups[1].group; // [1] 是自定义分组，他们代码就这样
+  });
+  request.groupListV7 = groupListV7;
 
 }());
 //#endregion
@@ -3123,6 +3131,7 @@
   const yawf = window.yawf;
   const config = yawf.config;
 
+  /** @type {Promise} */
   const configPromise = config.init();
 
   const hideAll = document.createElement('style');
@@ -3133,7 +3142,7 @@ html { background: #f9f9fa; }
 `;
   document.documentElement.appendChild(hideAll);
 
-  window.addEventListener('DOMContentLoaded', event => {
+  const onLoad = function () {
     configPromise.then(() => {
       const useRedirect = config.global.key('short_url_wo_confirm').get();
       if (!useRedirect) return false;
@@ -3160,10 +3169,16 @@ html { background: #f9f9fa; }
       if (!/https?:\/\/.*/i.test(fixEncodingUrl)) return false;
       location.replace(fixEncodingUrl);
       return true;
-    }).then(redirect => {
+    }).then(r => r, () => false).then(redirect => {
       if (!redirect) hideAll.remove();
     });
-  });
+  };
+
+  if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
+    setTimeout(onLoad, 0);
+  } else {
+    document.addEventListener('DOMContentLoaded', onLoad);
+  }
 
 }());
 //#endregion
@@ -3877,10 +3892,10 @@ html { background: #f9f9fa; }
       node.className = removed;
     };
     const addClass = function (node, ...classNames) {
-      classModify(node, classNames, []);
+      classModify(node, classNames.filter(x => x && typeof x === 'string'), []);
     };
     const removeClass = function (node, ...classNames) {
-      classModify(node, [], classNames);
+      classModify(node, [], classNames.filter(x => x && typeof x === 'string'));
     };
     const transformSlot = function (node, slotName, transformer) {
       const vnode = vNode(node);
@@ -5875,6 +5890,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   rule.class.TopicCollectionConfigItem = TopicCollectionConfigItem;
   rule.types.topics = TopicCollectionConfigItem;
 
+  // 这个目前不支持 V7
   class GroupIdCollectionConfigItem extends CollectionConfigItem {
     normalizeItem(value) {
       if (!value || typeof value !== 'object') return null;
@@ -9827,13 +9843,13 @@ throw new Error('YAWF | chat page found, skip following executions');
       const router = root.$router;
       router.beforeEach((to, from, next) => {
         if (to.name === 'home') {
-          next('mygroups?gid=' + gid);
+          next('/mygroups?gid=' + gid);
         } else {
           next();
         }
       });
       if (router.currentRoute.name === 'home') {
-        router.replace('mygroups?gid=' + gid);
+        router.replace('/mygroups?gid=' + gid);
       }
 
       const bus = root.$Bus;
@@ -9883,11 +9899,16 @@ throw new Error('YAWF | chat page found, skip following executions');
   const groupListLazyPromise = new Promise(resolve => {
     groupListLazyPromiseResolve = resolve;
   }).then(async () => {
-    const groups = await request.groupList();
-    return groups.map(({ name, id }) => ({ text: name, value: id }));
+    if (yawf.WEIBO_VERSION === 6) {
+      const groups = await request.groupList();
+      return groups.map(({ name, id }) => ({ text: name, value: id }));
+    } else {
+      const groups = await request.groupListV7();
+      return groups.map(({ gid, title }) => ({ text: title, value: gid }));
+    }
   });
   homepage.singleGroup = rule.Rule({
-    // weiboVersion: [6, 7],
+    weiboVersion: [6, 7],
     id: 'filter_homepage_single_group',
     version: 1,
     parent: homepage.homepage,
@@ -9920,30 +9941,12 @@ throw new Error('YAWF | chat page found, skip following executions');
         }
         fixHomeUrlV6(group);
       } else {
-        const group = this.ref.group.getConfig();
-        const groups = (await request.groupList()).slice(1);
-        const index = groups.length;
-        if (group === 'whisper') {
-          const uid = init.page.config.user.idstr;
-          fixHomeUrlV7({
-            gid: '10005' + uid,
-            api: '/ajax/feed/groupstimeline',
-            name,
-            index: index,
-            source: 'custom',
-          });
-        } else {
-          const gid = group.slice(1);
-          const index = groups.findIndex(g => g.id === group);
-          const name = groups[index].name;
-          fixHomeUrlV7({
-            gid,
-            api: '/ajax/feed/groupstimeline',
-            name,
-            index: index,
-            source: 'custom',
-          });
-        }
+        const gid = this.ref.group.getConfig();
+        const groups = await request.groupListV7();
+        const index = groups.findIndex(g => g.gid === gid);
+        const name = groups[index].title;
+        const api = '/ajax/feed/groupstimeline';
+        fixHomeUrlV7({ gid, api, name, index, source: 'custom' });
       }
     },
   });
@@ -9973,7 +9976,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         type: 'boolean',
       },
       groups: {
-        type: 'groups',
+        type: 'groups', // 不支持 V7
       },
       i: { type: 'bubble', icon: 'ask', template: () => i18n.feedsHomepageMultiGroupDetail },
       ii: { type: 'bubble', icon: 'warn', template: () => i18n.feedsHomepageMultiGroupDetail2 },
@@ -14109,6 +14112,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanFeedLikeComment: { cn: '赞 - 评论', tw: '讚 - 評論', en: 'Like - Comment' },
     cleanFeedLikeAttitude: { cn: '赞 - 表情', tw: '讚 - 表情', en: 'Like - Attitude' },
     cleanFeedForward: { cn: '转发', tw: '轉發', en: 'Forward' },
+    cleanFeedFastRepost: { cn: '快转' },
     cleanFeedFavorite: { cn: '收藏', tw: '收藏', en: 'Favorite' },
     cleanFeedPromoteOther: { cn: '帮上头条', tw: '帮上头条', en: '帮上头条' },
     cleanFeedReport: { cn: '举报', hk: '舉報', tw: '舉報/檢舉', en: 'Report' },
@@ -14167,41 +14171,52 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
   clean.CleanRule('source', () => i18n.cleanFeedSource, 1, {
     acss: `
-.WB_feed_detail .WB_from { height: 26px; overflow: hidden; }
-.WB_feed_detail .WB_feed_expand .WB_from { height: 16px; }
-.WB_feed_detail .WB_from::before { content: " "; display: block; float: left; width: 100%; height: 30px; }
-.WB_feed_detail .WB_from a[date],
-.WB_feed_detail .WB_from a[yawf-date],
-.WB_feed_detail .WB_from span[title],
-.WB_feed_detail .WB_from .yawf-edited { float: left; position: relative; top: -30px; }
-.WB_feed_detail .WB_from a[date]::after,
-.WB_feed_detail .WB_from a[yawf-date]::after { content: " "; }
+.yawf-WBV7 .yawf-feed-source-container { display: none !important; }
+
+.yawf-WBV6 .WB_feed_detail .WB_from { height: 26px; overflow: hidden; }
+.yawf-WBV6 .WB_feed_detail .WB_feed_expand .WB_from { height: 16px; }
+.yawf-WBV6 .WB_feed_detail .WB_from::before { content: " "; display: block; float: left; width: 100%; height: 30px; }
+.yawf-WBV6 .WB_feed_detail .WB_from a[date],
+.yawf-WBV6 .WB_feed_detail .WB_from a[yawf-date],
+.yawf-WBV6 .WB_feed_detail .WB_from span[title],
+.yawf-WBV6 .WB_feed_detail .WB_from .yawf-edited { float: left; position: relative; top: -30px; }
+.yawf-WBV6 .WB_feed_detail .WB_from a[date]::after,
+.yawf-WBV6 .WB_feed_detail .WB_from a[yawf-date]::after { content: " "; }
 `,
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanFeedSourceDetail } },
+    weiboVersion: [6, 7],
   });
   clean.CleanRule('pop', () => i18n.cleanFeedPop, 1, `
 .WB_feed_datail a[action-type="fl_pop"], .WB_feed_datail a[action-type="fl_pop"]+.S_txt3, 
 .WB_handle li[yawf-handle-type="fl_pop"] { display: none !important; }`);
   clean.CleanRule('like', () => i18n.cleanFeedLike, 1, `
-a[action-type="feed_list_like"],
-a[action-type="feed_list_like"]+.S_txt3, 
-[node-type="multi_image_like"],
-[action-type="feed_list_image_like"], 
-[action-type="object_like"], [action-type="like_object"], 
-.WB_feed_datail a[action-type="fl_like"],
-.WB_feed_datail a[action-type="fl_like"]+.S_txt3, 
-.WB_expand .WB_handle.W_fr li:nth-child(3), 
-.WB_handle li[yawf-handle-type="fl_like"],
-.WB_handle li[yawf-handle-type="like"] .layer_multipic_preview .pos_icon { display: none !important; }`);
-  clean.CleanRule('like_comment', () => i18n.cleanFeedLikeComment, 1, '.WB_handle li[yawf-comment-handle-type="like"] { display: none !important; }');
+.yawf-WBV7 .yawf-feed-toolbar-like { display: none !important; }
+
+.yawf-WBV6 a[action-type="feed_list_like"],
+.yawf-WBV6 a[action-type="feed_list_like"]+.S_txt3, 
+.yawf-WBV6 [node-type="multi_image_like"],
+.yawf-WBV6 [action-type="feed_list_image_like"], 
+.yawf-WBV6 [action-type="object_like"], [action-type="like_object"], 
+.yawf-WBV6 .WB_feed_datail a[action-type="fl_like"],
+.yawf-WBV6 .WB_feed_datail a[action-type="fl_like"]+.S_txt3, 
+.yawf-WBV6 .WB_expand .WB_handle.W_fr li:nth-child(3), 
+.yawf-WBV6 .WB_handle li[yawf-handle-type="fl_like"],
+.yawf-WBV6 .WB_handle li[yawf-handle-type="like"] .layer_multipic_preview .pos_icon { display: none !important; }`, { weiboVersion: [6, 7] });
+  clean.CleanRule('like_comment', () => i18n.cleanFeedLikeComment, 1, `
+.yawf-WBV7 .yawf-feed-comment-icon-list [yawf-icon-list-name="like"] { display: none !important; }
+
+.yawf-WBV6 .WB_handle li[yawf-comment-handle-type="like"] { display: none !important; }`, { weiboVersion: [6, 7] });
   clean.CleanRule('like_attitude', () => i18n.cleanFeedLikeAttitude, 1, '.W_layer_attitude { display: none !important; }');
   clean.CleanRule('forward', () => i18n.cleanFeedForward, 1, `
-a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3,
-.WB_media_expand .WB_handle a.S_func4[href$="?type=repost"], .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"]+.S_txt3, 
-.WB_feed_datail a[action-type="fl_forward"], .WB_feed_datail a[action-type="fl_forward"]+.S_txt3, 
-.WB_expand .WB_handle.W_fr li:nth-child(1), 
-.WB_handle li[yawf-handle-type="fl_forward"], .WB_handle li[yawf-handle-type="tab"]:nth-child(2) 
-{ display: none !important; }`);
+.yawf-WBV7 .yawf-feed-toolbar-retweet { display: none !important; }
+
+.yawf-WBV6 a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3,
+.yawf-WBV6 .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"], .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"]+.S_txt3, 
+.yawf-WBV6 .WB_feed_datail a[action-type="fl_forward"], .WB_feed_datail a[action-type="fl_forward"]+.S_txt3, 
+.yawf-WBV6 .WB_expand .WB_handle.W_fr li:nth-child(1), 
+.yawf-WBV6 .WB_handle li[yawf-handle-type="fl_forward"], .WB_handle li[yawf-handle-type="tab"]:nth-child(2) 
+.yawf-WBV6 { display: none !important; }`, { weiboVersion: [6, 7] });
+  clean.CleanRule('fast_repost', () => i18n.cleanFeedFastRepost, 83, { weiboVersion: 7 }); // 实现在 render
   clean.CleanRule('favorite', () => i18n.cleanFeedFavorite, 1, `
 a[action-type="feed_list_favorite"], a[action-type="feed_list_favorite"]+.S_txt3,
 .WB_feed_datail a[action-type="fl_favorite"], .WB_feed_datail a[action-type="fl_favorite"]+.S_txt3, 
@@ -15174,14 +15189,47 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   };
 
   sidebar.showAllGroups = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'layout_side_show_all_groups',
     version: 1,
     parent: sidebar.sidebar,
     template: () => i18n.showAllGroups,
-    acss: `
+    ainit() {
+      if (yawf.weiboVersion === 6) {
+        css.append(`
 .lev_Box .levmore { display: none !important; }
 .lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }
-`,
+`);
+      } else {
+        util.inject(function (rootKey) {
+          const yawf = window[rootKey];
+          const vueSetup = yawf.vueSetup;
+
+          const icons = {
+            navNew: 'new_feed',
+            navSpecial: 'special',
+            navMutual: 'friends',
+          };
+          vueSetup.eachComponentVM('home', function (vm) {
+            if (Array.isArray(vm.customList)) {
+              vm.$watch(function () { return this.customTabs; }, function () {
+                if (vm.customTabs && Array.isArray(vm.customTabs.list)) {
+                  vm.customList = [...vm.customTabs.list];
+                }
+              }, { immediate: true });
+              vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+                const { removeChild } = Nodes;
+
+                const moreButton = nodeStruct.querySelector('x-woo-box:last-child');
+                if (nodeStruct.lastChild === moreButton) {
+                  removeChild(nodeStruct, moreButton);
+                }
+              });
+            }
+          });
+        }, util.inject.rootKey);
+      }
+    },
   });
 
 
@@ -16605,6 +16653,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
   const rule = yawf.rule;
 
   const feeds = yawf.rules.feeds;
+  const clean = yawf.rules.clean;
 
   const i18n = util.i18n;
   const css = util.css;
@@ -16791,7 +16840,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
     });
 
     vueSetup.transformComponentsRenderByTagName('feed-content', function (nodeStruct, Nodes) {
-      const { vNode, addClass } = Nodes;
+      const { vNode, addClass, wrapNode, h } = Nodes;
+
       const headInfo = nodeStruct.querySelector('x-feed-head-info');
       if (headInfo) {
         addClass(headInfo, 'yawf-feed-head-info yawf-feed-head-info-retweet');
@@ -16804,6 +16854,19 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       addClass(nodeStruct, 'yawf-feed-content');
       if (headInfo) {
         addClass(nodeStruct, 'yawf-feed-content-retweet');
+      }
+
+      const tip = nodeStruct.querySelector('x-woo-tip');
+      if (tip) {
+        addClass(tip, 'yawf-feed-content-tip');
+        if (this.data.complaint && this.data.complaint.url) {
+          const linkVNode = h('a', {
+            class: 'yawf-feed-content-tip-link yawf-extra-link',
+            attrs: { href: absoluteUrl(this.data.complaint.url) },
+          });
+          wrapNode(tip, linkVNode);
+          configClickHandler(vNode(tip), linkVNode, true);
+        }
       }
     });
 
@@ -16880,8 +16943,18 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       addClass(content, 'yawf-feed-card-content');
     });
 
-    vueSetup.transformComponentsRenderByTagName('feed-toolbar', function (nodeStruct, Nodes) {
+    vueSetup.transformComponentsRenderByTagName('feed-card-article', function (nodeStruct, Nodes) {
       const { addClass } = Nodes;
+      addClass(nodeStruct, 'yawf-feed-card-article');
+    });
+
+    vueSetup.transformComponentsRenderByTagName('feed-card-vote', function (nodeStruct, Nodes) {
+      const { addClass } = Nodes;
+      addClass(nodeStruct, 'yawf-feed-card-vote');
+    });
+
+    vueSetup.transformComponentsRenderByTagName('feed-toolbar', function (nodeStruct, Nodes) {
+      const { addClass, vNode, removeChild, insertBefore } = Nodes;
 
       addClass(nodeStruct, 'yawf-feed-toolbar');
 
@@ -16892,6 +16965,25 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         addClass(retweet, 'yawf-feed-toolbar-retweet');
         addClass(comment, 'yawf-feed-toolbar-comment');
         addClass(like, 'yawf-feed-toolbar-like');
+
+        if (configs.hideFastRepost) {
+          try {
+            const pop = retweet.querySelector('x-woo-pop');
+            const popVNode = vNode(pop);
+            const retweetButton = popVNode.data.scopedSlots.ctrl()[0];
+            const oriRetweetButton = pop.querySelector('x-woo-pop-item:nth-child(2)');
+            const retweetOnClick = vNode(oriRetweetButton).data.nativeOn.click;
+            if (!retweetButton.data) retweetButton.data = {};
+            if (!retweetButton.data.on) retweetButton.data.on = {};
+            if (!retweetButton.data.nativeOn) retweetButton.data.nativeOn = {};
+            retweetButton.data.on.click = retweetButton.data.nativeOn.click = retweetOnClick;
+            const contain = pop.parentNode;
+            insertBefore(contain.parentNode, retweetButton, contain);
+            removeChild(contain.parentNode, contain);
+          } catch (e) {
+            // ignore
+          }
+        }
       }
     });
 
@@ -16995,6 +17087,9 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       if (moreIcon) {
         addClass(moreIcon.parentNode, 'yawf-feed-comment-more');
       }
+
+      const iconList = nodeStruct.querySelector('x-icon-list');
+      if (iconList) addClass(iconList, 'yawf-feed-comment-icon-list');
     };
     vueSetup.transformComponentsRenderByTagName('comment', function (nodeStruct, Nodes) {
       commentRenderTransformHelper(nodeStruct, this.item, Nodes);
@@ -17049,6 +17144,19 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         configClickHandler(vNode(time), linkVNode, newTab.detail);
       }
     });
+
+    vueSetup.transformComponentsRenderByTagName('icon-list', function (nodeStruct, Nodes) {
+      const { vNode } = Nodes;
+
+      const iconsName = this.iconsName;
+      const iconsNode = Array.from(nodeStruct.childNodes);
+      if (!Array.isArray(iconsName)) return;
+      if (iconsName.length !== iconsNode.length) return;
+      iconsNode.forEach((node, index) => {
+        const vnode = vNode(node);
+        vnode.data.attrs['yawf-icon-list-name'] = iconsName[index].name;
+      });
+    });
   };
 
   render.feedRenderFix = rule.Rule({
@@ -17069,6 +17177,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         [id]: feeds.details.feedLinkNewTab.getConfig() && feeds.details.feedLinkNewTab.ref[id].getConfig(),
       })));
       util.debug('render config: %o', configs);
+      configs.hideFastRepost = clean.feed.fast_repost.getConfig();
 
       util.inject(renderModify, util.inject.rootKey, configs);
 
@@ -17372,7 +17481,9 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .yawf-feed-video { transition: width 0s 0.2s ease; }
 .yawf-feed-video-inactive { width: 150px; }
 .yawf-feed-card { width: 316px; }
+.yawf-feed-card-picture { width: 80px !important; height: 80px !important; }
 .yawf-feed-comment-picture { max-width: 80px; }
+.yawf-feed-card-article { max-width: 240px; }
 `);
       }
     },
@@ -17602,6 +17713,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   const i18n = util.i18n;
   const css = util.css;
   const ui = util.ui;
+  const strings = util.strings;
 
   const content = feeds.content = {};
 
@@ -17903,6 +18015,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   });
 
   content.showVoteResult = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'show_vote_result',
     version: 46,
     parent: content.content,
@@ -17911,60 +18024,61 @@ ${[0, 1, 2, 3, 4].map(index => `
       i: { type: 'bubble', icon: 'warn', template: () => i18n.showVoteResultDetail },
     },
     ainit() {
-      const updateVoteByLike = function (feedlike) {
-        const like = feedlike.querySelector('[action-type="fl_like"]');
-        const liked = like.querySelector('[node-type="like_status"]').matches('.UI_ani_praised');
-        const items = feedlike.querySelectorAll('[action-type="feed_list_vote"], [action-type="yawf-feed_list_vote"]');
-        Array.from(items).forEach(item => {
-          item.setAttribute('action-type', liked ? 'feed_list_vote' : 'yawf-feed_list_vote');
+      if (yawf.WEIBO_VERSION === 6) {
+        const updateVoteByLike = function (feedlike) {
+          const like = feedlike.querySelector('[action-type="fl_like"]');
+          const liked = like.querySelector('[node-type="like_status"]').matches('.UI_ani_praised');
+          const items = feedlike.querySelectorAll('[action-type="feed_list_vote"], [action-type="yawf-feed_list_vote"]');
+          Array.from(items).forEach(item => {
+            item.setAttribute('action-type', liked ? 'feed_list_vote' : 'yawf-feed_list_vote');
+          });
+        };
+        const showVoteResult = async function (vote) {
+          const voteButtons = Array.from(vote.querySelectorAll('[action-type="feed_list_vote"], [action-type="yawf-feed_list_vote"]'));
+          if (!voteButtons.length) return;
+          const voteId = new URLSearchParams(voteButtons[0].getAttribute('action-data')).get('vote_id');
+          if (!voteId) return;
+          const voteResult = await request.voteDetail(voteId);
+          voteButtons.forEach(button => {
+            const actionData = new URLSearchParams(button.getAttribute('action-data'));
+            const id = actionData.get('vote_items');
+            const item = voteResult.vote_info.option_list.find(item => item.id === id);
+            button.dataset.partNum = item.part_num.replace('票', '人');
+            button.dataset.partRatio = item.part_ratio;
+            button.style.setProperty('--part-ratio', item.part_ratio / 100);
+          });
+          const feedlike = vote.closest('.WB_feed_expand, .WB_feed_type');
+          updateVoteByLike(feedlike);
+        };
+        const watchLike = function (/** @type {HTMLElement} */vote) {
+          const feedlike = vote.closest('.WB_feed_expand, .WB_feed_type');
+          const like = feedlike.querySelector('[action-type="fl_like"]');
+          const observer = new MutationObserver(() => { updateVoteByLike(feedlike); });
+          observer.observe(like, { subtree: true, attributes: true, attributeFilter: ['class'] });
+          updateVoteByLike(feedlike);
+        };
+        observer.dom.add(function updateVoteResult() {
+          const voteList = document.querySelectorAll('.WB_card_vote:not([yawf-card-vote])');
+          if (!voteList.length) return;
+          Array.from(voteList).forEach(vote => {
+            vote.setAttribute('yawf-card-vote', 'yawf-card-vote');
+            showVoteResult(vote);
+            watchLike(vote);
+          });
         });
-      };
-      const showVoteResult = async function (vote) {
-        const voteButtons = Array.from(vote.querySelectorAll('[action-type="feed_list_vote"], [action-type="yawf-feed_list_vote"]'));
-        if (!voteButtons.length) return;
-        const voteId = new URLSearchParams(voteButtons[0].getAttribute('action-data')).get('vote_id');
-        if (!voteId) return;
-        const voteResult = await request.voteDetail(voteId);
-        voteButtons.forEach(button => {
-          const actionData = new URLSearchParams(button.getAttribute('action-data'));
-          const id = actionData.get('vote_items');
-          const item = voteResult.vote_info.option_list.find(item => item.id === id);
-          button.dataset.partNum = item.part_num.replace('票', '人');
-          button.dataset.partRatio = item.part_ratio;
-          button.style.setProperty('--part-ratio', item.part_ratio / 100);
+        document.addEventListener('click', event => {
+          const target = event.target;
+          if (!(target instanceof HTMLElement)) return;
+          const vote = target.closest('[action-type="yawf-feed_list_vote"]');
+          if (!vote) return;
+          ui.alert({
+            id: 'yawf-vote-block',
+            icon: 'warn',
+            title: i18n.voteTitle,
+            text: i18n.voteText,
+          });
         });
-        const feedlike = vote.closest('.WB_feed_expand, .WB_feed_type');
-        updateVoteByLike(feedlike);
-      };
-      const watchLike = function (/** @type {HTMLElement} */vote) {
-        const feedlike = vote.closest('.WB_feed_expand, .WB_feed_type');
-        const like = feedlike.querySelector('[action-type="fl_like"]');
-        const observer = new MutationObserver(() => { updateVoteByLike(feedlike); });
-        observer.observe(like, { subtree: true, attributes: true, attributeFilter: ['class'] });
-        updateVoteByLike(feedlike);
-      };
-      observer.dom.add(function updateVoteResult() {
-        const voteList = document.querySelectorAll('.WB_card_vote:not([yawf-card-vote])');
-        if (!voteList.length) return;
-        Array.from(voteList).forEach(vote => {
-          vote.setAttribute('yawf-card-vote', 'yawf-card-vote');
-          showVoteResult(vote);
-          watchLike(vote);
-        });
-      });
-      document.addEventListener('click', event => {
-        const target = event.target;
-        if (!(target instanceof HTMLElement)) return;
-        const vote = target.closest('[action-type="yawf-feed_list_vote"]');
-        if (!vote) return;
-        ui.alert({
-          id: 'yawf-vote-block',
-          icon: 'warn',
-          title: i18n.voteTitle,
-          text: i18n.voteText,
-        });
-      });
-      css.append(`
+        css.append(`
 .WB_card_vote.WB_card_vote .vote_con1 .item { position: relative; z-index: 1; overflow: hidden; text-align: left; }
 .WB_card_vote.WB_card_vote .vote_con1 .item::after { content: attr(data-part-num) ; float: right; }
 .WB_card_vote.WB_card_vote .vote_con1 .item::before { content: " "; width: calc(var(--part-ratio) * 100%); top: 0; left: 0; bottom: 0; margin: 0; position: absolute; z-index: -1; }
@@ -17978,14 +18092,55 @@ ${[0, 1, 2, 3, 4].map(index => `
 .WB_card_vote.WB_card_vote .vote_con1 .item_rt.S_txt1 .bg,
 .WB_card_vote.WB_card_vote .vote_con1 .item::before { background-color: #80808022; }
 `);
-      const smallImage = feeds.layout.smallImage;
-      if (smallImage.isEnabled()) {
-        css.append(`
+        const smallImage = feeds.layout.smallImage;
+        if (smallImage.isEnabled()) {
+          css.append(`
 .WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn a { margin-right: -1px; }
 .WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn a { margin-left: -1px; }
 .WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn::after { left: 10px; }
 .WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn::after { right: 10px; }
 `);
+        }
+      } else {
+        const noticeKey = strings.randKey();
+
+        util.inject(function (rootKey, noticeKey) {
+          const yawf = window[rootKey];
+          const vueSetup = yawf.vueSetup;
+
+          vueSetup.transformComponentsRenderByTagName('feed-card-vote', function (nodeStruct, Nodes) {
+            const { vNode, addClass, removeClass } = Nodes;
+
+            const options = Array.from(nodeStruct.querySelectorAll('x-woo-panel'));
+            options.forEach(option => {
+              addClass(option, this.$style.itemed);
+              removeClass(option, this.$style.itemAni);
+              const optionVNode = vNode(option);
+              if (optionVNode.data && optionVNode.data.on && optionVNode.data.on.click) {
+                const vote = this;
+                optionVNode.data.on.click = (function (onclick) {
+                  return function (...args) {
+                    if (!vote.isParted && vote.$parent && !vote.$parent.data.attitudes_status) {
+                      const event = new CustomEvent(noticeKey, {});
+                      window.dispatchEvent(event);
+                      return;
+                    }
+                    onclick(...args);
+                  };
+                }(optionVNode.data.on.click));
+              }
+            });
+          });
+        }, util.inject.rootKey, noticeKey);
+
+        window.addEventListener(noticeKey, function () {
+          ui.alert({
+            id: 'yawf-vote-block',
+            icon: 'warn',
+            title: i18n.voteTitle,
+            text: i18n.voteText,
+          });
+        });
       }
     },
   });
@@ -21575,11 +21730,10 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 
   const i18n = util.i18n;
 
-  const showRuleDialog = function (event, tab = null) {
+  const showRuleDialog = function (tab = null) {
     try {
       rule.dialog(tab);
     } catch (e) { util.debug('Error while prompting dialog: %o', e); }
-    event.preventDefault();
   };
   document.documentElement.addEventListener('yawf-showRuleDialog', function () {
     showRuleDialog();
