@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.83
+// @version           4.0.84
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -535,8 +535,121 @@
   const yawf = window.yawf = window.yawf || {};
   const util = yawf.util = yawf.util || {};
 
-  util.inject = function (func, ...args) {
-    const executeScript = `void(${func}(${args.map(value => JSON.stringify(value))}));`;
+  const strings = util.strings;
+
+  let idIndex = 0;
+  const id = type => `${type}_${++idIndex}_${strings.randKey()}`;
+
+  const baseKey = '_yawf_' + strings.randKey();
+  const replyKey = baseKey + '_ack';
+
+  class Callback {
+    constructor() {
+      this.id = id('callback');
+    }
+    invoke(...params) {
+      const resp = new CustomEvent(replyKey, {
+        detail: JSON.stringify({ type: 'callback', callback: this.id, params }),
+      });
+      window.dispatchEvent(resp);
+    }
+  };
+
+  /** @type {Map<string, (event: CustomEvent) => any>} */
+  const callbacks = new Map();
+  let firstCall = true;
+
+  const init = function ([baseKey, replyKey]) {
+    let invokeIndex = 0;
+    /** @type {Map<number, (value: any) => any>} */
+    const resolver = new Map();
+    /** @type {Map<string, Set<() => any>>} */
+    const callbacks = new Map();
+    const invoke = function ({ method: key }) {
+      return async function (...params) {
+        const id = ++invokeIndex;
+        const result = new Promise(resolve => {
+          resolver.set(id, resolve);
+        });
+        const event = new CustomEvent(baseKey, {
+          detail: JSON.stringify({ id, method: key, params }),
+        });
+        window.dispatchEvent(event);
+        return result;
+      };
+    };
+    const callback = function ({ callback: key }) {
+      const collection = new Set();
+      callbacks.set(key, collection);
+      return {
+        addCallback: function (func) { collection.add(func); },
+        removeCallback: function (func) { collection.delete(func); },
+      };
+    };
+    window.addEventListener(replyKey, function (event) {
+      const detail = JSON.parse(event.detail);
+      if (detail.type === 'response') {
+        resolver.get(detail.id)(detail.error ? Promise.reject(detail.error) : detail.result);
+        resolver.delete(detail.id);
+      } else if (detail.type === 'callback') {
+        Array.from(callbacks.get(detail.callback) || []).forEach(func => {
+          try { func(...detail.params); } catch (e) { /* */ }
+        });
+      }
+    });
+    const run = function (func, params) {
+      const parsed = JSON.parse(params, function (key, val) {
+        if (typeof val === 'object' && val._type === 'method' && val.invoke === baseKey) {
+          return invoke(val);
+        } else if (typeof val === 'object' && val._type === 'callback' && val.invoke === baseKey) {
+          return callback(val);
+        } else {
+          return val;
+        }
+      });
+      return func(...parsed);
+    };
+    Object.defineProperty(window, baseKey, {
+      configurable: false,
+      enumerable: false,
+      writable: false,
+      value: run,
+    });
+  };
+
+  window.addEventListener(baseKey, function (event) {
+    const detail = JSON.parse(event.detail);
+    const { id, method, params } = detail;
+    let result = null, error = null;
+    try {
+      result = callbacks.get(method)(...params);
+    } catch (e) {
+      error = e;
+    }
+    const resp = new CustomEvent(baseKey + '_ack', {
+      detail: JSON.stringify({ type: 'response', id, error, result }),
+    });
+    window.dispatchEvent(resp);
+  });
+
+  const serialize = function (param) {
+    return JSON.stringify(JSON.stringify(param, function (key, val) {
+      if (typeof val === 'function') {
+        const key = id('method');
+        callbacks.set(key, val);
+        return { _type: 'method', method: key, invoke: baseKey };
+      } else if (typeof val === 'object' && val instanceof Callback) {
+        const key = val.id;
+        return { _type: 'callback', callback: key, invoke: baseKey };
+      }
+      return val;
+    }));
+  };
+
+  util.inject = function (func, ...params) {
+    if (typeof func !== 'function') return Promise.reject();
+    const setupScript = firstCall ? `(${init}(${JSON.stringify([baseKey, replyKey])}));` : ''; firstCall = false;
+    const executeScript = setupScript + `window[${JSON.stringify(baseKey)}](${func},${serialize(params)});`;
     const script = document.createElement('script');
     script.textContent = executeScript;
     const target = document.head || document.body || document.documentElement;
@@ -553,6 +666,7 @@
       }, 10);
     });
   };
+  util.inject.Callback = Callback;
 
 }());
 //#endregion
@@ -1388,12 +1502,18 @@
         }
       });
       util.inject(function (url, callback, key) {
-        window[callback] = function (data) {
-          const event = new CustomEvent(key, {
-            detail: { data: JSON.stringify(data) },
-          });
-          window.dispatchEvent(event);
-        };
+        Object.defineProperty(window, callback, {
+          configurable: true,
+          enumerable: false,
+          writable: true,
+          value: function (data) {
+            const event = new CustomEvent(key, {
+              detail: { data: JSON.stringify(data) },
+            });
+            window.dispatchEvent(event);
+            delete window[callback];
+          },
+        });
         const reject = function () {
           const event = new CustomEvent(key, { detail: { } });
           window.dispatchEvent(event);
@@ -3638,12 +3758,16 @@ html { background: #f9f9fa; }
       });
     };
 
+    const getTag = function (vm) {
+      const name = kebabCase(vm.$options.name || vm.$options._componentTag);
+      return name;
+    };
     /** @type {WeakMap<Object, Node>} */
     const vmToHtmlNode = new WeakMap();
     const seenElement = new WeakSet();
     const markElement = function (node, vm) {
       if (!vm || vm.$el !== node) return;
-      const tag = kebabCase((vm.$options || {})._componentTag);
+      const tag = getTag(vm);
       if (tag && node instanceof Element) {
         if (node.hasAttribute('yawf-component-tag')) {
           const tags = [...new Set([...node.getAttribute('yawf-component-tag').split(' '), tag]).values()].join(' ');
@@ -3736,7 +3860,7 @@ html { background: #f9f9fa; }
         if (seen.has(target)) return;
         seen.add(target);
         for (let vm of eachVmForNode(target)) {
-          if (kebabCase(vm.$options._componentTag) === kebabCase(tag)) callback(vm);
+          if (getTag(vm) === kebabCase(tag)) callback(vm);
         }
       };
       if (watch) {
@@ -3757,7 +3881,7 @@ html { background: #f9f9fa; }
 
     vueSetup.closest = function (vm, tag) {
       for (let p = vm; p; p = p.$parent) {
-        if (kebabCase((p.$options || {})._componentTag) === kebabCase(tag)) {
+        if (getTag(p) === kebabCase(tag)) {
           return p;
         }
       }
@@ -3792,14 +3916,20 @@ html { background: #f9f9fa; }
       }
       return '';
     };
-    const buildResult = function buildResult(vnode) {
+    const getVNodeTag = function (vnode) {
+      if (!vnode.componentOptions) return vnode.tag;
+      const opt = vnode.componentOptions;
+      const tag = opt.Ctor && opt.Ctor.options && opt.Ctor.options.name || opt.tag;
+      return 'x-' + kebabCase(tag);
+    };
+    const buildNodes = function buildNodes(vnode) {
       if (Array.isArray(vnode)) {
         const fragment = document.createElement('x-yawf-fragment');
         fragment.__vnode__ = vnode;
-        vnode.forEach(child => { fragment.appendChild(buildResult(child)); });
+        vnode.forEach(child => { fragment.appendChild(buildNodes(child)); });
         return fragment;
       }
-      const tag = vnode.componentOptions ? 'x-' + kebabCase(vnode.componentOptions.tag) : vnode.tag;
+      const tag = getVNodeTag(vnode);
       if (tag == null && vnode.text) {
         const node = document.createTextNode(vnode.text);
         node.__vnode__ = vnode;
@@ -3819,7 +3949,7 @@ html { background: #f9f9fa; }
       if (staticClassName) node.className += ' ' + staticClassName;
       const children = childArray(vnode);
       if (children) children.forEach(vnode => {
-        node.appendChild(buildResult(vnode));
+        node.appendChild(buildNodes(vnode));
       });
       return node;
     };
@@ -3830,7 +3960,7 @@ html { background: #f9f9fa; }
       if (refNode === null) {
         return appendChild(parentNode, newVNode);
       }
-      if (newNode == null) newNode = buildResult(newVNode);
+      if (newNode == null) newNode = buildNodes(newVNode);
       const refVNode = vNode(refNode);
       const parentVNode = vNode(parentNode);
       const children = childArray(parentVNode);
@@ -3842,7 +3972,7 @@ html { background: #f9f9fa; }
     const appendChild = function (parentNode, newVNode, newNode) {
       const parentVNode = vNode(parentNode);
       const children = childArray(parentVNode, true);
-      if (newNode == null) newNode = buildResult(newVNode);
+      if (newNode == null) newNode = buildNodes(newVNode);
       children.push(newVNode);
       parentNode.appendChild(newNode);
       return newNode;
@@ -3858,7 +3988,7 @@ html { background: #f9f9fa; }
     };
     const wrapNode = function (chroot) {
       return function (refNode, newVNode) {
-        const newNode = buildResult(newVNode);
+        const newNode = buildNodes(newVNode);
         const refVNode = vNode(refNode);
         const parentNode = refNode.parentNode;
         if (!parentNode) {
@@ -3903,38 +4033,54 @@ html { background: #f9f9fa; }
       if (!slots || !slots[slotName]) return;
       slots[slotName] = transformRender(slots[slotName], transformer);
     };
-
-    const transformRender = function (render, transformer) {
-      return function (createElement) {
-        let vdom = render.call(this, createElement);
-        const chroot = root => { vdom = root; };
-        const nodeStruct = buildResult(vdom);
-        try {
-          transformer.call(this, nodeStruct, {
-            vNode,
-            insertBefore,
-            removeChild,
-            appendChild,
-            wrapNode: wrapNode(chroot),
-            unwrapNode: changeRoot(chroot),
-            addClass,
-            removeClass,
-            createElement,
-            h: createElement,
-            transformSlot,
-          });
-        } catch (e) {
-          console.error('YAWF Error while inject render: %o', e);
-        }
-        return vdom;
+    const builder = function (createElement) {
+      return function (root) {
+        const replaceRoot = newRoot => { root = newRoot; };
+        const nodeStruct = buildNodes(root);
+        const Nodes = {
+          vNode,
+          replaceRoot,
+          insertBefore,
+          removeChild,
+          appendChild,
+          wrapNode: wrapNode(replaceRoot),
+          unwrapNode: changeRoot(replaceRoot),
+          addClass,
+          removeClass,
+          createElement,
+          h: createElement,
+          transformSlot,
+        };
+        return {
+          nodeStruct,
+          Nodes,
+          getRoot: () => root,
+        };
       };
     };
-    const transformComponentRender = vueSetup.transformComponentRender = function (vm, transformer) {
-      vm.$options.render = transformRender(vm.$options.render, transformer);
+
+    const transformRender = function (render, transformer, { raw = false } = {}) {
+      if (raw) {
+        return function (createElement) {
+          return transformer(render).call(this, createElement, { builder: builder(createElement) });
+        };
+      }
+      return function (createElement) {
+        const { nodeStruct, Nodes, getRoot } = builder(createElement)(render.call(this, createElement));
+        try {
+          transformer.call(this, nodeStruct, Nodes);
+        } catch (e) {
+          console.error('YAWF Error while inject render [%o]: %o', transformer, e);
+        }
+        return getRoot();
+      };
     };
-    vueSetup.transformComponentsRenderByTagName = function (tag, transformer) {
+    const transformComponentRender = vueSetup.transformComponentRender = function (vm, transformer, configs = {}) {
+      vm.$options.render = transformRender(vm.$options.render, transformer, configs);
+    };
+    vueSetup.transformComponentsRenderByTagName = function (tag, transformer, configs = {}) {
       eachComponentVM(tag, function (vm) {
-        transformComponentRender(vm, transformer);
+        transformComponentRender(vm, transformer, configs);
         vm.$forceUpdate();
       });
     };
@@ -6464,6 +6610,39 @@ throw new Error('YAWF | chat page found, skip following executions');
    */
   observer.comment = new FilterObserver();
 
+  const hideFeedCss = css.add(`
+.yawf-WBV6 [action-type="feed_list_item"]:not([yawf-feed]),
+.yawf-WBV6 [node-type="feed_list"] .WB_feed_type:not([yawf-feed]),
+.yawf-WBV6 .list_ul[node-type="feed_list_commentList"] .list_li:not([yawf-comment]),
+.yawf-WBV6 .list_ul[node-type="comment_list"] .list_li:not([yawf-comment])
+.yawf-WBV6 { visibility: hidden; opacity: 0; }
+.yawf-WBV6 [action-type="feed_list_item"]:not([yawf-feed]) [node-type="feed_list"] .WB_feed_type:not([yawf-feed]) { display: none; }
+.yawf-WBV6 [yawf-feed]:not([yawf-feed-display]), [yawf-comment]:not([yawf-comment-display]) { visibility: hidden; opacity: 0; }
+.yawf-WBV6 [yawf-comment-display="hide"], [yawf-feed-display="hide"] { display: none; }
+.yawf-WBV6 [yawf-feed-display="fold"] { position: relative; }
+.yawf-WBV6 [yawf-feed-display="fold"] > * { display: none; }
+.yawf-WBV6 [yawf-feed-display="fold"]::before { text-align: center; padding: 10px 20px; display: block; opacity: 0.6; line-height: 16px; }
+.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_detail { display: none; }
+.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail:not(:hover) { display: block; overflow: hidden; padding: 0 20px 27px; }
+.yawf-WBV6 .WB_feed.WB_feed_v3 .WB_feed_type[yawf-feed-display="fold"].WB_feed_vipcover:hover .WB_feed_detail { padding-top: 0; }
+.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_handle { display: none; }
+
+.yawf-WBV7 .yawf-feed-filter-loading,
+.yawf-WBV7 .yawf-feed-filter-running { visibility: hidden; }
+.yawf-WBV7 .yawf-resize-sensor,
+.yawf-WBV7 .yawf-resize-sensor-expand,
+.yawf-WBV7 .yawf-resize-sensor-shrink { position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; z-index: -1; visibility: hidden; }
+.yawf-WBV7 .yawf-resize-sensor-expand .yawf-resize-sensor-child { width: 100000px; height: 100000px; }
+.yawf-WBV7 .yawf-resize-sensor-shrink .yawf-resize-sensor-child { width: 200%; height: 200%; }
+.yawf-WBV7 .yawf-resize-sensor-child { position: absolute; top: 0; left: 0; transition: 0s; }
+`);
+
+  init.onLoad(function () {
+    css.append(`.yawf-WBV6 [yawf-feed-display="fold"]::before { content: ${i18n.foldReason}; }`);
+  });
+  init.onDeinit(() => {
+    hideFeedCss.remove();
+  });
 
   init.onLoad(function () {
     if (yawf.WEIBO_VERSION === 6) {
@@ -6634,55 +6813,8 @@ throw new Error('YAWF | chat page found, skip following executions');
             vm.data.splice(index, 1);
           }
         };
-        const setupSizeSensor = function (vm, attr) {
-          const element = vm.$refs.yawf_resize_sensor_element;
-          const expand = vm.$refs.yawf_resize_sensor_expand;
-          const shrink = vm.$refs.yawf_resize_sensor_shrink;
-
-          let lastHeight = element.offsetHeight, newHeight = null;
-          let dirty = false;
-          vm.$set(vm[attr], '_yawf_Size', lastHeight);
-          const reset = function () {
-            expand.scrollTop = 1e6;
-            shrink.scrollTop = 1e6;
-          };
-          reset();
-          const onResized = function () {
-            if (lastHeight === newHeight) return;
-            lastHeight = newHeight;
-            vm[attr]._yawf_Size = newHeight;
-            reset();
-          };
-          const onScroll = function () {
-            newHeight = element.offsetHeight;
-            if (dirty) return;
-            dirty = true;
-            requestAnimationFrame(function () {
-              dirty = false;
-              onResized();
-            });
-          };
-          expand.addEventListener('scroll', onScroll);
-          shrink.addEventListener('scroll', onScroll);
-        };
-        const addResizeSensor = function (vdom, h) {
-          // 在末尾插入一个用来侦测元素高度的元素
-          const children = vdom.children || vdom.componentOptions.children;
-          if (Array.isArray(children)) {
-            const resizeSensor = h('div', { key: 'yawf-resize-sensor', class: 'yawf-resize-sensor', ref: 'yawf_resize_sensor_element' }, [
-              h('div', { class: 'yawf-resize-sensor-expand', ref: 'yawf_resize_sensor_expand' }, [
-                h('div', { class: 'yawf-resize-sensor-child' }),
-              ]),
-              h('div', { class: 'yawf-resize-sensor-shrink', ref: 'yawf_resize_sensor_shrink' }, [
-                h('div', { class: 'yawf-resize-sensor-child' }),
-              ]),
-            ]);
-            children.push(resizeSensor);
-          }
-        };
         vueSetup.eachComponentVM('feed', function (vm) {
           const feedScroll = vueSetup.closest(vm, 'feed-scroll');
-          const scrollItem = vueSetup.closest(vm, 'scroll');
 
           // 在渲染一条 feed 时，额外插入过滤状态的标识
           vm.$options.render = (function (render) {
@@ -6707,49 +6839,94 @@ throw new Error('YAWF | chat page found, skip following executions');
               if (this.data._yawf_FilterReason) {
                 result.data.attrs['data-yawf-filter-reason'] = this.data._yawf_FilterReason;
               }
-              if (scrollItem) {
-                addResizeSensor(result, createElement);
-              }
               return result;
             };
           }(vm.$options.render));
           vm.$forceUpdate();
-          // 每次高度变化时更新 _yawf_Size 属性
+          // 每次高度变化时更新 _yawf_Height 属性
           // 我也不知道这段代码怎么工作起来的，反正网上的代码就这逻辑，然后也真的能用
-          if (scrollItem) {
-            vm.$nextTick(function () {
-              setupSizeSensor(vm, 'data');
-            });
-          }
-        });
-        ['comment', 'repost', 'reply'].forEach(componentName => {
-          vueSetup.eachComponentVM(componentName, function (vm) {
-            const scrollItem = vueSetup.closest(vm, 'scroll');
-            vm.$options.render = (function (render) {
-              return function (createElement) {
-                const result = render.call(this, createElement);
-                if (scrollItem) {
-                  addResizeSensor(result, createElement);
-                }
-                return result;
-              };
-            }(vm.$options.render));
-            vm.$forceUpdate();
-            if (scrollItem) {
-              vm.$nextTick(function () {
-                setupSizeSensor(vm, 'item');
-              });
-            }
-          });
         });
         vueSetup.eachComponentVM('scroll', function (vm) {
-          if (['repost-comment-list', 'feed-scroll'].some(id => vueSetup.closest(id))) {
-            // vm.__proto__.sizeDependencies 里面存的是原本关心的属性
-            // 那个没什么统一的好办法给改过来，但是我们可以在 vm 自己身上设置这个属性来覆盖它
-            // 因为设置的这个属性我们并不期望以后还有变化，所以我们不需要让它过 Vue 的生命周期 $forceUpdate 就是了
-            Object.defineProperty(vm, 'sizeDependencies', { value: ['_yawf_Size'], configurable: true, enumerable: true, writable: true });
-            vm.$forceUpdate();
-          }
+          const wrapRaf = function (f) {
+            let dirty = false;
+            return function () {
+              if (dirty) return;
+              dirty = true;
+              requestAnimationFrame(function () {
+                dirty = false;
+                f();
+              });
+            };
+          };
+          // vm.__proto__.sizeDependencies 里面存的是原本关心的属性
+          // 那个没什么统一的好办法给改过来，但是我们可以在 vm 自己身上设置这个属性来覆盖它
+          // 因为设置的这个属性我们并不期望以后还有变化，所以我们不需要让它过 Vue 的生命周期 $forceUpdate 就是了
+          Object.defineProperty(vm, 'sizeDependencies', { value: ['_yawf_Height'], configurable: true, enumerable: true, writable: true });
+          const onScroll = function (index) {
+            return wrapRaf(function () {
+              const container = vm.$refs['yawf_resize_sensor_element_' + index];
+              if (!container) return;
+              vm.data[index]._yawf_Height = container.clientHeight;
+              const [expand, shrink] = container.children;
+              expand.scrollTop = 1e5;
+              shrink.scrollTop = 1e5;
+            });
+          };
+          const updateSensor = wrapRaf(function () {
+            const allSensor = Object.keys(vm.$refs).filter(key => key.startsWith('yawf_resize_sensor_element_'));
+            allSensor.forEach(key => {
+              const container = vm.$refs[key];
+              if (!container) return;
+              const [expand, shrink] = container.children;
+              if (expand.scrollTop !== 0 && shrink.scrollTop !== 0) return;
+              const index = Number.parseInt(key.slice('yawf_resize_sensor_element_'.length), 10);
+              expand.scrollTop = 1e5;
+              shrink.scrollTop = 1e5;
+              vm.data[index]._yawf_Height = container.clientHeight;
+            });
+          });
+          vm.$scopedSlots.content = (function (content) {
+            return function (data) {
+              const createElement = vm._self._c, h = createElement;
+              const raw = content.call(this, data);
+              const { index } = data;
+              const resizeSensor = h('div', {
+                class: 'yawf-resize-sensor',
+                ref: 'yawf_resize_sensor_element_' + index,
+              }, [
+                h('div', {
+                  class: 'yawf-resize-sensor-expand',
+                  on: { scroll: onScroll(index) },
+                }, [
+                  h('div', { class: 'yawf-resize-sensor-child' }),
+                ]),
+                h('div', {
+                  class: 'yawf-resize-sensor-shrink',
+                  on: { scroll: onScroll(index) },
+                }, [
+                  h('div', { class: 'yawf-resize-sensor-child' }),
+                ]),
+              ]);
+              const result = Array.isArray(raw) ? raw : [raw];
+              result.push(resizeSensor);
+              updateSensor();
+              return result;
+            };
+          }(vm.$scopedSlots.content));
+          vm.$watch(function () { return this.data; }, function () {
+            if (!Array.isArray(vm.data)) return;
+            vm.data.forEach(item => {
+              const descriptor = Object.getOwnPropertyDescriptor(item, '_yawf_Height');
+              if (!descriptor) {
+                vm.$set(item, '_yawf_Height', 0);
+              } else if (!descriptor.set) {
+                const size = vm._yawf_Height;
+                delete vm._yawf_Height;
+                vm.$set(item, '_yawf_Height', size);
+              }
+            });
+          });
+          vm.$forceUpdate();
         });
         window.addEventListener(key, function (event) {
           const detail = JSON.parse(event.detail);
@@ -6795,39 +6972,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     tw: '"已折疊 @" attr(yawf-feed-author) " 的一條微博"',
     en: '"A feed posted by @" attr(yawf-feed-author)',
   };
-
-  const hideFeedCss = css.add(`
-.yawf-WBV6 [action-type="feed_list_item"]:not([yawf-feed]),
-.yawf-WBV6 [node-type="feed_list"] .WB_feed_type:not([yawf-feed]),
-.yawf-WBV6 .list_ul[node-type="feed_list_commentList"] .list_li:not([yawf-comment]),
-.yawf-WBV6 .list_ul[node-type="comment_list"] .list_li:not([yawf-comment])
-.yawf-WBV6 { visibility: hidden; opacity: 0; }
-.yawf-WBV6 [action-type="feed_list_item"]:not([yawf-feed]) [node-type="feed_list"] .WB_feed_type:not([yawf-feed]) { display: none; }
-.yawf-WBV6 [yawf-feed]:not([yawf-feed-display]), [yawf-comment]:not([yawf-comment-display]) { visibility: hidden; opacity: 0; }
-.yawf-WBV6 [yawf-comment-display="hide"], [yawf-feed-display="hide"] { display: none; }
-.yawf-WBV6 [yawf-feed-display="fold"] { position: relative; }
-.yawf-WBV6 [yawf-feed-display="fold"] > * { display: none; }
-.yawf-WBV6 [yawf-feed-display="fold"]::before { text-align: center; padding: 10px 20px; display: block; opacity: 0.6; line-height: 16px; }
-.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_detail { display: none; }
-.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail:not(:hover) { display: block; overflow: hidden; padding: 0 20px 27px; }
-.yawf-WBV6 .WB_feed.WB_feed_v3 .WB_feed_type[yawf-feed-display="fold"].WB_feed_vipcover:hover .WB_feed_detail { padding-top: 0; }
-.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_handle { display: none; }
-
-.yawf-WBV7 .yawf-feed-filter-loading,
-.yawf-WBV7 .yawf-feed-filter-running { visibility: hidden; }
-.yawf-WBV7 .yawf-resize-sensor,
-.yawf-WBV7 .yawf-resize-sensor-expand,
-.yawf-WBV7 .yawf-resize-sensor-shrink { position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; z-index: -1; visibility: hidden; }
-.yawf-WBV7 .yawf-resize-sensor-expand .yawf-resize-sensor-child { width: 1000000px; height: 1000000px; }
-.yawf-WBV7 .yawf-resize-sensor-shrink .yawf-resize-sensor-child { width: 200%; height: 200%; }
-.yawf-WBV7 .yawf-resize-sensor-child { position: absolute; top: 0; left: 0; transition: 0s; }
-`);
-  init.onLoad(function () {
-    css.append(`.yawf-WBV6 [yawf-feed-display="fold"]::before { content: ${i18n.foldReason}; }`);
-  });
-  init.onDeinit(() => {
-    hideFeedCss.remove();
-  });
 
   // 单条微博页面永远不应当隐藏微博
   observer.feed.filter(function singleWeiboPageUnsetRule() {
@@ -14767,14 +14911,8 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
         const yawf = window[rootKey];
         const vueSetup = yawf.vueSetup;
 
-        // 顶部导航栏也叫 nav
-        // 左侧那个玩意儿也叫 nav
-        // 大概是用 compontent 挂出来的，这个没办法
-        vueSetup.transformComponentsRenderByTagName('nav', function (nodeStruct, Nodes) {
+        vueSetup.transformComponentsRenderByTagName('weibo-top-nav-base', function (nodeStruct, Nodes) {
           const { h, wrapNode, vNode } = Nodes;
-
-          if (!nodeStruct.firstChild) return;
-          if (((vNode(nodeStruct.firstChild).data || {}).attrs || {}).role !== 'navigation') return;
 
           const navIcon = nodeStruct.querySelector('span');
           if (navIcon) {
@@ -14791,12 +14929,28 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 
           const items = nodeStruct.querySelectorAll('x-woo-tab-item > x-woo-box ');
           [...items].forEach((item, index) => {
-            if (!this.navItems[index].link) return;
+            const navItem = this.navItems[index];
+            let url = navItem.link;
+            if (!url && navItem.name === 'profile') {
+              url = `/u/${this.$root.config.uid}`;
+            }
+            if (!url) return;
             const linkVNode = h('a', {
               class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
-              attrs: { href: this.navItems[index].link },
+              attrs: { href: url },
             });
             wrapNode(item, linkVNode);
+          });
+        });
+        vueSetup.transformComponentsRenderByTagName('links', function (nodeStruct, Nodes) {
+          const { vNode } = Nodes;
+          const items = nodeStruct.querySelectorAll('a');
+          [...items].forEach((item, index) => {
+            const linkItem = this.linkItems[index];
+            const vnode = vNode(item);
+            if (!vnode.data) vnode.data = {};
+            if (!vnode.data.atttrs) vnode.data.atttrs = {};
+            vnode.data.attrs.href = linkItem.href;
           });
         });
       }, util.inject.rootKey);
@@ -15195,7 +15349,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     parent: sidebar.sidebar,
     template: () => i18n.showAllGroups,
     ainit() {
-      if (yawf.weiboVersion === 6) {
+      if (yawf.WEIBO_VERSION === 6) {
         css.append(`
 .lev_Box .levmore { display: none !important; }
 .lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }
@@ -15210,22 +15364,20 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
             navSpecial: 'special',
             navMutual: 'friends',
           };
-          vueSetup.eachComponentVM('home', function (vm) {
-            if (Array.isArray(vm.customList)) {
-              vm.$watch(function () { return this.customTabs; }, function () {
-                if (vm.customTabs && Array.isArray(vm.customTabs.list)) {
-                  vm.customList = [...vm.customTabs.list];
-                }
-              }, { immediate: true });
-              vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
-                const { removeChild } = Nodes;
-
-                const moreButton = nodeStruct.querySelector('x-woo-box:last-child');
-                if (nodeStruct.lastChild === moreButton) {
-                  removeChild(nodeStruct, moreButton);
-                }
-              });
+          vueSetup.eachComponentVM('left-nav-home', function (vm) {
+            if (!Array.isArray(vm.customList)) return;
+            vm.customShowCount = Infinity;
+            if (vm.customTabs && Array.isArray(vm.customTabs.list)) {
+              vm.customList = [...vm.customTabs.list];
             }
+            vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+              const { removeChild } = Nodes;
+
+              const moreButton = nodeStruct.querySelector('x-woo-box:last-child');
+              if (nodeStruct.lastChild === moreButton) {
+                removeChild(nodeStruct, moreButton);
+              }
+            });
           });
         }, util.inject.rootKey);
       }
@@ -15248,7 +15400,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
         const yawf = window[rootKey];
         const vueSetup = yawf.vueSetup;
 
-        vueSetup.transformComponentsRenderByTagName('home', function (nodeStruct, Nodes) {
+        vueSetup.transformComponentsRenderByTagName('left-nav-home', function (nodeStruct, Nodes) {
           const { h, wrapNode, vNode } = Nodes;
 
           const items = nodeStruct.querySelectorAll('x-nav-item');
@@ -16807,13 +16959,14 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       }
 
       // 标记一下时间和来源
-      const headInfo = nodeStruct.querySelector('x-feed-head-info');
+      const headInfo = nodeStruct.querySelector('x-head-info');
       addClass(headInfo, 'yawf-feed-head-info');
     });
 
-    vueSetup.transformComponentsRenderByTagName('feed-head-info', function (nodeStruct, Nodes) {
+    vueSetup.transformComponentsRenderByTagName('head-info', function (nodeStruct, Nodes) {
       const { h, insertBefore, removeChild, addClass, vNode } = Nodes;
 
+      addClass(nodeStruct, 'yawf-head-info');
       // 微博详情
       const link = nodeStruct.querySelector('a');
       addClass(link, 'yawf-feed-time');
@@ -16842,7 +16995,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
     vueSetup.transformComponentsRenderByTagName('feed-content', function (nodeStruct, Nodes) {
       const { vNode, addClass, wrapNode, h } = Nodes;
 
-      const headInfo = nodeStruct.querySelector('x-feed-head-info');
+      const headInfo = nodeStruct.querySelector('x-head-info');
       if (headInfo) {
         addClass(headInfo, 'yawf-feed-head-info yawf-feed-head-info-retweet');
         const headInfoVNode = vNode(headInfo);
@@ -16923,8 +17076,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       }
     });
 
-    vueSetup.transformComponentsRenderByTagName('feed-card-video', function (nodeStruct, Nodes) {
-      const { addClass } = Nodes;
+    vueSetup.transformComponentsRenderByTagName('feed-video', function (nodeStruct, Nodes) {
+      const { addClass, removeChild, appendChild, h } = Nodes;
       // 视频
       addClass(nodeStruct, 'yawf-feed-video');
       if (this.isPlaying) {
@@ -16943,12 +17096,12 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       addClass(content, 'yawf-feed-card-content');
     });
 
-    vueSetup.transformComponentsRenderByTagName('feed-card-article', function (nodeStruct, Nodes) {
+    vueSetup.transformComponentsRenderByTagName('feed-article', function (nodeStruct, Nodes) {
       const { addClass } = Nodes;
       addClass(nodeStruct, 'yawf-feed-card-article');
     });
 
-    vueSetup.transformComponentsRenderByTagName('feed-card-vote', function (nodeStruct, Nodes) {
+    vueSetup.transformComponentsRenderByTagName('feed-vote', function (nodeStruct, Nodes) {
       const { addClass } = Nodes;
       addClass(nodeStruct, 'yawf-feed-card-vote');
     });
@@ -18102,45 +18255,75 @@ ${[0, 1, 2, 3, 4].map(index => `
 `);
         }
       } else {
-        const noticeKey = strings.randKey();
-
-        util.inject(function (rootKey, noticeKey) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
-
-          vueSetup.transformComponentsRenderByTagName('feed-card-vote', function (nodeStruct, Nodes) {
-            const { vNode, addClass, removeClass } = Nodes;
-
-            const options = Array.from(nodeStruct.querySelectorAll('x-woo-panel'));
-            options.forEach(option => {
-              addClass(option, this.$style.itemed);
-              removeClass(option, this.$style.itemAni);
-              const optionVNode = vNode(option);
-              if (optionVNode.data && optionVNode.data.on && optionVNode.data.on.click) {
-                const vote = this;
-                optionVNode.data.on.click = (function (onclick) {
-                  return function (...args) {
-                    if (!vote.isParted && vote.$parent && !vote.$parent.data.attitudes_status) {
-                      const event = new CustomEvent(noticeKey, {});
-                      window.dispatchEvent(event);
-                      return;
-                    }
-                    onclick(...args);
-                  };
-                }(optionVNode.data.on.click));
-              }
-            });
-          });
-        }, util.inject.rootKey, noticeKey);
-
-        window.addEventListener(noticeKey, function () {
+        const voteBlock = function () {
           ui.alert({
             id: 'yawf-vote-block',
             icon: 'warn',
             title: i18n.voteTitle,
             text: i18n.voteText,
           });
-        });
+        };
+
+        util.inject(function (rootKey, voteBlock) {
+          const yawf = window[rootKey];
+          const vueSetup = yawf.vueSetup;
+
+          vueSetup.eachComponentVM('feed-vote', function (vm) {
+
+            vm.setVote = (function (setVote) {
+              return function (id) {
+                if (!this.isParted) {
+                  const feedData = this.$parent && this.$parent.data;
+                  if (feedData && !feedData.attitudes_status) {
+                    voteBlock();
+                    return;
+                  }
+                }
+                setVote(id);
+              }.bind(vm);
+            }(vm.setVote));
+
+            vueSetup.transformComponentRender(vm, function (render) {
+              return function (createElement, { builder }) {
+                if (this.voteObject.parted) {
+                  return render.call(this, createElement);
+                }
+                // 将当前的投票元素伪装成已参加过投票的状态
+                const wrap = Object.create(this, {
+                  getAniStyle: { value: this.constructor.options.methods.getAniStyle },
+                  isParted: { value: true },
+                  firstParted: { value: true },
+                  voteObject: {
+                    value: Object.create(this.voteObject, {
+                      parted: { value: 1 },
+                    }),
+                  },
+                });
+                wrap.getAniStyle = wrap.getAniStyle.bind(wrap);
+                const { nodeStruct, Nodes, getRoot } = builder(render.call(wrap, createElement));
+                // 去掉分享投票的按钮
+                const { removeChild, vNode } = Nodes;
+                const share = nodeStruct.querySelector(`[class|="${this.$style.btnB}"]`);
+                removeChild(share.parentNode, share);
+                // 修正投票按钮的事件
+                const buttons = nodeStruct.querySelectorAll('x-woo-panel');
+                if (buttons.length === this.voteObject.vote_list.length) {
+                  Array.from(buttons).forEach((button, index) => {
+                    const optionId = this.voteObject.vote_list[index].id;
+                    const buttonVNode = vNode(button);
+                    buttonVNode.data.nativeOn.click = buttonVNode.data.on.click = () => {
+                      this.vote(optionId);
+                    };
+                  });
+                }
+                return getRoot();
+              };
+            }, { raw: true });
+
+            vm.$forceUpdate();
+          });
+        }, util.inject.rootKey, voteBlock);
+
       }
     },
   });
@@ -19737,6 +19920,7 @@ ${selection ? `
   });
 
   media.useBuiltInVideoPlayer = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'feed_built_in_video_player',
     version: 60,
     parent: media.media,
@@ -19755,77 +19939,78 @@ ${selection ? `
       i: { type: 'bubble', icon: 'warn', template: () => i18n.useBuiltInVideoPlayerDetail },
     },
     ainit() {
-      const rule = this;
-      const getVideoSource = function (videoSources) {
-        const videoSourceData = new URLSearchParams(videoSources);
-        const quality = rule.ref.quality.getConfig();
-        const qualityTypes = [];
-        const allKeys = Array.from(videoSourceData).map(([key]) => key);
-        if (quality === 'best') {
-          const available = allKeys.filter(Number).sort((x, y) => y - x);
-          qualityTypes.push(...available.map(q => String(q)));
-        }
-        qualityTypes.push(videoSourceData.get('qType'), ...allKeys);
-        const qualityType = qualityTypes.find(q => /^https?(?::|%3A)/i.test(videoSourceData.get(q)));
-        let videoSource = videoSourceData.get(qualityType);
-        // 有时候会被转义两次，所以要再额外处理一次，原因不明
-        if (/^https?%3A/i.test(videoSource)) {
-          videoSource = decodeURIComponent(videoSource);
-        }
-        // http 会直接被浏览器拦掉，但是有的历史数据是 http
-        videoSource = videoSource.replace(/^http:/, 'https:');
-        return videoSource;
-      };
-      const replaceWeiboVideoPlayer = function replaceWeiboVideoPlayer() {
-        const containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
-        containers.forEach(function (container) {
-          const smallImage = yawf.rules.feeds.layout.smallImage.getConfig();
-          const cover = container.querySelector('[node-type="fl_h5_video_pre"] img');
-          if (!cover) return;
-          const video = container.querySelector('video');
-          if (video) video.src = 'data:text/plain,42';
-          const videoSource = getVideoSource(container.getAttribute('video-sources'));
-          const newContainer = document.createElement('li');
-          newContainer.className = container.className;
-          newContainer.classList.add('yawf-WB_video');
-          const newVideo = document.createElement('video');
-          newVideo.poster = cover.src;
-          newVideo.src = videoSource;
-          newVideo.preload = 'none';
-          newVideo.controls = !smallImage;
-          newVideo.autoplay = false;
-          const updatePlayState = function () {
-            const isPlaying = !newVideo.paused || newVideo.seeking;
-            if (isPlaying) newContainer.setAttribute('yawf-video-play', '');
-            else newContainer.removeAttribute('yawf-video-play');
-            if (smallImage) newVideo.controls = isPlaying;
-          };
-          newVideo.addEventListener('play', updatePlayState);
-          newVideo.addEventListener('pause', updatePlayState);
-          if (smallImage) {
-            newContainer.addEventListener('click', () => {
-              if (!newContainer.hasAttribute('yawf-video-play')) newVideo.play();
-            });
-            const tip = document.createElement('i');
-            tip.className = 'W_icon_tag_v2';
-            tip.textContent = i18n.mediaVideoType;
-            newContainer.appendChild(tip);
+      if (yawf.WEIBO_VERSION === 6) {
+        const rule = this;
+        const getVideoSource = function (videoSources) {
+          const videoSourceData = new URLSearchParams(videoSources);
+          const quality = rule.ref.quality.getConfig();
+          const qualityTypes = [];
+          const allKeys = Array.from(videoSourceData).map(([key]) => key);
+          if (quality === 'best') {
+            const available = allKeys.filter(Number).sort((x, y) => y - x);
+            qualityTypes.push(...available.map(q => String(q)));
           }
-          newVideo.volume = rule.ref.volume.getConfig() / 100;
-          if (rule.ref.memorize.getConfig()) {
-            newVideo.addEventListener('volumechange', () => {
-              rule.ref.volume.setConfig(Math.round(newVideo.volume * 100));
-            });
-            newVideo.addEventListener('play', () => {
-              newVideo.volume = rule.ref.volume.getConfig() / 100;
-            });
+          qualityTypes.push(videoSourceData.get('qType'), ...allKeys);
+          const qualityType = qualityTypes.find(q => /^https?(?::|%3A)/i.test(videoSourceData.get(q)));
+          let videoSource = videoSourceData.get(qualityType);
+          // 有时候会被转义两次，所以要再额外处理一次，原因不明
+          if (/^https?%3A/i.test(videoSource)) {
+            videoSource = decodeURIComponent(videoSource);
           }
-          newContainer.appendChild(newVideo);
-          container.parentNode.replaceChild(newContainer, container);
-        });
-      };
-      observer.dom.add(replaceWeiboVideoPlayer);
-      css.append(`
+          // http 会直接被浏览器拦掉，但是有的历史数据是 http
+          videoSource = videoSource.replace(/^http:/, 'https:');
+          return videoSource;
+        };
+        const replaceWeiboVideoPlayer = function replaceWeiboVideoPlayer() {
+          const containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
+          containers.forEach(function (container) {
+            const smallImage = yawf.rules.feeds.layout.smallImage.getConfig();
+            const cover = container.querySelector('[node-type="fl_h5_video_pre"] img');
+            if (!cover) return;
+            const video = container.querySelector('video');
+            if (video) video.src = 'data:text/plain,42';
+            const videoSource = getVideoSource(container.getAttribute('video-sources'));
+            const newContainer = document.createElement('li');
+            newContainer.className = container.className;
+            newContainer.classList.add('yawf-WB_video');
+            const newVideo = document.createElement('video');
+            newVideo.poster = cover.src;
+            newVideo.src = videoSource;
+            newVideo.preload = 'none';
+            newVideo.controls = !smallImage;
+            newVideo.autoplay = false;
+            const updatePlayState = function () {
+              const isPlaying = !newVideo.paused || newVideo.seeking;
+              if (isPlaying) newContainer.setAttribute('yawf-video-play', '');
+              else newContainer.removeAttribute('yawf-video-play');
+              if (smallImage) newVideo.controls = isPlaying;
+            };
+            newVideo.addEventListener('play', updatePlayState);
+            newVideo.addEventListener('pause', updatePlayState);
+            if (smallImage) {
+              newContainer.addEventListener('click', () => {
+                if (!newContainer.hasAttribute('yawf-video-play')) newVideo.play();
+              });
+              const tip = document.createElement('i');
+              tip.className = 'W_icon_tag_v2';
+              tip.textContent = i18n.mediaVideoType;
+              newContainer.appendChild(tip);
+            }
+            newVideo.volume = rule.ref.volume.getConfig() / 100;
+            if (rule.ref.memorize.getConfig()) {
+              newVideo.addEventListener('volumechange', () => {
+                rule.ref.volume.setConfig(Math.round(newVideo.volume * 100));
+              });
+              newVideo.addEventListener('play', () => {
+                newVideo.volume = rule.ref.volume.getConfig() / 100;
+              });
+            }
+            newContainer.appendChild(newVideo);
+            container.parentNode.replaceChild(newContainer, container);
+          });
+        };
+        observer.dom.add(replaceWeiboVideoPlayer);
+        css.append(`
 li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video_pre"],
 li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video_disp"] { display: none !important; }
 .yawf-WB_video { transition: width, height 0.2s; }
@@ -19834,30 +20019,123 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 .yawf-WB_video .W_icon_tag_v2 { z-index: 1; }
 .WB_video[yawf-video-play] .W_icon_tag_v2 { display: none !important; }
 `);
-      util.inject(function () {
-        const FakeVideoPlayer = function e() { };
-        FakeVideoPlayer.prototype.thumbnail = function () { };
-        FakeVideoPlayer.prototype.playStatus = function () { };
-        if (window.VideoPlayer) {
-          window.VideoPlayer = FakeVideoPlayer;
-          return;
-        }
-        let globalVideoPlayer = void 0;
-        Object.defineProperty(window, 'VideoPlayer', {
-          get() { return globalVideoPlayer; },
-          set(_) { globalVideoPlayer = FakeVideoPlayer; },
-          enumerable: true,
-          configurable: false,
+        util.inject(function () {
+          const FakeVideoPlayer = function e() { };
+          FakeVideoPlayer.prototype.thumbnail = function () { };
+          FakeVideoPlayer.prototype.playStatus = function () { };
+          if (window.VideoPlayer) {
+            window.VideoPlayer = FakeVideoPlayer;
+            return;
+          }
+          let globalVideoPlayer = void 0;
+          Object.defineProperty(window, 'VideoPlayer', {
+            get() { return globalVideoPlayer; },
+            set(_) { globalVideoPlayer = FakeVideoPlayer; },
+            enumerable: true,
+            configurable: false,
+          });
         });
-      });
-      // 这几行分别是不显示视频弹层按钮，显示全屏按钮，以及点视频时不弹层
-      // 因为直播视频没办法替换成原生播放器，所以这两个功能还需要保留
-      // 这里直接把这几个功能放在这里，不单独做一个功能了
-      css.append(`
+        // 这几行分别是不显示视频弹层按钮，显示全屏按钮，以及点视频时不弹层
+        // 因为直播视频没办法替换成原生播放器，所以这两个功能还需要保留
+        // 这里直接把这几个功能放在这里，不单独做一个功能了
+        css.append(`
 .wbv-pop-control { display: none !important; }
 .wbv-fullscreen-control { display: block !important; }
 .wbv-pop-layer { display: none !important; }
 `);
+      } else {
+        const rule = this;
+        const configs = {
+          memorize: this.ref.memorize.getConfig(),
+          volume: this.ref.volume.getConfig(),
+          quality: this.ref.quality.getConfig(),
+        };
+
+        const updateVolume = function (volume) {
+          if (typeof volume !== 'number') return;
+          if (volume < 0 || volume > 100 || !Number.isFinite(volume)) return;
+          rule.ref.volume.setConfig(Math.round(volume));
+        };
+
+        util.inject(function (rootKey, configs, updateVolume) {
+          const yawf = window[rootKey];
+          const vueSetup = yawf.vueSetup;
+
+          const { quality, memorize } = configs;
+          let volume = configs.volume;
+
+          const setVolume = function (video) {
+            const target = Math.round(volume) / 100;
+            if (video.paused && video.volume !== target) {
+              video.volume = target;
+            }
+          };
+          const onClick = function (event) {
+            this.isPlaying = true;
+            setVolume(event.target);
+            this.$refs.video.play();
+          };
+          const onPlay = function (event) {
+            this.isPlaying = true;
+            setVolume(event.target);
+          };
+          const onVolumechange = function (event) {
+            if (!memorize) return;
+            const video = event.target;
+            volume = Math.round(video.volume * 100);
+            updateVolume(volume);
+            Array.from(document.querySelectorAll('.yawf-feed-video')).forEach(setVolume);
+          };
+          const onLoadstart = function (event) {
+            setVolume(event.target);
+          };
+
+          vueSetup.transformComponentsRenderByTagName('feed-video', function (nodeStruct, Nodes) {
+            const { removeChild, appendChild, h } = Nodes;
+
+            const isPlaying = this.isPlaying;
+            // 去掉原本渲染的视频播放器
+            while (nodeStruct.firstChild) {
+              removeChild(nodeStruct, nodeStruct.firstChild);
+            }
+            // 我们自己画一个视频播放器上去
+            const playback = this.playbackList.find(x => x.play_info && x.play_info.url);
+            const url = quality === 'best' && playback ? playback.play_info.url : this.videoSrc;
+            const videoWrap = h('div', {
+              ref: 'videoWrapper',
+              class: [this.$style.videoBox],
+            }, [h('div', {
+              ref: 'videoContainer',
+              class: [this.$style.placeholder],
+            }, [h('div', {
+              class: [this.$style.video, 'wbp-video'],
+            }, [h('video', {
+              ref: 'video',
+              class: ['yawf-video', 'yawf-feed-video', 'wbpv-tech'],
+              attrs: {
+                src: url.replace(/^https?:\/\//, '//'),
+                poster: this.thumbnail.replace(/^https?:\/\//, '//'),
+                preload: 'auto',
+                controls: isPlaying ? true : false,
+              },
+              on: {
+                click: isPlaying ? null : onClick.bind(this),
+                play: onPlay.bind(this),
+                volumechange: onVolumechange.bind(this),
+                loadstart: onLoadstart.bind(this),
+              },
+            })])])]);
+            appendChild(nodeStruct, videoWrap);
+          });
+
+        }, util.inject.rootKey, configs, updateVolume);
+
+        css.append(String.raw`
+.yawf-feed-video:not(.yawf-feed-video-actived) .wbp-video::before { content: "\e001"; font-family: krvdficon; font-weight: 400; font-style: normal; font-size: 36px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; opacity: 0.85; text-shadow: 0 2px 4px rgba(0,0,0,.2); pointer-events: none; }
+.yawf-feed-video:not(.yawf-feed-video-actived) .wbp-video:hover::before { color: #ff8200; }
+`);
+
+      }
     },
   });
 
@@ -21735,20 +22013,12 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       rule.dialog(tab);
     } catch (e) { util.debug('Error while prompting dialog: %o', e); }
   };
-  document.documentElement.addEventListener('yawf-showRuleDialog', function () {
-    showRuleDialog();
-  });
 
   init.onLoad(() => {
     if (yawf.WEIBO_VERSION !== 7) return;
-    util.inject(function (rootKey) {
+    util.inject(function (rootKey, showRuleDialog) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
-
-      const showRuleDialog = function () {
-        const event = new CustomEvent('yawf-showRuleDialog');
-        document.documentElement.dispatchEvent(event);
-      };
 
       vueSetup.eachComponentVM('weibo-top-nav', function (vm) {
         vm.configs.splice(-1, 0, {
@@ -21768,7 +22038,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
           }.bind(vm);
         }(vm.configHandle));
       });
-    }, util.inject.rootKey);
+    }, util.inject.rootKey, showRuleDialog);
   });
 
 }());
