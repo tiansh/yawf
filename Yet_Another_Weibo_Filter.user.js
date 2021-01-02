@@ -3324,6 +3324,7 @@ html { background: #f9f9fa; }
 //#region custom implementation redirect
 ; (function () {
   if (location.host !== 't.cn') return;
+  setTimeout(()=>window.location=document.getElementsByClassName("link")[0].innerText, 5000)  //Autoredirect After 5 sec
   throw new Error('YAWF | t.cn page found, skip following executions');
 }());
 //#endregion
