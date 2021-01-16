@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.88
+// @version           4.0.89
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -3281,32 +3281,38 @@ html { background: #f9f9fa; }
 `;
   document.documentElement.appendChild(hideAll);
 
+  const fixUrl = function (url) {
+    // 显示的字符编码是错的
+    // 原本 UTF-8 编码的网址用 Latin-1 展示的
+    let fixEncodingUrl = url;
+    try {
+      const codePoints = [...url].map(x => x.charCodeAt());
+      if (codePoints.every(code => code < 256)) {
+        fixEncodingUrl = new TextDecoder().decode(new Uint8Array(codePoints));
+      }
+    } catch (e) {
+      fixEncodingUrl = url;
+    }
+    if (!/https?:\/\/.*/i.test(fixEncodingUrl)) return null;
+    return fixEncodingUrl;
+  };
+
   const onLoad = function () {
     configPromise.then(() => {
       const useRedirect = config.global.key('short_url_wo_confirm').get();
       if (!useRedirect) return false;
       let url = [
+        () => document.querySelector('.open-url a').href,
         () => document.querySelector('.link').textContent.trim(),
         () => document.querySelector('.url_view_code').textContent.trim(),
       ].reduce((url, getter) => {
         if (url) return url;
         try {
-          return getter();
+          return fixUrl(getter());
         } catch (e) { return null; }
       }, null);
-      // 显示的字符编码是错的
-      // 原本 UTF-8 编码的网址用 Latin-1 展示的
-      let fixEncodingUrl = null;
-      try {
-        const codePoints = [...url].map(x => x.charCodeAt());
-        if (codePoints.every(code => code < 256)) {
-          fixEncodingUrl = new TextDecoder().decode(new Uint8Array(codePoints));
-        }
-      } catch (e) {
-        fixEncodingUrl = url;
-      }
-      if (!/https?:\/\/.*/i.test(fixEncodingUrl)) return false;
-      location.replace(fixEncodingUrl);
+      if (!url) return false;
+      location.replace(url);
       return true;
     }).then(r => r, () => false).then(redirect => {
       if (!redirect) hideAll.remove();
