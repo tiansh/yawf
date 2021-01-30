@@ -75,10 +75,17 @@ module.exports = {
     'no-throw-literal': ['warn'],
     'no-eval': ['error'],
     'no-implied-eval': ['error'],
-    'no-unused-vars': ['off'],
+    "no-unused-vars": ["error", {
+      "varsIgnorePattern": "^_",
+      "vars": "all",
+      "args": "none",
+      "ignoreRestSiblings": true,
+      "caughtErrors": "none"
+    }],
     'no-implicit-globals': ['error'],
     'no-new-wrappers': ['warn'],
     'no-proto': ['warn'],
+    'no-restricted-globals': ['error', 'browser'],
     'operator-assignment': ['warn', 'always'],
 
     'no-extra-label': ['warn'],
