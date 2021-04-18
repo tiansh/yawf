@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.90
+// @version           4.0.91
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -260,9 +260,9 @@
 //#region @require yaofang://common/util/functools.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
-  const functools = util.functools = util.functools || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
+  const functools = util.functools = util.functools ?? {};
 
   /**
    * @template T
@@ -289,9 +289,9 @@
 //#region @require yaofang://common/util/urls.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
-  const urls = util.urls = util.urls || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
+  const urls = util.urls = util.urls ?? {};
 
   /**
    * @param {Blob} blob
@@ -312,8 +312,8 @@
 //#region @require yaofang://content/util/priority.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
 
   util.priority = {
     FIRST: 1000,
@@ -331,9 +331,9 @@
 //#region @require yaofang://content/util/debug.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
+  const yawf = window.yawf = window.yawf ?? {};
   const env = yawf.env;
-  const util = yawf.util = yawf.util || {};
+  const util = yawf.util = yawf.util ?? {};
 
   const prefix = env.config.consolePrefix;
   const pending = [];
@@ -404,8 +404,8 @@
 //#region @require yaofang://content/util/i18n.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
 
   let language = util.language = null;
   const i18n = new Proxy(Object.create(null), {
@@ -443,9 +443,8 @@
       else if (lower === 'zh-hk') language = 'hk';
       else if (lower === 'zh-tw') language = 'tw';
       else if (lower === 'en') language = 'en';
-      else return false;
+      else return;
       util.language = language;
-      return true;
     },
   });
 
@@ -455,7 +454,7 @@
 ; (function () {
 
   const yawf = window.yawf;
-  const util = yawf.util = yawf.util || {};
+  const util = yawf.util = yawf.util ?? {};
 
   const strings = util.strings = {};
 
@@ -484,9 +483,9 @@
 //#region @require yaofang://content/util/css.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
-  const css = util.css = util.css || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
+  const css = util.css = util.css ?? {};
 
   css.add = function (css) {
     const target = document.head || document.body || document.documentElement;
@@ -532,8 +531,8 @@
 //#region @require yaofang://content/util/inject.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
 
   const strings = util.strings;
 
@@ -592,7 +591,7 @@
         resolver.get(detail.id)(detail.error ? Promise.reject(detail.error) : detail.result);
         resolver.delete(detail.id);
       } else if (detail.type === 'callback') {
-        Array.from(callbacks.get(detail.callback) || []).forEach(func => {
+        Array.from(callbacks.get(detail.callback) ?? []).forEach(func => {
           try { func(...detail.params); } catch (e) { /* */ }
         });
       }
@@ -673,8 +672,8 @@
 //#region @require yaofang://content/util/keyboard.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
   const keyboard = util.keyboard = {};
 
   const CTRL = 2 ** 32, SHIFT = CTRL * 2, ALT = SHIFT * 2, META = ALT * 2, KEY = CTRL - 1, MAX = META * 2 - 1;
@@ -686,7 +685,7 @@
 
   // 对一个按键事件做编号
   keyboard.event = function (e) {
-    if (!e || !e.keyCode) return null;
+    if (!e?.keyCode) return null;
     return (e.keyCode >>> 0) +
       e.ctrlKey * CTRL +
       e.shiftKey * SHIFT +
@@ -710,13 +709,13 @@
 ; (function () {
 
   const yawf = window.yawf;
-  const util = yawf.util = yawf.util || {};
+  const util = yawf.util = yawf.util ?? {};
 
   const keyboard = util.keyboard;
   const i18n = util.i18n;
   const css = util.css;
 
-  const ui = util.ui = util.ui || {};
+  const ui = util.ui = util.ui ?? {};
 
   i18n.okButtonTitle = {
     cn: '确定',
@@ -796,8 +795,8 @@
     closeButton.title = i18n.closeButtonTitle;
     render(contentNode, Object.assign({}, ...[
       { close: closeButton },
-      button && button.ok ? { ok: okButton } : {},
-      button && button.cancel ? { cancel: cancelButton } : {},
+      button?.ok ? { ok: okButton } : {},
+      button?.cancel ? { cancel: cancelButton } : {},
     ]));
     // 定位对话框的位置
     const lastPos = { x: 0, y: 0 };
@@ -851,7 +850,7 @@
       cover.className = 'yawf-dialog-outer';
     }
     // 响应鼠标
-    if (!button || !button.ok && !button.cancel) {
+    if (!button?.ok && !button?.cancel) {
       buttonCollectionNode.parentNode.removeChild(buttonCollectionNode);
     } else {
       if (button.ok) okButton.addEventListener('click', event => {
@@ -867,12 +866,12 @@
     }
     closeButton.addEventListener('click', event => {
       if (!event.isTrusted) return;
-      (button && button.close || hide)();
+      (button?.close ?? hide)();
     });
     if (yawf.WEIBO_VERSION === 7) {
       mask.addEventListener('click', event => {
         if (!event.isTrusted) return;
-        (button && button.close || hide)();
+        (button?.close ?? hide)();
       });
     }
     // 响应按键
@@ -882,7 +881,7 @@
       const code = keyboard.event(event);
       if (code === keyboard.code.ENTER && button && button.ok) button.ok(event);
       else if (code === keyboard.code.ESC) {
-        (button && (button.cancel || button.close) || hide)(event);
+        (button?.cancel ?? button?.close ?? hide)(event);
       } else return;
       event.stopPropagation();
       event.preventDefault();
@@ -1187,9 +1186,9 @@
 //#region @require yaofang://content/util/dom.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
-  const dom = util.dom = util.dom || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
+  const dom = util.dom = util.dom ?? {};
 
 
   /**
@@ -1223,8 +1222,8 @@
 //#region @require yaofang://content/util/time.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
 
   const i18n = util.i18n;
   const time = util.time = {};
@@ -1464,7 +1463,7 @@
 //#region @require yaofang://common/network/network.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
+  const yawf = window.yawf = window.yawf ?? {};
   const network = yawf.network = {};
   const util = yawf.util;
 
@@ -1584,7 +1583,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   /** @typedef {{id:number,name:string,avatar:string,followee:number,follower:number}} UserInfo */
   /** @type {Map<number,UserInfo>} */
@@ -1658,7 +1657,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const userSuggestCache = new Map();
 
@@ -1671,7 +1670,7 @@
     url.searchParams.set('uid', yawf.init.page.$CONFIG.uid);
     util.debug('fetch url %s', url);
     const resp = await network.fetchText(url);
-    const users = Array.from((network.parseJson(resp).data || {}).user);
+    const users = Array.from(network.parseJson(resp).data?.user ?? []);
     const result = users.map(user => ({
       id: user.u_id + '',
       name: user.u_name,
@@ -1737,7 +1736,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const topicSuggest = async function (key) {
     const url = new URL('https://weibo.com/aj/mblog/topic?');
@@ -1768,7 +1767,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   // 这一次我们不再缓存长微博的原文了，因为现在微博神他妈可以编辑了
   const getLongText = async function (mid) {
@@ -1778,7 +1777,7 @@
     url.searchParams.set('__rnd', +new Date());
     util.debug('fetch url %s', url);
     const resp = await network.fetchJson(url);
-    const { html } = (resp || {}).data || {}; if (!html) return null;
+    const { html } = resp?.data ?? {}; if (!html) return null;
     util.debug('Got longtext for %o: %o', mid, { html });
     return html;
   };
@@ -1792,7 +1791,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const i18n = util.i18n;
   const functools = util.functools;
@@ -1837,7 +1836,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const dom = util.dom;
 
@@ -2091,7 +2090,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const catched = f => function (...args) {
     try {
@@ -2141,7 +2140,7 @@
       const avatar = new URL(img.src, 'https://weibo.com').href;
       return (catched(function () {
         // 关注了一个用户
-        const id = new URLSearchParams(img.getAttribute('usercard') || '').get('id');
+        const id = new URLSearchParams(img.getAttribute('usercard') ?? '').get('id');
         if (!id) return null;
         const href = `https://weibo.com/u/${id}`;
         const name = img.getAttribute('alt');
@@ -2155,9 +2154,9 @@
           name,
           description,
         };
-      })()) || (catched(function () {
+      })()) ?? (catched(function () {
         // 关注了一支股票
-        const id = (img.parentNode.href.match(/weibo.com\/p\/230677([a-zA-Z\d]+)/) || [])[1];
+        const id = img.parentNode.href.match(/weibo.com\/p\/230677([a-zA-Z\d]+)/)?.[1];
         if (!id) return null;
         const href = `https://weibo.com/p/230677${id}`;
         const description = `$${title}$`;
@@ -2170,7 +2169,7 @@
           name: description,
           description,
         };
-      })()) || (catched(function () {
+      })()) ?? (catched(function () {
         // 关注了一个话题
         const ref = img.parentNode.href.match(/huati.weibo.com/);
         if (!ref) return null;
@@ -2186,9 +2185,9 @@
           name: description,
           description: description,
         };
-      })()) || (catched(function () {
+      })()) ?? (catched(function () {
         const link = img.closest('[href]');
-        const href = link && link.getAttribute('href') || avatar;
+        const href = link?.getAttribute('href') ?? avatar;
         // 未知关注内容
         return {
           id: 'unknown-' + href,
@@ -2210,7 +2209,7 @@
   };
 
   const getFollowingPageV7 = async function (uid, page) {
-    const url = `https://weibo.com/ajax/friendships/friends?page=${page || 1}&uid=${uid}`;
+    const url = `https://weibo.com/ajax/friendships/friends?page=${page ?? 1}&uid=${uid}`;
     util.debug('Fetch Follow: fetch page %s', url);
     util.debug('fetch url %s', url);
     const resp = await network.fetchJson(url);
@@ -2270,7 +2269,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const voteDetail = async function (voteId) {
     const url = new URL('https://vote.weibo.com/h5/index/index');
@@ -2304,7 +2303,7 @@
 
   const yawf = window.yawf;
   const util = yawf.util;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const strings = util.strings;
 
@@ -2360,7 +2359,7 @@
   const util = yawf.util;
   const network = yawf.network;
 
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const getImage = function (url) {
     util.debug('fetch url %s', url);
@@ -2376,7 +2375,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const time = util.time;
 
@@ -2448,7 +2447,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const getAllImages = async function (author, mid) {
     const url = new URL(`https://weibo.com/${author}/${util.mid.encode(mid)}`);
@@ -2479,7 +2478,7 @@
   const yawf = window.yawf;
   const util = yawf.util;
   const network = yawf.network;
-  const request = yawf.request = yawf.request || {};
+  const request = yawf.request = yawf.request ?? {};
 
   const ignoreError = function (callback) {
     try { return callback(); } catch (e) { /* ignore */ }
@@ -2530,7 +2529,7 @@
   const whiteListAttribute = tagName => [
     ...({
       img: ['src'],
-    }[tagName] || []),
+    }[tagName] ?? []),
   ];
   const whiteListStyle = {
     'text-align': /^(?:left|right|center|justify)$/,
@@ -2635,7 +2634,7 @@
       const figure = document.createElement('figure');
       const img = figure.appendChild(document.createElement('img'));
       img.src = ori.src;
-      const descriptionText = description && description.textContent.trim();
+      const descriptionText = description?.textContent.trim();
       if (descriptionText) {
         const figcaption = figure.appendChild(document.createElement('figcaption'));
         figcaption.textContent = descriptionText;
@@ -2914,8 +2913,8 @@
 ; (function () {
 
   const browser = window.weBrowser;
-  const yawf = window.yawf = window.yawf || {};
-  const util = yawf.util = yawf.util || {};
+  const yawf = window.yawf = window.yawf ?? {};
+  const util = yawf.util = yawf.util ?? {};
 
   const storage = yawf.storage = {};
 
@@ -3092,7 +3091,7 @@
     }
     triggerOnChanged(key, newValue, oldValue) {
       const callbacks = this.watcher.get(key);
-      if (!callbacks || !callbacks.size) return;
+      if (!callbacks?.size) return;
       const clonedNewValue = newValue && JSON.parse(JSON.stringify(newValue));
       const clonedOldValue = oldValue && JSON.parse(JSON.stringify(oldValue));
       callbacks.forEach(callback => {
@@ -3229,10 +3228,10 @@
 //#region @require yaofang://content/storage/config.js
 ; (function () {
 
-  const yawf = window.yawf = window.yawf || {};
+  const yawf = window.yawf = window.yawf ?? {};
 
   const storage = yawf.storage;
-  const config = yawf.config = yawf.config || {};
+  const config = yawf.config = yawf.config ?? {};
   const pools = config.pools = [];
 
   config.init = async function (uid) {
@@ -3335,9 +3334,9 @@ html { background: #f9f9fa; }
 ; (function () {
 
   const yawf = window.yawf;
-  const init = yawf.init = yawf.init || {};
+  const init = yawf.init = yawf.init ?? {};
 
-  const page = init.page = init.page || {};
+  const page = init.page = init.page ?? {};
 
   // eslint-disable-next-line complexity
   page.typeV6 = function () {
@@ -3403,7 +3402,7 @@ html { background: #f9f9fa; }
       return 'group';
     }
     if (route.name === 'weibo') {
-      const channel = route.meta && route.meta.channel;
+      const channel = route.meta?.channel;
       // 热门
       if (channel === 'hot') return 'discover';
       // 首页
@@ -3454,10 +3453,10 @@ html { background: #f9f9fa; }
 
   const yawf = window.yawf;
   const util = yawf.util;
-  const init = yawf.init = yawf.init || {};
+  const init = yawf.init = yawf.init ?? {};
   yawf.WEIBO_VERSION = 0;
 
-  const page = init.page = init.page || {};
+  const page = init.page = init.page ?? {};
 
   const validPageReadyV6 = $CONFIG => {
     // 必须的参数
@@ -3504,7 +3503,7 @@ html { background: #f9f9fa; }
     for (const { callback } of list) {
       try {
         const result = callback();
-        if (result && typeof result.then === 'function') {
+        if (typeof result?.then === 'function') {
           await Promise.resolve(result);
         }
       } catch (e) {
@@ -3797,7 +3796,7 @@ html { background: #f9f9fa; }
           node.setAttribute('yawf-component-tag', tag);
         }
       }
-      const key = (vm.$vnode || {}).key;
+      const key = vm.$vnode?.key;
       if (key != null && node instanceof Element) {
         node.setAttribute('yawf-component-key', key);
       }
@@ -3870,7 +3869,7 @@ html { background: #f9f9fa; }
 
     Object.defineProperty(window, rootKey, { value: {}, enumerable: false, writable: false });
     const yawf = window[rootKey];
-    const vueSetup = yawf.vueSetup = (yawf.vueSetup || {});
+    const vueSetup = yawf.vueSetup = yawf.vueSetup ?? {};
 
     vueSetup.getRootVm = () => rootVm;
 
@@ -3942,7 +3941,7 @@ html { background: #f9f9fa; }
     const getVNodeTag = function (vnode) {
       if (!vnode.componentOptions) return vnode.tag;
       const opt = vnode.componentOptions;
-      const tag = opt.Ctor && opt.Ctor.options && opt.Ctor.options.name || opt.tag;
+      const tag = opt.Ctor?.options?.name ?? opt.tag;
       return 'x-' + kebabCase(tag);
     };
     const buildNodes = function buildNodes(vnode) {
@@ -3965,7 +3964,7 @@ html { background: #f9f9fa; }
       }
       const node = document.createElement(tag);
       node.__vnode__ = vnode;
-      const data = vnode.data || {};
+      const data = vnode.data ?? {};
       const className = parseClass(data.class);
       if (className) node.className = className;
       const staticClassName = parseClass(data.staticClass);
@@ -4038,7 +4037,7 @@ html { background: #f9f9fa; }
     };
     const classModify = function (node, add, remove) {
       const vnode = vNode(node);
-      vnode.data = vnode.data || {};
+      vnode.data = vnode.data ?? {};
       const added = parseClass([parseClass(vnode.data.class), ...add].join(' '));
       const removed = added.split(/\s+/).filter(c => !remove.includes(c)).join(' ');
       vnode.data.class = removed;
@@ -4117,8 +4116,8 @@ html { background: #f9f9fa; }
     };
     const transformSlot = function (node, slotName, transformer) {
       const vnode = vNode(node);
-      const slots = (vnode.data || {}).scopedSlots;
-      if (!slots || !slots[slotName]) return;
+      const slots = vnode.data?.scopedSlots;
+      if (!slots?.[slotName]) return;
       slots[slotName] = transformRender(slots[slotName], transformer);
     };
     const builder = function (createElement) {
@@ -4644,6 +4643,21 @@ if (!/^https:\/\/api.weibo.com\/chat/.test(location.href)) return;
     }
   }());
 
+  const newTabDefault = function () {
+    const base = document.createElement('base');
+    base.target = '_blank';
+    document.body.appendChild(base);
+  };
+  if (self !== top) {
+    if (document.body) {
+      newTabDefault();
+    } else {
+      document.addEventListener('DOMContentLoaded', event => {
+        newTabDefault();
+      });
+    }
+  }
+
   const disableUnloadPrompt = function () {
     util.inject(function disableBeforeUnload() {
       if (!window.onbeforeunload) {
@@ -4924,7 +4938,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         normal: ['child', 'splitter', 'text'],
         recursive: ['child', 'splitter', 'text', 'rule'],
         text: ['child', 'text'],
-      }[mode || 'normal']) || acceptTypes.filter(type => type !== 'rule');
+      }[mode ?? 'normal']) || acceptTypes.filter(type => type !== 'rule');
       const reference = document.createElement('label');
       const container = document.createElement('span');
       container.classList.add('yawf-config-item');
@@ -4958,7 +4972,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     let result;
     if (this.template) result = parse.call(this, isRoot);
     else result = this.render(isRoot);
-    return result && result.textContent.trim() || '';
+    return result?.textContent.trim() ?? '';
   })(parseTemplate(false)));
   /**
    * 渲染包括 render 和一个可选的 afterRender
@@ -5600,7 +5614,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       const contentLabel = content.querySelector('label');
       contentLabel.replaceWith(...Array.from(contentLabel.childNodes));
       const container = document.createElement('span');
-      const iconType = this.icon || 'ask';
+      const iconType = this.icon ?? 'ask';
       let icon;
       if (yawf.WEIBO_VERSION === 6) {
         icon = document.createElement('i');
@@ -5816,7 +5830,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       const updatePosition = () => {
         if (!suggestionItemsShown) return;
         const rects = input.getClientRects();
-        if (!rects || !rects[0]) return;
+        if (!rects?.[0]) return;
         const { left, width, bottom } = rects[0];
         const [oldLeft, oldWidth, oldBottom] = oldPosition;
         if (left !== oldLeft) suggestionContainer.style.left = Math.round(left) + 'px';
@@ -5888,12 +5902,12 @@ throw new Error('YAWF | chat page found, skip following executions');
           },
           [keyboard.code.UP]: () => {
             const old = getFocus();
-            const current = old && old.previousSibling || suggestionItems[suggestionItems.length - 1];
+            const current = old?.previousSibling ?? suggestionItems[suggestionItems.length - 1];
             if (current) setFocus(current);
           },
           [keyboard.code.DOWN]: () => {
             const old = getFocus();
-            const current = old && old.nextSibling || suggestionItems[0];
+            const current = old?.nextSibling ?? suggestionItems[0];
             if (current) setFocus(current);
           },
         }[keyboard.event(event)];
@@ -6065,7 +6079,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     async parseUserInput(value) {
       const username = value.replace(/^@/, '');
       const user = await request.userInfo({ name: username });
-      if (!user || !user.id) return null;
+      if (!user?.id) return null;
       return [{ id: user.id }];
     }
     async parseFastItem(value, type) {
@@ -6462,7 +6476,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const util = yawf.util;
   const init = yawf.init;
 
-  const observer = yawf.observer = yawf.observer || {};
+  const observer = yawf.observer = yawf.observer ?? {};
   observer.dom = {};
 
   const priority = util.priority;
@@ -6736,11 +6750,11 @@ throw new Error('YAWF | chat page found, skip following executions');
   init.onLoad(function () {
     if (yawf.WEIBO_VERSION === 6) {
       observer.feed.apply = function (feed, { result, filter = null, reason = null }) {
-        feed.setAttribute('yawf-feed-display', result || 'unset');
+        feed.setAttribute('yawf-feed-display', result ?? 'unset');
         if (result && result !== 'unset') {
           const author = feed.querySelector('.WB_detail > .WB_info > .W_fb[usercard]') ||
             feed.querySelector('.card-feed .info .name');
-          const authorName = author && author.textContent;
+          const authorName = author?.textContent;
           if (authorName) feed.setAttribute('yawf-feed-author', authorName);
           if (reason) feed.setAttribute('yawf-feed-reason', reason);
           util.debug('Feed filter %o -> %o by %o due to %o', feed, result, filter, reason);
@@ -6756,7 +6770,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         return this.active(parsed, false);
       };
       observer.comment.apply = function (comment, { result, filter = null, reason = null }) {
-        comment.setAttribute('yawf-comment-display', result || 'unset');
+        comment.setAttribute('yawf-comment-display', result ?? 'unset');
         if (result && result !== 'unset') {
           util.debug('Comment filter %o -> %o by %o due to %o', comment, result, filter, reason);
         }
@@ -6820,7 +6834,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.feed.apply = function (data, { result, filter = null, reason = null }) {
         const mid = data.mid;
         const event = new CustomEvent(key, {
-          detail: JSON.stringify({ action: 'result', mid, result: { result: result || 'unset', reason } }),
+          detail: JSON.stringify({ action: 'result', mid, result: { result: result ?? 'unset', reason } }),
         });
         document.documentElement.dispatchEvent(event);
         if (result) util.debug('Feed filter %o -> %o by %o due to %o', data, result, filter, reason);
@@ -6845,7 +6859,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 
         // 展开微博正文
         const longContentExpandForDetail = async function (vm, feedDetail) {
-          if (!feedDetail || !feedDetail.isLongText) return;
+          if (!feedDetail?.isLongText) return;
           if (feedDetail.longTextContent_raw) return;
           if ([true, false].includes(feedDetail._yawf_LongTextContentLoading)) return;
           vm.$set(feedDetail, '_yawf_LongTextContentLoading', true);
@@ -6857,7 +6871,7 @@ throw new Error('YAWF | chat page found, skip following executions');
             });
             if (!resp.data || !resp.data.ok || !resp.data.data) return;
             const data = resp.data.data;
-            if (data && data.longTextContent) {
+            if (data?.longTextContent) {
               feedDetail.longTextContent_raw = data.longTextContent;
               if (data.url_struct) feedDetail.url_struct = data.url_struct;
               if (data.topic_struct) feedDetail.topic_struct = data.topic_struct;
@@ -6952,29 +6966,22 @@ throw new Error('YAWF | chat page found, skip following executions');
           // 因为设置的这个属性我们并不期望以后还有变化，所以我们不需要让它过 Vue 的生命周期 $forceUpdate 就是了
           Object.defineProperty(vm, 'sizeDependencies', { value: ['_yawf_Height'], configurable: true, enumerable: true, writable: true });
           const sensorPrefix = 'yawf_resize_sensor_element_';
-          const resetSensor = function (container) {
-            const [expand, shrink] = container.children;
-            const height = container.clientHeight;
-            expand.scrollTop = 1e7;
-            shrink.scrollTop = 1e7;
-            return height;
-          };
-          const onScroll = function (index) {
-            return wrapRaf(function () {
-              const container = vm.$refs[sensorPrefix + index];
-              if (!container) return;
-              vm.data[index]._yawf_Height = resetSensor(container);
+          const observer = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+              const { target } = entry;
+              const index = Number.parseInt(target.id.slice(sensorPrefix.length), 10);
+              const data = vm?.data?.[index];
+              if (data) data._yawf_Height = target.clientHeight;
             });
-          };
+          });
           // 如果可以把 sensor 做成组件的话，其实只要 mount 时处理一下就行了，不过这里是没办法
           const updateSensor = wrapRaf(function () {
             const allSensor = Object.keys(vm.$refs).filter(key => key.startsWith(sensorPrefix));
             allSensor.map(key => Number.parseInt(key.slice(sensorPrefix.length), 10)).forEach(index => {
               const container = vm.$refs[sensorPrefix + index];
               if (!container) return;
-              const [expand, shrink] = container.children;
-              if (expand.scrollTop !== 0 && shrink.scrollTop !== 0) return;
-              vm.data[index]._yawf_Height = resetSensor(container);
+              observer.observe(container);
+              vm.data[index]._yawf_Height = container.clientHeight;
             });
           });
           vm.$scopedSlots.content = (function (content) {
@@ -6985,20 +6992,8 @@ throw new Error('YAWF | chat page found, skip following executions');
               const resizeSensor = h('div', {
                 class: 'yawf-resize-sensor',
                 ref: sensorPrefix + index,
-              }, [
-                h('div', {
-                  class: 'yawf-resize-sensor-expand',
-                  on: { '&scroll': onScroll(index) },
-                }, [
-                  h('div', { class: 'yawf-resize-sensor-child' }),
-                ]),
-                h('div', {
-                  class: 'yawf-resize-sensor-shrink',
-                  on: { '&scroll': onScroll(index) },
-                }, [
-                  h('div', { class: 'yawf-resize-sensor-child' }),
-                ]),
-              ]);
+                attrs: { id: sensorPrefix + index },
+              });
               const result = Array.isArray(raw) ? raw : [raw];
               result.push(resizeSensor);
               updateSensor();
@@ -7186,8 +7181,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       '<=': v => v <= verNum,
       '=': v => v === +verNum,
       '': v => v === +verNum,
-    }[verOp] || (() => true);
-    const [_wbverMatch, wbVerNum] = input.match(/\bweibo:v([67])\b/) || [];
+    }[verOp] ?? (() => true);
+    const [_wbverMatch, wbVerNum] = input.match(/\bweibo:v([67])\b/) ?? [];
     const weiboVersionTest = wbVerNum ? (v => Array.isArray(v) ? v.includes(+wbVerNum) : v === +wbVerNum) : () => true;
     layer.innerHTML = '';
     if (!searchTexts.length && verNum == null && wbVerNum == null) {
@@ -7574,7 +7569,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       ul.classList.add('yawf-fast-add-list');
       container.appendChild(ul);
       selectedItems.forEach(originalItem => {
-        const handlers = fastHandlers.get(originalItem.type) || [];
+        const handlers = fastHandlers.get(originalItem.type) ?? [];
         handlers.forEach(({ active, render, rules, radioGroup }) => {
           const item = JSON.parse(JSON.stringify(originalItem));
           items.push(item);
@@ -8343,7 +8338,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     const parser = detail ? fullTextParser : simpleTextParser;
     const elements = feedContentElements(target, { detail, long: true });
     if (elements) {
-      const texts = elements.map(element => parser(element) || '');
+      const texts = elements.map(element => parser(element) ?? '');
       return texts.join(detail ? '\u2028' : '\n');
     } else {
       return parser(target);
@@ -8402,7 +8397,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('id'));
     } else {
       return domList.map(dom => {
-        const [_, uid] = dom.pathname.match(/^\/(?:u\/)?(\d+)/) || [];
+        const uid = dom.pathname.match(/^\/(?:u\/)?(\d+)/)?.[1];
         return String(Number.parseInt(uid, 10));
       }).filter(uid => +uid);
     }
@@ -8470,7 +8465,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('id'));
     } else {
       return domList.map(dom => {
-        const [_, uid] = dom.pathname.match(/^\/(?:u\/)?(\d+)/) || [];
+        const uid = dom.pathname.match(/^\/(?:u\/)?(\d+)/)?.[1];
         return String(Number.parseInt(uid, 10));
       }).filter(uid => +uid);
     }
@@ -8664,7 +8659,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   commentParser.text = target => {
     const elements = commentContentElements(target);
     if (elements) {
-      const texts = elements.map(element => commentTextParser(element) || '');
+      const texts = elements.map(element => commentTextParser(element) ?? '');
       return texts.join('\n');
     } else {
       return commentTextParser(target);
@@ -8713,7 +8708,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const mid = mid => mid > 0 ? mid : null;
 
   feedParser.mid = feed => mid(feed.mid);
-  feedParser.omid = feed => mid((feed.retweeted_status || {}).mid);
+  feedParser.omid = feed => mid(feed.retweeted_status?.mid);
 
   feedParser.isFast = feed => feed.screen_name_suffix_new != null;
   feedParser.isFastForward = feed => feedParser.isFast(feed) && feed.ori_mid != null;
@@ -8740,7 +8735,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
   const text = feedParser.text = {};
   text.detail = feed => {
-    let text = [feed, feed.retweeted_status].filter(x => x && x.user).map(x => [
+    let text = [feed, feed.retweeted_status].filter(x => x?.user).map(x => [
       x.user.screen_name,
       x.longTextContent_raw || x.text_raw,
       x.source,
@@ -8748,8 +8743,8 @@ throw new Error('YAWF | chat page found, skip following executions');
     ]).reduce((x, y) => x.concat(y)).join('\u2028');
     if (Array.isArray(feed.url_struct)) {
       text = feed.url_struct.reduce(url => {
-        if (!url || !url.short_url || !/https?:\/\//.test(url.short_url)) return text;
-        return text.split(url.short_url).join((url.long_url || url.short_url) + '\ufff9' + (url.url_title || '') + '\ufffb');
+        if (!url?.short_url || !/https?:\/\//.test(url.short_url)) return text;
+        return text.split(url.short_url).join((url.long_url || url.short_url) + '\ufff9' + (url.url_title ?? '') + '\ufffb');
       }, text);
     }
     const topics = linkTopics(feed).map(t => `#${t}[超话]#`).join('');
@@ -8761,7 +8756,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       .map(x => x.longTextContent_raw || x.text_raw).join('\n');
     if (Array.isArray(feed.url_struct)) {
       text = feed.url_struct.reduce(url => {
-        if (!url || !url.short_url || !/https?:\/\//.test(url.short_url)) return text;
+        if (!url?.short_url || !/https?:\/\//.test(url.short_url)) return text;
         return text.split(url.short_url).join(url.url_title || url.long_URL || url.short_url);
       }, text);
     }
@@ -8773,7 +8768,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   mention.name = feed => {
     const text = [feed, feed.retweeted_status].filter(x => x)
       .map(x => x.longTextContent_raw || x.text_raw).join('\n');
-    const users = (text.match(/@[\u4e00-\u9fa5|\uE7C7-\uE7F3|\w_\-·]+/g) || []);
+    const users = text.match(/@[\u4e00-\u9fa5|\uE7C7-\uE7F3|\w_\-·]+/g) || [];
     return users.map(u => u.slice(1));
   };
   const topic = feedParser.topic = {};
@@ -8797,7 +8792,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   pics.info = feed => {
     const pics = [];
     [feed, feed.retweeted_status].forEach(fd => {
-      if (fd && fd.pic_infos) pics.push(...Object.keys(fd.pic_infos).map(k => fd.pic_infos[k]));
+      if (fd?.pic_infos) pics.push(...Object.keys(fd.pic_infos).map(k => fd.pic_infos[k]));
     });
     return pics;
   };
@@ -9182,7 +9177,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     const unfolding = unfold.map(async function (button) {
       const text = button.parentNode;
       if (!text.matches('.WB_text')) return;
-      if (text.nextElementSibling && text.nextElementSibling.matches('.WB_text')) return;
+      if (text.nextElementSibling?.matches('.WB_text')) return;
       const mid = new URLSearchParams(button.getAttribute('action-data')).get('mid');
       const html = await request.getLongText(mid);
       const full = text.cloneNode(false);
@@ -9405,7 +9400,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const checkListDiff = function (list, newList, lastChange) {
     // 如果之前没有数据，那么也就不用对比
     if (!Array.isArray(list)) return { add: [], lost: [], rename: [] };
-    const { add: lastAdd = [], lost: lastLost = [], rename: lastRename = [] } = lastChange || {};
+    const { add: lastAdd = [], lost: lastLost = [], rename: lastRename = [] } = lastChange ?? {};
     const sameFollowItem = (x, y) => x.id === y.id;
     const getName = x => x.name.replace(/@|\s?\(.*\)/g, '');
     // 先根据原有名单和未提交的更改恢复更早的名单
@@ -9495,8 +9490,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       reportUpdateStatus('checking');
       const newList = removeDuplicate(fetchData.getConfig().list);
       const oldList = lastList.getConfig();
-      const changeList = (lastChange.getConfig() || {});
-      const { add, lost, rename } = checkListDiff(oldList && oldList.list, newList, changeList);
+      const changeList = lastChange.getConfig() ?? {};
+      const { add, lost, rename } = checkListDiff(oldList?.list, newList, changeList);
 
       const finishTime = Date.now();
       lastList.setConfig({ timestamp: finishTime, list: newList });
@@ -9516,7 +9511,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   const clearFollowList = async function () {
     const { fetchData, lastList, lastChange } = followingContext;
-    const { timestamp, lock } = fetchData.getConfig() || {};
+    const { timestamp, lock } = fetchData.getConfig() ?? {};
     util.debug('Fetch Follow: clear fetching data.');
     if (timestamp > Date.now() - 600e3 && lock) {
       util.debug('Fetch Follow: Fetching seems in progress, and would break');
@@ -9802,14 +9797,14 @@ throw new Error('YAWF | chat page found, skip following executions');
       const fetchContext = fetchData.getConfig();
       const list = lastList.getConfig();
       if (fetchContext.lock) shouldUpdate = true;
-      if (enabled && (!list || !list.list)) shouldUpdate = true;
+      if (enabled && !list?.list) shouldUpdate = true;
       if (enabled && list && list.timestamp < Date.now() - frequency) shouldUpdate = true;
       if (shouldUpdate) {
         reportUpdateStatus('waiting');
         setTimeout(updateFollowList, 10e3);
       }
       const change = lastChange.getConfig();
-      if (change && change.timestamp) {
+      if (change?.timestamp) {
         if (init.page.type() === 'search') return;
         showChangeList(change).then(confirm => confirm && lastChange.setConfig(null));
       }
@@ -11022,7 +11017,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!list) return; // 搜索页面
         const container = list.parentNode;
         const sibling = container.previousSibling;
-        if (sibling && sibling.nodeType === Node.ELEMENT_NODE) {
+        if (sibling?.nodeType === Node.ELEMENT_NODE) {
           if (sibling.matches('.yawf-feed-filter-pause-notice')) return;
         }
         const wrap = document.createElement('div');
@@ -11215,7 +11210,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         const regexen = rule.ref.items.getConfigCompiled();
         const matchReg = regexen.find(regex => regex.test(text));
         if (!matchReg) return null;
-        const reason = ((matchReg + '').match(/\(\?=\|(([^)]|\\\))*)\)/) || [])[1] || i18n.regexContextReason;
+        const reason = (matchReg + '').match(/\(\?=\|(([^)]|\\\))*)\)/)?.[1] ?? i18n.regexContextReason;
         return { result: rule.feedAction, reason };
       }, { priority: this.priority });
       this.ref.items.addConfigListener(() => { observer.feed.rerun(); });
@@ -11334,7 +11329,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         const isShowRule = rule.feedAction === 'show';
         const isProfile = pageType === 'profile';
         const isGroup = pageType === 'group';
-        if ((fauthor || author) === oid && !isShowRule && isProfile) return null;
+        if ((fauthor ?? author) === oid && !isShowRule && isProfile) return null;
         const accounts = rule.ref.items.getConfig();
         const ignoreFastAuthor = isGroup && !isShowRule;
         const ignoreAuthor = ignoreFastAuthor && !feedParser.isFast(feed);
@@ -12154,7 +12149,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (feed.querySelector('[suda-uatrack*="1022-adFeedEvent"]')) return 'hide';
         } else {
           // 某某赞过的微博
-          if ((feed.title || {}).type === 'likerecommend') return 'hide';
+          if (feed.title?.type === 'likerecommend') return 'hide';
         }
         return null;
       }, { priority: 1e6 });
@@ -12311,7 +12306,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (feed.url_struct.find(url => /^https:\/\/m\.tb\.cn\//.test(url.long_url))) return 'hide';
           if (feed.url_struct.find(url => /buy\.png$/.test(url.url_type_pic))) return 'hide';
           if (feed.url_struct.find(url => /^https:\/\/shop\.sc\.weibo\.com\//.test(url.long_url))) return 'hide';
-          if (feed.url_struct.find(url => /shop_sc_weibo/.test((url.actionlog || {}).oid))) return 'hide';
+          if (feed.url_struct.find(url => /shop_sc_weibo/.test(url.actionlog?.oid))) return 'hide';
         }
         return null;
       });
@@ -12472,7 +12467,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           return 'hide';
         } else {
           if (feed.retweeted_status) {
-            if ((feed.retweeted_status.visible || {}).list_id > 0) return 'hide';
+            if (feed.retweeted_status.visible?.list_id > 0) return 'hide';
             if (feed.retweeted_status.deleted) return 'hide';
           }
           return null;
@@ -12545,12 +12540,12 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (feedParser.source.text(feed).includes('投票')) return 'hide';
         } else {
           if (Array.isArray(feed.url_struct)) {
-            if (feed.url_struct.find(url => /^1022:231716/.test((url.actionlog || {}).oid))) return 'hide';
+            if (feed.url_struct.find(url => /^1022:231716/.test(url.actionlog?.oid))) return 'hide';
             if (feed.url_struct.find(url => /https:\/\/vote\.weibo\.com\//.test(url.long_url))) return 'hide';
             if (feed.url_struct.find(url => /https:\/\/vote\.weibo\.com\//.test(url.ori_url))) return 'hide';
             if (feed.url_struct.find(url => /sinaweibo:\/\/browser\?url=https%3A%2F%2Fvote\.weibo\.com%2F/.test(url.ori_url))) return 'hide';
           }
-          if ((feed.page_info || {}).object_type === 'hudongvote') return 'hide';
+          if (feed.page_info?.object_type === 'hudongvote') return 'hide';
         }
         return null;
       });
@@ -12625,7 +12620,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           return 'hide';
         } else {
           const pics = feedParser.pics.info(feed);
-          if (pics.find(pic => (pic.pic_tags || []).length)) return 'hide';
+          if (pics.find(pic => pic.pic_tags?.length)) return 'hide';
           return null;
         }
       });
@@ -12827,7 +12822,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         } else {
           const pics = feedParser.pics.info(feed);
           // 付费图片
-          if (pics.find(pic => (pic.blur || {}).isPay)) return 'hide';
+          if (pics.find(pic => pic.blur?.isPay)) return 'hide';
           // 付费文章的特征找不到！
         }
         return null;
@@ -12934,9 +12929,10 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   ; (function (linkTypes) {
     Object.keys(linkTypes).sort().forEach(id => {
-      const { type, name, recognizer } = linkTypes[id];
+      const { type, name, recognizer, v7Type, v7Recognizer } = linkTypes[id];
       const pascalCaseType = type.replace(/^./, c => c.toUpperCase());
       link[type] = rule.Rule({
+        weiboVersion: [6, 7],
         id: `filter_${pascalCaseType}`,
         version: 30,
         parent: link.link,
@@ -12946,8 +12942,17 @@ throw new Error('YAWF | chat page found, skip following executions');
           observer.feed.filter(function feedWithSpecialLinkFilter(feed) {
             if (!rule.isEnabled()) return null;
             if (init.page.type() === type) return null;
-            if (feed.querySelector(`a[suda-uatrack*="1022-${type}"]`)) return 'hide';
-            if (recognizer && recognizer(feed)) return 'hide';
+            if (yawf.WEIBO_VERSION === 6) {
+              if (feed.querySelector(`a[suda-uatrack*="1022-${type}"]`)) return 'hide';
+              if (recognizer?.(feed)) return 'hide';
+            } else {
+              if (v7Type) {
+                const urls = feed.url_struct || [];
+                const url = urls.find(url => url.url_type_pic?.includes(v7Type + '.png'));
+                if (url) return 'hide';
+              }
+              if (v7Recognizer?.(feed)) return 'hide';
+            }
             return null;
           });
           this.addConfigListener(() => { observer.feed.rerun(); });
@@ -12957,18 +12962,22 @@ throw new Error('YAWF | chat page found, skip following executions');
   }({
     100101: {
       type: 'place',
+      v7Type: 'location',
       name: () => i18n.feedWithLinkPlace,
     },
     100120: {
       type: 'movie',
+      v7Type: 'movie',
       name: () => i18n.feedWithLinkMovie,
     },
     100202: {
       type: 'book',
+      v7Type: 'book',
       name: () => i18n.feedWithLinkBook,
     },
     100808: {
       type: 'topic',
+      v7Type: 'super',
       name: () => i18n.feedWithLinkTopic,
       recognizer: feed => {
         const source = feed.querySelector('.WB_from a[href^="https://huati.weibo.com/k/"]');
@@ -12978,11 +12987,15 @@ throw new Error('YAWF | chat page found, skip following executions');
     },
     101515: {
       type: 'music',
+      v7Type: 'music',
       name: () => i18n.feedWithLinkMusic,
     },
     230677: {
       type: 'stock',
       name: () => i18n.feedWithLinkStock,
+      v7Recognizer: feed => {
+        return feed.url_struct?.some(url => url.url_title?.[0] === '$');
+      },
     },
   }));
 
@@ -13886,7 +13899,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       const hideBigfan = hideSymbol.includes('bigfan');
       if (hideVip || hideBigfan) {
         vueSetup.eachComponentVM('icon-fans', function (vm) {
-          console.log('icon-fans: %o', vm);
           if (hideVip) {
             Object.defineProperties(vm, { isVip: { get: () => false } });
           }
@@ -14022,7 +14034,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       ainit: function () {
         document.documentElement.addEventListener('DOMNodeInserted', event => {
           const script = event.target;
-          if (!script || (script.tagName || '').toLowerCase() !== 'script') return;
+          if (script?.tagName?.toLowerCase() !== 'script') return;
           const pattern = /^https?:\/\/s.weibo.com\/ajax\/jsonp\/gettopsug\?(?:.*&)?_cb=(STK_\d+)/;
           const match = script.src.match(pattern);
           if (!match || !match[1]) return;
@@ -14098,8 +14110,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       while ((!prev || prev.matches('.lev_line')) &&
         (!next || next.matches('.lev_line'))) {
         let line = null;
-        if (prev && prev.matches('.lev_line')) line = prev;
-        if (next && next.matches('.lev_line')) line = next;
+        if (prev?.matches('.lev_line')) line = prev;
+        if (next?.matches('.lev_line')) line = next;
         if (line) {
           line = prev || next;
           removeBlankSibling(line);
@@ -14238,8 +14250,10 @@ throw new Error('YAWF | chat page found, skip following executions');
   Object.assign(i18n, {
     cleanRightGroupTitle: { cn: '隐藏模块 - 右栏', tw: '隱藏模組 - 右欄', en: 'Hide modules - Right Column' },
     cleanRightInfo: { cn: '个人信息', tw: '个人信息', en: 'Personal Info' },
+    cleanRightV7Entry: { cn: '切换到新版' },
     cleanRightRanks: { cn: '榜单（新歌榜等）', tw: '榜單（新歌榜等）', en: 'Rank List (Song list, etc.)' },
     cleanRightHotTopic: { cn: '热门话题 / 微博热搜', tw: '熱門話題', en: 'Hot Topic' },
+    cleanRightHotTopicTop: { cn: '置顶热门话题 (V7)' },
     cleanRightInterest: { cn: '可能感兴趣的人', tw: '可能感興趣的人', en: 'You may know' },
     cleanRightMember: { cn: '会员专区', tw: '會員專區', en: 'Weibo VIP' },
     cleanRightGroups: { cn: '分组成员列表', tw: '分組成員列表', en: 'Members of group' },
@@ -14253,8 +14267,10 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   clean.CleanGroup('right', () => i18n.cleanRightGroupTitle);
-  clean.CleanRule('info', () => i18n.cleanRightInfo, 1, '#v6_pl_rightmod_myinfo { display: none !important; }');
+  clean.CleanRule('info', () => i18n.cleanRightInfo, 1, '[yawf-id="v6_pl_rightmod_myinfo_myinfo"] { display: none !important; }');
+  clean.CleanRule('v7_entry', () => i18n.cleanRightV7Entry, 91, '[yawf-id="v6_pl_rightmod_myinfo_new_pc_apply"] { display: none !important; }');
   clean.CleanRule('ranks', () => i18n.cleanRightRanks, 1, '#v6_pl_rightmod_rank, [yawf-id="rightmod_taobao_movie"], [yawf-id="rightmod_recom_movie"] { display: none !important; }');
+  const hotSearchTop = clean.CleanRule('hot_topic_top', () => i18n.cleanRightHotTopicTop, 91, '', { weiboVersion: 7 });
   const hotSearch = clean.CleanRule('hot_topic', () => i18n.cleanRightHotTopic, 1, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }', { weiboVersion: [6, 7] });
   const interested = clean.CleanRule('interest', () => i18n.cleanRightInterest, 1, '[yawf-id="rightmod_recom_interest"] { display: none !important; }', { weiboVersion: [6, 7] });
   clean.CleanRule('member', () => i18n.cleanRightMember, 1, '#v6_trustPagelet_recom_member { display: none !important; }');
@@ -14271,6 +14287,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     '#trustPagelet_indexright_recom .WB_right_module:not([yawf-id])',
     '#v6_pl_rightmod_recominfo .WB_cardwrap:not([yawf-id])',
     '#v6_pl_rightmod_rank .WB_cardwrap:not([yawf-id])',
+    '#v6_pl_rightmod_myinfo .WB_cardwrap:not([yawf-id])',
   ].join(','), {
     '[change-data*="key=hottopic_r2"]': 'rightmod_zt_hottopic',
     '[change-data*="key=interest_r2"]': 'rightmod_recom_interest',
@@ -14279,9 +14296,12 @@ throw new Error('YAWF | chat page found, skip following executions');
     'h2.main_title a[href*="book.weibo.com/top"]': 'v6_pl_rightmod_rank_book',
     'h4.obj_name a[href*="pop.weibo.com"]': 'v6_pl_rightmod_rank_pop',
     'div.obj_name a[href*="100808faecebff8a54b97a91699c654e5f4cda"]': 'v6_pl_rightmod_rank_hong',
+    '.W_person_info': 'v6_pl_rightmod_myinfo_myinfo',
+    'a[action-type="new_pc_apply"]': 'v6_pl_rightmod_myinfo_new_pc_apply',
   });
 
   clean.CleanRuleGroup({
+    hotSearchTop: hotSearchTop,
     cardHotSearch: hotSearch,
     cardInterested: interested,
   }, function (options) {
@@ -14301,6 +14321,14 @@ throw new Error('YAWF | chat page found, skip following executions');
           }
         }, { immediate: true });
       });
+
+      if (options.hotSearchTop) {
+        vueSetup.eachComponentVM('card-hot-search', function (vm) {
+          vm.$watch(function () { return this.TopWord; }, function () {
+            if (vm.TopWord) vm.TopWord = null;
+          });
+        }, { immediate: true });
+      }
     }, util.inject.rootKey, options);
   });
 
@@ -14324,6 +14352,10 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanFeedOuterTip: { cn: '消息流提示横幅 {{i}}', tw: '消息流提示橫幅 {{i}}', en: 'Tips for feed {{i}}' },
     cleanFeedOuterTipDetail: {
       cn: '消息流内部的提示横幅，如“ 系统提示：根据你的屏蔽设置，系统已过滤掉部分微博。”等内容。',
+    },
+    cleanFeedInnerTip: { cn: '微博内提示横幅 {{i}}', tw: '微博內提示橫幅 {{i}}', en: 'Tips for feed {{i}}' },
+    cleanFeedInnerTipDetail: {
+      cn: '各条微博内的提示横幅。v6 位于某条微博顶部，v7 位于作者与正文之间。',
     },
     cleanFeedCommentTip: { cn: '评论框提示横幅 {{i}}', tw: '評論框提示橫幅 {{i}}', en: 'Tips for comment {{i}}' },
     cleanFeedCommentTipDetail: {
@@ -14363,6 +14395,11 @@ throw new Error('YAWF | chat page found, skip following executions');
   clean.CleanRule('feed_outer_tip', () => i18n.cleanFeedOuterTip, 1, {
     acss: '.WB_feed > .W_tips { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'ask', template: () => i18n.cleanFeedOuterTip } },
+  });
+  clean.CleanRule('feed_inner_tip', () => i18n.cleanFeedInnerTip, 91, {
+    acss: '.WB_feed_detail .W_tips, .yawf-feed-content .yawf-feed-content-tip, .yawf-feed-content .yawf-feed-content-tip-link { display: none !important; }',
+    ref: { i: { type: 'bubble', icon: 'ask', template: () => i18n.cleanFeedInnerTipDetail } },
+    weiboVersion: [6, 7],
   });
   clean.CleanRule('feed_tip', () => i18n.cleanFeedCommentTip, 1, {
     acss: '[node-type="feed_privateset_tip"] { display: none !important; }',
@@ -14497,7 +14534,7 @@ a[action-type="feed_list_favorite"], a[action-type="feed_list_favorite"]+.S_txt3
       else if (a.matches('[action-type="reply"]')) type = 'reply';
       else if (a.matches('[action-type="replycomment"]')) type = 'reply';
       else if (a.matches('[action-type="fl_like"]')) type = 'like';
-      li.setAttribute('yawf-comment-handle-type', type || '');
+      li.setAttribute('yawf-comment-handle-type', type ?? '');
     });
   });
 
@@ -14600,7 +14637,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     ].join(',')));
     if (!titles.length) return;
     titles.forEach(function (title) {
-      const name = title && title.textContent.trim() || '';
+      const name = title?.textContent.trim() ?? '';
       const container = title.closest('.WB_frame_b > div, .WB_frame_c > div');
       if (!container.hasAttribute('yawf-obj-name')) {
         container.setAttribute('yawf-obj-name', name);
@@ -14750,16 +14787,25 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
         util.inject(function (rootKey) {
           const yawf = window[rootKey];
           const vueSetup = yawf.vueSetup;
-
           vueSetup.eachComponentVM('card-hot-search', function (vm) {
             vm.$watch(function () { return this.bandList; }, function () {
               const cleanUp = vm.bandList.filter(i => !i.is_ad);
               if (vm.bandList.length !== cleanUp.length) vm.bandList = cleanUp;
             });
             vm.$watch(function () { return this.TopWord; }, function () {
-              if (vm.TopWord.is_ad) vm.TopWord = null;
+              if (vm.TopWord?.is_ad) vm.TopWord = null;
             });
           }, { immediate: true });
+          vueSetup.eachComponentVM('new-hot', function (vm) {
+            vm.$watch(function () { return this.list; }, function () {
+              for (let i = 0; i < vm.list.length;) {
+                if (!vm.list[i].realpos) {
+                  vm.list.splice(i, 1);
+                } else i++;
+              }
+              vm.hasTop = false;
+            });
+          });
 
         }, util.inject.rootKey);
       }
@@ -15007,10 +15053,10 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
       const sprite = document.getElementById('__SVG_SPRITE_NODE__');
       const svg = new DOMParser().parseFromString(`<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg">
-<symbol xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" id="nav-profile">
-<path d="m21.916 10.4q0-1.8589-0.93159-3.45-0.93157-1.5911-2.5263-2.5205-1.5947-0.92946-3.4579-0.92946-1.8632 0-3.4579 0.92946-1.5947 0.92943-2.5263 2.5205-0.93158 1.5911-0.93158 3.45 0 1.7329 0.82105 3.2452 0.82106 1.5123 2.2105 2.4575-1.8632 0.75616-3.2842 2.174-1.4211 1.4178-2.2105 3.2452-0.82105 1.8904-0.82105 3.9699 0 0.40958 0.28421 0.7089 0.2842 0.29932 0.69474 0.29932h18.442q0.41052 0 0.69474-0.29932 0.28421-0.29932 0.28421-0.7089 0-2.0795-0.82105-3.9699-0.78948-1.8274-2.2105-3.2452-1.4211-1.4178-3.2842-2.174 1.3895-0.94521 2.2105-2.4575 0.82106-1.5123 0.82106-3.2452zm-6.9158 4.663q-1.2632 0-2.3368-0.63014-1.0737-0.63014-1.7053-1.7014-0.63158-1.0712-0.63158-2.3315 0-1.2603 0.63158-2.3315 0.63158-1.0712 1.7053-1.7014 1.0737-0.63014 2.3368-0.63014 1.2632 0 2.3368 0.63014 1.0737 0.63014 1.7053 1.7014 0.63158 1.0712 0.63158 2.3315 0 1.2603-0.63158 2.3315-0.63158 1.0712-1.7053 1.7014-1.0737 0.63014-2.3368 0.63014zm-8.1789 9.452q0.25264-2.0164 1.4053-3.6705 1.1526-1.6541 2.9368-2.5993 1.7842-0.94521 3.8368-0.94521 2.0526 0 3.8368 0.94521 1.7842 0.94519 2.9368 2.5993 1.1526 1.6541 1.4053 3.6705z"/>
+<symbol xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" id="woo_svg_nav_profile">
+<path d="m21.916 10.4q0-1.8589-0.93159-3.45-0.93157-1.5911-2.5263-2.5205-1.5947-0.92946-3.4579-0.92946-1.8632 0-3.4579 0.92946-1.5947 0.92943-2.5263 2.5205-0.93158 1.5911-0.93158 3.45 0 1.7329 0.82105 3.2452 0.82106 1.5123 2.2105 2.4575-1.8632 0.75616-3.2842 2.174-1.4211 1.4178-2.2105 3.2452-0.82105 1.8904-0.82105 3.9699 0 0.40958 0.28421 0.7089 0.2842 0.29932 0.69474 0.29932h18.442q0.41052 0 0.69474-0.29932 0.28421-0.29932 0.28421-0.7089 0-2.0795-0.82105-3.9699-0.78948-1.8274-2.2105-3.2452-1.4211-1.4178-3.2842-2.174 1.3895-0.94521 2.2105-2.4575 0.82106-1.5123 0.82106-3.2452zm-6.9158 4.663q-1.2632 0-2.3368-0.63014-1.0737-0.63014-1.7053-1.7014-0.63158-1.0712-0.63158-2.3315 0-1.2603 0.63158-2.3315 0.63158-1.0712 1.7053-1.7014 1.0737-0.63014 2.3368-0.63014 1.2632 0 2.3368 0.63014 1.0737 0.63014 1.7053 1.7014 0.63158 1.0712 0.63158 2.3315 0 1.2603-0.63158 2.3315-0.63158 1.0712-1.7053 1.7014-1.0737 0.63014-2.3368 0.63014zm-8.1789 9.452q0.25264-2.0164 1.4053-3.6705 1.1526-1.6541 2.9368-2.5993 1.7842-0.94521 3.8368-0.94521 2.0526 0 3.8368 0.94521 1.7842 0.94519 2.9368 2.5993 1.1526 1.6541 1.4053 3.6705z" fill="currentColor"/>
 </symbol>
-<symbol xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" id="nav-profileFlat">
+<symbol xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" id="woo_svg_nav_profileFlat">
 <path d="m21.916 10.4c0-1.2393-0.31053-2.3893-0.93159-3.45-0.62104-1.0607-1.4632-1.9009-2.5263-2.5205-1.0632-0.61964-2.2158-0.92946-3.4579-0.92946-1.2421 0-2.3947 0.30982-3.4579 0.92946-1.0632 0.61962-1.9053 1.4598-2.5263 2.5205-0.62106 1.0607-0.93158 2.2108-0.93158 3.45 0 1.1552 0.27368 2.237 0.82105 3.2452 0.54737 1.0082 1.2842 1.8274 2.2105 2.4575-1.2421 0.50411-2.3368 1.2288-3.2842 2.174-0.94737 0.94521-1.6842 2.0269-2.2105 3.2452-0.54737 1.2603-0.82105 2.5835-0.82105 3.9699 0 0.27306 0.094737 0.50936 0.28421 0.7089 0.18947 0.19955 0.42105 0.29932 0.69474 0.29932h18.442c0.27368 0 0.50526-0.09977 0.69474-0.29932 0.18947-0.19955 0.28421-0.43585 0.28421-0.7089 0-1.3863-0.27368-2.7096-0.82105-3.9699-0.52632-1.2183-1.2632-2.3-2.2105-3.2452-0.94737-0.94521-2.0421-1.6699-3.2842-2.174 0.92632-0.63014 1.6632-1.4493 2.2105-2.4575 0.54737-1.0082 0.82106-2.0899 0.82106-3.2452z" fill="currentColor"/>
 </symbol>
 </svg>`, 'image/svg+xml');
@@ -15022,7 +15068,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
         vueSetup.eachComponentVM('ctrls', function (vm) {
           vm.$watch(function () { return this.navItems; }, function () {
             const profile = vm.navItems.find(item => item.name === 'profile');
-            if (profile && profile.src) profile.src = '';
+            if (profile?.src) profile.src = '';
             vm.$forceUpdate();
           }, { deep: true, immediate: true });
         });
@@ -15628,7 +15674,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         const container = document.querySelector('#plc_main');
         if (!left || !reference) return;
         const refc = reference.getClientRects();
-        if (!refc || !refc[0]) return;
+        if (!refc?.[0]) return;
         const pos = refc[0];
         if (!hasScroll) {
           if (pos.bottom < -60) {
@@ -15878,7 +15924,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         }
       } else {
         if (shape === 'circle') return;
-        css.append(`.woo-avatar-hoverMask, .woo-avatar-img { border-radius: 0 !important; }`);
+        css.append(`.woo-avatar-hoverMask, .woo-avatar-img, .woo-avatar-main::before { border-radius: 0 !important; }`);
       }
     },
   });
@@ -15904,7 +15950,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
           if (!Array.isArray(value)) return emptyList;
           return value.filter(item => {
             if (item === null) return true;
-            if (item && item.title && item.img && item.text) return true;
+            if (item?.title && item.img && item.text) return true;
             return false;
           }).concat(emptyList).slice(0, 10);
         },
@@ -15945,7 +15991,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
        */
       const renderListKeepOld = function (ul, faceList, isIm) {
         const listItems = Array.from(ul.querySelectorAll('li'));
-        const newFaceTitles = new Set(faceList.map(e => e && e.title).filter(t => t));
+        const newFaceTitles = new Set(faceList.map(e => e?.title).filter(t => t));
         const emptySlots = [];
         listItems.forEach(li => {
           const title = li.title;
@@ -15974,7 +16020,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         const listItems = Array.from(ul.querySelectorAll('li'));
         faceList.forEach((face, index) => {
           const listItem = listItems[index];
-          if (listItem.title === (face && face.title || '')) return;
+          if (listItem.title === (face?.title ?? '')) return;
           listItem.replaceWith(createFaceItem(face, isIm));
         });
       };
@@ -16621,7 +16667,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
         if (!skinStyle) {
           const skinCss = document.querySelector('link[href*="//img.t.sinajs.cn/t6/skin/"][href*="/skin.css?"]');
           if (!skinCss) return;
-          version = ((skinCss.href.match(/version=([a-fA-F0-9]*)/) || [])[1]) || '';
+          version = skinCss.href.match(/version=([a-fA-F0-9]*)/)?.[1] ?? '';
           skinStyle = skinCss.cloneNode(); skinStyle.id = 'yawf-skin_style';
           setSkinId(skinId);
         }
@@ -16982,7 +17028,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 
     // 给提到和话题的链接加上新标签页打开的标记
     const handleContentRender = function (content) {
-      if (!((content.data || {}).domProps || {}).innerHTML) return;
+      if (!content.data?.domProps?.innerHTML) return;
       const tag = 'x-content-parse-wrap-x' + (Math.random() + '').slice(2);
       const wrap = new DOMParser().parseFromString(`<${tag}>` + content.data.domProps.innerHTML, 'text/html').querySelector(tag);
       [...wrap.querySelectorAll('a')].forEach(link => {
@@ -17085,7 +17131,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const tip = nodeStruct.querySelector('x-woo-tip');
       if (tip) {
         addClass(tip, 'yawf-feed-content-tip');
-        if (this.data.complaint && this.data.complaint.url) {
+        if (this.data.complaint?.url) {
           const linkVNode = h('a', {
             class: 'yawf-feed-content-tip-link yawf-extra-link',
             attrs: { href: absoluteUrl(this.data.complaint.url) },
@@ -17132,8 +17178,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         addClass(nodeStruct, 'yawf-feed-picture-single');
         // 缩小单张图片，V5 版单张图片的尺寸不超过 120x120
         if (smallImage) {
-          const oriWidth = this.isPay && this.pics[0] && this.pics[0].width ? this.pics[0].width : this.pics[0].geo && this.pics[0].geo.width;
-          const oriHeight = this.isPay && this.pics[0] && this.pics[0].height ? this.pics[0].height : this.pics[0].geo && this.pics[0].geo.height;
+          const oriWidth = this.isPay && this.pics[0]?.width || this.pics[0].geo?.width;
+          const oriHeight = this.isPay && this.pics[0]?.height || this.pics[0].geo?.height;
           const width = Math.min(120, Math.max(120 / oriHeight * oriWidth, 30));
           const height = Math.min(120, Math.max(120 / oriWidth * oriHeight, 30));
           const style = vNode(nodeStruct.firstChild).data.style;
@@ -17156,7 +17202,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       if (newTab.card) setAttribute(nodeStruct, 'target', '_blank');
       const card = nodeStruct.firstChild;
       addClass(card, 'yawf-feed-card');
-      const [picture, content] = card.childNodes;
+      const picture = card.querySelector('x-woo-picture');
+      const content = picture.nextSibling;
       addClass(picture, 'yawf-feed-card-picture');
       addClass(content, 'yawf-feed-card-content');
     });
@@ -17214,7 +17261,8 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         if (newTab.comments) setAttribute(more, 'target', '_blank');
       }
     };
-    vueSetup.transformComponentsRenderByTagName('repost-comment-feed', repostCommentListRanderTransform);
+    vueSetup.transformComponentsRenderByTagName('repost-coment-feed', repostCommentListRanderTransform); // 又是他们拼错了
+    vueSetup.transformComponentsRenderByTagName('repost-comment-feed', repostCommentListRanderTransform); // 这行现在没用
     vueSetup.transformComponentsRenderByTagName('repost-comment-list', repostCommentListRanderTransform);
 
     vueSetup.transformComponentsRenderByTagName('reply-modal', function (nodeStruct, Nodes) {
@@ -17260,17 +17308,26 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         if (newTab.comments) setAttribute(author, 'target', '_blank');
       }
       // 二级评论作者
-      if (replyAuthors && replyAuthors.length) {
+      if (replyAuthors?.length) {
         replyAuthors.forEach((author, index) => {
-          if (!comment.comments || !comment.comments[index]) return;
+          if (!comment.comments?.[index]) return;
+          if (newTab.comments) setAttribute(author, 'target', '_blank');
           addClass(author, 'yawf-feed-comment-author', 'yawf-feed-comment-reply-author');
         });
+        if (comment.comments) {
+          const more = replyAuthors.slice(comment.comments.length);
+          more.forEach((author, index) => {
+            if (!comment.more_info?.user_list?.[index]) return;
+            if (newTab.comments) setAttribute(author, 'target', '_blank');
+            addClass(author, 'yawf-feed-comment-author', 'yawf-feed-comment-reply-author', 'yawf-feed-comment-more-author');
+          });
+        }
       }
 
       // 评论的内容
       const contentList = [...nodeStruct.querySelectorAll('span')];
       contentList.forEach(content => {
-        if (!Object.prototype.hasOwnProperty.call((vNode(content).data || {}).domProps || {}, 'innerHTML')) return;
+        if (!Object.prototype.hasOwnProperty.call(vNode(content).data?.domProps || {}, 'innerHTML')) return;
         addClass(content, 'yawf-feed-comment-content');
         addClass(content.parentNode, 'yawf-feed-comment-text');
         handleContentRender(vNode(content));
@@ -17282,9 +17339,10 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       if (picture) addClass(picture, 'yawf-feed-comment-picture');
 
       // 某条评论下的所有评论
-      const moreIcon = nodeStruct.querySelector('a > x-woo-fonticon');
-      if (moreIcon) {
-        addClass(moreIcon.parentNode, 'yawf-feed-comment-more');
+      const moreIcon = nodeStruct.querySelector('.yawf-feed-comment-more-author, a > x-woo-fonticon');
+      const line = moreIcon?.closest('.text');
+      if (line) {
+        addClass(line, 'yawf-feed-comment-more-text');
       }
 
       // 评论的操作按钮
@@ -17333,9 +17391,9 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const showRepost = removeClickHandler(vNode(nodeStruct));
 
       // 转发微博的时间
-      const time = content && content.parentNode.nextSibling.querySelector('div');
-      addClickHandler(vNode(time), showRepost);
+      const time = content?.parentNode.nextSibling.querySelector('div');
       if (time) {
+        addClickHandler(vNode(time), showRepost);
         const linkVNode = h('a', {
           class: 'yawf-feed-repost-time yawf-extra-link',
           attrs: {
@@ -17676,7 +17734,7 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .yawf-feed-picture-col4 > div { width: 332px; }
 .yawf-feed-video { transition: width 0s 0.2s ease; }
 .yawf-feed-video-inactive { width: 150px; }
-.yawf-feed-card { width: 316px; }
+.yawf-feed-card > div { width: 316px; }
 .yawf-feed-card-picture { width: 80px !important; height: 80px !important; }
 .yawf-feed-comment-picture { max-width: 80px; }
 .yawf-feed-card-article { max-width: 240px; }
@@ -18009,7 +18067,7 @@ ${[0, 1, 2, 3, 4].map(index => `
 .yawf-feed-author-box { justify-content: space-between !important; }
 .yawf-feed-author-box::after { content: " "; margin-bottom: 4px }
 .yawf-feed-detail-content { font-size: ${fs}px !important; line-height: ${lh}px !important; }
-.yawf-feed-original span, .yawf-feed-detail-content-retweet, .yawf-feed-comment-text, .yawf-feed-comment-more, .yawf-feed-repost-text, .yawf-feed-detail-content-retweet-size { font-size: ${fs2}px !important; line-height: ${lh2}px !important; }
+.yawf-feed-original span, .yawf-feed-detail-content-retweet, .yawf-feed-comment-text, .yawf-feed-comment-more-text, .yawf-feed-repost-text, .yawf-feed-detail-content-retweet-size { font-size: ${fs2}px !important; line-height: ${lh2}px !important; }
 .yawf-feed-detail-content img, .yawf-feed-detail-content .icon-link { height: ${fs}px !important; width: ${fs}px !important; }
 .yawf-feed-detail-content-retweet img, .yawf-feed-detail-content-retweet .icon-link { height: ${fs2}px !important; width: ${fs2}px !important; }
 
@@ -18057,8 +18115,8 @@ ${[0, 1, 2, 3, 4].map(index => `
                     http_code: 200,
                     data: {
                       longTextContent: vm.data.longTextContent_raw,
-                      url_struct: vm.data.url_struct || [],
-                      topic_struct: vm.data.topic_struct || [],
+                      url_struct: vm.data.url_struct ?? [],
+                      topic_struct: vm.data.topic_struct ?? [],
                     },
                   },
                 };
@@ -18344,7 +18402,7 @@ ${[0, 1, 2, 3, 4].map(index => `
             vm.setVote = (function (setVote) {
               return function (id) {
                 if (!this.isParted) {
-                  const feedData = this.$parent && this.$parent.data;
+                  const feedData = this.$parent?.data;
                   if (feedData && !feedData.attitudes_status) {
                     voteBlock();
                     return;
@@ -18538,7 +18596,7 @@ ${[0, 1, 2, 3, 4].map(index => `
           }
           last = { type, str };
           return last;
-        })].filter(content => content && content.str);
+        })].filter(content => content?.str);
         /** @type {{ delete: { type: 'delete', str: string }, insert: { type: 'insert', str: string } }} */
         let prevPart = { delete: null, insert: null, same: null };
         const result = connected.filter(part => {
@@ -18943,7 +19001,7 @@ body { position: relative; }
         }
         // 标题
         const title = container.querySelector('.yawf-article-title');
-        title.textContent = article.title || '';
+        title.textContent = article.title ?? '';
         // 作者
         const author = container.querySelector('.yawf-article-author');
         if (article.author) {
@@ -18954,7 +19012,7 @@ body { position: relative; }
           link.setAttribute('usercard', `id=${article.author.uid}`);
         } else author.remove();
         const authorInner = container.querySelector('.yawf-article-author-inner');
-        if (article.author && article.author.inner) {
+        if (article.author?.inner) {
           const inner = article.author.inner;
           if (inner.uid) {
             const link = document.createElement('a');
@@ -19447,7 +19505,7 @@ ${selection ? `
     } else if (ref.getAttribute('imagecard')) {
       const pid = new URLSearchParams(ref.getAttribute('imagecard')).get('pid');
       return { images: [getUrlByPid(pid).href], current: 1 };
-    } else if (ref.href && ref.href.indexOf('javascript:') === -1) {
+    } else if (ref.href?.indexOf('javascript:') === -1) {
       return { images: [ref.href], current: 1 };
     } else if (ref instanceof HTMLImageElement && ref.src) {
       return { images: [getImageUrl(ref, true)], current: 1 };
@@ -19538,9 +19596,9 @@ ${selection ? `
             filename = (index + 1) + '.' + extension;
           }
           const feed = ref.closest('[mid], [omid], [comment_id]');
-          const feedId = feed.getAttribute('comment_id') ||
-            ref.closest('.WB_feed_expand') && feed.getAttribute('omid') ||
-            feed.getAttribute('mid') || 0;
+          const feedId = feed.getAttribute('comment_id') ??
+            (ref.closest('.WB_feed_expand') && feed.getAttribute('omid')) ??
+            feed.getAttribute('mid') ?? 0;
           const path = 'weibo-images/' + download.filename(feedId) + '/' + filename;
           return { url, filename: path };
         });
@@ -19622,7 +19680,7 @@ ${selection ? `
         const target = event.target;
         if (event.button !== 0) return; // 只响应左键操作
         if (target.closest('.yawf-W_icon_tag_9p')) return; // 展开过多被折叠的图片按钮不响应
-        const pic = target.closest('.WB_media_wrap .WB_pic') || target.closest('a[imagecard]');
+        const pic = target.closest('.WB_media_wrap .WB_pic') ?? target.closest('a[imagecard]');
         if (!pic) return;
         const active = (function () {
           const shift = event.shiftKey;
@@ -19649,7 +19707,7 @@ ${selection ? `
           /** @type {Element & EventTarget} */
           const target = event.target;
           const pic = (function () {
-            const pic = target.closest('.WB_media_wrap .WB_pic') || target.closest('a[imagecard]');
+            const pic = target.closest('.WB_media_wrap .WB_pic') ?? target.closest('a[imagecard]');
             if (pic) return pic;
             const feed = target.closest('.WB_feed_type');
             if (!feed) return null;
@@ -19809,7 +19867,7 @@ ${selection ? `
           /** @type {string[]} */
           const allImages = await request.getAllImages(original, mid);
           ul.classList.remove('yawf-WB_media_a_m9p_loading');
-          if (!allImages || !allImages.length) return;
+          if (!allImages?.length) return;
           const imageCount = allImages.length;
           if (imageCount === 9 && officialNotSupport) return;
           const pids = allImages.map(img => img.replace(/^.*\/(.*)\..*$/, '$1'));
@@ -19989,7 +20047,7 @@ ${selection ? `
                 } else {
                   const more = h('div', {}, [
                     h('a', {
-                      class: 'viewpic yawf-feed-detail-content-retweet-size',
+                      class: 'viewpic yawf-feed-detail-content-retweet-size yawf-feed-pic-expand',
                       on: { click: expand },
                     }, [`查看全部图片（共 ${this.pic_num} 张）`]),
                   ]);
@@ -19997,10 +20055,10 @@ ${selection ? `
                 }
               }
             });
-
             vm.$forceUpdate();
           });
         }, util.inject.rootKey, configs);
+        css.append('.yawf-feed-pic-expand, .yawf-feed-pic-expand:hover { cursor: pointer; text-decoration: none; }');
       }
     },
   });
@@ -20249,7 +20307,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
             // 我们自己画一个视频播放器上去
             let url = null;
             if (quality === 'best') try {
-              const playback = this.infos.media_info.playback_list.find(x => x.play_info && x.play_info.url);
+              const playback = this.infos.media_info.playback_list.find(x => x.play_info?.url);
               url = playback.play_info.url;
             } catch (e) { /* ignore */ }
             if (!url) url = this.infos.media_info.stream_url;
@@ -20377,7 +20435,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
           });
         } else {
           button.setAttribute('favorite', '1');
-          const text = button.querySelector('[node-type="favorite_btn_text"]') || button;
+          const text = button.querySelector('[node-type="favorite_btn_text"]') ?? button;
           text.innerHTML = '<span><em class="W_ficon ficon_favorite S_spetxt">\xFB</em><em></em></span>';
           text.querySelector('em + em').textContent = i18n.favoriteFeed;
         }
@@ -20598,7 +20656,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 `);
 
       const updateEnable = function updateEnable() {
-        if (!document || !document.body) {
+        if (!document?.body) {
           setTimeout(updateEnable, 1000);
           return;
         }
@@ -20756,7 +20814,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       rule('weibo.tool.load_weibo_by_group.group', 'filter_homepage_single_group.group', group => `g${group.id}`);
       rule('weibo.tool.load_weibo_by_multi_group.enabled', 'filter_homepage_multi_group');
       rule(['weibo.tool.load_weibo_by_multi_group', 'weibo.tool.load_weibo_by_multi_group.whisper'], 'filter_homepage_multi_group.groups', ([groups, whisper], target) => ([
-        ...(groups || []).map(group => `g${group}`),
+        ...(groups ?? []).map(group => `g${group}`),
         ...(whisper ? ['whisper'] : []),
       ]));
       rule('weibo.other.auto_load_new_weibo', 'filter_homepage_auto_load');
@@ -21072,18 +21130,18 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
     }
     convert(wbp) {
       const configs = {};
-      (wbp.hideMods || []).forEach(mod => {
-        Object.assign(configs, ...(this.cleans.get(mod) || []).map(clean => clean() || {}));
+      wbp.hideMods?.forEach(mod => {
+        Object.assign(configs, ...(this.cleans.get(mod) ?? []).map(clean => clean() ?? {}));
       });
       Object.keys(wbp).forEach(key => {
-        Object.assign(configs, ...(this.rules.get(key) || []).map(rule => rule(wbp[key]) || {}));
+        Object.assign(configs, ...(this.rules.get(key) ?? []).map(rule => rule(wbp[key]) ?? {}));
       });
       Object.keys(wbp).forEach(key => {
         if (!this.collections.has(key)) return;
-        (this.collections.get(key) || []).forEach(mapper => {
+        this.collections.get(key)?.forEach(mapper => {
           const conf = mapper(wbp[key]);
           Object.keys(conf).forEach(ckey => {
-            configs[ckey] = (configs[ckey] || []).concat(conf[ckey]);
+            configs[ckey] = (configs[ckey] ?? []).concat(conf[ckey]);
           });
         });
       });
@@ -21424,7 +21482,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
           exportButton.classList.remove('yawf-export-busy');
         };
         download.blob({ blob, filename }).then(download => {
-          if (!download || !download.show) {
+          if (!download?.show) {
             finishDownload();
           } else {
             setTimeout(() => {
@@ -22121,7 +22179,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
     };
     const menuitem = function () {
       const menuitems = document.querySelectorAll('.gn_topmenulist ul li.line');
-      if (!menuitems || !menuitems.length) { setTimeout(menuitem, 100); return; }
+      if (!menuitems?.length) { setTimeout(menuitem, 100); return; }
       const reference = [...menuitems].pop();
       const ul = document.createElement('ul');
       ul.innerHTML = `
