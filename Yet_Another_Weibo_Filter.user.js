@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.91
+// @version           4.0.92
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -14796,12 +14796,16 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
               if (vm.TopWord?.is_ad) vm.TopWord = null;
             });
           }, { immediate: true });
+
           vueSetup.eachComponentVM('new-hot', function (vm) {
             vm.$watch(function () { return this.list; }, function () {
-              for (let i = 0; i < vm.list.length;) {
-                if (!vm.list[i].realpos) {
-                  vm.list.splice(i, 1);
-                } else i++;
+              const list = vm.list;
+              if (Array.isArray(list) && list.some(item => item.realpos)) {
+                for (let i = 0; i < list.length;) {
+                  if (!list[i].realpos) {
+                    list.splice(i, 1);
+                  } else i++;
+                }
               }
               vm.hasTop = false;
             });
