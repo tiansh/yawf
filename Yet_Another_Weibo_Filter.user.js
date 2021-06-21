@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.92
+// @version           4.0.93
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -12150,6 +12150,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         } else {
           // 某某赞过的微博
           if (feed.title?.type === 'likerecommend') return 'hide';
+          if (feed.content_auth === 5 /* 热推 */) return 'hide';
         }
         return null;
       }, { priority: 1e6 });
