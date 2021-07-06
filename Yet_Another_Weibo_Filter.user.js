@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.93
+// @version           4.0.94
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -12150,7 +12150,9 @@ throw new Error('YAWF | chat page found, skip following executions');
         } else {
           // 某某赞过的微博
           if (feed.title?.type === 'likerecommend') return 'hide';
-          if (feed.content_auth === 5 /* 热推 */) return 'hide';
+          // 热推 / 广告之类
+          if (feed.content_auth === 5) return 'hide';
+          if (feed.retweeted_status?.content_auth === 5) return 'hide';
         }
         return null;
       }, { priority: 1e6 });
@@ -13973,16 +13975,28 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   clean.CleanGroup('nav', () => i18n.cleanNavGroupTitle);
   clean.CleanRule('logo_img', () => i18n.cleanNavLogoImg, 1, {
+    weiboVersion: [6, 7],
     ainit: function () {
-      observer.dom.add(function replaceLogo() {
-        const box = document.querySelector('.WB_global_nav .gn_logo .box');
-        if (!box) { setTimeout(replaceLogo, 100); return; }
-        const img = box.getElementsByTagName('img')[0];
-        if (!img) return;
-        const logo = document.createElement('span');
-        logo.classList.add('logo');
-        img.replaceWith(logo);
-      });
+      if (yawf.WEIBO_VERSION === 6) {
+        observer.dom.add(function replaceLogo() {
+          const box = document.querySelector('.WB_global_nav .gn_logo .box');
+          if (!box) { setTimeout(replaceLogo, 100); return; }
+          const img = box.getElementsByTagName('img')[0];
+          if (!img) return;
+          const logo = document.createElement('span');
+          logo.classList.add('logo');
+          img.replaceWith(logo);
+        });
+      } else {
+        util.inject(function (rootKey) {
+          const yawf = window[rootKey];
+          const vueSetup = yawf.vueSetup;
+
+          vueSetup.eachComponentVM('weibo-top-nav', function (vm) {
+            Object.defineProperty(vm, 'skinData', { get: () => ({}) });
+          });
+        }, util.inject.rootKey);
+      }
     },
     acss: '.WB_global_nav .gn_logo .box img { display: none !important; }',
   });
@@ -17206,11 +17220,13 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       addClass(nodeStruct, 'yawf-feed-card-link');
       if (newTab.card) setAttribute(nodeStruct, 'target', '_blank');
       const card = nodeStruct.firstChild;
-      addClass(card, 'yawf-feed-card');
-      const picture = card.querySelector('x-woo-picture');
-      const content = picture.nextSibling;
-      addClass(picture, 'yawf-feed-card-picture');
-      addClass(content, 'yawf-feed-card-content');
+      if (card) {
+        addClass(card, 'yawf-feed-card');
+        const picture = card.querySelector('x-woo-picture');
+        const content = picture.nextSibling;
+        addClass(picture, 'yawf-feed-card-picture');
+        addClass(content, 'yawf-feed-card-content');
+      }
     });
 
     vueSetup.transformComponentsRenderByTagName('feed-article', function (nodeStruct, Nodes) {
