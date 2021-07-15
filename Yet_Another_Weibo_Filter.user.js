@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.94
+// @version           4.0.95
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -598,9 +598,9 @@
     });
     const run = function (func, params) {
       const parsed = JSON.parse(params, function (key, val) {
-        if (typeof val === 'object' && val._type === 'method' && val.invoke === baseKey) {
+        if (val && typeof val === 'object' && val._type === 'method' && val.invoke === baseKey) {
           return invoke(val);
-        } else if (typeof val === 'object' && val._type === 'callback' && val.invoke === baseKey) {
+        } else if (val && typeof val === 'object' && val._type === 'callback' && val.invoke === baseKey) {
           return callback(val);
         } else {
           return val;
@@ -3802,14 +3802,15 @@ html { background: #f9f9fa; }
       }
       if (tag) {
         if (vmToHtmlNode.has(vm)) {
-          const old = vmToHtmlNode.has(vm);
+          const old = vmToHtmlNode.get(vm);
           if (old !== node) {
             reportNewNode({ tag, node, replace: true });
+            vmToHtmlNode.set(vm, node);
           }
         } else {
           reportNewNode({ tag, node, replace: false });
+          vmToHtmlNode.set(vm, node);
         }
-        vmToHtmlNode.set(vm, node);
       }
     };
     const eachVmForNode = function* (node) {
@@ -6926,6 +6927,9 @@ throw new Error('YAWF | chat page found, skip following executions');
               // 那么我们不会把它就这么给隐藏起来
               const underFilter = feedScroll != null && this.mid > 0;
               const result = render.call(this, createElement);
+              if (!result.key && this.data.mid) {
+                result.key = 'yawf-feed-' + this.data.mid;
+              }
               Object.assign(result.data.class, {
                 'yawf-feed-filter': true,
                 'yawf-feed-filter-ignore': !underFilter,
@@ -6946,9 +6950,8 @@ throw new Error('YAWF | chat page found, skip following executions');
             };
           }(vm.$options.render));
           vm.$forceUpdate();
-          // 每次高度变化时更新 _yawf_Height 属性
-          // 我也不知道这段代码怎么工作起来的，反正网上的代码就这逻辑，然后也真的能用
         });
+        let heightIndex = 0;
         vueSetup.eachComponentVM('scroll', function (vm) {
           const wrapRaf = function (f) {
             let dirty = false;
@@ -6966,12 +6969,20 @@ throw new Error('YAWF | chat page found, skip following executions');
           // 因为设置的这个属性我们并不期望以后还有变化，所以我们不需要让它过 Vue 的生命周期 $forceUpdate 就是了
           Object.defineProperty(vm, 'sizeDependencies', { value: ['_yawf_Height'], configurable: true, enumerable: true, writable: true });
           const sensorPrefix = 'yawf_resize_sensor_element_';
+          const getItemFromSensor = sensor => {
+            if (!sensor?.id) return null;
+            const index = Number.parseInt(sensor.id.slice(sensorPrefix.length), 10);
+            // 在有微博被隐藏后，微博相对的索引会发生变化
+            // 无法依赖微博的索引确定对应的微博
+            // 所以我们不用 vm.data[index] 而只能这样找一遍
+            const item = vm?.data?.find?.(item => item._yawf_HeightIndex === index);
+            return item;
+          };
           const observer = new ResizeObserver(entries => {
             entries.forEach(entry => {
               const { target } = entry;
-              const index = Number.parseInt(target.id.slice(sensorPrefix.length), 10);
-              const data = vm?.data?.[index];
-              if (data) data._yawf_Height = target.clientHeight;
+              const item = getItemFromSensor(target);
+              if (item) item._yawf_Height = target.clientHeight;
             });
           });
           // 如果可以把 sensor 做成组件的话，其实只要 mount 时处理一下就行了，不过这里是没办法
@@ -6981,14 +6992,21 @@ throw new Error('YAWF | chat page found, skip following executions');
               const container = vm.$refs[sensorPrefix + index];
               if (!container) return;
               observer.observe(container);
-              vm.data[index]._yawf_Height = container.clientHeight;
+              const item = getItemFromSensor(container);
+              if (item) item._yawf_Height = container.clientHeight;
             });
           });
           vm.$scopedSlots.content = (function (content) {
             return function (data) {
               const createElement = vm._self._c, h = createElement;
               const raw = content.call(this, data);
-              const { index } = data;
+              // 给每个元素一个唯一的标识用于对应高度检测器
+              // 我们没办法用现成的 mid 或 comment_id，因为我们并不知道元素是什么类型
+              // 元素有可能是 feed，但也有可能是其他任何东西
+              if (!data.item._yawf_HeightIndex) {
+                data.item._yawf_HeightIndex = ++heightIndex;
+              }
+              const index = data.item._yawf_HeightIndex;
               const resizeSensor = h('div', {
                 class: 'yawf-resize-sensor',
                 ref: sensorPrefix + index,
@@ -12147,6 +12165,9 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hide';
           if (feed.querySelector('[suda-uatrack*="negativefeedback"]')) return 'hide';
           if (feed.querySelector('[suda-uatrack*="1022-adFeedEvent"]')) return 'hide';
+          if (/^\d+_[^0]|_0_(?!1)\d+_0$/.test(new URLSearchParams(feed.getAttribute('mrid')).get('rid'))) {
+            if (feed.querySelector('.WB_face .opt[action-data*="refer_from=homefeed"]')) return 'hide';
+          }
         } else {
           // 某某赞过的微博
           if (feed.title?.type === 'likerecommend') return 'hide';
@@ -20008,18 +20029,20 @@ ${selection ? `
         }
       } else {
         const configs = {
-          col: Number(this.ref.count.getConfig().split('x')[0]),
-          row: Number(this.ref.count.getConfig().split('x')[1]) || Infinity,
+          count: this.ref.count.getConfig(),
           more: this.ref.more.getConfig(),
         };
         util.inject(function (rootKey, configs) {
           const yawf = window[rootKey];
           const vueSetup = yawf.vueSetup;
 
+          const col = Number(configs.count.split('x')[0]);
+          const row = Number(configs.count.split('x')[1]) || Infinity;
+
           vueSetup.eachComponentVM('feed-picture', function (vm) {
             Object.defineProperty(vm, 'inlineNum', {
               get: function () {
-                return [1, 1, 3, 3, 4, 4, 3, 4, 4, 3][vm.pic_num] || configs.col;
+                return [1, 1, 3, 3, 4, 4, 3, 4, 4, 3][vm.pic_num] || col;
               },
               set: function (v) { },
               enumerable: true,
@@ -20028,7 +20051,7 @@ ${selection ? `
             Object.defineProperty(vm, 'newPics', {
               get: function () {
                 if (vm.$parent.data._yawf_PictureShowAll) return vm.pics.slice(0);
-                return vm.pics.slice(0, configs.col * configs.row);
+                return vm.pics.slice(0, col * row);
               },
               set: function (v) { },
               enumerable: true,
@@ -20052,7 +20075,7 @@ ${selection ? `
               }
               if (vm.$parent.data._yawf_PictureShowAll) {
                 // pass
-              } else if (this.pic_num > configs.col * configs.row) {
+              } else if (this.pic_num > col * row) {
                 if (configs.more === 'mask') {
                   const lastPic = nodeStruct.querySelector('x-woo-box-item:last-child');
                   const mask = h('woo-box', {
@@ -20062,7 +20085,7 @@ ${selection ? `
                     h('span', {
                       class: this.$style.picNum,
                       on: { click: expand },
-                    }, ['+' + (this.pic_num - configs.col * configs.row)]),
+                    }, ['+' + (this.pic_num - col * row)]),
                   ]);
                   appendChild(lastPic, mask);
                 } else {
