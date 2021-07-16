@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.95
+// @version           4.0.96
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -6691,7 +6691,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       }
     }
     async rerun() {
-      const lastRerun = this.lastRerun = (this.lastRerun || 0) + 1;
+      const lastRerun = this.lastRerun = {};
       await new Promise(resolve => setTimeout(resolve, 1000));
       if (this.lastRerun !== lastRerun) return;
       this.reapply();
@@ -6731,8 +6731,13 @@ throw new Error('YAWF | chat page found, skip following executions');
 .yawf-WBV6 .WB_feed.WB_feed_v3 .WB_feed_type[yawf-feed-display="fold"].WB_feed_vipcover:hover .WB_feed_detail { padding-top: 0; }
 .yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_handle { display: none; }
 
-.yawf-WBV7 .yawf-feed-filter-loading,
-.yawf-WBV7 .yawf-feed-filter-running { visibility: hidden; }
+.yawf-WBV7 article[class*="Feed"]:not(.yawf-feed-filter) > *,
+.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-loading > *,
+.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-running > * { visibility: hidden; }
+.yawf-WBV7 article[class*="Feed"]:not(.yawf-feed-filter)::before,
+.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-loading::before,
+.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display: block; position: absolute; left: 100px; right: 100px; top: 50%; height: 140px; max-height: calc(100% - 20px); transform: translateY(-50%); background-image: repeating-linear-gradient(to bottom, transparent 0 20px, var(--w-panel-background) 20px 60px), linear-gradient(to right, var(--w-main) 40%, transparent 50%, var(--w-main) 60%); animation: yawf-feed-filter-running 2s 1s linear infinite; background-size: 200% 100%; background-repeat: repeat; opacity: 0.1; } 
+@keyframes yawf-feed-filter-running { 0% { background-position: 120%; } 100% { background-position: -20%; } }
 .yawf-WBV7 .yawf-resize-sensor,
 .yawf-WBV7 .yawf-resize-sensor-expand,
 .yawf-WBV7 .yawf-resize-sensor-shrink { position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; z-index: -1; visibility: hidden; }
@@ -6847,11 +6852,17 @@ throw new Error('YAWF | chat page found, skip following executions');
         const event = new CustomEvent(key, { detail: JSON.stringify({ action: 'rerun' }) });
         document.documentElement.dispatchEvent(event);
       };
+      const feedTriggerPending = [];
       // 当页面脚本检测到一条需要过滤的微博时，提交过滤
       window.addEventListener(key, function (event) {
         const detail = JSON.parse(event.detail);
         if (detail.action === 'trigger') {
-          observer.feed.active([detail.data]);
+          feedTriggerPending.push(detail.data);
+          setTimeout(() => {
+            if (feedTriggerPending.length) {
+              observer.feed.active(feedTriggerPending.splice(0));
+            }
+          }, 0);
         }
       }, true);
       util.inject(function (rootKey, key) {
@@ -6921,34 +6932,45 @@ throw new Error('YAWF | chat page found, skip following executions');
           const feedScroll = vueSetup.closest(vm, 'feed-scroll');
 
           // 在渲染一条 feed 时，额外插入过滤状态的标识
-          vm.$options.render = (function (render) {
-            return function (createElement) {
-              // 如果某个 feed 不在 feed-scroll 里面
-              // 那么我们不会把它就这么给隐藏起来
-              const underFilter = feedScroll != null && this.mid > 0;
-              const result = render.call(this, createElement);
-              if (!result.key && this.data.mid) {
-                result.key = 'yawf-feed-' + this.data.mid;
-              }
-              Object.assign(result.data.class, {
-                'yawf-feed-filter': true,
-                'yawf-feed-filter-ignore': !underFilter,
-                [`yawf-feed-filter-${this.data._yawf_FilterStatus || 'loading'}`]: underFilter,
-              });
-              result.data.attrs['data-feed-author-name'] = this.data.user.screen_name;
-              result.data.attrs['data-feed-mid'] = this.data.mid;
-              if (this.data.retweeted_status) {
-                result.data.attrs['data-feed-omid'] = this.data.retweeted_status.mid;
-              }
+          vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+            const { vNode, addClass } = Nodes;
+
+            // 如果某个 feed 不在 feed-scroll 里面
+            // 那么我们不会把它就这么给隐藏起来
+            const underFilter = feedScroll != null && this.data.mid > 0;
+
+            const feed = nodeStruct;
+            const vnode = vNode(feed);
+
+            if (!vnode.key && this.data.mid) {
+              vnode.key = 'yawf-feed-' + this.data.mid;
               if (this.data.ori_mid) {
-                result.data.attrs['data-feed-fmid'] = this.data.idstr;
+                vnode.key = 'yawf-feed-' + this.data.mid + '-' + this.data.ori_mid;
+              } else {
+                vnode.key = 'yawf-feed-' + this.data.mid;
               }
-              if (this.data._yawf_FilterReason) {
-                result.data.attrs['data-yawf-filter-reason'] = this.data._yawf_FilterReason;
-              }
-              return result;
-            };
-          }(vm.$options.render));
+            }
+
+            addClass(feed, 'yawf-feed-filter');
+            if (underFilter) {
+              addClass(feed, `yawf-feed-filter-${this.data._yawf_FilterStatus || 'loading'}`);
+            } else {
+              addClass(feed, 'yawf-feed-filter-ignore');
+            }
+
+            vnode.data.attrs['data-feed-author-name'] = this.data.user.screen_name;
+            vnode.data.attrs['data-feed-mid'] = this.data.mid;
+            if (this.data.retweeted_status) {
+              vnode.data.attrs['data-feed-omid'] = this.data.retweeted_status.mid;
+            }
+            if (this.data.ori_mid) {
+              vnode.data.attrs['data-feed-fmid'] = this.data.idstr;
+            }
+            if (this.data._yawf_FilterReason) {
+              vnode.data.attrs['data-yawf-filter-reason'] = this.data._yawf_FilterReason;
+            }
+            return vnode;
+          });
           vm.$forceUpdate();
         });
         let heightIndex = 0;
@@ -12165,9 +12187,6 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hide';
           if (feed.querySelector('[suda-uatrack*="negativefeedback"]')) return 'hide';
           if (feed.querySelector('[suda-uatrack*="1022-adFeedEvent"]')) return 'hide';
-          if (/^\d+_[^0]|_0_(?!1)\d+_0$/.test(new URLSearchParams(feed.getAttribute('mrid')).get('rid'))) {
-            if (feed.querySelector('.WB_face .opt[action-data*="refer_from=homefeed"]')) return 'hide';
-          }
         } else {
           // 某某赞过的微博
           if (feed.title?.type === 'likerecommend') return 'hide';
@@ -14083,7 +14102,24 @@ throw new Error('YAWF | chat page found, skip following executions');
     });
   }
   clean.CleanRule('notice_new', () => i18n.cleanNavNoticeNew, 1, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
-  clean.CleanRule('new', () => i18n.cleanNavNew, 1, '.WB_global_nav .W_new { display: none !important; }');
+  clean.CleanRule('new', () => i18n.cleanNavNew, 1, '.WB_global_nav .W_new { display: none !important; }', {
+    weiboVersion: [6, 7],
+    ainit: function () {
+      if (yawf.WEIBO_VERSION !== 7) return;
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        vueSetup.transformComponentsRenderByTagName('ctrls', function (nodeStruct, Nodes) {
+          const { vNode } = Nodes;
+          const badges = Array.from(nodeStruct.querySelectorAll('x-woo-badge'));
+          badges.forEach(budge => {
+            Object.assign(vNode(budge).componentOptions.propsData, { dot: false, value: 0 });
+          });
+        });
+      }, util.inject.rootKey);
+    },
+  });
 
 }());
 //#endregion
@@ -21742,13 +21778,13 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       const lastWeiboVersion = this.ref.lastWeibo.getConfig();
       const updateDone = () => { this.ref.last.setConfig(currentVersion); };
       if (lastWeiboVersion && yawf.WEIBO_VERSION !== lastWeiboVersion) {
-        ui.alert({
-          id: 'yawf-weibo-version',
-          title: i18n.weiboVersionTitle,
-          text: yawf.WEIBO_VERSION === 6 ? i18n.weiboVersion7To6 : i18n.weiboVersion6To7,
-        }).then(() => {
+        // ui.alert({
+        //   id: 'yawf-weibo-version',
+        //   title: i18n.weiboVersionTitle,
+        //   text: yawf.WEIBO_VERSION === 6 ? i18n.weiboVersion7To6 : i18n.weiboVersion6To7,
+        // }).then(() => {
           this.ref.lastWeibo.setConfig(yawf.WEIBO_VERSION);
-        });
+        // });
       } else if (!lastWeiboVersion) {
         this.ref.lastWeibo.setConfig(yawf.WEIBO_VERSION);
       }
