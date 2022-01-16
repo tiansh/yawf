@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.97
+// @version           4.0.98
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -14012,6 +14012,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanNavHot: { cn: '热门（发现）', en: 'Discover' },
     cleanNavGame: { cn: '游戏', tw: '遊戲', en: 'Game' },
     cleanNavHotSearch: { cn: '大家正在搜', tw: '大家正在熱搜', en: 'Hot search' },
+    cleanNavAria: { cn: '无障碍', en: '无障碍 (a11y)' },
     cleanNavNoticeNew: { cn: '新消息计数', tw: '新消息計數', en: 'Count for new notice' },
     cleanNavNew: { cn: '提示红点', tw: '提示紅點', en: 'Red dot tips' },
   });
@@ -14104,6 +14105,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
     });
   }
+  clean.CleanRule('aria', () => i18n.cleanNavAria, 98, '[yawf-component-tag~="aria"], .gn_set_aria { display: none !important; }', { weiboVersion: [6, 7] });
   clean.CleanRule('notice_new', () => i18n.cleanNavNoticeNew, 1, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
   clean.CleanRule('new', () => i18n.cleanNavNew, 1, '.WB_global_nav .W_new { display: none !important; }', {
     weiboVersion: [6, 7],
@@ -22166,20 +22168,20 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 
   // 缩小搜索框宽度以留出漏斗按钮的位置
   const searchCss = `
-.WB_global_nav .gn_search_v2 { width: 178px !important; }
-.WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 135px !important; }
-.gn_topmenulist_search { width: 180px !important; }
+.WB_global_nav .gn_search_v2 { width: 118px !important; }
+.WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 75px !important; }
+.gn_topmenulist_search { width: 120px !important; }
 @media screen and (min-width:1295px) {
-  .WB_global_nav .gn_search_v2 { width: 435px !important; }
-  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 392px !important; }
-  .gn_topmenulist_search { width: 437px !important; }
+  .WB_global_nav .gn_search_v2 { width: 375px !important; }
+  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 332px !important; }
+  .gn_topmenulist_search { width: 377px !important; }
 }
 @media screen and (max-width:1006px) {
-  .WB_global_nav .gn_search_v2 { width: 115px !important; }
-  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 72px !important; }
-  .gn_topmenulist_search { width: 117px !important; }
+  .WB_global_nav .gn_search_v2 { width: 55px !important; }
+  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 12px !important; }
+  .gn_topmenulist_search { width: 57px !important; }
 }
-.gn_topmenulist_search { min-width: 200px !important; }
+.gn_topmenulist_search { min-width: 140px !important; }
 `;
   // 添加漏斗图标的定义
   const iconCss = `
