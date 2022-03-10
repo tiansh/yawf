@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.99
+// @version           4.0.100
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -14021,6 +14021,19 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanNavNew: { cn: '提示红点', tw: '提示紅點', en: 'Red dot tips' },
   });
 
+  clean.tagElements('Nav', [
+    '.gn_nav_list>li:not([yawf-id])',
+    '.gn_set_v2>a:not([yawf-id])',
+  ].join(','), {
+    'a[nm="home"]': 'home',
+    'a[nm="tv"]': 'tv',
+    'a[nm="find"]': 'find',
+    'a[nm="name"]': 'name',
+    'a[nm="game"]': 'game',
+    '.ficon_wb_ds': 'mall',
+    '.ficon_game': 'game',
+  });
+
   clean.CleanGroup('nav', () => i18n.cleanNavGroupTitle);
   clean.CleanRule('logo_img', () => i18n.cleanNavLogoImg, 1, {
     weiboVersion: [6, 7],
@@ -14053,17 +14066,17 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
   clean.CleanRuleGroup({
     // V7: 那段 CSS 是 V6 的，之后应该直接删掉
-    home: clean.CleanRule('main', () => i18n.cleanNavMain, 1, '.gn_nav_list>li:nth-child(1) { display: none !important; }', { weiboVersion: [6, 7] }),
-    tv: clean.CleanRule('tv', () => i18n.cleanNavTV, 1, '.gn_nav_list>li:nth-child(2) { display: none !important; }', { weiboVersion: [6, 7] }),
-    hot: clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '.gn_nav_list>li:nth-child(3) { display: none !important; }', { weiboVersion: [6, 7] }),
-    eCom: clean.CleanRule('eCom', () => i18n.cleanNavECom, 99, '.gn_set_v2>a:nth-child(1) { display: none !important; }', {
+    home: clean.CleanRule('main', () => i18n.cleanNavMain, 1, '[yawf-id="home"] { display: none !important; }', { weiboVersion: [6, 7] }),
+    tv: clean.CleanRule('tv', () => i18n.cleanNavTV, 1, '[yawf-id="tv"] { display: none !important; }', { weiboVersion: [6, 7] }),
+    hot: clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '[yawf-id="find"] { display: none !important; }', { weiboVersion: [6, 7] }),
+    eCom: clean.CleanRule('eCom', () => i18n.cleanNavECom, 1, '[yawf-id="mall"] { display: none !important; }', {
       weiboVersion: [6, 7],
       ainit: function () {
         const hideGame = clean.nav.game.getConfig();
         if (hideGame) css.append('.gn_set_v2 { display: none !important; }');
       },
     }),
-    game: clean.CleanRule('game', () => i18n.cleanNavGame, 99, '.gn_set_v2>a:nth-child(2) { display: none !important; }', { weiboVersion: [6, 7] }),
+    game: clean.CleanRule('game', () => i18n.cleanNavGame, 1, '[yawf-id="game"] { display: none !important; }', { weiboVersion: [6, 7] }),
   }, function (options) {
     if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
