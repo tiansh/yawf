@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.100
+// @version           4.0.101
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -16431,7 +16431,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
             if (textNode.nodeType !== Node.TEXT_NODE) return;
             const text = textNode.textContent.trim();
             if (text === '') return;
-            const [_full, match, tail] = text.match(/^(.*?)\s*(来自|來自|come from|)$/);
+            const [_full, match, tail] = text.match(/^(.*?)\s*((?:(?:来自|來自|come from).*)?)$/);
             const time = util.time.parse(match);
             if (!time) return;
             util.debug('parse time %o(%s) to %o(%s)', textNode, text, time, time);
@@ -16439,7 +16439,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
             const timeElement = document.createElement('span');
             timeElement.setAttribute('yawf-date', +time);
             updateDate(timeElement);
-            textNode.replaceWith(timeElement);
+            textNode.parentNode.insertBefore(timeElement, textNode);
           });
         };
         observer.dom.add(handleTextDateElements);
