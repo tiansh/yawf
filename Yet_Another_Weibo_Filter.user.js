@@ -4294,6 +4294,9 @@ html { background: #f9f9fa; }
           method: 'GET',
           url: url,
           responseType: 'arraybuffer',
+          headers: {
+            "Referer": "https://weibo.com/"
+          },
           onload: function (resp) {
             const mtime = (resp.responseHeaders.match(/^Last-Modified: (.*)$/mi) || [])[1];
             resolve({
