@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.101
+// @version           4.0.102
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -4285,14 +4285,15 @@ html { background: #f9f9fa; }
   };
 
   /**
-   * @param {{ url: string, filename: string }[]}
+   * @param {{ url: string, filename: string, referrer: string? }[]}
    */
   download.urls = async function (files) {
-    const content = await Promise.all(files.map(function ({ url, filename }, index) {
+    const content = await Promise.all(files.map(function ({ url, filename, referrer = '' }, index) {
       return new Promise((resolve, reject) => {
         GM.xmlHttpRequest({
           method: 'GET',
           url: url,
+          headers: { Referer: referrer },
           responseType: 'arraybuffer',
           onload: function (resp) {
             const mtime = (resp.responseHeaders.match(/^Last-Modified: (.*)$/mi) || [])[1];
@@ -4490,13 +4491,33 @@ html { background: #f9f9fa; }
     body { background-image: url("chrome://global/skin/media/imagedoc-darknoise.png");  }
     #viewer { background: hsl(0, 0%, 90%) url("chrome://global/skin/media/imagedoc-lightnoise.png") repeat scroll 0 0; }
   }
-</style><script>const info = ${JSON.stringify(info)};</script></head>
-<body><div id="container" tabindex="1"><div id="imgarea" tabindex="-1"><img id="viewer" class="large" /></div></div><div id="chose" tabindex="-1"><script>
+</style></head>
+<body><div id="container" tabindex="1"><div id="imgarea" tabindex="-1"><img id="viewer" class="large" /></div></div><div id="chose" tabindex="-1"></div><script>
+  const info = ${JSON.stringify(info)};
+  const allImages = new Set();
+  function loadImage(img, url) {
+    img.dataset.url = url;
+    allImages.add(img);
+    window.opener.postMessage(url);
+  }
+  window.addEventListener('message', event => {
+    if (event.source !== window.opener) return;
+    const { url, response } = event.data;
+    [...allImages].forEach(img => {
+      if (img.dataset.url === url) img.src = response;
+    });
+  });
   info.images.forEach(function (image, i) {
     const url = image.replace(/large/, 'square');
-    document.write('<a id="img' + i + '" href="javascript:;" onclick="return goto(' + i + ') && false"><img src="' + url + '"></a>');
+    const link = document.createElement('a');
+    link.id = 'img' + i;
+    link.href = 'javascript:;';
+    link.addEventListener('click', () => { goto(i); });
+    const img = document.createElement('img');
+    loadImage(img, url);
+    link.append(img);
+    chose.append(link);
   });
-</script></div><script>
   function resize() {
     const width = viewer.naturalWidth;
     const height = viewer.naturalHeight;
@@ -4505,10 +4526,11 @@ html { background: #f9f9fa; }
     focus();
   }
   function show() {
+    if (Number(viewer.dataset.index) === info.current) return;
+    viewer.dataset.index = info.current;
     const url = info.images[info.current];
-    if (viewer.src === url) return;
     viewer.src = '';
-    viewer.src = url;
+    loadImage(viewer, url);
     container.scrollTop = 0;
     container.scrollLeft = 0;
     Array.from(document.querySelectorAll('#chose a')).forEach(function (a) {
@@ -4570,8 +4592,29 @@ html { background: #f9f9fa; }
     const html = page({ images, current: current - 1 });
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    window.open(url);
+    const subWindow = window.open(url);
     setTimeout(function () { URL.revokeObjectURL(url); }, 3000);
+    const onMessage = event => {
+      if (event.source !== subWindow) return;
+      const url = String(event.data);
+      GM.xmlHttpRequest({
+        method: 'GET',
+        url,
+        headers: { Referer: 'https://weibo.com/' },
+        responseType: 'blob',
+        onload: function (resp) {
+          const reader = new FileReader();
+          reader.addEventListener('load', () => {
+            subWindow.postMessage({ url, response: reader.result });
+          });
+          reader.readAsDataURL(resp.response);
+        },
+      });
+    };
+    window.addEventListener('message', onMessage);
+    subWindow.addEventListener('close', () => {
+      window.removeEventListener('message', onMessage);
+    });
   };
 
 }());
@@ -19699,7 +19742,7 @@ ${selection ? `
             (ref.closest('.WB_feed_expand') && feed.getAttribute('omid')) ??
             feed.getAttribute('mid') ?? 0;
           const path = 'weibo-images/' + download.filename(feedId) + '/' + filename;
-          return { url, filename: path };
+          return { url, filename: path, referrer: 'https://weibo.com/' };
         });
         files.forEach(file => {
           util.debug('download fetch url %s', file.url);
