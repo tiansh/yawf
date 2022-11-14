@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.103
+// @version           4.0.104
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -811,7 +811,7 @@
       <div class="woo-dialog-body yawf-dialog-content">
       </div>
       <div class="woo-dialog-ctrl yawf-dialog-buttons">
-        <button class="woo-button-main woo-button-line woo-button-secondary woo-button-m woo-button-round woo-dialog-btn yawf-dialog-button-cancel"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>
+        <button class="woo-button-main woo-button-line woo-button-default woo-button-m woo-button-round woo-dialog-btn yawf-dialog-button-cancel"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>
         <button class="woo-button-main woo-button-flat woo-button-primary woo-button-m woo-button-round woo-dialog-btn yawf-dialog-button-ok"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>
       </div>
     </div>
@@ -4160,6 +4160,15 @@ html { background: #f9f9fa; }
       if (!vnode.data.attrs) return;
       delete vnode.data.attrs[name];
     };
+    const getTextNodeValue = function (text) {
+      const vnode = vNode(text);
+      return vnode.text;
+    };
+    const setTextNodeValue = function (text, nodeValue) {
+      const vnode = vNode(text);
+      if (typeof vnode.text !== 'string') return;
+      vnode.text = nodeValue;
+    };
     const transformSlot = function (node, slotName, transformer) {
       const vnode = vNode(node);
       const slots = vnode.data?.scopedSlots;
@@ -4187,6 +4196,8 @@ html { background: #f9f9fa; }
           hasAttribute,
           getAttribute,
           removeAttribute,
+          getTextNodeValue,
+          setTextNodeValue,
           createElement,
           h: createElement,
           transformSlot,
@@ -6928,9 +6939,9 @@ throw new Error('YAWF | chat page found, skip following executions');
 
       // 当有一条完成过滤规则判断时，交给页面脚本处理
       observer.feed.apply = function (data, { result, filter = null, reason = null }) {
-        const mid = data.mid;
+        const mid = data.mid, runIndex = data._yawf_FilterRunIndex;
         const event = new CustomEvent(key, {
-          detail: JSON.stringify({ action: 'result', mid, result: { result: result ?? 'unset', reason } }),
+          detail: JSON.stringify({ action: 'result', mid, runIndex, result: { result: result ?? 'unset', reason } }),
         });
         document.documentElement.dispatchEvent(event);
         if (result) util.debug('Feed filter %o -> %o by %o due to %o', data, result, filter, reason);
@@ -6990,10 +7001,10 @@ throw new Error('YAWF | chat page found, skip following executions');
         // 触发过滤并等待过滤结果回来
         const pendingFeeds = new Map();
         const triggerFilter = function (vm, feed) {
-          const mid = feed.mid;
+          const runIndex = feed._yawf_FilterRunIndex;
           feed._yawf_FilterStatus = 'running';
           const cleanUp = function () {
-            pendingFeeds.delete(mid);
+            pendingFeeds.delete(runIndex);
             vm.$off('hook:beforeDestroy', cleanUp);
           };
           vm.$once('hook:beforeDestroy', cleanUp);
@@ -7004,9 +7015,9 @@ throw new Error('YAWF | chat page found, skip following executions');
               feed._yawf_FilterReason = reason;
               resolve({ result, reason });
             };
-            pendingFeeds.set(mid, handleFilterResult);
+            pendingFeeds.set(runIndex, new WeakRef(handleFilterResult));
             const event = new CustomEvent(key, {
-              detail: JSON.stringify({ action: 'trigger', mid, data: feed }),
+              detail: JSON.stringify({ action: 'trigger', runIndex, data: feed }),
             });
             document.documentElement.dispatchEvent(event);
           });
@@ -7161,10 +7172,12 @@ throw new Error('YAWF | chat page found, skip following executions');
             }, { watch: false });
           } else if (detail.action === 'result') {
             // 应用过滤结果
-            const handler = pendingFeeds.get(detail.mid);
+            const runIndex = detail.runIndex;
+            const handler = pendingFeeds.get(runIndex)?.deref();
             if (handler) handler(detail.result);
           }
         }, true);
+        let runIndex = 0;
         vueSetup.eachComponentVM('feed-scroll', function (vm) {
           // 当 feed-scroll 内 feed 列表变化时，我们把那些没见过的全都标记一下
           vm.$watch(function () { return this.data; }, function () {
@@ -7175,6 +7188,7 @@ throw new Error('YAWF | chat page found, skip following executions');
               vm.$set(feed, '_yawf_FilterStatus', 'loading');
               vm.$set(feed, '_yawf_FilterReason', null);
               vm.$set(feed, '_yawf_FilterApply', true);
+              vm.$set(feed, '_yawf_FilterRunIndex', runIndex++);
               await longContentExpand(vm, feed);
               const { result, reason } = await triggerFilter(vm, feed);
               applyFilterResult(vm, feed, { result, reason });
@@ -7195,6 +7209,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   // 单条微博页面永远不应当隐藏微博
   observer.feed.filter(function singleWeiboPageUnsetRule() {
+    if (yawf.WEIBO_VERSION !== 6) return null;
     return document.querySelector('[id^="Pl_Official_WeiboDetail__"]') ? 'unset' : null;
   }, { priority: 1e6 });
   // 头条文章是一条微博，类似于单条微博，不应当隐藏
@@ -12305,6 +12320,10 @@ throw new Error('YAWF | chat page found, skip following executions');
           // 热推 / 广告之类
           if (feed.content_auth === 5) return 'hide';
           if (feed.retweeted_status?.content_auth === 5) return 'hide';
+          if (feed.attitude_dynamic_adid) {
+            // TODO 我也不确定这个属性是做什么的
+            // util.debug('attitude_dynamic_adid', feed.attitude_dynamic_adid, feed);
+          }
         }
         return null;
       }, { priority: 1e6 });
@@ -12509,6 +12528,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   commercial.userLike = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'filter_user_like',
     version: 1,
     parent: commercial.commercial,
@@ -12520,13 +12540,23 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function userLikeFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (init.page.type() !== 'profile') return null;
-        const { oid, onick } = init.page.$CONFIG;
-        if (!oid || !onick) return null;
-        const [author] = feedParser.author.id(feed);
-        const [fauthor] = feedParser.fauthor.id(feed);
-        if ((fauthor || author) !== oid) return 'hide';
-        return null;
+        if (yawf.WEIBO_VERSION === 6) {
+          if (init.page.type() !== 'profile') return null;
+          const { oid, onick } = init.page.$CONFIG;
+          if (!oid || !onick) return null;
+          const [author] = feedParser.author.id(feed);
+          const [fauthor] = feedParser.fauthor.id(feed);
+          if ((fauthor || author) !== oid) return 'hide';
+          return null;
+        } else {
+          if (init.page.type() !== 'profile') return null;
+          const oid = String(init.page.route.params.id);
+          if (!oid) return null;
+          const [author] = feedParser.author.id(feed);
+          const [fauthor] = feedParser.fauthor.id(feed);
+          if (String(fauthor || author) !== oid) return 'hide';
+          return null;
+        }
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -14164,7 +14194,7 @@ throw new Error('YAWF | chat page found, skip following executions');
             Object.defineProperty(vm, 'skinData', { get: () => ({}) });
           });
           vueSetup.eachComponentVM('weibo-top-nav-base', function (vm) {
-            Object.defineProperty(vm, 'logoUrl', { get: () => null, set: x => true });
+            Object.defineProperty(vm, 'logoUrl', { get: () => null, set: x => { } });
           });
         }, util.inject.rootKey);
       }
@@ -14192,10 +14222,12 @@ throw new Error('YAWF | chat page found, skip following executions');
 
       vueSetup.eachComponentVM('weibo-top-nav', function (vm) {
         if (Array.isArray(vm.channels)) {
-          vm.channels = vm.channels.filter(channel => !options[channel.name]);
+          const filtered = vm.channels.filter(channel => !options[channel.name]);
+          vm.channels.splice(0, vm.channels.length, ...filtered);
         }
         if (Array.isArray(vm.links)) {
-          vm.links = vm.links.filter(link => !options[link.name]);
+          const filtered = vm.links.filter(link => !options[link.name]);
+          vm.links.splice(0, vm.links.length, ...filtered);
         }
       });
 
@@ -14466,6 +14498,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanRightHotTopic: { cn: '热门话题 / 微博热搜', tw: '熱門話題', en: 'Hot Topic' },
     cleanRightHotTopicTop: { cn: '置顶热门话题 (V7)' },
     cleanRightInterest: { cn: '可能感兴趣的人', tw: '可能感興趣的人', en: 'You may know' },
+    cleanRightService: { cn: '创作者中心' },
     cleanRightMember: { cn: '会员专区', tw: '會員專區', en: 'Weibo VIP' },
     cleanRightGroups: { cn: '分组成员列表', tw: '分組成員列表', en: 'Members of group' },
     cleanRightRecomGroupUser: { cn: '建议加入该分组', tw: '建議加入該分組', en: 'Suggest to add to this group' },
@@ -14484,6 +14517,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const hotSearchTop = clean.CleanRule('hot_topic_top', () => i18n.cleanRightHotTopicTop, 91, '', { weiboVersion: 7 });
   const hotSearch = clean.CleanRule('hot_topic', () => i18n.cleanRightHotTopic, 1, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }', { weiboVersion: [6, 7] });
   const interested = clean.CleanRule('interest', () => i18n.cleanRightInterest, 1, '[yawf-id="rightmod_recom_interest"] { display: none !important; }', { weiboVersion: [6, 7] });
+  const service = clean.CleanRule('service', () => i18n.cleanRightService, 104, '', { weiboVersion: 7 })
   clean.CleanRule('member', () => i18n.cleanRightMember, 1, '#v6_trustPagelet_recom_member { display: none !important; }');
   clean.CleanRule('groups', () => i18n.cleanRightGroups, 1, '#v6_pl_rightmod_groups { display: none; }');
   clean.CleanRule('recom_group_user', () => i18n.cleanRightRecomGroupUser, 1, '#v6_pl_rightmod_recomgroupuser { display: none; }');
@@ -14515,6 +14549,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     hotSearchTop: hotSearchTop,
     cardHotSearch: hotSearch,
     cardInterested: interested,
+    cardService: service,
   }, function (options) {
     if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
@@ -14524,8 +14559,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       vueSetup.eachComponentVM('side', function (vm) {
         vm.$watch(function () { return this.cardsData; }, function () {
           if (Array.isArray(vm.cardsData)) {
+            if (vm.cardsData?.length) vm.$parent.isLoaded = true;
             for (let i = 0; i < vm.cardsData.length;) {
-              if (options[vm.cardsData[i].card_type]) {
+              const cardData = vm.cardsData[i];
+              if (cardData == null || options[cardData.card_type]) {
                 vm.cardsData.splice(i, 1);
               } else i++;
             }
@@ -15067,8 +15104,9 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   clean.CleanRule('home_tip', () => i18n.cleanOtherHomeTip, 1, '#v6_pl_content_hometip { display: none !important }');
   clean.CleanRule('footer', () => i18n.cleanOtherFooter, 1, {
     // 直接 display: none 的话，发现页面的左边栏会飘走
-    acss: '.global_footer, .WB_footer { height: 0; overflow: hidden; }',
+    acss: '.global_footer, .WB_footer { height: 0; overflow: hidden; } [yawf-component-tag*="copy-right"] { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanOtherFooterDetail } },
+    weiboVersion: [6, 7],
   });
   clean.CleanRule('im', () => i18n.cleanOtherIM, 1, {
     acss: '.WB_webim { display: none !important; }',
@@ -17305,7 +17343,14 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       }
       // 快转
       if (Array.isArray(this.screen_name_suffix_new) && this.screen_name_suffix_new.length) {
-        // TODO 微博目前快转的作者名不是链接，估计是 bug，先等等再看怎么处理
+        if (userLine) {
+          const [fastFromUser] = [...userLine.querySelectorAll('x-a-link')].filter(item => item !== userLink);
+          if (fastFromUser) {
+            addClass(fastFromUser, 'yawf-feed-author');
+            addClass(fastFromUser, 'yawf-feed-fast-forward-original');
+            addClass(userLink, 'yawf-feed-fast-forward-author');
+          }
+        }
       }
       // 标记一下时间和来源
       const headInfo = nodeStruct.querySelector('x-head-info');
@@ -17329,7 +17374,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       if (tag) addClass(tag, 'yawf-feed-tag');
 
       const sourceBox = nodeStruct.querySelector('x-woo-box-item x-woo-box');
-      const [source, edited] = sourceBox.childNodes;
+      const [, source, edited] = sourceBox.childNodes;
 
       // 替换掉原有的来源，保证来源本身有个标签，后续用来做拖拽过滤用
       if (source && source.nodeType !== Node.COMMENT_NODE) {
@@ -18253,6 +18298,82 @@ ${[0, 1, 2, 3, 4].map(index => `
   content.content = rule.Group({
     parent: feeds.feeds,
     template: () => i18n.feedContentGroupTitle,
+  });
+
+  i18n.feedUserScreenName = {
+    cn: '已备注的微博作者显示原始微博名',
+  };
+
+  content.fontSize = rule.Rule({
+    weiboVersion: 7,
+    id: 'feed_user_screen_name',
+    version: 104,
+    parent: content.content,
+    template: () => i18n.feedUserScreenName,
+    ainit() {
+
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        const fixScreenName = function (author, { screen_name }, Nodes, type) {
+          const { h, insertBefore, addClass, getTextNodeValue, setTextNodeValue } = Nodes;
+          const remark = author.firstChild;
+          const text = remark.firstChild;
+          let displayName = screen_name;
+          if (getTextNodeValue(text).startsWith('@')) {
+            setTextNodeValue(text, getTextNodeValue(text).slice(1));
+            displayName = '@' + displayName;
+          }
+          const screenName = h('span', {
+            class: `yawf-feed-${type}-screen-name yawf-feed-screen-name`,
+            attrs: { title: screen_name },
+          }, [displayName]);
+          insertBefore(author, screenName, remark);
+          addClass(remark, `yawf-feed-${type}-remark yawf-feed-remark`);
+          addClass(author, `yawf-feed-${type}-with-remark yawf-feed-with-remark`);
+        };
+
+        vueSetup.transformComponentsRenderByTagName('feed-head', function (nodeStruct, Nodes) {
+          // 作者
+          const author = nodeStruct.querySelector('span').closest('x-a-link');
+          const userInfo = vueSetup.closest(this, 'feed').data.user;
+          if (author && userInfo?.remark) {
+            fixScreenName(author, userInfo, Nodes, 'author');
+          }
+          // 快转
+          const userLine = nodeStruct.querySelector('span').closest('x-woo-box');
+          this.screen_name_suffix_new?.forEach((suffix, index) => {
+            if (suffix.scheme?.startsWith('sinaweibo://userinfo?') && suffix.remark) {
+              fixScreenName(userLine.children[index], { screen_name: suffix.content }, Nodes, 'fast-forward');
+            }
+          });
+        });
+
+        vueSetup.transformComponentsRenderByTagName('feed-detail', function (nodeStruct, Nodes) {
+          // 原作者
+          const [authorBox] = nodeStruct.childNodes;
+          if (authorBox && authorBox.nodeType !== Node.COMMENT_NODE) {
+            const author = authorBox.querySelector('x-a-link');
+            const userInfo = vueSetup.closest(this, 'feed').data.retweeted_status.user;
+            if (author && userInfo?.remark) {
+              fixScreenName(author, userInfo, Nodes, 'original');
+            }
+          }
+        });
+
+      }, util.inject.rootKey);
+      // 我也不懂为什么他们作者和转发原作者的名字在鼠标 hover 时候颜色不一样，但是我们姑且按照和他们一样的逻辑来
+      css.append(`
+span.yawf-feed-remark { margin-left: 0.6em; font-weight: normal; font-size: 90%; vertical-align: bottom; color: var(--w-sub); }
+span.yawf-feed-remark::before { content: "("; }
+span.yawf-feed-remark::after { content: ")"; }
+span.yawf-feed-screen-name { font-weight: bold; }
+.yawf-feed-author-with-remark:active span, .yawf-feed-author-with-remark:hover span { color: var(--w-alink); }
+.yawf-feed-original-with-remark:active span, .yawf-feed-original-with-remark:hover span { color: var(--w-brand); }
+.yawf-feed-original-with-remark { white-space: nowrap; max-width: 100%; display: inline-block; overflow: hidden; text-overflow: ellipsis; }
+`);
+    },
   });
 
   i18n.styleTextFontSize = {
