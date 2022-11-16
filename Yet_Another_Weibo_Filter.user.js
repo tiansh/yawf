@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.104
+// @version           4.0.105
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -803,7 +803,7 @@
 `;
     } else {
       template.innerHTML = `
-<div class="woo-box-flex woo-box-alignCenter woo-box-justifyCenter woo-modal-wrap">
+<div class="woo-box-flex woo-box-alignCenter woo-box-justifyCenter woo-modal-wrap woo-modal-an--pop-enter">
   <div class="woo-modal-main yawf-dialog">
     <i class="woo-font woo-font--cross yawf-dialog-close"></i>
     <div class="woo-box-flex woo-box-column woo-box-alignCenter woo-dialog-main" aria-modal="true" tabindex="0" role="alertdialog">
@@ -937,6 +937,7 @@
     // 关闭对话框
     const hide = function () {
       if (yawf.WEIBO_VERSION === 6) dialog.classList.add('UI_animated', 'UI_speed_fast', 'UI_ani_bounceOut');
+      else container.classList.add('woo-modal-an--pop-leave-to');
       document.removeEventListener('keydown', keys);
       container.removeEventListener('keypress', stopKeys);
       document.removeEventListener('scroll', resetPos);
@@ -969,6 +970,10 @@
         dialog.classList.add('UI_animated', 'UI_speed_fast', 'UI_ani_bounceIn');
         setTimeout(function () {
           dialog.classList.remove('UI_animated', 'UI_speed_fast', 'UI_ani_bounceIn');
+        }, 200);
+      } else {
+        setTimeout(function () {
+          container.classList.remove('woo-modal-an--pop-enter');
         }, 200);
       }
       dialogStack.push(dialog);
@@ -3847,42 +3852,37 @@ html { background: #f9f9fa; }
       }
       if (tag) {
         if (vmToHtmlNode.has(vm)) {
-          const old = vmToHtmlNode.get(vm);
+          const old = vmToHtmlNode.get(vm).deref();
           if (old !== node) {
             reportNewNode({ tag, node, replace: true });
-            vmToHtmlNode.set(vm, node);
+            vmToHtmlNode.set(vm, new WeakRef(node));
           }
         } else {
           reportNewNode({ tag, node, replace: false });
-          vmToHtmlNode.set(vm, node);
+          vmToHtmlNode.set(vm, new WeakRef(node));
         }
       }
     };
     const eachVmForNode = function* (node) {
-      for (let vm = node.__vue__; vm && vm.$el === node; vm = vm.$parent) {
+      const visited = new Set();
+      const queue = [node.__vue__];
+      while (queue.length) {
+        const vm = queue.shift();
+        if (vm == null || !vm._isVue) continue;
+        if (vm.$el !== node || visited.has(vm)) continue;
+        visited.add(vm);
         yield vm;
-      }
-      for (let vm = node.__vue__; ; vm = vm.$children[0]) {
-        if (!Array.isArray(vm.$children)) break;
-        if (vm.$children.length !== 1) break;
-        const child = vm.$children[0];
-        if (!child || child.$el !== node) break;
-        yield child;
+        if (vm.$parent) queue.unshift(vm.$parent);
+        if (Array.isArray(vm.$children)) {
+          queue.push(...vm.$children);
+        }
+        if (vm.$slots) {
+          const slots = Object.keys(vm.$slots).flatMap(key => vm.$slots[key]);
+          queue.push(...slots.map(slot => slot?.componentInstance));
+        }
       }
     };
-    const eachMountedNode = function (node) {
-      const vm = node.__vue__;
-      if (!vm) return;
-      // 如果发现根元素，那么初始化脚本
-      if (vm.$parent == null) {
-        reportRootNode(node);
-        listenRouteChange(node);
-      }
-      for (let vmi of eachVmForNode(node)) {
-        markElement(node, vmi);
-      }
-      if (seenElement.has(node)) return;
-      seenElement.add(node);
+    const watchVueAttr = function (node) {
       let __vue__ = node.__vue__;
       delete node.__vue__;
       Object.defineProperty(node, '__vue__', {
@@ -3896,22 +3896,36 @@ html { background: #f9f9fa; }
         },
       });
     };
+    /** @param {Node} node */
+    const eachMountedNode = function (node) {
+      if (seenElement.has(node)) return;
+      seenElement.add(node);
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.__vue__) {
+          for (let vm of eachVmForNode(node)) {
+            // 如果发现根元素，那么初始化脚本
+            if (vm.$parent == null) {
+              reportRootNode(node);
+              listenRouteChange(node);
+            }
+            markElement(node, vm);
+          }
+        }
+        watchVueAttr(node);
+      }
+      if (node.children) {
+        [...node.children].forEach(eachMountedNode);
+      }
+    };
     /** @type {MutationCallback} */
     const observeNewNodes = function (records) {
       Array.from(records).forEach(record => {
-        Array.from(record.addedNodes).forEach(node => {
-          const nodes = [node];
-          if (node instanceof Element) {
-            nodes.push(...node.getElementsByTagName('*'));
-          }
-          nodes.forEach(node => {
-            eachMountedNode(node);
-          });
-        });
+        Array.from(record.addedNodes).forEach(eachMountedNode);
       });
     };
     const observer = new MutationObserver(observeNewNodes);
     observer.observe(document.documentElement, { childList: true, subtree: true });
+    eachMountedNode(document.documentElement);
 
     Object.defineProperty(window, rootKey, { value: {}, enumerable: false, writable: false });
     const yawf = window[rootKey];
@@ -3920,11 +3934,15 @@ html { background: #f9f9fa; }
     vueSetup.getRootVm = () => rootVm;
 
     vueSetup.kebabCase = kebabCase;
-    const eachComponentVM = vueSetup.eachComponentVM = function (tag, callback, { mounted = true, watch = true } = {}) {
+    const eachComponentVM = vueSetup.eachComponentVM = function (tagName, callback, { mounted = true, watch = true } = {}) {
+      const tag = kebabCase(tagName);
+      if (tag === '*') {
+        console.error('wildcard tag is aimed for debugging purpose only! Which should be avoid.');
+      }
       const seen = new WeakSet();
       const found = function (target) {
         for (let vm of eachVmForNode(target)) {
-          if (getTag(vm) === kebabCase(tag)) {
+          if (tag === '*' || getTag(vm) === tag) {
             if (seen.has(vm)) continue;
             seen.add(vm);
             callback(vm);
@@ -3933,7 +3951,7 @@ html { background: #f9f9fa; }
       };
       if (watch) {
         document.documentElement.addEventListener('yawf-VueNodeInserted', event => {
-          if (tag !== event.detail.tag) return;
+          if (tag !== '*' && tag !== event.detail.tag) return;
           found(event.target);
         });
       }
@@ -4216,12 +4234,16 @@ html { background: #f9f9fa; }
           return transformer(originalRender).call(this, createElement, { builder: builder(createElement) });
         };
       }
+      let errorFlag = false;
       const wrapped = function render(createElement) {
         const { nodeStruct, Nodes, getRoot } = builder(createElement)(originalRender.call(this, createElement));
         try {
           transformer.call(this, nodeStruct, Nodes);
         } catch (e) {
-          console.error('YAWF Error while inject render [%o]: %o', transformer, e);
+          if (!errorFlag) {
+            console.error('YAWF Error while inject render [%o]: %o (Following errors are supressed)', transformer, e);
+            errorFlag = true;
+          }
         }
         return getRoot();
       };
@@ -6953,17 +6975,11 @@ throw new Error('YAWF | chat page found, skip following executions');
         const event = new CustomEvent(key, { detail: JSON.stringify({ action: 'rerun' }) });
         document.documentElement.dispatchEvent(event);
       };
-      const feedTriggerPending = [];
       // 当页面脚本检测到一条需要过滤的微博时，提交过滤
       window.addEventListener(key, function (event) {
         const detail = JSON.parse(event.detail);
         if (detail.action === 'trigger') {
-          feedTriggerPending.push(detail.data);
-          setTimeout(() => {
-            if (feedTriggerPending.length) {
-              observer.feed.active(feedTriggerPending.splice(0));
-            }
-          }, 0);
+          observer.feed.active([detail.data]);
         }
       }, true);
       util.inject(function (rootKey, key) {
@@ -7002,6 +7018,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         const pendingFeeds = new Map();
         const triggerFilter = function (vm, feed) {
           const runIndex = feed._yawf_FilterRunIndex;
+          console.log('FEEDFILTER Start: ', runIndex);
           feed._yawf_FilterStatus = 'running';
           const cleanUp = function () {
             pendingFeeds.delete(runIndex);
@@ -12315,15 +12332,14 @@ throw new Error('YAWF | chat page found, skip following executions');
           if (feed.querySelector('[suda-uatrack*="negativefeedback"]')) return 'hide';
           if (feed.querySelector('[suda-uatrack*="1022-adFeedEvent"]')) return 'hide';
         } else {
+          // TODO 我也不确定这个属性是做什么的
+          // if (feed.promotion) console.log('FILTERTEST promotion: %o (%o)', feed.promotion, feed);
+          // if (feed.attitude_dynamic_adid) console.log('FILTERTEST attitude_dynamic_adid: %o (%o)', feed.attitude_dynamic_adid, feed);
           // 某某赞过的微博
           if (feed.title?.type === 'likerecommend') return 'hide';
           // 热推 / 广告之类
           if (feed.content_auth === 5) return 'hide';
           if (feed.retweeted_status?.content_auth === 5) return 'hide';
-          if (feed.attitude_dynamic_adid) {
-            // TODO 我也不确定这个属性是做什么的
-            // util.debug('attitude_dynamic_adid', feed.attitude_dynamic_adid, feed);
-          }
         }
         return null;
       }, { priority: 1e6 });
@@ -12341,6 +12357,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   commercial.fansTop = rule.Rule({
+    weiboVersion: [6, 7],
     id: 'filter_fans_top',
     version: 1,
     parent: commercial.commercial,
@@ -12352,8 +12369,13 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function fansTopFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (feed.querySelector('[adcard="fanstop"]')) return 'hide';
-        return null;
+        if (yawf.WEIBO_VERSION === 6) {
+          if (feed.querySelector('[adcard="fanstop"]')) return 'hide';
+          return null;
+        } else {
+          if (feed.promotion?.adtype === 8) return 'hide';
+          return null;
+        }
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -14225,9 +14247,12 @@ throw new Error('YAWF | chat page found, skip following executions');
           const filtered = vm.channels.filter(channel => !options[channel.name]);
           vm.channels.splice(0, vm.channels.length, ...filtered);
         }
-        if (Array.isArray(vm.links)) {
-          const filtered = vm.links.filter(link => !options[link.name]);
-          vm.links.splice(0, vm.links.length, ...filtered);
+        let links = vm.links;
+        if (!Object.getOwnPropertyDescriptor(vm, 'links')?.get) {
+          Object.defineProperty(vm, 'links', {
+            get() { return links.filter(link => !options[link.name]); },
+            set(v) { links = v; },
+          });
         }
       });
 
@@ -17321,6 +17346,18 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       Object.assign(content.data.domProps, { innerHTML: wrap.innerHTML });
     };
 
+    vueSetup.transformComponentsRenderByTagName('feed', function (nodeStruct, Nodes) {
+      const { addClass } = Nodes;
+      addClass(nodeStruct, 'yawf-feed');
+      const body = nodeStruct.querySelector('x-feed-head').parentNode;
+      addClass(body, 'yawf-feed-body');
+    });
+
+    vueSetup.transformComponentsRenderByTagName('feed-title', function (nodeStruct, Nodes) {
+      const { addClass } = Nodes;
+      addClass(nodeStruct, 'yawf-feed-title');
+    });
+
     vueSetup.transformComponentsRenderByTagName('feed-head', function (nodeStruct, Nodes) {
       const { addClass, setAttribute } = Nodes;
 
@@ -17340,6 +17377,11 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       if (userLine) {
         addClass(userLine, 'yawf-feed-author-line');
         addClass(userLine.parentNode, 'yawf-feed-author-box');
+        addClass(userLine.closest('.yawf-feed-head > *'), 'yawf-feed-head-main');
+      }
+      if (userLink) {
+        const iconList = userLink.parentNode.querySelector('x-icon-list');
+        if (iconList) addClass(iconList, 'yawf-feed-icon-list yawf-feed-author-icon-list');
       }
       // 快转
       if (Array.isArray(this.screen_name_suffix_new) && this.screen_name_suffix_new.length) {
@@ -17354,7 +17396,18 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       }
       // 标记一下时间和来源
       const headInfo = nodeStruct.querySelector('x-head-info');
-      addClass(headInfo, 'yawf-feed-head-info');
+      if (headInfo) addClass(headInfo, 'yawf-feed-head-info');
+
+      const slots = nodeStruct.lastChild;
+      if (slots) {
+        addClass(slots, 'yawf-feed-head-slots');
+        const readnum = slots.querySelector('x-readnum');
+        const followBtn = slots.querySelector('x-follow-btn');
+        const morepop = slots.querySelector('x-morepop');
+        if (readnum) addClass(readnum, 'yawf-feed-readnum');
+        if (followBtn) addClass(followBtn, 'yawf-feed-follown-btn');
+        if (morepop) addClass(morepop, 'yawf-feed-morepop');
+      }
     });
 
     vueSetup.transformComponentsRenderByTagName('head-info', function (nodeStruct, Nodes) {
@@ -17405,6 +17458,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         if (headInfoVNode.componentOptions.propsData) {
           headInfoVNode.componentOptions.propsData.source = this.data.source;
         }
+        addClass(headInfo.parentNode, 'yawf-feed-retweet-bar');
       }
 
       // 内容
@@ -17432,10 +17486,13 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       const { vNode, addClass } = Nodes;
       const [authorBox, content] = nodeStruct.childNodes;
 
+      addClass(nodeStruct, 'yawf-feed-detail');
+
       // 原作者
       if (authorBox && authorBox.nodeType !== Node.COMMENT_NODE) {
         const author = authorBox.querySelector('x-a-link');
         addClass(author, 'yawf-feed-original');
+        addClass(authorBox, 'yawf-feed-original-box');
       }
 
       // 内容
@@ -17445,7 +17502,6 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
           addClass(content, 'yawf-feed-detail-content-retweet');
         }
         handleContentRender(vNode(content));
-        addClass(content, 'yawf-feed-detail-content-handler');
       }
     });
 
@@ -18429,6 +18485,7 @@ span.yawf-feed-screen-name { font-weight: bold; }
         }[this.ref.ratio.getConfig()];
         const { fs, lh, fs2, lh2 } = config;
         css.append(`
+:root:root { --feed-detail-og-font-size: ${fs}px; --feed-detail-og-line-height: ${lh}px; --feed-detail-re-font-size: ${fs2}px; --feed-detail-re-line-height: ${lh2}px; }
 .yawf-feed-author-line { margin-bottom: 0px !important; font-size: ${fs}px !important; line-height: ${lh}px !important; }
 .yawf-feed-author-box { justify-content: space-between !important; }
 .yawf-feed-author-box::after { content: " "; margin-bottom: 4px }
