@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.105
+// @version           4.0.106
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -3779,23 +3779,84 @@ html { background: #f9f9fa; }
         else return '-' + lower;
       });
     };
+
+    /** @type {Map<string, Set<() => void>>} */
+    const watchComponentVMCallbacks = new Map();
+    /** @type {Set<WeakSet<VM>>} */
+    const allComponentVM = new WeakSet();
+    /** @type {Map<string, Set<WeakRef<VM>>>} */
+    const allComponentVMByTagName = new Map();
+    const finalizeVm = new FinalizationRegistry((byTagName, ref) => {
+      byTagName.delete(ref);
+    });
     // 发现任何 Vue 元素的时候上报消息以方便其他模块修改该元素
-    const reportNewNode = function ({ tag, node, replace, root = false }) {
-      const event = new CustomEvent('yawf-VueNodeInserted', {
-        bubbles: true,
-        detail: { tag, replace, root },
-      });
-      node.dispatchEvent(event);
+    const reportNewVM = function (vm, node, replace) {
+      const tag = getTag(vm);
+      if (allComponentVM.has(vm)) return;
+      allComponentVM.add(vm);
+
+      const ref = new WeakRef(vm);
+      if (!allComponentVMByTagName.has(tag)) {
+        allComponentVMByTagName.set(tag, new Set());
+      }
+      const byTagName = allComponentVMByTagName.get(tag);
+      byTagName.add(ref);
+      finalizeVm.register(vm, byTagName, ref);
+
+      if (watchComponentVMCallbacks.has(tag)) {
+        [...watchComponentVMCallbacks.get(tag)].forEach(callback => {
+          callback(vm);
+        });
+      }
     };
+    const watchComponentVM = function (tag, callback) {
+      if (!watchComponentVMCallbacks.has(tag)) {
+        watchComponentVMCallbacks.set(tag, new Set());
+      }
+      const callbacks = watchComponentVMCallbacks.get(tag);
+      callbacks.add(callback);
+      return function unwatch() {
+        callbacks.delete(callback);
+        callback = null;
+      };
+    };
+    const getComponentsByTagName = function (tag) {
+      if (!allComponentVMByTagName.has(tag)) return [];
+      return [...allComponentVMByTagName.get(tag)].flatMap(ref => {
+        const vm = ref.deref();
+        if (!vm || !vm._isMounted) return [];
+        return [vm];
+      });
+    };
+    const eachComponentVM = function (tag, callback, { mounted = true, watch = true } = {}) {
+      let error = false;
+      const cb = function (vm) {
+        try {
+          callback(vm);
+        } catch (e) {
+          if (!error) {
+            console.error('Error while running eachCompontentVM callback %o:\n%o', callback, e);
+          }
+          error = true;
+        }
+      };
+      if (mounted) {
+        getComponentsByTagName(tag).forEach(cb);
+      }
+      if (watch) {
+        watchComponentVM(tag, cb);
+      }
+    };
+
     const routeReportObject = function (vm) {
-      return vm.$route ? {
+      return vm.$route ? JSON.parse(JSON.stringify({
         name: vm.$route.name,
         fullPath: vm.$route.fullPath,
         path: vm.$route.path,
-        params: JSON.parse(JSON.stringify(vm.$route.params)),
-        query: JSON.parse(JSON.stringify(vm.$route.query)),
-        meta: JSON.parse(JSON.stringify(vm.$route.meta)),
-      } : null;
+        params: vm.$route.params,
+        query: vm.$route.query,
+        meta: vm.$route.meta,
+      })) : null;
     };
     // 发现 Vue 根元素的时候启动脚本的初始化
     const reportRootNode = function (node) {
@@ -3833,10 +3894,8 @@ html { background: #f9f9fa; }
       return name;
     };
     /** @type {WeakMap<Object, Node>} */
-    const vmToHtmlNode = new WeakMap();
-    const seenElement = new WeakSet();
     const markElement = function (node, vm) {
-      if (!vm || vm.$el !== node) return;
+      if (!vm || vm.$el !== node || !vm._isMounted) return;
       const tag = getTag(vm);
       if (tag && node instanceof Element) {
         if (node.hasAttribute('yawf-component-tag')) {
@@ -3851,16 +3910,7 @@ html { background: #f9f9fa; }
         node.setAttribute('yawf-component-key', key);
       }
       if (tag) {
-        if (vmToHtmlNode.has(vm)) {
-          const old = vmToHtmlNode.get(vm).deref();
-          if (old !== node) {
-            reportNewNode({ tag, node, replace: true });
-            vmToHtmlNode.set(vm, new WeakRef(node));
-          }
-        } else {
-          reportNewNode({ tag, node, replace: false });
-          vmToHtmlNode.set(vm, new WeakRef(node));
-        }
+        reportNewVM(vm, node);
       }
     };
     const eachVmForNode = function* (node) {
@@ -3896,6 +3946,7 @@ html { background: #f9f9fa; }
         },
       });
     };
+    let seenElement = new WeakSet();
     /** @param {Node} node */
     const eachMountedNode = function (node) {
       if (seenElement.has(node)) return;
@@ -3934,36 +3985,8 @@ html { background: #f9f9fa; }
     vueSetup.getRootVm = () => rootVm;
 
     vueSetup.kebabCase = kebabCase;
-    const eachComponentVM = vueSetup.eachComponentVM = function (tagName, callback, { mounted = true, watch = true } = {}) {
-      const tag = kebabCase(tagName);
-      if (tag === '*') {
-        console.error('wildcard tag is aimed for debugging purpose only! Which should be avoid.');
-      }
-      const seen = new WeakSet();
-      const found = function (target) {
-        for (let vm of eachVmForNode(target)) {
-          if (tag === '*' || getTag(vm) === tag) {
-            if (seen.has(vm)) continue;
-            seen.add(vm);
-            callback(vm);
-          }
-        }
-      };
-      if (watch) {
-        document.documentElement.addEventListener('yawf-VueNodeInserted', event => {
-          if (tag !== '*' && tag !== event.detail.tag) return;
-          found(event.target);
-        });
-      }
-      if (mounted) {
-        [...document.querySelectorAll(`[yawf-component-tag~="${tag}"]`)].forEach(found);
-      }
-    };
-    vueSetup.getComponentsByTagName = function (tag) {
-      const result = [];
-      eachComponentVM(tag, result.push.bind(result), { watch: false });
-      return result;
-    };
+
+    vueSetup.getComponentsByTagName = getComponentsByTagName;
 
     vueSetup.closest = function (vm, tag) {
       for (let p = vm; p; p = p.$parent) {
@@ -4250,15 +4273,18 @@ html { background: #f9f9fa; }
       wrapped.originalRender = originalRender;
       return wrapped;
     };
-    const transformComponentRender = vueSetup.transformComponentRender = function (vm, transformer, configs = {}) {
+    const transformComponentRender = function (vm, transformer, configs = {}) {
       vm.$options.render = transformRender(vm.$options.render, transformer, configs);
     };
-    vueSetup.transformComponentsRenderByTagName = function (tag, transformer, configs = {}) {
+    const transformComponentsRenderByTagName = function (tag, transformer, configs = {}) {
       eachComponentVM(tag, function (vm) {
         transformComponentRender(vm, transformer, configs);
         vm.$forceUpdate();
       });
     };
+    vueSetup.eachComponentVM = eachComponentVM;
+    vueSetup.transformComponentRender = transformComponentRender;
+    vueSetup.transformComponentsRenderByTagName = transformComponentsRenderByTagName;
 
     const isSimpleClick = function (event) {
       if (event.ctrlKey || event.altKey || event.shiftKey || event.metaKey) return false;
@@ -6786,22 +6812,27 @@ throw new Error('YAWF | chat page found, skip following executions');
       this.busy = true;
       const promises = [];
       while (this.pending.length) {
-        const item = this.pending.shift();
-        promises.push((async () => {
-          await this.invokeCallbacks(this.before, item);
-          const result = await this.filters.filter(item);
-          const callAfter = this.apply(item, result);
-          if (callAfter) {
-            await this.invokeCallbacks(this.after, item, result);
-          }
-          await this.invokeCallbacks(this.finally, item, result);
+        while (this.pending.length) {
+          const item = this.pending.shift();
+          // console.log('filter run', item);
+          promises.push((async () => {
+            await this.invokeCallbacks(this.before, item);
+            const result = await this.filters.filter(item);
+            // console.log('filter apply', item);
+            const callAfter = this.apply(item, result);
+            if (callAfter) {
+              await this.invokeCallbacks(this.after, item, result);
+            }
+            await this.invokeCallbacks(this.finally, item, result);
+            await new Promise(resolve => setTimeout(resolve, 0));
+          })());
           await new Promise(resolve => setTimeout(resolve, 0));
-        })());
-        await new Promise(resolve => setTimeout(resolve, 0));
-        if (!this.busy) break;
+          // console.log('filter end', item);
+        }
+        await Promise.all(promises);
+        // console.log('filter done');
+        await this.invokeCallbacks(this.done);
       }
-      await Promise.all(promises);
-      await this.invokeCallbacks(this.done);
       this.busy = false;
       if (this.pending.length) {
         await this.active(this.pending.splice(0));
@@ -7011,14 +7042,21 @@ throw new Error('YAWF | chat page found, skip following executions');
           feedDetail._yawf_LongTextContentLoading = false;
         };
         const longContentExpand = async function (vm, feed) {
-          await longContentExpandForDetail(vm, feed);
-          await longContentExpandForDetail(vm, feed.retweeted_status);
+          for (let retry = 0; retry < 3; retry++) {
+            try {
+              await longContentExpandForDetail(vm, feed);
+              await longContentExpandForDetail(vm, feed.retweeted_status);
+              return true;
+            } catch (_ignore) {
+              await new Promise(resolve => setTimeout(resolve, 1e3));
+            }
+          }
+          return false;
         };
         // 触发过滤并等待过滤结果回来
         const pendingFeeds = new Map();
         const triggerFilter = function (vm, feed) {
           const runIndex = feed._yawf_FilterRunIndex;
-          console.log('FEEDFILTER Start: ', runIndex);
           feed._yawf_FilterStatus = 'running';
           const cleanUp = function () {
             pendingFeeds.delete(runIndex);
@@ -7202,12 +7240,16 @@ throw new Error('YAWF | chat page found, skip following executions');
             feeds.forEach(async feed => {
               if (!(feed.mid > 0)) return;
               if (feed._yawf_FilterApply) return;
+              const id = runIndex++;
+              // console.log('filter start', feed.mid);
               vm.$set(feed, '_yawf_FilterStatus', 'loading');
               vm.$set(feed, '_yawf_FilterReason', null);
               vm.$set(feed, '_yawf_FilterApply', true);
-              vm.$set(feed, '_yawf_FilterRunIndex', runIndex++);
+              vm.$set(feed, '_yawf_FilterRunIndex', id);
               await longContentExpand(vm, feed);
+              // console.log('filter trigger', feed.mid);
               const { result, reason } = await triggerFilter(vm, feed);
+              // console.log('filter finish', feed.mid);
               applyFilterResult(vm, feed, { result, reason });
             });
           }, { immediate: true });
@@ -14585,7 +14627,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         vm.$watch(function () { return this.cardsData; }, function () {
           if (Array.isArray(vm.cardsData)) {
             if (vm.cardsData?.length) vm.$parent.isLoaded = true;
-            for (let i = 0; i < vm.cardsData.length;) {
+            for (let i = 0; i < vm.cardsData?.length;) {
               const cardData = vm.cardsData[i];
               if (cardData == null || options[cardData.card_type]) {
                 vm.cardsData.splice(i, 1);
@@ -17345,6 +17387,18 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       });
       Object.assign(content.data.domProps, { innerHTML: wrap.innerHTML });
     };
+
+    vueSetup.transformComponentsRenderByTagName('home', function (nodeStruct, Nodes) {
+      const { vNode, removeChild, insertBefore } = Nodes;
+      const gray = nodeStruct.querySelector('.grayTheme');
+      while (gray.firstChild) {
+        const node = gray.firstChild;
+        const vnode = vNode(node);
+        removeChild(gray, node);
+        insertBefore(gray.parentNode, vnode, gray.nextSibling, node);
+      }
+      removeChild(gray.parentNode, gray);
+    });
 
     vueSetup.transformComponentsRenderByTagName('feed', function (nodeStruct, Nodes) {
       const { addClass } = Nodes;
