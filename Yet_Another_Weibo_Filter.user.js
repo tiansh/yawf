@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           4.0.107
+// @version           5.0.108
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -399,6 +399,9 @@
   util.debug = (...args) => debug(...args);
   util.debug.setEnabled = setEnabled;
 
+  // DEBUG
+  setEnabled();
+
 }());
 //#endregion
 //#region @require yaofang://content/util/i18n.js
@@ -783,26 +786,10 @@
    * 显示一个对话框
    * @param {{ id: string, title: string, render: Function, button: { [type: string]: Function? }?, bar: boolean? }}
    */
-  ui.dialog = function ({ id, title, render, button, bar }) {
+  ui.dialog = function ({ id, title, render, button }) {
     // 初始化 DOM
     const template = document.createElement('template');
-    if (yawf.WEIBO_VERSION === 6) {
-      template.innerHTML = `
-<div class="W_layer yawf-dialog">
-  <div tabindex="0"></div>
-  <div class="content" node-type="autoHeight">
-    <div class="W_layer_title yawf-dialog-title" node-type="title"></div>
-    <div class="W_layer_close"><a class="W_ficon ficon_close S_ficon yawf-dialog-close" href="javascript:void(0);" node-type="close">X</a></div>
-    <div node-type="inner" class="yawf-dialog-content"></div>
-    <div class="W_layer_btn S_bg1 yawf-dialog-buttons">
-      <a href="javascript:void(0);" class="W_btn_a btn_34px yawf-dialog-button-ok" node-type="ok" action-type="ok"><span></span></a>
-      <a href="javascript:void(0);" class="W_btn_b btn_34px yawf-dialog-button-cancel" node-type="cancel" action-type="cancel"><span></span></a>
-    </div>
-  </div>
-</div>
-`;
-    } else {
-      template.innerHTML = `
+    template.innerHTML = `
 <div class="woo-box-flex woo-box-alignCenter woo-box-justifyCenter woo-modal-wrap woo-modal-an--pop-enter">
   <div class="woo-modal-main yawf-dialog">
     <i class="woo-font woo-font--cross yawf-dialog-close"></i>
@@ -819,7 +806,6 @@
   <div class="woo-modal-mask yawf-dialog-mask"></div>
 </div>
 `;
-    }
     const container = document.importNode(template.content.firstElementChild, true);
     const dialog = container.querySelector('.yawf-dialog') || container;
     dialog.id = id;
@@ -828,13 +814,11 @@
     const okButton = dialog.querySelector('.yawf-dialog-button-ok');
     const cancelButton = dialog.querySelector('.yawf-dialog-button-cancel');
     const closeButton = dialog.querySelector('.yawf-dialog-close');
-    const mask = yawf.WEIBO_VERSION === 7 ? container.querySelector('.yawf-dialog-mask') : null;
+    const mask = container.querySelector('.yawf-dialog-mask');
     const contentNode = dialog.querySelector('.yawf-dialog-content');
     // 填入内容
     titleNode.textContent = title;
-    if (yawf.WEIBO_VERSION === 7) {
-      titleNode.classList.add('woo-dialog-bar');
-    }
+    titleNode.classList.add('woo-dialog-bar');
     okButton.textContent = i18n.okButtonTitle;
     cancelButton.textContent = i18n.cancelButtonTitle;
     closeButton.title = i18n.closeButtonTitle;
@@ -847,9 +831,7 @@
     const lastPos = { x: 0, y: 0 };
     const setPos = function ({ x, y }) {
       const left = Math.min(Math.max(0, x), document.body.clientWidth - dialog.clientWidth - 2);
-      const top = yawf.WEIBO_VERSION === 6 ?
-        Math.min(Math.max(window.pageYOffset, y), window.pageYOffset + window.innerHeight - dialog.clientHeight - 2) :
-        Math.min(Math.max(0, y), document.body.clientHeight - dialog.clientHeight - 2);
+      const top = Math.min(Math.max(0, y), document.body.clientHeight - dialog.clientHeight - 2);
       if (left + 'px' !== dialog.style.left) dialog.style.left = left + 'px';
       if (top + 'px' !== dialog.style.top) dialog.style.top = top + 'px';
       return Object.assign(lastPos, { x: left, y: top });
@@ -889,11 +871,6 @@
       titleNode.addEventListener('mousedown', dragMoveStart);
     }
     // 背景遮罩
-    const cover = yawf.WEIBO_VERSION === 6 ? document.createElement('div') : null;
-    if (yawf.WEIBO_VERSION === 6) {
-      cover.setAttribute('node-type', 'outer');
-      cover.className = 'yawf-dialog-outer';
-    }
     // 响应鼠标
     if (!button?.ok && !button?.cancel) {
       buttonCollectionNode.parentNode.removeChild(buttonCollectionNode);
@@ -913,12 +890,10 @@
       if (!event.isTrusted) return;
       (button?.close ?? hide)();
     });
-    if (yawf.WEIBO_VERSION === 7) {
-      mask.addEventListener('click', event => {
-        if (!event.isTrusted) return;
-        (button?.close ?? hide)();
-      });
-    }
+    mask.addEventListener('click', event => {
+      if (!event.isTrusted) return;
+      (button?.close ?? hide)();
+    });
     // 响应按键
     const keys = event => {
       if (!event.isTrusted) return;
@@ -936,28 +911,21 @@
     };
     // 关闭对话框
     const hide = function () {
-      if (yawf.WEIBO_VERSION === 6) dialog.classList.add('UI_animated', 'UI_speed_fast', 'UI_ani_bounceOut');
-      else container.classList.add('woo-modal-an--pop-leave-to');
+      container.classList.add('woo-modal-an--pop-leave-to');
       document.removeEventListener('keydown', keys);
       container.removeEventListener('keypress', stopKeys);
       document.removeEventListener('scroll', resetPos);
       window.removeEventListener('resize', resetPos);
-      if (yawf.WEIBO_VERSION === 6) document.body.removeChild(cover);
       setTimeout(function () { container.remove(); }, 200);
       dialogStack.splice(dialogStack.indexOf(dialog), 1);
     };
     const resetPosition = function ({ x, y } = {}) {
       if (x == null) x = (window.innerWidth - dialog.clientWidth) / 2;
       if (y == null) y = (window.innerHeight - dialog.clientHeight) / 2;
-      if (yawf.WEIBO_VERSION === 6) {
-        setPos({ x, y: y + window.pageYOffset });
-      } else {
-        setPos({ x, y });
-      }
+      setPos({ x, y });
     };
     // 显示对话框
     const show = function ({ x, y } = {}) {
-      if (yawf.WEIBO_VERSION === 6) document.body.appendChild(cover);
       document.body.appendChild(container);
       resetPosition({ x, y });
       document.addEventListener('keydown', keys);
@@ -965,17 +933,9 @@
       document.addEventListener('scroll', resetPos);
       window.addEventListener('resize', resetPos);
       document.activeElement.blur();
-      if (yawf.WEIBO_VERSION === 6) {
-        dialog.classList.remove('UI_ani_bounceOut');
-        dialog.classList.add('UI_animated', 'UI_speed_fast', 'UI_ani_bounceIn');
-        setTimeout(function () {
-          dialog.classList.remove('UI_animated', 'UI_speed_fast', 'UI_ani_bounceIn');
-        }, 200);
-      } else {
-        setTimeout(function () {
-          container.classList.remove('woo-modal-an--pop-enter');
-        }, 200);
-      }
+      setTimeout(function () {
+        container.classList.remove('woo-modal-an--pop-enter');
+      }, 200);
       dialogStack.push(dialog);
     };
     return { hide, show, resetPosition, dom: dialog };
@@ -990,27 +950,11 @@
     const inner = ({ id, title, text, icon = defaultIcon }) => new Promise(resolve => {
       const render = function (dom) {
         const template = document.createElement('template');
-        if (yawf.WEIBO_VERSION === 6) {
-          template.innerHTML = `
-<div class="layer_point">
-  <dl class="point clearfix">
-    <dt node-type="icon"><span class="W_icon yawf-dialog-icon"></span></dt>
-    <dd node-type="text"><p class="S_txt1 yawf-dialog-text"></p></dd>
-  </dl>
-</div>
-`;
-        } else {
-          template.innerHTML = `
+        template.innerHTML = `
 <div class="woo-dialog-message yawf-dialog-text"></div>
 `;
-        }
         const content = document.importNode(template.content.firstElementChild, true);
-        const iconElement = content.querySelector('.yawf-dialog-icon');
-        if (yawf.WEIBO_VERSION === 6) {
-          iconElement.classList.add(`icon_${icon}B`);
-        }
-        const textElement = yawf.WEIBO_VERSION === 6 ? content.querySelector('.yawf-dialog-text') : content;
-        textElement.textContent = text;
+        content.textContent = text;
         dom.appendChild(content);
       };
       const value = result => () => {
@@ -1038,22 +982,11 @@
   ui.bubble = function (bubbleContent, reference) {
     const bubble = (function () {
       const template = document.createElement('template');
-      if (yawf.WEIBO_VERSION === 6) {
-        template.innerHTML = `
-<div class="W_layer W_layer_pop yawf-bubble">
-  <div class="content layer_mini_info">
-    <div class="main_txt yawf-bubble-text"></div>
-    <div class="W_layer_arrow"><span class="W_arrow_bor" node-type="arrow"><i class="S_line3"></i><em class="S_bg2_br"></em></span><div></div></div>
-  </div>
-</div>
-`;
-      } else {
-        template.innerHTML = `
+      template.innerHTML = `
 <div class="woo-pop-main yawf-bubble">
 <div class="yawf-bubble-text"></div>
 </div>
 `;
-      }
       const bubble = document.importNode(template.content.firstElementChild, true);
       if (!(bubbleContent instanceof Node)) {
         bubbleContent = document.createTextNode(bubbleContent + '');
@@ -1061,7 +994,6 @@
       bubble.querySelector('.yawf-bubble-text').appendChild(bubbleContent);
       return bubble;
     }());
-    const arrow = yawf.WEIBO_VERSION === 6 ? bubble.querySelector('.W_arrow_bor') : null;
     const referenceList = [];
     const deBound = function (callback) {
       let busy = false;
@@ -1090,9 +1022,7 @@
       const top0 = rect.top - bubble.clientHeight - 8;
       const top1 = top0 + window.pageYOffset;
       const top2 = rect.bottom + 8 + window.pageYOffset;
-      const left = yawf.WEIBO_VERSION === 6 ?
-        rect.left - 32 + rect.width + window.pageXOffset :
-        rect.left - bubble.clientWidth / 2 + rect.width + window.pageXOffset;
+      const left = rect.left - bubble.clientWidth / 2 + rect.width + window.pageXOffset;
       const atTop = top0 > 0;
       const top = atTop ? top1 : top2;
       if (parseInt(bubble.style.left, 10) !== left) {
@@ -1100,16 +1030,6 @@
       }
       if (parseInt(bubble.style.top, 10) !== top) {
         bubble.style.top = top + 'px';
-      }
-      if (yawf.WEIBO_VERSION === 6) {
-        const addClass = atTop ? 'W_arrow_bor_b' : 'W_arrow_bor_t';
-        const removeClass = atTop ? 'W_arrow_bor_t' : 'W_arrow_bor_b';
-        if (!arrow.classList.contains(addClass)) {
-          arrow.classList.add(addClass);
-        }
-        if (arrow.classList.contains(removeClass)) {
-          arrow.classList.remove(removeClass);
-        }
       }
     });
     const show = function () {
@@ -1146,7 +1066,6 @@
     bubble.addEventListener('mouseleave', leave);
   };
 
-  // V7 only
   const icons = {
     checkbox: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="currentColor" d="M0 0v16h16V0H0zm14.398 2.9a.667.667 0 0 1 .523 1.129l-8.686 8.604c-.26.258-.677.258-.937 0L1.408 8.78a.667.667 0 1 1 .939-.947l3.42 3.39 8.215-8.14a.667.667 0 0 1 .416-.182z"/></svg>',
     success: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M512 0a512 512 0 1 0 0 1024A512 512 0 1 0 512 0zm265.393 292.006c16.75-.2 33.417 5.913 46.023 18.418 25.24 25.038 24.694 66.134-1.176 91.795L509.836 712.08a66.95 66.95 0 0 1-43.293 19.467l-.19.01a63.06 63.06 0 0 1-7.584.443c-17.812 0-33.938-7.168-45.604-18.754l-213.22-211.504C188.838 490.25 182 474.623 182 457.412c0-35.4 28.93-64.1 64.62-64.1 17.35 0 33.107 6.783 44.715 17.822l169.58 168.217L730.877 311.6c12.935-12.83 29.766-19.374 46.516-19.584z"/></svg>',
@@ -1161,74 +1080,14 @@
   };
 
   css.append(`
-.yawf-WBV6 .yawf-dialog-title {
-  cursor: move;
-}
-.yawf-WBV6 .yawf-dialog-outer {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background: none repeat scroll 0% 0% rgb(0, 0, 0);
-  opacity: 0.3;
-  z-index: 9999;
-}
-.yawf-WBV6 .yawf-dialog.yawf-drag {
-  opacity: 0.67;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-.yawf-WBV6 .yawf-bubble {
-  max-width: 400px;
-}
-`);
-
-  css.append(`
-.yawf-WBV7 .yawf-dialog {
-  position: fixed;
-  transition: none;
-}
-.yawf-WBV7 .yawf-dialog .woo-dialog-main {
-  max-width: none;
-}
-.yawf-WBV7 .yawf-dialog-text {
-  max-width: 400px;
-}
-.yawf-WBV7 .yawf-dialog-title {
-  cursor: move;
-}
-.yawf-WBV7 .yawf-dialog-outer {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background: none repeat scroll 0% 0% rgb(0, 0, 0);
-  opacity: 0.3;
-  z-index: 9999;
-}
-.yawf-WBV7 .yawf-dialog.yawf-drag {
-  opacity: 0.67;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-.yawf-WBV7 .yawf-bubble {
-  max-width: 400px;
-  font-size: 14px;
-  padding: 8px 16px;
-  box-sizing: border-box;
-}
-.yawf-WBV7 .yawf-dialog-close {
-  padding: 8px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1;
-  cursor: pointer;
-}
+.yawf-dialog.yawf-dialog { position: fixed; transition: none; }
+.yawf-dialog .woo-dialog-main { max-width: none; }
+.yawf-dialog-text { max-width: 400px; }
+.yawf-dialog-title { cursor: move; }
+.yawf-dialog-outer { position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999; }
+.yawf-dialog.yawf-drag { opacity: 0.67; user-select: none; transition: none; }
+.yawf-bubble { max-width: 400px; font-size: 14px; padding: 8px 16px; box-sizing: border-box; }
+.yawf-dialog-close { padding: 8px; position: absolute; top: 10px; right: 10px; z-index: 1; cursor: pointer; }
 `);
 
 }());
@@ -1717,7 +1576,7 @@
     url.searchParams.set('_t', 1);
     url.searchParams.set('_v', network.fakeCallback());
     url.searchParams.set('key', key);
-    url.searchParams.set('uid', yawf.init.page.$CONFIG.uid);
+    url.searchParams.set('uid', yawf.init.page.config.user.idstr);
     util.debug('fetch url %s', url);
     const resp = await network.fetchText(url);
     const users = Array.from(network.parseJson(resp).data?.user ?? []);
@@ -1840,7 +1699,6 @@
 
   const yawf = window.yawf;
   const util = yawf.util;
-  const network = yawf.network;
   const request = yawf.request = yawf.request ?? {};
 
   const i18n = util.i18n;
@@ -1850,287 +1708,13 @@
     cn: '悄悄关注',
   };
 
-  const groupListV6 = functools.once(async function () {
-    const url = 'https://weibo.com/aj/f/group/list';
-    util.debug('fetch url %s', url);
-    const resp = await network.fetchJson(url);
-    const groups = resp.data.map(function (group) {
-      return {
-        id: 'g' + group.gid,
-        name: group.gname,
-        type: 'group',
-      };
-    });
-    const special = [{
-      id: 'whisper',
-      name: i18n.whisperGroupName,
-      type: 'whisper',
-    }];
-    return [...special, ...groups];
-  });
-  request.groupList = groupListV6;
-
-  const groupListV7 = functools.once(async function () {
+  const groupList = functools.once(async function () {
     const url = new URL('/ajax/feed/allGroups?is_new_segment=1&fetch_hot=1', location.href).href;
     util.debug('fetch url %s', url);
     const resp = await fetch(url).then(resp => resp.json());
     return resp.groups[1].group; // [1] 是自定义分组，他们代码就这样
   });
-  request.groupListV7 = groupListV7;
-
-}());
-//#endregion
-//#region @require yaofang://content/request/feedsbygroup.js
-; (function () {
-
-  const yawf = window.yawf;
-  const util = yawf.util;
-  const network = yawf.network;
-  const request = yawf.request = yawf.request ?? {};
-
-  const dom = util.dom;
-
-  class OrderMismatchCount {
-    constructor() {
-      this.buffer = [];
-      this.lds = [1];
-      this.ldsm = 0;
-    }
-    appendItems(items) {
-      const buffer = this.buffer;
-      const lds = this.lds;
-      buffer.push(...items);
-      for (let i = lds.length, l = buffer.length; i < l; i++) {
-        let m = 1, v = buffer[i];
-        for (let j = i - 1; j >= 0; j--) {
-          let n = lds[j] + 1;
-          if (v >= buffer[j]) continue;
-          if (n > m) m = n;
-        }
-        lds[i] = m;
-        if (m > this.ldsm) this.ldsm = m;
-      }
-    }
-    errors() {
-      return this.lds.length - this.ldsm;
-    }
-  }
-
-  class FeedsByGroupLoader {
-    constructor(group, params) {
-      this.group = group;
-
-      this.search = new URLSearchParams(params);
-      ['gid', 'whisper', 'min_id', 'end_id'].forEach(key => this.search.delete(key));
-      if (group.id.startsWith('g')) {
-        this.search.set('gid', group.id.slice(1));
-      } else if (group.id === 'whisper') {
-        this.search.set('whisper', 1);
-      }
-
-      this.nextPage = 1;
-      /** @type {{ type: "feed", date: number, mid: string, dom: Element }[]} */
-      this.pendingFeeds = [];
-      this.bufferSize = 20;
-      this.orderMismatch = new OrderMismatchCount();
-      /** @type {{ mid: string }[][]} */
-      this.feedsByPage = [];
-    }
-    async peek() {
-      await this.loadMore();
-      return this.pendingFeeds[0];
-    }
-    async next() {
-      await this.loadMore();
-      return this.pendingFeeds.shift();
-    }
-    async hasNext() {
-      await this.loadMore();
-      return this.pendingFeeds.length > 0;
-    }
-    async loadMore() {
-      if (this.nextPage === null) return;
-      try {
-        while (this.pendingFeeds.length < this.bufferSize) {
-          const newLoaded = await this.loadNextPage();
-          const errors = this.orderMismatch.errors();
-          this.bufferSize = Math.max(this.bufferSize, errors * 3 + 20);
-          if (!newLoaded) { this.nextPage = null; break; }
-        }
-      } catch (e) {
-        this.nextPage = null;
-      }
-    }
-    async loadNextPage() {
-      this.nextPage++;
-      const search = new URLSearchParams(this.search);
-      if (this.feedsByPage.length) {
-        const lastPage = this.feedsByPage[this.feedsByPage.length - 1];
-        search.set('min_id', lastPage[0].mid);
-        search.set('end_id', lastPage[lastPage.length - 1].mid);
-      }
-      const hostname = (location.hostname === 'www.weibo.com' ? 'www.' : '') + 'weibo.com';
-      const url = `https://${hostname}/aj/mblog/fsearch?` + search;
-      util.debug('fetch url %s', url);
-      const result = await network.fetchJson(url);
-      const container = document.createElement('div');
-      dom.content(container, result.data);
-      const feedElements = Array.from(container.querySelectorAll('.WB_feed_type[mid]'));
-      const feeds = feedElements.map(item => {
-        const dateitem = item.querySelector('[node-type="feed_list_item_date"][date]'); if (!dateitem) return null;
-        const date = Number(dateitem.getAttribute('date')); if (!date) return null;
-        const mid = item.getAttribute('fmid') || item.getAttribute('mid');
-        if (!mid) return null;
-        return { type: 'feed', date, mid, dom: item.cloneNode(true) };
-      }).filter(feed => feed);
-      this.feedsByPage.push(feeds);
-      this.pendingFeeds.push(...feeds);
-      this.pendingFeeds.sort((a, b) => b.date - a.date);
-      this.orderMismatch.appendItems(feeds.map(({ date }) => date));
-      return feeds.length;
-    }
-  }
-
-  const feedsByGroup = function (group, params) {
-    const loader = new FeedsByGroupLoader(group, params);
-    return {
-      next: () => loader.next(),
-      hasNext: () => loader.hasNext(),
-      peek: () => loader.peek(),
-    };
-  };
-  request.feedsByGroup = feedsByGroup;
-
-  class FeedsByGroupsLoader {
-    constructor(groups, params) {
-      this.loaders = Array.from(groups).map(group => new FeedsByGroupLoader(group, params));
-      this.known = new Set();
-    }
-    async getLast() {
-      const loaders = this.loaders;
-      if (loaders.length === 0) return null;
-      /** @type {{ loader: FeedsByGroupLoader, feed: { type: "feed", date: number, mid: string, dom: Element }|{ type: "done", group: { id: string } } }[]} */
-      const feeds = (await Promise.all(loaders.map(async loader => {
-        while (true) {
-          const feed = await loader.peek();
-          if (!feed) return { loader, feed: { type: 'done', group: loader.group } };
-          if (!this.known.has(feed.mid)) {
-            return { loader, feed };
-          }
-          await loader.next();
-        }
-      })));
-      const empty = feeds.find(v => v.feed.type === 'done');
-      if (empty) return empty;
-      const last = feeds.reduce((a, b) => a.feed.date > b.feed.date ? a : b);
-      return last;
-    }
-    async peek() {
-      const { feed } = await this.getLast();
-      return feed;
-    }
-    async next() {
-      const { loader, feed } = await this.getLast();
-      if (feed.type === 'feed') {
-        await loader.next();
-        this.known.add(feed.mid);
-        return feed;
-      } else {
-        this.loaders.splice(this.loaders.indexOf(loader), 1);
-        return feed;
-      }
-    }
-    async hasNext() {
-      return this.loaders.length > 0;
-    }
-    isShown(feed) {
-      return this.known.has(feed.mid);
-    }
-    addShown(feed) {
-      return this.known.add(feed.mid);
-    }
-  }
-
-  const feedsByGroups = function (groups, params) {
-    const loader = new FeedsByGroupsLoader(groups, params);
-    return {
-      next: () => loader.next(),
-      hasNext: () => loader.hasNext(),
-      peek: () => loader.peek(),
-      isShown: feed => loader.isShown(feed),
-      addShown: feed => loader.addShown(feed),
-    };
-  };
-  request.feedsByGroups = feedsByGroups;
-
-  class FeedsByGroupsUnreadCount {
-    constructor(groups, stkInfo) {
-      this.groups = Array.from(groups)
-        .filter(group => group.id.startsWith('g'))
-        .map(group => group.id.slice(1));
-      this.stkInfo = stkInfo;
-      this.callbacks = new Set();
-      this.working = false;
-      this.paused = false;
-    }
-    watch(callback) {
-      this.callbacks.add(callback);
-      if (!this.working) this.schedule();
-    }
-    unwatch(callback) {
-      this.callbacks.delete(callback);
-    }
-    async schedule() {
-      if (this.callbacks.size === 0) this.working = false;
-      this.working = true;
-      if (!this.paused) {
-        const status = await this.check();
-        setTimeout(() => { this.schedule(); }, 30e3);
-        if (this.paused) return;
-        this.callbacks.forEach(callback => {
-          try {
-            callback(status);
-          } catch (e) {
-            util.debug('Error while check unread feeds: %o', e);
-          }
-        });
-      } else {
-        setTimeout(() => { this.schedule(); }, 30e3);
-      }
-    }
-    async check() {
-      const url = new URL('https://rm.api.weibo.com/2/remind/unread_hint.json');
-      url.searchParams.set('source', this.stkInfo.source);
-      url.searchParams.set('with_url', 1);
-      url.searchParams.set('appkeys', '');
-      url.searchParams.set('group_ids', this.groups.join(','));
-      url.searchParams.set('callback', network.fakeCallback());
-      util.debug('Check unread by groups: %o', url);
-      util.debug('fetch url %s', url);
-      const resp = await network.fetchText(url);
-      const data = network.parseJson(resp).data;
-      const groupStatus = Object.assign(...data.groups);
-      const result = Object.assign(...this.groups.map(group => ({ ['status_' + group]: Number(groupStatus[group]) })));
-      result.status = this.groups.reduce((p, group) => p + groupStatus[group], 0);
-      if (result.status) {
-        util.debug('Check unread by groups got unread: %o', result.status);
-      }
-      return result;
-    }
-    pause() { this.paused = true; }
-    run() { this.paused = false; }
-  }
-
-  const unreadByGroups = function (groups, stkInfo) {
-    const loader = new FeedsByGroupsUnreadCount(groups, stkInfo);
-    return {
-      watch(callback) { loader.watch(callback); },
-      unwatch(callback) { loader.unwatch(callback); },
-      pause() { loader.pause(); },
-      run() { loader.run(); },
-    };
-  };
-  request.unreadByGroups = unreadByGroups;
+  request.groupList = groupList;
 
 }());
 //#endregion
@@ -2142,123 +1726,7 @@
   const network = yawf.network;
   const request = yawf.request = yawf.request ?? {};
 
-  const catched = f => function (...args) {
-    try {
-      return f.call(this, ...args);
-    } catch (e) {
-      util.debug(e); return null;
-    }
-  };
-
-  const getFollowingPageV6 = async function (uid, pageUrl) {
-    const url = pageUrl || `https://weibo.com/${uid}/myfollow`;
-    util.debug('Fetch Follow: fetch page %s', url);
-    util.debug('fetch url %s', url);
-    const resp = await network.fetchText(url);
-    const re = /<script>FM\.view\({"ns":"pl\.relation\.myFollow\.index".*"html":(?=.*(?:member_box|WB_empty))(".*")}\)<\/script>\n/;
-    const dom = util.dom.content(document.createElement('div'), JSON.parse(resp.match(re)[1]));
-
-    // 如果在获取过程中用户手动取消了一些关注，可能导致最后几页是空白的
-    // 其实看到这种情况就说明出问题了
-    const empty = dom.querySelector('.WB_empty');
-    if (empty) {
-      return {
-        allPages: [],
-        followInPage: [],
-      };
-    }
-
-    const allPages = (function () {
-      try {
-        const pageLink = dom.querySelector('.W_pages a.page[href]');
-        const urlTemplate = new URL(pageLink.getAttribute('href'), url).href;
-        const pageLinks = dom.querySelectorAll('.W_pages .page');
-        const pageCount = Number(pageLinks[pageLinks.length - 2].textContent) || 1;
-
-        return Array.from(Array(pageCount)).map((_, index) => {
-          return urlTemplate.replace(/_page=\d+/, '_page=' + (index + 1));
-        });
-      } catch (e) {
-        // only one page
-      }
-      return [url];
-    }());
-
-    const followItem = Array.from(dom.querySelectorAll('.member_box .member_wrap .mod_pic .pic_box a > img'));
-    const followInPage = followItem.map(img => {
-      const title = img.title;
-      const avatar = new URL(img.src, 'https://weibo.com').href;
-      return (catched(function () {
-        // 关注了一个用户
-        const id = new URLSearchParams(img.getAttribute('usercard') ?? '').get('id');
-        if (!id) return null;
-        const href = `https://weibo.com/u/${id}`;
-        const name = img.getAttribute('alt');
-        const description = name !== title ? `@${name} (${title})` : '@' + name;
-        return {
-          id: `user-${id}`,
-          type: 'user',
-          user: id,
-          url: href,
-          avatar,
-          name,
-          description,
-        };
-      })()) ?? (catched(function () {
-        // 关注了一支股票
-        const id = img.parentNode.href.match(/weibo.com\/p\/230677([a-zA-Z\d]+)/)?.[1];
-        if (!id) return null;
-        const href = `https://weibo.com/p/230677${id}`;
-        const description = `$${title}$`;
-        return {
-          id: 'stock-' + id,
-          type: 'stock',
-          stock: id,
-          url: href,
-          avatar: avatar,
-          name: description,
-          description,
-        };
-      })()) ?? (catched(function () {
-        // 关注了一个话题
-        const ref = img.parentNode.href.match(/huati.weibo.com/);
-        if (!ref) return null;
-        // 原本的链接包含的是编号，这里换成话题文本，因为话题文本比编号更固定：编号可以被删除，文本无法修改
-        const href = `https://weibo.com/k/${title}`;
-        const description = `#${title}#`;
-        return {
-          id: 'topic-' + title,
-          type: 'topic',
-          topic: title,
-          url: href,
-          avatar: avatar,
-          name: description,
-          description: description,
-        };
-      })()) ?? (catched(function () {
-        const link = img.closest('[href]');
-        const href = link?.getAttribute('href') ?? avatar;
-        // 未知关注内容
-        return {
-          id: 'unknown-' + href,
-          type: 'unknown',
-          url: href,
-          avatar: avatar,
-          description: title,
-          name: title,
-        };
-      })());
-    });
-
-    if (!followInPage.length) {
-      throw Error('A page with no following items or empty notice.');
-    }
-    util.debug('Fetch follow: got %o in page', followInPage.length);
-
-    return { allPages, followInPage };
-  };
-
-  const getFollowingPageV7 = async function (uid, page) {
+  const getFollowingPage = async function (uid, page) {
     const url = `https://weibo.com/ajax/friendships/friends?page=${page ?? 1}&uid=${uid}`;
     util.debug('Fetch Follow: fetch page %s', url);
     util.debug('fetch url %s', url);
@@ -2293,12 +1761,7 @@
         util.debug('Retry fetching user following data; attempt %d', attempt + 1);
       }
       try {
-        // 这的 await 不能省掉，不然 catch 就抓不住这个返回结果了
-        if (yawf.WEIBO_VERSION === 6) {
-          return await getFollowingPageV6(uid, page);
-        } else {
-          return await getFollowingPageV7(uid, page);
-        }
+        return await getFollowingPage(uid, page);
       } catch (e) {
         util.debug('Error while fetching user following data: %o', e);
         await new Promise(resolve => { setTimeout(resolve, 30e3 * Math.min(8, attempt)); });
@@ -3388,58 +2851,11 @@ html { background: #f9f9fa; }
 
   const page = init.page = init.page ?? {};
 
-  // eslint-disable-next-line complexity
-  page.typeV6 = function () {
-    const search = new URLSearchParams(location.search);
-    // 导览页面
-    if (location.pathname.startsWith('/nguide')) return 'nguide';
-    // 搜索页面
-    if (location.host === 's.weibo.com') return 'search';
-    // 发现页面
-    if (location.host === 'd.weibo.com') return 'discover';
-    // 头条文章
-    if (/\/ttarticle\//.test(location.pathname)) return 'ttarticle';
-    const $CONFIG = page.$CONFIG; if (!$CONFIG) return null;
-    if ($CONFIG.bpType === 'page') {
-      // 地点
-      if ($CONFIG.domain === '100101') return 'place';
-      // 电影
-      if ($CONFIG.domain === '100120') return 'movie';
-      // 图书
-      if ($CONFIG.domain === '100202') return 'book';
-      // 个人主页
-      if ($CONFIG.domain === '100505') return 'profile';
-      // 个人主页（企业认证用户）
-      if ($CONFIG.domain === '100606') return 'profile';
-      // 话题页（超话）
-      if ($CONFIG.domain === '100808') return 'topic';
-      // 音乐
-      if ($CONFIG.domain === '101515') return 'music';
-      // 股票
-      if ($CONFIG.domain === '230677') return 'stock';
-    }
-    if ($CONFIG.bpType === 'main') {
-      // 赞
-      if (location.pathname.startsWith('/like/outbox')) return 'like';
-      // 收藏
-      if (location.pathname.startsWith('/fav')) return 'fav';
-      // 首页
-      if (/\/home$/.test(location.pathname)) {
-        if (search.get('gid') > 0) return 'group';
-        return 'home';
-      }
-      // 好友圈
-      if (location.pathname.startsWith('/friends')) return 'friends';
-    }
-    // Unknown
-    return null;
-  };
-
   page.route = null;
   page.update = function (route) {
     page.route = route;
   };
-  page.typeV7 = function () {
+  page.type = function () {
     if (location.pathname.startsWith('/tv/')) return 'tv';
     const route = page.route;
     if (route.name === 'profile') return 'profile';
@@ -3471,14 +2887,6 @@ html { background: #f9f9fa; }
     return page.config.user.idstr;
   };
 
-  page.type = function () {
-    if (yawf.WEIBO_VERSION === 6) {
-      return page.typeV6();
-    } else {
-      return page.typeV7();
-    }
-  };
-
 }());
 //#endregion
 //#region @require yaofang://content/init/init.js
@@ -3487,7 +2895,7 @@ html { background: #f9f9fa; }
  *
  * 初始化流程
  * Ready:
- *   当获取到 $CONFIG 参数时尽快调用
+ *   当获取到 根元素 参数时尽快调用
  * Load:
  *   当 DOMContentLoaded 时调用，此时 DOM 树可用
  *   Load 总是在 Ready 之后
@@ -3504,20 +2912,10 @@ html { background: #f9f9fa; }
   const yawf = window.yawf;
   const util = yawf.util;
   const init = yawf.init = yawf.init ?? {};
-  yawf.WEIBO_VERSION = 0;
 
   const page = init.page = init.page ?? {};
 
-  const validPageReadyV6 = $CONFIG => {
-    // 必须的参数
-    if (!$CONFIG) return false;
-    if (!$CONFIG.uid) return false;
-    if (!$CONFIG.nick) return false;
-    if ($CONFIG.islogin === '0') return false;
-    return true;
-  };
-
-  const validPageReadyV7 = config => {
+  const validPageReady = config => {
     // 必须的参数
     if (!config) return false;
     if (!config.user) return false;
@@ -3528,7 +2926,7 @@ html { background: #f9f9fa; }
 
   const validPageDom = () => {
     // 如果有登录按钮，则说明没有登录，此时不工作
-    if (document.querySelector('.gn_login')) return false;
+    if (document.querySelector('.loginBtn')) return false;
     return true;
   };
 
@@ -3563,20 +2961,9 @@ html { background: #f9f9fa; }
     set.clear();
   };
 
-  const genV6LikeConfigByV7Config = config => ({
-    uid: config.user.idstr,
-    name: config.user.screen_name,
-    oid: null, // 无数据
-    domain: '', // 无数据
-    bpType: '', // 无数据
-    location: '', // 无数据
-    lang: 'zh-CN',
-    skin: null, // 无数据
-  });
-
   init.status = () => status;
   // 触发 Ready
-  init.ready = async $CONFIG => {
+  init.ready = async config => {
     status = true;
     init.ready = init.deinit = noop;
     util.debug('yawf onready');
@@ -3590,24 +2977,9 @@ html { background: #f9f9fa; }
   // 触发 ConfigChange
   init.configChange = async config => {
     util.debug('yawf onconfigchange: %o', config);
-    if (validPageReadyV6(config)) {
-      if (!yawf.WEIBO_VERSION) {
-        yawf.WEIBO_VERSION = 6;
-        document.documentElement.classList.add('yawf-WBV6');
-      }
-      if (yawf.WEIBO_VERSION !== 6) return;
-      page.$CONFIG = config;
-      await runSet(onConfigChangeCallback);
-      await init.ready(config);
-    } else if (validPageReadyV7(config)) {
-      if (!yawf.WEIBO_VERSION) {
-        yawf.WEIBO_VERSION = 7;
-        document.documentElement.classList.add('yawf-WBV7');
-      }
-      if (yawf.WEIBO_VERSION !== 7) return;
+    if (validPageReady(config)) {
       if (!page.route) return;
       page.config = config;
-      page.$CONFIG = genV6LikeConfigByV7Config(config);
       await runSet(onConfigChangeCallback);
       await init.ready(config);
     } else {
@@ -3653,108 +3025,16 @@ html { background: #f9f9fa; }
 //#endregion
 //#region @require yaofang://content/init/setup.js
 /**
- * 这个文件用于从网页中获取 $CONFIG 参数
- * 网页中的 $CONFIG 参数包含脚本需要的上下文参数，如
- * 当前用户 id、昵称，当前页面用户 id，当前主题等等
- * 我们需要当前用户 id 才能读取用户的设置从而继续后面的工作
  */
-
-; (function () {
-
-  const yawf = window.yawf;
-  const util = yawf.util;
-  const init = yawf.init;
-
-  const strings = util.strings;
-
-  const randStr = strings.randKey();
-  const key = `yawf_${randStr}`;
-  util.inject(function (key) {
-    let lastReport = null;
-    const reportResult = async value => {
-      lastReport = lastReport ? lastReport.then(Promise.resolve()) : Promise.resolve();
-      await lastReport;
-      const event = new CustomEvent(key, {
-        detail: { $CONFIG: JSON.stringify(value) },
-      });
-      window.dispatchEvent(event);
-    };
-    let holder = null;
-    if ('$CONFIG' in window) {
-      // Failed to load YAWF before $CONFIG object ready. Some feature may not work.
-      const onDomContentLoaded = function () {
-        window.$CONFIG = new Proxy(window.$CONFIG, {
-          set: function (self, property, value) {
-            self[property] = value;
-            reportResult(window.$CONFIG);
-            return true;
-          },
-        });
-        reportResult(window.$CONFIG);
-      };
-      if (['complete', 'loaded', 'interactive'].includes(document.readyState)) {
-        setTimeout(() => { onDomContentLoaded(); }, 0);
-      } else {
-        document.addEventListener('DOMContentLoaded', onDomContentLoaded);
-      }
-      return;
-    }
-    let proxied = void 0;
-    Object.defineProperty(window, '$CONFIG', {
-      configurable: true,
-      enumerable: false,
-      get() { return proxied; },
-      set(value) {
-        let $CONFIG;
-        const property = Object.getOwnPropertyDescriptor(window, '$CONFIG');
-        property.enumerable = true;
-        Object.defineProperty(window, '$CONFIG', property);
-        if (holder) {
-          holder.$CONFIG = value;
-          $CONFIG = holder.$CONFIG;
-        } else {
-          $CONFIG = value;
-        }
-        proxied = new Proxy($CONFIG, {
-          set: function (self, property, value) {
-            self[property] = value;
-            reportResult($CONFIG);
-            return true;
-          },
-        });
-        reportResult(value);
-      },
-    });
-    const onload = () => {
-      window.removeEventListener('load', onload);
-      reportResult();
-    };
-    window.addEventListener('load', onload);
-  }, key);
-
-  let lastConfig = void 0;
-  window.addEventListener(key, function (event) {
-    event.stopPropagation();
-    if (!event.detail.$CONFIG) return;
-    const $CONFIG = JSON.parse(event.detail.$CONFIG);
-    if (event.detail.$CONFIG === lastConfig) return;
-    lastConfig = event.detail.$CONFIG;
-    init.configChange($CONFIG);
-  }, true);
-
-}());
-
-// TODO!
-// NEED CLEAN UP
-
 ; (function () {
   const yawf = window.yawf;
   const util = yawf.util;
   const init = yawf.init;
 
   const strings = util.strings;
-  const randStr = strings.randKey();
-  const key = `yawf_${randStr}`;
+  const key = `yawf_${strings.randKey()}`;
+
+  util.inject.rootKey = `yawf_${strings.randKey()}`;
 
   document.documentElement.addEventListener(key, function (event) {
     if (event.detail.route) {
@@ -3767,7 +3047,6 @@ html { background: #f9f9fa; }
     }
   }, true);
 
-  util.inject.rootKey = `yawf_${strings.randKey()}`;
   util.inject(function (rootKey, key) {
     let rootVm = null;
 
@@ -4319,27 +3598,14 @@ html { background: #f9f9fa; }
   const init = yawf.init;
 
   const priority = util.priority;
-  const css = util.css;
 
   const config = yawf.config;
 
   init.onReady(async () => {
-    const $CONFIG = init.page.$CONFIG;
-    await config.init($CONFIG.uid);
-    util.i18n = $CONFIG.lang;
-    util.time.setDiff($CONFIG.timeDiff || 0);
+    await config.init(init.page.config.user.idstr);
+    util.i18n = 'zh-CN';
+    util.time.setDiff(0);
   }, { priority: priority.FIRST });
-
-  util.debug('yawf loading, hide all');
-  const hideAll = css.add('.WB_miniblog { visibility: hidden; opacity: 0; }');
-  init.onReady(() => {
-    hideAll.remove();
-    util.debug('yawf loaded, disable hide all');
-  }, { priority: priority.LAST });
-  init.onDeinit(() => {
-    hideAll.remove();
-    util.debug('yawf unloaded, disable hide all');
-  });
 
 }());
 //#endregion
@@ -5320,11 +4586,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       if (this.always) return container;
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      if (yawf.WEIBO_VERSION === 6) {
-        checkbox.classList.add('W_checkbox', 'yawf-config-checkbox');
-      } else {
-        checkbox.classList.add('yawf-config-checkbox');
-      }
+      checkbox.classList.add('yawf-config-checkbox');
       checkbox.setAttribute('yawf-config-input', this.configId);
       checkbox.addEventListener('change', event => {
         if (!event.isTrusted) {
@@ -5334,16 +4596,14 @@ throw new Error('YAWF | chat page found, skip following executions');
       const label = container.querySelector('label');
       label.insertBefore(checkbox, label.firstChild);
       checkbox.checked = this.getConfig();
-      if (yawf.WEIBO_VERSION === 7) {
-        const contain = document.createElement('span');
-        contain.className = 'yawf-config-checkbox-wrap';
-        const icon = document.createElement('span');
-        icon.className = 'yawf-config-checkbox-icon';
-        checkbox.replaceWith(contain);
-        contain.append(checkbox);
-        contain.append(icon);
-        icon.append(ui.icon('checkbox').documentElement);
-      }
+      const contain = document.createElement('span');
+      contain.className = 'yawf-config-checkbox-wrap';
+      const icon = document.createElement('span');
+      icon.className = 'yawf-config-checkbox-icon';
+      checkbox.replaceWith(contain);
+      contain.append(checkbox);
+      contain.append(icon);
+      icon.append(ui.icon('checkbox').documentElement);
       return container;
     }
     renderValue(container) {
@@ -5401,9 +4661,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       container.setAttribute('yawf-config-item', this.configId);
       container.classList.add('yawf-config-select');
       const select = document.createElement('select');
-      if (yawf.WEIBO_VERSION === 7) {
-        select.classList.add('woo-input-main');
-      }
+      select.classList.add('woo-input-main');
       const renderOptions = items => {
         items.forEach(({ text, value, style = null }) => {
           const option = document.createElement('option');
@@ -5425,12 +4683,10 @@ throw new Error('YAWF | chat page found, skip following executions');
         } else this.setConfig(JSON.parse(select.value));
       });
       container.appendChild(select);
-      if (yawf.WEIBO_VERSION === 7) {
-        const wrap = document.createElement('div');
-        wrap.className = 'woo-input-wrap';
-        select.replaceWith(wrap);
-        wrap.append(select);
-      }
+      const wrap = document.createElement('div');
+      wrap.className = 'woo-input-wrap';
+      select.replaceWith(wrap);
+      wrap.append(select);
       return container;
     }
     renderValue(container) {
@@ -5465,9 +4721,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       container.setAttribute('yawf-config-item', this.configId);
       container.classList.add('yawf-config-input');
       const input = document.createElement('input');
-      if (yawf.WEIBO_VERSION === 7) {
-        input.classList.add('woo-input-main');
-      }
+      input.classList.add('woo-input-main');
       input.type = this.inputType;
       input.value = this.getConfig();
       input.addEventListener('input', event => {
@@ -5489,12 +4743,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       });
       input.setAttribute('yawf-config-input', this.configId);
       container.appendChild(input);
-      if (yawf.WEIBO_VERSION === 7) {
-        const wrap = document.createElement('div');
-        wrap.className = 'woo-input-wrap';
-        input.replaceWith(wrap);
-        wrap.append(input);
-      }
+      const wrap = document.createElement('div');
+      wrap.className = 'woo-input-wrap';
+      input.replaceWith(wrap);
+      wrap.append(input);
       return container;
     }
     renderValue(container) {
@@ -5657,9 +4909,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       container.setAttribute('yawf-config-item', this.configId);
       container.classList.add('yawf-config-key');
       const button = document.createElement('button');
-      if (yawf.WEIBO_VERSION === 7) {
-        button.className = 'woo-button-main woo-button-line woo-button-primary woo-button-s woo-button-round';
-      }
+      button.className = 'woo-button-main woo-button-line woo-button-primary woo-button-s woo-button-round';
       button.type = 'button';
       button.textContent = keyboard.name(this.getConfig());
       button.addEventListener('keydown', event => {
@@ -5712,11 +4962,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       container.setAttribute('yawf-config-item', this.configId);
       container.classList.add('yawf-config-text');
       const textarea = document.createElement('textarea');
-      if (yawf.WEIBO_VERSION === 6) {
-        textarea.classList.add('yawf-config-textarea', 'W_input');
-      } else {
-        textarea.className = 'yawf-config-textarea woo-input-main';
-      }
+      textarea.className = 'yawf-config-textarea woo-input-main';
       textarea.value = this.getConfig();
       textarea.addEventListener('input', event => {
         if (!event.isTrusted) textarea.value = this.getConfig();
@@ -5727,12 +4973,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       });
       textarea.setAttribute('yawf-config-input', this.configId);
       container.appendChild(textarea);
-      if (yawf.WEIBO_VERSION === 7) {
-        const wrap = document.createElement('div');
-        wrap.className = 'woo-input-wrap';
-        textarea.replaceWith(wrap);
-        wrap.append(textarea);
-      }
+      const wrap = document.createElement('div');
+      wrap.className = 'woo-input-wrap';
+      textarea.replaceWith(wrap);
+      wrap.append(textarea);
       return container;
     }
     renderValue(container) {
@@ -5762,22 +5006,15 @@ throw new Error('YAWF | chat page found, skip following executions');
       const contentLabel = content.querySelector('label');
       contentLabel.replaceWith(...Array.from(contentLabel.childNodes));
       const container = document.createElement('span');
-      const iconType = this.icon ?? 'ask';
-      let icon;
-      if (yawf.WEIBO_VERSION === 6) {
-        icon = document.createElement('i');
-        icon.classList.add('W_icon', 'yawf-bubble-icon', `icon_${iconType}S`);
-      } else {
-        const iconTypeV7 = {
-          ask: 'help',
-          warn: 'warn',
-          succ: 'success',
-        }[iconType];
-        icon = document.createElement('div');
-        icon.className = 'yawf-bubble-icon';
-        const svg = icon.appendChild(ui.icon(iconTypeV7).documentElement);
-        svg.setAttribute('class', `woo-tip-icon woo-tip-${iconTypeV7}Fill`);
-      }
+      const iconType = {
+        ask: 'help',
+        warn: 'warn',
+        succ: 'success',
+      }[this.icon] ?? 'help';
+      const icon = document.createElement('div');
+      icon.className = 'yawf-bubble-icon';
+      const svg = icon.appendChild(ui.icon(iconType).documentElement);
+      svg.setAttribute('class', `woo-tip-icon woo-tip-${iconType}Fill`);
       container.appendChild(icon);
       ui.bubble(content, icon);
       return container;
@@ -5802,20 +5039,12 @@ throw new Error('YAWF | chat page found, skip following executions');
     track(item, index = -1) { return '' + index; }
     renderListitem(item, index) {
       const listitem = document.createElement('li');
-      if (yawf.WEIBO_VERSION === 6) {
-        listitem.classList.add('yawf-config-collection-item', 'W_btn_b', 'W_btn_tag');
-      } else {
-        listitem.classList.add('yawf-config-collection-item');
-      }
+      listitem.classList.add('yawf-config-collection-item');
       const track = arguments.length > 1 ? this.track(item, index) : this.track(item);
       listitem.dataset.yawfTrack = track;
       const deleteItem = document.createElement('span');
       deleteItem.classList.add('yawf-config-collection-remove');
-      if (yawf.WEIBO_VERSION === 6) {
-        deleteItem.innerHTML = '<a class="W_ficon ficon_close S_ficon" href="javascript:void(0);">X</a>';
-      } else {
-        deleteItem.innerHTML = '<i class="woo-font woo-font--cross" yawf-component-tag="woo-fonticon"></i>';
-      }
+      deleteItem.innerHTML = '<i class="woo-font woo-font--cross" yawf-component-tag="woo-fonticon"></i>';
       listitem.appendChild(deleteItem);
       const content = document.createElement('div');
       content.classList.add('yawf-config-collection-item-content');
@@ -5830,18 +5059,12 @@ throw new Error('YAWF | chat page found, skip following executions');
         // 我们渲染一个输入框
         const input = document.createElement('input');
         input.type = 'text';
-        if (yawf.WEIBO_VERSION === 6) {
-          input.classList.add('yawf-config-collection-input', 'W_input');
-        } else {
-          input.className = 'yawf-config-collection-input woo-input-main';
-        }
+        input.className = 'yawf-config-collection-input woo-input-main';
         label.appendChild(input);
-        if (yawf.WEIBO_VERSION === 7) {
-          const wrap = document.createElement('div');
-          wrap.className = 'woo-input-wrap';
-          input.replaceWith(wrap);
-          wrap.append(input);
-        }
+        const wrap = document.createElement('div');
+        wrap.className = 'woo-input-wrap';
+        input.replaceWith(wrap);
+        wrap.append(input);
         // 在当前标签前面藏一个表单元素，用于处理用户输入提交
         const form = document.createElement('form');
         form.classList.add('yawf-config-collection-form');
@@ -5853,11 +5076,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         setTimeout(() => {
           const submit = document.createElement('button');
           submit.setAttribute('form', formId);
-          if (yawf.WEIBO_VERSION === 6) {
-            submit.classList.add('yawf-config-collection-submit', 'W_btn_a');
-          } else {
-            submit.className = 'yawf-config-collection-submit woo-button-main woo-button-line woo-button-primary woo-button-s woo-button-round';
-          }
+          submit.className = 'yawf-config-collection-submit woo-button-main woo-button-line woo-button-primary woo-button-s woo-button-round';
           submit.textContent = i18n.collectionAddButton;
           label.parentNode.insertBefore(submit, label.nextSibling);
         }, 0);
@@ -6035,10 +5254,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       const setFocus = current => suggestionItems.forEach(item => {
         if (item === current) {
           item.classList.add('yawf-current');
-          if (yawf.WEIBO_VERSION === 6) item.classList.add('cur');
         } else {
           item.classList.remove('yawf-current');
-          if (yawf.WEIBO_VERSION === 6) item.classList.remove('cur');
         }
       });
       const keydownEventHandler = event => {
@@ -6206,9 +5423,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     renderItem({ id }) {
       const useritem = document.createElement('div');
       useritem.classList.add('yawf-config-user-item');
-      if (yawf.WEIBO_VERSION === 6) {
-        useritem.setAttribute('usercard', `id=${id}`);
-      }
       const useravatar = document.createElement('div');
       useravatar.classList.add('yawf-config-user-avatar');
       useritem.appendChild(useravatar);
@@ -6423,21 +5637,17 @@ throw new Error('YAWF | chat page found, skip following executions');
       rules.all.set(this.id, this);
     }
     /** @type {number|number[]} */
-    get weiboVersion() { return 6; } // 如果没有特殊说明，这条规则只支持旧版（v6）微博
-    isWeiboVersionSupported() {
-      const versions = Array.isArray(this.weiboVersion) ? this.weiboVersion : [this.weiboVersion];
-      return versions.includes(yawf.WEIBO_VERSION);
-    }
+    get v7Support() { return false; } // 如果没有特殊说明，这条规则只支持旧版（v6）微博
     render(...args) {
       const node = super.render(...args);
       node.classList.add('yawf-config-rule');
-      if (!this.isWeiboVersionSupported()) {
+      if (!this.v7Support) {
         node.classList.add('yawf-config-rule-unsupport');
       }
       return node;
     }
     execute() {
-      if (!this.isWeiboVersionSupported()) return;
+      if (!this.v7Support) return;
       const enabled = this.isEnabled();
       try {
         const styles = [];
@@ -6522,91 +5732,58 @@ throw new Error('YAWF | chat page found, skip following executions');
   }, { priority: priority.DEFAULT });
 
   css.append(`
-.yawf-WBV6 .yawf-config-group { display: block; font-weight: bold; margin: 15px 10px 5px; }
-.yawf-WBV6 .yawf-config-rule { display: block; margin: 5px 20px; }
-.yawf-WBV6 .yawf-config-rule-unsupport { opacity: 0.5; }
-.yawf-WBV6 .yawf-bubble .yawf-config-rule { display: inline; margin: 0; }
-.yawf-WBV6 .yawf-config-rule > label + label { margin-left: 8px; }
-.yawf-WBV6 .yawf-config-rule > br + label { margin-left: 20px; }
-.yawf-WBV6 .yawf-bubble-icon { vertical-align: middle; margin-left: 2px; margin-right: 2px; }
-.yawf-WBV6 .yawf-bubble-text .yawf-bubble-icon { display: none; }
-.yawf-WBV6 .yawf-config-select { height: 20px; }
-.yawf-WBV6 .yawf-config-number input[type="number"] { width: 45px; box-sizing: border-box; }
-.yawf-WBV6 .yawf-config-range { position: relative; }
-.yawf-WBV6 .yawf-config-range-wrap { display: none; position: absolute; left: 0; right: 0; margin: 0; bottom: calc(100% + 2px); height: 80px; background: #f0f0f0; background: Menu; }
-.yawf-WBV6 .yawf-config-range:focus-within .yawf-config-range-wrap { display: block; }
-.yawf-WBV6 .yawf-config-range input[type="range"] { position: absolute; top: 0; bottom: 0; margin: auto; width: 75px; right: -20px; left: -20px; transform: rotate(-90deg); }
-.yawf-WBV6 .yawf-config-color input[type="color"] { width: 45px; box-sizing: border-box; height: 20px; vertical-align: middle; }
-.yawf-WBV6 .yawf-config-text textarea { width: calc(100% - 20px); padding-left: 10px; padding-right: 10px; min-height: 120px; resize: vertical; }
-.yawf-WBV6 .yawf-config-collection-input { margin: 5px; }
-.yawf-WBV6 .yawf-config-collection-list { display: block; margin: 5px; }
-.yawf-WBV6 .yawf-config-collection-list .yawf-config-collection-item { padding: 0 5px 0 20px; min-width: 0; height: 20px; overflow: hidden; text-overflow: ellipsis; cursor: default; }
-.yawf-WBV6 .yawf-config-collection-remove { display: block; position: absolute; top: 0; left: 0; display: flow-root; width: 20px; height: 20px; line-height: 20px; }
-.yawf-WBV6 .yawf-config-collection-item-content { max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-collection-list { margin-left: -5px; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-collection-item { width: 90px; height: 50px; padding: 1px 20px 1px 56px; text-align: left; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-collection-remove { right: 0; left: auto; text-align: center; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-collection-remove a { position: static; margin: 0; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-user-avatar { position: absolute; left: 1px; top: 1px; width: 50px; height: 50px; overflow: hidden; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-user-avatar-img { width: 50px; height: 50px; }
-.yawf-WBV6 .yawf-config-collection-user-id .yawf-config-user-name { max-width: 100%; word-break: break-all; white-space: normal; max-height: 40px; overflow: hidden; }
-.yawf-WBV6 .yawf-collection-suggestion.yawf-collection-suggestion { z-index: 10000; position: fixed; }
-.yawf-WBV6 .yawf-list-suggestion-item a { min-height: 15.6px; }
-`);
+label:hover .yawf-config-checkbox-wrap .yawf-config-checkbox-icon,
+.yawf-config-checkbox-wrap:hover .yawf-config-checkbox-icon { border-color: var(--w-checkbox-check-color); }
+.yawf-config-checkbox-wrap { display: inline-block; position: relative; width: var(--w-checkbox-size); height: var(--w-checkbox-size); overflow: hidden; margin-right: 4px; vertical-align: baseline; }
+.yawf-config-checkbox { position: absolute; left: -100px; }
+.yawf-config-checkbox-icon { border: 1px solid var(--w-checkbox-border); color: var(--w-checkbox-check-color); }
+.yawf-config-checkbox-icon { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+.yawf-config-checkbox-icon svg { position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; }
+.yawf-config-checkbox:not(:checked) ~ .yawf-config-checkbox-icon svg { display: none; }
 
-  css.append(`
-.yawf-WBV7 label:hover .yawf-config-checkbox-wrap .yawf-config-checkbox-icon,
-.yawf-WBV7 .yawf-config-checkbox-wrap:hover .yawf-config-checkbox-icon { border-color: var(--w-checkbox-check-color); }
-.yawf-WBV7 .yawf-config-checkbox-wrap { display: inline-block; position: relative; width: var(--w-checkbox-size); height: var(--w-checkbox-size); overflow: hidden; margin-right: 4px; vertical-align: baseline; }
-.yawf-WBV7 .yawf-config-checkbox { position: absolute; left: -100px; }
-.yawf-WBV7 .yawf-config-checkbox-icon { border: 1px solid var(--w-checkbox-border); color: var(--w-checkbox-check-color); }
-.yawf-WBV7 .yawf-config-checkbox-icon { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
-.yawf-WBV7 .yawf-config-checkbox-icon svg { position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; }
-.yawf-WBV7 .yawf-config-checkbox:not(:checked) ~ .yawf-config-checkbox-icon svg { display: none; }
-
-.yawf-WBV7 .yawf-config-group { display: block; font-weight: bold; margin: 15px 10px 5px; }
-.yawf-WBV7 .yawf-config-rule { display: block; margin: 5px 20px; }
-.yawf-WBV7 .yawf-config-rule-unsupport { opacity: 0.5; }
-.yawf-WBV7 .yawf-bubble .yawf-config-rule { display: inline; margin: 0; }
-.yawf-WBV7 .yawf-config-rule > label + label { margin-left: 8px; }
-.yawf-WBV7 .yawf-config-rule > br + label { margin-left: 20px; }
-.yawf-WBV7 .yawf-bubble-icon { vertical-align: middle; margin-left: 2px; margin-right: 2px; display: inline; }
-.yawf-WBV7 .yawf-bubble-text .yawf-bubble-icon { display: none; }
-.yawf-WBV7 .yawf-config-select { height: 20px; }
-.yawf-WBV7 .yawf-config-number input[type="number"] { width: 45px; box-sizing: border-box; }
-.yawf-WBV7 .yawf-config-range { position: relative; }
-.yawf-WBV7 .yawf-config-range-wrap { display: none; position: absolute; left: 0; right: 0; margin: 0; bottom: calc(100% + 2px); height: 80px; background: #f0f0f0; background: Menu; }
-.yawf-WBV7 .yawf-config-range:focus-within .yawf-config-range-wrap { display: block; }
-.yawf-WBV7 .yawf-config-range input[type="range"] { position: absolute; top: 0; bottom: 0; margin: auto; width: 75px; right: -20px; left: -20px; transform: rotate(-90deg); }
-.yawf-WBV7 .yawf-config-color input[type="color"] { width: 45px; box-sizing: border-box; height: 20px; vertical-align: middle; }
-.yawf-WBV7 .yawf-config-text textarea { width: 100%; min-height: 120px; resize: vertical; padding-left: var(--w-input-indent); padding-right: var(--w-input-indent); }
-.yawf-WBV7 .yawf-config-collection-submit,
-.yawf-WBV7 .yawf-config-key button { padding: 4px 16px; margin: 0 4px; vertical-align: bottom; }
-.yawf-WBV7 .yawf-config-collection-list { display: block; margin: 5px; padding: 0; }
-.yawf-WBV7 .yawf-config-collection-list .yawf-config-collection-item { padding: 0 5px 0 20px; min-width: 0; height: 20px; overflow: hidden; text-overflow: ellipsis; cursor: default; display: inline-block; position: relative; margin-left: 8px; border: 1px solid var(--w-b-line-primary-border); }
-.yawf-WBV7 .yawf-config-collection-remove { display: block; position: absolute; top: 2px; left: 0; display: flow-root; width: 20px; height: 20px; line-height: 20px; text-align: center; cursor: pointer; }
-.yawf-WBV7 .yawf-config-collection-item-content { max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-collection-list { margin-left: -5px; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-collection-item { width: 90px; height: 50px; padding: 1px 20px 1px 56px; text-align: left; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-collection-remove { right: 0; left: auto; text-align: center; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-collection-remove a { position: static; margin: 0; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-user-avatar { position: absolute; left: 1px; top: 1px; width: 50px; height: 50px; overflow: hidden; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-user-avatar-img { width: 50px; height: 50px; }
-.yawf-WBV7 .yawf-config-collection-user-id .yawf-config-user-name { max-width: 100%; word-break: break-all; white-space: normal; max-height: 40px; overflow: hidden; }
-.yawf-WBV7 .yawf-collection-suggestion.yawf-collection-suggestion { z-index: 10000; position: fixed; background: var(--w-card-background); border: 1px solid var(--w-layer-border); border-radius: var(--w-layer-radius); }
-.yawf-WBV7 .yawf-collection-suggestion-list { margin: 0; padding: 10px 0; list-style: none; }
-.yawf-WBV7 .yawf-list-suggestion-item { line-height: 20px; padding: 5px 10px; }
-.yawf-WBV7 .yawf-list-suggestion-item.yawf-current { line-height: 20px; padding: 5px 10px; background: var(--w-pop-item-hover); }
-.yawf-WBV7 .yawf-list-suggestion-item a { min-height: 15.6px; color: inherit; text-decoration: none; }
-.yawf-WBV7 .yawf-config-item .woo-input-wrap { height: 20px; line-height: 20px; --w-input-height: 20px; box-sizing: content-box; margin-left: 4px; margin-right: 4px; }
-.yawf-WBV7 .yawf-config-item .woo-input-wrap.woo-input-text { height: auto; width: 100%; box-sizing: border-box; }
-.yawf-WBV7 .yawf-config-item .woo-input-wrap input,
-.yawf-WBV7 .yawf-config-item .woo-input-wrap select { vertical-align: bottom; }
-.yawf-WBV7 .yawf-config-item .yawf-config-select .woo-input-wrap { padding-right: 36px; position: relative; }
-.yawf-WBV7 .yawf-config-item .yawf-config-select .woo-input-wrap::before { content: " "; display: block; width: 0; height: 0; border-top: 4px solid currentColor; border-left: 4px solid transparent; border-right: 4px solid transparent; position: absolute; right: 14px; top: calc(50% - 2px); }
-.yawf-WBV7 .yawf-config-text .woo-input-wrap { width: 520px; height: auto; padding: 0; }
-.yawf-WBV7 .yawf-config-item .woo-input-main { background: inherit; }
-.yawf-WBV7 .yawf-config-item .woo-input-wrap select { margin-left: -12px; padding-left: 12px; margin-right: -36px; padding-right: 36px; width: auto; }
+.yawf-config-group { display: block; font-weight: bold; margin: 15px 10px 5px; }
+.yawf-config-rule { display: block; margin: 5px 20px; }
+.yawf-config-rule-unsupport { opacity: 0.5; }
+.yawf-bubble .yawf-config-rule { display: inline; margin: 0; }
+.yawf-config-rule > label + label { margin-left: 8px; }
+.yawf-config-rule > br + label { margin-left: 20px; }
+.yawf-bubble-icon { vertical-align: middle; margin-left: 2px; margin-right: 2px; display: inline; }
+.yawf-bubble-text .yawf-bubble-icon { display: none; }
+.yawf-config-select { height: 20px; }
+.yawf-config-number input[type="number"] { width: 45px; box-sizing: border-box; }
+.yawf-config-range { position: relative; }
+.yawf-config-range-wrap { display: none; position: absolute; left: 0; right: 0; margin: 0; bottom: calc(100% + 2px); height: 80px; background: #f0f0f0; background: Menu; }
+.yawf-config-range:focus-within .yawf-config-range-wrap { display: block; }
+.yawf-config-range input[type="range"] { position: absolute; top: 0; bottom: 0; margin: auto; width: 75px; right: -20px; left: -20px; transform: rotate(-90deg); }
+.yawf-config-color input[type="color"] { width: 45px; box-sizing: border-box; height: 20px; vertical-align: middle; }
+.yawf-config-text textarea { width: 100%; min-height: 120px; resize: vertical; padding-left: var(--w-input-indent); padding-right: var(--w-input-indent); }
+.yawf-config-collection-submit,
+.yawf-config-key button { padding: 4px 16px; margin: 0 4px; vertical-align: bottom; }
+.yawf-config-collection-list { display: block; margin: 5px; padding: 0; }
+.yawf-config-collection-list .yawf-config-collection-item { padding: 0 5px 0 20px; min-width: 0; height: 20px; overflow: hidden; text-overflow: ellipsis; cursor: default; display: inline-block; position: relative; margin-left: 8px; border: 1px solid var(--w-b-line-primary-border); }
+.yawf-config-collection-remove { display: block; position: absolute; top: 2px; left: 0; display: flow-root; width: 20px; height: 20px; line-height: 20px; text-align: center; cursor: pointer; }
+.yawf-config-collection-item-content { max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+.yawf-config-collection-user-id .yawf-config-collection-list { margin-left: -5px; }
+.yawf-config-collection-user-id .yawf-config-collection-item { width: 90px; height: 50px; padding: 1px 20px 1px 56px; text-align: left; }
+.yawf-config-collection-user-id .yawf-config-collection-remove { right: 0; left: auto; text-align: center; }
+.yawf-config-collection-user-id .yawf-config-collection-remove a { position: static; margin: 0; }
+.yawf-config-collection-user-id .yawf-config-user-avatar { position: absolute; left: 1px; top: 1px; width: 50px; height: 50px; overflow: hidden; }
+.yawf-config-collection-user-id .yawf-config-user-avatar-img { width: 50px; height: 50px; }
+.yawf-config-collection-user-id .yawf-config-user-name { max-width: 100%; word-break: break-all; white-space: normal; max-height: 40px; overflow: hidden; }
+.yawf-collection-suggestion.yawf-collection-suggestion { z-index: 10000; position: fixed; background: var(--w-card-background); border: 1px solid var(--w-layer-border); border-radius: var(--w-layer-radius); }
+.yawf-collection-suggestion-list { margin: 0; padding: 10px 0; list-style: none; }
+.yawf-list-suggestion-item { line-height: 20px; padding: 5px 10px; }
+.yawf-list-suggestion-item.yawf-current { line-height: 20px; padding: 5px 10px; background: var(--w-pop-item-hover); }
+.yawf-list-suggestion-item a { min-height: 15.6px; color: inherit; text-decoration: none; }
+.yawf-config-item .woo-input-wrap { height: 20px; line-height: 20px; --w-input-height: 20px; box-sizing: content-box; margin-left: 4px; margin-right: 4px; }
+.yawf-config-item .woo-input-wrap.woo-input-text { height: auto; width: 100%; box-sizing: border-box; }
+.yawf-config-item .woo-input-wrap input,
+.yawf-config-item .woo-input-wrap select { vertical-align: bottom; }
+.yawf-config-item .yawf-config-select .woo-input-wrap { padding-right: 36px; position: relative; }
+.yawf-config-item .yawf-config-select .woo-input-wrap::before { content: " "; display: block; width: 0; height: 0; border-top: 4px solid currentColor; border-left: 4px solid transparent; border-right: 4px solid transparent; position: absolute; right: 14px; top: calc(50% - 2px); }
+.yawf-config-text .woo-input-wrap { width: 520px; height: auto; padding: 0; }
+.yawf-config-item .woo-input-main { background: inherit; }
+.yawf-config-item .woo-input-wrap select { margin-left: -12px; padding-left: 12px; margin-right: -36px; padding-right: 36px; width: auto; }
 `);
 
 }());
@@ -6720,7 +5897,6 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   const priority = util.priority;
   const css = util.css;
-  const i18n = util.i18n;
   const strings = util.strings;
 
   /**
@@ -6775,8 +5951,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       this.done = [];
       this.filters = new FilterCollection();
       this.pending = [];
-      this.busy = false;
-      this.clean = null;
+      this.busy = null;
+      this.resolve = null;
     }
     filter(filter, { priority = 0 } = {}) {
       this.filters.add(filter, priority);
@@ -6794,55 +5970,30 @@ throw new Error('YAWF | chat page found, skip following executions');
         })
       )));
     }
-    async active(items, isAppend = true) {
-      if (isAppend) {
-        this.pending.push(...items);
-      } else {
-        this.pending.unshift(...items);
-      }
+    async active(items) {
+      this.pending.push(...items);
       if (this.busy) {
-        if (!this.clean) {
-          this.clean = new Promise(resolve => {
-            this.resolve = resolve;
-          });
-        }
-        await this.clean;
+        await this.busy;
         return;
       }
-      this.busy = true;
-      const promises = [];
+      let resolve = null;
+      this.busy = new Promise(r => { resolve = r; });
       while (this.pending.length) {
         while (this.pending.length) {
           const item = this.pending.shift();
-          // console.log('filter run', item);
-          promises.push((async () => {
-            await this.invokeCallbacks(this.before, item);
-            const result = await this.filters.filter(item);
-            // console.log('filter apply', item);
-            const callAfter = this.apply(item, result);
-            if (callAfter) {
-              await this.invokeCallbacks(this.after, item, result);
-            }
-            await this.invokeCallbacks(this.finally, item, result);
-            await new Promise(resolve => setTimeout(resolve, 0));
-          })());
+          await this.invokeCallbacks(this.before, item);
+          const result = await this.filters.filter(item);
+          const callAfter = this.apply(item, result);
+          if (callAfter) {
+            await this.invokeCallbacks(this.after, item, result);
+          }
+          await this.invokeCallbacks(this.finally, item, result);
           await new Promise(resolve => setTimeout(resolve, 0));
-          // console.log('filter end', item);
         }
-        await Promise.all(promises);
-        // console.log('filter done');
         await this.invokeCallbacks(this.done);
       }
-      this.busy = false;
-      if (this.pending.length) {
-        await this.active(this.pending.splice(0));
-        return;
-      }
-      if (this.clean) this.clean = null;
-      if (this.resolve) {
-        this.resolve();
-        this.resolve = null;
-      }
+      this.busy = null;
+      resolve();
     }
     async rerun() {
       const lastRerun = this.lastRerun = {};
@@ -6869,424 +6020,314 @@ throw new Error('YAWF | chat page found, skip following executions');
   observer.comment = new FilterObserver();
 
   const hideFeedCss = css.add(`
-.yawf-WBV6 [action-type="feed_list_item"]:not([yawf-feed]),
-.yawf-WBV6 [node-type="feed_list"] .WB_feed_type:not([yawf-feed]),
-.yawf-WBV6 .list_ul[node-type="feed_list_commentList"] .list_li:not([yawf-comment]),
-.yawf-WBV6 .list_ul[node-type="comment_list"] .list_li:not([yawf-comment])
-.yawf-WBV6 { visibility: hidden; opacity: 0; }
-.yawf-WBV6 [action-type="feed_list_item"]:not([yawf-feed]) [node-type="feed_list"] .WB_feed_type:not([yawf-feed]) { display: none; }
-.yawf-WBV6 [yawf-feed]:not([yawf-feed-display]), [yawf-comment]:not([yawf-comment-display]) { visibility: hidden; opacity: 0; }
-.yawf-WBV6 [yawf-comment-display="hide"], [yawf-feed-display="hide"] { display: none; }
-.yawf-WBV6 [yawf-feed-display="fold"] { position: relative; }
-.yawf-WBV6 [yawf-feed-display="fold"] > * { display: none; }
-.yawf-WBV6 [yawf-feed-display="fold"]::before { text-align: center; padding: 10px 20px; display: block; opacity: 0.6; line-height: 16px; }
-.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_detail { display: none; }
-.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"]:hover .WB_feed_detail:not(:hover) { display: block; overflow: hidden; padding: 0 20px 27px; }
-.yawf-WBV6 .WB_feed.WB_feed_v3 .WB_feed_type[yawf-feed-display="fold"].WB_feed_vipcover:hover .WB_feed_detail { padding-top: 0; }
-.yawf-WBV6 .WB_feed_type[yawf-feed-display="fold"] .WB_feed_handle { display: none; }
-
-.yawf-WBV7 article[class*="Feed"]:not(.yawf-feed-filter) > *,
-.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-loading > *,
-.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-running > * { visibility: hidden; }
-.yawf-WBV7 article[class*="Feed"]:not(.yawf-feed-filter)::before,
-.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-loading::before,
-.yawf-WBV7 article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display: block; position: absolute; left: 100px; right: 100px; top: 50%; height: 140px; max-height: calc(100% - 20px); transform: translateY(-50%); background-image: repeating-linear-gradient(to bottom, transparent 0 20px, var(--w-panel-background) 20px 60px), linear-gradient(to right, var(--w-main) 40%, transparent 50%, var(--w-main) 60%); animation: yawf-feed-filter-running 2s 1s linear infinite; background-size: 200% 100%; background-repeat: repeat; opacity: 0.1; } 
+article[class*="Feed"]:not(.yawf-feed-filter) > *,
+article[class*="Feed"].yawf-feed-filter-loading > *,
+article[class*="Feed"].yawf-feed-filter-running > * { visibility: hidden; }
+article[class*="Feed"]:not(.yawf-feed-filter)::before,
+article[class*="Feed"].yawf-feed-filter-loading::before,
+article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display: block; position: absolute; left: 100px; right: 100px; top: 50%; height: 140px; max-height: calc(100% - 20px); transform: translateY(-50%); background-image: repeating-linear-gradient(to bottom, transparent 0 20px, var(--w-panel-background) 20px 60px), linear-gradient(to right, var(--w-main) 40%, transparent 50%, var(--w-main) 60%); animation: yawf-feed-filter-running 2s 1s linear infinite; background-size: 200% 100%; background-repeat: repeat; opacity: 0.1; } 
 @keyframes yawf-feed-filter-running { 0% { background-position: 120%; } 100% { background-position: -20%; } }
-.yawf-WBV7 .yawf-resize-sensor,
-.yawf-WBV7 .yawf-resize-sensor-expand,
-.yawf-WBV7 .yawf-resize-sensor-shrink { position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; z-index: -1; visibility: hidden; }
-.yawf-WBV7 .yawf-resize-sensor-expand .yawf-resize-sensor-child { width: 10000000px; height: 10000000px; }
-.yawf-WBV7 .yawf-resize-sensor-shrink .yawf-resize-sensor-child { width: 200%; height: 200%; }
-.yawf-WBV7 .yawf-resize-sensor-child { position: absolute; top: 0; left: 0; transition: 0s; }
+.yawf-resize-sensor,
+.yawf-resize-sensor-expand,
+.yawf-resize-sensor-shrink { position: absolute; top: 0; bottom: 0; left: 0; right: 0; overflow: hidden; z-index: -1; visibility: hidden; }
+.yawf-resize-sensor-expand .yawf-resize-sensor-child { width: 10000000px; height: 10000000px; }
+.yawf-resize-sensor-shrink .yawf-resize-sensor-child { width: 200%; height: 200%; }
+.yawf-resize-sensor-child { position: absolute; top: 0; left: 0; transition: 0s; }
 `);
 
-  init.onLoad(function () {
-    css.append(`.yawf-WBV6 [yawf-feed-display="fold"]::before { content: ${i18n.foldReason}; }`);
-  });
   init.onDeinit(() => {
     hideFeedCss.remove();
   });
 
   init.onLoad(function () {
-    if (yawf.WEIBO_VERSION === 6) {
-      observer.feed.apply = function (feed, { result, filter = null, reason = null }) {
-        feed.setAttribute('yawf-feed-display', result ?? 'unset');
-        if (result && result !== 'unset') {
-          const author = feed.querySelector('.WB_detail > .WB_info > .W_fb[usercard]') ||
-            feed.querySelector('.card-feed .info .name');
-          const authorName = author?.textContent;
-          if (authorName) feed.setAttribute('yawf-feed-author', authorName);
-          if (reason) feed.setAttribute('yawf-feed-reason', reason);
-          util.debug('Feed filter %o -> %o by %o due to %o', feed, result, filter, reason);
-        }
-        if (result === 'hide') return false;
-        return true;
-      };
-      observer.feed.reapply = function () {
-        const parsed = Array.from(document.querySelectorAll('[yawf-feed-display]'));
-        parsed.forEach(feed => {
-          feed.removeEventListener('click', unfoldEventHandler);
-        });
-        return this.active(parsed, false);
-      };
-      observer.comment.apply = function (comment, { result, filter = null, reason = null }) {
-        comment.setAttribute('yawf-comment-display', result ?? 'unset');
-        if (result && result !== 'unset') {
-          util.debug('Comment filter %o -> %o by %o due to %o', comment, result, filter, reason);
-        }
-        if (result === 'hide') return false;
-        return true;
-      };
-      observer.comment.reapply = function () {
-        const parsed = Array.from(document.querySelectorAll('[yawf-comment-display]'));
-        return this.active(parsed, false);
-      };
-      const removeHiddenItem = function (item, { result }) {
-        if (result !== 'hide') return;
-        item.remove();
-      };
-      const unfoldEventHandler = function (event) {
-        const feed = event.target.closest('[mid]');
-        feed.setAttribute('yawf-feed-display', 'unfold');
-        feed.removeEventListener('click', unfoldEventHandler);
-      };
-      const foldFeedUnfold = function (feed, { result }) {
-        if (result !== 'fold') return;
-        feed.addEventListener('click', unfoldEventHandler);
-      };
-      observer.feed.onFinally(removeHiddenItem);
-      observer.feed.onFinally(foldFeedUnfold);
-      observer.comment.onFinally(removeHiddenItem);
+    /*
+     * 微博表示 Feed 的结构体很奇妙
+     * 它的 idstr 属性，是个 string，是当前微博的 mid，也可能是快转的原微博 id
+     * 它的 id 属性，大部分情况下是个 number，表示当前微博的 mid，偶尔是个字符串，表示快转微博的当前 id
+     * 它的 mid 属性，是个 string，是 id 属性的字符串形式
+     * 它的 mblogid 是 62 进制换算后的 idstr
+     */
 
-      // 自动检测页面中的微博并触发过滤规则
-      observer.dom.add(function feedFilter() {
-        const feeds = document.querySelectorAll([
-          '[action-type="feed_list_item"]:not([yawf-feed])',
-          '[node-type="feed_list"] .WB_feed_type:not([yawf-feed])',
-        ].join(','));
-        if (!feeds.length) return;
-        feeds.forEach(feed => feed.setAttribute('yawf-feed', ''));
-        observer.feed.active(feeds);
+    const randStr = strings.randKey();
+    const key = `yawf_feedFilter_${randStr}`;
+
+    // 当有一条完成过滤规则判断时，交给页面脚本处理
+    observer.feed.apply = function (data, { result, filter = null, reason = null }) {
+      const mid = data.mid, runIndex = data._yawf_FilterRunIndex;
+      const event = new CustomEvent(key, {
+        detail: JSON.stringify({ action: 'result', mid, runIndex, result: { result: result ?? 'unset', reason } }),
       });
-      // 自动检测页面中的评论并触发过滤规则
-      observer.dom.add(function commentFilter() {
-        const comments = document.querySelectorAll([
-          '.list_ul[node-type="feed_list_commentList"] .list_li:not([yawf-comment])',
-          '.list_ul[node-type="comment_list"] .list_li:not([yawf-comment]) ',
-        ].join(','));
-        if (!comments.length) return;
-        comments.forEach(comment => comment.setAttribute('yawf-comment', ''));
-        observer.comment.active(comments);
-      });
-    } else {
-      /*
-       * 微博表示 Feed 的结构体很奇妙
-       * 它的 idstr 属性，是个 string，是当前微博的 mid，也可能是快转的原微博 id
-       * 它的 id 属性，大部分情况下是个 number，表示当前微博的 mid，偶尔是个字符串，表示快转微博的当前 id
-       * 它的 mid 属性，是个 string，是 id 属性的字符串形式
-       * 它的 mblogid 是 62 进制换算后的 idstr
-       */
+      document.documentElement.dispatchEvent(event);
+      if (result) util.debug('Feed filter %o -> %o by %o due to %o', data, result, filter, reason);
+      if (result === 'hide') return false;
+      return true;
+    };
+    // 如果需要重新触发过滤规则，那么让页面脚本重新触发一次
+    observer.feed.reapply = function () {
+      const event = new CustomEvent(key, { detail: JSON.stringify({ action: 'rerun' }) });
+      document.documentElement.dispatchEvent(event);
+    };
+    // 当页面脚本检测到一条需要过滤的微博时，提交过滤
+    window.addEventListener(key, function (event) {
+      const detail = JSON.parse(event.detail);
+      if (detail.action === 'trigger') {
+        observer.feed.active([detail.data]);
+      }
+    }, true);
+    util.inject(function (rootKey, key) {
+      const yawf = window[rootKey];
+      const vueSetup = yawf.vueSetup;
 
-      const randStr = strings.randKey();
-      const key = `yawf_feedFilter_${randStr}`;
-
-      // 当有一条完成过滤规则判断时，交给页面脚本处理
-      observer.feed.apply = function (data, { result, filter = null, reason = null }) {
-        const mid = data.mid, runIndex = data._yawf_FilterRunIndex;
-        const event = new CustomEvent(key, {
-          detail: JSON.stringify({ action: 'result', mid, runIndex, result: { result: result ?? 'unset', reason } }),
-        });
-        document.documentElement.dispatchEvent(event);
-        if (result) util.debug('Feed filter %o -> %o by %o due to %o', data, result, filter, reason);
-        if (result === 'hide') return false;
-        return true;
-      };
-      // 如果需要重新触发过滤规则，那么让页面脚本重新触发一次
-      observer.feed.reapply = function () {
-        const event = new CustomEvent(key, { detail: JSON.stringify({ action: 'rerun' }) });
-        document.documentElement.dispatchEvent(event);
-      };
-      // 当页面脚本检测到一条需要过滤的微博时，提交过滤
-      window.addEventListener(key, function (event) {
-        const detail = JSON.parse(event.detail);
-        if (detail.action === 'trigger') {
-          observer.feed.active([detail.data]);
+      // 展开微博正文
+      const longContentExpandForDetail = async function (vm, feedDetail) {
+        if (!feedDetail?.isLongText) return;
+        if (feedDetail.longTextContent_raw) return;
+        if ([true, false].includes(feedDetail._yawf_LongTextContentLoading)) return;
+        vm.$set(feedDetail, '_yawf_LongTextContentLoading', true);
+        vm.$set(feedDetail, 'longTextContent_raw', null);
+        vm.$set(feedDetail, 'longTextContent', null);
+        try {
+          const resp = await vm.$http.get('/ajax/statuses/longtext', {
+            params: { id: feedDetail.idstr },
+          });
+          if (!resp.data || !resp.data.ok || !resp.data.data) return;
+          const data = resp.data.data;
+          if (data?.longTextContent) {
+            feedDetail.longTextContent_raw = data.longTextContent;
+            if (data.url_struct) feedDetail.url_struct = data.url_struct;
+            if (data.topic_struct) feedDetail.topic_struct = data.topic_struct;
+          }
+        } catch (e) {
+          console.error('Error while fetching long text', e);
         }
-      }, true);
-      util.inject(function (rootKey, key) {
-        const yawf = window[rootKey];
-        const vueSetup = yawf.vueSetup;
-
-        // 展开微博正文
-        const longContentExpandForDetail = async function (vm, feedDetail) {
-          if (!feedDetail?.isLongText) return;
-          if (feedDetail.longTextContent_raw) return;
-          if ([true, false].includes(feedDetail._yawf_LongTextContentLoading)) return;
-          vm.$set(feedDetail, '_yawf_LongTextContentLoading', true);
-          vm.$set(feedDetail, 'longTextContent_raw', null);
-          vm.$set(feedDetail, 'longTextContent', null);
+        feedDetail._yawf_LongTextContentLoading = false;
+      };
+      const longContentExpand = async function (vm, feed) {
+        for (let retry = 0; retry < 3; retry++) {
           try {
-            const resp = await vm.$http.get('/ajax/statuses/longtext', {
-              params: { id: feedDetail.idstr },
-            });
-            if (!resp.data || !resp.data.ok || !resp.data.data) return;
-            const data = resp.data.data;
-            if (data?.longTextContent) {
-              feedDetail.longTextContent_raw = data.longTextContent;
-              if (data.url_struct) feedDetail.url_struct = data.url_struct;
-              if (data.topic_struct) feedDetail.topic_struct = data.topic_struct;
-            }
-          } catch (e) {
-            console.error(e);
+            await longContentExpandForDetail(vm, feed);
+            await longContentExpandForDetail(vm, feed.retweeted_status);
+            return true;
+          } catch (_ignore) {
+            await new Promise(resolve => setTimeout(resolve, 1e3));
           }
-          feedDetail._yawf_LongTextContentLoading = false;
-        };
-        const longContentExpand = async function (vm, feed) {
-          for (let retry = 0; retry < 3; retry++) {
-            try {
-              await longContentExpandForDetail(vm, feed);
-              await longContentExpandForDetail(vm, feed.retweeted_status);
-              return true;
-            } catch (_ignore) {
-              await new Promise(resolve => setTimeout(resolve, 1e3));
-            }
-          }
-          return false;
-        };
-        // 触发过滤并等待过滤结果回来
-        const pendingFeeds = new Map();
-        const triggerFilter = function (vm, feed) {
-          const runIndex = feed._yawf_FilterRunIndex;
-          feed._yawf_FilterStatus = 'running';
+        }
+        return false;
+      };
+      // 触发过滤并等待过滤结果回来
+      const pendingFeeds = new Map();
+      const triggerFilter = function (vm, feed) {
+        const runIndex = feed._yawf_FilterRunIndex;
+        feed._yawf_FilterStatus = 'running';
+        return new Promise(resolve => {
           const cleanUp = function () {
             pendingFeeds.delete(runIndex);
             vm.$off('hook:beforeDestroy', cleanUp);
           };
-          vm.$once('hook:beforeDestroy', cleanUp);
-          return new Promise(resolve => {
-            const handleFilterResult = function ({ result, reason }) {
-              cleanUp();
-              feed._yawf_FilterStatus = result;
-              feed._yawf_FilterReason = reason;
-              resolve({ result, reason });
-            };
-            pendingFeeds.set(runIndex, new WeakRef(handleFilterResult));
-            const event = new CustomEvent(key, {
-              detail: JSON.stringify({ action: 'trigger', runIndex, data: feed }),
-            });
-            document.documentElement.dispatchEvent(event);
+          vm.$once('hook:beforeDestroy', function () {
+            cleanUp();
+            resolve({});
           });
-        };
-        // 处理过滤结果
-        const applyFilterResult = function (vm, feed, { result, reason }) {
-          if (result === 'hide') {
-            const index = vm.data.indexOf(feed);
-            vm.data.splice(index, 1);
-          }
-        };
-        vueSetup.eachComponentVM('feed', function (vm) {
-          const feedScroll = vueSetup.closest(vm, 'feed-scroll');
+          const handleFilterResult = function ({ result, reason }) {
+            cleanUp();
+            feed._yawf_FilterStatus = result;
+            feed._yawf_FilterReason = reason;
+            resolve({ result, reason });
+          };
+          pendingFeeds.set(runIndex, handleFilterResult);
+          const event = new CustomEvent(key, {
+            detail: JSON.stringify({ action: 'trigger', runIndex, data: feed }),
+          });
+          document.documentElement.dispatchEvent(event);
+        });
+      };
+      // 处理过滤结果
+      const applyFilterResult = function (vm, feed, { result, reason }) {
+        if (result === 'hide') {
+          const index = vm.data.indexOf(feed);
+          vm.data.splice(index, 1);
+        }
+      };
+      vueSetup.eachComponentVM('feed', function (vm) {
+        const feedScroll = vueSetup.closest(vm, 'feed-scroll');
 
-          // 在渲染一条 feed 时，额外插入过滤状态的标识
-          vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
-            const { vNode, addClass } = Nodes;
+        // 在渲染一条 feed 时，额外插入过滤状态的标识
+        vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+          const { vNode, addClass } = Nodes;
 
-            // 如果某个 feed 不在 feed-scroll 里面
-            // 那么我们不会把它就这么给隐藏起来
-            const underFilter = feedScroll != null && this.data.mid > 0;
+          // 如果某个 feed 不在 feed-scroll 里面
+          // 那么我们不会把它就这么给隐藏起来
+          const underFilter = feedScroll != null && this.data.mid > 0;
 
-            const feed = nodeStruct;
-            const vnode = vNode(feed);
+          const feed = nodeStruct;
+          const vnode = vNode(feed);
 
-            if (!vnode.key && this.data.mid) {
-              vnode.key = 'yawf-feed-' + this.data.mid;
-              if (this.data.ori_mid) {
-                vnode.key = 'yawf-feed-' + this.data.mid + '-' + this.data.ori_mid;
-              } else {
-                vnode.key = 'yawf-feed-' + this.data.mid;
-              }
-            }
-
-            addClass(feed, 'yawf-feed-filter');
-            if (underFilter) {
-              addClass(feed, `yawf-feed-filter-${this.data._yawf_FilterStatus || 'loading'}`);
+          if (!vnode.key && this.data.mid) {
+            vnode.key = 'yawf-feed-' + this.data.mid;
+            if (this.data.ori_mid) {
+              vnode.key = 'yawf-feed-' + this.data.mid + '-' + this.data.ori_mid;
             } else {
-              addClass(feed, 'yawf-feed-filter-ignore');
+              vnode.key = 'yawf-feed-' + this.data.mid;
             }
-
-            if (this.data.mid) {
-              vnode.data.attrs['data-feed-author-name'] = this.data.user.screen_name;
-              vnode.data.attrs['data-feed-mid'] = this.data.mid;
-              if (this.data.retweeted_status) {
-                vnode.data.attrs['data-feed-omid'] = this.data.retweeted_status.mid;
-              }
-              if (this.data.ori_mid) {
-                vnode.data.attrs['data-feed-fmid'] = this.data.idstr;
-              }
-              if (this.data._yawf_FilterReason) {
-                vnode.data.attrs['data-yawf-filter-reason'] = this.data._yawf_FilterReason;
-              }
-            }
-            return vnode;
-          });
-          vm.$forceUpdate();
-        });
-        let heightIndex = 0;
-        vueSetup.eachComponentVM('scroll', function (vm) {
-          const wrapRaf = function (f) {
-            let dirty = false;
-            return function () {
-              if (dirty) return;
-              dirty = true;
-              requestAnimationFrame(function () {
-                dirty = false;
-                f();
-              });
-            };
-          };
-          // vm.__proto__.sizeDependencies 里面存的是原本关心的属性
-          // 那个没什么统一的好办法给改过来，但是我们可以在 vm 自己身上设置这个属性来覆盖它
-          // 因为设置的这个属性我们并不期望以后还有变化，所以我们不需要让它过 Vue 的生命周期 $forceUpdate 就是了
-          Object.defineProperty(vm, 'sizeDependencies', { value: ['_yawf_Height'], configurable: true, enumerable: true, writable: true });
-          const sensorPrefix = 'yawf_resize_sensor_element_';
-          const getItemFromSensor = sensor => {
-            if (!sensor?.id) return null;
-            const index = Number.parseInt(sensor.id.slice(sensorPrefix.length), 10);
-            // 在有微博被隐藏后，微博相对的索引会发生变化
-            // 无法依赖微博的索引确定对应的微博
-            // 所以我们不用 vm.data[index] 而只能这样找一遍
-            const item = vm?.data?.find?.(item => item._yawf_HeightIndex === index);
-            return item;
-          };
-          const observer = new ResizeObserver(entries => {
-            entries.forEach(entry => {
-              const { target } = entry;
-              const item = getItemFromSensor(target);
-              if (item) item._yawf_Height = target.clientHeight;
-            });
-          });
-          // 如果可以把 sensor 做成组件的话，其实只要 mount 时处理一下就行了，不过这里是没办法
-          const updateSensor = wrapRaf(function () {
-            const allSensor = Object.keys(vm.$refs).filter(key => key.startsWith(sensorPrefix));
-            allSensor.map(key => Number.parseInt(key.slice(sensorPrefix.length), 10)).forEach(index => {
-              const container = vm.$refs[sensorPrefix + index];
-              if (!container) return;
-              observer.observe(container);
-              const item = getItemFromSensor(container);
-              if (item) item._yawf_Height = container.clientHeight;
-            });
-          });
-          vm.$scopedSlots.content = (function (content) {
-            return function (data) {
-              const createElement = vm._self._c, h = createElement;
-              const raw = content.call(this, data);
-              // 给每个元素一个唯一的标识用于对应高度检测器
-              // 我们没办法用现成的 mid 或 comment_id，因为我们并不知道元素是什么类型
-              // 元素有可能是 feed，但也有可能是其他任何东西
-              if (!data.item._yawf_HeightIndex) {
-                data.item._yawf_HeightIndex = ++heightIndex;
-              }
-              const index = data.item._yawf_HeightIndex;
-              const resizeSensor = h('div', {
-                class: 'yawf-resize-sensor',
-                ref: sensorPrefix + index,
-                key: sensorPrefix + index,
-                attrs: { id: sensorPrefix + index },
-              });
-              const result = Array.isArray(raw) ? raw : [raw];
-              result.push(resizeSensor);
-              updateSensor();
-              return result;
-            };
-          }(vm.$scopedSlots.content));
-          vm.$watch(function () { return this.data; }, function () {
-            if (!Array.isArray(vm.data)) return;
-            vm.data.forEach(item => {
-              const descriptor = Object.getOwnPropertyDescriptor(item, '_yawf_Height');
-              if (!descriptor) {
-                vm.$set(item, '_yawf_Height', 0);
-              } else if (!descriptor.set) {
-                const size = vm._yawf_Height;
-                delete vm._yawf_Height;
-                vm.$set(item, '_yawf_Height', size);
-              }
-            });
-          });
-          vm.$forceUpdate();
-        });
-        window.addEventListener(key, function (event) {
-          const detail = JSON.parse(event.detail);
-          if (detail.action === 'rerun') {
-            // 对现有的元素再来一次
-            vueSetup.eachComponentVM('feed-scroll', function (vm) {
-              [...vm.data].forEach(async feed => {
-                if (['loading', 'running'].includes(feed._yawf_FilterStatus)) return;
-                const { result, reason } = await triggerFilter(vm, feed);
-                applyFilterResult(vm, feed, { result, reason });
-              });
-            }, { watch: false });
-          } else if (detail.action === 'result') {
-            // 应用过滤结果
-            const runIndex = detail.runIndex;
-            const handler = pendingFeeds.get(runIndex)?.deref();
-            if (handler) handler(detail.result);
           }
-        }, true);
-        let runIndex = 0;
-        vueSetup.eachComponentVM('feed-scroll', function (vm) {
-          // 当 feed-scroll 内 feed 列表变化时，我们把那些没见过的全都标记一下
-          vm.$watch(function () { return this.data; }, function () {
-            const feeds = [...vm.data];
-            feeds.forEach(async feed => {
-              if (!(feed.mid > 0)) return;
-              if (feed._yawf_FilterApply) return;
-              const id = runIndex++;
-              // console.log('filter start', feed.mid);
-              vm.$set(feed, '_yawf_FilterStatus', 'loading');
-              vm.$set(feed, '_yawf_FilterReason', null);
-              vm.$set(feed, '_yawf_FilterApply', true);
-              vm.$set(feed, '_yawf_FilterRunIndex', id);
-              await longContentExpand(vm, feed);
-              // console.log('filter trigger', feed.mid);
+
+          addClass(feed, 'yawf-feed-filter');
+          if (underFilter) {
+            addClass(feed, `yawf-feed-filter-${this.data._yawf_FilterStatus || 'loading'}`);
+          } else {
+            addClass(feed, 'yawf-feed-filter-ignore');
+          }
+
+          if (this.data.mid) {
+            vnode.data.attrs['data-feed-author-name'] = this.data.user.screen_name;
+            vnode.data.attrs['data-feed-mid'] = this.data.mid;
+            if (this.data.retweeted_status) {
+              vnode.data.attrs['data-feed-omid'] = this.data.retweeted_status.mid;
+            }
+            if (this.data.ori_mid) {
+              vnode.data.attrs['data-feed-fmid'] = this.data.idstr;
+            }
+            if (this.data._yawf_FilterReason) {
+              vnode.data.attrs['data-yawf-filter-reason'] = this.data._yawf_FilterReason;
+            }
+          }
+          return vnode;
+        });
+        vm.$forceUpdate();
+      });
+      let heightIndex = 0;
+      vueSetup.eachComponentVM('scroll', function (vm) {
+        const wrapRaf = function (f) {
+          let dirty = false;
+          return function () {
+            if (dirty) return;
+            dirty = true;
+            requestAnimationFrame(function () {
+              dirty = false;
+              f();
+            });
+          };
+        };
+        // vm.__proto__.sizeDependencies 里面存的是原本关心的属性
+        // 那个没什么统一的好办法给改过来，但是我们可以在 vm 自己身上设置这个属性来覆盖它
+        // 因为设置的这个属性我们并不期望以后还有变化，所以我们不需要让它过 Vue 的生命周期 $forceUpdate 就是了
+        Object.defineProperty(vm, 'sizeDependencies', { value: ['_yawf_Height'], configurable: true, enumerable: true, writable: true });
+        const sensorPrefix = 'yawf_resize_sensor_element_';
+        const getItemFromSensor = sensor => {
+          if (!sensor?.id) return null;
+          const index = Number.parseInt(sensor.id.slice(sensorPrefix.length), 10);
+          // 在有微博被隐藏后，微博相对的索引会发生变化
+          // 无法依赖微博的索引确定对应的微博
+          // 所以我们不用 vm.data[index] 而只能这样找一遍
+          const item = vm?.data?.find?.(item => item._yawf_HeightIndex === index);
+          return item;
+        };
+        const observer = new ResizeObserver(entries => {
+          entries.forEach(entry => {
+            const { target } = entry;
+            const item = getItemFromSensor(target);
+            if (item) item._yawf_Height = target.clientHeight;
+          });
+        });
+        // 如果可以把 sensor 做成组件的话，其实只要 mount 时处理一下就行了，不过这里是没办法
+        const updateSensor = wrapRaf(function () {
+          const allSensor = Object.keys(vm.$refs).filter(key => key.startsWith(sensorPrefix));
+          allSensor.map(key => Number.parseInt(key.slice(sensorPrefix.length), 10)).forEach(index => {
+            const container = vm.$refs[sensorPrefix + index];
+            if (!container) return;
+            observer.observe(container);
+            const item = getItemFromSensor(container);
+            if (item) item._yawf_Height = container.clientHeight;
+          });
+        });
+        vm.$scopedSlots.content = (function (content) {
+          return function (data) {
+            const createElement = vm._self._c, h = createElement;
+            const raw = content.call(this, data);
+            // 给每个元素一个唯一的标识用于对应高度检测器
+            // 我们没办法用现成的 mid 或 comment_id，因为我们并不知道元素是什么类型
+            // 元素有可能是 feed，但也有可能是其他任何东西
+            if (!data.item._yawf_HeightIndex) {
+              data.item._yawf_HeightIndex = ++heightIndex;
+            }
+            const index = data.item._yawf_HeightIndex;
+            const resizeSensor = h('div', {
+              class: 'yawf-resize-sensor',
+              ref: sensorPrefix + index,
+              key: sensorPrefix + index,
+              attrs: { id: sensorPrefix + index },
+            });
+            const result = Array.isArray(raw) ? raw : [raw];
+            result.push(resizeSensor);
+            updateSensor();
+            return result;
+          };
+        }(vm.$scopedSlots.content));
+        vm.$watch(function () { return this.data; }, function () {
+          if (!Array.isArray(vm.data)) return;
+          vm.data.forEach(item => {
+            const descriptor = Object.getOwnPropertyDescriptor(item, '_yawf_Height');
+            if (!descriptor) {
+              vm.$set(item, '_yawf_Height', 0);
+            } else if (!descriptor.set) {
+              const size = vm._yawf_Height;
+              delete vm._yawf_Height;
+              vm.$set(item, '_yawf_Height', size);
+            }
+          });
+        });
+        vm.$forceUpdate();
+      });
+      window.addEventListener(key, function (event) {
+        const detail = JSON.parse(event.detail);
+        if (detail.action === 'rerun') {
+          // 对现有的元素再来一次
+          vueSetup.eachComponentVM('feed-scroll', function (vm) {
+            [...vm.data].forEach(async feed => {
+              if (['loading', 'running'].includes(feed._yawf_FilterStatus)) return;
               const { result, reason } = await triggerFilter(vm, feed);
-              // console.log('filter finish', feed.mid);
               applyFilterResult(vm, feed, { result, reason });
             });
-          }, { immediate: true });
+          }, { watch: false });
+        } else if (detail.action === 'result') {
+          // 应用过滤结果
+          const runIndex = detail.runIndex;
+          const handler = pendingFeeds.get(runIndex);
+          if (handler) handler(detail.result);
+        }
+      }, true);
+      let runIndex = 0;
+      const seenFeeds = new WeakMap();
+      const onBeforeUpdate = function () {
+        const vm = this;
+        if (!Array.isArray(vm.data)) return;
+        vm.data.forEach(async feed => {
+          if (seenFeeds.has(feed)) return;
+          if (!(feed.mid > 0)) return;
+          try {
+            const id = runIndex++;
+            vm.$set(feed, '_yawf_FilterStatus', 'loading');
+            vm.$set(feed, '_yawf_FilterReason', null);
+            vm.$set(feed, '_yawf_FilterApply', true);
+            vm.$set(feed, '_yawf_FilterRunIndex', id);
+            seenFeeds.set(feed, id);
+            await longContentExpand(vm, feed);
+            const { result, reason } = await triggerFilter(vm, feed);
+            if (Array.isArray(vm.data) && vm.data.includes(feed)) {
+              applyFilterResult(vm, feed, { result, reason });
+            }
+          } catch (e) {
+            util.debug('Error while filter feed %o', feed);
+            applyFilterResult(vm, feed, {});
+          }
         });
-
-
-      }, util.inject.rootKey, key);
-    }
+      };
+      vueSetup.eachComponentVM('feed-scroll', function (vm) {
+        vm.$options.beforeUpdate.push(onBeforeUpdate);
+        onBeforeUpdate();
+      });
+    }, util.inject.rootKey, key);
   }, { priority: priority.LAST });
-
-  i18n.foldReason = {
-    cn: '"已折叠 @" attr(yawf-feed-author) " 的一条微博"',
-    tw: '"已折疊 @" attr(yawf-feed-author) " 的一條微博"',
-    en: '"A feed posted by @" attr(yawf-feed-author)',
-  };
-
-  // 单条微博页面永远不应当隐藏微博
-  observer.feed.filter(function singleWeiboPageUnsetRule() {
-    if (yawf.WEIBO_VERSION !== 6) return null;
-    return document.querySelector('[id^="Pl_Official_WeiboDetail__"]') ? 'unset' : null;
-  }, { priority: 1e6 });
-  // 头条文章是一条微博，类似于单条微博，不应当隐藏
-  observer.feed.filter(function singleWeiboPageUnsetRule(feed) {
-    if (yawf.WEIBO_VERSION !== 6) return null;
-    return feed.matches('.WB_artical *') ? 'unset' : null;
-  }, { priority: 1e6 });
-  // 无论因为何种原因，同一页面上同一条微博不应出现两次
-  // 2020年7月后，上一行注释是错的，因为快转之后他们的 mid 是一样的，需要用 fmid 区分
-  // 不过就算是快转的，展示几次也没有任何意义，所以这段逻辑保持不变
-  observer.feed.filter(function hideDuplicate(feed) {
-    if (yawf.WEIBO_VERSION !== 6) return null;
-    const mid = feed.getAttribute('mid');
-    if (!mid) return null;
-    const all = Array.from(document.querySelectorAll('.WB_feed_type[mid]'));
-    if (all.find(that => that !== feed && that.getAttribute('mid') === mid)) return 'hide';
-    return null;
-  }, { priority: 1e6 });
 
 }());
 //#endregion
@@ -7320,61 +6361,35 @@ throw new Error('YAWF | chat page found, skip following executions');
   const configDom = {};
   configDom.left = () => {
     const container = document.createElement('div');
-    if (yawf.WEIBO_VERSION === 6) {
-      container.innerHTML = '<div class="WB_minitab yawf-config-header" node-type="yawf-config-header"><ul class="minitb_ul S_line1 S_bg1 clearfix"></ul></div>';
-    } else {
-      container.innerHTML = '<div class="yawf-config-header"><ul class="woo-box-flex woo-tab-nav"></ul></div>';
-    }
+    container.innerHTML = '<div class="yawf-config-header"><ul class="woo-box-flex woo-tab-nav"></ul></div>';
     return container.removeChild(container.firstChild);
   };
   configDom.search = () => {
     const container = document.createElement('ul');
-    if (yawf.WEIBO_VERSION === 6) {
-      container.innerHTML = '<li class="minitb_item S_line1 yawf-config-tab yawf-config-tab-search"><label class="minitb_lk S_txt1"><input id="yawf-config-search" class="yawf-config-search" type="search"><span class="yawf-config-search-logo W_ficon S_txt2">f</span></label></li>';
-    } else {
-      container.innerHTML = '<li class="woo-tab-item-main yawf-config-tab yawf-config-tab-search"><label><input id="yawf-config-search" class="woo-input-main yawf-config-search" type="search"><i data-v-2621="" class="woo-font icon woo-font--search yawf-config-search-logo"></i></label></li>';
-    }
+    container.innerHTML = '<li class="woo-tab-item-main yawf-config-tab yawf-config-tab-search"><label><input id="yawf-config-search" class="woo-input-main yawf-config-search" type="search"><i data-v-2621="" class="woo-font icon woo-font--search yawf-config-search-logo"></i></label></li>';
     return container.removeChild(container.firstChild);
   };
   configDom.item = title => {
     const container = document.createElement('ul');
-    if (yawf.WEIBO_VERSION === 6) {
-      container.innerHTML = '<li class="minitb_item S_line1 yawf-config-tab"><a class="minitb_lk S_txt1 S_bg1 S_bg2" action-type="tab_item" href="javascript:void(0);"></a></li>';
-      const text = container.querySelector('a');
-      text.appendChild(title);
-    } else {
-      container.innerHTML = '<li class="woo-tab-item-main yawf-config-tab"><button></button></li>';
-      const text = container.querySelector('button');
-      text.appendChild(title);
-    }
+    container.innerHTML = '<li class="woo-tab-item-main yawf-config-tab"><button></button></li>';
+    const text = container.querySelector('button');
+    text.appendChild(title);
     return container.removeChild(container.firstChild);
   };
   configDom.right = () => {
     const container = document.createElement('div');
-    if (yawf.WEIBO_VERSION === 6) {
-      container.innerHTML = '<div node-type="yawf-config-body" class="yawf-config-body yawf-window-body"></div>';
-    } else {
-      container.innerHTML = '<div class="yawf-config-body yawf-window-body"></div>';
-    }
+    container.innerHTML = '<div class="yawf-config-body yawf-window-body"></div>';
     return container.removeChild(container.firstChild);
   };
   configDom.layer = () => {
     const container = document.createElement('div');
-    if (yawf.WEIBO_VERSION === 6) {
-      container.innerHTML = '<div class="yawf-config-layer"></div>';
-    } else {
-      container.innerHTML = '<div class="yawf-config-layer"></div>';
-    }
+    container.innerHTML = '<div class="yawf-config-layer"></div>';
     return container.removeChild(container.firstChild);
   };
 
   const renderTip = (layer, text) => {
-    if (yawf.WEIBO_VERSION === 6) {
-      layer.innerHTML = '<div class="WB_empty"><div class="WB_innerwrap"><div class="empty_con clearfix"><p class="icon_bed"><i class="W_icon icon_warnB"></i></p><p class="text yawf-tip-text"></p></div></div></div>';
-    } else {
-      layer.innerHTML = '<div class="woo-tip-main woo-tip-vertical yawf-empty-tip"><span class="woo-tip-icon woo-tip-warnFill yawf-empty-tip-icon"></span><span class="woo-tip-text yawf-tip-text"></p></div>';
-      layer.querySelector('.woo-tip-icon').appendChild(ui.icon('warn').documentElement).setAttribute('class', 'woo-tip-icon');
-    }
+    layer.innerHTML = '<div class="woo-tip-main woo-tip-vertical yawf-empty-tip"><span class="woo-tip-icon woo-tip-warnFill yawf-empty-tip-icon"></span><span class="woo-tip-text yawf-tip-text"></p></div>';
+    layer.querySelector('.woo-tip-icon').appendChild(ui.icon('warn').documentElement).setAttribute('class', 'woo-tip-icon');
     layer.querySelector('.yawf-tip-text').textContent = text;
   };
 
@@ -7389,10 +6404,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       '=': v => v === +verNum,
       '': v => v === +verNum,
     }[verOp] ?? (() => true);
-    const [_wbverMatch, wbVerNum] = input.match(/\bweibo:v([67])\b/) ?? [];
-    const weiboVersionTest = wbVerNum ? (v => Array.isArray(v) ? v.includes(+wbVerNum) : v === +wbVerNum) : () => true;
     layer.innerHTML = '';
-    if (!searchTexts.length && verNum == null && wbVerNum == null) {
+    if (!searchTexts.length && verNum == null) {
       renderTip(layer, i18n.searchEmptyInput);
       return;
     }
@@ -7400,7 +6413,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       filter: function (item) {
         if (!item.version) return false;
         if (!versionTest(item.version)) return false;
-        if (!weiboVersionTest(item.weiboVersion)) return false;
         if (typeof filter === 'function' && !filter(item)) return false;
         const text = item.text().toUpperCase();
         if (searchTexts.some(t => !text.includes(t))) return false;
@@ -7422,13 +6434,14 @@ throw new Error('YAWF | chat page found, skip following executions');
     inner.classList.add('yawf-config-inner');
     const left = inner.appendChild(configDom.left());
     const right = inner.appendChild(configDom.right());
-    if (yawf.WEIBO_VERSION === 7) {
-      const v7Tip = document.createElement('div');
-      v7Tip.innerHTML = '<div class="tip woo-box-flex woo-box-alignCenter woo-box-justifyCenter woo-tip-main woo-tip-flat woo-tip-error" style="padding: 10px;"><span class="woo-tip-text">药方（YAWF）针对微博新版（V7）的支持正在开发中！目前绝大多数功能暂不支持新版！！欢迎到 <a href="https://github.com/tiansh/yaofang" target="_blank" rel="noopener">项目主页</a> 贡献代码！</span></div>';
-      const text = v7Tip.querySelector('.woo-tip-text');
-      text.parentElement.insertBefore(ui.icon('error').documentElement, text).setAttribute('style', 'width: 32px; height: 32px;');
-      right.appendChild(v7Tip.firstChild);
-    }
+
+    // 后续移除这段
+    const v7Tip = document.createElement('div');
+    v7Tip.innerHTML = '<div class="tip woo-box-flex woo-box-alignCenter woo-box-justifyCenter woo-tip-main woo-tip-flat woo-tip-error" style="padding: 10px;"><span class="woo-tip-text">药方（YAWF）针对微博新版（V7）的支持正在开发中！目前绝大多数功能暂不支持新版！！欢迎到 <a href="https://github.com/tiansh/yaofang" target="_blank" rel="noopener">项目主页</a> 贡献代码！</span></div>';
+    const text = v7Tip.querySelector('.woo-tip-text');
+    text.parentElement.insertBefore(ui.icon('error').documentElement, text).setAttribute('style', 'width: 32px; height: 32px;');
+    right.appendChild(v7Tip.firstChild);
+
     const tablist = left.querySelector('ul');
     const search = tablist.appendChild(configDom.search());
     const searchInput = search.querySelector('input');
@@ -7469,7 +6482,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     });
     const setCurrent = tabLeft => {
       if (current === tabLeft) return;
-      const currentClassName = yawf.WEIBO_VERSION === 6 ? 'current' : 'woo-tab-active';
+      const currentClassName = 'woo-tab-active';
       if (current) current.classList.remove('yawf-current', currentClassName);
       current = tabLeft;
       tabLeft.classList.add('yawf-current', currentClassName);
@@ -7532,45 +6545,28 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   css.append(`
-.yawf-WBV6 #yawf-config .yawf-config-inner { padding: 0 0 0 160px; width: 640px; height: 480px; position: relative; }
-.yawf-WBV6 #yawf-config .yawf-config-header { position: absolute; width: 160px; height: 480px; top: 0; left: 0; }
-.yawf-WBV6 #yawf-config .yawf-config-header ul { height: 450px; width: 120px; overflow: hidden; padding: 20px 0 10px 40px; box-shadow: -4px 0 2px -2px rgba(64, 64, 64, 0.15) inset, 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; }
-.yawf-WBV6 #yawf-config .yawf-config-header li { display: block; width: 120px; height: 25px; border-style: solid none; margin-top: -1px; }
-.yawf-WBV6 #yawf-config .yawf-config-header a,
-.yawf-WBV6 #yawf-config .yawf-config-header label { width: 100px; padding: 0 10px; position: relative; z-index: 1; }
-.yawf-WBV6 #yawf-config .yawf-config-header .yawf-config-tab:not(.current) a { background: none transparent; }
-.yawf-WBV6 #yawf-config .yawf-config-header .yawf-config-search { -moz-appearance: none; -webkit-appearance: none; background: none transparent; border: medium none; height: 25px; padding: 0 0 0 30px; text-align: right; width: 70px; box-sizing: content-box; position: relative; z-index: 2; }
-.yawf-WBV6 #yawf-config .yawf-config-search-logo { clear: both; display: block; float: left; left: 45px; position: relative; top: -27px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
-.yawf-WBV6 #yawf-config .yawf-config-header li.current .yawf-config-search-logo,
-.yawf-WBV6 #yawf-config .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }
-.yawf-WBV6 #yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; box-shadow: 0 4px 2px -2px rgba(64, 64, 64, 0.15) inset; position: relative; line-height: 20px; }
-.yawf-WBV6 #yawf-config .yawf-config-layer { padding-bottom: 20px; min-height: 400px; }
-.yawf-WBV6 #yawf-config .yawf-config-layer.current { display: block; }
-`);
-
-  css.append(`
-.yawf-WBV7 #yawf-config { width: 800px; font-size: 14px; }
-.yawf-WBV7 #yawf-config .yawf-config-inner { padding: 0 0 0 160px; width: 640px; height: 480px; position: relative; }
-.yawf-WBV7 #yawf-config .yawf-config-header { position: absolute; width: 160px; height: 480px; top: 0; left: 0; }
-.yawf-WBV7 #yawf-config .yawf-config-header ul { height: 442px; width: 120px; overflow: hidden; padding: 20px 0 20px 40px; border-right: 10px solid var(--frame-background); }
-.yawf-WBV7 #yawf-config .yawf-config-header li { display: block; width: 120px; height: 25px; line-height: 25px; }
-.yawf-WBV7 #yawf-config .yawf-config-header li.yawf-current { box-shadow: -2px 0 var(--w-brand) inset; font-weight: bold; }
-.yawf-WBV7 #yawf-config .yawf-config-header li:hover button { background: var(--w-hover) !important; border-radius: 15px; }
-.yawf-WBV7 #yawf-config .yawf-config-header button,
-.yawf-WBV7 #yawf-config .yawf-config-header label { width: 120px; padding: 0; border: none; background: none; position: relative; z-index: 1; }
-.yawf-WBV7 #yawf-config .yawf-config-header button { color: inherit; outline: none; cursor: pointer; font: inherit; }
-.yawf-WBV7 #yawf-config .yawf-config-header .yawf-config-search { -moz-appearance: none; -webkit-appearance: none; background: none transparent; height: 25px; padding: 0 10px   0 30px; text-align: right; width: 80px; box-sizing: content-box; position: relative; z-index: 2; }
-.yawf-WBV7 #yawf-config .yawf-config-search-logo { clear: both; display: block; float: left; left: 55px; position: relative; top: -18px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
-.yawf-WBV7 #yawf-config .yawf-config-header li.yawf-current .yawf-config-search-logo,
-.yawf-WBV7 #yawf-config .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }
-.yawf-WBV7 #yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; position: relative; line-height: 20px; }
-.yawf-WBV7 #yawf-config .yawf-config-layer { padding-bottom: 20px; min-height: 400px; }
-.yawf-WBV7 #yawf-config .yawf-config-layer.yawf-current { display: block; }
-.yawf-WBV7 #yawf-config .woo-dialog-main { width: 800px; max-width: none; padding: 0; overflow: hidden; }
-.yawf-WBV7 #yawf-config .woo-dialog-title { margin-bottom: 0; }
-.yawf-WBV7 #yawf-config .woo-tab-nav { margin: 0; flex-direction: column; }
-.yawf-WBV7 #yawf-config .yawf-empty-tip { text-align: center; }
-.yawf-WBV7 #yawf-config .yawf-empty-tip-icon { display: block; margin: 0 auto 20px; padding-top: 150px; }
+#yawf-config { width: 800px; font-size: 14px; }
+#yawf-config .yawf-config-inner { padding: 0 0 0 160px; width: 640px; height: 480px; position: relative; }
+#yawf-config .yawf-config-header { position: absolute; width: 160px; height: 480px; top: 0; left: 0; }
+#yawf-config .yawf-config-header ul { height: 442px; width: 120px; overflow: hidden; padding: 20px 0 20px 40px; border-right: 10px solid var(--frame-background); }
+#yawf-config .yawf-config-header li { display: block; width: 120px; height: 25px; line-height: 25px; }
+#yawf-config .yawf-config-header li.yawf-current { box-shadow: -2px 0 var(--w-brand) inset; font-weight: bold; }
+#yawf-config .yawf-config-header li:hover button { background: var(--w-hover) !important; border-radius: 15px; }
+#yawf-config .yawf-config-header button,
+#yawf-config .yawf-config-header label { width: 120px; padding: 0; border: none; background: none; position: relative; z-index: 1; }
+#yawf-config .yawf-config-header button { color: inherit; outline: none; cursor: pointer; font: inherit; }
+#yawf-config .yawf-config-header .yawf-config-search { appearance: none; background: none transparent; height: 25px; padding: 0 10px   0 30px; text-align: right; width: 80px; box-sizing: content-box; position: relative; z-index: 2; }
+#yawf-config .yawf-config-search-logo { clear: both; display: block; float: left; left: 55px; position: relative; top: -18px; transition: left linear 0.2s; cursor: text; font-weight: normal; }
+#yawf-config .yawf-config-header li.yawf-current .yawf-config-search-logo,
+#yawf-config .yawf-config-search:focus ~ .yawf-config-search-logo { left: 15px; }
+#yawf-config .yawf-config-body { padding: 10px 20px 20px; width: 600px; max-height: 450px; overflow: auto; position: relative; line-height: 20px; }
+#yawf-config .yawf-config-layer { padding-bottom: 20px; min-height: 400px; }
+#yawf-config .yawf-config-layer.yawf-current { display: block; }
+#yawf-config .woo-dialog-main { width: 800px; max-width: none; padding: 0; overflow: hidden; }
+#yawf-config .woo-dialog-title { margin-bottom: 0; }
+#yawf-config .woo-tab-nav { margin: 0; flex-direction: column; }
+#yawf-config .yawf-empty-tip { text-align: center; }
+#yawf-config .yawf-empty-tip-icon { display: block; margin: 0 auto 20px; padding-top: 150px; }
 `);
 
 }());
@@ -7663,8 +6659,8 @@ throw new Error('YAWF | chat page found, skip following executions');
     key,
     title,
     type,
-    before: { hide: beforeHide = null, show: beforeShow = null, fold: beforeFold = null } = {},
-    details: { hide = null, show = null, fold = null },
+    before: { hide: beforeHide = null, show: beforeShow = null } = {},
+    details: { hide = null, show = null },
     fast = null,
     version,
   }) {
@@ -7677,11 +6673,9 @@ throw new Error('YAWF | chat page found, skip following executions');
       template: title,
     });
 
-    // 依次创建三种类型的过滤规则
     const actions = [
       { action: 'show', details: show, before: beforeShow },
       { action: 'hide', details: hide, before: beforeHide },
-      { action: 'fold', details: fold, before: beforeFold },
     ].filter(item => item.details);
 
     actions.forEach(({ action, details: { title, priority = null }, before }) => {
@@ -7693,7 +6687,6 @@ throw new Error('YAWF | chat page found, skip following executions');
         priority: priority === null ? {
           show: 1e5,
           hide: 0,
-          fold: -1e5,
         }[action] : priority,
         template: () => '{{ball}}' + title(),
         ref: {
@@ -7732,9 +6725,9 @@ throw new Error('YAWF | chat page found, skip following executions');
 .yawf-config-feed-ball { display: inline-block; width: 0.8em; height: 0.8em; border-radius: 1em; margin-right: 0.5em; border: 1px solid transparent; vertical-align: middle; background: var(--yawf-ball-color); box-shadow: 0 0 2px var(--yawf-ball-color); opacity: 0.8; }
 .yawf-config-feed-show { --yawf-ball-color: #3ec63e; }
 .yawf-config-feed-hide { --yawf-ball-color: #c63e3e; }
-.yawf-config-feed-fold { --yawf-ball-color: #c6c63e; }
 `);
 
+  // 后面的都还没支持新版
   Object.assign(i18n, {
     fastAddDialogTitle: {
       cn: '创建过滤规则',
@@ -7755,11 +6748,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       cn: '隐藏',
       tw: '隱藏',
       en: 'hide',
-    },
-    fastAddFold: {
-      cn: '折叠',
-      tw: '折疊',
-      en: 'fold',
     },
   });
 
@@ -7809,7 +6797,6 @@ throw new Error('YAWF | chat page found, skip following executions');
             option.text = i18n[{
               show: 'fastAddShow',
               hide: 'fastAddHide',
-              fold: 'fastAddFold',
             }[action]];
             select.appendChild(option);
           });
@@ -7996,17 +6983,16 @@ throw new Error('YAWF | chat page found, skip following executions');
     dropArea.appendChild(dropAreaContent);
     dropAreaContent.innerHTML = '<div class="yawf-drop-title"></div><div class="yawf-drop-text"></div>';
 
-    init.onLoad(function addDropArea() {
-      if (yawf.WEIBO_VERSION === 6) {
-        const reference = document.querySelector('.yawf-gn_set_list');
-        if (!reference) {
-          setTimeout(addDropArea, 100);
-          return;
-        }
-        dropAreaContent.querySelector('.yawf-drop-title').textContent = i18n.dropAreaTitle;
-        dropAreaContent.querySelector('.yawf-drop-text').textContent = i18n.dropAreaContent;
-        reference.appendChild(dropArea);
+    // 还没支持新版，我们先给他注释掉
+    if (Math.E < 0) init.onLoad(function addDropArea() {
+      const reference = document.querySelector('.yawf-gn_set_list');
+      if (!reference) {
+        setTimeout(addDropArea, 100);
+        return;
       }
+      dropAreaContent.querySelector('.yawf-drop-title').textContent = i18n.dropAreaTitle;
+      dropAreaContent.querySelector('.yawf-drop-text').textContent = i18n.dropAreaContent;
+      reference.appendChild(dropArea);
     });
 
   }());
@@ -8019,7 +7005,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 .yawf-drop-area.yawf-drag-in { opacity: 1; }
 .WB_global_nav .gn_topmenulist.yawf-drop-area .W_layer_arrow .W_arrow_bor_t { right: 122px; }
 .yawf-drop-content { margin: 20px; border: 5px dashed #666; border-radius: 20px; text-align: center; white-space: wrap; width: 134px; height: 134px; padding: 20px; margin: 20px; line-height: 1.5; }
-.yawf-drop-title { font-size: 16px; font-weight: bold; white-space: pre-wrap; margin: 0 0 20px; -moz-user-select: none; -webkit-user-select: none; user-select: none; }
+.yawf-drop-title { font-size: 16px; font-weight: bold; white-space: pre-wrap; margin: 0 0 20px; user-select: none; }
 .yawf-drop-area-active .gn_topmenulist_yawf { display: none; }
 `);
 
@@ -8029,874 +7015,9 @@ throw new Error('YAWF | chat page found, skip following executions');
 ; (function () {
 
   const yawf = window.yawf;
-  const init = yawf.init;
-  const page = init.page;
 
-  const feedParser = yawf.feedV6 = {};
-  const commentParser = yawf.commentV6 = {};
-
-  // 文本
-  // 文本分为完整模式（用于正则匹配）和简易模式（用于关键词）
-  // 完整模式下产生的文本更复杂，可用于更复杂的过滤规则
-  // 简单模式下产生的文本更符合一般用户的理解，更适合普通用户使用
-  /**
-   * 找到一组 Node 的公共祖先
-   * @param {Node[]} nodes
-   */
-  const commonParent = function (...nodes) {
-    if (nodes.length === 0) return null;
-    if (nodes.length === 1) return nodes[0];
-    const firstParents = [];
-    let parentIndex = 0;
-    for (let [r] = nodes; r; r = r.parentElement) firstParents.push(r);
-    for (let i = 0, l = nodes.length; i < l; i++) {
-      for (let p = nodes[i]; true; p = p.parentElement) {
-        if (!p) return null;
-        const index = firstParents.indexOf(p, parentIndex);
-        if (index === -1) continue;
-        parentIndex = index;
-        break;
-      }
-    }
-    return firstParents[parentIndex];
-  };
-
-  /**
-   * 检查一个节点是不是另一个节点的祖先节点
-   * @param {Node|NodeList|Node[]} parent
-   * @param {Node|NodeList|Node[]} child
-   * @return {boolean}
-   */
-  const contains = function (parent, child) {
-    if (!parent || !child) return false;
-    if (!(child instanceof Node)) {
-      const children = Array.from(child);
-      return children.every(child => contains(parent, child));
-    }
-    if (parent instanceof Node) {
-      return parent.contains(child);
-    } else {
-      const parents = new Set(Array.from(parent));
-      for (let e = child; e; e = e.parentElement) {
-        if (parents.has(e)) return true;
-      }
-    }
-    return false;
-  };
-
-  /**
-   * 检查某个元素是否是一条微博
-   * @param {Element} element
-   * @returns {boolean}
-   */
-  const isFeedElement = function (element) {
-    if (!(element instanceof Element)) return false;
-    if (!element.hasAttribute('mid')) return false;
-    return true;
-  };
-
-  /**
-   * 检查某个元素是否是一条搜索页面的微博
-   * @param {Element} element
-   * @returns {boolean}
-   */
-  const isSearchFeedElement = function (element) {
-    if (!isFeedElement(element)) return false;
-    if (!element.matches('.card-wrap')) return false;
-    if (!element.querySelector('.card-feed')) return false;
-    return true;
-  };
-
-  /**
-   * 检查某个元素是否是一条评论
-   * @param {Element} element
-   * @returns {boolean}
-   */
-  const isCommentElement = function (element) {
-    if (!(element instanceof Element)) return false;
-    if (!element.hasAttribute('comment_id')) return false;
-    return true;
-  };
-
-  /**
-   * 检查某个元素是否是一条转发的微博
-   * @param {Element} element
-   * @returns {boolean}
-   */
-  const isForwardFeedElement = function (element) {
-    if (!isFeedElement(element)) return false;
-    if (!element.hasAttribute('omid')) return false;
-    return true;
-  };
-
-  /**
-   * 检查某个元素是否是一条类似简单转发的微博
-   * @param {Element} element
-   * @returns {boolean}
-   */
-  const isFastFeedElement = function (element) {
-    if (!isFeedElement(element)) return false;
-    if (!element.hasAttribute('fmid')) return false;
-    return true;
-  };
-
-  /**
-   * 检查某个元素是否是一条快转的微博
-   * @param {Element} element
-   * @returns {boolean}
-   */
-  const isFastForwardFeedElement = function (element) {
-    if (!isFastFeedElement(element)) return false;
-    if (element.getAttribute('isfastforward') !== '1') return false;
-    return true;
-  };
-
-  /**
-   * 获取一条微博中所有内容相关的节点
-   * @param {Element} feed
-   * @returns {Element[]}
-   */
-  const feedContentElements = function (feed, { detail = false, short = false, long = true } = {}) {
-    if (!isFeedElement(feed)) return null;
-    const content = feedParser.content.dom(feed, true, false);
-    const contentFull = feedParser.content.dom(feed, true, true);
-    let post = contentFull ? !short ? [contentFull] : long ? [content, contentFull] : [content] : [content];
-    if (detail) {
-      const [author] = feedParser.author.dom(feed);
-      const [source] = feedParser.source.dom(feed, true);
-      const [date] = feedParser.date.dom(feed, true);
-      post = [author, ...post, source, date];
-    }
-    if (feed.hasAttribute('fmid')) {
-      const [fauthor] = feedParser.fauthor.dom(feed);
-      post.unshift(fauthor);
-    }
-    if (feed.hasAttribute('omid')) {
-      const reason = feedParser.content.dom(feed, false, false);
-      const reasonFull = feedParser.content.dom(feed, false, true);
-      let ori = reasonFull ? !short ? [reasonFull] : long ? [reason, reasonFull] : [reason] : [reason];
-      if (detail) {
-        const [original] = feedParser.original.dom(feed);
-        const [sourceOri] = feedParser.source.dom(feed, false);
-        const [dateOri] = feedParser.date.dom(feed, false);
-        ori = [original, ...ori, sourceOri, dateOri];
-      }
-      return [...post, null, ...ori];
-    }
-    return post;
-  };
-
-  /**
-   * 获取一条微博中所有内容相关的节点
-   * @param {Element} comment
-   * @returns {Element[]}
-   */
-  const commentContentElements = function (comment) {
-    if (!isCommentElement(comment)) return null;
-    const text = comment.querySelector('.WB_text');
-    return [text];
-  };
-
-  /**
-   * 获取节点所在的微博
-   * @param {Node} node
-   * @returns {Element}
-   */
-  const feedContainer = function (node) {
-    if (!node) return null;
-    if ((node instanceof Node) && !(node instanceof Element)) {
-      return feedContainer(node.parentNode);
-    }
-    return node.closest('[mid]');
-  };
-  feedParser.feedNode = node => feedContainer(node);
-
-  /**
-   * 获取节点所在的评论
-   * @param {Node} node
-   * @returns {Element}
-   */
-  const commentContainer = function (node) {
-    if (!node) return null;
-    if ((node instanceof Node) && !(node instanceof Element)) {
-      return commentContainer(node.parentNode);
-    }
-    return node.closest('[comment_id]');
-  };
-  feedParser.commentNode = node => feedContainer(node);
-
-  const textParser = function (detail, containerType) {
-    const parsers = [];
-    /**
-     * 普通文本（文本✓，正则✓）
-     * @param {Node} node
-     */
-    const text = node => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        return node.textContent.trim().replace(/\s/g, ' ');
-      }
-      return null;
-    };
-    parsers.push(text);
-    /**
-     * 展开/收起全文（不计入内容）
-     * @param {Element} node
-     */
-    const fold = node => {
-      if (node.matches('a[action-type="fl_unfold"], a[action-type="fl_fold"]')) {
-        return '';
-      }
-      return null;
-    };
-    parsers.push(fold);
-    /**
-     * 换行符 <br> （文本✓，正则✓）
-     * @param {Element} node
-     */
-    const lineBreak = node => {
-      if (node.matches('br, .yawf-line-break')) {
-        return '\n';
-      }
-      return null;
-    };
-    parsers.push(lineBreak);
-    /**
-     * #话题#（文本✓，正则✓）
-     * @param {Element} node
-     */
-    const topic = node => {
-      let topic = null;
-      if (node.matches('a[suda-uatrack*="1022-topic"]') && node.title) {
-        topic = node.title.replace(/^[\s#]+|[\s#]+$/g, '');
-        if (node.querySelector('.ficon_supertopic')) topic = '\ue627' + topic;
-      }
-      if (!topic && node.matches('a.a_topic, a[suda-uatrack*="1022-topic"]')) {
-        topic = node.textContent.replace(/^[\s#]+|[\s#]+$/g, '');
-      }
-      if (!topic && node.matches('a[suda-uatrack*="1022-stock"]')) {
-        topic = node.textContent.replace(/^[\s$]+|[\s$]+$/g, '');
-      }
-      if (topic) {
-        const [_, superTopic, text] = topic.match(/^(?=(\ue627?|.*\[超话\]|.*超话$))[\ue627\s]*(.*?)(?:\[超话\]|超话)?$/);
-        if (superTopic && detail) return ` #${text}[超话]# `;
-        if (detail) return ` #${text}# `;
-        return `#${text}#`;
-      }
-      return null;
-    };
-    parsers.push(topic);
-    /**
-     * $股票$（文本✓，正则✓）
-     * @param {Element} node
-     */
-    const stock = node => {
-      if (node.matches('a[suda-uatrack*="1022-stock"]')) {
-        const text = node.textContent.trim().replace(/^\$?|\$?$/g, '');
-        if (detail) return ` $${text}$ `;
-        return `$${text}$`;
-      }
-      return null;
-    };
-    parsers.push(stock);
-    /**
-     * [表情]（文本✓，正则✓）
-     * @param {Element} node
-     */
-    const emotion = node => {
-      if (node.matches('img[type="face"][alt]')) {
-        const text = node.getAttribute('alt').trim()
-          .replace(/^\[?/, '[').replace(/\]?$/, ']');
-        if (detail) return ` ${text} `;
-        return text;
-      }
-      return null;
-    };
-    parsers.push(emotion);
-
-    /**
-     * 如果我们拿到一个作者或者原作者的链接，我们还可以拿到他的那些小图标
-     * @param {Element} node
-     */
-    const userIcons = function (node) {
-      const isSearch = isSearchFeedElement(feedContainer(node));
-      const items = [];
-      if (isSearch) {
-        const sibling = [...node.parentNode.children];
-        items.push(...sibling.filter(item => item.matches('a[title]')));
-      } else {
-        const icons = [];
-        for (let next = node; next; next = next.nextElementSibling) {
-          if (next.matches('.sp_kz')) break;
-          if (next.matches('[title]')) icons.push(next);
-          const inner = next.querySelector('.W_icon[title]');
-          if (inner) icons.push(inner);
-        }
-        items.push(...icons);
-      }
-      const icons = items.filter(item => item !== node && item.title.trim());
-      return icons.map(icon => `[${icon.title.trim()}]`);
-    };
-
-    /**
-     * @作者（文本✗，正则✓）
-     * @param {Element} node
-     */
-    const author = node => {
-      if (!node.matches('.WB_detail > .WB_info > .W_fb[usercard]')) return null;
-      if (!detail) return '';
-      const name = '@' + node.textContent.trim();
-      const id = new URLSearchParams(node.getAttribute('usercard')).get('id');
-      const link = 'https://weibo.com/u/' + id;
-      const icons = userIcons(node);
-      return [name, link, ...icons].join(' ');
-    };
-    parsers.push(author);
-    /**
-     * @原作（文本✗，正则✓）
-     * @param {Element} node
-     */
-    const original = node => {
-      if (!node.matches('.WB_expand > .WB_info > .W_fb[usercard]')) return null;
-      if (!detail) return '';
-      const name = node.textContent.trim().replace(/^@?/, '@');
-      const id = new URLSearchParams(node.getAttribute('usercard')).get('id');
-      const link = 'https://weibo.com/u/' + id;
-      const icons = userIcons(node);
-      return [name, link, ...icons].join(' ');
-    };
-    parsers.push(original);
-    /**
-     * @提到（文本✓，正则✓）
-     * @param {Element} node
-     */
-    const mention = node => {
-      if (node.matches('a[usercard]')) {
-        return node.textContent.trim().replace(/^@?/, '@') + ' ';
-      }
-      return null;
-    };
-    parsers.push(mention);
-    /**
-     * 来源（文本✗，正则✓）
-     * @param {Element} node
-     */
-    const source = node => {
-      if (!node.matches('.WB_from a:not([date]):not([yawf-date])')) return null;
-      if (!detail) return '';
-      return (node.title || node.textContent).trim();
-    };
-    parsers.push(source);
-    /**
-     * 时间（文本✗，正则✓）
-     * @param {Element} node
-     */
-    const timestamp = node => {
-      if (!node.matches('a[date], a[yawf-date]')) return null;
-      if (!detail) return '';
-      const date = new Date(+(node.getAttribute('date') || node.getAttribute('yawf-date')));
-      // 将时间格式化为东八区的 ISO 8601 串
-      date.setHours(date.getHours() + 8);
-      if ((date.getUTCFullYear() + '').length !== 4) return '';
-      return [
-        date.getUTCFullYear(),
-        '-', (date.getUTCMonth() + 1 + '').padStart(2, 0),
-        '-', (date.getUTCDate() + '').padStart(2, 0),
-        'T', (date.getUTCHours() + '').padStart(2, 0),
-        ':', (date.getUTCMinutes() + '').padStart(2, 0),
-        ':', (date.getUTCSeconds() + '').padStart(2, 0),
-        '.', (date.getUTCMilliseconds() + '').padStart(3, 0),
-        '+0800',
-      ].join('');
-    };
-    parsers.push(timestamp);
-    /**
-     * 链接
-     * URL（文本✗，正则✓）
-     * 标题（文本✓，正则✓）
-     * @param {Element} node
-     */
-    const link = node => {
-      const output = [];
-      if (!node.matches('a[action-type="feed_list_url"]')) return null;
-      if (node.matches('[suda-uatrack*="1022-topic"]')) return null;
-      if (detail) {
-        const url = new URL(node.href.trim());
-        if (url.host + url.pathname === 'feed.mix.sina.com.cn/link_card/redirect') {
-          output.push(url.searchParams.get('url'));
-        } else output.push(url.href);
-        output.push('\ufff9');
-        const icon = node.querySelector('.W_ficon');
-        if (icon) output.push(icon.textContent);
-      }
-      if (node.matches('[title]')) {
-        output.push(node.getAttribute('title').trim());
-      }
-      if (detail) {
-        output.push('\ufffb');
-      }
-      if (output.length) return ' ' + output.join(' ') + ' ';
-      return null;
-    };
-    parsers.push(link);
-
-    /**
-     * @param {Node} node
-     * @returns {string}
-     */
-    const allParser = function (node) {
-      return parsers.reduce((result, parser) => {
-        if (result != null) return result;
-        return parser(node);
-      }, null);
-    };
-
-    /**
-     * @param {Node} node
-     * @returns {string}
-     */
-    const parseNode = function parseNode(node, isSearch = null) {
-      const text = allParser(node);
-      if (text != null) return text;
-      if (node.hasChildNodes()) {
-        return [...node.childNodes].map(node => parseNode(node)).join('');
-      }
-      return '';
-    };
-
-    /**
-     * @param {Selection} selection
-     * @returns {string[]}
-     */
-    const parseSelection = function (selection) {
-      const ranges = [...Array(selection.rangeCount)]
-        .map((_, i) => selection.getRangeAt(i));
-      const rangeElements = ranges.map(range => {
-        return commonParent(range.startContainer, range.endContainer);
-      });
-      const container = containerType === 'feed' ? feedContainer : commentContainer;
-      const contentElements = containerType === 'feed' ? feedContentElements : commentContentElements;
-      const feed = container(commonParent(...rangeElements));
-      if (!feed) return null;
-      const elements = contentElements(feed, { detail, short: true, long: true });
-      if (!elements) return null;
-      if (rangeElements.some(re => !contains(elements, re))) return null;
-      return ranges.map((range, rangeIndex) => {
-        const [start, end] = [range.startContainer, range.endContainer];
-        if (start === end) {
-          if (start instanceof Text) {
-            return start.textContent.slice(range.startOffset, range.endOffset);
-          }
-          return parseNode(start);
-        }
-        let status = 0;
-        return (function parseNode(node) {
-          if (node === start && node instanceof Text) {
-            return node.textContent.slice(range.startOffset);
-          }
-          if (node === end && node instanceof Text) {
-            return node.textContent.slice(0, range.endOffset);
-          }
-          const text = allParser(node);
-          if (text) {
-            if (node === start) status = 1;
-            if (node === end) status = 2;
-            return status === 1 || node === end ? text : '';
-          }
-          if (node.hasChildNodes()) {
-            return [...node.childNodes].map(node => parseNode(node)).join('');
-          }
-          return '';
-        }(rangeElements[rangeIndex]));
-      });
-    };
-
-    /** @type {WeakMap<Node, string>} */
-    const nodeCache = new WeakMap();
-
-    /**
-     *//**
-    * @param {Node} target
-    * @returns {string}
-    *//**
-    * @param {Selection} target
-    * @returns {string[]}
-    */
-    const parser = function (target) {
-      if (target instanceof Node) {
-        if (nodeCache.has(target)) return nodeCache.get(target);
-        const text = parseNode(target);
-        nodeCache.set(target, text);
-        return text;
-      }
-      if (target instanceof Selection) {
-        return parseSelection(target);
-      }
-      return null;
-    };
-
-    return parser;
-  };
-
-  const fullTextParser = textParser(true, 'feed');
-  const simpleTextParser = textParser(false, 'feed');
-  const commentTextParser = textParser(false, 'comment');
-
-  const nodeTextParser = (target, detail) => {
-    const parser = detail ? fullTextParser : simpleTextParser;
-    const elements = feedContentElements(target, { detail, long: true });
-    if (elements) {
-      const texts = elements.map(element => parser(element) ?? '');
-      return texts.join(detail ? '\u2028' : '\n');
-    } else {
-      return parser(target);
-    }
-  };
-
-  const text = feedParser.text = {};
-  text.detail = element => nodeTextParser(element, true);
-  text.simple = element => nodeTextParser(element, false);
-
-  // 内容区域
-  const content = feedParser.content = {};
-  content.dom = (feed, isMain, isFull) => {
-    const isSearch = isSearchFeedElement(feed);
-    if (isFull === false) {
-      if (isMain && !isSearch) {
-        return feed.querySelector('[node-type="feed_list_content"]');
-      } else if (!isMain && !isSearch) {
-        return feed.querySelector('[node-type="feed_list_reason"]');
-      } else if (isMain) {
-        return feed.querySelector('.content > [node-type="feed_list_content"]');
-      } else {
-        return feed.querySelector('[node-type="feed_list_forwardContent"] > [node-type="feed_list_content"]');
-      }
-    } else if (isFull === true) {
-      if (isMain && !isSearch) {
-        return feed.querySelector('[node-type="feed_list_content_full"]');
-      } else if (!isMain && !isSearch) {
-        return feed.querySelector('[node-type="feed_list_reason_full"]');
-      } else if (isMain) {
-        return feed.querySelector('.content > [node-type="feed_list_content_full"]');
-      } else {
-        return feed.querySelector('[node-type="feed_list_forwardContent"] > [node-type="feed_list_content_full"]');
-      }
-    } else {
-      return content.dom(feed, true) || content.dom(feed, false);
-    }
-  };
-
-  // 作者（这条微博是谁发的）
-  // 对于快转微博，是这条微博转发自的作者
-  const author = feedParser.author = {};
-  author.dom = feed => {
-    if (!(feed instanceof Node)) return [];
-    if (!isSearchFeedElement(feed)) {
-      const author = feed.querySelector('.WB_detail > .WB_info > .W_fb[usercard]');
-      return author ? [author] : [];
-    } else {
-      const author = feed.querySelector('.card-feed .info .name');
-      return author ? [author] : [];
-    }
-  };
-  author.id = feed => {
-    const domList = author.dom(feed);
-    if (!isSearchFeedElement(feed)) {
-      return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('id'));
-    } else {
-      return domList.map(dom => {
-        const uid = dom.pathname.match(/^\/(?:u\/)?(\d+)/)?.[1];
-        return String(Number.parseInt(uid, 10));
-      }).filter(uid => +uid);
-    }
-  };
-  author.name = feed => {
-    const domList = author.dom(feed);
-    return domList.map(dom => dom.textContent.trim());
-  };
-  author.avatar = feed => {
-    const domList = author.dom(feed);
-    if (domList.length !== 1) return null;
-    if (!isSearchFeedElement(feed)) {
-      const img = feed.querySelector('.WB_face img');
-      return img.src;
-    } else {
-      const img = feed.querySelector('.card-feed .avator img');
-      return img.src;
-    }
-  };
-
-  // 快转作者
-  const fauthor = feedParser.fauthor = {};
-  fauthor.dom = feed => {
-    if (!(feed instanceof Node)) return [];
-    if (!isSearchFeedElement(feed)) {
-      const fauthor = feed.querySelector('.sp_kz ~ a[usercard]');
-      return fauthor ? [fauthor] : [];
-    } else {
-      return [];
-    }
-  };
-  fauthor.id = feed => {
-    const domList = fauthor.dom(feed);
-    if (!isSearchFeedElement(feed)) {
-      return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('id'));
-    } else {
-      return [];
-    }
-  };
-  fauthor.name = feed => {
-    const domList = fauthor.dom(feed);
-    const $CONFIG = page.$CONFIG;
-    return domList.map(dom => {
-      const id = new URLSearchParams(dom.getAttribute('usercard')).get('id');
-      if (id === $CONFIG.uid) return $CONFIG.nick;
-      return dom.textContent.trim();
-    });
-  };
-
-  // 原作者（一条被转发的微博最早来自谁）
-  const original = feedParser.original = {};
-  original.dom = feed => {
-    if (!(feed instanceof Node)) return [];
-    if (!isSearchFeedElement(feed)) {
-      const original = feed.querySelector('.WB_expand > .WB_info > .W_fb[usercard]');
-      return original ? [original] : [];
-    } else {
-      const original = feed.querySelector('.card-comment .name');
-      return original ? [original] : [];
-    }
-  };
-  original.id = feed => {
-    const domList = original.dom(feed);
-    if (!isSearchFeedElement(feed)) {
-      return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('id'));
-    } else {
-      return domList.map(dom => {
-        const uid = dom.pathname.match(/^\/(?:u\/)?(\d+)/)?.[1];
-        return String(Number.parseInt(uid, 10));
-      }).filter(uid => +uid);
-    }
-  };
-  original.name = feed => {
-    const domList = original.dom(feed);
-    return domList.map(dom => dom.textContent.trim().replace(/^@/, ''));
-  };
-
-  // 提到（微博中提到的人，转发路径中的人同属于提到）
-  const mention = feedParser.mention = {};
-  mention.dom = (feed, { short = false, long = true } = {}) => {
-    const contents = feedContentElements(feed, { short, long });
-    if (!isSearchFeedElement(feed)) {
-      const domList = contents.map(content => {
-        if (!content) return [];
-        return Array.from(content.querySelectorAll('a[href*="loc=at"][usercard*="name"]'));
-      }).reduce((x, y) => x.concat(y));
-      return domList;
-    } else {
-      const linkList = contents.map(content => (
-        content ? Array.from(content.querySelectorAll('a')) : []
-      )).reduce((x, y) => x.concat(y));
-      const domList = linkList.filter(link => {
-        if (!['weibo.com', 'www.weibo.com'].includes(link.hostname)) return false;
-        if (!/\/n\//.test(link.pathname)) return false;
-        if (!/^@/.test(link.textContent.trim())) return false;
-        return true;
-      });
-      return domList;
-    }
-  };
-  mention.name = (feed, { short = false, long = true } = {}) => {
-    const domList = mention.dom(feed, { short, long });
-    if (!isSearchFeedElement(feed)) {
-      return domList.map(dom => new URLSearchParams(dom.getAttribute('usercard')).get('name'));
-    } else {
-      return domList.map(dom => decodeURIComponent(dom.pathname.split('/')[2]));
-    }
-  };
-
-  // 话题（包括话题和超话）
-  const topic = feedParser.topic = {};
-  topic.dom = (feed, { short = false, long = true } = {}) => {
-    const isSearch = isSearchFeedElement(feed);
-    const contents = feedContentElements(feed, { short, long });
-    const domList = [];
-    contents.forEach(content => {
-      if (!content) return;
-      if (!isSearch) {
-        const topics = content.querySelectorAll([
-          'a[suda-uatrack*="1022-topic"]',
-          'a.a_topic',
-        ].join(','));
-        domList.push(...topics);
-        const sources = source.dom(feed);
-        sources.forEach(source => {
-          if (/^https:\/\/huati.weibo.com\/k\/[^/?#]+$/.test(source.href)) domList.push(source);
-        });
-      } else {
-        const links = Array.from(content.querySelectorAll('a'));
-        links.forEach(link => {
-          let isTopic = false;
-          if (link.hostname === 's.weibo.com') {
-            isTopic = /^#.*#$/.test(link.textContent.trim());
-          }
-          if (link.hostname === 'huati.weibo.com') {
-            isTopic = /^\s*\ue627/.test(link.textContent);
-          }
-          if (isTopic) domList.push(link);
-        });
-      }
-    });
-    return domList;
-  };
-  topic.text = (feed, { short = false, long = true } = {}) => {
-    const domList = topic.dom(feed, { short, long });
-    return domList.map(dom => {
-      if (dom instanceof HTMLAnchorElement) {
-        if (/^https:\/\/huati.weibo.com\/k\/[^/?#]+$/.test(dom.href)) {
-          return decodeURIComponent(dom.href.split('/').pop()).trim();
-        }
-      }
-      const text = dom.title || dom.textContent;
-      return text.replace(/[#\ue627]|\[超话\]$/g, '').trim();
-    });
-  };
-
-  // 链接（除超话外所有的链接，包括外站链接、视频、文章等）
-  const link = feedParser.link = {};
-  link.dom = (feed, { short = false, long = true } = {}) => {
-    const isSearch = isSearchFeedElement(feed);
-    const contents = feedContentElements(feed, { short, long });
-    const domList = [].concat(...contents.map(content => {
-      if (!content) return [];
-      if (!isSearch) {
-        return Array.from(content.querySelectorAll('a[action-type="feed_list_url"]'));
-      } else {
-        const links = Array.from(content.querySelectorAll('a'));
-        return links.filter(link => (
-          link.querySelector('.wbicon').textContent.trim() === 'O'
-        ));
-      }
-    }));
-    const topics = new Set(feedParser.topic.dom(feed, { short, long }));
-    return domList.filter(link => link && !topics.has(link));
-  };
-  link.text = (feed, { short = false, long = true } = {}) => {
-    const domList = link.dom(feed, { short, long });
-    return domList.map(dom => {
-      const text = dom.title || dom.textContent;
-      return text;
-    });
-  };
-
-  // 来源
-  const source = feedParser.source = {};
-  source.dom = (feed, isMain) => {
-    const isSearch = isSearchFeedElement(feed);
-    if (isMain === true) {
-      if (!isSearch) {
-        return Array.from(feed.querySelectorAll('.WB_detail > .WB_from a:not([date]):not([yawf-date])'));
-      } else {
-        return Array.from(feed.querySelectorAll('.content > .from a:last-child:not(:first-child)'));
-      }
-    } else if (isMain === false) {
-      if (!isSearch) {
-        return Array.from(feed.querySelectorAll('.WB_expand .WB_from a:not([date]):not([yawf-date])'));
-      } else {
-        return Array.from(feed.querySelectorAll('.card-comment .from a:last-child:not(:first-child)'));
-      }
-    } else {
-      if (!isSearch) {
-        return Array.from(feed.querySelectorAll('.WB_from a:not([date]):not([yawf-date])'));
-      } else {
-        return Array.from(feed.querySelectorAll('.from a:last-child:not(:first-child)'));
-      }
-    }
-  };
-  source.text = (feed, isMain) => {
-    const domList = source.dom(feed, isMain);
-    return domList.map(dom => {
-      const text = (dom.title || dom.textContent).trim();
-      return text;
-    }).filter(source => source);
-  };
-
-  // 日期
-  const date = feedParser.date = {};
-  date.dom = (feed, isMain) => {
-    const isSearch = isSearchFeedElement(feed);
-    if (isMain === true) {
-      if (!isSearch) {
-        return Array.from(feed.querySelectorAll('.WB_detail > .WB_from a[date], .WB_detail > .WB_from a[yawf-date]'));
-      } else {
-        return Array.from(feed.querySelectorAll('.content > .from a:first-child'));
-      }
-    } else if (isMain === false) {
-      if (!isSearch) {
-        return Array.from(feed.querySelectorAll('.WB_expand .WB_from a[date], .WB_expand .WB_from a[yawf-date]'));
-      } else {
-        return Array.from(feed.querySelectorAll('.card-comment .from a:first-child'));
-      }
-    } else {
-      if (!isSearch) {
-        return Array.from(feed.querySelectorAll('.WB_from a[date], .WB_from a[yawf-date]'));
-      } else {
-        return Array.from(feed.querySelectorAll('.from a:first-child'));
-      }
-    }
-  };
-  date.date = (feed, isMain) => {
-    const domList = date.dom(feed, isMain);
-    return domList.map(dom => (
-      new Date(Number(dom.getAttribute('date') || dom.getAttribute('yawf-date')))
-    )).filter(date => +date);
-  };
-
-  // 其他基础通用
-  feedParser.isFeed = feed => isFeedElement(feed);
-  feedParser.isSearchFeed = feed => isSearchFeedElement(feed);
-  feedParser.isForward = feed => isForwardFeedElement(feed);
-  feedParser.isFast = feed => isFastFeedElement(feed);
-  feedParser.isFastForward = feed => isFastForwardFeedElement(feed);
-
-  feedParser.mid = node => feedContainer(node).getAttribute('mid');
-  feedParser.omid = node => feedContainer(node).getAttribute('omid');
-  feedParser.fmid = node => feedContainer(node).getAttribute('fmid');
-
-  commentParser.content = comment => {
-    return commentContentElements(comment);
-  };
-
-  // 评论内容
-  commentParser.text = target => {
-    const elements = commentContentElements(target);
-    if (elements) {
-      const texts = elements.map(element => commentTextParser(element) ?? '');
-      return texts.join('\n');
-    } else {
-      return commentTextParser(target);
-    }
-  };
-
-  // 评论用户
-  const commentUser = commentParser.user = {};
-  commentUser.dom = comment => {
-    const content = commentContentElements(comment);
-    return [].concat(...content.map(element => [...element.querySelectorAll('a[usercard]')]));
-  };
-  commentUser.name = comment => {
-    const domList = commentUser.dom(comment);
-    return domList
-      .map(dom => dom.textContent.trim().replace(/^@?/, ''))
-      .filter(user => user);
-  };
-
-}());
-; (function () {
-
-  const yawf = window.yawf;
-
-  const feedParser = yawf.feedV7 = {};
-  const commentParser = yawf.commentV7 = {}; // eslint-disable-line no-unused-vars
+  const feedParser = yawf.feed = {};
+  const commentParser = yawf.comment = {}; // eslint-disable-line no-unused-vars
 
   // 将时间格式化为东八区的 ISO 8601 串
   const date = function (dateStr) {
@@ -9007,23 +7128,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     });
     return pics;
   };
-
-
-}());
-; (function () {
-  const yawf = window.yawf;
-  const init = yawf.init;
-  const util = yawf.util;
-
-  const priority = util.priority;
-
-  const feedParser = yawf.feed = {};
-  const commentParser = yawf.comment = {};
-
-  init.onLoad(function () {
-    Object.setPrototypeOf(feedParser, yawf.WEIBO_VERSION === 6 ? yawf.feedV6 : yawf.feedV7);
-    Object.setPrototypeOf(commentParser, yawf.WEIBO_VERSION === 6 ? yawf.commentV6 : yawf.commentV7);
-  }, { priority: priority.FIRST });
 
 }());
 //#endregion
@@ -9345,93 +7449,6 @@ throw new Error('YAWF | chat page found, skip following executions');
 
 }());
 //#endregion
-//#region @require yaofang://content/rule/filter/common/long.js
-; (function () {
-
-  const yawf = window.yawf;
-  const util = yawf.util;
-  const observer = yawf.observer;
-
-  const request = yawf.request;
-  const feedParser = yawf.feed;
-
-  const i18n = util.i18n;
-  const dom = util.dom;
-  const strings = util.strings;
-
-  /**
-   * 统计一条微博的字数
-   * 微博的字数英文按半字计算并四舍五入
-   * @param {Element} html
-   */
-  const feedCharacterCount = function (text) {
-    const content = text.textContent;
-    const charCount = content.length;
-    const latinCount = content.replace(/[^\u0020-\u00fe]/g, '').length;
-    return Math.ceil(charCount - latinCount / 2);
-  };
-
-  Object.assign(i18n, {
-    foldText: {
-      cn: '收起全文',
-    },
-    textCount: {
-      cn: '（约{1}字）',
-      tw: '（約{1}字）',
-      en: ' (about {1} characters)',
-    },
-  });
-
-  observer.feed.onBefore(async function (feed) {
-    if (yawf.WEIBO_VERSION !== 6) return Promise.resolve();
-    const normalizeConfusableHan = function () {
-      const enabled = yawf.rules.feeds.content.confusableHanNormalize.isEnabled();
-      if (!enabled) return;
-      [false, true].forEach((isMain, _, bools) => {
-        bools.forEach(isFull => {
-          /** @type {HTMLElement} */
-          const element = feedParser.content.dom(feed, isMain, isFull);
-          strings.normalizeConfusableHanNode(element);
-        });
-      });
-    };
-    const unfold = Array.from(feed.querySelectorAll('[action-type="fl_unfold"]'));
-    // 这段逻辑基于 lib.feed.plugins.moreThan140
-    // 包括直接把 HTML 插入进去的逻辑也是根据这段来做的
-    const unfolding = unfold.map(async function (button) {
-      const text = button.parentNode;
-      if (!text.matches('.WB_text')) return;
-      if (text.nextElementSibling?.matches('.WB_text')) return;
-      const mid = new URLSearchParams(button.getAttribute('action-data')).get('mid');
-      const html = await request.getLongText(mid);
-      const full = text.cloneNode(false);
-      full.setAttribute('node-type', full.getAttribute('node-type') + '_full');
-      dom.content(full, html);
-      text.parentNode.insertBefore(full, text.nextSibling);
-      const charCount = feedCharacterCount(full);
-      const lineBreakCount = full.querySelectorAll('br').length;
-      const foldButtonContainer = document.createElement('div');
-      foldButtonContainer.innerHTML = '<a href="javascript:void(0);" ignore="ignore" class="WB_text_opt" action-type="fl_fold"><i class="W_ficon ficon_arrow_up">d</i></a>';
-      const countTip = i18n.textCount.replace('{1}', () => charCount > 1000 ? Math.round(charCount / 100) * 100 : Math.round(charCount / 10) * 10);
-      button.insertBefore(document.createTextNode(countTip), button.querySelector('i'));
-      // 自动展开不超过指定字数的微博
-      const expandLong = yawf.rules.feeds.content.expandLong;
-      if (expandLong.getConfig() && expandLong.ref.count.getConfig() >= charCount + lineBreakCount * (expandLong.ref.br.getConfig() - 1)) {
-        text.style.display = 'none';
-      } else {
-        full.style.display = 'none';
-        const foldButton = foldButtonContainer.firstChild;
-        foldButton.insertBefore(document.createTextNode(i18n.foldText), foldButton.firstChild);
-        full.appendChild(foldButton);
-      }
-      normalizeConfusableHan();
-    });
-    normalizeConfusableHan();
-    return Promise.all(unfolding).then(() => { });
-  });
-
-}());
-//#endregion
 //#region @require yaofang://content/rule/filter/filter/filter.js
 
 ; (function () {
@@ -9477,7 +7494,7 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   const getContext = functools.once(async function () {
     const followConfig = await config.pool('Follow', {
-      uid: init.page.$CONFIG.uid,
+      uid: init.page.config.user.idstr,
       isLocal: true,
     });
     const fetchData = new rule.class.OffscreenConfigItem({
@@ -9532,7 +7549,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           }
           return value;
         }());
-        base.weiboVersion = yawf.WEIBO_VERSION;
+        base.weiboVersion = 7;
         return base;
       },
     });
@@ -9594,7 +7611,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     const { fetchData } = followingContext;
     const lock = fetchData.touchTimestamp();
     fetchData.restart();
-    const { allPages, followInPage } = await request.getFollowingPage(init.page.$CONFIG.uid);
+    const { allPages, followInPage } = await request.getFollowingPage(init.page.config.user.idstr);
     fetchData.assertLock(lock);
     const fetchContext = fetchData.getConfig();
     fetchContext.allPages = allPages;
@@ -9609,7 +7626,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     const oldFetchContext = fetchData.getConfig();
     const currentPage = oldFetchContext.currentPage;
     const nextPage = oldFetchContext.allPages[currentPage];
-    const { followInPage } = await request.getFollowingPage(init.page.$CONFIG.uid, nextPage);
+    const { followInPage } = await request.getFollowingPage(init.page.config.user.idstr, nextPage);
     fetchData.assertLock(lock);
     const fetchContext = fetchData.getConfig();
     fetchContext.list.push(...followInPage);
@@ -9678,7 +7695,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     }
 
     // 如果之前获取数据使用的微博版本和现在不一样，那么数据要丢弃
-    if (fetchData.getConfig().weiboVersion !== yawf.WEIBO_VERSION) {
+    if (fetchData.getConfig().weiboVersion !== 7) {
       fetchData.setConfig({});
     }
 
@@ -9762,7 +7779,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     }).join('\r\n') + '\r\n'; // CRLF 换行符支持效果最好，而且也更合乎规范
     const blob = new Blob([content], { type: 'text/csv' });
     const date = new Date(timestamp).toISOString().replace(/[-]|T.*/g, '');
-    const filename = download.filename('following-' + init.page.$CONFIG.uid + '-' + date + '.csv');
+    const filename = download.filename('following-' + init.page.config.user.idstr + '-' + date + '.csv');
     download.blob({ blob, filename });
   };
 
@@ -9883,7 +7900,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   following.autoCheckFollowing = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_follow_check',
     version: 1,
     parent: following.following,
@@ -9909,21 +7926,13 @@ throw new Error('YAWF | chat page found, skip following executions');
           this.getConfig();
           const buttonArea = document.createElement('span');
           buttonArea.setAttribute('yawf-config-item', this.configId);
-          if (yawf.WEIBO_VERSION === 6) {
-            buttonArea.innerHTML = '<span class="yawf-following-checking"></span><a href="javascript:;" class="W_btn_b yawf-following-check-now"><span class="W_f14"></span></a>';
-          } else {
-            buttonArea.innerHTML = '<span class="yawf-following-checking"></span><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-check-now"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
-          }
+          buttonArea.innerHTML = '<span class="yawf-following-checking"></span><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-check-now"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
           const checkNowButton = buttonArea.querySelector('.yawf-following-check-now');
           checkNowButton.addEventListener('click', event => {
             if (!event.isTrusted) return;
             updateFollowList();
           });
-          if (yawf.WEIBO_VERSION === 6) {
-            checkNowButton.querySelector('span').textContent = i18n.autoCheckFollowingNow;
-          } else {
-            checkNowButton.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingNow;
-          }
+          checkNowButton.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingNow;
           this.renderValue(buttonArea);
           return buttonArea;
         },
@@ -9966,22 +7975,13 @@ throw new Error('YAWF | chat page found, skip following executions');
         render() {
           const buttonArea = document.createElement('span');
           buttonArea.setAttribute('yawf-config-item', this.configId);
-          if (yawf.WEIBO_VERSION === 6) {
-            buttonArea.innerHTML = '<span class="yawf-following-last-text"></span><span class="yawf-following-last-time"></span><a href="javascript:;" class="W_btn_b yawf-following-export" style="margin-left:1em;"><span class="W_f14"></span></a><a href="javascript:;" class="W_btn_b yawf-following-clear" style="margin-left:1em;"><span class="W_f14"></span></a>';
-          } else {
-            buttonArea.innerHTML = '<span class="yawf-following-last-text"></span><span class="yawf-following-last-time"></span><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-export"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-clear"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
-          }
+          buttonArea.innerHTML = '<span class="yawf-following-last-text"></span><span class="yawf-following-last-time"></span><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-export"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-following-clear"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
           const lastTimeText = buttonArea.querySelector('.yawf-following-last-text');
           const lastTime = buttonArea.querySelector('.yawf-following-last-time');
           const exportButton = buttonArea.querySelector('.yawf-following-export');
           const clearFollowing = buttonArea.querySelector('.yawf-following-clear');
-          if (yawf.WEIBO_VERSION === 6) {
-            exportButton.querySelector('span').textContent = i18n.autoCheckFollowingDownload;
-            clearFollowing.querySelector('span').textContent = i18n.autoCheckFollowingClean;
-          } else {
-            exportButton.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingDownload;
-            clearFollowing.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingClean;
-          }
+          exportButton.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingDownload;
+          clearFollowing.querySelector('.woo-button-content').textContent = i18n.autoCheckFollowingClean;
           exportButton.addEventListener('click', event => {
             if (!event.isTrusted) return;
             exportFollowList(this.getConfig());
@@ -10038,30 +8038,17 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   css.append(`
-.yawf-WBV6 .yawf-following-add-title,
-.yawf-WBV6 .yawf-following-lost-title,
-.yawf-WBV6 .yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
-.yawf-WBV6 .yawf-following-notice-header { padding: 20px; }
-.yawf-WBV6 .yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
-.yawf-WBV6 .yawf-following-notice-footer { padding: 20px; } 
-.yawf-WBV6 .yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
-.yawf-WBV6 .yawf-following-rename .yawf-config-user-name,
-.yawf-WBV6 .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
-.yawf-WBV6 .yawf-config-user-avatar-img { max-width: 50px; max-height: 50px; }
-`);
-
-  css.append(`
-.yawf-WBV7 #yawf-follow-change .woo-dialog-title { margin-bottom: 0; }
-.yawf-WBV7 #yawf-follow-change .woo-dialog-body { padding: 0; }
-.yawf-WBV7 .yawf-following-add-title,
-.yawf-WBV7 .yawf-following-lost-title,
-.yawf-WBV7 .yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
-.yawf-WBV7 .yawf-following-notice-header { padding: 20px; }
-.yawf-WBV7 .yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
-.yawf-WBV7 .yawf-following-notice-footer { padding: 20px; } 
-.yawf-WBV7 .yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
-.yawf-WBV7 .yawf-following-rename .yawf-config-user-name,
-.yawf-WBV7 .yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
+#yawf-follow-change .woo-dialog-title { margin-bottom: 0; }
+#yawf-follow-change .woo-dialog-body { padding: 0; }
+.yawf-following-add-title,
+.yawf-following-lost-title,
+.yawf-following-rename-title { font-weight: bold; margin: 10px 0 5px; } 
+.yawf-following-notice-header { padding: 20px; }
+.yawf-following-notice-body { padding: 0 20px; width: 600px; max-height: 320px; overflow: auto; } 
+.yawf-following-notice-footer { padding: 20px; } 
+.yawf-following-notice-body a.yawf-config-user-name { color: inherit; }
+.yawf-following-rename .yawf-config-user-name,
+.yawf-following-rename .yawf-config-user-detail { display: inline-block; text-overflow: ellipsis; white-space: nowrap; vertical-align: top; }
 `);
 
   i18n.uncheckFollowPresenter = {
@@ -10127,13 +8114,11 @@ throw new Error('YAWF | chat page found, skip following executions');
 ; (function () {
 
   const yawf = window.yawf;
-  const env = yawf.env;
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
   const request = yawf.request;
   const browserInfo = yawf.browserInfo;
-  const stk = yawf.stk;
   const feedParser = yawf.feed;
   const notifications = yawf.notifications;
   const init = yawf.init;
@@ -10219,67 +8204,7 @@ throw new Error('YAWF | chat page found, skip following executions');
     template: () => i18n.feedsHomepageGroupTitle,
   });
 
-  // 因为 YAWF 脚本用的 -1，这里为了避免可能的冲突（虽然别的功能还是会冲突），所以用 -2
-  const CUSTOM_GID = -2;
-
-  const fixHomeUrlV6 = function (target) {
-    const setParam = function (url) {
-      if (target === 'newest') {
-        url.searchParams.delete('gid');
-        url.searchParams.set('is_new', 1);
-      } else if (target === 'custom') {
-        url.searchParams.set('gid', CUSTOM_GID);
-      } else if (target.startsWith('g')) {
-        url.searchParams.set('gid', target.slice(1));
-      } else if (target === 'whisper') {
-        url.searchParams.delete('gid');
-        url.searchParams.set('whisper', 1);
-      }
-    };
-    const updateLocation = function updateLocation() {
-      const isHomeFeed = document.getElementById('v6_pl_content_homefeed');
-      const notHomeFeed = document.getElementById('v6_pl_content_commentlist') ||
-        document.querySelector('[id^="Pl_Official_MyProfileFeed__"]');
-      if (!isHomeFeed && !notHomeFeed) return;
-      const url = new URL(location.href);
-      const hasGid = Boolean(+url.searchParams.get('gid'));
-      const isNew = Boolean(+url.searchParams.get('is_new'));
-      const isSearch = Boolean(+url.searchParams.get('is_search'));
-      const isSpecial = ['isfriends', 'vplus', 'isfriends', 'isgroupsfeed', 'whisper']
-        .some(key => +url.searchParams.get(key));
-      const isCustomGid = hasGid && url.searchParams.get('gid') < 0;
-      const shouldBeFixed = isHomeFeed && !isSearch && !isSpecial;
-      const shouldRemoveGid = notHomeFeed && isCustomGid;
-      const incorrectGid = isCustomGid && target !== 'custom';
-      if ((!hasGid || incorrectGid) && !isNew && shouldBeFixed) {
-        setParam(url);
-        observer.dom.remove(updateLocation);
-        location.replace(url.href);
-      } else if (hasGid && shouldRemoveGid) {
-        url.searchParams.delete('gid');
-        observer.dom.remove(updateLocation);
-        location.replace(url);
-      }
-    };
-    observer.dom.add(updateLocation);
-
-    const updateHomeLinks = function updateHomeLinks() {
-      /** @type {HTMLAnchorElement[]} */
-      const links = Array.from(document.querySelectorAll([
-        '.gn_logo a', // 导航栏logo
-        'a[suda-uatrack*="homepage"]', // 首页链接，根据跟踪标识识别；适用于顶栏和左栏
-        '#v6_pl_content_homefeed a[action-type="search_type"][action-data="type=0"]', // 首页消息流顶部的“全部”链接
-      ].map(selector => selector + ':not([href*="is_search"])').join(',')));
-      links.forEach(link => {
-        const url = new URL(link.href);
-        setParam(url);
-        link.href = url.href;
-      });
-    };
-    observer.dom.add(updateHomeLinks);
-  };
-
-  const fixHomeUrlV7 = function (config) {
+  const fixHomeUrl = function (config) {
     util.inject(function (rootKey, { gid, name, api, index, source }) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -10311,7 +8236,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   homepage.newestFeeds = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_homepage_newest_feeds',
     version: 21,
     parent: homepage.homepage,
@@ -10325,18 +8250,14 @@ throw new Error('YAWF | chat page found, skip following executions');
       });
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        fixHomeUrlV6('newest');
-      } else {
-        const uid = init.page.config.user.idstr;
-        fixHomeUrlV7({
-          gid: '11000' + uid,
-          api: '/ajax/feed/friendstimeline',
-          name: '最新微博',
-          index: 1,
-          source: 'left',
-        });
-      }
+      const uid = init.page.config.user.idstr;
+      fixHomeUrl({
+        gid: '11000' + uid,
+        api: '/ajax/feed/friendstimeline',
+        name: '最新微博',
+        index: 1,
+        source: 'left',
+      });
     },
   });
 
@@ -10344,16 +8265,11 @@ throw new Error('YAWF | chat page found, skip following executions');
   const groupListLazyPromise = new Promise(resolve => {
     groupListLazyPromiseResolve = resolve;
   }).then(async () => {
-    if (yawf.WEIBO_VERSION === 6) {
-      const groups = await request.groupList();
-      return groups.map(({ name, id }) => ({ text: name, value: id }));
-    } else {
-      const groups = await request.groupListV7();
-      return groups.map(({ gid, title }) => ({ text: title, value: gid }));
-    }
+    const groups = await request.groupList();
+    return groups.map(({ gid, title }) => ({ text: title, value: gid }));
   });
   homepage.singleGroup = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_homepage_single_group',
     version: 1,
     parent: homepage.homepage,
@@ -10378,302 +8294,12 @@ throw new Error('YAWF | chat page found, skip following executions');
       });
     },
     async ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        let group = this.ref.group.getConfig();
-        if (group == null) {
-          await groupListLazyPromise;
-          group = this.ref.group.getConfig();
-        }
-        fixHomeUrlV6(group);
-      } else {
-        const gid = this.ref.group.getConfig();
-        const groups = await request.groupListV7();
-        const index = groups.findIndex(g => g.gid === gid);
-        const name = groups[index].title;
-        const api = '/ajax/feed/groupstimeline';
-        fixHomeUrlV7({ gid, api, name, index, source: 'custom' });
-      }
-    },
-  });
-
-  homepage.multiGroup = rule.Rule({
-    id: 'filter_homepage_multi_group',
-    version: 1,
-    parent: homepage.homepage,
-    template: () => i18n.feedsHomepageMultiGroup,
-    ref: {
-      count: {
-        type: 'range',
-        min: 20,
-        max: 200,
-        initial: 50,
-        step: 10,
-      },
-      more: {
-        type: 'select',
-        select: [
-          { value: 'keep', text: () => i18n.feedsHomepageKeepOld },
-          { value: 'clear', text: () => i18n.feedsHomepageCleanOld },
-        ],
-        initial: 'clear',
-      },
-      unread: {
-        type: 'boolean',
-      },
-      groups: {
-        type: 'groups', // 不支持 V7
-      },
-      i: { type: 'bubble', icon: 'ask', template: () => i18n.feedsHomepageMultiGroupDetail },
-      ii: { type: 'bubble', icon: 'warn', template: () => i18n.feedsHomepageMultiGroupDetail2 },
-    },
-    init() {
-      this.addConfigListener(config => {
-        if (config) {
-          homepage.newestFeeds.setConfig(false);
-          homepage.singleGroup.setConfig(false);
-        }
-      });
-    },
-    ainit() {
-      const rule = this;
-      const count = rule.ref.count.getConfig();
-      const unread = rule.ref.unread.getConfig();
-      const groups = rule.ref.groups.getConfig().slice(0);
-      const clear = rule.ref.more.getConfig() === 'clear';
-      const autoLoad = homepage.autoLoad.isEnabled();
-
-      if (groups.length === 0) return;
-
-      fixHomeUrlV6('custom');
-
-      // 检查当前页面是否需要启用分组拼凑首页功能
-      const checkPage = function checkMultiGroupPage() {
-        const query = new URLSearchParams(location.search);
-        const gid = +query.get('gid');
-        if (gid !== CUSTOM_GID) return;
-        if (!Array.isArray(groups)) return;
-        if (groups.length < 2) return;
-        query.delete('gid');
-        observer.dom.add(function multiGroupPageFix() {
-          watchFeedList(query);
-          watchMembers();
-        });
-      };
-
-      const getLoadingTip = function () {
-        const container = document.createElement('div');
-        container.innerHTML = '<div class="WB_cardwrap S_bg2"><div class="WB_empty WB_empty_narrow"><div class="WB_innerwrap"><div class="empty_con clearfix"><p class="text"><i class="W_loading"></i></p></div></div></div></div>';
-        container.querySelector('.text').appendChild(document.createTextNode(i18n.feedsMultiGroupLoading));
-        return container.firstChild;
-      };
-      const getShowMore = function () {
-        const container = document.createElement('div');
-        container.innerHTML = '<div class="WB_cardwrap S_bg2 yawf-multiGroupMore"><a class="WB_cardmore WB_cardmore_noborder clearfix" href="javascript:;"><span class="more_txt W_f14"><em class="W_ficon ficon_arrow_down">c</em></span></a></div>';
-        const textContainer = container.querySelector('span');
-        textContainer.insertBefore(document.createTextNode(i18n.feedsMultiGroupLoadMore), textContainer.firstChild);
-        return container.firstChild;
-      };
-
-      // 找到消息流的容器，并初始化好它
-      const watchFeedList = function (query) {
-        const placeholder = document.querySelector('.WB_feed > .WB_result_null');
-        if (!placeholder) return;
-        let feedlist = placeholder.parentElement;
-        feedlist.removeChild(placeholder);
-        fillFeedList(feedlist, query);
-      };
-
-      // 初始化消息流容器
-      const fillFeedList = function (feedlist, query) {
-        feedlist.classList.add('WB_feed_v3', 'WB_feed_v4');
-        const loading = getLoadingTip();
-        feedlist.appendChild(loading);
-        const showmore = getShowMore();
-        showmore.style.display = 'none';
-        feedlist.appendChild(showmore);
-
-        const getter = showFeeds(groups, query, { feedlist, loading, showmore });
-        if (unread) {
-          initUnread(groups, query, getter, { feedlist });
-        }
-      };
-
-      // 下掉边栏组内用户的组件
-      const watchMembers = function () {
-        const members = document.getElementById('v6_pl_rightmod_groups');
-        if (members) members.parentNode.removeChild(members);
-      };
-
-      // 初始化拼凑首页的逻辑
-      const showFeeds = function (groups, query, dom) {
-        const getter = request.feedsByGroups(groups, query);
-        showMoreFeeds(getter, count, dom);
-        return getter;
-      };
-
-      // 一条一条往消息流里面塞内容
-      const showMoreFeeds = async function (getter, remain, dom) {
-        const hasNext = await getter.hasNext();
-        if (!hasNext) {
-          everythingDone(dom);
-          return;
-        }
-        if (remain === 0) {
-          await waitShowMore(dom);
-          remain = count;
-        }
-        const feed = await getter.next();
-        if (feed.type === 'feed') {
-          renderFeed(feed.dom, dom);
-          await new Promise(resolve => setTimeout(resolve, 10));
-          remain--;
-        } else {
-          renderDone(feed.group, dom);
-        }
-        showMoreFeeds(getter, remain, dom);
-      };
-
-      // 完成一组显示后等用户的操作再继续
-      const waitShowMore = async function ({ feedlist, loading, showmore }) {
-        loading.style.display = 'none';
-        showmore.style.display = 'block';
-        await new Promise(resolve => {
-          const listener = () => {
-            showmore.removeEventListener('click', listener);
-            resolve();
-          };
-          showmore.addEventListener('click', listener);
-        });
-        loading.style.display = 'block';
-        showmore.style.display = 'none';
-        if (clear) {
-          const nav = document.querySelector('.WB_global_nav');
-          const navBottom = nav.clientTop + nav.clientHeight;
-          const feedlistTop = feedlist.parentNode.offsetTop;
-          const margin = 10;
-          document.documentElement.scrollTop = feedlistTop - (navBottom + margin);
-          while (feedlist.firstChild !== loading) {
-            feedlist.removeChild(feedlist.firstChild);
-          }
-        }
-      };
-
-      // 显示一条消息
-      const renderFeed = function (feed, { feedlist, loading }) {
-        feedlist.insertBefore(feed, loading);
-      };
-
-      // 完成一个分组的加载
-      const renderDone = function (group, { feedlist, loading }) {
-        const container = document.createElement('div');
-        container.innerHTML = '<div class="WB_cardwrap S_bg2 yawf-multiGroupDone"><div class="WB_cardtitle_a W_tc yawf-multiGroupDoneTitle"></div></div>';
-        const titleContainer = container.querySelector('.yawf-multiGroupDoneTitle');
-        const [textBefore, textAfter] = i18n.feedsHomePageDoneGroup.split('{1}');
-        titleContainer.appendChild(document.createTextNode(textBefore));
-        const groupNameContainer = titleContainer.appendChild(document.createElement('span'));
-        titleContainer.appendChild(document.createTextNode(textAfter));
-        request.groupList().then(groupList => {
-          const gotGroup = groupList.find(({ id }) => id === group.id);
-          if (gotGroup) groupNameContainer.textContent = gotGroup.name;
-        });
-        feedlist.insertBefore(container, loading);
-      };
-
-      // 所有分组都完成加载
-      const everythingDone = function ({ feedlist, loading, showmore }) {
-        feedlist.removeChild(loading);
-        feedlist.removeChild(showmore);
-      };
-
-      const showUnreadFeeds = async function (groups, query, getter, unreadChecker, { newfeedtip, feedlist }, status) {
-        unreadChecker.pause();
-        if (status > count && !autoLoad) {
-          // 未读消息太多了，我们直接刷新算了
-          feedlist.innerHTML = '';
-          newfeedtip.remove();
-          fillFeedList(feedlist, query);
-        } else {
-          if (!autoLoad) {
-            const link = newfeedtip.querySelector('a');
-            link.textContent = i18n.feedsUnreadLoading;
-            const loading = document.createElement('i');
-            loading.className = 'W_loading';
-            link.insertBefore(loading, link.firstChild);
-            feedlist.insertBefore(newfeedtip, feedlist.firstChild);
-          }
-          const fragement = document.createDocumentFragment();
-          const newGetter = request.feedsByGroups(groups, query);
-          for (let limit = count; limit; limit--) {
-            const feed = await newGetter.next();
-            if (feed.type !== 'feed') continue;
-            if (getter.isShown(feed)) break;
-            const feedDom = fragement.appendChild(feed.dom);
-            if (autoLoad) {
-              feedDom.setAttribute('yawf-feed-preload', 'unread');
-            }
-            getter.addShown(feed);
-          }
-          feedlist.insertBefore(fragement, feedlist.firstChild);
-          if (!autoLoad) {
-            newfeedtip.remove();
-          }
-          unreadChecker.run();
-        }
-      };
-
-      // 显示新消息提示横幅
-      const noticeUnread = function (data, groups, query, getter, { feedlist }, unreadChecker) {
-        const status = data.status;
-        if (!status) {
-          const newfeedtip = document.getElementById('yawf-group-new-feed-tip');
-          if (newfeedtip) newfeedtip.remove();
-        } else if (autoLoad) {
-          showUnreadFeeds(groups, query, getter, unreadChecker, { newfeedtip: null, feedlist }, status);
-        } else {
-          if (!document.getElementById('yawf-group-new-feed-tip')) {
-            const container = document.createElement('div');
-            container.innerHTML = '<div class="WB_cardwrap WB_notes" id="yawf-group-new-feed-tip"><a href="javascript:void(0);"></a></div>';
-            const newfeedtip = container.firstChild;
-            feedlist.parentNode.insertBefore(newfeedtip, feedlist);
-            const clickToShowUnreadFeeds = () => {
-              showUnreadFeeds(groups, query, getter, unreadChecker, { newfeedtip, feedlist }, newfeedtip.dataset.status);
-            };
-            newfeedtip.querySelector('a').addEventListener('click', clickToShowUnreadFeeds);
-            document.addEventListener('keyup', function loadContentKey(event) {
-              if (keyboard.event(event) !== keyboard.code.PERIOD) return;
-              document.removeEventListener('keyup', loadContentKey);
-              clickToShowUnreadFeeds();
-            });
-          }
-          const newfeedtip = document.getElementById('yawf-group-new-feed-tip');
-          if (Number(newfeedtip.dataset.status) !== status) {
-            newfeedtip.dataset.status = status;
-            newfeedtip.querySelector('a').textContent = i18n.feedsUnreadTipWithCount.replace('{1}', status);
-          }
-        }
-      };
-
-      // 初始化未读提示
-      const initUnread = async function (groups, query, getter, { feedlist }) {
-        if (!env.config.stkInfoSupported) return;
-        const searchParams = ['is_ori', 'is_forward', 'is_text', 'is_pic', 'is_video', 'is_music', 'is_article', 'key_word', 'start_time', 'end_time', 'is_search', 'is_searchadv'];
-        // 不支持搜索页面
-        if (searchParams.some(param => query.has(param))) return;
-        const stkInfo = await stk.info;
-        const unreadChecker = request.unreadByGroups(groups, stkInfo);
-        const callback = data => {
-          noticeUnread(data, groups, query, getter, { feedlist }, unreadChecker);
-        };
-        unreadChecker.watch(callback);
-        observer.dom.add(function waitFeedListRemoved() {
-          if (document.contains(feedlist)) return;
-          unreadChecker.unwatch(callback);
-          observer.dom.remove(waitFeedListRemoved);
-        });
-      };
-
-      checkPage();
-
+      const gid = this.ref.group.getConfig();
+      const groups = await request.groupList();
+      const index = groups.findIndex(g => g.gid === gid);
+      const name = groups[index].title;
+      const api = '/ajax/feed/groupstimeline';
+      fixHomeUrl({ gid, api, name, index, source: 'custom' });
     },
   });
 
@@ -10771,7 +8397,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         // 如果作者是自己那么不算延迟加载的（发微薄的时候会插入到最前面）
         const [author] = feedParser.author.id(feed);
         const [fauthor] = feedParser.fauthor.id(feed);
-        if (init.page.$CONFIG.uid === (fauthor || author)) isUnread = false;
+        if (init.page.config.user.idstr === (fauthor || author)) isUnread = false;
         feed.setAttribute('yawf-feed-preload', isUnread ? 'unread' : 'show');
       });
 
@@ -10974,7 +8600,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const hideListPromise = async function () {
 
     const manuallyHideConfig = await config.pool('Hide', {
-      uid: init.page.$CONFIG.uid,
+      uid: init.page.config.user.idstr,
       isLocal: true,
     });
 
@@ -11052,7 +8678,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         const [author] = feedParser.author.id(feed);
         const [fauthor] = feedParser.fauthor.id(feed);
         const authorId = fauthor || author;
-        if (!authorId || authorId === init.page.$CONFIG.uid) return; // 自己的微博，不显示按钮
+        if (!authorId || authorId === init.page.config.user.idstr) return; // 自己的微博，不显示按钮
         if (feed.matches('#v6_pl_content_atmeweibo *')) return; // 不在提到页面显示，避免与“屏蔽at”发生歧义
         if (feed.hasAttribute('yawf-hide-box')) return; // 已经有了按钮，不显示按钮
         if (feed.querySelector('.screen_box .ficon_close')) return; // 广告微博右上角已经有个叉了，就不再弄一个了
@@ -11321,11 +8947,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏包含以下內容的微博||關鍵字{{items}}',
       en: 'Hide feeds with these content||keyword {{items}}',
     },
-    textContentFold: {
-      cn: '折叠包含以下内容的微博||关键词{{items}}',
-      tw: '折疊包含以下內容的微博||關鍵字{{items}}',
-      en: 'Fold feeds with these content||keyword {{items}}',
-    },
     textContentReason: {
       cn: '关键词“{1}”',
       tw: '关键字「{1}」',
@@ -11334,7 +8955,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class TextFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -11366,9 +8987,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
       show: {
         title: () => i18n.textContentShow,
-      },
-      fold: {
-        title: () => i18n.textContentFold,
       },
     },
     fast: {
@@ -11410,12 +9028,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏匹配以下正規表示式的微博||正規式{{items}}',
       en: 'Hide feeds match these regexen||Regexen {{items}}',
     },
-    regexContentFold: {
-      cn: '折叠匹配以下正则表达式的微博||正则式{{items}}',
-      hk: '折叠匹配以下正則表達式的微博||正則式{{items}}',
-      tw: '折叠匹配以下正規表示式的微博||正規式{{items}}',
-      en: 'Fold feeds match these regexen||Regexen {{items}}',
-    },
     regexContextReason: {
       cn: '正则匹配',
       hk: '正則符合',
@@ -11425,7 +9037,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class RegexFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -11456,9 +9068,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
       show: {
         title: () => i18n.regexContentShow,
-      },
-      fold: {
-        title: () => i18n.regexContentFold,
       },
     },
     fast: {
@@ -11527,11 +9136,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏以下作者的微博||作者{{items}}',
       en: 'Hide feeds from these authors||author {{items}}',
     },
-    accountAuthorFold: {
-      cn: '折叠以下作者的微博||作者{{items}}',
-      tw: '折疊以下作者的微博||作者{{items}}',
-      en: 'Fold feeds from these authors||author {{items}}',
-    },
     accountAuthorReason: {
       cn: '作者 @{1}',
       tw: '作者 @{1}',
@@ -11540,14 +9144,14 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class AuthorFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
     init() {
       const rule = this;
       observer.feed.filter(function authorFilterFeedFilter(/** @type {Element} */feed) {
-        const oid = yawf.WEIBO_VERSION === 6 ? init.page.$CONFIG.oid : init.page.oid();
+        const oid = init.page.oid();
         const [author] = feedParser.author.id(feed);
         const [fauthor] = feedParser.fauthor.id(feed);
         // 个人主页不按照作者隐藏（否则就会把所有东西都藏起来……）
@@ -11593,9 +9197,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       show: {
         title: () => i18n.accountAuthorShow,
       },
-      fold: {
-        title: () => i18n.accountAuthorFold,
-      },
     },
     fast: {
       types: [['author', 'account'], ['original', 'mention', 'commentuser']],
@@ -11633,11 +9234,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '总是隱藏以下作者轉發的微博||帳號{{items}}',
       en: 'Hide feeds from these authors\' forwarding||author {{items}}',
     },
-    accountAuthorForwardFold: {
-      cn: '折叠以下作者转发的微博||帐号{{items}}',
-      tw: '折叠以下作者轉發的微博||帳號{{items}}',
-      en: 'Fold feeds from these authors\' forwarding||author {{items}}',
-    },
     accountAuthorForwardReason: {
       cn: '由 @{1} 转发',
       tw: '由 @{1} 轉發',
@@ -11646,7 +9242,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class AuthorForwardFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -11692,9 +9288,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       show: {
         title: () => i18n.accountAuthorForwardShow,
       },
-      fold: {
-        title: () => i18n.accountAuthorForwardFold,
-      },
     },
     fast: {
       types: [[], ['author', 'original', 'mention', 'account', 'commentuser']],
@@ -11738,11 +9331,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏轉發自以下帳號的微博||原作者{{items}}',
       en: 'Hide feeds forwarded from these authors||original {{items}}',
     },
-    accountOriginalFold: {
-      cn: '折叠转发自以下帐号的微博||原作者{{items}}',
-      tw: '折疊轉發自以下帳號的微博||原作者{{items}}',
-      en: 'Fold feeds forwarded from these authors||original {items}}',
-    },
     accountOriginalDiscover: {
       cn: '按原创作者过滤的规则对发现页面的作者生效',
       tw: '按原創作者過濾的規則對發現頁面的作者生效',
@@ -11780,7 +9368,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   class OriginalFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -11796,7 +9384,7 @@ throw new Error('YAWF | chat page found, skip following executions');
           return { result: rule.feedAction, reason };
         }
 
-        const pageType = yawf.WEIBO_VERSION === 6 ? init.page.type() : null; // V7 TODO
+        const pageType = init.page.type();
         const isDiscover = pageType === 'discover';
         const asDiscover = rules.original.id.discover.isEnabled() && isDiscover;
         const asFastForward = feedParser.isFast(feed);
@@ -11834,9 +9422,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       show: {
         title: () => i18n.accountOriginalShow,
       },
-      fold: {
-        title: () => i18n.accountOriginalFold,
-      },
     },
     before: {
       show: additionalRules,
@@ -11849,7 +9434,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   original.id.follower = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_original_follower',
     version: 1,
     parent: original.id.id,
@@ -11911,11 +9496,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏提到以下帳號的微博||作者{{items}}',
       en: 'Hide feeds mentioned these accounts||mention {{items}}',
     },
-    accountMentionFold: {
-      cn: '折叠提到以下帐号的微博||作者{{items}}',
-      tw: '折疊提到以下帳號的微博||作者{{items}}',
-      en: 'Fold feeds mentioned these accounts||mention {{items}}',
-    },
     accountMentionReason: {
       cn: '提到了 @{1}',
       tw: '提到了 @{1}',
@@ -11924,7 +9504,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class MentionFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -11955,9 +9535,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
       show: {
         title: () => i18n.accountMentionShow,
-      },
-      fold: {
-        title: () => i18n.accountMentionFold,
       },
     },
     fast: {
@@ -12018,11 +9595,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏包含以下話題的微博||話題{{items}}',
       en: 'Hide feeds with these topics||topic {{items}}',
     },
-    topicFold: {
-      cn: '折叠包含以下话题的微博||话题{{items}}',
-      tw: '折疊包含以下話題的微博||話題{{items}}',
-      en: 'Fold feeds with these topics||topic {{items}}',
-    },
     topicReason: {
       cn: '提到话题 {1}',
       tw: '提到話題 {1}',
@@ -12031,7 +9603,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class TopicFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -12062,9 +9634,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
       show: {
         title: () => i18n.topicShow,
-      },
-      fold: {
-        title: () => i18n.topicFold,
       },
     },
     fast: {
@@ -12125,11 +9694,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       tw: '隱藏來自以下來源的微博||來源{{items}}',
       en: 'Hide feeds from these sources||source {{items}}',
     },
-    sourceFold: {
-      cn: '折叠来自以下来源的微博||来源{{items}}',
-      tw: '折疊來自以下來源的微博||來源{{items}}',
-      en: 'Fold feeds from these sources||source {{items}}',
-    },
     sourceReason: {
       cn: '来自 {1}',
       tw: '來自 {1}',
@@ -12138,7 +9702,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   class SourceFeedRule extends rule.class.Rule {
-    get weiboVersion() { return this.feedAction === 'fold' ? [6] : [6, 7]; }
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
     }
@@ -12169,9 +9733,6 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
       show: {
         title: () => i18n.sourceShow,
-      },
-      fold: {
-        title: () => i18n.sourceFold,
       },
     },
     fast: {
@@ -12237,7 +9798,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   showthese.showMyFeed = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_my_feed',
     version: 1,
     parent: showthese.showthese,
@@ -12247,7 +9808,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function showMyFeed(feed) {
         if (!rule.isEnabled()) return null;
-        const me = yawf.WEIBO_VERSION === 6 ? init.page.$CONFIG.uid : init.page.uid();
+        const me = init.page.uid();
         const [author] = feedParser.author.id(feed);
         const [fauthor] = feedParser.fauthor.id(feed);
         if (me === author || me === fauthor) return 'showme';
@@ -12264,7 +9825,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   showthese.showMyOriginal = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_my_original',
     version: 1,
     parent: showthese.showthese,
@@ -12273,7 +9834,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function showMyOriginal(feed) {
         if (!rule.isEnabled()) return null;
-        const me = yawf.WEIBO_VERSION === 6 ? init.page.$CONFIG.uid : init.page.uid();
+        const me = init.page.uid();
         const [original] = feedParser.original.id(feed);
         const [author] = feedParser.isFast(feed) ? feedParser.author.id(feed) : [];
         if (me === original || me === author) return 'showme';
@@ -12290,7 +9851,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   showthese.showMentionMe = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_mention_me',
     version: 1,
     parent: showthese.showthese,
@@ -12299,7 +9860,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function showMentionMe(feed) {
         if (!rule.isEnabled()) return null;
-        const me = yawf.WEIBO_VERSION === 6 ? init.page.$CONFIG.uid : init.page.uid();
+        const me = init.page.uid();
         const mentions = feedParser.mention.name(feed);
         if (mentions.includes(me)) return 'showme';
         return null;
@@ -12351,7 +9912,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   commercial.ad = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_ad_feed',
     version: 1,
     parent: commercial.commercial,
@@ -12363,26 +9924,14 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function adFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          // 修改这里时请注意，悄悄关注也会显示关注按钮，但是相关微博不应被隐藏
-          // 快转也可能有关注按钮，但是快转不在这里隐藏
-          if (feed.getAttribute('feedtype') === 'ad') return 'hide';
-          if (feed.querySelector('[action-type="feed_list_ad"]')) return 'hide';
-          if (feed.querySelector('a[href*="//adinside.weibo.cn/"]')) return 'hide';
-          if (feed.querySelector('[diss-data*="feedad"]') && !feedParser.isFastForward(feed)) return 'hide';
-          if (feed.querySelector('[suda-uatrack*="insert_feed"]')) return 'hide';
-          if (feed.querySelector('[suda-uatrack*="negativefeedback"]')) return 'hide';
-          if (feed.querySelector('[suda-uatrack*="1022-adFeedEvent"]')) return 'hide';
-        } else {
-          // TODO 我也不确定这个属性是做什么的
-          // if (feed.promotion) console.log('FILTERTEST promotion: %o (%o)', feed.promotion, feed);
-          // if (feed.attitude_dynamic_adid) console.log('FILTERTEST attitude_dynamic_adid: %o (%o)', feed.attitude_dynamic_adid, feed);
-          // 某某赞过的微博
-          if (feed.title?.type === 'likerecommend') return 'hide';
-          // 热推 / 广告之类
-          if (feed.content_auth === 5) return 'hide';
-          if (feed.retweeted_status?.content_auth === 5) return 'hide';
-        }
+        // TODO 我也不确定这个属性是做什么的
+        // if (feed.promotion) console.log('FILTERTEST promotion: %o (%o)', feed.promotion, feed);
+        // if (feed.attitude_dynamic_adid) console.log('FILTERTEST attitude_dynamic_adid: %o (%o)', feed.attitude_dynamic_adid, feed);
+        // 某某赞过的微博
+        if (feed.title?.type === 'likerecommend') return 'hide';
+        // 热推 / 广告之类
+        if (feed.content_auth === 5) return 'hide';
+        if (feed.retweeted_status?.content_auth === 5) return 'hide';
         return null;
       }, { priority: 1e6 });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -12399,7 +9948,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   commercial.fansTop = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_fans_top',
     version: 1,
     parent: commercial.commercial,
@@ -12411,13 +9960,8 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function fansTopFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          if (feed.querySelector('[adcard="fanstop"]')) return 'hide';
-          return null;
-        } else {
-          if (feed.promotion?.adtype === 8) return 'hide';
-          return null;
-        }
+        if (feed.promotion?.adtype === 8) return 'hide';
+        return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -12432,101 +9976,14 @@ throw new Error('YAWF | chat page found, skip following executions');
     cn: '带有微博橱窗商品链接的微博，点击链接可以到商品的购买页面。勾选以隐藏此类微博。',
   };
 
-  commercial.weiboProduct = rule.Rule({
-    weiboVersion: 6, // V7 有另一个设置项
-    id: 'filter_weibo_product',
-    version: 1,
-    parent: commercial.commercial,
-    template: () => i18n.weiboProductFeedFilter,
-    ref: {
-      i: { type: 'bubble', icon: 'ask', template: () => i18n.weiboProductFeedFilterDetail },
-    },
-    init() {
-      const rule = this;
-      observer.feed.filter(function weiboProductFeedFilter(feed) {
-        if (!rule.isEnabled()) return null;
-        if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="1022-product"]')) return 'hide';
-        if (feed.querySelector('.WB_feed_spec[exp-data*="key=tblog_weibocard"][exp-data*="2017845002-product"]')) return 'hide';
-        if (feed.querySelector('a[action-type="feed_list_url"][suda-uatrack*="2017845002-product"]')) return 'hide';
-        if (feed.querySelector('a[action-type="feed_list_url"][suda-uatrack*="2017845002-collection"]')) return 'hide';
-        if (feed.querySelector('.media_box .buy_list')) return 'hide';
-        return null;
-      });
-      this.addConfigListener(() => { observer.feed.rerun(); });
-    },
-  });
-
-  i18n.taobaoProductFeedFilter = {
-    cn: '带有淘宝、天猫或聚划算商品的微博{{i}}',
-    tw: '帶有淘寶、天貓或聚划算商品的微博{{i}}',
-    en: 'Weibo with Taobao / Tmall / Juhuasuan commodity{{i}}',
-  };
-  i18n.taobaoProductFeedFilterDetail = {
-    cn: '带有{{taobao}}、{{tmall}}或{{juhuasuan}}的微博',
-  };
-  i18n.taobaoProduct = {
-    cn: '淘宝商品',
-  };
-  i18n.tmallProduct = {
-    cn: '天猫商品',
-  };
-  i18n.juhuasuanProduct = {
-    cn: '聚划算商品',
-  };
-
-  commercial.taobaoProduct = rule.Rule({
-    weiboVersion: 6, // V7 有另一个设置项
-    id: 'filter_tb_tm_feed',
-    version: 1,
-    parent: commercial.commercial,
-    template: () => i18n.taobaoProductFeedFilter,
-    ref: {
-      i: {
-        type: 'bubble',
-        icon: 'ask',
-        template: () => i18n.taobaoProductFeedFilterDetail,
-        ref: Object.assign(...[
-          { id: 'taobao', className: 'icon_cd_tb', content: () => i18n.taobaoProduct },
-          { id: 'tmall', className: 'icon_cd_tmall', content: () => i18n.tmallProduct },
-          { id: 'juhuasuan', className: 'icon_cd_ju', content: () => i18n.juhuasuanProduct },
-        ].map(({ id, className, content }) => ({
-          [id]: {
-            render() {
-              const wrap = document.createElement('div');
-              wrap.innerHTML = '<span class="W_btn_b W_btn_cardlink btn_22px"><span class="ico_spe"><i class="W_icon yawf-card-icon"></i></span><span class="W_autocut yawf-card-content"></span></span>';
-              const icon = wrap.querySelector('.yawf-card-icon');
-              icon.classList.add(className);
-              const text = wrap.querySelector('.yawf-card-content');
-              text.textContent = content();
-              return wrap.firstChild;
-            },
-          },
-        }))),
-      },
-    },
-    init() {
-      const rule = this;
-      observer.feed.filter(function taobaoProductFeedFilter(feed) {
-        if (!rule.isEnabled()) return null;
-        if (feed.querySelector('.icon_cd_tmall, .icon_cd_tb, .icon_cd_ju')) return 'hide';
-        if (feed.querySelector('a[href^="https://shoptb.sc.weibo.com/"]')) return 'hide';
-        return null;
-      });
-      this.addConfigListener(() => { observer.feed.rerun(); });
-    },
-  });
-
   i18n.weiboProductLikeFeedFilter = {
     cn: '带有商品链接的微博{{i}}',
     tw: '帶有商品鏈接的微博{{i}}',
     en: 'Weibo with link to weibo shop / taobao {{i}}',
   };
-  i18n.weiboProductLikeFeedFilterDetail = {
-    cn: '带有微博橱窗商品或淘宝商品链接的微博。适配微博 V7，对应 V6 版的“微博橱窗”“淘宝商品”两个设置项。',
-  };
 
   commercial.weiboProductLike = rule.Rule({
-    weiboVersion: 7,
+    v7Support: true,
     id: 'filter_weibo_product_like',
     version: 75,
     parent: commercial.commercial,
@@ -12592,7 +10049,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   commercial.userLike = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_user_like',
     version: 1,
     parent: commercial.commercial,
@@ -12604,23 +10061,13 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function userLikeFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          if (init.page.type() !== 'profile') return null;
-          const { oid, onick } = init.page.$CONFIG;
-          if (!oid || !onick) return null;
-          const [author] = feedParser.author.id(feed);
-          const [fauthor] = feedParser.fauthor.id(feed);
-          if ((fauthor || author) !== oid) return 'hide';
-          return null;
-        } else {
-          if (init.page.type() !== 'profile') return null;
-          const oid = String(init.page.route.params.id);
-          if (!oid) return null;
-          const [author] = feedParser.author.id(feed);
-          const [fauthor] = feedParser.fauthor.id(feed);
-          if (String(fauthor || author) !== oid) return 'hide';
-          return null;
-        }
+        if (init.page.type() !== 'profile') return null;
+        const oid = String(init.page.route.params.id);
+        if (!oid) return null;
+        const [author] = feedParser.author.id(feed);
+        const [fauthor] = feedParser.fauthor.id(feed);
+        if (String(fauthor || author) !== oid) return 'hide';
+        return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -12647,12 +10094,11 @@ throw new Error('YAWF | chat page found, skip following executions');
       i: { type: 'bubble', icon: 'ask', template: () => i18n.fakeWeiboFilterDetail },
     },
     init() {
-      const rule = this;
+      // const rule = this;
       observer.feed.filter(function fakeWeiboFilter(feed) {
-        if (feed.matches('[id^="Pl_Core_WendaList__"] *')) return null;
-        if (feed.hasAttribute('mid')) return null;
-        if (rule.isEnabled() && init.page.type() !== 'search') return 'hide';
-        return 'unset';
+        return null;
+        // if (rule.isEnabled() && init.page.type() !== 'search') return 'hide';
+        // return 'unset';
       }, { priority: 1e6 });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -12696,7 +10142,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   content.deletedForward = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_deleted_forward',
     version: 1,
     parent: content.content,
@@ -12710,17 +10156,11 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!rule.isEnabled()) return null;
         const isForward = feedParser.isForward(feed);
         if (!isForward) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          const forwardContent = feed.querySelector('.WB_media_expand .WB_info .WB_name, .WB_expand .WB_info .W_fb');
-          if (forwardContent) return null;
-          return 'hide';
-        } else {
-          if (feed.retweeted_status) {
-            if (feed.retweeted_status.visible?.list_id > 0) return 'hide';
-            if (feed.retweeted_status.deleted) return 'hide';
-          }
-          return null;
+        if (feed.retweeted_status) {
+          if (feed.retweeted_status.visible?.list_id > 0) return 'hide';
+          if (feed.retweeted_status.deleted) return 'hide';
         }
+        return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -12768,7 +10208,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   content.vote = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_vote',
     version: 1,
     parent: content.content,
@@ -12780,22 +10220,13 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function voteFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          if (feed.querySelector('.WB_from a[href*="//vote.weibo.com/"]')) return 'hide';
-          if (feed.querySelector('.WB_feed_spec_cont a[action-data*="vote.weibo.com"]')) return 'hide';
-          if (feed.querySelector('a[suda-uatrack*="1022-vote"]')) return 'hide';
-          if (feed.querySelector('a[suda-uatrack*="1022-hudongvote"]')) return 'hide';
-          if (feed.querySelector('.icon_sw_vote')) return 'hide';
-          if (feedParser.source.text(feed).includes('投票')) return 'hide';
-        } else {
-          if (Array.isArray(feed.url_struct)) {
-            if (feed.url_struct.find(url => /^1022:231716/.test(url.actionlog?.oid))) return 'hide';
-            if (feed.url_struct.find(url => /https:\/\/vote\.weibo\.com\//.test(url.long_url))) return 'hide';
-            if (feed.url_struct.find(url => /https:\/\/vote\.weibo\.com\//.test(url.ori_url))) return 'hide';
-            if (feed.url_struct.find(url => /sinaweibo:\/\/browser\?url=https%3A%2F%2Fvote\.weibo\.com%2F/.test(url.ori_url))) return 'hide';
-          }
-          if (feed.page_info?.object_type === 'hudongvote') return 'hide';
+        if (Array.isArray(feed.url_struct)) {
+          if (feed.url_struct.find(url => /^1022:231716/.test(url.actionlog?.oid))) return 'hide';
+          if (feed.url_struct.find(url => /https:\/\/vote\.weibo\.com\//.test(url.long_url))) return 'hide';
+          if (feed.url_struct.find(url => /https:\/\/vote\.weibo\.com\//.test(url.ori_url))) return 'hide';
+          if (feed.url_struct.find(url => /sinaweibo:\/\/browser\?url=https%3A%2F%2Fvote\.weibo\.com%2F/.test(url.ori_url))) return 'hide';
         }
+        if (feed.page_info?.object_type === 'hudongvote') return 'hide';
         return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -12842,7 +10273,9 @@ throw new Error('YAWF | chat page found, skip following executions');
     cn: '微博允许给配图添加标签，标签可以是文本、话题、用户以及商品链接。选择这条规则后将不会看到对应的微博，另外您可以只隐藏[[clean_feed_pic_tag]]。',
   };
   content.imageTag = rule.Rule({
-    weiboVersion: [6, 7], // 虽然 V7 网页目前还不支持查看标签，不过我只管有没有，不管看得见看不见
+    // 虽然 V7 网页目前还不支持查看标签，不过我只管有没有，不管看得见看不见
+    // 上面这行评论是之前打上去的，我没空检查他现在有没有
+    v7Support: true,
     id: 'filter_image_tag',
     version: 47,
     parent: content.content,
@@ -12854,24 +10287,9 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function imageTagFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          const list = feed.querySelector('.WB_media_a[action-data*="photo_tag_pids"]');
-          if (!list) return null;
-          const tagPidsStr = new URLSearchParams(list.getAttribute('action-data')).get('photo_tag_pids');
-          if (!tagPidsStr) return null;
-          const tagPids = tagPidsStr.split(',');
-          const items = feed.querySelectorAll('[action-type="fl_pics"][action-data*="pic_id"]');
-          const hasTag = Array.from(items).some(item => {
-            const id = new URLSearchParams(item.getAttribute('action-data')).get('pic_id');
-            return tagPids.includes(id);
-          });
-          if (!hasTag) return null;
-          return 'hide';
-        } else {
-          const pics = feedParser.pics.info(feed);
-          if (pics.find(pic => pic.pic_tags?.length)) return 'hide';
-          return null;
-        }
+        const pics = feedParser.pics.info(feed);
+        if (pics.find(pic => pic.pic_tags?.length)) return 'hide';
+        return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -13049,7 +10467,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   content.paid = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_paid',
     version: 1,
     parent: content.content,
@@ -13061,19 +10479,10 @@ throw new Error('YAWF | chat page found, skip following executions');
       const rule = this;
       observer.feed.filter(function paidFeedFilter(feed) {
         if (!rule.isEnabled()) return null;
-        if (yawf.WEIBO_VERSION === 6) {
-          const searchParams = new URLSearchParams(location.search);
-          const paidOnly = +searchParams.get('vplus') || searchParams.get('is_vclub');
-          if (paidOnly) return null;
-          if (feed.querySelector('.icon_vplus')) return 'hide';
-          if (feed.querySelector('.WB_media_a[action-data*="isPrivate=1"]')) return 'hide';
-          if (feed.querySelector('[action-type="fl_pics"][action-data*="isPrivate=1"]')) return 'hide';
-        } else {
-          const pics = feedParser.pics.info(feed);
-          // 付费图片
-          if (pics.find(pic => pic.blur?.isPay)) return 'hide';
-          // 付费文章的特征找不到！
-        }
+        const pics = feedParser.pics.info(feed);
+        // 付费图片
+        if (pics.find(pic => pic.blur?.isPay)) return 'hide';
+        // 付费文章的特征找不到！
         return null;
       });
       this.addConfigListener(() => { observer.feed.rerun(); });
@@ -13121,7 +10530,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   };
 
   content.fastForward = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'filter_fast_forward',
     version: 67,
     parent: content.content,
@@ -13144,7 +10553,6 @@ throw new Error('YAWF | chat page found, skip following executions');
 //#endregion
 //#region @require yaofang://content/rule/filter/more/link.js
 ; (function () {
-
   const yawf = window.yawf;
   const util = yawf.util;
   const rule = yawf.rule;
@@ -13178,9 +10586,9 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   ; (function (linkTypes) {
     Object.keys(linkTypes).sort().forEach(id => {
-      const { type, name, recognizer, v7Type, v7Recognizer } = linkTypes[id];
-      const pascalCaseType = type.replace(/^./, c => c.toUpperCase());
-      link[type] = rule.Rule({
+      const { pageType, name, recognizer, type } = linkTypes[id];
+      const pascalCaseType = pageType.replace(/^./, c => c.toUpperCase());
+      link[pageType] = rule.Rule({
         weiboVersion: [6, 7],
         id: `filter_${pascalCaseType}`,
         version: 30,
@@ -13190,18 +10598,13 @@ throw new Error('YAWF | chat page found, skip following executions');
           const rule = this;
           observer.feed.filter(function feedWithSpecialLinkFilter(feed) {
             if (!rule.isEnabled()) return null;
-            if (init.page.type() === type) return null;
-            if (yawf.WEIBO_VERSION === 6) {
-              if (feed.querySelector(`a[suda-uatrack*="1022-${type}"]`)) return 'hide';
-              if (recognizer?.(feed)) return 'hide';
-            } else {
-              if (v7Type) {
-                const urls = feed.url_struct || [];
-                const url = urls.find(url => url.url_type_pic?.includes(v7Type + '.png'));
-                if (url) return 'hide';
-              }
-              if (v7Recognizer?.(feed)) return 'hide';
+            if (init.page.type() === pageType) return null;
+            if (type) {
+              const urls = feed.url_struct || [];
+              const url = urls.find(url => url.url_type_pic?.includes(type + '.png'));
+              if (url) return 'hide';
             }
+            if (recognizer?.(feed)) return 'hide';
             return null;
           });
           this.addConfigListener(() => { observer.feed.rerun(); });
@@ -13210,44 +10613,38 @@ throw new Error('YAWF | chat page found, skip following executions');
     });
   }({
     100101: {
-      type: 'place',
-      v7Type: 'location',
+      pageType: 'place',
+      type: 'location',
       name: () => i18n.feedWithLinkPlace,
     },
     100120: {
+      pageType: 'movie',
       type: 'movie',
-      v7Type: 'movie',
       name: () => i18n.feedWithLinkMovie,
     },
     100202: {
+      pageType: 'book',
       type: 'book',
-      v7Type: 'book',
       name: () => i18n.feedWithLinkBook,
     },
     100808: {
-      type: 'topic',
-      v7Type: 'super',
+      pageType: 'topic',
+      type: 'super',
       name: () => i18n.feedWithLinkTopic,
-      recognizer: feed => {
-        const source = feed.querySelector('.WB_from a[href^="https://huati.weibo.com/k/"]');
-        if (source) return true;
-        return false;
-      },
     },
     101515: {
+      pageType: 'music',
       type: 'music',
-      v7Type: 'music',
       name: () => i18n.feedWithLinkMusic,
     },
     230677: {
-      type: 'stock',
+      pageType: 'stock',
       name: () => i18n.feedWithLinkStock,
-      v7Recognizer: feed => {
+      recognizer: feed => {
         return feed.url_struct?.some(url => url.url_title?.[0] === '$');
       },
     },
   }));
-
 }());
 //#endregion
 //#region @require yaofang://content/rule/filter/more/toomany.js
@@ -13276,12 +10673,10 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
 
   Object.assign(i18n, {
-    floodingFeedHide: { cn: '隐藏', tw: '隱藏', en: 'hidden' },
-    floodingFeedFold: { cn: '折叠', tw: '折疊', en: 'folded' },
     floodingAuthor: {
-      cn: '相同作者|超过{{number}}条微博|时超出的{{action}}||{{group}}在分组页面同样生效',
-      tw: '相同作者|超過{{number}}條微博|時超出的{{action}}||{{group}}在分組頁面同樣生效',
-      en: 'Feeds by same author will | be {{action}} | when more than {{number}} seen||{{group}} Also apply to grouping pages',
+      cn: '相同作者|超过{{number}}条微博|时超出的隐藏||{{group}}在分组页面同样生效',
+      tw: '相同作者|超過{{number}}條微博|時超出的隱藏||{{group}}在分組頁面同樣生效',
+      en: 'Feeds by same author will | be hidden | when more than {{number}} seen||{{group}} Also apply to grouping pages',
     },
     floodingAuthorReason: {
       cn: '刷屏',
@@ -13289,9 +10684,9 @@ throw new Error('YAWF | chat page found, skip following executions');
       en: 'flooding',
     },
     floodingForward: {
-      cn: '相同微博的转发|超过{{number}}条|时超出的{{action}}',
-      tw: '相同微博的轉發|超過{{number}}條|時超出的{{action}}',
-      en: 'Feeds forwarded form same one will | be {{action}} | when more than {{number}} seen',
+      cn: '相同微博的转发|超过{{number}}条|时超出的隐藏',
+      tw: '相同微博的轉發|超過{{number}}條|時超出的隱藏',
+      en: 'Feeds forwarded form same one will | be hidden | when more than {{number}} seen',
     },
     floodingForwardReason: {
       cn: '频繁转发',
@@ -13312,14 +10707,6 @@ throw new Error('YAWF | chat page found, skip following executions');
         max: 20,
         initial: 5,
       },
-      action: {
-        type: 'select',
-        initial: 'hide',
-        select: [
-          { value: 'hide', text: () => i18n.floodingFeedHide },
-          { value: 'fold', text: () => i18n.floodingFeedFold },
-        ],
-      },
       group: { type: 'boolean' },
     },
     init() {
@@ -13330,7 +10717,7 @@ throw new Error('YAWF | chat page found, skip following executions');
         if (!rule.isEnabled()) return null;
         // 如果是因为修改规则导致的重新计算，那么我们不再做一次处理
         if (parsed.has(feed)) return null;
-        const me = init.page.$CONFIG.uid;
+        const me = init.page.config.user.idstr;
         const [author] = feedParser.author.id(feed);
         const [fauthor] = feedParser.fauthor.id(feed);
         const authorId = fauthor || author;
@@ -13346,9 +10733,8 @@ throw new Error('YAWF | chat page found, skip following executions');
         const feeds = [...document.querySelectorAll('.WB_feed_type')];
         const count = feeds.filter(feed => parsed.get(feed) === authorId).length;
         if (count <= rule.ref.number.getConfig()) return null;
-        const result = rule.ref.action.getConfig();
         const reason = i18n.floodingAuthorReason;
-        return { result, reason };
+        return { result: 'hide', reason };
       }, { priority: -1e6 });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -13366,14 +10752,6 @@ throw new Error('YAWF | chat page found, skip following executions');
         max: 20,
         initial: 3,
       },
-      action: {
-        type: 'select',
-        initial: 'hide',
-        select: [
-          { value: 'hide', text: () => i18n.floodingFeedHide },
-          { value: 'fold', text: () => i18n.floodingFeedFold },
-        ],
-      },
     },
     init() {
       const rule = this;
@@ -13388,9 +10766,8 @@ throw new Error('YAWF | chat page found, skip following executions');
         const feeds = [...document.querySelectorAll('[mid]')];
         const count = feeds.filter(feed => parsed.get(feed) === omid).length;
         if (count <= rule.ref.number.getConfig()) return null;
-        const result = rule.ref.action.getConfig();
         const reason = i18n.floodingForwardReason;
-        return { result, reason };
+        return { result: 'hide', reason };
       }, { priority: -1e6 });
       this.addConfigListener(() => { observer.feed.rerun(); });
     },
@@ -13790,7 +11167,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       observer.comment.filter(function showMyComment(comment) {
         if (!rule.isEnabled()) return null;
         const author = commentParser.user.name(comment)[0];
-        const username = init.page.$CONFIG.nick;
+        const username = init.page.config.user.screen_name;
         if (author === username) return 'shomme';
         return null;
       });
@@ -14069,38 +11446,20 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanIconsOthers: { cn: '更多', tw: '其他', en: 'More' },
   });
 
-  const showIcons = classNames => ({
-    afterRender: container => {
-      const label = container.querySelector('label');
-      classNames.forEach(className => {
-        const container = document.createElement('span');
-        container.innerHTML = '<i class="W_icon" style="display:inline-block!important"></i>';
-        const i = container.querySelector('i');
-        if (typeof className === 'string') {
-          i.classList.add(className);
-        } else if (Array.isArray(className)) {
-          i.className = className.join(' ');
-        }
-        label.appendChild(container);
-      });
-      return container;
-    },
-  });
-
   clean.CleanGroup('icons', () => i18n.cleanIconsGroupTitle);
   clean.CleanRule('level', () => i18n.cleanIconsLevel, 1, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
-  const member = clean.CleanRule('member', () => i18n.cleanIconsMember, 1, '[class*="icon_member"], [class*="ico_member"], [class*="ico_vip"], [class*="icon_vip"] { display: none !important; }', showIcons(['icon_member1']), { weiboVersion: [6, 7] });
-  const approve = clean.CleanRule('approve', () => i18n.cleanIconsApprove, 1, '.approve, .icon_approve, .icon_pf_approve, .icon_approve_gold, .icon_pf_approve_gold { display: none !important; }', showIcons(['icon_approve', 'icon_approve_gold']), { weiboVersion: [6, 7] });
-  const approveCo = clean.CleanRule('approve_co', () => i18n.cleanIconsApproveCo, 1, '.approve_co, .icon_approve_co, .icon_pf_approve_co, [class^="W_icon_co"], [class^=".icon_approve_co_"], [class^=".icon_pf_approve_co_"] { display: none !important; }', showIcons(['icon_approve_co']), { weiboVersion: [6, 7] });
-  clean.CleanRule('approve_dead', () => i18n.cleanIconsApproveDead, 1, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }', showIcons(['icon_approve_dead']));
-  const bigFan = clean.CleanRule('bigfun', () => i18n.cleanIconsBigFun, 26, '.W_icon_bf { display: none !important; }', showIcons([['W_icon_bf', 'icon_bigfans']]), { weiboVersion: [6, 7] });
-  const club = clean.CleanRule('club', () => i18n.cleanIconsClub, 1, '.ico_club, .icon_pf_club, .icon_club { display: none !important; }', showIcons(['icon_club']), { weiboVersion: [6, 7] });
-  const vGirl = clean.CleanRule('v_girl', () => i18n.cleanIconsVGirl, 1, '.ico_vlady, .icon_pf_vlady, .icon_vlady { display: none !important; }', showIcons(['icon_vlady']), { weiboVersion: [6, 7] });
-  clean.CleanRule('supervisor', () => i18n.cleanIconsSupervisor, 1, '.icon_supervisor { display: none !important; }', showIcons(['icon_supervisor']));
-  clean.CleanRule('taobao', () => i18n.cleanIconsTaobao, 1, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }', showIcons(['icon_taobao', 'icon_tmall']));
-  clean.CleanRule('cheng', () => i18n.cleanIconsCheng, 1, '.icon_cheng { display: none !important; }', showIcons(['icon_cheng']));
-  clean.CleanRule('gongyi', () => i18n.cleanIconsGongyi, 1, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }', showIcons(['icon_gongyi']));
-  clean.CleanRule('zongyika', () => i18n.cleanIconsZongyika, 1, '.zongyika2014, .icon_zongyika2014 { display: none !important; }', showIcons(['icon_zongyika2014']));
+  const member = clean.CleanRule('member', () => i18n.cleanIconsMember, 1, '', { v7Support: true });
+  const approve = clean.CleanRule('approve', () => i18n.cleanIconsApprove, 1, '', { v7Support: true });
+  const approveCo = clean.CleanRule('approve_co', () => i18n.cleanIconsApproveCo, 1, '', { v7Support: true });
+  clean.CleanRule('approve_dead', () => i18n.cleanIconsApproveDead, 1, '.icon_approve_dead, .icon_pf_approve_dead { display: none !important; }');
+  const bigFan = clean.CleanRule('bigfun', () => i18n.cleanIconsBigFun, 26, '', { v7Support: true });
+  const club = clean.CleanRule('club', () => i18n.cleanIconsClub, 1, '', { v7Support: true });
+  const vGirl = clean.CleanRule('v_girl', () => i18n.cleanIconsVGirl, 1, '', { v7Support: true });
+  clean.CleanRule('supervisor', () => i18n.cleanIconsSupervisor, 1, '.icon_supervisor { display: none !important; }');
+  clean.CleanRule('taobao', () => i18n.cleanIconsTaobao, 1, '.ico_taobao, .icon_tmall, .icon_taobao, .icon_tmall { display: none !important; }');
+  clean.CleanRule('cheng', () => i18n.cleanIconsCheng, 1, '.icon_cheng { display: none !important; }');
+  clean.CleanRule('gongyi', () => i18n.cleanIconsGongyi, 1, '.ico_gongyi, .ico_gongyi1, .ico_gongyi2, .ico_gongyi3, .ico_gongyi4, .ico_gongyi5, .icon_gongyi, .icon_gongyi2, .icon_gongyi3, .icon_gongyi4, .icon_gongyi5 { display: none !important; }');
+  clean.CleanRule('zongyika', () => i18n.cleanIconsZongyika, 1, '.zongyika2014, .icon_zongyika2014 { display: none !important; }');
   clean.CleanRule('others', () => i18n.cleanIconsOthers, 1, () => {
     observer.dom.add(function () {
       const icons = Array.from(document.querySelectorAll('a > .W_icon_yystyle'));
@@ -14112,7 +11471,7 @@ throw new Error('YAWF | chat page found, skip following executions');
       });
     });
     css.append('.W_icon_yystyle, .W_icon_yy { display: none !important; }');
-  }, showIcons(['icon_yy_ssp1', 'icon_yy_gqt', 'icon_yy_lol']));
+  });
 
   clean.CleanRuleGroup({
     'vyellow,vgold': approve,
@@ -14122,7 +11481,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     'vip,vipex': member,
     bigfan: bigFan,
   }, function (options) {
-    if (yawf.WEIBO_VERSION !== 7) return;
     const hideSymbol = Object.keys(options).filter(key => options[key]).join(',').split(',');
 
     util.inject(function (rootKey, hideSymbol) {
@@ -14200,9 +11558,7 @@ throw new Error('YAWF | chat page found, skip following executions');
   const yawf = window.yawf;
   const env = yawf.env;
   const util = yawf.util;
-  const css = util.css;
   const backend = yawf.backend;
-  const observer = yawf.observer;
 
   const clean = yawf.rules.clean;
 
@@ -14237,49 +11593,28 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   clean.CleanGroup('nav', () => i18n.cleanNavGroupTitle);
   clean.CleanRule('logo_img', () => i18n.cleanNavLogoImg, 1, {
-    weiboVersion: [6, 7],
+    v7Support: true,
     ainit: function () {
-      if (yawf.WEIBO_VERSION === 6) {
-        observer.dom.add(function replaceLogo() {
-          const box = document.querySelector('.WB_global_nav .gn_logo .box');
-          if (!box) { setTimeout(replaceLogo, 100); return; }
-          const img = box.getElementsByTagName('img')[0];
-          if (!img) return;
-          const logo = document.createElement('span');
-          logo.classList.add('logo');
-          img.replaceWith(logo);
-        });
-      } else {
-        util.inject(function (rootKey) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
 
-          vueSetup.eachComponentVM('weibo-top-nav', function (vm) {
-            Object.defineProperty(vm, 'skinData', { get: () => ({}) });
-          });
-          vueSetup.eachComponentVM('weibo-top-nav-base', function (vm) {
-            Object.defineProperty(vm, 'logoUrl', { get: () => null, set: x => { } });
-          });
-        }, util.inject.rootKey);
-      }
+        vueSetup.eachComponentVM('weibo-top-nav', function (vm) {
+          Object.defineProperty(vm, 'skinData', { get: () => ({}) });
+        });
+        vueSetup.eachComponentVM('weibo-top-nav-base', function (vm) {
+          Object.defineProperty(vm, 'logoUrl', { get: () => null, set: x => { } });
+        });
+      }, util.inject.rootKey);
     },
-    acss: '.WB_global_nav .gn_logo .box img { display: none !important; }',
   });
   clean.CleanRuleGroup({
-    // V7: 那段 CSS 是 V6 的，之后应该直接删掉
-    home: clean.CleanRule('main', () => i18n.cleanNavMain, 1, '[yawf-id="home"] { display: none !important; }', { weiboVersion: [6, 7] }),
-    tv: clean.CleanRule('tv', () => i18n.cleanNavTV, 1, '[yawf-id="tv"] { display: none !important; }', { weiboVersion: [6, 7] }),
-    hot: clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '[yawf-id="find"] { display: none !important; }', { weiboVersion: [6, 7] }),
-    eCom: clean.CleanRule('eCom', () => i18n.cleanNavECom, 1, '[yawf-id="mall"] { display: none !important; }', {
-      weiboVersion: [6, 7],
-      ainit: function () {
-        const hideGame = clean.nav.game.getConfig();
-        if (hideGame) css.append('.gn_set_v2 { display: none !important; }');
-      },
-    }),
-    game: clean.CleanRule('game', () => i18n.cleanNavGame, 1, '[yawf-id="game"] { display: none !important; }', { weiboVersion: [6, 7] }),
+    home: clean.CleanRule('main', () => i18n.cleanNavMain, 1, '', { v7Support: true }),
+    tv: clean.CleanRule('tv', () => i18n.cleanNavTV, 1, '', { v7Support: true }),
+    hot: clean.CleanRule('hot', () => i18n.cleanNavHot, 1, '', { v7Support: true }),
+    eCom: clean.CleanRule('eCom', () => i18n.cleanNavECom, 1, '', { v7Support: true }),
+    game: clean.CleanRule('game', () => i18n.cleanNavGame, 1, '', { v7Support: true }),
   }, function (options) {
-    if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -14338,12 +11673,11 @@ throw new Error('YAWF | chat page found, skip following executions');
       },
     });
   }
-  clean.CleanRule('aria', () => i18n.cleanNavAria, 98, '[yawf-component-tag~="aria"], .gn_set_aria { display: none !important; }', { weiboVersion: [6, 7] });
+  clean.CleanRule('aria', () => i18n.cleanNavAria, 98, '[yawf-component-tag~="aria"] { display: none !important; }', { v7Support: true });
   clean.CleanRule('notice_new', () => i18n.cleanNavNoticeNew, 1, '.WB_global_nav .gn_set_list .W_new_count { display: none !important; }');
-  clean.CleanRule('new', () => i18n.cleanNavNew, 1, '.WB_global_nav .W_new { display: none !important; }', {
-    weiboVersion: [6, 7],
+  clean.CleanRule('new', () => i18n.cleanNavNew, 1, '', {
+    v7Support: true,
     ainit: function () {
-      if (yawf.WEIBO_VERSION !== 7) return;
       util.inject(function (rootKey) {
         const yawf = window[rootKey];
         const vueSetup = yawf.vueSetup;
@@ -14366,12 +11700,8 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   const yawf = window.yawf;
   const util = yawf.util;
-  const observer = yawf.observer;
-  const init = yawf.init;
 
   const i18n = util.i18n;
-  const css = util.css;
-  const priority = util.priority;
 
   const clean = yawf.rules.clean;
 
@@ -14393,82 +11723,11 @@ throw new Error('YAWF | chat page found, skip following executions');
     cleanLeftCount: { cn: '新分组微博计数', tw: '新分組微博計數', en: 'Counts of Feeds by Group' },
   });
 
-  const leftHide = (function () {
-    const ids = [];
-    // 移除一个左栏链接或相关元素
-    const removeNode = function removeNode(node) {
-      const container = node.parentNode;
-      let prev, next;
-      const removeBlank = function (node) {
-        if (node && node.nodeType === Node.TEXT_NODE && node.data.match(/^\s*$/)) {
-          return container.removeChild(node);
-        }
-        if (node && node.nodeType === Node.COMMENT_NODE) {
-          return container.removeChild(node);
-        }
-        return null;
-      };
-      const removeBlankSibling = function (node) {
-        while (removeBlank(node.previousSibling));
-        while (removeBlank(node.nextSibling));
-      };
-      removeBlankSibling(node);
-      prev = node.previousSibling; next = node.nextSibling;
-      // 如果前后都是分割线（连续的分割线）那么应当删掉一个（删掉前面一个）
-      // 如果分割线在开头或末尾，那么应该删掉分割线
-      // 如果前后都没有东西，那么应该连同容器一起删除
-      while ((!prev || prev.matches('.lev_line')) &&
-        (!next || next.matches('.lev_line'))) {
-        let line = null;
-        if (prev?.matches('.lev_line')) line = prev;
-        if (next?.matches('.lev_line')) line = next;
-        if (line) {
-          line = prev || next;
-          removeBlankSibling(line);
-          container.removeChild(line);
-          prev = node.previousSibling;
-          next = node.nextSibling;
-        } else break;
-      }
-      if (node.parentNode) node.parentNode.removeChild(node);
-      if (!prev && !next) removeNode(container);
-    };
-    // 检查是否有未筛选的左栏链接并根据名称判断
-    const listener = function leftNavRemove() {
-      const levs = Array.from(document.querySelectorAll('#v6_pl_leftnav_group .lev[yawf-id]:not([yawf-checked-lev])'));
-      levs.forEach(function (lev) {
-        const id = lev.getAttribute('yawf-id');
-        if (ids.includes(id)) removeNode(lev);
-        else lev.setAttribute('yawf-checked-lev', '');
-      });
-    };
-    css.append('#v6_pl_leftnav_group .lev:not([yawf-checked-lev]) { visibility: hidden; }');
-    init.onLoad(function () {
-      if (yawf.WEIBO_VERSION !== 6) return;
-      observer.dom.add(listener);
-      listener();
-    }, { priority: priority.LAST });
-    return function (id) {
-      return () => { ids.push('leftnav_' + id); };
-    };
-  }());
-
   clean.CleanGroup('left', () => i18n.cleanLeftGroupTitle);
   clean.CleanRule('level', () => i18n.cleanIconsLevel, 1, '.icon_bed[node-type="level"], .W_level_ico, .W_icon_level { display: none !important; }');
-  clean.CleanRule('home', () => i18n.cleanLeftHome, 1, leftHide('home'));
-  clean.CleanRule('fav', () => i18n.cleanLeftFav, 1, leftHide('fav'));
-  clean.CleanRule('like', () => i18n.cleanLeftLike, 1, leftHide('like'));
-  clean.CleanRule('hot', () => i18n.cleanLeftHot, 1, leftHide('hot'));
-  clean.CleanRule('tv', () => i18n.cleanLeftTV, 1, leftHide('tv'));
-  const new_feed = clean.CleanRule('new_feed', () => i18n.cleanLeftNewFeed, 21, leftHide('new'), { weiboVersion: [6, 7] });
-  const friends = clean.CleanRule('friends', () => i18n.cleanLeftFriends, 1, leftHide('friends'), { weiboVersion: [6, 7] });
-  clean.CleanRule('group_to_me', () => i18n.cleanLeftGroupToMe, 1, leftHide('groupsfeed'));
-  const special = clean.CleanRule('special', () => i18n.cleanLeftSpecial, 1, leftHide('special'), { weiboVersion: [6, 7] });
-  clean.CleanRule('whisper', () => i18n.cleanLeftWhisper, 1, leftHide('whisper'));
-  clean.CleanRule('v_plus', () => i18n.cleanLeftVPlus, 1, leftHide('vplus'));
-  clean.CleanRule('new', () => i18n.cleanLeftNew, 1, '.WB_left_nav .lev .W_new, .yawf-WB_left_nav .lev .W_new { display: none !important; }');
-  clean.CleanRule('news', () => i18n.cleanLeftNews, 1, '.WB_left_nav .level_1_Box .W_new_count, .yawf-WB_left_nav .level_1_Box .W_new_count { display: none !important; }');
-  clean.CleanRule('count', () => i18n.cleanLeftCount, 1, '.WB_left_nav .pl_leftnav_group .W_new_count, .WB_left_nav .lev .W_new_count, .yawf-WB_left_nav .pl_leftnav_group .W_new_count, .yawf-WB_left_nav .lev .W_new_count { display: none !important; }');
+  const new_feed = clean.CleanRule('new_feed', () => i18n.cleanLeftNewFeed, 21, '', { v7Support: true });
+  const friends = clean.CleanRule('friends', () => i18n.cleanLeftFriends, 1, '', { v7Support: true });
+  const special = clean.CleanRule('special', () => i18n.cleanLeftSpecial, 1, '', { v7Support: true });
 
   clean.tagElements('Left', [
     '#v6_pl_leftnav_group .lev:not([yawf-id])',
@@ -14494,8 +11753,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     special,
     friends,
   }, function (options) {
-    if (yawf.WEIBO_VERSION !== 7) return;
-
     if (yawf.rules.filter.homepage.newestFeeds.getConfig()) {
       options.new_feed = false;
     }
@@ -14560,10 +11817,9 @@ throw new Error('YAWF | chat page found, skip following executions');
   Object.assign(i18n, {
     cleanRightGroupTitle: { cn: '隐藏模块 - 右栏', tw: '隱藏模組 - 右欄', en: 'Hide modules - Right Column' },
     cleanRightInfo: { cn: '个人信息', tw: '个人信息', en: 'Personal Info' },
-    cleanRightV7Entry: { cn: '切换到新版' },
     cleanRightRanks: { cn: '榜单（新歌榜等）', tw: '榜單（新歌榜等）', en: 'Rank List (Song list, etc.)' },
     cleanRightHotTopic: { cn: '热门话题 / 微博热搜', tw: '熱門話題', en: 'Hot Topic' },
-    cleanRightHotTopicTop: { cn: '置顶热门话题 (V7)' },
+    cleanRightHotTopicTop: { cn: '置顶热门话题' },
     cleanRightInterest: { cn: '可能感兴趣的人', tw: '可能感興趣的人', en: 'You may know' },
     cleanRightService: { cn: '创作者中心' },
     cleanRightMember: { cn: '会员专区', tw: '會員專區', en: 'Weibo VIP' },
@@ -14579,12 +11835,11 @@ throw new Error('YAWF | chat page found, skip following executions');
 
   clean.CleanGroup('right', () => i18n.cleanRightGroupTitle);
   clean.CleanRule('info', () => i18n.cleanRightInfo, 1, '[yawf-id="v6_pl_rightmod_myinfo_myinfo"] { display: none !important; }');
-  clean.CleanRule('v7_entry', () => i18n.cleanRightV7Entry, 91, '[yawf-id="v6_pl_rightmod_myinfo_new_pc_apply"] { display: none !important; }');
   clean.CleanRule('ranks', () => i18n.cleanRightRanks, 1, '#v6_pl_rightmod_rank, [yawf-id="rightmod_taobao_movie"], [yawf-id="rightmod_recom_movie"] { display: none !important; }');
-  const hotSearchTop = clean.CleanRule('hot_topic_top', () => i18n.cleanRightHotTopicTop, 91, '', { weiboVersion: 7 });
-  const hotSearch = clean.CleanRule('hot_topic', () => i18n.cleanRightHotTopic, 1, '[yawf-id="rightmod_zt_hottopic"] { display: none !important; }', { weiboVersion: [6, 7] });
-  const interested = clean.CleanRule('interest', () => i18n.cleanRightInterest, 1, '[yawf-id="rightmod_recom_interest"] { display: none !important; }', { weiboVersion: [6, 7] });
-  const service = clean.CleanRule('service', () => i18n.cleanRightService, 104, '', { weiboVersion: 7 })
+  const hotSearchTop = clean.CleanRule('hot_topic_top', () => i18n.cleanRightHotTopicTop, 91, '', { v7Support: true });
+  const hotSearch = clean.CleanRule('hot_topic', () => i18n.cleanRightHotTopic, 1, '', { v7Support: true });
+  const interested = clean.CleanRule('interest', () => i18n.cleanRightInterest, 1, '', { v7Support: true });
+  const service = clean.CleanRule('service', () => i18n.cleanRightService, 104, '', { v7Support: true });
   clean.CleanRule('member', () => i18n.cleanRightMember, 1, '#v6_trustPagelet_recom_member { display: none !important; }');
   clean.CleanRule('groups', () => i18n.cleanRightGroups, 1, '#v6_pl_rightmod_groups { display: none; }');
   clean.CleanRule('recom_group_user', () => i18n.cleanRightRecomGroupUser, 1, '#v6_pl_rightmod_recomgroupuser { display: none; }');
@@ -14618,7 +11873,6 @@ throw new Error('YAWF | chat page found, skip following executions');
     cardInterested: interested,
     cardService: service,
   }, function (options) {
-    if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, options) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
@@ -14713,7 +11967,6 @@ throw new Error('YAWF | chat page found, skip following executions');
 .B_page .WB_frame { min-height: auto; }
 `, {
     ainit: function () {
-      if (yawf.WEIBO_VERSION !== 7) return;
       util.inject(function (rootKey) {
         const yawf = window[rootKey];
         const vueSetup = yawf.vueSetup;
@@ -14728,16 +11981,16 @@ throw new Error('YAWF | chat page found, skip following executions');
         });
       }, util.inject.rootKey);
     },
-    weiboVersion: [6, 7],
+    v7Support: true,
   });
   clean.CleanRule('feed_outer_tip', () => i18n.cleanFeedOuterTip, 1, {
     acss: '.WB_feed > .W_tips { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'ask', template: () => i18n.cleanFeedOuterTip } },
   });
   clean.CleanRule('feed_inner_tip', () => i18n.cleanFeedInnerTip, 91, {
-    acss: '.WB_feed_detail .W_tips, .yawf-feed-content .yawf-feed-content-tip, .yawf-feed-content .yawf-feed-content-tip-link { display: none !important; }',
+    acss: '.yawf-feed-content .yawf-feed-content-tip-link { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'ask', template: () => i18n.cleanFeedInnerTipDetail } },
-    weiboVersion: [6, 7],
+    v7Support: true,
   });
   clean.CleanRule('feed_tip', () => i18n.cleanFeedCommentTip, 1, {
     acss: '[node-type="feed_privateset_tip"] { display: none !important; }',
@@ -14785,76 +12038,23 @@ throw new Error('YAWF | chat page found, skip following executions');
   });
   clean.CleanRule('source', () => i18n.cleanFeedSource, 1, {
     acss: `
-.yawf-WBV7 .yawf-feed-source-container { display: none !important; }
-
-.yawf-WBV6 .WB_feed_detail .WB_from { height: 26px; overflow: hidden; }
-.yawf-WBV6 .WB_feed_detail .WB_feed_expand .WB_from { height: 16px; }
-.yawf-WBV6 .WB_feed_detail .WB_from::before { content: " "; display: block; float: left; width: 100%; height: 30px; }
-.yawf-WBV6 .WB_feed_detail .WB_from a[date],
-.yawf-WBV6 .WB_feed_detail .WB_from a[yawf-date],
-.yawf-WBV6 .WB_feed_detail .WB_from span[title],
-.yawf-WBV6 .WB_feed_detail .WB_from .yawf-edited { float: left; position: relative; top: -30px; }
-.yawf-WBV6 .WB_feed_detail .WB_from a[date]::after,
-.yawf-WBV6 .WB_feed_detail .WB_from a[yawf-date]::after { content: " "; }
+.yawf-feed-source-container { display: none !important; }
 `,
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanFeedSourceDetail } },
-    weiboVersion: [6, 7],
+    v7Support: true,
   });
   clean.CleanRule('pop', () => i18n.cleanFeedPop, 1, `
-.WB_feed_datail a[action-type="fl_pop"], .WB_feed_datail a[action-type="fl_pop"]+.S_txt3, 
-.WB_handle li[yawf-handle-type="fl_pop"] { display: none !important; }`);
-  clean.CleanRule('like', () => i18n.cleanFeedLike, 1, `
-.yawf-WBV7 .yawf-feed-toolbar-like { display: none !important; }
-
-.yawf-WBV6 a[action-type="feed_list_like"],
-.yawf-WBV6 a[action-type="feed_list_like"]+.S_txt3, 
-.yawf-WBV6 [node-type="multi_image_like"],
-.yawf-WBV6 [action-type="feed_list_image_like"], 
-.yawf-WBV6 [action-type="object_like"], [action-type="like_object"], 
-.yawf-WBV6 .WB_feed_datail a[action-type="fl_like"],
-.yawf-WBV6 .WB_feed_datail a[action-type="fl_like"]+.S_txt3, 
-.yawf-WBV6 .WB_expand .WB_handle.W_fr li:nth-child(3), 
-.yawf-WBV6 .WB_handle li[yawf-handle-type="fl_like"],
-.yawf-WBV6 .WB_handle li[yawf-handle-type="like"] .layer_multipic_preview .pos_icon { display: none !important; }`, { weiboVersion: [6, 7] });
-  clean.CleanRule('like_comment', () => i18n.cleanFeedLikeComment, 1, `
-.yawf-WBV7 .yawf-feed-comment-icon-list [yawf-icon-list-name="like"] { display: none !important; }
-
-.yawf-WBV6 .WB_handle li[yawf-comment-handle-type="like"] { display: none !important; }`, { weiboVersion: [6, 7] });
+`);
+  clean.CleanRule('like', () => i18n.cleanFeedLike, 1, `.yawf-feed-toolbar-like { display: none !important; }`, { v7Support: true });
+  clean.CleanRule('like_comment', () => i18n.cleanFeedLikeComment, 1, `.yawf-feed-comment-icon-list [yawf-icon-list-name="like"] { display: none !important; }`, { v7Support: true });
   clean.CleanRule('like_attitude', () => i18n.cleanFeedLikeAttitude, 1, '.W_layer_attitude { display: none !important; }');
-  clean.CleanRule('forward', () => i18n.cleanFeedForward, 1, `
-.yawf-WBV7 .yawf-feed-toolbar-retweet { display: none !important; }
-
-.yawf-WBV6 a[action-type="feed_list_forward"], a[action-type="feed_list_forward"]+.S_txt3,
-.yawf-WBV6 .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"], .WB_media_expand .WB_handle a.S_func4[href$="?type=repost"]+.S_txt3, 
-.yawf-WBV6 .WB_feed_datail a[action-type="fl_forward"], .WB_feed_datail a[action-type="fl_forward"]+.S_txt3, 
-.yawf-WBV6 .WB_expand .WB_handle.W_fr li:nth-child(1), 
-.yawf-WBV6 .WB_handle li[yawf-handle-type="fl_forward"], .WB_handle li[yawf-handle-type="tab"]:nth-child(2) 
-.yawf-WBV6 { display: none !important; }`, { weiboVersion: [6, 7] });
-  clean.CleanRule('fast_repost', () => i18n.cleanFeedFastRepost, 83, { weiboVersion: 7 }); // 实现在 render
+  clean.CleanRule('forward', () => i18n.cleanFeedForward, 1, `.yawf-feed-toolbar-retweet { display: none !important; }`, { v7Support: true });
+  clean.CleanRule('fast_repost', () => i18n.cleanFeedFastRepost, 83, { v7Support: true }); // 实现在 render
   clean.CleanRule('favorite', () => i18n.cleanFeedFavorite, 1, `
-a[action-type="feed_list_favorite"], a[action-type="feed_list_favorite"]+.S_txt3,
-.WB_feed_datail a[action-type="fl_favorite"], .WB_feed_datail a[action-type="fl_favorite"]+.S_txt3, 
-.WB_handle .WB_row_line li[yawf-handle-type="fl_favorite"] { display: none !important; }`);
+`);
   clean.CleanRule('promote_other', () => i18n.cleanFeedPromoteOther, 1, '.screen_box .layer_menu_list a[action-data*="promote.vip.weibo.com"] { display: none !important; }');
   clean.CleanRule('report', () => i18n.cleanFeedReport, 1, '.screen_box .layer_menu_list a[onclick*="service.account.weibo.com/reportspam"], .WB_handle ul li[yawf-comment-handle-type="report"] { display: none !important; }');
   clean.CleanRule('use_card_background', () => i18n.cleanFeedUseCardBackground, 1, '.screen_box .layer_menu_list a[action-type="fl_cardCover"] { display: none !important; }');
-
-  observer.feed.onBefore(function (feed) {
-    if (yawf.WEIBO_VERSION !== 6) return;
-    const lis = Array.from(feed.querySelectorAll('.WB_feed_type .WB_handle .WB_row_line li, .WB_feed_together .WB_func .WB_handle li'));
-    lis.forEach(li => {
-      let type = li.querySelector('a').getAttribute('action-type');
-      if (!type && li.querySelector('a[suda-uatrack="key=profile_feed&value=popularize_host"]')) type = 'fl_pop';
-      if (!type && li.querySelector('span[title*="评论"], span[title*="評論"], span[title*="comment"]')) type = 'fl_comment'; // 由于用户设置，无法进行评论
-      li.setAttribute('yawf-handle-type', type);
-    });
-    const fwli = Array.from(feed.querySelectorAll('.WB_feed_expand .WB_func .WB_handle li'));
-    if (fwli.length === 3) fwli.forEach(function (li, index) {
-      li.setAttribute('yawf-handle-type', ['fl_forward', 'fl_comment', 'fl_like'][index]);
-    }); else if (fwli.length === 4) fwli.forEach(function (li, index) {
-      li.setAttribute('yawf-handle-type', ['fl_read', 'fl_forward', 'fl_comment', 'fl_like'][index]);
-    });
-  });
 
   // 标记微博评论按钮
   observer.dom.add(function markCommentButton() {
@@ -15014,8 +12214,6 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   const env = yawf.env;
   const util = yawf.util;
   const backend = yawf.backend;
-  const observer = yawf.observer;
-  const init = yawf.init;
 
   const i18n = util.i18n;
 
@@ -15060,100 +12258,39 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 
   clean.CleanGroup('other', () => i18n.cleanOtherGroupTitle);
   clean.CleanRule('ads', () => i18n.cleanOtherAds, 1, {
-    weiboVersion: [6, 7],
-    init: function () {
-      if (yawf.WEIBO_VERSION === 6) {
-        if (env.config.requestBlockingSupported) {
-          backend.onRequest('ads', details => {
-            if (this.isEnabled()) return { cancel: true };
-            return {};
-          });
-        }
-      }
-    },
+    v7Support: true,
     ainit: function () {
-      if (yawf.WEIBO_VERSION === 6) {
-        util.css.append([
-          '[ad-data]', '[feedtype="ad"]',
-          '[id^="ads_"]', '[id^="ad_"]',
-          '[id*="pl_rightmod_ads"]', '[id*="pl_content_biz"]', '[id*="pl_ad_"]', '[id^="sinaadToolkitBox"]',
-          '[class*="WB_ad_"]',
-          '#topicAD', '#topicADButtom', '.WB_feed .popular_buss', '.feed_app_ads', '.W_bigDay',
-          '.WB_feed_yy2016_up_but', '.WB_feed_yy2016_down_but', '#pl_common_ali',
-          '.W_skin_banner',
-          '[node-type="imgBtn"][action-data="canUploadImage=0"]',
-        ].join(',') + ' { display: none !important; } ' +
-          '#wrapAD, .news_logo { visibility: hidden !important; }');
-
-        let version = '';
-        // 检查应当替换为哪种皮肤
-        // 网页中 $CONFIG.skin 给出了用户选择的皮肤
-        const defaultSkin = 'skin058';
-        let targetSkin = defaultSkin;
-        try { targetSkin = init.page.$CONFIG.skin || defaultSkin; } catch (e) { targetSkin = defaultSkin; }
-        if (/skin3[56]\d/.test(targetSkin)) targetSkin = defaultSkin;
-        // 检查网页中是否被插入了广告皮肤，如果有则换成用户选择的（或默认的）皮肤
-        const updateSkin = function updateSkin() {
-          const adskin = document.querySelector('link[href*="/skin35"], link[href*="/skin36"]');
-          if (adskin) {
-            version = new URL(adskin.href).searchParams.get('version');
-            util.debug('ad skin %o(version %o) has been replaced', adskin.href, version);
-            adskin.setAttribute('href', `//img.t.sinajs.cn/t6/skin/${targetSkin}/skin.css?version=${encodeURIComponent(version)}`);
-          }
-          const adskincover = document.querySelector('#skin_cover_s[style*="/skin35"], #skin_cover_s[style*="/skin36"]');
-          if (adskincover) adskincover.style.backgroundImage = `url("//img.t.sinajs.cn/t6/skin/${targetSkin}/images/profile_cover_s.jpg?version=${encodeURIComponent(version)}")`;
-        };
-        observer.dom.add(updateSkin);
-
-        // 一些广告内容的 iframe，如果这些东西只是隐藏没有被摘掉的话，里面的 JavaScript 会不停的报错，直到把你的控制台弄崩
-        const removeAdIframes = function removeAdIframes() {
-          const iframes = Array.from(document.querySelectorAll('iframe[src*="s.alitui.weibo.com"]'));
-          iframes.forEach(function (iframe) {
-            iframe.parentNode.removeChild(iframe);
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+        vueSetup.eachComponentVM('card-hot-search', function (vm) {
+          vm.$watch(function () { return this.bandList; }, function () {
+            const cleanUp = vm.bandList.filter(i => !i.is_ad);
+            if (vm.bandList.length !== cleanUp.length) vm.bandList = cleanUp;
           });
-        };
-        observer.dom.add(removeAdIframes);
+          vm.$watch(function () { return this.TopWord; }, function () {
+            if (vm.TopWord?.is_ad) vm.TopWord = null;
+          });
+        }, { immediate: true });
 
-        // 视频播放完毕之后会自动推荐下一个视频，之前很多是相关推荐，但现在也有不少是广告，所以不单独做一个选项，直接放在这里了
-        observer.dom.add(function videoNoAutoNext() {
-          const close = document.querySelector('.video_box_next [action-type="next_close"]:not([yawf-no-auto-next])');
-          if (!close) return;
-          close.setAttribute('yawf-no-auto-next', '');
-          close.click();
-        });
-      } else {
-        util.inject(function (rootKey) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
-          vueSetup.eachComponentVM('card-hot-search', function (vm) {
-            vm.$watch(function () { return this.bandList; }, function () {
-              const cleanUp = vm.bandList.filter(i => !i.is_ad);
-              if (vm.bandList.length !== cleanUp.length) vm.bandList = cleanUp;
-            });
-            vm.$watch(function () { return this.TopWord; }, function () {
-              if (vm.TopWord?.is_ad) vm.TopWord = null;
-            });
-          }, { immediate: true });
-
-          vueSetup.eachComponentVM('new-hot', function (vm) {
-            vm.$watch(function () { return this.list; }, function () {
-              const list = vm.list;
-              if (Array.isArray(list) && list.some(item => item.realpos)) {
-                for (let i = 0; i < list.length;) {
-                  if (!list[i].realpos) {
-                    list.splice(i, 1);
-                  } else i++;
-                }
+        vueSetup.eachComponentVM('new-hot', function (vm) {
+          vm.$watch(function () { return this.list; }, function () {
+            const list = vm.list;
+            if (Array.isArray(list) && list.some(item => item.realpos)) {
+              for (let i = 0; i < list.length;) {
+                if (!list[i].realpos) {
+                  list.splice(i, 1);
+                } else i++;
               }
-              vm.hasTop = false;
-            });
+            }
+            vm.hasTop = false;
           });
+        });
 
-          vueSetup.transformComponentsRenderByTagName('tips-ad', function () {
-            return function () { return null; };
-          }, { raw: true });
-        }, util.inject.rootKey);
-      }
+        vueSetup.transformComponentsRenderByTagName('tips-ad', function () {
+          return function () { return null; };
+        }, { raw: true });
+      }, util.inject.rootKey);
     },
   });
   if (env.config.requestBlockingSupported) {
@@ -15170,10 +12307,9 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   clean.CleanRule('template', () => i18n.cleanOtherTemplate, 1, '.icon_setskin { display: none !important; }');
   clean.CleanRule('home_tip', () => i18n.cleanOtherHomeTip, 1, '#v6_pl_content_hometip { display: none !important }');
   clean.CleanRule('footer', () => i18n.cleanOtherFooter, 1, {
-    // 直接 display: none 的话，发现页面的左边栏会飘走
-    acss: '.global_footer, .WB_footer { height: 0; overflow: hidden; } [yawf-component-tag*="copy-right"] { display: none !important; }',
+    acss: '[yawf-component-tag*="copy-right"] { display: none !important; }',
     ref: { i: { type: 'bubble', icon: 'warn', template: () => i18n.cleanOtherFooterDetail } },
-    weiboVersion: [6, 7],
+    v7Support: true,
   });
   clean.CleanRule('im', () => i18n.cleanOtherIM, 1, {
     acss: '.WB_webim { display: none !important; }',
@@ -15343,7 +12479,6 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   });
 
   Object.assign(i18n, {
-    navHideName: { cn: '导航栏上的用户名|{{act}} (V6){{i}}', tw: '導覽列上的用戶名|{{act}} (V6){{i}}', en: 'Username on nav bar would be | {{act}} (V6){{i}}' },
     navHideNameReplace: { cn: '替换为“个人主页”', tw: '替換為「個人主頁」', en: 'replaced by text "My Profile"' },
     navHideNameHidden: { cn: '隐藏', tw: '隱藏', en: 'hidden' },
     navHideNameDetail: {
@@ -15352,43 +12487,12 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     navHideNameReplaceText: { cn: '个人主页', tw: '個人主頁', en: 'My Profile' },
   });
 
-  const hideNavName = css.add('.yawf-WBV6 .WB_global_nav .gn_nav_list li.gn_name.S_txt1 { display: none; }');
-  navbar.navHideName = rule.Rule({
-    id: 'layout_nav_hide_name',
-    version: 1,
-    parent: navbar.navbar,
-    template: () => i18n.navHideName,
-    ref: {
-      act: {
-        type: 'select',
-        select: [
-          { value: 'hidden', text: () => i18n.navHideNameHidden },
-          { value: 'replace', text: () => i18n.navHideNameReplace },
-        ],
-      },
-      i: { type: 'bubble', icon: 'ask', template: () => i18n.navHideNameDetail },
-    },
-    init() {
-      if (this.getConfig()) {
-        if (this.ref.act.getConfig() === 'replace') {
-          css.append(`
-.WB_global_nav .gn_nav_list li .gn_name .S_txt1::before { content: "${i18n.navHideNameReplaceText}"; display: block; }
-.WB_global_nav .gn_nav_list li .gn_name .S_txt1 { height: 26px; display: inline-block; width: 4em; }
-`);
-        } else {
-          css.append('.WB_global_nav .gn_nav_list li a.gn_name .S_txt1 { display: none; }');
-        }
-      }
-      hideNavName.remove();
-    },
-  });
-
   Object.assign(i18n, {
-    navHideAvatar: { cn: '导航栏不显示个人头像 (V7)' },
+    navHideAvatar: { cn: '导航栏不显示个人头像' },
   });
-  const hideNavAvatar = css.add('.yawf-WBV7 [class*="Ctrls_avatarItem_"] { visibility: hidden; }');
+  const hideNavAvatar = css.add('[class*="Ctrls_avatarItem_"] { visibility: hidden; }');
   navbar.navHideAvatar = rule.Rule({
-    weiboVersion: 7,
+    v7Support: true,
     id: 'layout_nav_hide_avatar',
     version: 85,
     parent: navbar.navbar,
@@ -15539,10 +12643,10 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   });
 
   Object.assign(i18n, {
-    sidebarShowLiked: { cn: '在首页左侧栏增加 (V7)||{{fav}}我的收藏|{{like}}我的赞' },
+    sidebarShowLiked: { cn: '在首页左侧栏增加||{{fav}}我的收藏|{{like}}我的赞' },
   });
   sidebar.liked = rule.Rule({
-    weiboVersion: 7,
+    v7Support: true,
     id: 'layout_left_liked',
     version: 85,
     parent: sidebar.sidebar,
@@ -15743,9 +12847,9 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
 @media screen and (max-width: 1006px) {
   body[yawf-merge-left] a.W_gotop { margin-left: calc(calc(var(--yawf-feed-width) + 20px) / 2); }
   body[yawf-merge-left="left"] .WB_main .WB_main_c { float: none; }
-  body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; -webkit-transform: scaleX(-1); transform: scaleX(-1); }
+  body[yawf-merge-left="left"] .W_fold { right: auto; left: 0; transform: scaleX(-1); }
   body[yawf-merge-left="left"] .W_fold.W_fold_out { left: 269px; }
-  body[yawf-merge-left="left"] .WB_main_r { right: auto; left: 0px; -webkit-transform: translateX(-100%) translateZ(0px); transform: translateX(-100%) translateZ(0px); }
+  body[yawf-merge-left="left"] .WB_main_r { right: auto; left: 0px; transform: translateX(-100%) translateZ(0px); }
   body[yawf-merge-left="left"] .WB_main_r.W_fold_layer { left: 269px; }
   body[yawf-merge-left="left"] .WB_main_r { direction: rtl; }
   body[yawf-merge-left="left"] .WB_main_r .WB_cardwrap { direction: ltr; }
@@ -15885,39 +12989,32 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
   };
 
   sidebar.showAllGroups = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'layout_side_show_all_groups',
     version: 1,
     parent: sidebar.sidebar,
     template: () => i18n.showAllGroups,
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        css.append(`
-.lev_Box .levmore { display: none !important; }
-.lev_Box [node-type="moreList"] { display: block !important; height: auto !important; }
-`);
-      } else {
-        util.inject(function (rootKey) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
 
-          vueSetup.eachComponentVM('left-nav-home', function (vm) {
-            if (!Array.isArray(vm.customList)) return;
-            vm.customShowCount = Infinity;
-            if (vm.customTabs && Array.isArray(vm.customTabs.list)) {
-              vm.customList = [...vm.customTabs.list];
+        vueSetup.eachComponentVM('left-nav-home', function (vm) {
+          if (!Array.isArray(vm.customList)) return;
+          vm.customShowCount = Infinity;
+          if (vm.customTabs && Array.isArray(vm.customTabs.list)) {
+            vm.customList = [...vm.customTabs.list];
+          }
+          vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+            const { removeChild } = Nodes;
+
+            const moreButton = nodeStruct.querySelector('x-woo-box:last-child');
+            if (nodeStruct.lastChild === moreButton) {
+              removeChild(nodeStruct, moreButton);
             }
-            vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
-              const { removeChild } = Nodes;
-
-              const moreButton = nodeStruct.querySelector('x-woo-box:last-child');
-              if (nodeStruct.lastChild === moreButton) {
-                removeChild(nodeStruct, moreButton);
-              }
-            });
           });
-        }, util.inject.rootKey);
-      }
+        });
+      }, util.inject.rootKey);
     },
   });
 
@@ -16229,49 +13326,20 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 
   Object.assign(i18n, {
     avatarShape: {
-      cn: '统一头像形状为|{{shape}}',
-      hk: '統一頭像形狀為|{{shape}}',
-      en: 'Show all avatars as | {{shape}}',
-    },
-    avatarShapeCircle: {
-      cn: '圆形',
-      hk: '圓形',
-      en: 'Circle',
-    },
-    avatarShapeSquare: {
-      cn: '方形',
-      en: 'Square',
+      cn: '统一头像形状为方形',
+      hk: '統一頭像形狀為方形',
+      en: 'Show all avatars as square',
     },
   });
 
   details.avatarShape = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'layout_avatar_shape',
     version: 1,
     parent: details.details,
     template: () => i18n.avatarShape,
-    ref: {
-      shape: {
-        type: 'select',
-        initial: 'square',
-        select: [
-          { value: 'circle', text: () => i18n.avatarShapeCircle },
-          { value: 'square', text: () => i18n.avatarShapeSquare },
-        ],
-      },
-    },
     ainit() {
-      const shape = this.ref.shape.getConfig();
-      if (yawf.WEIBO_VERSION === 6) {
-        if (shape === 'square') {
-          css.append(`.W_face_radius, .W_person_info .cover .headpic, .PCD_header .pf_photo, .PCD_header .photo_wrap, .PCD_header .pf_photo .photo, .PCD_user_a .picitems .pic_box, .PCD_connectlist .follow_box .mod_pic img, .PCD_ut_a .pic_box, .PCD_counter_b .pic_box, .WB_feed_v3 .WB_sonFeed .WB_face, .WB_feed_v3 .WB_sonFeed .WB_face .face img { border-radius: 0 !important; }`);
-        } else {
-          css.append(`img[usercard], .WB_face img { border-radius: 50% !important; }`);
-        }
-      } else {
-        if (shape === 'circle') return;
-        css.append(`.woo-avatar-hoverMask, .woo-avatar-img, .woo-avatar-main::before { border-radius: 0 !important; }`);
-      }
+      css.append(`.woo-avatar-hoverMask, .woo-avatar-img, .woo-avatar-main::before { border-radius: 0 !important; }`);
     },
   });
 
@@ -16514,7 +13582,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 .yawf-face-items { float: right; margin: 0 8px; }
 .yawf-face-items li { color: transparent; }
 .yawf-face-drop-area { background: rgba(255, 255, 127, 0.5); clear: both; float: right; font-weight: bold; height: 36px; line-height: 36px; margin: -36px 8px 0; opacity: 1; padding: 0; width: 348px; text-align: center; }
-.layer_faces .faces_list { -webkit-user-select: none; -moz-user-select: none; user-select: none; }
+.layer_faces .faces_list { user-select: none; }
 .layer_faces .faces_list li { overflow: hidden; }
 .layer_faces .faces_list img { border: 10px transparent solid; margin: -10px; }
 `);
@@ -17079,7 +14147,7 @@ body[yawf-merge-left] .WB_main_r[yawf-fixed] .WB_main_l { width: 229px; }
 }
 .gn_logo .logo:empty::before { width: 36px; float: left; }
 .gn_logo .logo:empty::after { width: 104px; float: right; background-position: -36px 40%; }
-.gn_logo .logo:empty::after { filter: url("data:image/svg+xml,%3Csvg%20viewBox=%220%200%20183%20276%22%20id=%22img3%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter%20id=%22invert%22%3E%3CfeComponentTransfer%3E%3CfeFuncR%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncG%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncB%20tableValues=%221%200%22%20type=%22table%22/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3C/svg%3E#invert"); -webkit-filter: invert(100%); filter: invert(100%); }
+.gn_logo .logo:empty::after { filter: url("data:image/svg+xml,%3Csvg%20viewBox=%220%200%20183%20276%22%20id=%22img3%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter%20id=%22invert%22%3E%3CfeComponentTransfer%3E%3CfeFuncR%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncG%20tableValues=%221%200%22%20type=%22table%22/%3E%3CfeFuncB%20tableValues=%221%200%22%20type=%22table%22/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3C/svg%3E#invert"); filter: invert(100%); }
 .FRAME_main .WB_global_nav .gn_nav_list li .home em { color: #fa7d3c; }
 .WB_global_nav .S_ficon, .WB_global_nav .S_ficon_dis, .WB_global_nav a.S_ficon_dis:hover, .WB_global_nav a:hover .S_ficon_dis { color: #a6afbf; }
 .WB_global_nav .S_txt1, .WB_global_nav .SW_fun .S_func1 { color: #eee; }
@@ -17201,7 +14269,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 
   if (env.config.externalMenuSupported) {
     userCss.css = rule.Rule({
-      weiboVersion: [6, 7],
+      v7Support: true,
       id: 'custom_css',
       version: 1,
       parent: userCss.userCss,
@@ -17818,7 +14886,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
   };
 
   render.feedRenderFix = rule.Rule({
-    weiboVersion: 7,
+    v7Support: true,
     id: 'feed_render',
     version: 77,
     parent: render.render,
@@ -18000,7 +15068,7 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
   };
 
   layout.smallImage = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'feed_small_image',
     version: 1,
     parent: layout.layout,
@@ -18010,125 +15078,8 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
       i: { type: 'bubble', icon: 'warn', template: () => i18n.smallImageDetail },
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        css.append(`
-.WB_feed.WB_feed_v3 .WB_media_a { margin: -2px 0 0 6px; width: 258px; }
-.WB_feed.WB_feed_v3 .WB_media_a_mn .WB_pic { width: 80px; height: 80px; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic { width: 80px !important; height: 80px !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img { top: 40px !important; left: 40px !important; transform: translate(-50%, -50%); position: relative !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="left:0"][style*="width:110px"] { width: 100% !important; height: auto !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"][style*="height:110px"] { height: 100% !important; width: auto !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"] { top: 0 !important; transform: translateX(-50%) !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="left:0"] { left: 0 !important; transform: translateY(-50%) !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img[style*="top:0"][style*="left:0"] { left: 0 !important; top: 0 !important; transform: none !important; }
-.WB_feed.WB_feed_v4 .WB_media_a_mn .WB_pic img:not([style*="top"]) { max-width; 100%; max-height: 100%; }
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: 120px; max-height: 120px; min-width: 36px; height: auto !important; width: auto !important; }
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-height: 120px; max-width: 120px; width: auto !important; height: auto !important; position: static; -webkit-transform: none; transform: none; }
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not(.yawf-WB_video):not(.WB_video_h5_v2) { width: 120px; height: 80px; min-width: 36px; }
-.WB_feed.WB_feed_v3 .WB_media_a_m4 { width: 172px; }
-.WB_feed.WB_feed_v3 .WB_feed_repeat .WB_media_a_m1 .WB_pic::before { display: none; }
-.WB_feed.WB_feed_v3 .WB_feed_repeat .WB_media_a_m1 .WB_pic img { max-width: 120px; max-height: 120px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec { height: 100px; width: 316px; border: 1px solid rgba(127,127,127,0.3); box-shadow: 0 0 2px rgba(0,0,0,0.15); border-radius: 2px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_pic { height: 100px; width: 100px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_info { height: 88px; width: 202px; padding: 7px 4px 5px 10px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_a .WB_feed_spec_pic { width: 100px; height: 100px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_a .WB_feed_spec_info { width: 200px; height: 88px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_b2 .WB_feed_spec_pic img, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic img { height: auto; min-height: 100px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_pic, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_pic { height: 100px; width: 250px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_b, .WB_feed.WB_feed_v3 .WB_feed_spec_c, .WB_feed.WB_feed_v3 .WB_feed_spec2 { width: 250px; height: auto; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_info { float: right; height: 88px; padding: 7px 4px 5px 10px; width: 202px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info { float: none; height: auto; width: auto; padding: 10px 5px 0; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_b .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec_c .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit, .WB_feed.WB_feed_v3 .WB_feed_spec2 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_tit { font-size: inherit; font-weight: 700; margin: 0 0 6px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_info .WB_feed_spec_cont .WB_feed_spec_brieftxt { line-height: 15px; height: 30px; }
-.WB_feed.WB_feed_v3 .WB_feed_spec_user .W_fl { width: 240px; }
-
-.WB_feed .yawf-WB_pic_more { line-height: 80px; }
-
-.layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a { margin: 0; width: auto; }
-.layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic { max-width: none; max-height: none; min-width: auto; }
-.layer_feedimgshow .WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_pic img { max-width: 260px; max-width: 40vw; max-height: 260px; max-height: 40vh; min-width: auto; }
-
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video.WB_video_h5 { width: auto; height: auto; display: table; }
-.WB_h5video.hv-s1, .WB_h5video.hv-s3-2, .WB_h5video.hv-s3-5 { width: 120px; height: 80px; max-width: 120px; max-height: 80px; min-width: 36px; }
-.WB_h5video.hv-s1 .con-11, .WB_h5video.hv-s3-2 .con-11, .WB_h5video.hv-s3-5 .con-11 { display: none; }
-.WB_h5video.hv-s1 video, .WB_h5video.hv-s3-2 video, .WB_h5video.hv-s3-5 video { max-width: 100%; max-height: 100%; }
-.WB_h5video.hv-s3.hv-s3-2 .con-4,
-.WB_h5video.hv-s3.hv-s3-5 .con-4 { opacity: 1; z-index: 1; }
-.WB_h5video.hv-s3.hv-s3-2:hover .con-6,
-.WB_h5video.hv-s3.hv-s3-5:hover .con-6,
-.WB_h5video.hv-s3.hv-s3-5 .con-3 .box-2 em,
-.WB_h5video .con-3.hv-s3-3 .box-3 { opacity: 0; z-index: 0; }
-.WB_video .wbv-error-display h4 { bottom: 0; }
-
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) { width: 120px; height: 80px; min-width: 36px; }
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .WB_video:not([yawf-video-play]) .wbv-control-bar { display: none !important; }
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .html5-video:not([yawf-video-play]) { max-width: 120px; max-height: 80px; }
-.WB_feed.WB_feed_v3 .WB_media_a_m1 .html5-video:not([yawf-video-play]) .box-3 { display: none !important; }
-
-.WB_card_vote.WB_card_vote .vote_con1 .item { font-size: inherit; line-height: 14px; margin-top: -5px; text-align: left; }
-.WB_card_vote.WB_card_vote .vote_con1 .item_rt { font-size: inherit; line-height: 24px; height: 24px; margin-top: -5px; }
-.WB_card_vote.WB_card_vote .vote_con2 .vote_pic { width: 120px; height: 90px; }
-.WB_card_vote.WB_card_vote .vote_con2 { width: 242px; margin: 0; }
-.WB_card_vote.WB_card_vote .vote_con2 table { margin: 5px 0; }
-.WB_card_vote.WB_card_vote .vote_con2 .vote_pic .bg { font-size: inherit; text-shadow: 0 0 2px black; }
-.WB_card_vote.WB_card_vote .vote_con2 .vote_btn a { margin: 5px 0; }
-.WB_card_vote.WB_card_vote .vote_tit { font-size: inherit; }
-.WB_card_vote.WB_card_vote .vote_share a { line-height: 24px; height: 24px; margin-top: -5px; }
-`);
-        observer.dom.add(function smallVideo() {
-          [{
-            videoSelector: '.WB_video_h5_v2 .WB_h5video_v2:not([yawf-watch-pause])',
-            containerSelector: '.WB_video_h5_v2',
-            isPlaying: video => video.classList.contains('wbv-playing'),
-          }, {
-            videoSelector: '.html5-video .hv-icon:not([yawf-watch-pause])',
-            containerSelector: '.html5-video',
-            isPlaying: video => video.classList.contains('hv-icon-pause'),
-          }].forEach(function ({ videoSelector, containerSelector, isPlaying }) {
-            const videos = Array.from(document.querySelectorAll(videoSelector));
-            videos.forEach(video => {
-              video.setAttribute('yawf-watch-pause', '');
-              const container = video.closest(containerSelector);
-              let videoObserver;
-              const setPlayAttribute = function setPlayAttribute() {
-                const playing = isPlaying(video);
-                if (playing) {
-                  container.setAttribute('yawf-video-play', '');
-                  if (videoObserver) videoObserver.disconnect();
-                  return true;
-                }
-                return false;
-              };
-              if (setPlayAttribute()) return;
-              videoObserver = new MutationObserver(setPlayAttribute);
-              videoObserver.observe(video, { attributes: true, attributeFilter: ['class'], childList: false, characterData: false });
-            });
-          });
-        });
-        const repost = this.ref.repost.getConfig();
-        if (repost) css.append(`
-.WB_feed.WB_feed_v3 .WB_expand_media { margin: 2px 0 8px; padding: 12px 16px 16px; }
-.WB_feed.WB_feed_v3 .WB_expand { margin: 0 0 10px; padding: 10px 16px 13px; }
-.WB_feed.WB_feed_v3 .WB_expand .WB_func { margin: 0; }
-.WB_feed.WB_feed_v3 .WB_expand_media_box { margin-left: 0; margin-right: 0; }
-.WB_feed.WB_feed_v3 .WB_expand .WB_expand_media { padding: 0 0 5px; margin: 0; }
-.WB_feed.WB_feed_v3 .WB_media_view { margin: 6px auto 0; }
-.WB_feed.WB_feed_v3 .WB_media_view, .WB_feed.WB_feed_v3 .WB_media_view .media_show_box li { width: 440px; }
-.WB_feed.WB_feed_v3 .WB_media_view .media_show_box ul { margin-left: -32px; padding-left: 32px; }
-.WB_feed.WB_feed_v3 .artwork_box { width: 440px; }
-.WB_feed.WB_feed_v3 .WB_media_view .media_show_box img { max-width: 440px; height: auto !important; }
-.WB_feed.WB_feed_v3 .layer_view_morepic .view_pic { padding: 0 40px 20px; }
-.WB_feed.WB_feed_v3 .WB_media_view .pic_choose_box .stage_box { width: 440px; }
-`);
-        const feedWidth = layout.increaseFeedWidth.isEnabled() ? layout.increaseFeedWidth.ref.width.getConfig() : 600;
-        if (feedWidth < 650 && repost) css.append(`
-.WB_h5video { margin-left: -22px; }
-.WB_h5video.hv-s1, .WB_h5video.hv-s3-2, .WB_h5video.hv-s3-5 { margin-left: 0; }
-.yawf-WB_video[yawf-video-play] { margin-left: -22px; }
-`);
-      } else {
-        // 单张图片尺寸计算在 render 里
-        css.append(`
+      // 单张图片尺寸计算在 render 里
+      css.append(`
 .yawf-feed-picture-col3 > div { width: 252px; }
 .yawf-feed-picture-col4 > div { width: 332px; }
 .yawf-feed-video { transition: width 0s 0.2s ease; }
@@ -18138,37 +15089,36 @@ body .WB_feed_v3 .WB_face .opt.opt .W_btn_b { width: 48px; }
 .yawf-feed-comment-picture { max-width: 80px; }
 .yawf-feed-card-article { max-width: 240px; }
 `);
-        util.inject(function (rootKey) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
+      util.inject(function (rootKey) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
 
-          // 我们需要他不复用视频组件
-          vueSetup.transformComponentsRenderByTagName('feed-content', function (nodeStruct, Nodes) {
-            const video = nodeStruct.querySelectorAll('x-feed-video');
-            if (video && !video.key) video.key = this.data.id; // 用 mid 很方便
+        // 我们需要他不复用视频组件
+        vueSetup.transformComponentsRenderByTagName('feed-content', function (nodeStruct, Nodes) {
+          const video = nodeStruct.querySelectorAll('x-feed-video');
+          if (video && !video.key) video.key = this.data.id; // 用 mid 很方便
+        });
+        vueSetup.eachComponentVM('feed-video', function (vm) {
+          // 这个变量要存下来，不然到 beforeDestroy 的时候他爹就不是现在这个了
+          const feed = vm.$parent.data;
+          if (!vm.isPlaying && feed._yawf_VideoTouched) {
+            vm.isPlaying = true;
+            vm.$forceUpdate();
+          }
+          vm.$on('hook:beforeDestroy', function () {
+            feed._yawf_VideoTouched = vm.isPlaying;
           });
-          vueSetup.eachComponentVM('feed-video', function (vm) {
-            // 这个变量要存下来，不然到 beforeDestroy 的时候他爹就不是现在这个了
-            const feed = vm.$parent.data;
-            if (!vm.isPlaying && feed._yawf_VideoTouched) {
-              vm.isPlaying = true;
-              vm.$forceUpdate();
+          vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+            const { addClass } = Nodes;
+            if (this.isPlaying) {
+              addClass(nodeStruct, 'yawf-feed-video-actived');
+            } else {
+              addClass(nodeStruct, 'yawf-feed-video-inactive');
             }
-            vm.$on('hook:beforeDestroy', function () {
-              feed._yawf_VideoTouched = vm.isPlaying;
-            });
-            vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
-              const { addClass } = Nodes;
-              if (this.isPlaying) {
-                addClass(nodeStruct, 'yawf-feed-video-actived');
-              } else {
-                addClass(nodeStruct, 'yawf-feed-video-inactive');
-              }
-            });
           });
+        });
 
-        }, util.inject.rootKey);
-      }
+      }, util.inject.rootKey);
     },
   });
 
@@ -18255,15 +15205,13 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
 
   Object.assign(i18n, {
     reorderFeedButton: {
-      cn: '重新排列微博控制按钮 {{i}}||{{0}}|{{1}}|{{2}}|{{3}}|{{4}}',
-      tw: '重新排列微博控制按鈕 {{i}}||{{0}}|{{1}}|{{2}}|{{3}}|{{4}}',
-      en: 'Reorder buttons of feeds {{i}}||{{0}}|{{1}}|{{2}}|{{3}}|{{4}}',
+      cn: '重新排列微博控制按钮 {{i}}||{{0}}|{{1}}|{{2}}',
+      tw: '重新排列微博控制按鈕 {{i}}||{{0}}|{{1}}|{{2}}',
+      en: 'Reorder buttons of feeds {{i}}||{{0}}|{{1}}|{{2}}',
     },
     reorderFeedButtonDetail: {
-      cn: '此外您还可以在版面清理选项卡，或此处，勾选以隐藏“[[clean_feed_pop]]”“[[clean_feed_favorite]]”“[[clean_feed_forward]]”“[[clean_feed_like]]”。',
+      cn: '此外您还可以在版面清理选项卡，或此处，勾选以隐藏“[[clean_feed_forward]]”“[[clean_feed_like]]”。',
     },
-    reorderFeedButtonPop: { cn: '推广', tw: '推廣', en: ' Promote' },
-    reorderFeedButtonFavorite: { cn: '收藏', tw: '收藏', en: 'Favourite' },
     reorderFeedButtonForward: { cn: '转发', tw: '轉發', en: 'Forward' },
     reorderFeedButtonComment: { cn: '评论', tw: '評論', en: 'Comment' },
     reorderFeedButtonLike: { cn: '赞', tw: '讚', en: 'Like' },
@@ -18289,14 +15237,12 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
   };
 
   layout.reorderFeedButton = rule.Rule({
-    weiboVersion: [6, 7],
-    id: 'feed_button_order',
+    v7Support: true,
+    id: 'feed_buttons_order', // 悄悄换个名字，因为之前那个设置没法继承下来
     version: 1,
     parent: layout.layout,
     template: () => i18n.reorderFeedButton,
     ref: Object.assign({}, reorderRefGroup([
-      { value: 'pop', text: () => i18n.reorderFeedButtonPop },
-      { value: 'favorite', text: () => i18n.reorderFeedButtonFavorite },
       { value: 'forward', text: () => i18n.reorderFeedButtonForward },
       { value: 'comment', text: () => i18n.reorderFeedButtonComment },
       { value: 'like', text: () => i18n.reorderFeedButtonLike },
@@ -18304,34 +15250,20 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
       i: { type: 'bubble', icon: 'ask', template: () => i18n.reorderFeedButtonDetail },
     }),
     init() {
-      [0, 1, 2, 3, 4].forEach(key => {
+      [0, 1, 2].forEach(key => {
         keepOrderItemsDiff(this.ref[key]);
       });
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        css.append(`
-.WB_feed.WB_feed_v3 .WB_func .WB_handle li:last-child .line { border-right-width: 1px; }
-.WB_feed.WB_feed_v3 .WB_func .WB_handle ul { overflow: hidden; }
-.WB_feed.WB_feed_v3 .WB_func .WB_handle ul::after {  content: " "; display: block; margin-left: -1px; flex: 0 0 0; order: 10; }
-.WB_handle ul li[yawf-handle-type="fl_read"] { order: 0; }
-${[0, 1, 2, 3, 4].map(index => `
-.WB_handle ul li[yawf-handle-type="fl_${this.ref[index].getConfig()}"] { order: ${index + 1}; }
-`).join('')}
-`);
-      } else {
-        [0, 1, 2, 3, 4].forEach(index => {
-          const config = this.ref[index].getConfig();
-          const selector = {
-            pop: '',
-            favorite: '',
-            forward: '.yawf-feed-toolbar-retweet',
-            comment: '.yawf-feed-toolbar-comment',
-            like: '.yawf-feed-toolbar-like',
-          }[config];
-          if (selector) css.append(`${selector} { order: ${index} }`);
-        });
-      }
+      [0, 1, 2].forEach(index => {
+        const config = this.ref[index].getConfig();
+        const selector = {
+          forward: '.yawf-feed-toolbar-retweet',
+          comment: '.yawf-feed-toolbar-comment',
+          like: '.yawf-feed-toolbar-like',
+        }[config];
+        css.append(`${selector} { order: ${index} }`);
+      });
     },
   });
 
@@ -18416,7 +15348,7 @@ ${[0, 1, 2, 3, 4].map(index => `
   };
 
   content.fontSize = rule.Rule({
-    weiboVersion: 7,
+    v7Support: true,
     id: 'feed_user_screen_name',
     version: 104,
     parent: content.content,
@@ -18488,13 +15420,13 @@ span.yawf-feed-screen-name { font-weight: bold; }
   });
 
   i18n.styleTextFontSize = {
-    cn: '增大微博正文字号为|原大小的{{ratio}}（V7最大200%）',
-    tw: '加大微博內文字體為|原大小的{{ratio}}（V7最大200%）',
-    en: 'Increase font size for weibo content | to {{ratio}} (V7 up to 200%)',
+    cn: '增大微博正文字号为|原大小的{{ratio}}',
+    tw: '加大微博內文字體為|原大小的{{ratio}}',
+    en: 'Increase font size for weibo content | to {{ratio}}',
   };
 
   content.fontSize = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'feed_font_size',
     version: 1,
     parent: content.content,
@@ -18506,40 +15438,17 @@ span.yawf-feed-screen-name { font-weight: bold; }
           { value: '120', text: '120%', style: `font-size: 16px;` },
           { value: '150', text: '150%', style: `font-size: 21px;` },
           { value: '200', text: '200%', style: `font-size: 28px;` },
-          { value: '300', text: '300%', style: `font-size: 42px;` },
         ],
       },
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        const config = {
-          120: { fs: 16, lh: 26, fs2: 14, lh2: 24, h: 20, h2: 18, fs3: 12 },
-          150: { fs: 21, lh: 32, fs2: 18, lh2: 27, h: 25, h2: 23, fs3: 14 },
-          200: { fs: 28, lh: 42, fs2: 24, lh2: 36, h: 33, h2: 29, fs3: 19 },
-          300: { fs: 42, lh: 64, fs2: 36, lh2: 54, h: 50, h2: 46, fs3: 28 },
-        }[this.ref.ratio.getConfig()];
-        const { fs, lh, fs2, lh2, h, h2, fs3 } = config;
-        css.append(`
-.WB_info, .WB_text, .WB_info *, .WB_text * { font-size: ${fs}px !important; line-height: ${lh}px !important; }
-.WB_feed_expand .WB_info *, .WB_feed_expand .WB_text *, .WB_feed_expand .WB_info, .WB_feed_expand .WB_text { font-size: ${fs2}px !important; line-height: ${lh2}px !important; }
-.WB_text .W_btn_b { height: ${h}px !important; }
-.WB_text .W_btn_b, .WB_text .W_btn_b * { line-height: ${h}px !important; font-size: ${fs2}px !important; }
-.WB_feed_expand .WB_text .W_btn_b, .WB_text .W_btn_c, .WB_empty .W_btn_c { height: ${h2}px !important; line-height: ${h2}px !important; }
-.WB_feed_expand .WB_text .W_btn_b, .WB_feed_expand .WB_text .W_btn_b *, .WB_text .W_btn_c *, .WB_empty .W_btn_c * { line-height: ${h2}px !important; font-size: ${fs3}px !important; }
-.W_icon_feedpin, .W_icon_feedhot { height: 16px !important; line-height: 16px !important; }
-.WB_info { margin-bottom: 2px !important; padding-top: 0 !important; line-height: ${fs <= 28 ? 28 : 50}px !important; }
-.yawf-WB_text_size_main, .yawf-WB_text_size { font-size: ${fs}px; line-height: ${lh}px; }
-.yawf-WB_text_size_expand, .WB_feed_expand .yawf-WB_text_size { font-size: ${fs2}px; }
-`);
-      } else {
-        const config = {
-          120: { fs: 16, alh: 20, lh: 26, fs2: 14, lh2: 24 },
-          150: { fs: 21, alh: 24, lh: 32, fs2: 18, lh2: 27 },
-          200: { fs: 28, alh: 32, lh: 42, fs2: 24, lh2: 36 },
-          300: { fs: 28, alh: 32, lh: 42, fs2: 24, lh2: 36 },
-        }[this.ref.ratio.getConfig()];
-        const { fs, lh, fs2, lh2 } = config;
-        css.append(`
+      const config = {
+        120: { fs: 16, alh: 20, lh: 26, fs2: 14, lh2: 24 },
+        150: { fs: 21, alh: 24, lh: 32, fs2: 18, lh2: 27 },
+        200: { fs: 28, alh: 32, lh: 42, fs2: 24, lh2: 36 },
+      }[this.ref.ratio.getConfig()];
+      const { fs, lh, fs2, lh2 } = config;
+      css.append(`
 :root:root { --feed-detail-og-font-size: ${fs}px; --feed-detail-og-line-height: ${lh}px; --feed-detail-re-font-size: ${fs2}px; --feed-detail-re-line-height: ${lh2}px; }
 .yawf-feed-author-line { margin-bottom: 0px !important; font-size: ${fs}px !important; line-height: ${lh}px !important; }
 .yawf-feed-author-box { justify-content: space-between !important; }
@@ -18551,7 +15460,6 @@ span.yawf-feed-screen-name { font-weight: bold; }
 
 .wbpv-big-play-button { z-index: 99; }
 `);
-      }
     },
   });
 
@@ -18562,7 +15470,7 @@ span.yawf-feed-screen-name { font-weight: bold; }
   };
 
   content.expandLong = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'feed_long_expand',
     version: 1,
     parent: content.content,
@@ -18571,8 +15479,6 @@ span.yawf-feed-screen-name { font-weight: bold; }
       count: { type: 'range', min: 140, max: 2000, step: 10, initial: 200 },
       br: { type: 'range', min: 1, max: 60, step: 1, initial: 30 },
     },
-    // V6 这个设置项的相关逻辑实现在 content/rule/filter/common/long.js
-    // V7 实现如下
     init() {
       const expand = this.isEnabled();
       const count = this.ref.count.getConfig();
@@ -18771,7 +15677,7 @@ span.yawf-feed-screen-name { font-weight: bold; }
   });
 
   content.showVoteResult = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'show_vote_result',
     version: 46,
     parent: content.content,
@@ -18780,154 +15686,24 @@ span.yawf-feed-screen-name { font-weight: bold; }
       i: { type: 'bubble', icon: 'warn', template: () => i18n.showVoteResultDetail },
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        const updateVoteByLike = function (feedlike) {
-          const like = feedlike.querySelector('[action-type="fl_like"]');
-          const liked = like.querySelector('[node-type="like_status"]').matches('.UI_ani_praised');
-          const items = feedlike.querySelectorAll('[action-type="feed_list_vote"], [action-type="yawf-feed_list_vote"]');
-          Array.from(items).forEach(item => {
-            item.setAttribute('action-type', liked ? 'feed_list_vote' : 'yawf-feed_list_vote');
-          });
-        };
-        const showVoteResult = async function (vote) {
-          const voteButtons = Array.from(vote.querySelectorAll('[action-type="feed_list_vote"], [action-type="yawf-feed_list_vote"]'));
-          if (!voteButtons.length) return;
-          const voteId = new URLSearchParams(voteButtons[0].getAttribute('action-data')).get('vote_id');
-          if (!voteId) return;
-          const voteResult = await request.voteDetail(voteId);
-          voteButtons.forEach(button => {
-            const actionData = new URLSearchParams(button.getAttribute('action-data'));
-            const id = actionData.get('vote_items');
-            const item = voteResult.vote_info.option_list.find(item => item.id === id);
-            button.dataset.partNum = item.part_num.replace('票', '人');
-            button.dataset.partRatio = item.part_ratio;
-            button.style.setProperty('--part-ratio', item.part_ratio / 100);
-          });
-          const feedlike = vote.closest('.WB_feed_expand, .WB_feed_type');
-          updateVoteByLike(feedlike);
-        };
-        const watchLike = function (/** @type {HTMLElement} */vote) {
-          const feedlike = vote.closest('.WB_feed_expand, .WB_feed_type');
-          const like = feedlike.querySelector('[action-type="fl_like"]');
-          const observer = new MutationObserver(() => { updateVoteByLike(feedlike); });
-          observer.observe(like, { subtree: true, attributes: true, attributeFilter: ['class'] });
-          updateVoteByLike(feedlike);
-        };
-        observer.dom.add(function updateVoteResult() {
-          const voteList = document.querySelectorAll('.WB_card_vote:not([yawf-card-vote])');
-          if (!voteList.length) return;
-          Array.from(voteList).forEach(vote => {
-            vote.setAttribute('yawf-card-vote', 'yawf-card-vote');
-            showVoteResult(vote);
-            watchLike(vote);
-          });
+      const voteBlock = function () {
+        ui.alert({
+          id: 'yawf-vote-block',
+          icon: 'warn',
+          title: i18n.voteTitle,
+          text: i18n.voteText,
         });
-        document.addEventListener('click', event => {
-          const target = event.target;
-          if (!(target instanceof HTMLElement)) return;
-          const vote = target.closest('[action-type="yawf-feed_list_vote"]');
-          if (!vote) return;
-          ui.alert({
-            id: 'yawf-vote-block',
-            icon: 'warn',
-            title: i18n.voteTitle,
-            text: i18n.voteText,
-          });
+      };
+
+      util.inject(function (rootKey, voteBlock) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        vueSetup.transformComponentsRenderByTagName('vote-item', function (nodeStruct, Nodes) {
+          const { addClass } = Nodes;
+          addClass(nodeStruct, this.$style.itemed);
         });
-        css.append(`
-.WB_card_vote.WB_card_vote .vote_con1 .item { position: relative; z-index: 1; overflow: hidden; text-align: left; }
-.WB_card_vote.WB_card_vote .vote_con1 .item::after { content: attr(data-part-num) ; float: right; }
-.WB_card_vote.WB_card_vote .vote_con1 .item::before { content: " "; width: calc(var(--part-ratio) * 100%); top: 0; left: 0; bottom: 0; margin: 0; position: absolute; z-index: -1; }
-.WB_card_vote.WB_card_vote .vote_con2 .vote_btn { position: relative; font-size: 14px; }
-.WB_card_vote.WB_card_vote .vote_con2 .vote_btn a { background: currentColor; border-radius: 0; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn a { margin-right: -2px; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn a { margin-left: -2px; }
-.WB_card_vote.WB_card_vote .vote_con2 .vote_btn::after { content: attr(data-part-num); position: absolute; top: 0; bottom: 0; color: white; line-height: 24px; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn::after { left: 26px; right: auto; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn::after { left: auto; right: 26px; }
-.WB_card_vote.WB_card_vote .vote_con1 .item_rt.S_txt1 .bg,
-.WB_card_vote.WB_card_vote .vote_con1 .item::before { background-color: #80808022; }
-`);
-        const smallImage = feeds.layout.smallImage;
-        if (smallImage.isEnabled()) {
-          css.append(`
-.WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn a { margin-right: -1px; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn a { margin-left: -1px; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fl .vote_btn::after { left: 10px; }
-.WB_card_vote.WB_card_vote .vote_con2 .W_fr .vote_btn::after { right: 10px; }
-`);
-        }
-      } else {
-        const voteBlock = function () {
-          ui.alert({
-            id: 'yawf-vote-block',
-            icon: 'warn',
-            title: i18n.voteTitle,
-            text: i18n.voteText,
-          });
-        };
-
-        util.inject(function (rootKey, voteBlock) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
-
-          vueSetup.eachComponentVM('feed-vote', function (vm) {
-
-            vm.setVote = (function (setVote) {
-              return function (id) {
-                if (!this.isParted) {
-                  const feedData = this.$parent?.data;
-                  if (feedData && !feedData.attitudes_status) {
-                    voteBlock();
-                    return;
-                  }
-                }
-                setVote(id);
-              }.bind(vm);
-            }(vm.setVote));
-
-            vueSetup.transformComponentRender(vm, function (render) {
-              return function (createElement, { builder }) {
-                if (this.voteObject.parted) {
-                  return render.call(this, createElement);
-                }
-                // 将当前的投票元素伪装成已参加过投票的状态
-                const wrap = Object.create(this, {
-                  getAniStyle: { value: this.constructor.options.methods.getAniStyle },
-                  isParted: { value: true },
-                  firstParted: { value: true },
-                  voteObject: {
-                    value: Object.create(this.voteObject, {
-                      parted: { value: 1 },
-                    }),
-                  },
-                });
-                wrap.getAniStyle = wrap.getAniStyle.bind(wrap);
-                const { nodeStruct, Nodes, getRoot } = builder(render.call(wrap, createElement));
-                // 去掉分享投票的按钮
-                const { removeChild, vNode } = Nodes;
-                const share = nodeStruct.querySelector(`[class|="${this.$style.btnB}"]`);
-                removeChild(share.parentNode, share);
-                // 修正投票按钮的事件
-                const buttons = nodeStruct.querySelectorAll('x-woo-panel');
-                if (buttons.length === this.voteObject.vote_list.length) {
-                  Array.from(buttons).forEach((button, index) => {
-                    const optionId = this.voteObject.vote_list[index].id;
-                    const buttonVNode = vNode(button);
-                    buttonVNode.data.nativeOn.click = buttonVNode.data.on.click = () => {
-                      this.vote(optionId);
-                    };
-                  });
-                }
-                return getRoot();
-              };
-            }, { raw: true });
-
-            vm.$forceUpdate();
-          });
-        }, util.inject.rootKey, voteBlock);
-
-      }
+      }, util.inject.rootKey, voteBlock);
     },
   });
 
@@ -19885,7 +16661,6 @@ ${selection ? `
 
   const yawf = window.yawf;
   const env = yawf.env;
-  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
@@ -19893,7 +16668,6 @@ ${selection ? `
   const download = yawf.download;
   const contextmenu = yawf.contextmenu;
   const imageViewer = yawf.imageViewer;
-  const feedParser = yawf.feed;
 
   const feeds = yawf.rules.feeds;
 
@@ -20276,7 +17050,7 @@ ${selection ? `
   });
 
   media.imagePreviewAll = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'image_preview_all',
     version: 50,
     parent: media.media,
@@ -20316,226 +17090,81 @@ ${selection ? `
       });
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        const previewSize = this.ref.count.getConfig();
-        const previewWidth = +previewSize[0];
-        const previewCount = previewSize[0] * previewSize[2] || Infinity;
-        const lastImageMask = this.ref.more.getConfig() === 'mask';
+      const configs = {
+        count: this.ref.count.getConfig(),
+        more: this.ref.more.getConfig(),
+      };
+      util.inject(function (rootKey, configs) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
 
-        observer.feed.onAfter(async function (/** @type {HTMLElement} */feed) {
-          // 收藏页面目前原生不支持，原因不明
-          const officialNotSupport = init.page.type() === 'fav';
-          // 单条微博页面已经预先展开了，所以不能再继续操作了
-          if (document.querySelector('[id^="Pl_Official_WeiboDetail__"]')) return;
-          const ul = feed.querySelector('ul[node-type="fl_pic_list"]');
-          // 如果没有图片，或者已经有第十张图片了，那我们应该不工作
-          if (!ul || ul.querySelector('.li_10')) return;
-          // 首页等官方支持的页面，会标记 over9pic，我们用这个属性来判断
-          if (!officialNotSupport && !ul.getAttribute('action-data').includes('over9pic=1')) return;
-          // 目前部分页面没有支持，我们只能看到满 9 张图，就去检查是不是有第十张
-          if (officialNotSupport && !ul.querySelector('.li_9')) return;
-          const mid = (feedParser.isForward(feed) ? feedParser.omid : feedParser.mid)(feed);
-          const [author] = feedParser.author.id(feed);
-          const original = feedParser.isForward(feed) ? feedParser.original.id(feed) : author;
-          ul.classList.add('yawf-WB_media_a_m9p_loading');
-          /** @type {string[]} */
-          const allImages = await request.getAllImages(original, mid);
-          ul.classList.remove('yawf-WB_media_a_m9p_loading');
-          if (!allImages?.length) return;
-          const imageCount = allImages.length;
-          if (imageCount === 9 && officialNotSupport) return;
-          const pids = allImages.map(img => img.replace(/^.*\/(.*)\..*$/, '$1'));
-          const imgType = type => img => img.replace(/^(.*\/).*(\/.*)$/, (_, d, n) => d + type + n);
-          // 最后一个图片的格式和别人不一样，如果我们要显示的不是9个，就会很奇怪，所以我们删掉再自己加一遍
-          ul.removeChild(ul.querySelector('.li_9'));
-          allImages.forEach((image, index) => {
-            if (index < 8) return;
-            const pid = pids[index];
-            const li = document.createElement('li');
-            li.className = `WB_pic li_${index + 1} S_bg1 S_line2 bigcursor li_focus yawf-li_more`;
-            li.setAttribute('action-data', `isPrivate=0&relation=0&pic_id=${pid}`);
-            li.setAttribute('action-type', 'fl_pics');
-            li.setAttribute('suda-uatrack', `key=tblog_newimage_feed&value=image_feed_unfold:${mid}:${pid}:${author}:0`);
-            const img = li.appendChild(document.createElement('img'));
-            // 因为不知道总宽比的时候不太方便处理 orj360，所以用 thumb300 代替一下
-            img.src = imgType('thumb300')(image);
-            img.style = 'height:110px;width:110px;top:0;left:0;';
-            ul.appendChild(li);
-            if (image.endsWith('.gif')) {
-              const tip = document.createElement('i');
-              tip.className = 'W_icon_tag_v2';
-              tip.textContent = i18n.animatedImage;
-              li.appendChild(tip);
-            }
+        const col = Number(configs.count.split('x')[0]);
+        const row = Number(configs.count.split('x')[1]) || Infinity;
+
+        vueSetup.eachComponentVM('feed-picture', function (vm) {
+          Object.defineProperty(vm, 'inlineNum', {
+            get: function () {
+              return [1, 1, 3, 3, 4, 4, 3, 4, 4, 3][vm.pic_num] || col;
+            },
+            set: function (v) { },
+            enumerable: true,
+            configurable: true,
+          });
+          Object.defineProperty(vm, 'newPics', {
+            get: function () {
+              if (vm.$parent.data._yawf_PictureShowAll) return vm.pics.slice(0);
+              return vm.pics.slice(0, col * row);
+            },
+            set: function (v) { },
+            enumerable: true,
+            configurable: true,
           });
 
-          if (imageCount < 10) return;
-          // 同时保留 WB_media_a_m9
-          ul.classList.add('yawf-WB_media_a_m' + imageCount, 'yawf-WB_media_a_m9p');
-          // 不能用 URLSearchParams 来处理 actionData，因为它需要项目间的逗号不被转义才能正常工作
-          const actionData = ul.getAttribute('action-data').split('&');
-          const setActionData = (key, value) => {
-            const newValue = key + '=' + value.map(encodeURIComponent).join(',');
-            const item = actionData.findIndex(item => item.startsWith(key + '='));
-            if (item !== -1) actionData[item] = newValue;
-            else actionData.push(newValue);
-          };
-          setActionData('clear_picSrc', allImages.map(imgType('mw690')));
-          setActionData('thumb_picSrc', allImages.map(imgType('orj360')));
-          setActionData('pic_ids', pids);
-          setActionData('object_ids', pids.map(pid => '1042018:' + pid));
-          // 微博自己判断的是 over9pic == 1，所以我们用图片数量代替一下这个值
-          // 这样既包括 "over9pic=1" 子串，也保持了 truthy，同时还不是 1
-          setActionData('over9pic', [allImages.length]);
-          // GIF 对应的视频 id 拿不到，所以就不更新了，反正也就是动图放不了罢了
-          ul.setAttribute('action-data', actionData.join('&'));
-
-          if (imageCount > previewCount) {
-            /** @type {HTMLDivElement} */
-            const mediaWrap = ul.closest('.WB_media_wrap');
-            if (lastImageMask) {
-              const lastImage = ul.querySelectorAll('.WB_pic')[previewCount - 1];
-              const mask = document.createElement('span');
-              mask.className = 'yawf-W_icon_tag_9p W_icon_tag_9p';
-              mask.textContent = '+' + (imageCount - previewCount);
-              lastImage.appendChild(mask);
-            } else {
-              // 类似超过 140 字的展开全文一样，我们显示一个查看所有图片的按钮
-              const foldContainer = document.createElement('div');
-              foldContainer.className = 'yawf-WB_media_a_ctrl yawf-WB_text_size';
-              foldContainer.innerHTML = '<a href="javascript:;" class="yawf-WB_media_a_show"><i class="W_ficon ficon_arrow_down">c</i></a><a href="javascript:;" class="yawf-WB_media_a_fold"><i class="W_ficon ficon_arrow_up">d</i></a>';
-              const showButton = foldContainer.querySelector('.yawf-WB_media_a_show');
-              const showText = i18n.previewAllShow.replace('{1}', () => imageCount);
-              showButton.insertBefore(document.createTextNode(showText), showButton.firstChild);
-              const foldButton = foldContainer.querySelector('.yawf-WB_media_a_fold');
-              const foldText = i18n.previewAllFold;
-              foldButton.insertBefore(document.createTextNode(foldText), foldButton.firstChild);
-              showButton.addEventListener('click', () => {
-                mediaWrap.classList.add('yawf-WB_media_a_all');
-              });
-              foldButton.addEventListener('click', () => {
-                const oldHeight = mediaWrap.clientHeight;
-                const oldScrollTop = document.documentElement.scrollTop;
-                mediaWrap.classList.remove('yawf-WB_media_a_all');
-                // 调整滚动条以适应高度变化
-                requestAnimationFrame(function () {
-                  const newHeight = mediaWrap.clientHeight;
-                  document.documentElement.scrollTop = oldScrollTop - oldHeight + newHeight;
-                });
-              });
-              mediaWrap.appendChild(foldContainer);
-            }
+          if (!Object.getOwnPropertyDescriptor(vm.$parent.data, '_yawf_PictureShowAll')) {
+            vm.$parent.$set(vm.$parent.data, '_yawf_PictureShowAll', false);
           }
-        });
 
-        if (Number.isFinite(previewCount)) css.append(`.yawf-WB_media_a_m9p .li_${previewCount} ~ .WB_pic { display: none; }`);
-        css.append(`
-.yawf-WB_media_a_m9p_loading { visibility: hidden; opacity: 0; }
-.yawf-WB_media_a_all .yawf-W_icon_tag_9p { display: none; }
-.yawf-WB_media_a_all .yawf-WB_media_a_m9p .WB_pic { display: block; }
-.yawf-WB_media_a_fold { display: none; }
-.yawf-WB_media_a_show { display: inline; }
-.yawf-WB_media_a_all .yawf-WB_media_a_fold { display: inline; }
-.yawf-WB_media_a_all .yawf-WB_media_a_show { display: none; }
-.yawf-WB_media_a_ctrl { clear: both; margin-left: 10px; padding-top: 4px; }
-`);
-        if (previewWidth === 4) {
-          const smallImage = feeds.layout.smallImage.isEnabled();
-          if (smallImage) {
-            css.append('.WB_feed_v3 .WB_media_a.yawf-WB_media_a_m9p { width: 345px; }');
-          } else {
-            css.append('.WB_feed_v3 .WB_media_a.yawf-WB_media_a_m9p { width: 456px; }');
-          }
-        }
-
-        if (lastImageMask) {
-          document.addEventListener('click', event => {
-            const target = event.target;
-            if (!(target instanceof Element)) return;
-            const mask = target.closest('.yawf-W_icon_tag_9p');
-            if (!mask) return;
-            const mediaWrap = mask.closest('.WB_media_wrap');
-            mediaWrap.classList.add('yawf-WB_media_a_all');
+          const expand = function (event) {
+            vm.$parent.data._yawf_PictureShowAll = true;
             event.stopPropagation();
-          }, true);
-        }
-      } else {
-        const configs = {
-          count: this.ref.count.getConfig(),
-          more: this.ref.more.getConfig(),
-        };
-        util.inject(function (rootKey, configs) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
+          };
 
-          const col = Number(configs.count.split('x')[0]);
-          const row = Number(configs.count.split('x')[1]) || Infinity;
-
-          vueSetup.eachComponentVM('feed-picture', function (vm) {
-            Object.defineProperty(vm, 'inlineNum', {
-              get: function () {
-                return [1, 1, 3, 3, 4, 4, 3, 4, 4, 3][vm.pic_num] || col;
-              },
-              set: function (v) { },
-              enumerable: true,
-              configurable: true,
-            });
-            Object.defineProperty(vm, 'newPics', {
-              get: function () {
-                if (vm.$parent.data._yawf_PictureShowAll) return vm.pics.slice(0);
-                return vm.pics.slice(0, col * row);
-              },
-              set: function (v) { },
-              enumerable: true,
-              configurable: true,
-            });
-
-            if (!Object.getOwnPropertyDescriptor(vm.$parent.data, '_yawf_PictureShowAll')) {
-              vm.$parent.$set(vm.$parent.data, '_yawf_PictureShowAll', false);
+          vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
+            const { removeChild, appendChild, h } = Nodes;
+            const moreIcon = nodeStruct.querySelector('x-woo-box-item x-woo-box');
+            if (moreIcon) {
+              removeChild(moreIcon.parentNode, moreIcon);
             }
-
-            const expand = function (event) {
-              vm.$parent.data._yawf_PictureShowAll = true;
-              event.stopPropagation();
-            };
-
-            vueSetup.transformComponentRender(vm, function (nodeStruct, Nodes) {
-              const { removeChild, appendChild, h } = Nodes;
-              const moreIcon = nodeStruct.querySelector('x-woo-box-item x-woo-box');
-              if (moreIcon) {
-                removeChild(moreIcon.parentNode, moreIcon);
+            if (vm.$parent.data._yawf_PictureShowAll) {
+              // pass
+            } else if (this.pic_num > col * row) {
+              if (configs.more === 'mask') {
+                const lastPic = nodeStruct.querySelector('x-woo-box-item:last-child');
+                const mask = h('woo-box', {
+                  class: [this.$style.mask, this.$style.focusImg],
+                  attrs: { align: 'center', justify: 'center' },
+                }, [
+                  h('span', {
+                    class: this.$style.picNum,
+                    on: { click: expand },
+                  }, ['+' + (this.pic_num - col * row)]),
+                ]);
+                appendChild(lastPic, mask);
+              } else {
+                const more = h('div', {}, [
+                  h('a', {
+                    class: 'viewpic yawf-feed-detail-content-retweet-size yawf-feed-pic-expand',
+                    on: { click: expand },
+                  }, [`查看全部图片（共 ${this.pic_num} 张）`]),
+                ]);
+                appendChild(nodeStruct, more);
               }
-              if (vm.$parent.data._yawf_PictureShowAll) {
-                // pass
-              } else if (this.pic_num > col * row) {
-                if (configs.more === 'mask') {
-                  const lastPic = nodeStruct.querySelector('x-woo-box-item:last-child');
-                  const mask = h('woo-box', {
-                    class: [this.$style.mask, this.$style.focusImg],
-                    attrs: { align: 'center', justify: 'center' },
-                  }, [
-                    h('span', {
-                      class: this.$style.picNum,
-                      on: { click: expand },
-                    }, ['+' + (this.pic_num - col * row)]),
-                  ]);
-                  appendChild(lastPic, mask);
-                } else {
-                  const more = h('div', {}, [
-                    h('a', {
-                      class: 'viewpic yawf-feed-detail-content-retweet-size yawf-feed-pic-expand',
-                      on: { click: expand },
-                    }, [`查看全部图片（共 ${this.pic_num} 张）`]),
-                  ]);
-                  appendChild(nodeStruct, more);
-                }
-              }
-            });
-            vm.$forceUpdate();
+            }
           });
-        }, util.inject.rootKey, configs);
-        css.append('.yawf-feed-pic-expand, .yawf-feed-pic-expand:hover { cursor: pointer; text-decoration: none; }');
-      }
+          vm.$forceUpdate();
+        });
+      }, util.inject.rootKey, configs);
+      css.append('.yawf-feed-pic-expand, .yawf-feed-pic-expand:hover { cursor: pointer; text-decoration: none; }');
     },
   });
 
@@ -20602,7 +17231,7 @@ ${selection ? `
   });
 
   media.useBuiltInVideoPlayer = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'feed_built_in_video_player',
     version: 60,
     parent: media.media,
@@ -20621,211 +17250,105 @@ ${selection ? `
       i: { type: 'bubble', icon: 'warn', template: () => i18n.useBuiltInVideoPlayerDetail },
     },
     ainit() {
-      if (yawf.WEIBO_VERSION === 6) {
-        const rule = this;
-        const getVideoSource = function (videoSources) {
-          const videoSourceData = new URLSearchParams(videoSources);
-          const quality = rule.ref.quality.getConfig();
-          const qualityTypes = [];
-          const allKeys = Array.from(videoSourceData).map(([key]) => key);
-          if (quality === 'best') {
-            const available = allKeys.filter(Number).sort((x, y) => y - x);
-            qualityTypes.push(...available.map(q => String(q)));
+      const rule = this;
+      const configs = {
+        memorize: this.ref.memorize.getConfig(),
+        volume: this.ref.volume.getConfig(),
+        quality: this.ref.quality.getConfig(),
+      };
+
+      const updateVolume = function (volume) {
+        if (typeof volume !== 'number') return;
+        if (volume < 0 || volume > 100 || !Number.isFinite(volume)) return;
+        rule.ref.volume.setConfig(Math.round(volume));
+      };
+
+      util.inject(function (rootKey, configs, updateVolume) {
+        const yawf = window[rootKey];
+        const vueSetup = yawf.vueSetup;
+
+        const { quality, memorize } = configs;
+        let volume = configs.volume;
+
+        const setVolume = function (video) {
+          const target = Math.round(volume) / 100;
+          if (video.paused && video.volume !== target) {
+            video.volume = target;
           }
-          qualityTypes.push(videoSourceData.get('qType'), ...allKeys);
-          const qualityType = qualityTypes.find(q => /^https?(?::|%3A)/i.test(videoSourceData.get(q)));
-          let videoSource = videoSourceData.get(qualityType);
-          // 有时候会被转义两次，所以要再额外处理一次，原因不明
-          if (/^https?%3A/i.test(videoSource)) {
-            videoSource = decodeURIComponent(videoSource);
-          }
-          // http 会直接被浏览器拦掉，但是有的历史数据是 http
-          videoSource = videoSource.replace(/^http:/, 'https:');
-          return videoSource;
         };
-        const replaceWeiboVideoPlayer = function replaceWeiboVideoPlayer() {
-          const containers = document.querySelectorAll('li.WB_video[node-type="fl_h5_video"][video-sources]');
-          containers.forEach(function (container) {
-            const smallImage = yawf.rules.feeds.layout.smallImage.getConfig();
-            const cover = container.querySelector('[node-type="fl_h5_video_pre"] img');
-            if (!cover) return;
-            const video = container.querySelector('video');
-            if (video) video.src = 'data:text/plain,42';
-            const videoSource = getVideoSource(container.getAttribute('video-sources'));
-            const newContainer = document.createElement('li');
-            newContainer.className = container.className;
-            newContainer.classList.add('yawf-WB_video');
-            const newVideo = document.createElement('video');
-            newVideo.poster = cover.src;
-            newVideo.src = videoSource;
-            newVideo.preload = 'none';
-            newVideo.controls = !smallImage;
-            newVideo.autoplay = false;
-            const updatePlayState = function () {
-              const isPlaying = !newVideo.paused || newVideo.seeking;
-              if (isPlaying) newContainer.setAttribute('yawf-video-play', '');
-              else newContainer.removeAttribute('yawf-video-play');
-              if (smallImage) newVideo.controls = isPlaying;
-            };
-            newVideo.addEventListener('play', updatePlayState);
-            newVideo.addEventListener('pause', updatePlayState);
-            if (smallImage) {
-              newContainer.addEventListener('click', () => {
-                if (!newContainer.hasAttribute('yawf-video-play')) newVideo.play();
-              });
-              const tip = document.createElement('i');
-              tip.className = 'W_icon_tag_v2';
-              tip.textContent = i18n.mediaVideoType;
-              newContainer.appendChild(tip);
-            }
-            newVideo.volume = rule.ref.volume.getConfig() / 100;
-            if (rule.ref.memorize.getConfig()) {
-              newVideo.addEventListener('volumechange', () => {
-                rule.ref.volume.setConfig(Math.round(newVideo.volume * 100));
-              });
-              newVideo.addEventListener('play', () => {
-                newVideo.volume = rule.ref.volume.getConfig() / 100;
-              });
-            }
-            newContainer.appendChild(newVideo);
-            container.parentNode.replaceChild(newContainer, container);
-          });
+        const onClick = function (event) {
+          this.isPlaying = true;
+          setVolume(event.target);
+          this.$refs.video.play();
         };
-        observer.dom.add(replaceWeiboVideoPlayer);
-        css.append(`
-li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video_pre"],
-li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video_disp"] { display: none !important; }
-.yawf-WB_video { transition: width, height 0.2s; }
-.yawf-WB_video video { width: 100%; height: 100%; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; }
-.WB_media_a .WB_video.yawf-WB_video { cursor: unset; }
-.yawf-WB_video .W_icon_tag_v2 { z-index: 1; }
-.WB_video[yawf-video-play] .W_icon_tag_v2 { display: none !important; }
-`);
-        util.inject(function () {
-          const FakeVideoPlayer = function e() { };
-          FakeVideoPlayer.prototype.thumbnail = function () { };
-          FakeVideoPlayer.prototype.playStatus = function () { };
-          if (window.VideoPlayer) {
-            window.VideoPlayer = FakeVideoPlayer;
-            return;
+        const onPlay = function (event) {
+          this.isPlaying = true;
+          setVolume(event.target);
+        };
+        const onVolumechange = function (event) {
+          if (!memorize) return;
+          const video = event.target;
+          volume = Math.round(video.volume * 100);
+          updateVolume(volume);
+          Array.from(document.querySelectorAll('.yawf-feed-video')).forEach(setVolume);
+        };
+        const onLoadstart = function (event) {
+          setVolume(event.target);
+        };
+
+        vueSetup.transformComponentsRenderByTagName('feed-video', function (nodeStruct, Nodes) {
+          const { removeChild, appendChild, h } = Nodes;
+
+          const isPlaying = this.isPlaying;
+          // 去掉原本渲染的视频播放器
+          while (nodeStruct.firstChild) {
+            removeChild(nodeStruct, nodeStruct.firstChild);
           }
-          let globalVideoPlayer = void 0;
-          Object.defineProperty(window, 'VideoPlayer', {
-            get() { return globalVideoPlayer; },
-            set(_) { globalVideoPlayer = FakeVideoPlayer; },
-            enumerable: true,
-            configurable: false,
-          });
+          // 我们自己画一个视频播放器上去
+          let url = null;
+          if (quality === 'best') try {
+            const playback = this.infos.media_info.playback_list.find(x => x.play_info?.url);
+            url = playback.play_info.url;
+          } catch (e) { /* ignore */ }
+          if (!url) url = this.infos.media_info.stream_url;
+          const videoWrap = h('div', {
+            ref: 'videoWrapper',
+            class: [this.$style.videoBox, 'yawf-video-box'],
+          }, [h('div', {
+            ref: 'videoContainer',
+            class: [this.$style.placeholder, 'yawf-video-placeholder'],
+          }, [h('div', {
+            class: [this.$style.video, 'yawf-video-container'],
+          }, [h('div', {
+            class: [this.$style.video, 'wbp-video', isPlaying ? 'yawf-feed-video-actived' : null],
+          }, [h('video', {
+            ref: 'video',
+            class: ['yawf-video', 'yawf-feed-video', 'wbpv-tech'],
+            attrs: {
+              src: url.replace(/^https?:\/\//, '//'),
+              poster: this.thumbnail.replace(/^https?:\/\//, '//'),
+              preload: 'auto',
+              controls: isPlaying ? true : false,
+            },
+            on: {
+              click: isPlaying ? null : onClick.bind(this),
+              play: onPlay.bind(this),
+              volumechange: onVolumechange.bind(this),
+              loadstart: onLoadstart.bind(this),
+            },
+          })])])])]);
+          appendChild(nodeStruct, videoWrap);
         });
-        // 这几行分别是不显示视频弹层按钮，显示全屏按钮，以及点视频时不弹层
-        // 因为直播视频没办法替换成原生播放器，所以这两个功能还需要保留
-        // 这里直接把这几个功能放在这里，不单独做一个功能了
-        css.append(`
-.wbv-pop-control { display: none !important; }
-.wbv-fullscreen-control { display: block !important; }
-.wbv-pop-layer { display: none !important; }
-`);
-      } else {
-        const rule = this;
-        const configs = {
-          memorize: this.ref.memorize.getConfig(),
-          volume: this.ref.volume.getConfig(),
-          quality: this.ref.quality.getConfig(),
-        };
 
-        const updateVolume = function (volume) {
-          if (typeof volume !== 'number') return;
-          if (volume < 0 || volume > 100 || !Number.isFinite(volume)) return;
-          rule.ref.volume.setConfig(Math.round(volume));
-        };
+      }, util.inject.rootKey, configs, updateVolume);
 
-        util.inject(function (rootKey, configs, updateVolume) {
-          const yawf = window[rootKey];
-          const vueSetup = yawf.vueSetup;
-
-          const { quality, memorize } = configs;
-          let volume = configs.volume;
-
-          const setVolume = function (video) {
-            const target = Math.round(volume) / 100;
-            if (video.paused && video.volume !== target) {
-              video.volume = target;
-            }
-          };
-          const onClick = function (event) {
-            this.isPlaying = true;
-            setVolume(event.target);
-            this.$refs.video.play();
-          };
-          const onPlay = function (event) {
-            this.isPlaying = true;
-            setVolume(event.target);
-          };
-          const onVolumechange = function (event) {
-            if (!memorize) return;
-            const video = event.target;
-            volume = Math.round(video.volume * 100);
-            updateVolume(volume);
-            Array.from(document.querySelectorAll('.yawf-feed-video')).forEach(setVolume);
-          };
-          const onLoadstart = function (event) {
-            setVolume(event.target);
-          };
-
-          vueSetup.transformComponentsRenderByTagName('feed-video', function (nodeStruct, Nodes) {
-            const { removeChild, appendChild, h } = Nodes;
-
-            const isPlaying = this.isPlaying;
-            // 去掉原本渲染的视频播放器
-            while (nodeStruct.firstChild) {
-              removeChild(nodeStruct, nodeStruct.firstChild);
-            }
-            // 我们自己画一个视频播放器上去
-            let url = null;
-            if (quality === 'best') try {
-              const playback = this.infos.media_info.playback_list.find(x => x.play_info?.url);
-              url = playback.play_info.url;
-            } catch (e) { /* ignore */ }
-            if (!url) url = this.infos.media_info.stream_url;
-            const videoWrap = h('div', {
-              ref: 'videoWrapper',
-              class: [this.$style.videoBox, 'yawf-video-box'],
-            }, [h('div', {
-              ref: 'videoContainer',
-              class: [this.$style.placeholder, 'yawf-video-placeholder'],
-            }, [h('div', {
-              class: [this.$style.video, 'yawf-video-container'],
-            }, [h('div', {
-              class: [this.$style.video, 'wbp-video', isPlaying ? 'yawf-feed-video-actived' : null],
-            }, [h('video', {
-              ref: 'video',
-              class: ['yawf-video', 'yawf-feed-video', 'wbpv-tech'],
-              attrs: {
-                src: url.replace(/^https?:\/\//, '//'),
-                poster: this.thumbnail.replace(/^https?:\/\//, '//'),
-                preload: 'auto',
-                controls: isPlaying ? true : false,
-              },
-              on: {
-                click: isPlaying ? null : onClick.bind(this),
-                play: onPlay.bind(this),
-                volumechange: onVolumechange.bind(this),
-                loadstart: onLoadstart.bind(this),
-              },
-            })])])])]);
-            appendChild(nodeStruct, videoWrap);
-          });
-
-        }, util.inject.rootKey, configs, updateVolume);
-
-        css.append(String.raw`
+      css.append(String.raw`
 .yawf-feed-video .wbp-video {width: 100%; height: 100%; }
 .yawf-feed-video .wbp-video:not(.yawf-feed-video-actived)::before { content: "\e001"; font-family: krvdficon; font-weight: 400; font-style: normal; font-size: 36px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2; opacity: 0.85; text-shadow: 0 2px 4px rgba(0,0,0,.2); pointer-events: none; }
 .yawf-feed-video .wbp-video:not(.yawf-feed-video-actived):hover::before { color: #ff8200; }
 .yawf-video-container { position: absolute; top: 0; right: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; overflow: hidden; }
 `);
 
-      }
     },
   });
 
@@ -20835,7 +17358,6 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
 ; (function () {
 
   const yawf = window.yawf;
-  const init = yawf.init;
   const util = yawf.util;
   const rule = yawf.rule;
   const observer = yawf.observer;
@@ -20900,8 +17422,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
         event.stopPropagation();
         event.preventDefault();
         const feed = feedParser.feedNode(button);
-        const $CONFIG = init.page.$CONFIG;
-        const success = await request.feedFavorite(feed, { $CONFIG });
+        const success = await request.feedFavorite(feed, { location: null });
         if (!success) {
           dialog.alert({
             id: 'yawf-favorite-fail',
@@ -20993,7 +17514,7 @@ li.WB_video[node-type="fl_h5_video"][video-sources] > div[node-type="fl_h5_video
   });
 
   details.feedLinkNewTab = rule.Rule({
-    weiboVersion: 7,
+    v7Support: true,
     id: 'feed_link_new_tab',
     version: 85,
     parent: details.details,
@@ -21677,14 +18198,11 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 
       collection('whiteKeywords', 'filter_content_text_show.items', keywordMapper);
       collection('blackKeywords', 'filter_content_text_hide.items', keywordMapper);
-      collection('grayKeywords', 'filter_content_text_fold.items', keywordMapper);
       collection('whiteKeywords', 'filter_content_regex_show.items', regexMapper);
       collection('blackKeywords', 'filter_content_regex_hide.items', regexMapper);
-      collection('grayKeywords', 'filter_content_regex_fold.items', regexMapper);
       collection('userBlacklist', 'filter_author_id_hide.items', userIdMapper);
       collection('userBlacklist', 'filter_original_id_hide.items', userIdMapper);
       collection('sourceKeywords', 'filter_source_text_hide.items', textMapper);
-      collection('sourceGrayKeywords', 'filter_source_text_fold.items', textMapper);
       collection('URLKeywords', 'filter_comment_name_show.items', textMapper);
 
       rule('filterOthersOnly', 'filter_my_feed');
@@ -21855,7 +18373,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   let wbpConfig = null;
 
   backup.importExport = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'script_import_export',
     version: 1,
     parent: backup.backup,
@@ -21863,24 +18381,14 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       const rule = this;
       const container = document.createElement('span');
       container.className = 'yawf-config-item yawf-config-rule';
-      if (yawf.WEIBO_VERSION === 6) {
-        container.innerHTML = '<label><input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><span class="W_btn_b yawf-import" style="cursor: pointer"><span class="W_f14"></span></span></label><a class="W_btn_b yawf-export" href="javascript:;"><span class="W_f14"></span></a><a class="W_btn_b yawf-reset" href="javascript:;"><span class="W_f14"></span></a>';
-      } else {
-        container.innerHTML = '<input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-import"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-export"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-reset"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
-      }
+      container.innerHTML = '<input type="file" style=" width: 1px; height: 1px; margin: 0 -1px 0 0; opacity: 0;" /><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-import"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-export"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button><button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-reset"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
       const importInput = container.querySelector('input');
       const importButton = container.querySelector('.yawf-import');
       const exportButton = container.querySelector('.yawf-export');
       const resetButton = container.querySelector('.yawf-reset');
-      if (yawf.WEIBO_VERSION === 6) {
-        importButton.querySelector('.W_f14').textContent = i18n.configImportButton;
-        exportButton.querySelector('.W_f14').textContent = i18n.configExportButton;
-        resetButton.querySelector('.W_f14').textContent = i18n.configResetButton;
-      } else {
-        importButton.querySelector('.woo-button-content').textContent = i18n.configImportButton;
-        exportButton.querySelector('.woo-button-content').textContent = i18n.configExportButton;
-        resetButton.querySelector('.woo-button-content').textContent = i18n.configResetButton;
-      }
+      importButton.querySelector('.woo-button-content').textContent = i18n.configImportButton;
+      exportButton.querySelector('.woo-button-content').textContent = i18n.configExportButton;
+      resetButton.querySelector('.woo-button-content').textContent = i18n.configResetButton;
       const readFile = async function (file) {
         if (file.size > (1 << 24)) throw new RangeError();
         return new Promise(resolve => {
@@ -21930,11 +18438,9 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
         }
         importData({ config, source });
       });
-      if (yawf.WEIBO_VERSION === 7) {
-        importButton.addEventListener('click', event => {
-          importInput.click();
-        });
-      }
+      importButton.addEventListener('click', event => {
+        importInput.click();
+      });
       exportButton.addEventListener('click', event => {
         if (exportButton.classList.contains('yawf-export-busy')) return;
         exportButton.classList.add('yawf-export-busy');
@@ -21950,7 +18456,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
         };
         const text = JSON.stringify(data, null, 2);
         const blob = new Blob([text], { type: 'application/json' });
-        const username = yawf.WEIBO_VERSION === 6 ? init.page.$CONFIG.nick : init.page.config.user.screen_name;
+        const username = init.page.config.user.screen_name;
         const date = new Date();
         const dateStr = date.toISOString().replace(/-|T.*/g, '');
         const filename = download.filename(`${username}-${i18n.configFilename}-${dateStr}.json`);
@@ -21981,17 +18487,9 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
       });
       if (wbpConfig) try {
         const wrap = document.createElement('div');
-        if (yawf.WEIBO_VERSION === 6) {
-          wrap.innerHTML = '<a class="W_btn_b yawf-import-wbp" href="javascript:;"><span class="W_f14"></span></a>';
-        } else {
-          wrap.innerHTML = '<button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-import-wbp"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
-        }
+        wrap.innerHTML = '<button class="woo-button-main woo-button-flat woo-button-primary woo-button-s woo-button-round woo-dialog-btn yawf-import-wbp"><span class="woo-button-wrap"><span class="woo-button-content"></span></span></button>';
         const importWbpButton = wrap.querySelector('.yawf-import-wbp');
-        if (yawf.WEIBO_VERSION === 6) {
-          importWbpButton.querySelector('.W_f14').textContent = i18n.configImportWbpButton;
-        } else {
-          importWbpButton.querySelector('.woo-button-content').textContent = i18n.configImportWbpButton;
-        }
+        importWbpButton.querySelector('.woo-button-content').textContent = i18n.configImportWbpButton;
         importWbpButton.addEventListener('click', event => {
           importData(wbpConfig);
         });
@@ -22362,7 +18860,7 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   };
 
   debug.enable = rule.Rule({
-    weiboVersion: [6, 7],
+    v7Support: true,
     id: 'script_enable_debug',
     version: 1,
     parent: debug.debug,
@@ -22514,185 +19012,8 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
 }());
 //#endregion
 //#region @require yaofang://content/main/entry.js
-// 这个文件用于向界面上添加漏斗图标和菜单项
-
+// 这个文件用于向界面上添加菜单项
 ; (function () {
-
-  const yawf = window.yawf;
-  const util = yawf.util;
-  const init = yawf.init;
-  const observer = yawf.observer;
-  const pagemenu = yawf.pagemenu;
-
-  const i18n = util.i18n;
-
-  const rule = yawf.rule;
-
-  i18n.filterMenuItem = {
-    cn: '药方设置',
-    tw: '藥方設定',
-    en: 'YAWF Settings',
-  };
-
-  // 缩小搜索框宽度以留出漏斗按钮的位置
-  const searchCss = `
-.WB_global_nav .gn_search_v2 { width: 118px !important; }
-.WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 75px !important; }
-.gn_topmenulist_search { width: 120px !important; }
-@media screen and (min-width:1295px) {
-  .WB_global_nav .gn_search_v2 { width: 375px !important; }
-  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 332px !important; }
-  .gn_topmenulist_search { width: 377px !important; }
-}
-@media screen and (max-width:1006px) {
-  .WB_global_nav .gn_search_v2 { width: 55px !important; }
-  .WB_global_nav .gn_search_v2 .placeholder, .WB_global_nav .gn_search_v2 .W_input { width: 12px !important; }
-  .gn_topmenulist_search { width: 57px !important; }
-}
-.gn_topmenulist_search { min-width: 140px !important; }
-`;
-  // 添加漏斗图标的定义
-  const iconCss = `
-.gn_filter .W_ficon { font-family: "yawf-iconfont" !important; }
-@font-face { font-family: "yawf-iconfont"; font-style: normal; font-weight: normal; src: url("data:image/woff;base64,d09GRk9UVE8AAAPIAAoAAAAABbQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABDRkYgAAAA9AAAANUAAADot8EQFkZGVE0AAAHMAAAAGgAAABxtAw0mT1MvMgAAAegAAABJAAAAYFmdYldjbWFwAAACNAAAADgAAAFCAA0DAGhlYWQAAAJsAAAAMAAAADYD5a1oaGhlYQAAApwAAAAdAAAAJAaAA4BobXR4AAACvAAAAAgAAAAICAAAd21heHAAAALEAAAABgAAAAYAAlAAbmFtZQAAAswAAADkAAAB1Hh5OPRwb3N0AAADsAAAABYAAAAg/4YAM3icVY2xagJBFADfO+9O1GNNJBcLFwWxPLUXAumvDekPQUmjTYjYCNbP0sLO+Ak2NsLWfkN+ZN/ebiTaBG6qqWYQfB8QUSyzxaT/MZ7PJvPZJ6AHCC/c8liWuOlvImxXofL1PiT6l6isa7aZt00SSFjVJcCDhPWjBCHhpwHePSGgVQgXLzdG4CF230hxqlApc1El9ZwP+HgdhMqtYk7NxaVlkVdMEn+T3bkeuY7dE3HH7rgX8PD3NT7oc6gzfXJT0pk9kT0HIt8+UbzYm4RCiqp/hZJWXgAAAHicY2BgYGQAgjO2i86D6AtJW7VhNABKVQagAAB4nGNgZmFg/MLAysDBNJPpDAMDQz+EZnzNYMzIycDAxMAGJKGAkQEJBKS5pjA4MEQyRDLr/NdhiGGawdCMUAPkKQAhIwBYTwumAAAAeJxjYGBgZoBgGQZGBhCwAfIYwXwWBgUgzQKEIH7k//8Q8v8KqEoGRjYGGJP6gGYGUxcAAJgrBwx4nGNgZGBgAOK+F//94vltvjJwszCAwIWkrdpwuvx/LXMX0wwgl4OBCSQKAFMCC7x4nGNgZGBgmvG/liGGhQEEmLsYGBlQARMAU6MDCAAAAAQAAAAEAAB3AABQAAACAAB4nJWPwWoCMRCGv+gqihV6KB7EQ85ClmTxJL12n0C8i+zKXjawCuKLeOn79EH6BH2ETnSglFJoA0m+mf+fzAR44IohLcOUhXKPEc/KfZa8KmfieVceMDEj5SFT48VpsrFk5reqxD0epfrOfTa8KGfieVMeMONDecjcPHFhx5kaR8OeSCuczhNcdufaNfvY1rGV8If+JZWaSnfHgQpLQY6Xey379yZ3PbASLYjfSZ2/xZTydBm7Q2WL3Nu1/TaOxGHlgneFD+L9+y+2MlzHUXxJT63TmGyr7tjE1obc/+O1T5RwTOJ4nGNgZgCD/80MRkCKkQENAAAoVQG5AAA=") format("woff"); }
-.gn_topmenulist_yawf { top: 34px; right: -17px; width: 134px; }
-.yawf-drop-area-active .gn_topmenulist_yawf { display: none; }
-`;
-
-  const searchStyle = util.css.add(searchCss);
-  const iconStyle = util.css.add(iconCss);
-  init.onDeinit(() => {
-    searchStyle.remove();
-    iconStyle.remove();
-  });
-
-  const onClick = function (event, tab = null) {
-    try {
-      rule.dialog(tab);
-    } catch (e) { util.debug('Error while prompting dialog: %o', e); }
-    event.preventDefault();
-  };
-
-  // 给漏斗图标添加一个菜单
-  const addScriptMenu = function (container) {
-    const menuList = document.createElement('div');
-    menuList.innerHTML = '<div class="gn_topmenulist gn_topmenulist_yawf" node-type="msgLayer" style="display: none;"><ul></ul><div class="W_layer_arrow"><span class="W_arrow_bor W_arrow_bor_t"><i class="S_line3"></i><em class="S_bg2_br"></em></span></div></div>';
-    container.appendChild(menuList.firstChild);
-    const dropdown = container.querySelector('.gn_topmenulist_yawf');
-    const ul = dropdown.querySelector('ul');
-    // 允许其他功能向菜单里面塞东西
-    pagemenu.ready(ul);
-    // 在鼠标移入或获得焦点时展示下拉菜单
-    const addTempClassName = async function (classNames, delay) {
-      await new Promise(resolve => setTimeout(resolve, 0));
-      dropdown.classList.add(...classNames);
-      await new Promise(resolve => setTimeout(resolve, delay));
-      dropdown.classList.remove(...classNames);
-    };
-    let mouseInCount = 0, shown = false;
-    const showDropdown = function () {
-      mouseInCount++;
-      if (!shown) {
-        shown = true;
-        dropdown.style.display = 'block';
-        addTempClassName('UI_speed_fast', 'UI_ani_fadeInDown', 200);
-      }
-    };
-    const hideDropdown = async function () {
-      const lastInCount = mouseInCount;
-      await new Promise(resolve => setTimeout(resolve, 200));
-      if (lastInCount !== mouseInCount) return;
-      if (shown) {
-        shown = false;
-        await addTempClassName('UI_speed_fast', 'UI_ani_fadeOutUp', 200);
-        if (lastInCount !== mouseInCount) return;
-        dropdown.style.display = 'none';
-      }
-    };
-    container.addEventListener('mouseenter', showDropdown);
-    container.addEventListener('mouseleave', hideDropdown);
-    container.addEventListener('focusin', showDropdown);
-    container.addEventListener('focusout', hideDropdown);
-
-    // 添加菜单项，跳转到设置页面的各标签页
-    rule.tabs.forEach((tab, index) => {
-      if (!tab.pagemenu) return;
-      pagemenu.add({
-        title: tab.template,
-        onClick: event => onClick(event, tab),
-        order: index,
-      });
-    });
-
-    // 如果点击了漏斗图标，我们会直接显示设置窗口，但如果是触摸点击的，我们先显示下拉菜单
-    const onTouch = function (event) {
-      if (shown) return;
-      showDropdown();
-      event.preventDefault();
-      event.stopPropagation();
-    };
-    container.addEventListener('touchstart', onTouch, true);
-  };
-  init.onLoad(() => {
-    const icon = function () {
-      const reference = document.querySelector('.WB_global_nav .gn_set_list');
-      if (!reference) { setTimeout(icon, 100); return; }
-      if (document.querySelector('.gn_filter')) return;
-      const template = document.createElement('template');
-      template.innerHTML = `<div class="gn_set_list yawf-gn_set_list"><a node-type="filter" href="javascript:void(0);" class="gn_filter"><em class="W_ficon ficon_mail S_ficon">Y</em></a></div>`;
-      const container = document.importNode(template.content.firstElementChild, true);
-      const button = container.querySelector('.gn_filter');
-      button.setAttribute('title', i18n.filterMenuItem);
-      button.addEventListener('click', onClick);
-      reference.before(container);
-      setTimeout(async () => {
-        await searchStyle.ready;
-        const [{ width, height }] = button.getClientRects();
-        const size = width * height;
-        // 如果用户选择不显示漏斗按钮，那么要恢复搜索框的宽度
-        // 扩展不提供显示或不显示的选项，但是会提供自定义 CSS 功能
-        if (!size) searchStyle.remove();
-      }, 0);
-    };
-    const menuitem = function () {
-      const menuitems = document.querySelectorAll('.gn_topmenulist ul li.line');
-      if (!menuitems?.length) { setTimeout(menuitem, 100); return; }
-      const reference = [...menuitems].pop();
-      const ul = document.createElement('ul');
-      ul.innerHTML = `
-<li class="line S_line1 yawf-config-menuline"></li>
-<li><a href="javascript:void(0);" class="yawf-config-menuitem"></a></li>
-`;
-      const container = document.importNode(ul, true);
-      const item = container.querySelector('.yawf-config-menuitem');
-      item.addEventListener('click', onClick);
-      item.textContent = i18n.filterMenuItem;
-      reference.before(...container.children);
-
-      const iconContainer = document.querySelector('.yawf-gn_set_list');
-      addScriptMenu(iconContainer);
-    };
-    if (['search', 'ttarticle'].includes(init.page.type())) return;
-    if (yawf.WEIBO_VERSION === 7) {
-      searchStyle.remove();
-      iconStyle.remove();
-      return;
-    }
-    icon(); menuitem();
-  });
-
-  init.onLoad(() => {
-    observer.dom.add(function fixNavBarUS() {
-      // 统一海外版导航栏
-      const navUs = document.querySelector('.WB_global_nav_us');
-      if (navUs) navUs.classList.remove('WB_global_nav_us');
-    });
-  });
-
-}());
-
-; (function () {
-
   const yawf = window.yawf;
   const util = yawf.util;
   const init = yawf.init;
@@ -22705,7 +19026,6 @@ body[yawf-feed-only] .WB_frame { padding-left: 0; }
   };
 
   init.onLoad(() => {
-    if (yawf.WEIBO_VERSION !== 7) return;
     util.inject(function (rootKey, showRuleDialog) {
       const yawf = window[rootKey];
       const vueSetup = yawf.vueSetup;
