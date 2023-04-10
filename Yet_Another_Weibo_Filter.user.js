@@ -1113,6 +1113,7 @@
     while (result.firstChild) fragment.appendChild(result.firstChild);
     return fragment;
   };
+  dom.parseHtml = parseHtml;
 
   /**
    * @param {Element} element
@@ -7015,6 +7016,9 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
 ; (function () {
 
   const yawf = window.yawf;
+  const util = yawf.util;
+
+  const dom = util.dom;
 
   const feedParser = yawf.feed = {};
   const commentParser = yawf.comment = {}; // eslint-disable-line no-unused-vars
@@ -7036,6 +7040,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
     ].join('');
   };
 
+  const contentText = html => dom.parseHtml(html).textContent;
   const catched = (f, v = null) => feed => { try { return f(feed); } catch (e) { return v; } };
   const mid = mid => mid > 0 ? mid : null;
 
@@ -7070,7 +7075,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
     let text = [feed, feed.retweeted_status].filter(x => x?.user).map(x => [
       x.user.screen_name,
       x.longTextContent_raw || x.text_raw,
-      x.source,
+      contentText(x.source),
       date(x.created_at),
     ]).reduce((x, y) => x.concat(y)).join('\u2028');
     if (Array.isArray(feed.url_struct)) {
@@ -7117,7 +7122,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   };
   const source = feedParser.source = {};
   source.text = feed => {
-    const sources = [feed, feed.retweeted_status].filter(x => x).map(x => x.source);
+    const sources = [feed, feed.retweeted_status].filter(x => x).map(x => contentText(x.source));
     return sources;
   };
   const pics = feedParser.pics = {};
@@ -14494,8 +14499,10 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       }
       // 用户昵称
       const userLink = nodeStruct.querySelector('span').closest('x-a-link');
-      if (userLink) addClass(userLink, 'yawf-feed-author');
-      if (newTab.author) setAttribute(userLink, 'target', '_blank');
+      if (userLink) {
+        addClass(userLink, 'yawf-feed-author');
+        if (newTab.author) setAttribute(userLink, 'target', '_blank');
+      }
       const userLine = nodeStruct.querySelector('span').closest('x-woo-box');
       if (userLine) {
         addClass(userLine, 'yawf-feed-author-line');
@@ -14554,12 +14561,20 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 
       // 替换掉原有的来源，保证来源本身有个标签，后续用来做拖拽过滤用
       if (source && source.nodeType !== Node.COMMENT_NODE) {
+        const tag = 'x-content-parse-wrap-x' + (Math.random() + '').slice(2);
+        const sourceValue = new DOMParser().parseFromString(`<${tag}>` + this.source, 'text/html').querySelector(tag);
+        const link = sourceValue.querySelector('a');
+        const url = link && link.href || null;
+        const sourceText = sourceValue.contentText;
         const newSourceVNode = h('div', {
           class: [this.$style.source, 'yawf-feed-source-container'],
-        }, ['来自 ', h('span', {
+        }, ['来自 ', h(url ? 'a' : 'span', {
           class: ['yawf-feed-source'],
           attrs: { draggable: 'true' },
-        }, [this.source || '微博 weibo.com'])]);
+          href: url,
+          rel: url && 'noopener nofollow',
+          target: url && '_blank',
+        }, [sourceText || '微博 weibo.com'])]);
         insertBefore(sourceBox, newSourceVNode, source);
         removeChild(sourceBox, source);
       }
@@ -14694,15 +14709,13 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
 
       // 操作按钮
       const buttons = [...nodeStruct.querySelectorAll('x-woo-box-item')];
-      if (buttons.length === 3) {
-        const [retweet, comment, like] = buttons;
-        addClass(retweet, 'yawf-feed-toolbar-retweet');
-        addClass(comment, 'yawf-feed-toolbar-comment');
-        addClass(like, 'yawf-feed-toolbar-like');
-
-        if (configs.hideFastRepost) {
+      buttons.forEach(button => {
+        if (button.childNodes.length !== 3) return;
+        const buttonType = [...button.childNodes].findIndex(node => node.nodeType === Node.ELEMENT_NODE);
+        addClass(button, ['yawf-feed-toolbar-retweet', 'yawf-feed-toolbar-comment', 'yawf-feed-toolbar-like'][buttonType]);
+        if (buttonType === 0 && configs.hideFastRepost) {
           try {
-            const pop = retweet.querySelector('x-woo-pop');
+            const pop = button.querySelector('x-woo-pop');
             const popVNode = vNode(pop);
             const retweetButtonVNode = popVNode.data.scopedSlots.ctrl()[0];
             const oriRetweetButton = pop.querySelector('x-woo-pop-item:nth-child(2)');
@@ -14715,7 +14728,7 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
             // ignore
           }
         }
-      }
+      });
     });
 
     const repostCommentListRanderTransform = function (nodeStruct, Nodes) {
