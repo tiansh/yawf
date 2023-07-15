@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           5.0.108
+// @version           5.0.109
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -2859,6 +2859,7 @@ html { background: #f9f9fa; }
   page.type = function () {
     if (location.pathname.startsWith('/tv/')) return 'tv';
     const route = page.route;
+    if (route.name === 'home') return 'home';
     if (route.name === 'profile') return 'profile';
     if (route.name === 'like') return 'like';
     if (route.name === 'collect') return 'fav';
@@ -9908,8 +9909,8 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   });
 
   i18n.adFeedFilter = {
-    cn: '推广微博/粉丝通微博/品牌速递/好友赞过的微博 {{i}}',
-    tw: '推廣微博/粉絲通微博/品牌速遞/好友贊過的微博 {{i}}',
+    cn: '推广微博/粉丝通微博/品牌速递/好友赞过的微博/内容推荐 {{i}}',
+    tw: '推廣微博/粉絲通微博/品牌速遞/好友贊過的微博/內容推薦 {{i}}',
     en: 'Ad Weibo / Inserted not followed Weibo {{i}}',
   };
   i18n.adFeedFilterDetail = {
@@ -9919,7 +9920,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   commercial.ad = rule.Rule({
     v7Support: true,
     id: 'filter_ad_feed',
-    version: 1,
+    version: 109,
     parent: commercial.commercial,
     template: () => i18n.adFeedFilter,
     ref: {
@@ -9932,6 +9933,8 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
         // TODO 我也不确定这个属性是做什么的
         // if (feed.promotion) console.log('FILTERTEST promotion: %o (%o)', feed.promotion, feed);
         // if (feed.attitude_dynamic_adid) console.log('FILTERTEST attitude_dynamic_adid: %o (%o)', feed.attitude_dynamic_adid, feed);
+        // 未关注的人的微博
+        if (['home', 'group'].includes(init.page.type()) && !feed.user.following) return 'hide';
         // 某某赞过的微博
         if (feed.title?.type === 'likerecommend') return 'hide';
         // 热推 / 广告之类
@@ -14461,19 +14464,6 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
       Object.assign(content.data.domProps, { innerHTML: wrap.innerHTML });
     };
 
-    vueSetup.transformComponentsRenderByTagName('home', function (nodeStruct, Nodes) {
-      const { vNode, removeChild, insertBefore } = Nodes;
-      const gray = nodeStruct.querySelector('.grayTheme');
-      if (!gray) return;
-      while (gray.firstChild) {
-        const node = gray.firstChild;
-        const vnode = vNode(node);
-        removeChild(gray, node);
-        insertBefore(gray.parentNode, vnode, gray.nextSibling, node);
-      }
-      removeChild(gray.parentNode, gray);
-    });
-
     vueSetup.transformComponentsRenderByTagName('feed', function (nodeStruct, Nodes) {
       const { addClass } = Nodes;
       addClass(nodeStruct, 'yawf-feed');
@@ -14565,15 +14555,17 @@ body .W_input, body .send_weibo .input { background-color: ${color3}; }
         const sourceValue = new DOMParser().parseFromString(`<${tag}>` + this.source, 'text/html').querySelector(tag);
         const link = sourceValue.querySelector('a');
         const url = link && link.href || null;
-        const sourceText = sourceValue.contentText;
+        const sourceText = sourceValue.textContent;
         const newSourceVNode = h('div', {
           class: [this.$style.source, 'yawf-feed-source-container'],
         }, ['来自 ', h(url ? 'a' : 'span', {
           class: ['yawf-feed-source'],
-          attrs: { draggable: 'true' },
-          href: url,
-          rel: url && 'noopener nofollow',
-          target: url && '_blank',
+          attrs: {
+            draggable: 'true',
+            href: url,
+            rel: url && 'noopener nofollow',
+            target: url && '_blank',
+          },
         }, [sourceText || '微博 weibo.com'])]);
         insertBefore(sourceBox, newSourceVNode, source);
         removeChild(sourceBox, source);
