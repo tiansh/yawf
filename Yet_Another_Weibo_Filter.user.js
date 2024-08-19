@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           5.0.109
+// @version           5.0.110
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -15493,7 +15493,7 @@ span.yawf-feed-screen-name { font-weight: bold; }
         const vueSetup = yawf.vueSetup;
 
         const expandLongTextContent = function (vm) {
-          vm.$set(vm.data, 'text_expand', vm.showText);
+          vm.$set(vm.data, 'text_expand', vm.text);
           vm.$http = Object.create(vm.$http);
           vm.$http.get = (function (get) {
             return async function (...args) {
@@ -15523,15 +15523,15 @@ span.yawf-feed-screen-name { font-weight: bold; }
             const unwatch = vm.$watch(function () { return this.data.longTextContent; }, function () {
               if (!vm.data.longTextContent) return;
               unwatch();
-              vm.showText = vm.data.longTextContent;
-              vm.$emit('updateText', vm.showText);
+              vm.text = vm.data.longTextContent;
+              vm.$emit('updateText', vm.text);
             });
           } else {
             const expand = '<span class="expand">展开</span>';
             const wordTip = `展开（约 ${Math.ceil(len / 10) * 10} 字）`;
             vm.data.text_expand = vm.data.text_expand.replace(expand, () => expand.replace('展开', wordTip));
-            vm.showText = vm.data.text_expand;
-            vm.$emit('updateText', vm.showText);
+            vm.text = vm.data.text_expand;
+            vm.$emit('updateText', vm.text);
           }
         };
 
