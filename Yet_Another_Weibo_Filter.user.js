@@ -12,7 +12,7 @@
 // @description:zh-TW Yet Another Weibo Filter (YAWF) 新浪微博根據關鍵詞、作者、話題、來源等篩選微博；修改版面
 // @description:en    Sina Weibo feed filter by keywords, authors, topics, source, etc.; Modifying webpage layout
 // @namespace         https://github.com/tiansh
-// @version           5.0.109
+// @version           5.0.110
 // @match             *://*.weibo.com/*
 // @match             *://t.cn/*
 // @include           *://weibo.com/*
@@ -650,6 +650,8 @@
           return invoke(val);
         } else if (val && typeof val === 'object' && val._type === 'callback' && val.invoke === baseKey) {
           return callback(val);
+        } else if (val && typeof val === 'object' && val._type === 'regex' && val.invoke === baseKey) {
+          return new RegExp(val.source, val.flags);
         } else {
           return val;
         }
@@ -688,6 +690,8 @@
       } else if (typeof val === 'object' && val instanceof Callback) {
         const key = val.id;
         return { _type: 'callback', callback: key, invoke: baseKey };
+      } else if (typeof val === 'object' && val instanceof RegExp) {
+        return { _type: 'regex', source: val.source, flags: val.flags, invoke: baseKey };
       }
       return val;
     }));
@@ -5745,7 +5749,7 @@ label:hover .yawf-config-checkbox-wrap .yawf-config-checkbox-icon,
 
 .yawf-config-group { display: block; font-weight: bold; margin: 15px 10px 5px; }
 .yawf-config-rule { display: block; margin: 5px 20px; }
-.yawf-config-rule-unsupport { opacity: 0.5; }
+.yawf-config-rule-unsupport { display: none; }
 .yawf-bubble .yawf-config-rule { display: inline; margin: 0; }
 .yawf-config-rule > label + label { margin-left: 8px; }
 .yawf-config-rule > br + label { margin-left: 20px; }
@@ -6016,8 +6020,7 @@ label:hover .yawf-config-checkbox-wrap .yawf-config-checkbox-icon,
   observer.feed = new FilterObserver();
 
   /**
-   * 针对评论的过滤规则
-   * 对应脚本版 observer.comment
+   * 我懒得查找依赖关系了，其实这个已经没用了
    */
   observer.comment = new FilterObserver();
 
@@ -6124,14 +6127,13 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
         return new Promise(resolve => {
           const cleanUp = function () {
             pendingFeeds.delete(runIndex);
+            resolve({});
             vm.$off('hook:beforeDestroy', cleanUp);
           };
-          vm.$once('hook:beforeDestroy', function () {
-            cleanUp();
-            resolve({});
-          });
+          vm.$once('hook:beforeDestroy', cleanUp);
           const handleFilterResult = function ({ result, reason }) {
-            cleanUp();
+            pendingFeeds.delete(runIndex);
+            vm.$off('hook:beforeDestroy', cleanUp);
             feed._yawf_FilterStatus = result;
             feed._yawf_FilterReason = reason;
             resolve({ result, reason });
@@ -6332,6 +6334,122 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   }, { priority: priority.LAST });
 
 }());
+
+; (function () {
+  const yawf = window.yawf;
+
+  const util = yawf.util;
+  const init = yawf.init;
+  const observer = yawf.observer;
+
+  const priority = util.priority;
+  const css = util.css;
+  const strings = util.strings;
+
+  init.onLoad(function () {
+    const configs = {
+      text: {
+        show: yawf.rules.comment.text.show.ref.items.getConfig(),
+        hide: yawf.rules.comment.text.hide.ref.items.getConfig(),
+      },
+      regex: {
+        show: yawf.rules.comment.regex.show.ref.items.getConfigCompiled(),
+        hide: yawf.rules.comment.regex.hide.ref.items.getConfigCompiled(),
+      },
+      user: {
+        show: yawf.rules.comment.name.show.ref.items.getConfig(),
+        hide: yawf.rules.comment.name.hide.ref.items.getConfig(),
+      },
+      more: {
+        bot: yawf.rules.comment.more.commentByBot.getConfig(),
+      }
+    };
+    util.inject(function (rootKey, configs) {
+      console.log(configs);
+      const yawf = window[rootKey];
+      const vueSetup = yawf.vueSetup;
+      const matchText = (comment, textList) => (
+        textList.some(text => comment.text_raw.includes(text))
+      );
+      const matchRegex = (comment, regexList) => (
+        regexList.some(regex => regex.test(comment.text_raw))
+      );
+      const matchUser = (comment, nameList) => (
+        nameList.some(name => (comment.screen_name === name ||
+          comment.text.includes(`<a href=/n/${name} `)))
+      );
+      const matchBot = comment => (
+        comment.analysis_extra?.includes('ai_type')
+      );
+      const filterComment = function (comment) {
+        try {
+          const isShow = (
+            matchText(comment, configs.text.show) ||
+            matchRegex(comment, configs.regex.show) ||
+            matchUser(comment, configs.user.show) ||
+          false);
+          if (isShow) return 'show';
+          const isHide = (
+            matchText(comment, configs.text.hide) ||
+            matchRegex(comment, configs.regex.hide) ||
+            matchUser(comment, configs.user.hide) ||
+            configs.more.bot && matchBot(comment) ||
+          false);
+          if (isHide) {
+            console.log('Comment %o hidden', comment.idstr);
+            return 'hide';
+          }
+          return null;
+        } catch (error) {
+          console.error('Error while filte comment: %o', error);
+          return null;
+        }
+      };
+      const handleCommentSubList = function (sublist) {
+        for (let index2 = 0; index2 < sublist.length;) {
+          const result2 = filterComment(sublist[index2]);
+          if (result2 === 'hide') {
+            sublist.splice(index2, 1);
+            continue;
+          }
+          index2++;
+        }
+      };
+      const handleCommentList = function (list) {
+        for (let index1 = 0; index1 < list.length;) {
+          const result = filterComment(list[index1]);
+          if (result === 'hide') {
+            list.splice(index1, 1);
+            continue;
+          }
+          const sublist = list[index1].comments;
+          if (sublist) {
+            handleCommentSubList(sublist);
+          }
+          index1++;
+        }
+      };
+      vueSetup.eachComponentVM('repost-coment-list', vm => {
+        vm.$watch('list', handleCommentList, { immediate: true, deep: true })
+      });
+      vueSetup.eachComponentVM('feed', vm => {
+        if (!vm.data.rcList) return;
+        vm.$watch('data.rcList', rcList => {
+          handleCommentList(rcList);
+        }, { immediate: true, deep: true });
+      });
+      vueSetup.eachComponentVM('reply-modal', vm => {
+        if (!vm.rootComment) return;
+        vm.$watch('rootComment', rootComment => {
+          handleCommentList([rootComment]);
+        }, { immediate: true, deep: true });
+        vm.$watch('list', list => {
+          handleCommentSubList(list);
+        }, { immediate: true, deep: true });
+      });
+    }, util.inject.rootKey, configs);
+  }, { priority: priority.LAST });
+}())
 //#endregion
 //#region @require yaofang://content/ruleset/dialog.js
 /**
@@ -10959,21 +11077,9 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   });
 
   class TextCommentRule extends rule.class.Rule {
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
-    }
-    init() {
-      const rule = this;
-      observer.comment.filter(function textCommentFilter(/** @type {Element} */comment) {
-        const text = commentParser.text(comment);
-        const keywords = rule.ref.items.getConfig();
-        const contain = keywords.find(keyword => text.includes(keyword));
-        if (!contain) return null;
-        const reasonText = contain.length > 8 ? contain.slice(0, 6) + '…' : contain;
-        const reason = i18n.textContentReason.replace('{1}', () => reasonText);
-        return { result: rule.feedAction, reason };
-      }, { priority: this.priority });
-      this.ref.items.addConfigListener(() => { observer.comment.rerun(); });
     }
   }
 
@@ -11021,19 +11127,9 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   });
 
   class RegexCommentRule extends rule.class.Rule {
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
-    }
-    init() {
-      const rule = this;
-      observer.comment.filter(function regexCommentFilter(/** @type {Element} */comment) {
-        const text = commentParser.text(comment);
-        const regexen = rule.ref.items.getConfigCompiled();
-        const matchReg = regexen.find(regex => regex.test(text));
-        if (!matchReg) return null;
-        return { result: rule.feedAction };
-      }, { priority: this.priority });
-      this.ref.items.addConfigListener(() => { observer.comment.rerun(); });
     }
   }
 
@@ -11041,7 +11137,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
     baseClass: RegexCommentRule,
     tab: 'comment',
     key: 'regex',
-    version: 1,
+    version: 110,
     type: 'regexen',
     title: () => i18n.contentRegexCommentGroupTitle,
     details: {
@@ -11092,19 +11188,9 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
 
 
   class CommentUserFeedRule extends rule.class.Rule {
+    get v7Support() { return true; }
     constructor(item) {
       super(item);
-    }
-    init() {
-      const rule = this;
-      observer.comment.filter(function commentFilterFeedFilter(/** @type {Element} */feed) {
-        const users = new Set(commentParser.user.name(feed));
-        const accounts = rule.ref.items.getConfig();
-        const contain = accounts.find(account => users.has(account));
-        if (!contain) return null;
-        return { result: rule.feedAction };
-      }, { priority: this.priority });
-      this.ref.items.addConfigListener(() => { observer.comment.rerun(); });
     }
   }
 
@@ -11113,7 +11199,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
     tab: 'comment',
     key: 'name',
     type: 'usernames',
-    version: 1,
+    version: 110,
     title: () => i18n.accountCommentGroupTitle,
     details: {
       hide: {
@@ -11155,7 +11241,7 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
   const more = comment.more = {};
   more.more = rule.Group({
     parent: comment.comment,
-    template: () => i18n.moreCommercialGroupTitle,
+    template: () => i18n.commentMoreGroupTitle,
   });
 
 
@@ -11272,6 +11358,18 @@ article[class*="Feed"].yawf-feed-filter-running::before { content: " "; display:
       this.addConfigListener(() => { observer.comment.rerun(); });
     },
   });
+
+  i18n.commentByBot = {
+    cn: '隐藏机器人评论',
+  };
+
+  more.commentByBot = rule.Rule({
+    id: 'filter_comment_by_bot',
+    version: 110,
+    parent: more.more,
+    template: () => i18n.commentByBot,
+    get v7Support() { return true; }
+  })
 
   i18n.commentWithForward = {
     cn: '隐藏含有转发消息的微博',
@@ -12660,8 +12758,8 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
     parent: sidebar.sidebar,
     template: () => i18n.sidebarShowLiked,
     ref: {
-      fav: { type: 'boolean', initial() { return true; } },
-      like: { type: 'boolean', nitial() { return true; } },
+      fav: { type: 'boolean', get initial() { return true; } },
+      like: { type: 'boolean', get initial() { return true; } },
     },
     ainit() {
       const configs = {
@@ -12692,7 +12790,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
           }.bind(this);
 
           if (configs.fav) {
-            const target = { name: 'collect', params: { id: this.$root.config.uid } };
+            const target = { name: 'fav', params: { id: this.$root.config.uid } };
             const navItem = h('nav-item', {
               key: 'yawf-fav',
               class: 'yawf-nav-item',
@@ -12700,6 +12798,7 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
               on: { click: onClick(target) },
             });
             const navLink = h('a', {
+              key: 'yawf-fav',
               class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
               attrs: { href: this.$router.resolve(target).href },
             }, [navItem]);
@@ -12707,19 +12806,18 @@ body .WB_handle ul li { flex: 1 1 auto; float: none; width: auto; }
           }
           if (configs.like) {
             const target = { name: 'like', params: { id: this.$root.config.uid } };
-            let navItem = h('nav-item', {
+            const navItem = h('nav-item', {
               key: 'yawf-like',
               class: 'yawf-nav-item',
               attrs: { icon: 'navLike', text: '我的赞' },
               on: { click: onClick(target) },
             });
-            if (configs.link) {
-              navItem = h('a', {
-                class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
-                attrs: { href: this.$router.resolve(target).href },
-              }, [navItem]);
-            }
-            insertBefore(container, navItem, divider);
+            const navLink = h('a', {
+              key: 'yawf-like',
+              class: 'yawf-nav-link yawf-extra-link yawf-link-mfsp yawf-link-nmfpd',
+              attrs: { href: this.$router.resolve(target).href },
+            }, [navItem]);
+            insertBefore(container, navLink, divider);
           }
         });
       }, util.inject.rootKey, configs);
@@ -15325,7 +15423,6 @@ html .WB_artical .WB_feed_repeat .W_tips, html .WB_artical .WB_feed_repeat .WB_m
   const observer = yawf.observer;
   const request = yawf.request;
   const feedParser = yawf.feed;
-  const commentParser = yawf.comment;
 
   const feeds = yawf.rules.feeds;
   const layout = yawf.rules.layout;
@@ -15493,7 +15590,7 @@ span.yawf-feed-screen-name { font-weight: bold; }
         const vueSetup = yawf.vueSetup;
 
         const expandLongTextContent = function (vm) {
-          vm.$set(vm.data, 'text_expand', vm.showText);
+          vm.$set(vm.data, 'text_expand', vm.text);
           vm.$http = Object.create(vm.$http);
           vm.$http.get = (function (get) {
             return async function (...args) {
@@ -15523,15 +15620,15 @@ span.yawf-feed-screen-name { font-weight: bold; }
             const unwatch = vm.$watch(function () { return this.data.longTextContent; }, function () {
               if (!vm.data.longTextContent) return;
               unwatch();
-              vm.showText = vm.data.longTextContent;
-              vm.$emit('updateText', vm.showText);
+              vm.text = vm.data.longTextContent;
+              vm.$emit('updateText', vm.text);
             });
           } else {
             const expand = '<span class="expand">展开</span>';
             const wordTip = `展开（约 ${Math.ceil(len / 10) * 10} 字）`;
             vm.data.text_expand = vm.data.text_expand.replace(expand, () => expand.replace('展开', wordTip));
-            vm.showText = vm.data.text_expand;
-            vm.$emit('updateText', vm.showText);
+            vm.text = vm.data.text_expand;
+            vm.$emit('updateText', vm.text);
           }
         };
 
@@ -15557,39 +15654,6 @@ span.yawf-feed-screen-name { font-weight: bold; }
     },
   });
 
-  Object.assign(i18n, {
-    confusableHanNormalize: {
-      cn: '同形汉字归一化处理{{i}}',
-      tw: '同形漢字歸一化處理{{i}}',
-      en: 'Normalize confusable Han characters {{i}}',
-    },
-    confusableHanNormalizeDetail: {
-      cn: '替换一部分同形汉字为其常见的模式。不会处理一些仅是形近的 CJK 字符或同形的非汉字字符。',
-      tw: '替換一部分同形漢字為其常見的模式。不會處理一些僅是形近的 CJK 字元或同形的非漢字字元。',
-      en: 'Replace some confusable Han characters to its common variant.',
-    },
-  });
-
-  content.confusableHanNormalize = rule.Rule({
-    id: 'confusable_han_normalize',
-    version: 103,
-    parent: content.content,
-    template: () => i18n.confusableHanNormalize,
-    ref: {
-      i: { type: 'bubble', icon: 'ask', template: () => i18n.confusableHanNormalizeDetail },
-    },
-    ainit() {
-      // 微博相关逻辑见展开长微博
-      // 这里是评论相关逻辑
-      observer.comment.onBefore(function normalizeConfusableHan(comment) {
-        const contents = commentParser.content(comment);
-        if (!contents) return;
-        contents.forEach(content => {
-          strings.normalizeConfusableHanNode(content);
-        });
-      });
-    },
-  });
 
   i18n.feedContentLineBreak = {
     cn: '将微博中的换行显示为|{{text}}',
