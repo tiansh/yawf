@@ -18,6 +18,7 @@
 // @include           *://weibo.com/*
 // @include           *://*.weibo.com/*
 // @include           *://t.cn/*
+// @include           *://weibo.cn/*
 // @exclude           *://weibo.com/a/bind/*
 // @exclude           *://account.weibo.com/*
 // @exclude           *://kefu.weibo.com/*
@@ -2843,6 +2844,15 @@ html { background: #f9f9fa; }
 ; (function () {
   if (location.host !== 't.cn') return;
   throw new Error('YAWF | t.cn page found, skip following executions');
+}());
+
+; (function () {
+  if (location.host !== 'weibo.cn' || location.pathname !== '/sinaurl') return;
+  const urlParams = new URLSearchParams(location.search);
+  const targetUrl = urlParams.get('u');
+  if (targetUrl) {
+    location.replace(decodeURIComponent(targetUrl));
+  }
 }());
 //#endregion
 //#region @require yaofang://content/init/page.js
