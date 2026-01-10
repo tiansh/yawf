@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.3
+// @version           0.0.4
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -283,7 +283,7 @@ const payload = ('void(' + function (config, key) {
       }
     });
     const container = el.querySelector('.woo-box-flex').children;
-    if (container[1]) container[1].setAttribute('__yawf_feed_toobar__extra__');
+    if (container[1]) container[1].setAttribute('__yawf_feed_toobar__extra__', '');
   });
   addLifecycleListener('mounted updated', 'icon-list', instance => {
     // 名字旁边的 Vip 等图标
@@ -387,14 +387,10 @@ const payload = ('void(' + function (config, key) {
   //#endregion
 
   //#region 评论
+  /*
   addLifecycleListener('beforeCreate', 'comment', instance => {
     wrapRender(instance, function (render) {
       return function (...args) {
-        const mainFilter = commentFilter(instance.data.commentData);
-        if (instance.data.commentData && mainFilter.action === 'hide') {
-          log(`评论过滤（${mainFilter.reason}）`, instance.data.commentData);
-          return null;
-        }
         const comments = instance.data.commentData.comments;
         const status = comments.map(item => commentFilter(item));
         if (status.some(item => item.action === 'hide')) {
@@ -409,6 +405,7 @@ const payload = ('void(' + function (config, key) {
       };
     });
   });
+  */
   //#endregion
 
   //#region 热搜固顶
