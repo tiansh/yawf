@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.4
+// @version           0.0.5
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -30,7 +30,7 @@
 /* eslint-env browser, greasemonkey */
 
 const key = 'yawf-' + Array(64).fill(0).map(() => (Math.random() * 16).toString(16)[0]).join('');
-const payload = ('void(' + function (config, key) {
+const payload = (Array(33).fill('\n').join('') + 'void(' + function (config, key) {
 
   //#region utils
   const log = function (...args) {
@@ -45,31 +45,13 @@ const payload = ('void(' + function (config, key) {
       else return '-' + lower;
     });
   };
-  //#endregion
-
-  //#region vnode 处理
-  /** @param {{ withSlot: boolean }} config */
-  const allDescendants = (vnode, callback, config = {}) => {
-    if (Array.isArray(vnode)) {
-      vnode.forEach(child => allDescendants(child, callback, config));
-    } else {
-      callback(vnode);
-      if (Array.isArray(vnode.children)) allDescendants(vnode.children, callback, config);
-      else if (config?.withSlot && vnode.children && typeof vnode.children === 'object') {
-        Object.keys(vnode.children).forEach(key => {
-          slotContent(vnode, key, content => allDescendants(content, callback, config));
-        });
-      }
-    }
-    return vnode;
-  };
-  const slotContent = (vnode, key, callback) => {
-    const slot = vnode.children?.[key];
-    if (typeof slot !== 'function') return;
-    vnode.children[key] = function (...args) {
-      const result = slot.apply(this, args);
-      return callback(result);
-    };
+  const wrapFunction = function (original, wrapped) {
+    original.__raw__ = original;
+    return new Proxy(original, {
+      apply(target, thisArg, argumentsList) {
+        return wrapped.apply(thisArg, argumentsList);
+      },
+    });
   };
   //#endregion
 
@@ -152,12 +134,16 @@ const payload = ('void(' + function (config, key) {
       try { item.listener(instance); } catch (E) { console.error(E); }
     });
   };
-  const wrapRender = (instance, wrapper) => {
-    if (!instance?.render) return;
-    const render = wrapper(instance.render);
-    render.raw = instance.render;
-    instance.render = render;
-    return render;
+  const wrapRenderContext = wrapper => {
+    const wrapped = new WeakMap();
+    return instance => {
+      if (wrapped.has(instance.render)) {
+        return wrapped.get(instance.render);
+      }
+      const wrappedRender = wrapper(instance);
+      wrapped.set(instance.render, (instance.render = wrapFunction(instance.render, wrappedRender)));
+      return wrappedRender;
+    };
   };
 
   appReady.then(app => {
@@ -189,56 +175,89 @@ const payload = ('void(' + function (config, key) {
   //#endregion
 
   //#region 渲染增加组件名称
-  const properName = result => {
-    if (!result) return 'unnamed-component';
-    const name = kebabCase(result.type?.name || result.type?.__name || result.type?.__refName);
-    if (name) return name + '--child';
-    return properName(result.parent);
-  };
-  const trimClassName = klass => klass.replace(/_[a-z\d]+_\d+$/, '');
-  const tagRenderResult = prefix => vnode => {
-    if (typeof vnode !== 'object' || !vnode) return vnode;
-    if (Array.isArray(vnode)) return vnode.map(child => tagRenderResult(prefix)(child));
-    // 更新 ClassName
-    if (typeof vnode.props?.class === 'string') {
-      const classList = vnode.props.class.split(' ').flatMap(klass => {
-        if (!klass || klass.includes('__yawf_')) return [];
-        if (!/_[a-z\d]+_\d+$/.test(klass)) return [klass];
-        return [klass, '__yawf_' + prefix + '_' + trimClassName(klass)];
-      }).filter(x => x);
-      vnode.props.class = classList.join(' ');
-    }
-    // 标记事件处理
-    if (vnode.props && typeof vnode.props === 'object') {
-      Object.keys(vnode.props).forEach(eventName => {
-        if (!eventName.startsWith('on') || eventName.startsWith('onUpdate')) return;
-        const handler = vnode.props[eventName];
-        const name = (typeof handler === 'function' ? [handler.name ?? 'function'] :
-          Array.isArray(handler) ? handler.flatMap(item => typeof item === 'function' ? [(item.name ?? 'function')] : []) : []
-        ).map(item => item.replace(/.*\s/, '')).join(' ');
-        const key = kebabCase(eventName);
-        vnode.props ??= {};
-        vnode.props['__yawf_event_' + key.replace(/-/g, '_') + '__'] = name;
-      });
-    }
-    // 递归内部元素
-    if (vnode.children && Array.isArray(vnode.children)) {
-      vnode.children.forEach(child => {
-        tagRenderResult(prefix)(child);
-      });
-    } else if (vnode.children && typeof vnode.children === 'object') {
-      Object.keys(vnode.children).forEach(key => {
-        const value = vnode.children[key];
-        if (typeof value === 'function') {
-          vnode.children[key] = function (...args) {
-            return tagRenderResult(prefix)(value.apply(this, args));
-          };
-          vnode.children[key].raw = value;
+  const renderWithExtraInfo = wrapRenderContext(function (instance) {
+    const properName = result => {
+      if (!result) return 'unnamed-component';
+      const name = kebabCase(result.type?.name || result.type?.__name || result.type?.__refName);
+      if (name) return name + '--child';
+      return properName(result.parent);
+    };
+    const trimClassName = klass => klass.replace(/_[a-z\d]+_\d+$/, '');
+    const name = kebabCase(instance.type.name || instance.type.__name || instance.type.__refName);
+    const prefix = name || kebabCase(properName(instance));
+    const render = instance.render;
+    const childrenSlots = new WeakMap();
+    const tagRenderResult = vnode => {
+      if (typeof vnode !== 'object' || !vnode) return vnode;
+      if (Array.isArray(vnode)) return vnode.map(child => tagRenderResult(child));
+      // 更新 ClassName
+      if (typeof vnode.props?.class === 'string') {
+        const classList = vnode.props.class.split(' ').flatMap(klass => {
+          if (!klass || klass.includes('__yawf_')) return [];
+          if (!/_[a-z\d]+_\d+$/.test(klass)) return [klass];
+          return [klass, '__yawf_' + prefix + '_' + trimClassName(klass)];
+        }).filter(x => x);
+        vnode.props.class = classList.join(' ');
+      }
+      // 标记事件处理
+      if (vnode.props && typeof vnode.props === 'object') {
+        Object.keys(vnode.props).forEach(eventName => {
+          if (!eventName.startsWith('on') || eventName.startsWith('onUpdate')) return;
+          const handler = vnode.props[eventName];
+          const name = (typeof handler === 'function' ? [handler.name ?? 'function'] :
+            Array.isArray(handler) ? handler.flatMap(item => typeof item === 'function' ? [(item.name ?? 'function')] : []) : []
+          ).map(item => item.replace(/.*\s/, '')).join(' ');
+          const key = kebabCase(eventName);
+          vnode.props ??= {};
+          vnode.props['__yawf_event_' + key.replace(/-/g, '_') + '__'] = name;
+        });
+      }
+      // 递归内部元素
+      if (vnode.children && Array.isArray(vnode.children)) {
+        vnode.children.forEach(child => {
+          tagRenderResult(child);
+        });
+      } else if (vnode.children && typeof vnode.children === 'object') {
+        Object.keys(vnode.children).forEach(key => {
+          const value = vnode.children[key];
+          if (typeof value !== 'function') return;
+          if (childrenSlots.has(value)) {
+            vnode.children[key] = childrenSlots.get(value);
+          } else {
+            const wrapped = function (...args) {
+              const result = value.apply(this, args);
+              tagRenderResult(result);
+              return result;
+            };
+            childrenSlots.set(value, (vnode.children[key] = wrapFunction(value, wrapped)));
+            vnode.children[key].__raw__ = value;
+          }
+        });
+      }
+      return vnode;
+    };
+    return function (...args) {
+      const result = render.apply(this, args);
+      tagRenderResult(result);
+      // 增加 Component Name
+      if (typeof result.type === 'string') instance.__renderTag = result.type;
+      else instance.__renderTag = null;
+      result.props ??= {};
+      for (let ins = instance, lv = 0; ins && (!lv || typeof ins.__renderTag !== 'string'); ins = ins.parent, ++lv) {
+        const name = kebabCase(ins.type.name || ins.type.__name || ins.type.__refName || properName(ins));
+        result.props['__yawf_component_' + name + '__'] = ins.uid;
+        const key = ins.vnode.key;
+        if (typeof key === 'string' || typeof key === 'number' || typeof key === 'symbol') {
+          result.props['__yawf_key_' + (lv || '') + '__'] = String(key);
         }
-      });
-    }
-    return vnode;
-  };
+        if (ins !== ins.parent?.children?.[0]) break;
+      }
+      if (result.key && (typeof result.key === 'string' || typeof result.key === 'number' || typeof result.key === 'symbol')) {
+        result.props['__yawf_key__'] = String(result.key);
+      }
+      return result;
+    };
+  });
   addLifecycleListener('beforeCreate', '*', instance => {
     if (instance.type.components && typeof instance.type.components === 'object') {
       Object.keys(instance.type.components).forEach(key => {
@@ -246,31 +265,7 @@ const payload = ('void(' + function (config, key) {
         value.__refName = key;
       });
     }
-    const name = kebabCase(instance.type.name || instance.type.__name || instance.type.__refName);
-    const displayName = name || kebabCase(properName(instance));
-    wrapRender(instance, function (render) {
-      return function (...args) {
-        const result = render.apply(this, args);
-        tagRenderResult(displayName)(result);
-        // 增加 Component Name
-        if (typeof result.type === 'string') instance.__renderTag = result.type;
-        else instance.__renderTag = null;
-        result.props ??= {};
-        for (let ins = instance, lv = 0; ins && (!lv || typeof ins.__renderTag !== 'string'); ins = ins.parent, ++lv) {
-          const name = kebabCase(ins.type.name || ins.type.__name || ins.type.__refName || properName(ins));
-          result.props['__yawf_component_' + name + '__'] = ins.uid;
-          const key = ins.vnode.key;
-          if (typeof key === 'string' || typeof key === 'number' || typeof key === 'symbol') {
-            result.props['__yawf_key_' + (lv || '') + '__'] = String(key);
-          }
-          if (ins !== ins.parent?.children?.[0]) break;
-        }
-        if (result.key && (typeof result.key === 'string' || typeof result.key === 'number' || typeof result.key === 'symbol')) {
-          result.props['__yawf_key__'] = String(result.key);
-        }
-        return result;
-      };
-    });
+    renderWithExtraInfo(instance);
   });
   // 微博的操作按钮
   addLifecycleListener('mounted updated', 'feed-toolbar', instance => {
@@ -333,56 +328,62 @@ const payload = ('void(' + function (config, key) {
   //#endregion
 
   //#region 广告
+  const renderFilterBandList = wrapRenderContext(function (instance) {
+    const render = instance.render;
+    return function (...args) {
+      const bandList = instance.data.bandList;
+      const status = bandList.map(item => hotSearchFilter(item));
+      if (status.some(item => item.action === 'hide')) {
+        status.forEach((item, index) => { if (item.action === 'hide') log(`热搜过滤（${item.reason}）`, bandList[index]); });
+        bandList.splice(0, bandList.length, ...bandList.filter((item, index) => status[index].action !== 'hide'));
+      }
+      const result = render.apply(this, args);
+      return result;
+    };
+  });
   addLifecycleListener('created', 'card-hot-search', instance => {
-    wrapRender(instance, function (render) {
-      return function (...args) {
-        const bandList = instance.data.bandList;
-        const status = bandList.map(item => hotSearchFilter(item));
-        if (status.some(item => item.action === 'hide')) {
-          status.forEach((item, index) => { if (item.action === 'hide') log(`热搜过滤（${item.reason}）`, bandList[index]); });
-          bandList.splice(0, bandList.length, ...bandList.filter((item, index) => status[index].action !== 'hide'));
-        }
-        const result = render.apply(this, args);
-        return result;
-      };
-    });
+    renderFilterBandList(instance);
+  });
+  const renderFilterAdTopImage = wrapRenderContext(function (instance) {
+    const render = instance.render;
+    return function (...args) {
+      if (instance.setupState.show) {
+        instance.setupState.show = false;
+        log('清理：广告：消息流头图');
+      }
+      const result = render.apply(this, args);
+      return result;
+    };
   });
   addLifecycleListener('beforeCreate', '*', instance => {
     const props = instance?.type?.props;
     if (props?.adHeight && props?.adBackground) {
-      wrapRender(instance, function (render) {
-        return function (...args) {
-          if (instance.setupState.show) {
-            instance.setupState.show = false;
-            log('清理：广告：消息流头图');
-          }
-          const result = render.apply(this, args);
-          return result;
-        };
-      });
+      renderFilterAdTopImage(instance);
     }
   });
   //#endregion
 
   //#region 消息流
-  addLifecycleListener('beforeCreate', 'feed-scroll', instance => {
-    wrapRender(instance, function (render) {
-      return function (...args) {
-        const feedList = instance.props.data;
-        if (Array.isArray(feedList)) {
-          const status = feedList.map(item => feedFilter(item));
-          if (status.some(item => item.action === 'hide')) {
-            status.forEach((item, index) => {
-              if (item.action === 'hide') log(`微博过滤（${item.reason}）`, feedList[index]);
-            });
-            const filtered = feedList.filter((item, index) => status[index].action !== 'hide');
-            feedList.splice(0, feedList.length, ...filtered);
-          }
+  const renderFeedFilter = wrapRenderContext(function (instance) {
+    const render = instance.render;
+    return function (...args) {
+      const feedList = instance.props.data;
+      if (Array.isArray(feedList)) {
+        const status = feedList.map(item => feedFilter(item));
+        if (status.some(item => item.action === 'hide')) {
+          status.forEach((item, index) => {
+            if (item.action === 'hide') log(`微博过滤（${item.reason}）`, feedList[index]);
+          });
+          const filtered = feedList.filter((item, index) => status[index].action !== 'hide');
+          feedList.splice(0, feedList.length, ...filtered);
         }
-        const result = render.apply(this, args);
-        return result;
-      };
-    });
+      }
+      const result = render.apply(this, args);
+      return result;
+    };
+  });
+  addLifecycleListener('beforeCreate', 'feed-scroll', instance => {
+    renderFeedFilter(instance);
   });
   //#endregion
 
@@ -409,17 +410,19 @@ const payload = ('void(' + function (config, key) {
   //#endregion
 
   //#region 热搜固顶
+  const renderTopWordsClear = wrapRenderContext(function (instance) {
+    const render = instance.render;
+    return function (...args) {
+      if (instance.data.TopWords?.length) {
+        log('清理：热搜：置顶热搜', instance.data.TopWords);
+        instance.data.TopWords = [];
+      }
+      const result = render.apply(this, args);
+      return result;
+    };
+  });
   addLifecycleListener('created', 'card-hot-search', instance => {
-    wrapRender(instance, function (render) {
-      return function (...args) {
-        if (instance.data.TopWords?.length) {
-          log('清理：热搜：置顶热搜', instance.data.TopWords);
-          instance.data.TopWords = [];
-        }
-        const result = render.apply(this, args);
-        return result;
-      };
-    });
+    renderTopWordsClear(instance);
   });
   //#endregion
 
@@ -447,3 +450,4 @@ handlers.config = () => {
 };
 
 unsafeWindow.eval(payload);
+
