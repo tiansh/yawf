@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.5
+// @version           0.0.6
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -168,7 +168,7 @@ const payload = (Array(33).fill('\n').join('') + 'void(' + function (config, key
   //#endregion
 
   //#region DEBUG
-  addLifecycleListener('mounted updated', '*', instance => {
+  0 && addLifecycleListener('mounted updated', '*', instance => {
     const el = instance.vnode.el;
     el.__vue__ = new WeakRef(instance);
   });
@@ -224,13 +224,13 @@ const payload = (Array(33).fill('\n').join('') + 'void(' + function (config, key
           if (childrenSlots.has(value)) {
             vnode.children[key] = childrenSlots.get(value);
           } else {
-            const wrapped = function (...args) {
+            const wrapped = wrapFunction(value, function (...args) {
               const result = value.apply(this, args);
               tagRenderResult(result);
               return result;
-            };
-            childrenSlots.set(value, (vnode.children[key] = wrapFunction(value, wrapped)));
-            vnode.children[key].__raw__ = value;
+            });
+            vnode.children[key] = wrapped;
+            childrenSlots.set(value, wrapped);
           }
         });
       }
@@ -328,102 +328,96 @@ const payload = (Array(33).fill('\n').join('') + 'void(' + function (config, key
   //#endregion
 
   //#region 广告
-  const renderFilterBandList = wrapRenderContext(function (instance) {
-    const render = instance.render;
-    return function (...args) {
-      const bandList = instance.data.bandList;
+  addLifecycleListener('created', 'card-hot-search', instance => {
+    instance.proxy.$watch(() => instance.data.bandList, function (bandList) {
       const status = bandList.map(item => hotSearchFilter(item));
       if (status.some(item => item.action === 'hide')) {
         status.forEach((item, index) => { if (item.action === 'hide') log(`热搜过滤（${item.reason}）`, bandList[index]); });
         bandList.splice(0, bandList.length, ...bandList.filter((item, index) => status[index].action !== 'hide'));
       }
-      const result = render.apply(this, args);
-      return result;
-    };
+    }, { deep: true });
   });
-  addLifecycleListener('created', 'card-hot-search', instance => {
-    renderFilterBandList(instance);
+  const renderHideTipsAd = wrapRenderContext(function (instance) {
+    return function () { return null; }; // 直接不展示即可
   });
-  const renderFilterAdTopImage = wrapRenderContext(function (instance) {
-    const render = instance.render;
-    return function (...args) {
-      if (instance.setupState.show) {
-        instance.setupState.show = false;
-        log('清理：广告：消息流头图');
-      }
-      const result = render.apply(this, args);
-      return result;
-    };
-  });
-  addLifecycleListener('beforeCreate', '*', instance => {
-    const props = instance?.type?.props;
-    if (props?.adHeight && props?.adBackground) {
-      renderFilterAdTopImage(instance);
-    }
+  const emptyRender = function () { return null; };
+  addLifecycleListener('beforeCreate', 'tips-ad', instance => {
+    log('清理：广告：消息流头图');
+    renderHideTipsAd(instance);
   });
   //#endregion
 
   //#region 消息流
-  const renderFeedFilter = wrapRenderContext(function (instance) {
-    const render = instance.render;
-    return function (...args) {
-      const feedList = instance.props.data;
-      if (Array.isArray(feedList)) {
-        const status = feedList.map(item => feedFilter(item));
-        if (status.some(item => item.action === 'hide')) {
-          status.forEach((item, index) => {
-            if (item.action === 'hide') log(`微博过滤（${item.reason}）`, feedList[index]);
-          });
-          const filtered = feedList.filter((item, index) => status[index].action !== 'hide');
-          feedList.splice(0, feedList.length, ...filtered);
+  addLifecycleListener('created', 'feed-scroll', instance => {
+    const executedItems = new Set();
+    instance.proxy.$watch(() => instance.props.data, feedList => {
+      if (!Array.isArray(feedList) || !feedList.length) return;
+      const filtered = [];
+      let dirty = false;
+      feedList.forEach(item => {
+        if (executedItems.has(item.idstr)) return;
+        executedItems.add(item.idstr);
+        const status = feedFilter(item);
+        if (status.action !== 'hide') filtered.push(item);
+        else {
+          dirty = true;
+          log(`微博过滤：${status.reason}`, item);
         }
-      }
-      const result = render.apply(this, args);
-      return result;
-    };
+      });
+      if (dirty) instance.emit('update:data', filtered);
+    }, { deep: true });
   });
-  addLifecycleListener('beforeCreate', 'feed-scroll', instance => {
-    renderFeedFilter(instance);
-  });
-  //#endregion
-
-  //#region 评论
-  /*
-  addLifecycleListener('beforeCreate', 'comment', instance => {
-    wrapRender(instance, function (render) {
-      return function (...args) {
-        const comments = instance.data.commentData.comments;
-        const status = comments.map(item => commentFilter(item));
-        if (status.some(item => item.action === 'hide')) {
-          status.forEach((item, index) => {
-            if (item.action === 'hide') log(`评论过滤（${item.reason}）`, comments[index]);
-          });
-          const filtered = comments.filter((item, index) => status[index].action !== 'hide');
-          comments.splice(0, comments.length, ...filtered);
+  addLifecycleListener('created', 'feed', instance => {
+    const $route = instance.appContext.config.globalProperties.$route;
+    if ($route.name === 'atWeibo') return; // 暂不过滤“@我的”页面
+    const executedItems = new Set();
+    instance.proxy.$watch(() => instance.props.data.rcList, rcList => {
+      if (!Array.isArray(rcList) || !rcList.length) return;
+      const filtered = [];
+      let dirty = false;
+      rcList.forEach(item => {
+        if (executedItems.has(item.idstr)) return;
+        executedItems.add(item.idstr);
+        const isFeed = item.retweeted_status;
+        if (isFeed) {
+          const status = feedFilter(item);
+          if (status.action !== 'hide') filtered.push(item);
+          else {
+            dirty = true;
+            log(`转发过滤：${status.reason}`, item);
+          }
+        } else {
+          const status = commentFilter(item);
+          if (status.action !== 'hide') {
+            const subComments = item.comments;
+            const filteredSubComments = [];
+            if (Array.isArray(subComments)) subComments.forEach(subComment => {
+              const status = commentFilter(subComment);
+              if (status.action !== 'hide') filteredSubComments.push(subComment);
+              else log(`二级评论过滤：${status.reason}`, subComment);
+            });
+            if (filteredSubComments.length === subComments.length) filtered.push(item);
+            else filtered.push({ ...item, comments: filteredSubComments });
+          } else {
+            dirty = true;
+            log(`评论过滤：${status.reason}`, item);
+          }
         }
-        const result = render.apply(this, args);
-        return result;
-      };
-    });
+      });
+      if (dirty) instance.emit('update:data', { ...instance.props.data, rcList: filtered });
+    }, { deep: true });
   });
-  */
   //#endregion
 
   //#region 热搜固顶
-  const renderTopWordsClear = wrapRenderContext(function (instance) {
-    const render = instance.render;
-    return function (...args) {
-      if (instance.data.TopWords?.length) {
-        log('清理：热搜：置顶热搜', instance.data.TopWords);
-        instance.data.TopWords = [];
-      }
-      const result = render.apply(this, args);
-      return result;
-    };
-  });
   addLifecycleListener('created', 'card-hot-search', instance => {
-    renderTopWordsClear(instance);
-  });
+    instance.proxy.$watch(() => instance.data.TopWords, function (TopWords) {
+      if (TopWords?.length) {
+        log('清理：热搜：置顶热搜', TopWords);
+        TopWords.splice(0);
+      }
+    });
+  }, { deep: true });
   //#endregion
 
 } + '(' + [(function () {
