@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.6
+// @version           0.0.7
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -355,7 +355,10 @@ const payload = (Array(33).fill('\n').join('') + 'void(' + function (config, key
       const filtered = [];
       let dirty = false;
       feedList.forEach(item => {
-        if (executedItems.has(item.idstr)) return;
+        if (executedItems.has(item.idstr)) {
+          filtered.push(item);
+          return;
+        }
         executedItems.add(item.idstr);
         const status = feedFilter(item);
         if (status.action !== 'hide') filtered.push(item);
@@ -376,7 +379,10 @@ const payload = (Array(33).fill('\n').join('') + 'void(' + function (config, key
       const filtered = [];
       let dirty = false;
       rcList.forEach(item => {
-        if (executedItems.has(item.idstr)) return;
+        if (executedItems.has(item.idstr)) {
+          filtered.push(item);
+          return;
+        }
         executedItems.add(item.idstr);
         const isFeed = item.retweeted_status;
         if (isFeed) {
