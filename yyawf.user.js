@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.8
+// @version           0.0.9
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -977,6 +977,16 @@ const renderConfig = (container, profileId, template) => {
 };
 const addCss = css => { style.textContent += '\n' + css + '\n'; };
 addCss(`
+.yawf-dialog.yawf-dialog { position: fixed; transition: none; }
+.yawf-dialog .woo-dialog-main { max-width: none; padding-bottom: 0; }
+.yawf-dialog-text { max-width: 400px; }
+.yawf-dialog-title { cursor: move; margin-bottom: 0; }
+.yawf-dialog-content { padding: 0; }
+.yawf-dialog-outer { position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: none repeat scroll 0% 0% rgb(0, 0, 0); opacity: 0.3; z-index: 9999; }
+.yawf-dialog.yawf-drag { opacity: 0.67; user-select: none; transition: none; }
+.yawf-bubble { max-width: 400px; font-size: 14px; padding: 8px 16px; box-sizing: border-box; }
+.yawf-dialog-close { padding: 8px; position: absolute; top: 10px; right: 10px; z-index: 1; cursor: pointer; }
+
 .yawf-config { width: 800px; font-size: 14px; color: var(--w-main); background: var(--frame-background); }
 
 .yawf-tabs { display: flex; width: 100%; height: 480px; overflow: hidden; }
