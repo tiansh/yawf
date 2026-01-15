@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.9
+// @version           0.0.10
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -35,12 +35,14 @@ const configKey = 'CONFIG', messageKey = 'yawf-' + Array(64).fill(0).map(() => (
 const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, messageKey) {
 
   const $CONFIG = {}, yawfConfig = {};
+  let isDebug = null;
   if (typeof window.$CONFIG !== 'undefined') {
     alert('脚本需要在页面打开前加载才能正常工作。当前注入加载时间过晚，请检查你是用的猴子版本是否受到支持。');
   }
 
   //#region utils
   const log = function (...args) {
+    if (!isDebug) return;
     if (typeof args[0] === 'string') console.log('[yyawf] ' + args[0], ...args.slice(1));
     else console.log('[yyawf]', ...args);
   };
@@ -65,10 +67,10 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     });
   };
   let $style = null;
-  const addStyle = function (css) {
+  const addStyle = css => {
     if (!$style) {
-      $style = document.createElement('style');
-      document.head.appendChild($style);
+      $style = document.body.appendChild(document.createElement('style'));
+      $style.id = 'yawf_page_style';
     }
     $style.textContent += css + '\n';
   };
@@ -122,26 +124,46 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
   const filterConfig = () => {
     return {
       keywords: getConfigStrings('filter::keywords'),
+      authors: getConfigStrings('filter::authors'),
       removeAd: getConfigBoolean('cleanup::ad'),
     };
   };
-  const feedFilter = function (feed) {
-    const { keywords, removeAd } = filterConfig();
+  const feedFilter = function (feed, context) {
+    const { keywords, authors, removeAd } = filterConfig();
+    // 广告
     if (removeAd && feed.content_auth === 5) return { action: 'hide', reason: '广告' };
-    if (removeAd && feed.retweeted_status?.content_auth === 5) return { action: 'hide', reason: '广告' };
-    const text = feed.text_raw || feed.text;
+    // 按关键词
+    const texts = [], collectText = feed => {
+      texts.push(feed.text_raw || feed.text);
+      if (feed.title_source?.name) texts.push(feed.title_source.name);
+      if (feed.title?.text) texts.push(feed.title.text);
+      if (feed.source) texts.push(feed.source);
+    };
+    collectText(feed);
+    const text = texts.join('\n');
+    log(feed, text);
     const keywordMatch = keywords.find(keyword => text.includes(keyword));
     if (keywordMatch) return { action: 'hide', reason: `关键词“${keywordMatch}”` };
-    const re_text = feed.retweeted_status?.text_raw || feed.retweeted_status?.text;
-    const reKeywordMatch = re_text && keywords.find(keyword => re_text?.includes(keyword));
-    if (reKeywordMatch) return { action: 'hide', reason: `关键词“${reKeywordMatch}”` };
+    // 按用户
+    const users = [], collectUser = feed => {
+      users.push(feed.user?.idstr);
+      if (Array.isArray(feed.cooperate_info?.cooperate_user_list)) feed.cooperate_info.cooperate_user_list.forEach(item => item?.idstr && users.push(item.idstr));
+    };
+    collectUser(feed);
+    log(feed, users);
+    const authorMatch = authors.find(author => author !== context.profile && users.includes(author));
+    if (authorMatch) return { action: 'hide', reason: `用户“${authorMatch}”` };
+    if (feed.retweeted_status) return feedFilter(feed.retweeted_status, context);
     return { action: 'show' };
   };
-  const commentFilter = function (comment) {
-    const { keywords, removeAd } = filterConfig();
+  const commentFilter = function (comment, context) {
+    const { keywords, authors, removeAd } = filterConfig();
     const text = comment.text_raw || comment.text;
     const keywordMatch = keywords.find(keyword => text.includes(keyword));
     if (keywordMatch) return { action: 'hide', reason: `关键词“${keywordMatch}”` };
+    const user = comment.user?.idstr;
+    const authorMatch = authors.find(author => author !== context.profile && user === author);
+    if (authorMatch) return { action: 'hide', reason: `用户“${authorMatch}”` };
     return { action: 'show' };
   };
   const hotSearchFilter = function (hotSearch) {
@@ -196,9 +218,14 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     };
   };
 
+  appReady.then(() => {
+    invokeContentScript('ready');
+  });
+
   appReady.then(app => {
     Object.assign($CONFIG, window.$CONFIG);
-    Object.assign(yawfConfig, config[$CONFIG.uid]);
+    Object.assign(yawfConfig, config[$CONFIG.user.idstr]);
+    isDebug = yawfConfig['about::debug'];
   });
 
   appReady.then(app => {
@@ -225,8 +252,9 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
 
   //#region DEBUG
   addLifecycleListener('mounted updated', '*', instance => {
+    if (!isDebug) return;
     const el = instance.vnode.el;
-    el.__vue__ = new WeakRef(instance);
+    el.__vue__ = instance;
   });
   //#endregion
 
@@ -383,7 +411,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
         const [index] = args;
         const type = instance.setupState.configs[index].type;
         if (type === 'yawf-config') {
-          invokeContentScript('config', { profileId: window.$CONFIG.uid });
+          invokeContentScript('config', { profileId: $CONFIG.user.idstr });
         } else _configHandle.apply(this, args);
       };
     }(instance.ctx.configHandle)).bind(null);
@@ -404,7 +432,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
 
   //#region 消息流
   const filterExecutedItems = new Set();
-  const filterFeedList = feedList => {
+  const filterFeedList = (feedList, context) => {
     if (!Array.isArray(feedList) || !feedList.length) return null;
     const filtered = [];
     let dirty = false;
@@ -414,7 +442,8 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
         return;
       }
       filterExecutedItems.add(item.idstr);
-      const status = feedFilter(item);
+      const status = feedFilter(item, context);
+      if (isDebug) item.__yawf_filterStatus__ = status;
       if (status.action !== 'hide') filtered.push(item);
       else {
         dirty = true;
@@ -423,7 +452,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     });
     return dirty ? filtered : null;
   };
-  const filterRepostCommentList = rcList => {
+  const filterRepostCommentList = (rcList, context) => {
     if (!Array.isArray(rcList) || !rcList.length) return;
     const filtered = [];
     let dirty = false;
@@ -435,15 +464,14 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       filterExecutedItems.add(item.idstr);
       const isRepost = item.retweeted_status;
       if (isRepost) {
-
-        const status = feedFilter(item);
+        const status = feedFilter(item, { ...context, rcList: true });
         if (status.action !== 'hide') filtered.push(item);
         else {
           dirty = true;
           log(`转发过滤：${status.reason}`, item);
         }
       } else {
-        const status = commentFilter(item);
+        const status = commentFilter(item, context);
         if (status.action !== 'hide') {
           const subComments = item.comments;
           const filteredSubComments = [];
@@ -462,24 +490,31 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     });
     return dirty ? filtered : null;
   };
+  const collectContext = instance => {
+    const context = {};
+    const $route = instance.appContext.config.globalProperties.$route;
+    if ($route.name === 'profile') context.profile = $route.params?.id;
+    context.uid = $CONFIG.user.idstr;
+    return context;
+  };
   addLifecycleListener('created', 'feed-scroll', instance => {
     if (!shouldFilterFeedList(instance)) return;
     instance.proxy.$watch(() => instance.props.data, feedList => {
-      const filtered = filterFeedList(feedList);
+      const filtered = filterFeedList(feedList, collectContext(instance));
       if (filtered) instance.emit('update:data', filtered);
     }, { deep: true });
   });
   addLifecycleListener('created', 'feed', instance => {
     if (!shouldFilterRCList(instance)) return;
     instance.proxy.$watch(() => instance.props.data.rcList, rcList => {
-      const filtered = filterRepostCommentList(rcList);
+      const filtered = filterRepostCommentList(rcList, collectContext(instance));
       if (filtered) instance.emit('update:data', { ...instance.props.data, rcList: filtered });
     }, { deep: true });
   });
   addLifecycleListener('created', 'repost-coment-list', instance => {
     if (!shouldFilterRCList(instance)) return;
     instance.proxy.$watch(() => instance.data.list, list => {
-      const filtered = filterRepostCommentList(list);
+      const filtered = filterRepostCommentList(list, collectContext(instance));
       if (filtered) instance.data.list.splice(0, instance.data.list.length, ...filtered);
     });
   });
@@ -535,7 +570,10 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       `[__yawf_component_profile-header__] .__yawf_profile-header_avatar2 { margin-top: 0; }`,
       `[__yawf_component_profile-header__] .__yawf_profile-header_content { padding-left: 100px; margin-top: -50px; width: 0; }`,
       `[__yawf_component_profile-header__] .__yawf_profile-header_box3 { margin-left: 126px; }`,
-    ],
+    ].join('\n'),
+    'cleanup::ad': [
+      '[__yawf_component_tips-ad__] { display: none; }',
+    ].join('\n'),
   };
   appReady.then(() => {
     Object.keys(cleanupStyles).forEach(key => {
@@ -561,11 +599,6 @@ try {
   alert('脚本需要在页面加载前读取配置，当前猴子环境可能不支持相关功能。请检查你是用的猴子版本是否受到支持。');
 }
 
-const style = document.createElement('style');
-document.addEventListener('DOMContentLoaded', () => {
-  document.body.appendChild(style);
-});
-
 const handlers = {};
 document.addEventListener(messageKey, event => {
   const { method, data } = event.detail;
@@ -575,6 +608,11 @@ document.addEventListener(messageKey, event => {
 handlers.config = ({ profileId }) => {
   configDialog(profileId);
 };
+const appReady = new Promise(resolve => {
+  handlers.ready = () => {
+    resolve();
+  };
+});
 //#region 基本 UI 组件
 const dialogStack = [];
 /**
@@ -803,7 +841,6 @@ const renderConfig = (container, profileId, template) => {
   // 设置读写
   const readConfig = () => {
     const config = GM_getValue(configKey);
-    console.log('YAWF CONFIG READ', config);
     if (config && typeof config === 'object') {
       config[profileId] ??= {};
       return config;
@@ -811,7 +848,6 @@ const renderConfig = (container, profileId, template) => {
     return writeConfig({});
   };
   const writeConfig = (config) => {
-    console.log('YAWF CONFIG WRITE', config);
     try { GM_setValue(configKey, config); return config; } catch (e) { }
     try { GM_setValue(configKey, {}); } catch (e) { }
     return {};
@@ -975,8 +1011,15 @@ const renderConfig = (container, profileId, template) => {
     configs.clear();
   };
 };
-const addCss = css => { style.textContent += '\n' + css + '\n'; };
-addCss(`
+let $style;
+const addStyle = css => {
+  if (!$style) {
+    $style = document.body.appendChild(document.createElement('style'));
+    $style.id = 'yawf_content_style';
+  }
+  $style.textContent += '\n' + css + '\n';
+};
+appReady.then(() => addStyle(`
 .yawf-dialog.yawf-dialog { position: fixed; transition: none; }
 .yawf-dialog .woo-dialog-main { max-width: none; padding-bottom: 0; }
 .yawf-dialog-text { max-width: 400px; }
@@ -1020,7 +1063,7 @@ label:hover .yawf-checkbox-wrap .yawf-checkbox-icon,
 .yawf-collection-input { width: 100%; height: 20px; box-sizing: border-box; padding-left: var(--w-input-indent, 4px); padding-right: var(--w-input-indent, 4px); }
 .yawf-collection-submit { padding: 4px 16px; margin: 0 4px; vertical-align: bottom; background: var(--w-b-flat-default-bg); border: 1px solid var(--w-b-line-default-border); color: var(--w-main); border-radius: 4px; cursor: pointer; }
 .yawf-collection-submit:hover { background: var(--w-b-line-default-bg-hover); }
-`);
+`));
 //#endregion
 
 //#region 配置界面
@@ -1079,12 +1122,20 @@ const CONFIG_TEMPLATE = `
     </yawf-group>
   </yawf-tab>
   <yawf-tab name="关于">
-    <p>yyawf 目前正在开发中，欢迎贡献代码</p>
-    <p>Licensed under MPL-2.0</p>
+    <yawf-group name="调试">
+      <yawf-rule id="about::debug">
+        <yawf-checkbox key="about::debug">启用调试</yawf-checkbox>
+      </yawf-rule>
+    </yawf-group>
+    <yawf-group name="关于">
+      <yawf-rule id="about::script">
+        <p>yyawf 目前正在开发中，欢迎贡献代码</p>
+        <p>Licensed under MPL-2.0</p>
+      </yawf-rule>
+    </yawf-group>
   </yawf-tab>
 </yawf-tabs>
 `;
 //#endregion
 
 unsafeWindow.eval(payload);
-
