@@ -358,6 +358,58 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     isDebug = yawfConfig['about::debug'];
   });
 
+  //#region 首页路由修正
+  appReady.then(app => {
+    const router = app.config.globalProperties.$router;
+    if (!router) return;
+    const uid = $CONFIG.user.idstr;
+    const gid = '11000' + uid;
+    const targetPath = '/mygroups?gid=' + gid;
+
+    const isHomeRoute = route => {
+      if (!route) return false;
+      if (route.name === 'home') return true;
+      const path = route.path || route.fullPath || '';
+      return path === '/' || path === '/home' || path.startsWith('/home?') || path.startsWith('/home/');
+    };
+
+    if (typeof router.__yawf_fix_home_guard__ === 'function') {
+      router.__yawf_fix_home_guard__();
+    }
+    router.__yawf_fix_home_guard__ = router.beforeEach(to => {
+      if (!getConfigBoolean('home::newest')) return;
+      if (isHomeRoute(to)) return targetPath;
+    });
+
+    const currentRoute = router.currentRoute.value;
+    if (getConfigBoolean('home::newest') && isHomeRoute(currentRoute)) {
+      router.replace(targetPath).catch(() => {});
+    }
+
+    // 拦截 $Bus 事件
+    const bus = app.config.globalProperties.$Bus;
+    if (bus) {
+      // 拦截 reload 事件，将 home 重定向到最新微博
+      const originalEmit = bus.$emit;
+      bus.$emit = function (eventName, ...args) {
+        if (getConfigBoolean('home::newest')) {
+          if (eventName === 'reload' && args[0] === 'home') {
+            return originalEmit.call(this, 'handleHomeNav', { gid, title: '最新微博', api: '/ajax/feed/friendstimeline', yawf_Trigger: true }, 1, 'left');
+          }
+          if (eventName === 'handleHomeNav') {
+            const data = args[0];
+            const dataGid = String(data?.gid ?? '');
+            if (dataGid.startsWith('10001') && !data.yawf_Trigger) {
+              return originalEmit.call(this, 'handleHomeNav', { gid, title: '最新微博', api: '/ajax/feed/friendstimeline', yawf_Trigger: true }, 1, 'left');
+            }
+          }
+        }
+        return originalEmit.apply(this, arguments);
+      };
+    }
+  });
+  //#endregion
+
   appReady.then(app => {
     log('Vue 加载完成');
     app.mixin({
@@ -1399,6 +1451,12 @@ const CONFIG_TEMPLATE = /* html */`
         <div><yawf-users key="filter::authors" /></div>
       </yawf-rule>
       <p>此处的作者会被应用于微博的作者、转发原作者、共著作者等用户。</p>
+    </yawf-group>
+    <yawf-group name="首页">
+      <yawf-rule id="home::newest">
+        <yawf-checkbox key="home::newest">使用最新微博代替首页（首页微博时间顺序排列）</yawf-checkbox>
+      </yawf-rule>
+      <p>启用后，点击左上角微博图标或「全部关注」时也会跳转到最新微博页面。</p>
     </yawf-group>
   </yawf-tab>
   <yawf-tab name="界面清理">
