@@ -128,10 +128,39 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       removeAd: getConfigBoolean('cleanup::ad'),
     };
   };
+  /**
+   * 判断是否为“赞过”推荐微博。
+   * 通过多字段容错识别：既检查已知标记字段，也检查标题文本中的“赞过”。
+   * @param {any} feed 微博数据对象
+   * @returns {boolean} 是否为“赞过”微博
+   */
+  const isLikedFeed = feed => {
+    if (!feed || typeof feed !== 'object') return false;
+    const flagKeys = [
+      'isSecondRelationFeed',
+      'is_second_relation_feed',
+      'isSecondRelation',
+      'is_second_relation',
+      'is_second_relation_mblog',
+      'isSecondRelationMblog',
+    ];
+    if (flagKeys.some(key => feed[key] === true)) return true;
+    const titleText = [
+      feed.title?.text,
+      feed.title?.text_raw,
+      feed.title?.name,
+      feed.title_source?.name,
+      feed.title_source?.text,
+    ].filter(Boolean).join(' ');
+    return titleText.includes('赞过');
+  };
   const feedFilter = function (feed, context) {
     const { keywords, authors, removeAd } = filterConfig();
+    const hideLiked = getConfigBoolean('cleanup::feedLiked');
     // 广告
     if (removeAd && feed.content_auth === 5) return { action: 'hide', reason: '广告' };
+    // 赞过
+    if (hideLiked && isLikedFeed(feed)) return { action: 'hide', reason: '赞过' };
     // 按关键词
     const texts = [], collectText = feed => {
       texts.push(feed.text_raw || feed.text);
@@ -1106,6 +1135,7 @@ const CONFIG_TEMPLATE = `
       <yawf-rule id="cleanup::feedQr"><yawf-checkbox key="cleanup::feedQr">分享二维码</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::feedRetweet"><yawf-checkbox key="cleanup::feedRetweet">转发</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::feedLike"><yawf-checkbox key="cleanup::feedLike">点赞</yawf-checkbox></yawf-rule>
+      <yawf-rule id="cleanup::feedLiked"><yawf-checkbox key="cleanup::feedLiked">赞过微博</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::translate"><yawf-checkbox key="cleanup::translate">翻译</yawf-checkbox></yawf-rule>
     </yawf-group>
     <yawf-group name="图标" class="yawf-compact-group">
