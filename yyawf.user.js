@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.10
+// @version           0.0.11
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -32,6 +32,7 @@
 /* eslint-env browser, greasemonkey */
 
 const configKey = 'CONFIG', messageKey = 'yawf-' + Array(64).fill(0).map(() => (Math.random() * 16).toString(16)[0]).join('');
+//#region PAGE SCRIPT
 const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, messageKey) {
 
   const $CONFIG = {}, yawfConfig = {};
@@ -46,10 +47,6 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     if (typeof args[0] === 'string') console.log('[yyawf] ' + args[0], ...args.slice(1));
     else console.log('[yyawf]', ...args);
   };
-  const invokeContentScript = function (method, data) {
-    const event = new CustomEvent(messageKey, { detail: { method, data } });
-    document.dispatchEvent(event);
-  };
   const kebabCase = function (word) {
     if (typeof word !== 'string') return word;
     return word.replace(/./g, (char, index) => {
@@ -61,7 +58,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
   const wrapFunction = function (original, wrapped) {
     original.__raw__ = original;
     return new Proxy(original, {
-      apply(target, thisArg, argumentsList) {
+      apply(_, thisArg, argumentsList) {
         return wrapped.apply(thisArg, argumentsList);
       },
     });
@@ -73,6 +70,139 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       $style.id = 'yawf_page_style';
     }
     $style.textContent += css + '\n';
+  };
+  const invokeContentScript = function (method, data) {
+    const event = new CustomEvent(messageKey + 'CONTENT', { detail: { method, data } });
+    document.dispatchEvent(event);
+  };
+  const handlers = {}, handle = (key, method) => handlers[key] = method;
+  document.addEventListener(messageKey + 'PAGE', event => {
+    const { method, data } = event.detail;
+    handlers[method]?.(data);
+  });
+  const dialog = config => {
+    appReady.then(app => {
+      const dialog = app.config.globalProperties.$_w_dialog;
+      return new Promise(resolve => {
+        dialog({
+          ...config,
+          action: () => resolve(true),
+          cancel: () => resolve(false),
+        });
+      });
+    });
+  };
+  handle('dialog', async ({ id, config }) => {
+    invokeContentScript('dialogDone', { id, response: await dialog(config) });
+  });
+  //#endregion
+
+  //#region 网络请求
+  const xhr = {};
+  handle('xhr', async ({ id, name, config }) => {
+    invokeContentScript('xhrDone', { id, response: await xhr[name](config) });
+  });
+  /** @typedef {{ idstr: string; screen_name: string; avatar: string; }} UserInfo */
+  const fetchUserInfo = (function () {
+    const byId = new Map();
+    const byName = new Map();
+
+    let throttle = Promise.resolve();
+    const raw = async function (param) {
+      const url = new URL('/ajax/user/popcard/get', location.href);
+      if (param.idstr) url.searchParams.set('id', param.idstr);
+      else if (param.screen_name) url.searchParams.set('screen_name', param.screen_name);
+      try {
+        const resp = await fetch(url);
+        if (resp.status !== 200) return null;
+        const json = await resp.json();
+        if (json && json.ok === 1 && json.data != null) {
+          const data = json.data;
+          if (data.idstr && data.screen_name) return data;
+        }
+        return null;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    const returnFromCache = function (param) {
+      const { idstr, screen_name } = param;
+      if (idstr && byId.has(idstr)) return byId.get(idstr);
+      if (screen_name && byName.has(screen_name)) return byName.get(screen_name);
+      return null;
+    };
+    const updateCacheItem = function (cache, key, data) {
+      if (typeof cache.get(key)?.then === 'function') {
+        if (cache.get(key) !== data) cache.get(key).resolver(data);
+      } else if (data) cache.set(key, data);
+      else cache.delete(key);
+    };
+    const updateCache = function (param, data) {
+      if (param.idstr) updateCacheItem(byId, param.idstr, data);
+      if (param.screen_name) updateCacheItem(byName, param.screen_name, data);
+      if (data && typeof data.then !== 'function') {
+        if (data.idstr) updateCacheItem(byId, data.idstr, data);
+        if (data.screen_name) updateCacheItem(byName, data.screen_name, data);
+      }
+    };
+    const writeCache = function (user) {
+      updateCache({}, user);
+    };
+
+    const throttled = async function (param, config) {
+      let cached = returnFromCache(param);
+      if (cached) return cached;
+
+      const promise = (function () {
+        let r, p = new Promise(res => (r = res));
+        p.resolver = r;
+        return p;
+      }());
+      updateCache(param, promise);
+      if (!config?.immediate) {
+        const wait = throttle;
+        throttle = throttle.then(() => promise.then(() => new Promise(res => setTimeout(res, 100))));
+        await wait;
+      }
+      const cacheAfterWait = returnFromCache(param);
+      if (cacheAfterWait !== promise) return cacheAfterWait;
+      const data = await raw(param);
+      updateCache(param, data);
+
+      return promise;
+    };
+
+    const wrapped = async function (param, config) {
+      const data = await throttled(param, config);
+      return JSON.parse(JSON.stringify(data ?? null));
+    };
+
+    return {
+      id: /** @type (id: string, config?: { immediate?: boolean }) => Promise<UserInfo | null> */ (id, config) => wrapped({ idstr: String(id) }, config),
+      name: /** @type (name: string, config?: { immediate?: boolean }) => Promise<UserInfo | null> */ (name, config) => wrapped({ screen_name: String(name) }, config),
+      writeCache,
+    };
+  }());
+  xhr.userInfoById = fetchUserInfo.id;
+  xhr.userInfoByName = fetchUserInfo.name;
+  const writeUserCache = fetchUserInfo.writeCache;
+  xhr.searchUsers = async function (keyword) {
+    if (!keyword) return [];
+    const url = new URL('/ajax/setting/searchUsers', location.href);
+    url.searchParams.set('q', keyword);
+    try {
+      const resp = await fetch(url);
+      if (resp.status !== 200) return [];
+      const json = await resp.json();
+      if (json && json.ok === 1 && Array.isArray(json.users)) {
+        json.users.forEach(user => writeUserCache({ idstr: user.idstr, screen_name: user.screen_name, avatar: user.profile_image_url }));
+        return json.users;
+      }
+      return [];
+    } catch {
+      return [];
+    }
   };
   //#endregion
 
@@ -151,7 +281,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     };
     collectUser(feed);
     log(feed, users);
-    const authorMatch = authors.find(author => author !== context.profile && users.includes(author));
+    const authorMatch = authors.find(author => author !== context?.profile && users.includes(author));
     if (authorMatch) return { action: 'hide', reason: `用户“${authorMatch}”` };
     if (feed.retweeted_status) return feedFilter(feed.retweeted_status, context);
     return { action: 'show' };
@@ -162,7 +292,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     const keywordMatch = keywords.find(keyword => text.includes(keyword));
     if (keywordMatch) return { action: 'hide', reason: `关键词“${keywordMatch}”` };
     const user = comment.user?.idstr;
-    const authorMatch = authors.find(author => author !== context.profile && user === author);
+    const authorMatch = authors.find(author => author !== context?.profile && user === author);
     if (authorMatch) return { action: 'hide', reason: `用户“${authorMatch}”` };
     return { action: 'show' };
   };
@@ -499,16 +629,16 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
   };
   addLifecycleListener('created', 'feed-scroll', instance => {
     if (!shouldFilterFeedList(instance)) return;
-    instance.proxy.$watch(() => instance.props.data, feedList => {
+    instance.proxy.$watch(() => instance.proxy.$props.data, feedList => {
       const filtered = filterFeedList(feedList, collectContext(instance));
       if (filtered) instance.emit('update:data', filtered);
     }, { deep: true });
   });
   addLifecycleListener('created', 'feed', instance => {
     if (!shouldFilterRCList(instance)) return;
-    instance.proxy.$watch(() => instance.props.data.rcList, rcList => {
+    instance.proxy.$watch(() => instance.proxy.$props.data.rcList, rcList => {
       const filtered = filterRepostCommentList(rcList, collectContext(instance));
-      if (filtered) instance.emit('update:data', { ...instance.props.data, rcList: filtered });
+      if (filtered) instance.emit('update:data', { ...instance.proxy.$props.data, rcList: filtered });
     }, { deep: true });
   });
   addLifecycleListener('created', 'repost-coment-list', instance => {
@@ -534,45 +664,45 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
 
   //#region 元素清理
   const cleanupStyles = {
-    'cleanup::navHome': `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/"] { display: none; }`,
-    'cleanup::navHot': `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/hot"] { display: none; }`,
-    'cleanup::navTv': `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/tv"] { display: none; }`,
-    'cleanup::navMessage': `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/at/weibo"] { display: none; }`,
-    'cleanup::navProfile': `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] { display: none; }`,
+    'cleanup::navHome': /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/"] { display: none; }`,
+    'cleanup::navHot': /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/hot"] { display: none; }`,
+    'cleanup::navTv': /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/tv"] { display: none; }`,
+    'cleanup::navMessage': /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href="/at/weibo"] { display: none; }`,
+    'cleanup::navProfile': /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] { display: none; }`,
     'cleanup::navAvatar': [
-      `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] { text-decoration: none; }`,
-      `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] .__yawf_ctrls_avatarItem::before { font-family: woo; content: "\\e087"; color: var(--weibo-top-nav-icon-color); font-size: 30px; }`,
-      `[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] .__yawf_ctrls_avatarItem > *{ display: none; }`,
+      /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] { text-decoration: none; }`,
+      /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] .__yawf_ctrls_avatarItem::before { font-family: woo; content: "\\e087"; color: var(--weibo-top-nav-icon-color); font-size: 30px; }`,
+      /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_ctrls__] a[href^="/u/"] .__yawf_ctrls_avatarItem > *{ display: none; }`,
     ].join('\n'),
-    'cleanup::navGame': `[__yawf_component_weibo-top-nav-base__] a[href*="game.weibo.com"] { display: none; }`,
-    'cleanup::navDarkMode': `[__yawf_component_weibo-top-nav-base__] [__yawf_component_dark__] { display: none; }`,
-    'cleanup::navAria': `[__yawf_component_aria__] { display: none; }`,
-    'cleanup::hotSearch': `[__yawf_component_card-hot-search__] { display: none; }`,
-    'cleanup::interested': `[__yawf_component_card-interested__] { display: none; }`,
-    'cleanup::creatorCenter': `[__yawf_component_card-service__] { display: none; }`,
-    'cleanup::sideFooter': `.wbpro-side-copy[__yawf_component_index__] { display: none; }`,
-    'cleanup::service': `[__yawf_component_service-module__] { display: none; }`,
-    'cleanup::followRecom': `[__yawf_component_recom-module__] { display: none; }`,
-    'cleanup::feedEmptyTip': `.__yawf_home_emptyPic { display: none; }`,
-    'cleanup::feedSource': `.__yawf_head-info_source { display: none; }`,
-    'cleanup::feedFollow': `[__yawf_component_feed__] [__yawf_component_head__] [__yawf_component_follow-btn__] { display: none; }`,
-    'cleanup::feedQr': `[__yawf_feed_toobar__extra__] { display: none; }`,
-    'cleanup::feedRetweet': `[__yawf_feed_toolbar__="retweet"], [__yawf_comment_toolbar_item__="retweet"] { display: none; }`,
-    'cleanup::feedLike': `[__yawf_feed_toolbar__="like"], [__yawf_comment_toolbar_item__="like"] { display: none; }`,
-    'cleanup::translate': `.__yawf_translate_opt { display: none; }`,
-    'cleanup::iconVerify': `.woo-icon-skinSpe, .woo-icon-skinSpe + .woo-icon-frames, .woo-icon--vred, .woo-icon--vorange, .woo-icon--vyellow, .woo-icon--vblue { display: none; }`,
-    'cleanup::iconVip': `[__yawf_icon_list_item__="vip"], .__yawf_woo-icon_vipimg { display: none; }`,
-    'cleanup::iconFans': `.__yawf_icon-fans_fans { display: none; }`,
-    'cleanup::iconOther': `.__yawf_icon-list_custom { display: none; }`,
+    'cleanup::navGame': /* css */`[__yawf_component_weibo-top-nav-base__] a[href*="game.weibo.com"] { display: none; }`,
+    'cleanup::navDarkMode': /* css */`[__yawf_component_weibo-top-nav-base__] [__yawf_component_dark__] { display: none; }`,
+    'cleanup::navAria': /* css */`[__yawf_component_aria__] { display: none; }`,
+    'cleanup::hotSearch': /* css */`[__yawf_component_card-hot-search__] { display: none; }`,
+    'cleanup::interested': /* css */`[__yawf_component_card-interested__] { display: none; }`,
+    'cleanup::creatorCenter': /* css */`[__yawf_component_card-service__] { display: none; }`,
+    'cleanup::sideFooter': /* css */`.wbpro-side-copy[__yawf_component_index__] { display: none; }`,
+    'cleanup::service': /* css */`[__yawf_component_service-module__] { display: none; }`,
+    'cleanup::followRecom': /* css */`[__yawf_component_recom-module__] { display: none; }`,
+    'cleanup::feedEmptyTip': /* css */`.__yawf_home_emptyPic { display: none; }`,
+    'cleanup::feedSource': /* css */`.__yawf_head-info_source { display: none; }`,
+    'cleanup::feedFollow': /* css */`[__yawf_component_feed__] [__yawf_component_head__] [__yawf_component_follow-btn__] { display: none; }`,
+    'cleanup::feedQr': /* css */`[__yawf_feed_toobar__extra__] { display: none; }`,
+    'cleanup::feedRetweet': /* css */`[__yawf_feed_toolbar__="retweet"], [__yawf_comment_toolbar_item__="retweet"] { display: none; }`,
+    'cleanup::feedLike': /* css */`[__yawf_feed_toolbar__="like"], [__yawf_comment_toolbar_item__="like"] { display: none; }`,
+    'cleanup::translate': /* css */`.__yawf_translate_opt { display: none; }`,
+    'cleanup::iconVerify': /* css */`.woo-icon-skinSpe, .woo-icon-skinSpe + .woo-icon-frames, .woo-icon--vred, .woo-icon--vorange, .woo-icon--vyellow, .woo-icon--vblue { display: none; }`,
+    'cleanup::iconVip': /* css */`[__yawf_icon_list_item__="vip"], .__yawf_woo-icon_vipimg { display: none; }`,
+    'cleanup::iconFans': /* css */`.__yawf_icon-fans_fans { display: none; }`,
+    'cleanup::iconOther': /* css */`.__yawf_icon-list_custom { display: none; }`,
     'cleanup::profileHeader': [
-      `[__yawf_component_profile-header__] .wbpro-pos { display: none; }`,
-      `[__yawf_component_profile-header__] .__yawf_profile-header_box1 { padding-top: 40px; }`,
-      `[__yawf_component_profile-header__] .__yawf_profile-header_avatar2 { margin-top: 0; }`,
-      `[__yawf_component_profile-header__] .__yawf_profile-header_content { padding-left: 100px; margin-top: -50px; width: 0; }`,
-      `[__yawf_component_profile-header__] .__yawf_profile-header_box3 { margin-left: 126px; }`,
+      /* css */`[__yawf_component_profile-header__] .wbpro-pos { display: none; }`,
+      /* css */`[__yawf_component_profile-header__] .__yawf_profile-header_box1 { padding-top: 40px; }`,
+      /* css */`[__yawf_component_profile-header__] .__yawf_profile-header_avatar2 { margin-top: 0; }`,
+      /* css */`[__yawf_component_profile-header__] .__yawf_profile-header_content { padding-left: 100px; margin-top: -50px; width: 0; }`,
+      /* css */`[__yawf_component_profile-header__] .__yawf_profile-header_box3 { margin-left: 126px; }`,
     ].join('\n'),
     'cleanup::ad': [
-      '[__yawf_component_tips-ad__] { display: none; }',
+      /* css */`[__yawf_component_tips-ad__] { display: none; }`,
     ].join('\n'),
   };
   appReady.then(() => {
@@ -589,7 +719,9 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     return {};
   } catch { return {}; }
 }()), messageKey].map(x => JSON.stringify(x)) + '))');
+//#endregion
 
+//#region CONTENT SCRIPT
 try {
   if (typeof GM_getValue !== 'function') throw Error();
   if (typeof GM_setValue !== 'function') throw Error();
@@ -599,20 +731,43 @@ try {
   alert('脚本需要在页面加载前读取配置，当前猴子环境可能不支持相关功能。请检查你是用的猴子版本是否受到支持。');
 }
 
-const handlers = {};
-document.addEventListener(messageKey, event => {
+const handlers = {}, handle = (key, method) => handlers[key] = method;
+document.addEventListener(messageKey + 'CONTENT', event => {
   const { method, data } = event.detail;
   handlers[method]?.(data);
 });
-
-handlers.config = ({ profileId }) => {
-  configDialog(profileId);
+const invokePageScript = function (method, data) {
+  const event = new CustomEvent(messageKey + 'PAGE', { detail: { method, data } });
+  document.dispatchEvent(event);
 };
-const appReady = new Promise(resolve => {
-  handlers.ready = () => {
-    resolve();
-  };
+handle('config', ({ profileId }) => {
+  configDialog(profileId);
 });
+const appReady = new Promise(resolve => {
+  handle('ready', () => {
+    resolve();
+  });
+});
+
+let xhrIndex = 0;
+const xhrFly = new Map();
+handle('xhrDone', ({ id, response }) => {
+  xhrFly.get(id)?.(response);
+  xhrFly.delete(id);
+});
+const xhr = new Proxy({}, {
+  get(_, name) {
+    return async config => {
+      const id = ++xhrIndex;
+      const resp = new Promise(resolve => {
+        xhrFly.set(id, resolve);
+      });
+      invokePageScript('xhr', { id, name, config });
+      return resp;
+    };
+  },
+});
+
 //#region 基本 UI 组件
 const dialogStack = [];
 /**
@@ -629,7 +784,7 @@ const dialogStack = [];
 const uiDialog = function ({ id, title, render, button, onShow, onHide }) {
   // 初始化 DOM
   const template = document.createElement('template');
-  template.innerHTML = `
+  template.innerHTML = /* html */`
 <div class="woo-box-flex woo-box-alignCenter woo-box-justifyCenter woo-modal-wrap woo-modal-an--pop-enter">
   <div class="woo-modal-main yawf-dialog">
     <i class="woo-font woo-font--cross yawf-dialog-close"></i>
@@ -783,6 +938,20 @@ const uiDialog = function ({ id, title, render, button, onShow, onHide }) {
   };
   return { hide, show, resetPosition, dom: dialog };
 };
+const wooDialogFly = new Map();
+let wooDialogIndex = 0;
+const wooDialog = function (config) {
+  const id = ++wooDialogIndex;
+  const resp = new Promise(resolve => {
+    wooDialogFly.set(id, resolve);
+  });
+  invokePageScript('dialog', { id, config });
+  return resp;
+};
+handle('dialogDone', ({ id, response }) => {
+  wooDialogFly.get(id)?.(response);
+  wooDialogFly.delete(id);
+});
 //#endregion
 
 //#region 设置界面
@@ -821,7 +990,7 @@ const renderConfig = (container, profileId, template) => {
   const t = t => new Text(t);
   /** @type {HTMLElement} */
   const main = dom.querySelector('yawf-config').cloneNode(true);
-  // 标签页
+  //#region 标签页
   [...main.querySelectorAll('yawf-tabs')].forEach(tabs => {
     const tabItems = [...tabs.children].filter(item => item.matches('yawf-tab'));
     const list = r('div', 'yawf-tab-list'), content = r('div', 'yawf-tab-content');
@@ -838,7 +1007,8 @@ const renderConfig = (container, profileId, template) => {
     }); tabs.parentNode.replaceChild(container, tabs);
     highlight(0);
   });
-  // 设置读写
+  //#endregion
+  //#region 设置读写
   const readConfig = () => {
     const config = GM_getValue(configKey);
     if (config && typeof config === 'object') {
@@ -875,6 +1045,8 @@ const renderConfig = (container, profileId, template) => {
       }
     });
   });
+  //#endregion
+  //#region 设置项
   /** @type {Map<string, ConfigItem[]>} */
   const configs = new Map();
   class ConfigItem {
@@ -915,6 +1087,40 @@ const renderConfig = (container, profileId, template) => {
     }
     renderItem(val) { return t(val); }
   }
+  class UsersConfigItem extends StringsConfigItem {
+    renderItem(val) {
+      const container = r('div', 'yawf-user-item');
+      xhr.userInfoById(val).then(user => {
+        if (!user) return;
+        container.innerHTML = '';
+        container.append(
+          r('img', 'yawf-user-avatar', { src: user.avatar, alt: user.screen_name }),
+          r('a', 'yawf-user-name', { href: `/u/${user.idstr}`, target: '_blank' }, [
+            r('span', { title: user.screen_name }, [t(user.screen_name)]),
+          ])
+        );
+      });
+      return container;
+    }
+  }
+  const addStringItem = function (key, val) {
+    const value = val.trim();
+    if (!value) return null;
+    setConfig(key, (getConfig(key)?.filter(i => i !== value) || []).concat([value]));
+    return true;
+  };
+  const addUserItem = async function (key, val) {
+    const name = val.trim().replace(/^@/, '');
+    if (!name) return null;
+    const user = await xhr.userInfoByName(name, { immediate: true });
+    if (!user) {
+      wooDialog({ type: 'alert', message: '找不到该用户', btnConfirm: '我知道了', title: '添加用户' });
+      return false;
+    }
+    const idstr = user.idstr;
+    setConfig(key, (getConfig(key)?.filter(i => i !== idstr) || []).concat([idstr]));
+    return true;
+  };
   // 勾选框
   [...main.querySelectorAll('yawf-checkbox')].forEach(checkbox => {
     const key = checkbox.getAttribute('key');
@@ -943,22 +1149,26 @@ const renderConfig = (container, profileId, template) => {
     select.parentNode.replaceChild($select, select);
     new SelectConfigItem(key, $select, defaultValue);
   });
-  // 字符串列表
-  [...main.querySelectorAll('yawf-strings')].forEach(strings => {
+  // 字符串列表和用户列表
+  [...main.querySelectorAll('yawf-strings, yawf-users')].forEach(strings => {
+    const isUsers = strings.matches('yawf-users');
     const key = strings.getAttribute('key');
-    const $ul = r('ul', 'yawf-collection-list', { 'data-key': key });
+    const $ul = r('ul', 'yawf-collection-list yawf-strings-list ' + (isUsers ? 'yawf-users-list' : ''), { 'data-key': key });
     strings.parentNode.replaceChild($ul, strings);
-    new StringsConfigItem(key, $ul, []);
+    if (isUsers) new UsersConfigItem(key, $ul, []);
+    else new StringsConfigItem(key, $ul, []);
   });
-  [...main.querySelectorAll('yawf-strings-input')].forEach(stringsInput => {
+  [...main.querySelectorAll('yawf-strings-input, yawf-users-input')].forEach(stringsInput => {
     const key = stringsInput.getAttribute('key');
-    const $form = r('form', 'yawf-collection-form', { 'data-key': key }, [
+    const isUsers = stringsInput.matches('yawf-users-input');
+    const $form = r('form', 'yawf-collection-form yawf-strings-form ' + (isUsers ? 'yawf-users-form' : ''), { 'data-key': key }, [
       r('div', 'woo-input-wrap', [r('input', 'yawf-collection-input woo-input-main', { type: 'text' })]),
       r('button', 'yawf-collection-submit woo-button-main woo-button-line woo-button-primary woo-button-s woo-button-round', { type: 'submit' }, [t('添加')]),
     ]);
     stringsInput.parentNode.replaceChild($form, stringsInput);
   });
-  // 界面
+  //#endregion
+  //#region 界面
   [...main.querySelectorAll('yawf-rule')].forEach(rule => {
     const $rule = rule.parentNode.replaceChild(moveSubTree(r('div', 'yawf-rule'), rule), rule);
     if (rule.className) $rule.className += ' '+ rule.className;
@@ -993,19 +1203,115 @@ const renderConfig = (container, profileId, template) => {
       setConfig(key, getConfig(key)?.filter(i => i !== value) || []);
     }
   })
-  root.addEventListener('submit', e => {
+  root.addEventListener('submit', async e => {
     const el = e.target;
     const key = el?.dataset?.key;
     if (!key) return;
     if (el.matches('form.yawf-collection-form')) {
-      const input = el.querySelector('input.yawf-collection-input');
-      const value = input.value.trim();
-      if (value) setConfig(key, (getConfig(key)?.filter(i => i !== value) || []).concat([value]));
-      input.value = '';
-      input.focus();
       e.preventDefault();
+      const input = el.querySelector('input.yawf-collection-input');
+      const isUsers = input.matches('.yawf-users-form input.yawf-collection-input');
+      input.disabled = true;
+      const addItem = await (isUsers ? addUserItem(key, input.value) : addStringItem(key, input.value));
+      input.disabled = false;
+      if (addItem !== false) input.value = '';
+      input.focus();
+      const autoComplete = input.nextSibling;
+      if (autoComplete) autoComplete.innerHTML = '';
     }
   });
+  const renderAutoComplete = async el => {
+    const valueSnapshot = el.value;
+    const val = valueSnapshot.trim().replace(/^@/, '').trim();
+    const autoComplete = el.nextSibling;
+    /** @type {Array} */
+    const users = await xhr.searchUsers(val);
+    if (el.value !== valueSnapshot) return;
+    autoComplete.innerHTML = '';
+    const candidates = users.map(user => (
+      autoComplete.appendChild(r('div', 'yawf-collection-auto-complete-item', { 'data-value': user.screen_name }, [t(user.screen_name)]))
+    ));
+    candidates[0]?.classList.add('yawf-collection-auto-complete-current');
+  };
+  root.addEventListener('focusin', event => {
+    const el = event.target;
+    if (el.matches('.yawf-users-form input.yawf-collection-input')) {
+      if (!el.nextSibling?.matches('.yawf-collection-auto-complete')) {
+        el.parentNode.insertBefore(r('div', 'yawf-collection-auto-complete'), el.nextSibling);
+      }
+      renderAutoComplete(el);
+    }
+  });
+  root.addEventListener('focusout', event => {
+    const el = event.target;
+    if (el instanceof HTMLElement && el.matches('.yawf-users-form input.yawf-collection-input')) {
+      const autoComplete = el.nextSibling;
+      if (!(autoComplete instanceof HTMLElement) || !autoComplete.matches('.yawf-collection-auto-complete')) return;
+      autoComplete.parentNode.removeChild(autoComplete);
+    }
+  });
+  root.addEventListener('input', event => {
+    const el = event.target;
+    if (el instanceof HTMLElement && el.matches('.yawf-users-form input.yawf-collection-input')) {
+      const autoComplete = el.nextSibling;
+      if (!(autoComplete instanceof HTMLElement) || !autoComplete.matches('.yawf-collection-auto-complete')) return;
+      autoComplete.innerHTML = '';
+      if (!event.isComposing) renderAutoComplete(el);
+    }
+  });
+  root.addEventListener('keydown', event => {
+    const el = event.target;
+    if (el instanceof HTMLElement && el.matches('.yawf-users-form input.yawf-collection-input')) {
+      const autoComplete = el.nextSibling;
+      if (!(autoComplete instanceof HTMLElement) || !autoComplete.matches('.yawf-collection-auto-complete')) return;
+      if (event.isComposing) return;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        const items = [...autoComplete.children].filter(item => item.matches('.yawf-collection-auto-complete-item'));
+        const current = items.find(item => item.matches('.yawf-collection-auto-complete-current'));
+        const currentIndex = items.indexOf(current);
+        if (current) current.classList.remove('yawf-collection-auto-complete-current');
+        const next = event.key === 'ArrowDown' ?
+          currentIndex >= 0 && currentIndex < items.length - 1 ? currentIndex + 1 : 0 :
+          currentIndex > 0 && currentIndex <= items.length - 1 ? currentIndex - 1 : items.length - 1;
+        items[next].classList.add('yawf-collection-auto-complete-current');
+        items[next].scrollIntoView({ block: 'nearest' });
+      } else if (event.key === 'Enter') {
+        const current = autoComplete.querySelector('.yawf-collection-auto-complete-current');
+        if (current) el.value = current.dataset.value;
+      }
+    }
+  });
+  root.addEventListener('mousemove', event => {
+    const el = event.target;
+    if (el instanceof HTMLElement && el.closest('.yawf-collection-auto-complete-item')) {
+      const item = el.closest('.yawf-collection-auto-complete-item');
+      const list = item.parentNode;
+      const current = list.querySelector('.yawf-collection-auto-complete-current');
+      if (item !== current) {
+        current?.classList.remove('yawf-collection-auto-complete-current');
+        item.classList.add('yawf-collection-auto-complete-current');
+      }
+    }
+  });
+  root.addEventListener('mousedown', async event => {
+    const el = event.target;
+    if (el instanceof HTMLElement && el.closest('.yawf-collection-auto-complete-item')) {
+      const item = el.closest('.yawf-collection-auto-complete-item');
+      const list = item.parentNode;
+      const input = list.previousSibling;
+      const form = input.closest('.yawf-collection-form');
+      const value = item.dataset.value;
+      const key = form.dataset.key;
+      if (input && form) {
+        input.disabled = true;
+        const addItem = await addUserItem(key, value);
+        input.disabled = false;
+        if (addItem !== false) input.value = '';
+        input.focus();
+      }
+    }
+  });
+  //#endregion
   return () => {
     GM_removeValueChangeListener(listenerId);
     configs.clear();
@@ -1019,7 +1325,7 @@ const addStyle = css => {
   }
   $style.textContent += '\n' + css + '\n';
 };
-appReady.then(() => addStyle(`
+appReady.then(() => addStyle(/* css */`
 .yawf-dialog.yawf-dialog { position: fixed; transition: none; }
 .yawf-dialog .woo-dialog-main { max-width: none; padding-bottom: 0; }
 .yawf-dialog-text { max-width: 400px; }
@@ -1057,17 +1363,29 @@ label:hover .yawf-checkbox-wrap .yawf-checkbox-icon,
 .yawf-collection-item { padding: 0 5px 0 20px; min-width: 0; height: 20px; overflow: hidden; text-overflow: ellipsis; cursor: default; display: inline-block; position: relative; margin-left: 8px; border: 1px solid var(--w-b-line-default); border-radius: 2px; background: var(--w-card-background); line-height: 20px; vertical-align: middle; }
 .yawf-collection-item-remove { display: block; position: absolute; top: 2px; left: 0; width: 20px; height: 20px; line-height: 20px; text-align: center; cursor: pointer; background: none; border: none; }
 .yawf-collection-item-remove i { color: var(--w-fonticon); }
-.yawf-collection-item-content { max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; display: inline-block; padding-left: 2px; }
+.yawf-collection-item-content { max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; display: inline-block; }
 .yawf-collection-form { display: contents; align-items: center; margin: 5px 0; }
 .yawf-collection-form .woo-input-wrap { flex: 1; margin-right: 4px; }
 .yawf-collection-input { width: 100%; height: 20px; box-sizing: border-box; padding-left: var(--w-input-indent, 4px); padding-right: var(--w-input-indent, 4px); }
+.yawf-users-list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.yawf-users-list .yawf-collection-item { padding-left: 60px; height: 50px; margin: 0; }
+.yawf-users-list .yawf-collection-item .yawf-collection-item-remove { position: static; float: right; margin: 5px; }
+.yawf-users-list .yawf-collection-item .yawf-collection-item-content { display: inline; word-break: break-all; white-space: pre-wrap; line-height: 20px; }
+.yawf-users-list .yawf-collection-item .yawf-user-avatar { position: absolute; top: 0; left: 0; width: 50px; height: 50px; }
+.yawf-users-list .yawf-collection-item .yawf-user-item { padding: 5px 0; }
+.yawf-users-list .yawf-collection-item .yawf-user-name:not(:hover):not(:focus) { color: inherit; }
 .yawf-collection-submit { padding: 4px 16px; margin: 0 4px; vertical-align: bottom; background: var(--w-b-flat-default-bg); border: 1px solid var(--w-b-line-default-border); color: var(--w-main); border-radius: 4px; cursor: pointer; }
 .yawf-collection-submit:hover { background: var(--w-b-line-default-bg-hover); }
+
+.yawf-collection-auto-complete { position: absolute; top: 100%; margin-top: 4px; left: 0; width: 400px; z-index: 1; background: var(--w-card-background); color: var(--w-main); border: 1px solid var(--w-b-line-default-border); border-radius: var(--w-pop-wrap-radius); max-height: 200px; overflow: auto; }
+.yawf-collection-auto-complete:empty { display: none; }
+.yawf-collection-auto-complete-current { background: var(--w-pop-item-hover); }
+.yawf-collection-auto-complete-item { line-height: 40px; padding: 0 10px; cursor: normal; }
 `));
 //#endregion
 
 //#region 配置界面
-const CONFIG_TEMPLATE = `
+const CONFIG_TEMPLATE = /* html */`
 <yawf-tabs>
   <yawf-tab name="微博过滤">
     <yawf-group name="过滤规则">
@@ -1075,7 +1393,12 @@ const CONFIG_TEMPLATE = `
         <div>关键字 <yawf-strings-input key="filter::keywords" /></div>
         <div><yawf-strings key="filter::keywords" /></div>
       </yawf-rule>
-      <p>此处的规则会被应用于微博和评论，关键字会匹配全文，包括话题和@的用户。</p>
+      <p>此处的关键字会被应用于微博和评论，关键字会匹配全文，包括话题和@的用户。</p>
+      <yawf-rule id="filter::authors">
+        <div>作者 <yawf-users-input key="filter::authors" /></div>
+        <div><yawf-users key="filter::authors" /></div>
+      </yawf-rule>
+      <p>此处的作者会被应用于微博的作者、转发原作者、共著作者等用户。</p>
     </yawf-group>
   </yawf-tab>
   <yawf-tab name="界面清理">
@@ -1137,5 +1460,5 @@ const CONFIG_TEMPLATE = `
 </yawf-tabs>
 `;
 //#endregion
-
+//#endregion
 unsafeWindow.eval(payload);
