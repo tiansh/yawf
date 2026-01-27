@@ -386,26 +386,134 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       router.replace(targetPath).catch(() => {});
     }
 
-    // 拦截 $Bus 事件
+    const isEnabled = () => getConfigBoolean('home::newest');
+
+    // 站内有一条“回首页”的事件链路：点击左上角微博图标/首页入口 -> $Bus.$emit('reload','home')
+    // 但在“最新微博”页这会打 /ajax/feed/unreadfriendstimeline?list_id=10001...，把信息流刷成非时间序。
+    // 这里拦截点击，并改为复用站内正常的“切到最新微博”导航链路（handleHomeNav）。
+    if (typeof router.__yawf_fix_home_click_guard__ === 'function') {
+      router.__yawf_fix_home_click_guard__();
+    }
+    const isAtTarget = () => {
+      try {
+        const url = new URL(location.href);
+        return url.pathname === '/mygroups' && url.searchParams.get('gid') === String(gid);
+      } catch {
+        return false;
+      }
+    };
+
+    const findGroupInAllGroups = (groups, wantGid) => {
+      // allGroups response shape: { groups: [ { group: [ ... ] }, ... ] }
+      const root = Array.isArray(groups) ? groups : [];
+      for (const item of root) {
+        const list = Array.isArray(item?.group) ? item.group : null;
+        if (!list) continue;
+        const index = list.findIndex(g => String(g?.gid ?? '') === String(wantGid));
+        if (index !== -1) return { group: list[index], index };
+      }
+      return null;
+    };
+    const buildNewestPayload = g => {
+      // allGroups payload may omit fields that web-weibo expects when navigating.
+      const apipath = String(g?.apipath ?? '');
+      const api = typeof g?.api === 'string' && g.api ? g.api :
+        apipath === 'statuses/friends/timeline' ? '/ajax/feed/friendstimeline' : null;
+      return {
+        ...g,
+        api: api ?? g?.api,
+        name: g?.name ?? g?.title ?? '最新微博',
+        title: g?.title ?? g?.name ?? '最新微博',
+        loadEmptyPic: g?.loadEmptyPic ?? false,
+        yawf_Trigger: true,
+      };
+    };
+
+    let newestGroupPromise = null;
+    const getNewestGroup = async () => {
+      if (newestGroupPromise) return newestGroupPromise;
+      newestGroupPromise = fetch('/ajax/feed/allGroups', { credentials: 'include' })
+        .then(r => r.json())
+        .then(({ groups } = {}) => findGroupInAllGroups(groups, gid))
+        .catch(() => {
+          newestGroupPromise = null;
+          return null;
+        });
+      return newestGroupPromise;
+    };
+    const routeToNewest = async ({ force = false } = {}) => {
+      if (!force && isAtTarget()) return;
+      router.replace(targetPath).catch(() => {});
+      const bus = app.config.globalProperties.$Bus;
+      if (bus && typeof bus.$emit === 'function') {
+        const groupInfo = await getNewestGroup();
+        if (groupInfo?.group) {
+          bus.$emit('handleHomeNav', buildNewestPayload(groupInfo.group), groupInfo.index, 'left');
+          return;
+        }
+        // fallback: 拿不到完整 group 配置时，尽力触发一次导航（不保证所有站内逻辑都能跟上）
+        bus.$emit('handleHomeNav', { gid, title: '最新微博', yawf_Trigger: true }, 1, 'left');
+        return;
+      }
+    };
+    const normalizeText = s => String(s ?? '').replace(/[\u200b\r\n]+/g, '').trim();
+    const isHomeEntryAnchor = a => {
+      if (!a) return false;
+      const text = normalizeText(a.textContent);
+      const href = a.getAttribute?.('href');
+      // Left sidebar "全部关注" link (href="/") routes to home.
+      if (text === '全部关注' && href === '/') return true;
+
+      // Top nav logo / home tabs.
+      if (!a.closest?.('[__yawf_component_weibo-top-nav-base__]')) return false;
+      if (a.matches?.('a.__yawf_weibo-top-nav-base_logoWrap')) return true;
+      if (text.startsWith('首页')) return true;
+      return href === '/';
+    };
+    const clickGuard = e => {
+      if (!isEnabled()) return;
+      if (e.defaultPrevented) return;
+      if ('button' in e && e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      const a = e.target?.closest?.('a');
+      if (!isHomeEntryAnchor(a)) return;
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      e.stopPropagation();
+
+      routeToNewest({ force: true }).catch(() => {});
+    };
+    document.addEventListener('click', clickGuard, true);
+    router.__yawf_fix_home_click_guard__ = () => {
+      document.removeEventListener('click', clickGuard, true);
+    };
+
+    // $router 的改动不一定会驱动首页内容切换（站内很多是通过 $Bus 驱动的）。
+    // 为避免侵入式 override $emit，这里采用类似旧版 YAWF 的方式：监听关键事件并补发导航事件。
     const bus = app.config.globalProperties.$Bus;
     if (bus) {
-      // 拦截 reload 事件，将 home 重定向到最新微博
-      const originalEmit = bus.$emit;
-      bus.$emit = function (eventName, ...args) {
-        if (getConfigBoolean('home::newest')) {
-          if (eventName === 'reload' && args[0] === 'home') {
-            return originalEmit.call(this, 'handleHomeNav', { gid, title: '最新微博', api: '/ajax/feed/friendstimeline', yawf_Trigger: true }, 1, 'left');
+      const on = typeof bus.$on === 'function' ? bus.$on : (typeof bus.on === 'function' ? bus.on : null);
+      if (on) {
+        // 某些入口会通过事件总线“回首页”，但路由不变；这里兜底把它们导向“最新微博”。
+        on.call(bus, 'reload', function (...args) {
+          if (!isEnabled()) return;
+          if (args[0] !== 'home') return;
+          if (isAtTarget()) return;
+          routeToNewest().catch(() => {});
+        });
+
+        on.call(bus, 'handleHomeNav', function (data) {
+          if (!isEnabled()) return;
+          if (data?.yawf_Trigger) return;
+          const dataGid = String(data?.gid ?? '');
+          if (dataGid.startsWith('10001')) {
+            if (isAtTarget()) return;
+            routeToNewest().catch(() => {});
           }
-          if (eventName === 'handleHomeNav') {
-            const data = args[0];
-            const dataGid = String(data?.gid ?? '');
-            if (dataGid.startsWith('10001') && !data.yawf_Trigger) {
-              return originalEmit.call(this, 'handleHomeNav', { gid, title: '最新微博', api: '/ajax/feed/friendstimeline', yawf_Trigger: true }, 1, 'left');
-            }
-          }
-        }
-        return originalEmit.apply(this, arguments);
-      };
+        });
+      }
     }
   });
   //#endregion
