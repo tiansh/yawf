@@ -2,7 +2,7 @@
 // @name              yyawf
 // @description       Under construction
 // @namespace         https://github.com/tiansh
-// @version           0.0.11
+// @version           0.0.12
 // @match             *://*.weibo.com/*
 // @noframes
 // @run-at            document-start
@@ -92,6 +92,11 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       });
     });
   };
+  handle('configChanged', ({ profileId, key, value }) => {
+    if (profileId !== $CONFIG.user.idstr) return;
+    yawfConfig[key] = value;
+    if (key === 'cleanup::feedFavorite') updateFavoriteVisibility();
+  });
   handle('dialog', async ({ id, config }) => {
     invokeContentScript('dialogDone', { id, response: await dialog(config) });
   });
@@ -356,6 +361,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     Object.assign($CONFIG, window.$CONFIG);
     Object.assign(yawfConfig, config[$CONFIG.user.idstr]);
     isDebug = yawfConfig['about::debug'];
+    updateFavoriteVisibility();
   });
 
   appReady.then(app => {
@@ -526,6 +532,155 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       }
     }
   });
+  //#endregion
+
+  //#region 一键收藏
+  const favoriteOverrides = new Map();
+  const getXsrfToken = () => {
+    const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);
+    return match ? decodeURIComponent(match[1]) : '';
+  };
+  const requestFavorite = async (id, favorite) => {
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Requested-With': 'XMLHttpRequest',
+    };
+    const token = getXsrfToken();
+    if (token) headers['X-XSRF-TOKEN'] = token;
+    const response = await fetch('/ajax/statuses/' + (favorite ? 'createFavorites' : 'destoryFavorites'), {
+      method: 'POST',
+      credentials: 'include',
+      headers,
+      body: 'id=' + encodeURIComponent(id),
+    });
+    const text = await response.text();
+    let json = null;
+    try { json = JSON.parse(text); } catch { }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (!json || typeof json !== 'object') throw new Error('接口返回异常');
+    if (json.ok === 0 || json.result === false) {
+      const message = json.message || json.msg || json.data?.message || json.data?.msg;
+      throw new Error(message || '请求被拒绝');
+    }
+    if (typeof json.favorited === 'boolean') return json.favorited;
+    if (typeof json.status?.favorited === 'boolean') return json.status.favorited;
+    if (typeof json.data?.favorited === 'boolean') return json.data.favorited;
+    return favorite;
+  };
+  let favoriteMessageTimer = 0;
+  const showFavoriteMessage = (message, isError) => {
+    let toast = document.getElementById('yawf-favorite-message');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'yawf-favorite-message';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.toggle('yawf-favorite-message-error', !!isError);
+    toast.classList.add('yawf-favorite-message-show');
+    clearTimeout(favoriteMessageTimer);
+    favoriteMessageTimer = setTimeout(() => {
+      toast.classList.remove('yawf-favorite-message-show');
+    }, 1800);
+  };
+  const renderFavoriteButton = (button, favorited) => {
+    if (button.dataset.yawfFavoriteState === String(favorited)) return;
+    button.dataset.yawfFavoriteState = String(favorited);
+    button.classList.toggle('yawf-favorite-active', favorited);
+    button.setAttribute('aria-pressed', String(favorited));
+    button.title = favorited ? '取消收藏' : '收藏';
+    button.setAttribute('aria-label', button.title);
+    const icon = button.querySelector('.yawf-favorite-icon');
+    icon?.classList.toggle('woo-font--star', favorited);
+    icon?.classList.toggle('woo-font--navCollect', !favorited);
+  };
+  const updateFavoriteVisibility = () => {
+    document.documentElement.classList.toggle('yawf-hide-favorite', getConfigBoolean('cleanup::feedFavorite'));
+  };
+  const updateFavoriteButtonById = (id, favorited) => {
+    [...document.querySelectorAll('.yawf-favorite')].forEach(button => {
+      if (button.dataset.yawfFavoriteId === id) renderFavoriteButton(button, favorited);
+    });
+  };
+  const toggleFavorite = async button => {
+    const id = button.dataset.yawfFavoriteId;
+    if (!id || button.dataset.yawfFavoriteBusy === 'true') return;
+    const favorited = button.classList.contains('yawf-favorite-active');
+    button.dataset.yawfFavoriteBusy = 'true';
+    button.classList.add('yawf-favorite-busy');
+    try {
+      const nextFavorited = await requestFavorite(id, !favorited);
+      favoriteOverrides.set(id, nextFavorited);
+      updateFavoriteButtonById(id, nextFavorited);
+      showFavoriteMessage(nextFavorited ? '已收藏' : '已取消收藏');
+    } catch (e) {
+      log('收藏操作失败', id, e);
+      showFavoriteMessage('收藏失败：' + (e?.message || '未知错误'), true);
+    } finally {
+      delete button.dataset.yawfFavoriteBusy;
+      button.classList.remove('yawf-favorite-busy');
+    }
+  };
+  const createFavoriteButton = () => {
+    const button = document.createElement('div');
+    button.className = 'woo-box-item-flex yawf-favorite';
+    button.setAttribute('role', 'button');
+    button.setAttribute('tabindex', '0');
+    button.innerHTML = /* html */`<div class="woo-box-flex woo-box-alignCenter woo-box-justifyCenter yawf-favorite-inner">
+      <span class="woo-box-flex woo-box-alignCenter woo-box-justifyCenter yawf-favorite-icon-wrap"><i class="woo-font woo-font--navCollect yawf-favorite-icon"></i></span>
+      <span class="yawf-favorite-label">收藏</span>
+    </div>`;
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleFavorite(button);
+    });
+    button.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      event.stopPropagation();
+      toggleFavorite(button);
+    });
+    return button;
+  };
+  const injectFavoriteButton = instance => {
+    const article = instance.vnode.el;
+    if (!(article instanceof HTMLElement) || article.tagName !== 'ARTICLE') return;
+    const data = instance.props?.data;
+    const id = data?.idstr ? String(data.idstr) : '';
+    if (!id || data.isAd) return;
+    const footer = article.querySelector(':scope > footer');
+    const toolbar = footer?.querySelector(':scope > .woo-box-flex > .woo-box-item-flex > .woo-box-flex');
+    if (!toolbar) return;
+    let button = toolbar.querySelector(':scope > .yawf-favorite');
+    const likeItem = [...toolbar.children].find(item => item !== button && item.querySelector('.woo-like-main'));
+    if (!button) {
+      button = createFavoriteButton();
+      if (likeItem) likeItem.after(button);
+      else toolbar.appendChild(button);
+    } else if (likeItem ? likeItem.nextElementSibling !== button : toolbar.lastElementChild !== button) {
+      if (likeItem) likeItem.after(button);
+      else toolbar.appendChild(button);
+    }
+    if (button.dataset.yawfFavoriteId !== id) button.dataset.yawfFavoriteId = id;
+    const favorited = favoriteOverrides.has(id) ? favoriteOverrides.get(id) :
+      data.favorited === true || instance.props?.favorited === true;
+    renderFavoriteButton(button, favorited);
+  };
+  addLifecycleListener('mounted updated', 'feed', injectFavoriteButton);
+  appReady.then(() => addStyle(/* css */`
+html.yawf-hide-favorite .yawf-favorite { display: none; }
+.yawf-favorite { color: #808080; cursor: pointer; }
+.yawf-favorite-inner { width: 100%; height: 40px; gap: 10px; font-size: 14px; line-height: 40px; }
+.yawf-favorite-icon-wrap { width: 15px; height: 15px; }
+.yawf-favorite-icon { font-size: 15px; line-height: 15px; }
+.yawf-favorite-label { font-size: 14px; line-height: 14px; }
+.yawf-favorite:hover, .yawf-favorite.yawf-favorite-active { color: #ea8011; }
+.yawf-favorite.yawf-favorite-busy { opacity: .5; cursor: default; }
+#yawf-favorite-message { position: fixed; left: 50%; bottom: 80px; z-index: 9999; padding: 8px 16px; border-radius: 4px; background: rgba(0, 0, 0, .8); color: #fff; font-size: 14px; line-height: 20px; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(10px); transition: opacity .2s, transform .2s; }
+#yawf-favorite-message.yawf-favorite-message-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#yawf-favorite-message.yawf-favorite-message-error { background: rgba(210, 50, 50, .9); }
+`));
   //#endregion
 
   //#region 设置入口
@@ -1032,6 +1187,9 @@ const renderConfig = (container, profileId, template) => {
         [key]: newValue
       },
     });
+    if (key === 'cleanup::feedFavorite') {
+      invokePageScript('configChanged', { profileId, key, value: newValue });
+    }
   };
   const listenerId = GM_addValueChangeListener(configKey, (name, oldValue, newValue, remote) => {
     const oldConfig = config;
@@ -1042,6 +1200,9 @@ const renderConfig = (container, profileId, template) => {
       const ov = o?.[key] ?? null, nv = n?.[key] ?? null;
       if (JSON.stringify(ov) !== JSON.stringify(nv)) {
         configs.get(key)?.forEach(c => c.onChange(nv));
+        if (key === 'cleanup::feedFavorite') {
+          invokePageScript('configChanged', { profileId, key, value: nv });
+        }
       }
     });
   });
@@ -1429,6 +1590,7 @@ const CONFIG_TEMPLATE = /* html */`
       <yawf-rule id="cleanup::feedQr"><yawf-checkbox key="cleanup::feedQr">分享二维码</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::feedRetweet"><yawf-checkbox key="cleanup::feedRetweet">转发</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::feedLike"><yawf-checkbox key="cleanup::feedLike">点赞</yawf-checkbox></yawf-rule>
+      <yawf-rule id="cleanup::feedFavorite"><yawf-checkbox key="cleanup::feedFavorite">收藏</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::translate"><yawf-checkbox key="cleanup::translate">翻译</yawf-checkbox></yawf-rule>
     </yawf-group>
     <yawf-group name="图标" class="yawf-compact-group">
