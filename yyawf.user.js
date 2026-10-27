@@ -92,6 +92,11 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
       });
     });
   };
+  handle('configChanged', ({ profileId, key, value }) => {
+    if (profileId !== $CONFIG.user.idstr) return;
+    yawfConfig[key] = value;
+    if (key === 'cleanup::feedFavorite') updateFavoriteVisibility();
+  });
   handle('dialog', async ({ id, config }) => {
     invokeContentScript('dialogDone', { id, response: await dialog(config) });
   });
@@ -356,6 +361,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     Object.assign($CONFIG, window.$CONFIG);
     Object.assign(yawfConfig, config[$CONFIG.user.idstr]);
     isDebug = yawfConfig['about::debug'];
+    updateFavoriteVisibility();
   });
 
   appReady.then(app => {
@@ -588,6 +594,9 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
     icon?.classList.toggle('woo-font--star', favorited);
     icon?.classList.toggle('woo-font--navCollect', !favorited);
   };
+  const updateFavoriteVisibility = () => {
+    document.documentElement.classList.toggle('yawf-hide-favorite', getConfigBoolean('cleanup::feedFavorite'));
+  };
   const updateFavoriteButtonById = (id, favorited) => {
     [...document.querySelectorAll('.yawf-favorite')].forEach(button => {
       if (button.dataset.yawfFavoriteId === id) renderFavoriteButton(button, favorited);
@@ -660,6 +669,7 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
   };
   addLifecycleListener('mounted updated', 'feed', injectFavoriteButton);
   appReady.then(() => addStyle(/* css */`
+html.yawf-hide-favorite .yawf-favorite { display: none; }
 .yawf-favorite { color: #808080; cursor: pointer; }
 .yawf-favorite-inner { width: 100%; height: 40px; gap: 10px; font-size: 14px; line-height: 40px; }
 .yawf-favorite-icon-wrap { width: 15px; height: 15px; }
@@ -1177,6 +1187,9 @@ const renderConfig = (container, profileId, template) => {
         [key]: newValue
       },
     });
+    if (key === 'cleanup::feedFavorite') {
+      invokePageScript('configChanged', { profileId, key, value: newValue });
+    }
   };
   const listenerId = GM_addValueChangeListener(configKey, (name, oldValue, newValue, remote) => {
     const oldConfig = config;
@@ -1187,6 +1200,9 @@ const renderConfig = (container, profileId, template) => {
       const ov = o?.[key] ?? null, nv = n?.[key] ?? null;
       if (JSON.stringify(ov) !== JSON.stringify(nv)) {
         configs.get(key)?.forEach(c => c.onChange(nv));
+        if (key === 'cleanup::feedFavorite') {
+          invokePageScript('configChanged', { profileId, key, value: nv });
+        }
       }
     });
   });
@@ -1574,6 +1590,7 @@ const CONFIG_TEMPLATE = /* html */`
       <yawf-rule id="cleanup::feedQr"><yawf-checkbox key="cleanup::feedQr">分享二维码</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::feedRetweet"><yawf-checkbox key="cleanup::feedRetweet">转发</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::feedLike"><yawf-checkbox key="cleanup::feedLike">点赞</yawf-checkbox></yawf-rule>
+      <yawf-rule id="cleanup::feedFavorite"><yawf-checkbox key="cleanup::feedFavorite">收藏</yawf-checkbox></yawf-rule>
       <yawf-rule id="cleanup::translate"><yawf-checkbox key="cleanup::translate">翻译</yawf-checkbox></yawf-rule>
     </yawf-group>
     <yawf-group name="图标" class="yawf-compact-group">
