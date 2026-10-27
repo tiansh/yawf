@@ -661,10 +661,11 @@ const payload = (Array(35).fill('\n').join('') + 'void(' + function (config, mes
   addLifecycleListener('mounted updated', 'feed', injectFavoriteButton);
   appReady.then(() => addStyle(/* css */`
 .yawf-favorite { color: #808080; cursor: pointer; }
-.yawf-favorite-inner { width: 100%; height: 40px; gap: 4px; font-size: 16px; line-height: 40px; }
-.yawf-favorite-icon-wrap { width: 16px; height: 16px; }
-.yawf-favorite-icon { font-size: 16px; line-height: 16px; }
-.yawf-favorite:hover, .yawf-favorite.yawf-favorite-active { color: #f5a623; }
+.yawf-favorite-inner { width: 100%; height: 40px; gap: 10px; font-size: 14px; line-height: 40px; }
+.yawf-favorite-icon-wrap { width: 15px; height: 15px; }
+.yawf-favorite-icon { font-size: 15px; line-height: 15px; }
+.yawf-favorite-label { font-size: 14px; line-height: 14px; }
+.yawf-favorite:hover, .yawf-favorite.yawf-favorite-active { color: #ea8011; }
 .yawf-favorite.yawf-favorite-busy { opacity: .5; cursor: default; }
 #yawf-favorite-message { position: fixed; left: 50%; bottom: 80px; z-index: 9999; padding: 8px 16px; border-radius: 4px; background: rgba(0, 0, 0, .8); color: #fff; font-size: 14px; line-height: 20px; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(10px); transition: opacity .2s, transform .2s; }
 #yawf-favorite-message.yawf-favorite-message-show { opacity: 1; transform: translateX(-50%) translateY(0); }
